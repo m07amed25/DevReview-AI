@@ -1,6 +1,6 @@
 "use client";
 
-import { FaGithub, FaGoogle } from "react-icons/fa";
+import { FaGithub } from "react-icons/fa";
 import { AlertCircle, Eye, EyeOff, Loader2, X } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
@@ -137,21 +137,6 @@ export default function SignUpPage() {
     }
   };
 
-  const handleGoogleSignUp = async () => {
-    setError("");
-    setLoading(true);
-
-    try {
-      await signIn.social({
-        provider: "google",
-        callbackURL: "/repo",
-      });
-    } catch {
-      setError("Failed to connect with Google. Please try again.");
-      setLoading(false);
-    }
-  };
-
   const passwordStrength = password ? getPasswordStrength(password) : null;
 
   return (
@@ -175,19 +160,6 @@ export default function SignUpPage() {
                 <FaGithub className="mr-2 size-4" />
               )}
               Sign up with GitHub
-            </Button>
-            <Button
-              variant={"outline"}
-              onClick={handleGoogleSignUp}
-              disabled={loading}
-              className="w-full"
-            >
-              {loading ? (
-                <Loader2 className="mr-2 size-4 animate-spin" />
-              ) : (
-                <FaGoogle className="mr-2 size-4" />
-              )}
-              Sign up with Google
             </Button>
           </div>
 
