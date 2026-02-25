@@ -5,8 +5,9 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/server/db/client"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+  output        = "../src/server/db/client"
 }
 
 datasource db {
@@ -81,7 +82,7 @@ model Verification {
 }
 
 model Repository {
-  id        String   @id
+  id        String   @id @default(cuid())
   userId    String
   githubId  Int
   name      String
@@ -93,6 +94,8 @@ model Repository {
 
   user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   reviews Review[]
+
+  @@unique([userId, githubId])
 }
 
 model Review {
