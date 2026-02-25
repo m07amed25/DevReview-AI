@@ -217,7 +217,7 @@ export default function RepositoryDetailPage({ params }: PageProps) {
 
       {/* Statistics Cards */}
       <div className="grid gap-4 md:grid-cols-4">
-        <Card className="bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 border-emerald-500/20">
+        <Card className="bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 border-emerald-500/20 pb-4">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-emerald-600 flex items-center gap-2">
               <GitPullRequest className="size-4" />
@@ -234,7 +234,7 @@ export default function RepositoryDetailPage({ params }: PageProps) {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-purple-500/10 to-purple-500/5 border-purple-500/20">
+        <Card className="bg-gradient-to-br from-purple-500/10 to-purple-500/5 border-purple-500/20 pb-4">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-purple-600 flex items-center gap-2">
               <GitMerge className="size-4" />
@@ -251,7 +251,7 @@ export default function RepositoryDetailPage({ params }: PageProps) {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-blue-500/10 to-blue-500/5 border-blue-500/20">
+        <Card className="bg-gradient-to-br from-blue-500/10 to-blue-500/5 border-blue-500/20 pb-4">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-blue-600 flex items-center gap-2">
               <TrendingUp className="size-4" />
@@ -269,7 +269,7 @@ export default function RepositoryDetailPage({ params }: PageProps) {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-amber-500/10 to-amber-500/5 border-amber-500/20">
+        <Card className="bg-gradient-to-br from-amber-500/10 to-amber-500/5 border-amber-500/20 pb-4">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-amber-600 flex items-center gap-2">
               <Activity className="size-4" />
@@ -403,6 +403,26 @@ export default function RepositoryDetailPage({ params }: PageProps) {
             <PullRequestCard key={pr.id} pr={pr} repositoryId={id} />
           ))
         )}
+      </div>
+
+      {/* Developer Credit */}
+      <div className="mt-8 pt-6 border-t border-border/30 text-center">
+        <p className="text-sm text-muted-foreground">
+          Developed by{" "}
+          <a
+            href="mailto:m07hamedreda25@gmail.com"
+            className="text-primary hover:text-primary/80 font-medium transition-colors duration-200"
+          >
+            Mohamed Reda
+          </a>{" "}
+          -{" "}
+          <a
+            href="mailto:m07hamedreda25@gmail.com"
+            className="text-muted-foreground hover:text-foreground transition-colors duration-200"
+          >
+            m07hamedreda25@gmail.com
+          </a>
+        </p>
       </div>
     </div>
   );
