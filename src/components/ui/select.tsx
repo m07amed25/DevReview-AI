@@ -62,7 +62,7 @@ const NativeSelect = React.forwardRef<HTMLSelectElement, NativeSelectProps>(
     const [isOpen, setIsOpen] = React.useState(false);
     const selectId = React.useId();
 
-    const selectedOption = React.useMemo(() => {
+    const selectedOption: React.ReactNode = React.useMemo(() => {
       if (!children) return null;
       const childrenArray = React.Children.toArray(children);
       for (const child of childrenArray) {
@@ -71,9 +71,10 @@ const NativeSelect = React.forwardRef<HTMLSelectElement, NativeSelectProps>(
           child.props &&
           typeof child.props === "object" &&
           "value" in child.props &&
+          "children" in child.props &&
           child.props.value === value
         ) {
-          return child.props.children;
+          return child.props.children as React.ReactNode;
         }
       }
       return null;
@@ -155,7 +156,7 @@ const DropdownSelect = React.forwardRef<HTMLButtonElement, DropdownSelectProps>(
     const selectId = React.useId();
 
     // Find selected label
-    const selectedLabel = React.useMemo(() => {
+    const selectedLabel: React.ReactNode = React.useMemo(() => {
       const childrenArray = React.Children.toArray(children);
       for (const child of childrenArray) {
         if (
@@ -163,9 +164,10 @@ const DropdownSelect = React.forwardRef<HTMLButtonElement, DropdownSelectProps>(
           child.props &&
           typeof child.props === "object" &&
           "value" in child.props &&
+          "children" in child.props &&
           child.props.value === value
         ) {
-          return child.props.children;
+          return child.props.children as React.ReactNode;
         }
       }
       return null;
