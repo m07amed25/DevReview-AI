@@ -17,7 +17,7 @@ export function HealthCheck() {
 
   return (
     <Badge variant="secondary">
-      API: {data?.status} {data?.timestamp}
+      API: {data?.status} {data?.timestamp?.toLocaleString()}
     </Badge>
   );
 }

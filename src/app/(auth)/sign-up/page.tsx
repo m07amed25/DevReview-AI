@@ -110,8 +110,10 @@ export default function SignUpPage() {
 
       if (result.error) {
         setError(result.error.message || "An error occurred during sign-up.");
-        setLoading(false);
-      } else {
+      }
+      setLoading(false);
+
+      if (!result.error) {
         router.push("/repo");
       }
     } catch {

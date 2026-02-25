@@ -125,6 +125,7 @@ export function UserMenu({ user }: { user: UserProps }) {
         <Button
           variant="ghost"
           className="h-9 gap-2 px-2 hover:bg-muted/80 transition-all duration-200 data-[state=open]:bg-muted"
+          suppressHydrationWarning
         >
           <Avatar className="size-7 ring-2 ring-border transition-all duration-200 group-hover:ring-primary/20">
             <AvatarImage
