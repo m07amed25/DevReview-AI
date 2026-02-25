@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { FolderGit2, GitPullRequest, ScanSearch } from "lucide-react";
+import { FolderGit2, GitPullRequest } from "lucide-react";
 import { UserMenu } from "./user-menu";
 
 interface User {
@@ -47,10 +47,10 @@ export function Header({ user }: HeaderProps) {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors",
+                    "nav-link flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200 hover:scale-105",
                     isActive
                       ? "text-foreground bg-muted"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50",
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50 hover:shadow-sm",
                   )}
                 >
                   <Icon className="size-4" />

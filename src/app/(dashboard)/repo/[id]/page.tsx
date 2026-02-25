@@ -122,7 +122,7 @@ export default function RepositoryDetailPage({ params }: PageProps) {
           <p className="text-sm text-muted-foreground mt-1">
             This repository may have been disconnected.
           </p>
-          <Link href="/repos" className="mt-6 inline-block">
+          <Link href="/repo" className="mt-6 inline-block">
             <Button variant="outline">
               <ArrowLeft className="h-4 w-4" />
               Back to repositories
@@ -138,7 +138,7 @@ export default function RepositoryDetailPage({ params }: PageProps) {
       {/* Header Section */}
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-start gap-4">
-          <Link href={"/repos"}>
+          <Link href={"/repo"}>
             <Button variant={"outline"} size={"icon"} className="shrink-0">
               <ArrowLeft className="h-4 w-4" />
             </Button>

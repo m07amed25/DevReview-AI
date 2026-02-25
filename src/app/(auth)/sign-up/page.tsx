@@ -2,7 +2,7 @@
 
 import { FaGithub } from "react-icons/fa";
 import { AlertCircle, Eye, EyeOff, Loader2, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn, signUp } from "@/lib/auth-client";
@@ -17,6 +17,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import gsap from "gsap";
+import {
+  AuroraBackground,
+  GridBackground,
+} from "@/components/animations/backgrounds";
 
 interface FieldErrors {
   name?: string;
@@ -54,6 +59,22 @@ export default function SignUpPage() {
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Entrance animation
+    gsap.fromTo(
+      cardRef.current,
+      { opacity: 0, y: 30, scale: 0.95 },
+      {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.6,
+        ease: "power3.out",
+      },
+    );
+  }, []);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const validateFields = (): boolean => {
@@ -142,8 +163,17 @@ export default function SignUpPage() {
   const passwordStrength = password ? getPasswordStrength(password) : null;
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
-      <Card className="w-full max-w-md">
+    <div className="relative flex min-h-screen items-center justify-center p-4">
+      {/* Animated background */}
+      <div className="fixed inset-0 -z-10" aria-hidden="true">
+        <AuroraBackground />
+        <GridBackground />
+      </div>
+
+      <Card
+        ref={cardRef}
+        className="w-full max-w-md hover-lift transition-all duration-300"
+      >
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">Sign Up</CardTitle>
           <CardDescription>Create your account to get started.</CardDescription>

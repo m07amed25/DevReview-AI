@@ -25,6 +25,19 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useState, useEffect, useRef } from "react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
+  AuroraBackground,
+  GridBackground,
+  BlobBackground,
+} from "@/components/animations/backgrounds";
+import {
+  AnimateIn,
+  Reveal,
+  HoverScale,
+  GlowEffect,
+  StaggeredList,
+} from "@/components/animations/index";
 
 export default function HomePage() {
   const [activeFeature, setActiveFeature] = useState<number | null>(null);
@@ -39,6 +52,9 @@ export default function HomePage() {
   const featuresRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Register ScrollTrigger
+    gsap.registerPlugin(ScrollTrigger);
+
     const ctx = gsap.context(() => {
       // Hero section animations
       gsap.fromTo(
@@ -107,7 +123,7 @@ export default function HomePage() {
         delay: 2,
       });
 
-      // Stats counter animation
+      // Stats counter animation with scroll trigger
       const statValues = document.querySelectorAll(".stat-value");
       statValues.forEach((stat) => {
         gsap.fromTo(
@@ -117,13 +133,17 @@ export default function HomePage() {
             opacity: 1,
             scale: 1,
             duration: 0.8,
-            delay: 1.2,
             ease: "back.out(1.7)",
+            scrollTrigger: {
+              trigger: stat,
+              start: "top 85%",
+              toggleActions: "play none none reverse",
+            },
           },
         );
       });
 
-      // Features cards animation
+      // Features cards animation with scroll trigger
       const featureCards = document.querySelectorAll(".feature-card");
       gsap.fromTo(
         featureCards,
@@ -133,8 +153,12 @@ export default function HomePage() {
           y: 0,
           duration: 0.8,
           stagger: 0.15,
-          delay: 1.5,
           ease: "power3.out",
+          scrollTrigger: {
+            trigger: featureCards[0],
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          },
         },
       );
 
@@ -148,10 +172,53 @@ export default function HomePage() {
           x: 0,
           duration: 0.6,
           stagger: 0.2,
-          delay: 1.8,
           ease: "power3.out",
+          scrollTrigger: {
+            trigger: steps[0],
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
         },
       );
+
+      // Language badges animation
+      const langBadges = document.querySelectorAll(".lang-badge");
+      gsap.fromTo(
+        langBadges,
+        { opacity: 0, scale: 0.8 },
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 0.4,
+          stagger: 0.05,
+          ease: "back.out(1.7)",
+          scrollTrigger: {
+            trigger: langBadges[0],
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
+        },
+      );
+
+      // CTA section animation
+      const ctaSection = document.querySelector(".cta-section");
+      if (ctaSection) {
+        gsap.fromTo(
+          ctaSection,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: ctaSection,
+              start: "top 80%",
+              toggleActions: "play none none reverse",
+            },
+          },
+        );
+      }
     }, heroRef);
 
     return () => ctx.revert();
@@ -161,23 +228,25 @@ export default function HomePage() {
     <div className="min-h-screen bg-background">
       {/* Enhanced animated background */}
       <div className="fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
-        {/* Primary gradient mesh */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-background to-background" />
-
-        {/* Animated orbs */}
-        <div className="orb-1 absolute left-1/4 top-1/4 h-[500px] w-[500px] rounded-full bg-primary/8 blur-[120px]" />
-        <div className="orb-2 absolute right-1/4 bottom-1/4 h-[400px] w-[400px] rounded-full bg-accent/6 blur-[100px]" />
-        <div className="orb-3 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-full bg-primary/3 blur-[150px]" />
+        {/* Aurora effect */}
+        <AuroraBackground />
 
         {/* Grid pattern overlay */}
+        <GridBackground />
+
+        {/* Animated orbs */}
+        <div className="orb-1 absolute left-1/4 top-1/4 h-[500px] w-[500px] rounded-full bg-primary/8 blur-[120px] animate-pulse" />
         <div
-          className="absolute inset-0 opacity-[0.015]"
-          style={{
-            backgroundImage: `linear-gradient(var(--foreground) 1px, transparent 1px),
-                             linear-gradient(90deg, var(--foreground) 1px, transparent 1px)`,
-            backgroundSize: "60px 60px",
-          }}
+          className="orb-2 absolute right-1/4 bottom-1/4 h-[400px] w-[400px] rounded-full bg-accent/6 blur-[100px] animate-pulse"
+          style={{ animationDelay: "1s" }}
         />
+        <div
+          className="orb-3 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-full bg-primary/3 blur-[150px] animate-pulse"
+          style={{ animationDelay: "2s" }}
+        />
+
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-background to-background" />
       </div>
 
       {/* Skip to main content link for accessibility */}
@@ -724,7 +793,7 @@ export default function HomePage() {
               ].map((lang) => (
                 <span
                   key={lang.name}
-                  className="px-4 py-2 rounded-full bg-muted/50 border border-border/60 text-sm font-medium transition-all duration-200 hover:scale-105 hover:bg-muted/80 hover:border-primary/30 cursor-default"
+                  className="lang-badge px-4 py-2 rounded-full bg-muted/50 border border-border/60 text-sm font-medium transition-all duration-200 hover:scale-105 hover:bg-muted/80 hover:border-primary/30 cursor-default hover:shadow-lg hover:shadow-primary/10"
                   role="listitem"
                 >
                   {lang.name}
@@ -736,7 +805,7 @@ export default function HomePage() {
 
         {/* CTA Section */}
         <section
-          className="relative overflow-hidden"
+          className="cta-section relative overflow-hidden"
           aria-labelledby="cta-heading"
         >
           {/* Background gradient */}

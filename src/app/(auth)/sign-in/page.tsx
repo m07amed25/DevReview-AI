@@ -2,7 +2,7 @@
 
 import { FaGithub } from "react-icons/fa";
 import { AlertCircle, Eye, EyeOff, Loader2, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn } from "@/lib/auth-client";
@@ -17,6 +17,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import gsap from "gsap";
+import {
+  AuroraBackground,
+  GridBackground,
+} from "@/components/animations/backgrounds";
 
 interface FieldErrors {
   email?: string;
@@ -31,6 +36,22 @@ export default function SignInPage() {
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Entrance animation
+    gsap.fromTo(
+      cardRef.current,
+      { opacity: 0, y: 30, scale: 0.95 },
+      {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.6,
+        ease: "power3.out",
+      },
+    );
+  }, []);
 
   const validateFields = (): boolean => {
     const errors: FieldErrors = {};
@@ -103,8 +124,17 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
-      <Card className="w-full max-w-md">
+    <div className="relative flex min-h-screen items-center justify-center p-4">
+      {/* Animated background */}
+      <div className="fixed inset-0 -z-10" aria-hidden="true">
+        <AuroraBackground />
+        <GridBackground />
+      </div>
+
+      <Card
+        ref={cardRef}
+        className="w-full max-w-md hover-lift transition-all duration-300"
+      >
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">Sign In</CardTitle>
           <CardDescription>
