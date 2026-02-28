@@ -50,6 +50,12 @@ export default function RepositoryDetailPage({ params }: PageProps) {
     { enabled: !!id },
   );
 
+  // Fetch all PRs for accurate count calculations (not filtered by state)
+  const allPullRequests = trpc.pullRequest.list.useQuery(
+    { repositoryId: id, state: "all" },
+    { enabled: !!id },
+  );
+
   const filteredPRs = useMemo(() => {
     if (!pullRequests.data) return [];
     if (!searchQuery.trim()) return pullRequests.data;
@@ -64,28 +70,28 @@ export default function RepositoryDetailPage({ params }: PageProps) {
   }, [pullRequests.data, searchQuery]);
 
   const prCounts = {
-    open: pullRequests.data?.filter((pr) => pr.state === "open").length ?? 0,
+    open: allPullRequests.data?.filter((pr) => pr.state === "open").length ?? 0,
     closed:
-      pullRequests.data?.filter((pr) => pr.state === "closed").length ?? 0,
-    all: pullRequests.data?.length ?? 0,
+      allPullRequests.data?.filter((pr) => pr.state === "closed").length ?? 0,
+    all: allPullRequests.data?.length ?? 0,
   };
 
   const stats = useMemo(() => {
-    if (!pullRequests.data || pullRequests.data.length === 0) return null;
-    const totalAdditions = pullRequests.data.reduce(
+    if (!allPullRequests.data || allPullRequests.data.length === 0) return null;
+    const totalAdditions = allPullRequests.data.reduce(
       (sum, pr) => sum + pr.additions,
       0,
     );
-    const totalDeletions = pullRequests.data.reduce(
+    const totalDeletions = allPullRequests.data.reduce(
       (sum, pr) => sum + pr.deletions,
       0,
     );
-    const totalFiles = pullRequests.data.reduce(
+    const totalFiles = allPullRequests.data.reduce(
       (sum, pr) => sum + pr.changedFiles,
       0,
     );
     return { totalAdditions, totalDeletions, totalFiles };
-  }, [pullRequests.data]);
+  }, [allPullRequests.data]);
 
   if (repository.isLoading) {
     return (

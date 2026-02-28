@@ -31,13 +31,6 @@ import {
   GridBackground,
   BlobBackground,
 } from "@/components/animations/backgrounds";
-import {
-  AnimateIn,
-  Reveal,
-  HoverScale,
-  GlowEffect,
-  StaggeredList,
-} from "@/components/animations/index";
 
 export default function HomePage() {
   const [activeFeature, setActiveFeature] = useState<number | null>(null);

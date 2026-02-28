@@ -435,34 +435,51 @@ export default function ReposPage() {
             </div>
           </CardContent>
         ) : (
-          <CardContent className="py-8 text-center">
-            {githubRepos.error?.data?.code === "PRECONDITION_FAILED" ? (
-              <Button
-                onClick={async () => {
-                  const { linkSocial } = await import("@/lib/auth-client");
-                  await linkSocial({
-                    provider: "github",
-                    callbackURL: window.location.href,
-                  });
-                }}
-                className="gap-2"
-              >
-                <Github className="size-4" />
-                Connect GitHub
-              </Button>
-            ) : (
-              <Button
-                onClick={() => {
-                  setShowGitHubRepos(true);
-                  setSearchQuery("");
-                  setSelectedRepos(new Set());
-                }}
-                className="gap-2"
-              >
-                <Plus className="size-4" />
-                Connect Repository
-              </Button>
-            )}
+          <CardContent className="py-16 text-center">
+            <div className="flex flex-col items-center max-w-sm mx-auto">
+              <div className="relative mb-6">
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-violet-500/20 to-purple-500/20 flex items-center justify-center">
+                  <FolderGit2 className="w-10 h-10 text-violet-500" />
+                </div>
+                <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-background border-2 border-border flex items-center justify-center">
+                  <Plus className="w-4 h-4 text-muted-foreground" />
+                </div>
+              </div>
+              <h3 className="text-lg font-semibold mb-2">
+                No repositories connected
+              </h3>
+              <p className="text-sm text-muted-foreground mb-6 max-w-xs">
+                Connect your GitHub repositories to start tracking pull requests
+                and managing your development workflow.
+              </p>
+              {githubRepos.error?.data?.code === "PRECONDITION_FAILED" ? (
+                <Button
+                  onClick={async () => {
+                    const { linkSocial } = await import("@/lib/auth-client");
+                    await linkSocial({
+                      provider: "github",
+                      callbackURL: window.location.href,
+                    });
+                  }}
+                  className="gap-2"
+                >
+                  <Github className="size-4" />
+                  Connect GitHub
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => {
+                    setShowGitHubRepos(true);
+                    setSearchQuery("");
+                    setSelectedRepos(new Set());
+                  }}
+                  className="gap-2"
+                >
+                  <Plus className="size-4" />
+                  Connect Repository
+                </Button>
+              )}
+            </div>
           </CardContent>
         )}
       </Card>
