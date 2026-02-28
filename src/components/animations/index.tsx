@@ -381,16 +381,13 @@ export function Reveal({
 }
 
 // Text reveal animation
-interface TextRevealProps<T extends keyof React.JSX.IntrinsicElements = "div"> {
+interface TextRevealProps {
   text: string;
   className?: string;
-  as?: T;
 }
 
-export function TextReveal<
-  T extends keyof React.JSX.IntrinsicElements = "div",
->({ text, className = "", as: Component = "div" as T }: TextRevealProps<T>) {
-  const elementRef = useRef<React.ElementRef<T>>(null);
+export function TextReveal({ text, className = "" }: TextRevealProps) {
+  const elementRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const element = elementRef.current;
@@ -398,7 +395,7 @@ export function TextReveal<
 
     // Split text into words
     const words = text.split(" ");
-    (element as unknown as HTMLElement).innerHTML = words
+    element.innerHTML = words
       .map(
         (word) =>
           `<span style="display: inline-block; opacity: 0; transform: translateY(20px)">${word}&nbsp;</span>`,
@@ -420,9 +417,9 @@ export function TextReveal<
   }, [text]);
 
   return (
-    <Component ref={elementRef} className={className}>
+    <div ref={elementRef} className={className}>
       {text}
-    </Component>
+    </div>
   );
 }
 
