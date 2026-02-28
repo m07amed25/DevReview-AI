@@ -1,5 +1,23 @@
 import { db } from "@/server/db";
 
+export interface GitHubPullRequestFile {
+  sha: string;
+  filename: string;
+  status:
+    | "added"
+    | "removed"
+    | "modified"
+    | "renamed"
+    | "copied"
+    | "changed"
+    | "unchanged";
+  additions: number;
+  deletions: number;
+  changes: number;
+  patch?: string;
+  previous_filename?: string;
+}
+
 export interface GitHubUser {
   login: string;
   avatar_url: string;
@@ -26,17 +44,6 @@ export interface GitHubPullRequest {
   additions: number;
   deletions: number;
   changed_files: number;
-}
-
-export interface GitHubPullRequestFile {
-  sha: string;
-  filename: string;
-  status: "added" | "removed" | "modified" | "renamed";
-  additions: number;
-  deletions: number;
-  changes: number;
-  patch: string | null;
-  previous_filename: string | null;
 }
 
 export interface GitHubRepo {
@@ -122,7 +129,7 @@ export async function fetchPullRequests(
 
   // The list endpoint doesn't include additions/deletions/changed_files,
   // so we fetch each PR individually to get those stats.
-  return await Promise.all(
+  return Promise.all(
     pulls.map((pr) => fetchPullRequest(accessToken, owner, repo, pr.number)),
   );
 }
@@ -156,19 +163,31 @@ export async function fetchPullRequestFiles(
   repo: string,
   prNumber: number,
 ): Promise<GitHubPullRequestFile[]> {
-  const response = await fetch(
-    `https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}/files?per_page=100`,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        Accept: "application/vnd.github.v3+json",
-      },
-    },
-  );
+  const files: GitHubPullRequestFile[] = [];
+  let page = 1;
+  const perPage = 100;
 
-  if (!response.ok) {
-    throw new Error(`GitHub API error: ${response.status}`);
+  while (true) {
+    const response = await fetch(
+      `https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}/files?per_page=${perPage}&page=${page}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          Accept: "application/vnd.github.v3+json",
+        },
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error(`GitHub API error: ${response.status}`);
+    }
+
+    const data = (await response.json()) as GitHubPullRequestFile[];
+    files.push(...data);
+
+    if (data.length < perPage) break;
+    page++;
   }
 
-  return (await response.json()) as GitHubPullRequestFile[];
+  return files;
 }

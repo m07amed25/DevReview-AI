@@ -29,6 +29,7 @@ import {
   Calendar,
   TrendingUp,
   Activity,
+  Eye,
 } from "lucide-react";
 import { cn, formatDate } from "@/lib/utils";
 
@@ -458,47 +459,84 @@ interface PullRequestCardProps {
 function PullRequestCard({ pr, repositoryId }: PullRequestCardProps) {
   const isMerged = pr.state === "closed" && pr.mergedAt !== null;
 
+  // Determine card border color based on state
+  const borderColor = isMerged
+    ? "border-l-purple-500"
+    : pr.state === "closed"
+      ? "border-l-red-500"
+      : "border-l-emerald-500";
+
+  // Calculate relative time for more dynamic display
+  const timeAgo = useMemo(() => {
+    const now = new Date();
+    const created = new Date(pr.createdAt);
+    const diffMs = now.getTime() - created.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+
+    if (diffMinutes < 60) return `${diffMinutes}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays < 30) return `${diffDays}d ago`;
+    return formatDate(pr.createdAt);
+  }, [pr.createdAt]);
+
   return (
-    <Card className="group hover:border-border transition-all duration-200 hover:shadow-md">
+    <Card
+      className={cn(
+        "group hover:border-border transition-all duration-200 hover:shadow-md border-l-4",
+        borderColor,
+        "hover:scale-[1.01] cursor-pointer",
+      )}
+    >
       <CardContent className="p-5">
-        <div className="flex items-start justify-between gap-6">
+        <div className="flex items-start justify-between gap-6 cursor-context-menu">
           <div className="flex items-start gap-4 min-w-0 flex-1">
-            <div className="mt-1">
+            <div className="mt-1 flex flex-col items-center">
               {isMerged ? (
-                <GitMerge className="size-5 text-purple-500" />
+                <div className="p-2.5 rounded-full bg-purple-500/10 ring-2 ring-purple-500/20 group-hover:ring-purple-500/30 transition-all">
+                  <GitMerge className="size-5 text-purple-500" />
+                </div>
               ) : pr.state === "closed" ? (
-                <XCircle className="size-5 text-red-500" />
+                <div className="p-2.5 rounded-full bg-red-500/10 ring-2 ring-red-500/20 group-hover:ring-red-500/30 transition-all">
+                  <XCircle className="size-5 text-red-500" />
+                </div>
               ) : (
-                <GitPullRequest className="size-5 text-emerald-500" />
+                <div className="p-2.5 rounded-full bg-emerald-500/10 ring-2 ring-emerald-500/20 group-hover:ring-emerald-500/30 transition-all animate-pulse group-hover:animate-none">
+                  <GitPullRequest className="size-5 text-emerald-500" />
+                </div>
               )}
             </div>
 
-            <div className="min-w-0 flex-1 space-y-2.5">
+            <div className="min-w-0 flex-1 space-y-3">
               <div className="flex items-center gap-2 flex-wrap">
                 <Link
                   href={`/repos/${repositoryId}/pr/${pr.number}`}
-                  className="font-medium hover:text-primary transition-colors line-clamp-1 text-base"
+                  className="font-semibold hover:text-primary transition-colors line-clamp-1 text-base group-hover:underline decoration-primary/30 underline-offset-4"
                 >
                   {pr.title}
                 </Link>
                 {pr.draft && (
-                  <Badge variant={"secondary"} className="text-xs">
+                  <Badge
+                    variant={"secondary"}
+                    className="text-xs bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20 font-medium"
+                  >
                     Draft
                   </Badge>
                 )}
               </div>
 
               <div className="flex items-center gap-x-4 gap-y-2 text-sm text-muted-foreground flex-wrap">
-                <span className="font-mono text-xs bg-muted px-2 py-0.5 rounded">
+                <span className="font-mono text-xs bg-muted px-2 py-0.5 rounded border border-border/50 font-medium">
                   #{pr.number}
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <Avatar className="size-5 ring-1 ring-border">
+                  <Avatar className="size-5 ring-2 ring-background shadow-sm">
                     <AvatarImage
                       src={pr.author.avatarUrl}
                       alt={pr.author.login}
                     />
-                    <AvatarFallback className="text-[10px]">
+                    <AvatarFallback className="text-[10px] bg-primary/10 text-primary font-bold">
                       {pr.author.login?.[0]?.toUpperCase() || "?"}
                     </AvatarFallback>
                   </Avatar>
@@ -506,47 +544,69 @@ function PullRequestCard({ pr, repositoryId }: PullRequestCardProps) {
                     {pr.author.login}
                   </span>
                 </span>
-                <span className="flex items-center gap-1">
-                  <Calendar className="size-3.5" />
-                  {formatDate(pr.createdAt)}
+                <span className="flex items-center gap-1 bg-muted/30 px-2 py-0.5 rounded text-xs">
+                  <Calendar className="size-3" />
+                  {timeAgo}
                 </span>
               </div>
 
-              <div className="flex items-center gap-4 text-sm pt-1">
-                <code className="px-2.5 py-1 rounded-md bg-muted/50 text-xs font-mono text-muted-foreground flex items-center truncate border border-border/50">
-                  <GitBranch className="mr-1.5 size-3 text-muted-foreground/70" />
-                  {pr.baseRef}
-                  <ArrowLeft className="mx-2 size-3 text-muted-foreground/50" />
-                  {pr.headRef}
-                </code>
-                <div className="flex items-center gap-4">
-                  <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium">
-                    <Plus className="size-3.5" />
-                    <span className="tabular-nums">{pr.additions}</span>
+              <div className="flex items-center gap-3 pt-1 flex-wrap">
+                <div className="flex items-center gap-1.5 text-xs font-mono text-muted-foreground bg-muted/30 px-3 py-1.5 rounded-lg border border-border/30 shadow-sm">
+                  <GitBranch className="size-3.5 text-muted-foreground/70" />
+                  <span className="text-foreground/80">{pr.baseRef}</span>
+                  <ArrowLeft className="size-3 text-muted-foreground/50 rotate-90" />
+                  <span className="text-emerald-600 dark:text-emerald-400">
+                    {pr.headRef}
                   </span>
-                  <span className="flex items-center gap-1 text-red-600 dark:text-red-400 font-medium">
-                    <Minus className="size-3.5" />
-                    <span className="tabular-nums">{pr.deletions}</span>
-                  </span>
-                  <span className="flex items-center gap-1 text-muted-foreground">
-                    <FileText className="size-3.5" />
-                    <span className="tabular-nums">{pr.changedFiles}</span>
-                    <span className="text-xs">files</span>
-                  </span>
+                </div>
+                <div className="flex items-center gap-2 ml-auto">
+                  <div className="flex items-center gap-1 px-2 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20">
+                    <Plus className="size-3 text-emerald-500" />
+                    <span className="tabular-nums text-sm font-mono font-semibold text-emerald-600 dark:text-emerald-400">
+                      {pr.additions}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1 px-2 py-1 rounded-md bg-red-500/10 border border-red-500/20">
+                    <Minus className="size-3 text-red-500" />
+                    <span className="tabular-nums text-sm font-mono font-semibold text-red-600 dark:text-red-400">
+                      {pr.deletions}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1 px-2 py-1 rounded-md bg-muted border border-border/50">
+                    <FileText className="size-3 text-muted-foreground" />
+                    <span className="tabular-nums text-sm font-mono font-medium text-muted-foreground">
+                      {pr.changedFiles}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex flex-col items-end gap-3 shrink-0">
             {pr.review && <ReviewStatusBadge status={pr.review.status} />}
             <Link href={`/repos/${repositoryId}/pr/${pr.number}`}>
               <Button
                 variant={pr.review ? "outline" : "default"}
                 size="sm"
-                className="min-w-[80px]"
+                className={cn(
+                  "min-w-[90px] transition-all shadow-sm hover:shadow cursor-pointer",
+                  pr.review
+                    ? "border-primary/20 hover:bg-primary/5 hover:border-primary/40"
+                    : "bg-emerald-600 hover:bg-emerald-700 shadow-emerald-500/25 hover:shadow-emerald-500/40",
+                )}
               >
-                {pr.review ? "View" : "Review"}
+                {pr.review ? (
+                  <>
+                    <Eye className="size-3.5 mr-1.5" />
+                    View
+                  </>
+                ) : (
+                  <>
+                    <GitBranch className="size-3.5 mr-1.5" />
+                    Review
+                  </>
+                )}
               </Button>
             </Link>
           </div>
