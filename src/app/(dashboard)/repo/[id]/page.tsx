@@ -511,7 +511,7 @@ function PullRequestCard({ pr, repositoryId }: PullRequestCardProps) {
             <div className="min-w-0 flex-1 space-y-3">
               <div className="flex items-center gap-2 flex-wrap">
                 <Link
-                  href={`/repos/${repositoryId}/pr/${pr.number}`}
+                  href={`/repo/${repositoryId}/pr/${pr.number}`}
                   className="font-semibold hover:text-primary transition-colors line-clamp-1 text-base group-hover:underline decoration-primary/30 underline-offset-4"
                 >
                   {pr.title}
@@ -585,7 +585,7 @@ function PullRequestCard({ pr, repositoryId }: PullRequestCardProps) {
 
           <div className="flex flex-col items-end gap-3 shrink-0">
             {pr.review && <ReviewStatusBadge status={pr.review.status} />}
-            <Link href={`/repos/${repositoryId}/pr/${pr.number}`}>
+            <Link href={`/repo/${repositoryId}/pr/${pr.number}`}>
               <Button
                 variant={pr.review ? "outline" : "default"}
                 size="sm"

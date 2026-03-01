@@ -19,6 +19,7 @@ import {
   DropdownMenuSub,
   DropdownMenuSubTrigger,
   DropdownMenuSubContent,
+  DropdownMenuPortal,
 } from "./ui/dropdown-menu";
 import {
   LogOut,
@@ -328,8 +329,13 @@ export function UserMenu({ user }: { user: UserProps }) {
                   </span>
                 </div>
               </DropdownMenuSubTrigger>
-              <DropdownMenuSubContent className="min-w-[180px]">
-                <DropdownMenuItem
+              <DropdownMenuPortal>
+                <DropdownMenuSubContent
+                  className="min-w-[180px]"
+                  sideOffset={8}
+                  collisionPadding={16}
+                >
+                  <DropdownMenuItem
                   className="gap-2 cursor-pointer justify-between group/theme-item"
                   onClick={(e) => handleThemeChange("light", e)}
                 >
@@ -372,6 +378,7 @@ export function UserMenu({ user }: { user: UserProps }) {
                   )}
                 </DropdownMenuItem>
               </DropdownMenuSubContent>
+              </DropdownMenuPortal>
             </DropdownMenuSub>
 
             {/* <DropdownMenuItem className="gap-3 px-2 py-2 cursor-pointer rounded-md">
