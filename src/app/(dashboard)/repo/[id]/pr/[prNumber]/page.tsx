@@ -96,7 +96,7 @@ export default function PullRequestPage({ params }: PageProps) {
     );
   }
 
-  const isMerged = pr.data.state === "closed" && pr.data.mergedAt;
+  const isMerged = pr.data.state === "closed" && !!pr.data.mergedAt;
 
   return (
     <div className="space-y-8">
