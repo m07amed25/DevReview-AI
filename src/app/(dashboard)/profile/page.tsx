@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { trpc } from "@/lib/trpc/client";
 import { linkSocial } from "@/lib/auth-client";
+import { CropDialog } from "@/components/crop-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -140,6 +141,8 @@ export default function ProfilePage() {
     accountId: string;
     providerName: string;
   } | null>(null);
+  const [cropSrc, setCropSrc] = useState<string | null>(null);
+  const [cropDialogOpen, setCropDialogOpen] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -288,7 +291,7 @@ export default function ProfilePage() {
     setDisconnectTarget(null);
   };
 
-  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -311,56 +314,69 @@ export default function ProfilePage() {
       return;
     }
 
-    setIsUploading(true);
-    setUploadProgress(0);
-    setErrorMessage(null);
+    // Open crop dialog with a preview URL of the selected file
+    const objectUrl = URL.createObjectURL(file);
+    setCropSrc(objectUrl);
+    setCropDialogOpen(true);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
 
-    const formData = new FormData();
-    formData.append("file", file);
+  const handleCroppedUpload = useCallback(
+    (blob: Blob) => {
+      // Clean up the object URL
+      if (cropSrc) URL.revokeObjectURL(cropSrc);
+      setCropSrc(null);
 
-    const xhr = new XMLHttpRequest();
+      setIsUploading(true);
+      setUploadProgress(0);
+      setErrorMessage(null);
 
-    xhr.upload.addEventListener("progress", (e) => {
-      if (e.lengthComputable) {
-        setUploadProgress(Math.round((e.loaded / e.total) * 100));
-      }
-    });
+      const formData = new FormData();
+      formData.append("file", blob, "avatar.jpg");
 
-    xhr.addEventListener("load", () => {
-      try {
-        const data = JSON.parse(xhr.responseText);
-        if (xhr.status >= 200 && xhr.status < 300 && data.url) {
-          if (isEditing) {
-            setEditImage(data.url);
-          } else {
-            updateProfile.mutate({ image: data.url });
-          }
-        } else {
-          throw new Error(data.error || "Upload failed");
+      const xhr = new XMLHttpRequest();
+
+      xhr.upload.addEventListener("progress", (e) => {
+        if (e.lengthComputable) {
+          setUploadProgress(Math.round((e.loaded / e.total) * 100));
         }
-      } catch (err) {
-        setErrorMessage(
-          err instanceof Error ? err.message : "Failed to upload photo.",
-        );
+      });
+
+      xhr.addEventListener("load", () => {
+        try {
+          const data = JSON.parse(xhr.responseText);
+          if (xhr.status >= 200 && xhr.status < 300 && data.url) {
+            if (isEditing) {
+              setEditImage(data.url);
+            } else {
+              updateProfile.mutate({ image: data.url });
+            }
+          } else {
+            throw new Error(data.error || "Upload failed");
+          }
+        } catch (err) {
+          setErrorMessage(
+            err instanceof Error ? err.message : "Failed to upload photo.",
+          );
+          setTimeout(() => setErrorMessage(null), 5000);
+        } finally {
+          setIsUploading(false);
+          setUploadProgress(0);
+        }
+      });
+
+      xhr.addEventListener("error", () => {
+        setErrorMessage("Network error during upload.");
         setTimeout(() => setErrorMessage(null), 5000);
-      } finally {
         setIsUploading(false);
         setUploadProgress(0);
-        if (fileInputRef.current) fileInputRef.current.value = "";
-      }
-    });
+      });
 
-    xhr.addEventListener("error", () => {
-      setErrorMessage("Network error during upload.");
-      setTimeout(() => setErrorMessage(null), 5000);
-      setIsUploading(false);
-      setUploadProgress(0);
-      if (fileInputRef.current) fileInputRef.current.value = "";
-    });
-
-    xhr.open("POST", "/api/upload");
-    xhr.send(formData);
-  };
+      xhr.open("POST", "/api/upload");
+      xhr.send(formData);
+    },
+    [cropSrc, isEditing, updateProfile],
+  );
 
   const displayImage = isEditing ? editImage : (profile?.image ?? "");
   const displayName = isEditing ? editName : (profile?.name ?? "");
@@ -883,6 +899,23 @@ export default function ProfilePage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Image Crop Dialog */}
+      {cropSrc && (
+        <CropDialog
+          src={cropSrc}
+          open={cropDialogOpen}
+        onOpenChange={(open: boolean) => {
+          setCropDialogOpen(open);
+          if (!open && cropSrc) {
+            URL.revokeObjectURL(cropSrc);
+            setCropSrc(null);
+          }
+        }}
+          outputSize={512}
+          onCrop={handleCroppedUpload}
+        />
+      )}
 
       {/* Disconnect Confirmation Dialog */}
       <AlertDialog
