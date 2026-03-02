@@ -518,7 +518,7 @@ export default function HomePage() {
           className="border-y border-border/40 bg-muted/15"
           aria-labelledby="stats-heading"
         >
-          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-12 sm:py-14">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
             <div
               className="grid grid-cols-2 gap-6 sm:gap-8 md:grid-cols-4"
               role="list"
@@ -559,7 +559,7 @@ export default function HomePage() {
           aria-labelledby="features-heading"
         >
           <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
-            <div className="text-center mb-14 sm:mb-16">
+            <div className="text-center mb-12 sm:mb-14">
               <h2
                 id="features-heading"
                 className="text-3xl sm:text-4xl font-bold tracking-tight"
@@ -673,7 +673,7 @@ export default function HomePage() {
           aria-labelledby="how-it-works-heading"
         >
           <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
-            <div className="text-center mb-14 sm:mb-16">
+            <div className="text-center mb-12 sm:mb-14">
               <h2
                 id="how-it-works-heading"
                 className="text-3xl sm:text-4xl font-bold tracking-tight"
@@ -752,8 +752,8 @@ export default function HomePage() {
           className="border-b border-border/40"
           aria-labelledby="languages-heading"
         >
-          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
-            <div className="text-center mb-10 sm:mb-12">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
+            <div className="text-center mb-12 sm:mb-14">
               <h2
                 id="languages-heading"
                 className="text-2xl sm:text-3xl font-semibold tracking-tight"

@@ -29,13 +29,51 @@ export const auth = betterAuth({
     github: {
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
-      scope: ["read:user", "user:email", "repo"],
+      scope: ["read:user", "user:email", "repo", "read:org"],
     },
+    ...(process.env.DISCORD_CLIENT_ID && process.env.DISCORD_CLIENT_SECRET
+      ? {
+          discord: {
+            clientId: process.env.DISCORD_CLIENT_ID,
+            clientSecret: process.env.DISCORD_CLIENT_SECRET,
+          },
+        }
+      : {}),
+    ...(process.env.LINKEDIN_CLIENT_ID && process.env.LINKEDIN_CLIENT_SECRET
+      ? {
+          linkedin: {
+            clientId: process.env.LINKEDIN_CLIENT_ID,
+            clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
+          },
+        }
+      : {}),
+    ...(process.env.TWITCH_CLIENT_ID && process.env.TWITCH_CLIENT_SECRET
+      ? {
+          twitch: {
+            clientId: process.env.TWITCH_CLIENT_ID,
+            clientSecret: process.env.TWITCH_CLIENT_SECRET,
+          },
+        }
+      : {}),
+    ...(process.env.APPLE_CLIENT_ID && process.env.APPLE_CLIENT_SECRET
+      ? {
+          apple: {
+            clientId: process.env.APPLE_CLIENT_ID,
+            clientSecret: process.env.APPLE_CLIENT_SECRET,
+          },
+        }
+      : {}),
   },
   account: {
     accountLinking: {
       enabled: true,
-      trustedProviders: ["github"],
+      trustedProviders: [
+        "github",
+        "discord",
+        "linkedin",
+        "twitch",
+        "apple",
+      ],
       requireEmailVerification: false,
     },
   },

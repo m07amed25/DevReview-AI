@@ -74,16 +74,22 @@ export async function getGitHubAccessToken(
   return account?.accessToken ?? null;
 }
 
-export async function fetchGitHubRepos(
+interface GitHubOrg {
+  login: string;
+}
+
+async function fetchAllPages<T>(
+  url: string,
   accessToken: string,
-): Promise<GitHubRepo[]> {
-  const repos: GitHubRepo[] = [];
+  perPage = 100,
+): Promise<T[]> {
+  const results: T[] = [];
   let page = 1;
-  const perPage = 100;
 
   while (true) {
+    const separator = url.includes("?") ? "&" : "?";
     const response = await fetch(
-      `https://api.github.com/user/repos?per_page=${perPage}&page=${page}&sort=updated`,
+      `${url}${separator}per_page=${perPage}&page=${page}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -93,16 +99,58 @@ export async function fetchGitHubRepos(
     );
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch GitHub repos: ${response.status}`);
+      throw new Error(`GitHub API error: ${response.status} for ${url}`);
     }
 
-    const data = (await response.json()) as GitHubRepo[];
-    repos.push(...data);
+    const data = (await response.json()) as T[];
+    results.push(...data);
     if (data.length < perPage) break;
     page++;
   }
 
-  return repos;
+  return results;
+}
+
+export async function fetchGitHubRepos(
+  accessToken: string,
+): Promise<GitHubRepo[]> {
+  // Fetch user repos (owned, collaborator, and org-member repos)
+  const userRepos = await fetchAllPages<GitHubRepo>(
+    "https://api.github.com/user/repos?sort=updated&affiliation=owner,collaborator,organization_member",
+    accessToken,
+  );
+
+  // Fetch all orgs the user belongs to
+  const orgs = await fetchAllPages<GitHubOrg>(
+    "https://api.github.com/user/orgs",
+    accessToken,
+  );
+
+  // Fetch repos from each org (includes repos visible to the user in that org)
+  const orgRepoArrays = await Promise.all(
+    orgs.map((org) =>
+      fetchAllPages<GitHubRepo>(
+        `https://api.github.com/orgs/${org.login}/repos?sort=updated`,
+        accessToken,
+      ),
+    ),
+  );
+
+  // Deduplicate by repo ID
+  const repoMap = new Map<number, GitHubRepo>();
+  for (const repo of userRepos) {
+    repoMap.set(repo.id, repo);
+  }
+  for (const orgRepos of orgRepoArrays) {
+    for (const repo of orgRepos) {
+      repoMap.set(repo.id, repo);
+    }
+  }
+
+  // Return sorted by updated_at descending
+  return Array.from(repoMap.values()).sort(
+    (a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
+  );
 }
 
 export async function fetchPullRequests(

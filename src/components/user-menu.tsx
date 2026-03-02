@@ -56,17 +56,14 @@ export function UserMenu({ user }: { user: UserProps }) {
 
   const handleThemeChange = useCallback(
     (newTheme: string, event?: React.MouseEvent) => {
-      // Get click coordinates for the circular reveal origin
       const x = event?.clientX ?? window.innerWidth / 2;
       const y = event?.clientY ?? 0;
 
-      // Calculate the maximum radius needed to cover the entire screen
       const endRadius = Math.hypot(
         Math.max(x, window.innerWidth - x),
         Math.max(y, window.innerHeight - y),
       );
 
-      // Use View Transition API if available for a smooth circular reveal
       const doc = document as Document & {
         startViewTransition?: (callback: () => void) => {
           ready: Promise<void>;
@@ -94,7 +91,6 @@ export function UserMenu({ user }: { user: UserProps }) {
           );
         });
       } else {
-        // Fallback for browsers without View Transition API
         setTheme(newTheme);
       }
     },
