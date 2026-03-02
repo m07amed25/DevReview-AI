@@ -68,11 +68,7 @@ export const profileRouter = createTRPCRouter({
       z.object({
         name: z.string().min(1, "Name is required").max(100).optional(),
         email: z.string().email("Invalid email address").optional(),
-        image: z
-          .string()
-          .url("Invalid image URL")
-          .or(z.literal(""))
-          .optional(),
+        image: z.string().min(1).or(z.literal("")).optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {

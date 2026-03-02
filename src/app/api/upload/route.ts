@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/server/auth";
+import { put } from "@vercel/blob";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import crypto from "crypto";
@@ -12,6 +13,13 @@ const ALLOWED_TYPES = [
   "image/webp",
   "image/svg+xml",
 ];
+
+/**
+ * When BLOB_READ_WRITE_TOKEN is set (Vercel production / preview) we upload to
+ * Vercel Blob Storage.  Otherwise we fall back to the local filesystem so
+ * development works without any external service.
+ */
+const useBlob = !!process.env.BLOB_READ_WRITE_TOKEN;
 
 export async function POST(request: NextRequest) {
   // Authenticate user
@@ -45,19 +53,33 @@ export async function POST(request: NextRequest) {
     // Generate unique filename
     const ext = file.name.split(".").pop() || "png";
     const hash = crypto.randomBytes(8).toString("hex");
-    const filename = `${session.user.id}-${hash}.${ext}`;
+    const filename = `avatars/${session.user.id}-${hash}.${ext}`;
 
-    // Ensure upload directory exists
-    const uploadDir = path.join(process.cwd(), "public", "uploads", "avatars");
-    await mkdir(uploadDir, { recursive: true });
+    let url: string;
 
-    // Write file
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    const filePath = path.join(uploadDir, filename);
-    await writeFile(filePath, buffer);
+    if (useBlob) {
+      // ── Vercel Blob Storage (production) ──────────────────────────
+      const blob = await put(filename, file, {
+        access: "public",
+        addRandomSuffix: false,
+      });
+      url = blob.url;
+    } else {
+      // ── Local filesystem (development) ────────────────────────────
+      const uploadDir = path.join(
+        process.cwd(),
+        "public",
+        "uploads",
+        "avatars",
+      );
+      await mkdir(uploadDir, { recursive: true });
 
-    const url = `/uploads/avatars/${filename}`;
+      const bytes = await file.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+      const localFilename = `${session.user.id}-${hash}.${ext}`;
+      await writeFile(path.join(uploadDir, localFilename), buffer);
+      url = `/uploads/avatars/${localFilename}`;
+    }
 
     return NextResponse.json({ url });
   } catch (error) {
