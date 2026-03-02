@@ -47,25 +47,16 @@ export const settingsRouter = createTRPCRouter({
         });
       }
 
-      const session = await ctx.db.session.findFirst({
+      // Use deleteMany so it's idempotent — if the session was already
+      // removed (e.g. by "revoke all"), we simply return success.
+      const result = await ctx.db.session.deleteMany({
         where: {
           id: input.sessionId,
           userId: ctx.user.id,
         },
       });
 
-      if (!session) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Session not found.",
-        });
-      }
-
-      await ctx.db.session.delete({
-        where: { id: input.sessionId },
-      });
-
-      return { success: true };
+      return { success: true, deleted: result.count };
     }),
 
   /**
@@ -88,11 +79,9 @@ export const settingsRouter = createTRPCRouter({
   deleteAccount: protectedProcedure
     .input(
       z.object({
-        confirmation: z
-          .string()
-          .refine((val) => val === "DELETE", {
-            message: 'Please type "DELETE" to confirm.',
-          }),
+        confirmation: z.string().refine((val) => val === "DELETE", {
+          message: 'Please type "DELETE" to confirm.',
+        }),
       }),
     )
     .mutation(async ({ ctx, input }) => {

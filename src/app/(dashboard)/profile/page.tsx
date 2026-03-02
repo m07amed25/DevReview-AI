@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { trpc } from "@/lib/trpc/client";
 import { linkSocial } from "@/lib/auth-client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -86,6 +87,8 @@ function ProfileSkeleton() {
 }
 
 export default function ProfilePage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const utils = trpc.useUtils();
   const { data: profile, isLoading } = trpc.profile.get.useQuery();
   const { data: availableProviders } =
@@ -112,6 +115,25 @@ export default function ProfilePage() {
   );
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Pick up auth errors from URL (e.g. after a failed provider link redirect)
+  useEffect(() => {
+    const authError = searchParams.get("auth_error");
+    if (authError) {
+      const messages: Record<string, string> = {
+        account_already_linked_to_different_user:
+          "This social account is already linked to a different user.",
+        "email_doesn't_match":
+          "The email on the social account doesn\u2019t match your profile email.",
+      };
+      setErrorMessage(
+        messages[authError] ?? `Authentication error: ${authError}`,
+      );
+      // Clean the URL without triggering a navigation
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  }, [searchParams]);
+
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [disconnectTarget, setDisconnectTarget] = useState<{
@@ -868,37 +890,79 @@ export default function ProfilePage() {
         onOpenChange={(open) => !open && setDisconnectTarget(null)}
       >
         <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              Disconnect {disconnectTarget?.providerName}?
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              This will remove your {disconnectTarget?.providerName} connection.
-              You won&apos;t be able to sign in with{" "}
-              {disconnectTarget?.providerName} until you reconnect it.
-              {(profile?.accounts.filter((a) => a.providerId !== "credential")
-                .length ?? 0) <= 1 && (
-                <span className="block mt-2 font-medium text-destructive">
-                  Warning: This is your only connected provider. You may lose
-                  access to your account.
-                </span>
-              )}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDisconnect}
-              className="bg-destructive text-white hover:bg-destructive/90"
-            >
-              {disconnectAccount.isPending ? (
-                <Loader2 className="size-4 animate-spin mr-2" />
-              ) : (
-                <Unlink className="size-4 mr-2" />
-              )}
-              Disconnect
-            </AlertDialogAction>
-          </AlertDialogFooter>
+          {(() => {
+            const hasPassword = profile?.accounts.some(
+              (a) => a.providerId === "credential",
+            );
+            const otherProviders =
+              profile?.accounts.filter(
+                (a) =>
+                  a.providerId !== "credential" &&
+                  a.id !== disconnectTarget?.accountId,
+              ) ?? [];
+            const isOnlyAuthMethod =
+              !hasPassword && otherProviders.length === 0;
+
+            return isOnlyAuthMethod ? (
+              <>
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="flex items-center gap-2 text-amber-500">
+                    <Shield className="size-5" />
+                    Can&apos;t Disconnect {disconnectTarget?.providerName}
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    <span className="block">
+                      {disconnectTarget?.providerName} is your only way to sign
+                      in. Disconnecting it would lock you out of your account.
+                    </span>
+                    <span className="block mt-2">
+                      To remove this connection, you can delete your account
+                      from the Settings page.
+                    </span>
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    variant="destructive"
+                    onClick={() => {
+                      setDisconnectTarget(null);
+                      router.push("/settings#danger-zone");
+                    }}
+                  >
+                    Go to Settings
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </>
+            ) : (
+              <>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Disconnect {disconnectTarget?.providerName}?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will remove your {disconnectTarget?.providerName}{" "}
+                    connection. You won&apos;t be able to sign in with{" "}
+                    {disconnectTarget?.providerName} until you reconnect it.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    variant="destructive"
+                    onClick={handleDisconnect}
+                  >
+                    {disconnectAccount.isPending ? (
+                      <Loader2 className="size-4 animate-spin mr-2" />
+                    ) : (
+                      <Unlink className="size-4 mr-2" />
+                    )}
+                    Disconnect
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </>
+            );
+          })()}
         </AlertDialogContent>
       </AlertDialog>
     </div>
