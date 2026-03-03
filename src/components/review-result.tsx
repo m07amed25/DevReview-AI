@@ -317,9 +317,17 @@ function CommentCard({
 
   return (
     <Card>
-      <button
+      <div
+        role="button"
+        tabIndex={0}
         onClick={() => setExpanded(!expanded)}
-        className="w-full text-left"
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setExpanded(!expanded);
+          }
+        }}
+        className="w-full text-left cursor-pointer"
       >
         <div className="p-4 flex items-start gap-3">
           <div
@@ -388,7 +396,7 @@ function CommentCard({
             </button>
           </div>
         </div>
-      </button>
+      </div>
 
       {expanded && comment.suggestion && (
         <div className="px-4 pb-4">
