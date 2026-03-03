@@ -270,6 +270,7 @@ export default function PullRequestPage({ params }: PageProps) {
       {/* ── Branch & stats card ── */}
       <Card className="overflow-hidden">
         <CardContent className="p-0">
+          {/* Top row: Branch + Stats */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:divide-x divide-border/60">
             {/* Branch info */}
             <div className="flex-1 p-3 sm:p-4">
@@ -294,11 +295,10 @@ export default function PullRequestPage({ params }: PageProps) {
               </div>
             </div>
 
-            {/* Separator visible only on mobile */}
             <Separator className="sm:hidden" />
 
             {/* Stats */}
-            <div className="flex items-center justify-around sm:justify-start gap-4 sm:gap-6 px-3 sm:px-6 py-3 sm:py-4">
+            <div className="flex items-center justify-around sm:justify-start gap-4 sm:gap-6 px-3 sm:px-6 py-3 sm:py-4 shrink-0">
               <StatItem
                 icon={Plus}
                 value={pr.data.additions}
@@ -321,37 +321,44 @@ export default function PullRequestPage({ params }: PageProps) {
                 bgClass="bg-muted"
               />
             </div>
+          </div>
 
-            <div className="px-6 py-4 flex items-center gap-3">
-              <div className="flex items-center gap-2 rounded-lg px-3 py-1.5">
-                <ReviewStatusBadge
-                  status={latestReview.data?.status ?? null}
-                  completedAt={
-                    latestReview.data?.status === "COMPLETED"
-                      ? latestReview.data.createdAt
-                      : null
-                  }
-                />
-                {!isReviewing && <div className="h-4 w-px bg-border" />}
-                {isReviewing ? null : (
-                  <Button
-                    variant="outline"
-                    size={"sm"}
-                    onClick={() => {
-                      triggerReview.mutate({
-                        repositoryId: id,
-                        prNumber: prNum,
-                      });
-                    }}
-                    disabled={triggerReview.isPending}
-                    className="gap-1.5 h-auto py-1 px-2 text-xs"
-                  >
-                    <Wand2 />
-                    {latestReview.data ? "Re-run" : "Review"}
-                  </Button>
-                )}
+          {/* Bottom row: Review status */}
+          <div className="border-t border-border/60 px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-3 bg-muted/30">
+            <ReviewStatusBadge
+              status={latestReview.data?.status ?? null}
+              completedAt={
+                latestReview.data?.status === "COMPLETED"
+                  ? latestReview.data.createdAt
+                  : null
+              }
+            />
+            {isReviewing ? (
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <Loader2 className="size-3 animate-spin" />
+                <span>Working…</span>
               </div>
-            </div>
+            ) : (
+              <Button
+                variant="outline"
+                size={"sm"}
+                onClick={() => {
+                  triggerReview.mutate({
+                    repositoryId: id,
+                    prNumber: prNum,
+                  });
+                }}
+                disabled={triggerReview.isPending}
+                className="gap-1.5 h-auto py-1.5 px-3 text-xs"
+              >
+                {triggerReview.isPending ? (
+                  <Loader2 className="size-3.5 animate-spin" />
+                ) : (
+                  <Wand2 className="size-3.5" />
+                )}
+                {latestReview.data ? "Re-run Review" : "Run AI Review"}
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -413,7 +420,16 @@ export default function PullRequestPage({ params }: PageProps) {
       {activeTab === "review" && (
         <div>
           {latestReview.data ? (
-            <ReviewResult review={latestReview.data} />
+            <ReviewResult
+              review={latestReview.data}
+              onRetry={() =>
+                triggerReview.mutate({
+                  repositoryId: id,
+                  prNumber: prNum,
+                })
+              }
+              isRetrying={triggerReview.isPending}
+            />
           ) : (
             <Card className="border-dashed">
               <CardContent className="py-16 sm:py-20 text-center flex flex-col items-center">
@@ -660,7 +676,7 @@ function ReviewStatusBadge({
   const Icon = config.icon;
 
   return (
-    <Badge variant="outline" className={cn("gap-1.5 border", config.className)}>
+    <Badge variant="outline" className={cn("gap-1.5 border whitespace-nowrap", config.className)}>
       <Icon className={cn("h-3 w-3", config.spin && "animate-spin")} />
       {config.label}
     </Badge>

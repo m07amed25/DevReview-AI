@@ -1,19 +1,19 @@
-import OpenAI from "openai";
+import Groq from "groq-sdk";
 import { z } from "zod";
 
-let openaiClient: OpenAI | null = null;
+let groqClient: Groq | null = null;
 
-function getOpenAIClient(): OpenAI {
-  const apiKey = process.env.OPENAI_API_KEY;
+function getGroqClient(): Groq {
+  const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
-    throw new Error("OPENAI_API_KEY is not set");
+    throw new Error("GROQ_API_KEY is not set");
   }
 
-  if (!openaiClient) {
-    openaiClient = new OpenAI({ apiKey });
+  if (!groqClient) {
+    groqClient = new Groq({ apiKey });
   }
 
-  return openaiClient;
+  return groqClient;
 }
 
 export const ReviewCommentSchema = z.object({
@@ -100,16 +100,16 @@ export async function reviewCode(
 **Changes:**
 ${diffContent}`;
 
-  const openai = getOpenAIClient();
-  const response = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
+  const groq = getGroqClient();
+  const response = await groq.chat.completions.create({
+    model: "llama-3.3-70b-versatile",
     messages: [
       { role: "system", content: SYSTEM_PROMPT },
       { role: "user", content: userPrompt },
     ],
-    response_format: { type: "json_object" },
-    temperature: 0.3,
     max_tokens: 2000,
+    temperature: 0.3,
+    response_format: { type: "json_object" },
   });
 
   const content = response.choices[0]?.message?.content;
@@ -118,7 +118,5 @@ ${diffContent}`;
   }
 
   const parsed = JSON.parse(content);
-  const validated = ReviewResultSchema.parse(parsed);
-
-  return validated;
+  return ReviewResultSchema.parse(parsed);
 }
