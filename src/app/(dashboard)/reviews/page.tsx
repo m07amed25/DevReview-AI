@@ -41,6 +41,10 @@ import {
   RefreshCw,
   Filter,
   GitPullRequest,
+  TrendingUp,
+  TrendingDown,
+  Minus,
+  ArrowUpRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import gsap from "gsap";
@@ -140,23 +144,26 @@ function AnimatedCounter({
   const ref = useRef<HTMLSpanElement>(null);
   const prevValue = useRef(0);
 
-  useGSAP(() => {
-    if (!ref.current) return;
-    const el = ref.current;
-    const obj = { val: prevValue.current };
-    gsap.to(obj, {
-      val: value,
-      duration: 1,
-      ease: "power2.out",
-      onUpdate: () => {
-        el.textContent =
-          decimals > 0
-            ? obj.val.toFixed(decimals)
-            : Math.round(obj.val).toString();
-      },
-    });
-    prevValue.current = value;
-  }, { dependencies: [value, decimals] });
+  useGSAP(
+    () => {
+      if (!ref.current) return;
+      const el = ref.current;
+      const obj = { val: prevValue.current };
+      gsap.to(obj, {
+        val: value,
+        duration: 1,
+        ease: "power2.out",
+        onUpdate: () => {
+          el.textContent =
+            decimals > 0
+              ? obj.val.toFixed(decimals)
+              : Math.round(obj.val).toString();
+        },
+      });
+      prevValue.current = value;
+    },
+    { dependencies: [value, decimals] },
+  );
 
   return (
     <span ref={ref} className={className}>
@@ -172,19 +179,22 @@ function MiniRiskGauge({ score, size = 44 }: { score: number; size?: number }) {
   const offset = circumference - (score / 10) * circumference;
   const gaugeRef = useRef<SVGCircleElement>(null);
 
-  useGSAP(() => {
-    if (!gaugeRef.current) return;
-    gsap.fromTo(
-      gaugeRef.current,
-      { strokeDashoffset: circumference },
-      {
-        strokeDashoffset: offset,
-        duration: 1,
-        delay: 0.3,
-        ease: "power2.out",
-      },
-    );
-  }, { dependencies: [offset, circumference] });
+  useGSAP(
+    () => {
+      if (!gaugeRef.current) return;
+      gsap.fromTo(
+        gaugeRef.current,
+        { strokeDashoffset: circumference },
+        {
+          strokeDashoffset: offset,
+          duration: 1,
+          delay: 0.3,
+          ease: "power2.out",
+        },
+      );
+    },
+    { dependencies: [offset, circumference] },
+  );
 
   return (
     <div
@@ -396,14 +406,17 @@ function EmptyState({
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useGSAP(() => {
-    if (!containerRef.current) return;
-    gsap.fromTo(
-      containerRef.current,
-      { opacity: 0, scale: 0.95 },
-      { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)" },
-    );
-  }, { scope: containerRef });
+  useGSAP(
+    () => {
+      if (!containerRef.current) return;
+      gsap.fromTo(
+        containerRef.current,
+        { opacity: 0, scale: 0.95 },
+        { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)" },
+      );
+    },
+    { scope: containerRef },
+  );
 
   return (
     <div ref={containerRef}>
@@ -450,6 +463,140 @@ function EmptyState({
   );
 }
 
+function MiniStatSparkline({
+  data,
+  color,
+  className,
+}: {
+  data: number[];
+  color: string;
+  className?: string;
+}) {
+  const max = Math.max(...data, 1);
+  const points = data.map((v, i) => {
+    const x = (i / (data.length - 1)) * 100;
+    const y = 100 - (v / max) * 70 - 15;
+    return `${x},${y}`;
+  });
+  const lineRef = useRef<SVGPolylineElement>(null);
+  const areaRef = useRef<SVGPolygonElement>(null);
+  const reactId = React.useId();
+  const gradientId = `statFill-${reactId.replace(/:/g, "")}`;
+
+  useGSAP(() => {
+    if (!lineRef.current) return;
+    const length = lineRef.current.getTotalLength();
+    gsap.fromTo(
+      lineRef.current,
+      { strokeDasharray: length, strokeDashoffset: length },
+      { strokeDashoffset: 0, duration: 1.2, delay: 0.4, ease: "power2.out" },
+    );
+    if (areaRef.current) {
+      gsap.fromTo(
+        areaRef.current,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.8, delay: 0.8, ease: "power2.out" },
+      );
+    }
+  });
+
+  return (
+    <svg
+      viewBox="0 0 100 100"
+      className={cn("w-full h-full", className)}
+      preserveAspectRatio="none"
+    >
+      <defs>
+        <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="currentColor" stopOpacity="0.25" />
+          <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <polygon
+        ref={areaRef}
+        points={`0,100 ${points.join(" ")} 100,100`}
+        fill={`url(#${gradientId})`}
+        className={color}
+        style={{ opacity: 0 }}
+      />
+      <polyline
+        ref={lineRef}
+        points={points.join(" ")}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={color}
+      />
+    </svg>
+  );
+}
+
+function StatProgressRing({
+  progress,
+  color,
+  size = 48,
+}: {
+  progress: number;
+  color: string;
+  size?: number;
+}) {
+  const r = 16;
+  const circumference = 2 * Math.PI * r;
+  const offset =
+    circumference - (Math.min(progress, 100) / 100) * circumference;
+  const ringRef = useRef<SVGCircleElement>(null);
+
+  useGSAP(
+    () => {
+      if (!ringRef.current) return;
+      gsap.fromTo(
+        ringRef.current,
+        { strokeDashoffset: circumference },
+        {
+          strokeDashoffset: offset,
+          duration: 1.2,
+          delay: 0.5,
+          ease: "power3.out",
+        },
+      );
+    },
+    { dependencies: [offset, circumference] },
+  );
+
+  return (
+    <svg
+      viewBox="0 0 36 36"
+      style={{ width: size, height: size }}
+      className="-rotate-90"
+    >
+      <circle
+        cx="18"
+        cy="18"
+        r={r}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        className="text-muted-foreground/10"
+      />
+      <circle
+        ref={ringRef}
+        cx="18"
+        cy="18"
+        r={r}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeDasharray={circumference}
+        strokeDashoffset={circumference}
+        className={color}
+      />
+    </svg>
+  );
+}
+
 function StatCard({
   label,
   value,
@@ -458,6 +605,11 @@ function StatCard({
   subtitle,
   delay = 0,
   decimals = 0,
+  trend,
+  trendLabel,
+  sparklineData,
+  progress,
+  live,
 }: {
   label: string;
   value: number;
@@ -466,60 +618,187 @@ function StatCard({
   subtitle?: string;
   delay?: number;
   decimals?: number;
+  trend?: "up" | "down" | "neutral";
+  trendLabel?: string;
+  sparklineData?: number[];
+  progress?: number;
+  live?: boolean;
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
+  const glowRef = useRef<HTMLDivElement>(null);
 
-  useGSAP(() => {
-    if (!cardRef.current) return;
-    gsap.fromTo(
-      cardRef.current,
-      { opacity: 0, y: 20, scale: 0.95 },
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.5,
-        delay,
-        ease: "back.out(1.7)",
-      },
-    );
-  }, { scope: cardRef, dependencies: [delay] });
+  useGSAP(
+    () => {
+      if (!cardRef.current) return;
+      gsap.fromTo(
+        cardRef.current,
+        { opacity: 0, y: 24, scale: 0.92 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.6,
+          delay,
+          ease: "back.out(1.4)",
+        },
+      );
+    },
+    { scope: cardRef, dependencies: [delay] },
+  );
+
+  const TrendIcon =
+    trend === "up" ? TrendingUp : trend === "down" ? TrendingDown : Minus;
+  const trendColor =
+    trend === "up"
+      ? "text-emerald-500 bg-emerald-500/10"
+      : trend === "down"
+        ? "text-red-500 bg-red-500/10"
+        : "text-muted-foreground bg-muted/50";
+
+  const textColorMap: Record<string, string> = {
+    "bg-primary": "text-primary",
+    "bg-emerald-500": "text-emerald-500",
+    "bg-blue-500": "text-blue-500",
+    "bg-amber-500": "text-amber-500",
+    "bg-red-500": "text-red-500",
+  };
+  const textColor = textColorMap[color] ?? "text-primary";
 
   return (
     <div ref={cardRef}>
-      <div className="group relative overflow-hidden rounded-xl border border-border/50 bg-card/60 p-4 backdrop-blur-sm transition-all duration-300 hover:border-border hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-0.5">
-        {/* Background glow accent */}
+      <div
+        className="group relative overflow-hidden rounded-2xl border border-border/40 bg-linear-to-br from-card/90 via-card/70 to-card/50 backdrop-blur-sm transition-all duration-500 hover:border-border/80 hover:shadow-2xl hover:shadow-primary/5 hover:-translate-y-1"
+        onMouseMove={(e) => {
+          if (!glowRef.current) return;
+          const rect = e.currentTarget.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          glowRef.current.style.left = `${x}px`;
+          glowRef.current.style.top = `${y}px`;
+          glowRef.current.style.opacity = "1";
+        }}
+        onMouseLeave={() => {
+          if (glowRef.current) glowRef.current.style.opacity = "0";
+        }}
+      >
+        {/* Cursor-following glow */}
+        <div
+          ref={glowRef}
+          className={cn(
+            "pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 size-40 rounded-full blur-3xl transition-opacity duration-500 opacity-0",
+            color,
+          )}
+          style={{ opacity: 0 }}
+        />
+
+        {/* Ambient background glow */}
         <div
           className={cn(
-            "absolute -right-4 -top-4 size-20 rounded-full opacity-10 blur-2xl transition-opacity duration-500 group-hover:opacity-20",
+            "absolute -right-6 -top-6 size-28 rounded-full opacity-[0.07] blur-3xl transition-all duration-700 group-hover:opacity-[0.15] group-hover:scale-125",
             color,
           )}
         />
-        <div className="relative flex items-center justify-between">
-          <div className="space-y-1">
-            <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-widest">
-              {label}
-            </p>
-            <div className="flex items-baseline gap-2">
-              <AnimatedCounter
-                value={value}
-                className="text-2xl font-bold tabular-nums tracking-tight"
-                decimals={decimals}
-              />
-            </div>
-            {subtitle && (
-              <p className="text-[11px] text-muted-foreground leading-tight">
-                {subtitle}
-              </p>
-            )}
+        <div
+          className={cn(
+            "absolute -left-4 -bottom-4 size-20 rounded-full opacity-[0.04] blur-2xl transition-all duration-700 group-hover:opacity-[0.08]",
+            color,
+          )}
+        />
+
+        {/* Top accent line */}
+        <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-border/60 to-transparent" />
+        <div
+          className={cn(
+            "absolute top-0 left-1/2 -translate-x-1/2 h-px w-0 transition-all duration-500 group-hover:w-full",
+            color,
+            "opacity-40",
+          )}
+        />
+
+        {/* Sparkline background */}
+        {sparklineData && sparklineData.length > 1 && (
+          <div className="absolute inset-x-0 bottom-0 h-16 opacity-30 group-hover:opacity-50 transition-opacity duration-500">
+            <MiniStatSparkline data={sparklineData} color={textColor} />
           </div>
-          <div
-            className={cn(
-              "flex size-11 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110",
-              color,
-            )}
-          >
-            <Icon className="size-5 text-white" />
+        )}
+
+        <div className="relative p-4 sm:p-5 flex flex-col gap-3">
+          {/* Header row: label + icon */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">
+                {label}
+              </p>
+              {live && (
+                <span className="relative flex size-2">
+                  <span
+                    className={cn(
+                      "absolute inline-flex h-full w-full animate-ping rounded-full opacity-75",
+                      color,
+                    )}
+                  />
+                  <span
+                    className={cn(
+                      "relative inline-flex size-2 rounded-full",
+                      color,
+                    )}
+                  />
+                </span>
+              )}
+            </div>
+            <div className="relative">
+              <div
+                className={cn(
+                  "flex size-10 items-center justify-center rounded-xl ring-1 ring-white/10 shadow-lg transition-all duration-500 group-hover:scale-110 group-hover:shadow-xl group-hover:rotate-3",
+                  color,
+                )}
+              >
+                <Icon className="size-4.5 text-white drop-shadow-sm" />
+              </div>
+              {progress != null && (
+                <div className="absolute -inset-0.5">
+                  <StatProgressRing
+                    progress={progress}
+                    color={textColor}
+                    size={44}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Value row */}
+          <div className="flex items-end justify-between gap-2">
+            <div className="space-y-1 min-w-0">
+              <div className="flex items-baseline gap-2.5">
+                <AnimatedCounter
+                  value={value}
+                  className="text-3xl font-extrabold tabular-nums tracking-tight leading-none"
+                  decimals={decimals}
+                />
+                {trend && trendLabel && (
+                  <div
+                    className={cn(
+                      "inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[10px] font-semibold tabular-nums",
+                      trendColor,
+                    )}
+                  >
+                    <TrendIcon className="size-2.5" />
+                    {trendLabel}
+                  </div>
+                )}
+              </div>
+              {subtitle && (
+                <p className="text-[11px] text-muted-foreground/70 leading-tight truncate">
+                  {subtitle}
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Hover CTA hint */}
+          <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-1 group-hover:translate-y-0">
+            <ArrowUpRight className="size-3.5 text-muted-foreground/50" />
           </div>
         </div>
       </div>
@@ -699,21 +978,24 @@ function ReviewCard({
   const recent =
     status === "COMPLETED" && isRecentlyCompleted(review.createdAt);
 
-  useGSAP(() => {
-    if (!cardRef.current) return;
-    gsap.fromTo(
-      cardRef.current,
-      { opacity: 0, y: 15, scale: 0.98 },
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.4,
-        delay: Math.min(index * 0.04, 0.4),
-        ease: "power2.out",
-      },
-    );
-  }, { scope: cardRef, dependencies: [index] });
+  useGSAP(
+    () => {
+      if (!cardRef.current) return;
+      gsap.fromTo(
+        cardRef.current,
+        { opacity: 0, y: 15, scale: 0.98 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.4,
+          delay: Math.min(index * 0.04, 0.4),
+          ease: "power2.out",
+        },
+      );
+    },
+    { scope: cardRef, dependencies: [index] },
+  );
 
   // Grid
   if (viewMode === "grid") {
@@ -1061,17 +1343,23 @@ export default function ReviewsPage() {
   const reviews = trpc.review.list.useQuery({ limit: 50 });
   const repos = trpc.repository.list.useQuery();
 
-  useGSAP(() => {
-    if (!headerRef.current) return;
-    gsap.fromTo(
-      headerRef.current,
-      { opacity: 0, y: -15 },
-      { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
-    );
-  }, { scope: headerRef });
+  useGSAP(
+    () => {
+      if (!headerRef.current) return;
+      gsap.fromTo(
+        headerRef.current,
+        { opacity: 0, y: -15 },
+        { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
+      );
+    },
+    { scope: headerRef },
+  );
+
+  const [currentTime] = useState(() => Date.now());
 
   const stats = useMemo(() => {
     if (!reviews.data) return null;
+    const now = currentTime;
     const total = reviews.data.length;
     const completed = reviews.data.filter(
       (r) => r.status === "COMPLETED",
@@ -1085,16 +1373,88 @@ export default function ReviewsPage() {
       withRisk.reduce((sum, r) => sum + (r.riskScore ?? 0), 0) /
       (withRisk.length || 1);
 
+    // Compute 7-day vs prior-7-day trend data
+    const sevenDaysAgo = now - 7 * 86400000;
+    const fourteenDaysAgo = now - 14 * 86400000;
+    const thisWeek = reviews.data.filter(
+      (r) => new Date(r.createdAt).getTime() >= sevenDaysAgo,
+    );
+    const lastWeek = reviews.data.filter((r) => {
+      const t = new Date(r.createdAt).getTime();
+      return t >= fourteenDaysAgo && t < sevenDaysAgo;
+    });
+
+    const thisWeekCompleted = thisWeek.filter(
+      (r) => r.status === "COMPLETED",
+    ).length;
+    const lastWeekCompleted = lastWeek.filter(
+      (r) => r.status === "COMPLETED",
+    ).length;
+
+    const totalTrend: "up" | "down" | "neutral" =
+      thisWeek.length > lastWeek.length
+        ? "up"
+        : thisWeek.length < lastWeek.length
+          ? "down"
+          : "neutral";
+    const completedTrend: "up" | "down" | "neutral" =
+      thisWeekCompleted > lastWeekCompleted
+        ? "up"
+        : thisWeekCompleted < lastWeekCompleted
+          ? "down"
+          : "neutral";
+
+    const totalDiff = thisWeek.length - lastWeek.length;
+    const completedDiff = thisWeekCompleted - lastWeekCompleted;
+
+    // Daily sparkline buckets (last 7 days) for each stat
+    const days = 7;
+    const totalBuckets = Array.from({ length: days }, () => 0);
+    const completedBuckets = Array.from({ length: days }, () => 0);
+    const pendingBuckets = Array.from({ length: days }, () => 0);
+    const riskBuckets: number[][] = Array.from({ length: days }, () => []);
+
+    reviews.data.forEach((r) => {
+      const age = Math.floor(
+        (now - new Date(r.createdAt).getTime()) / 86400000,
+      );
+      if (age < days) {
+        const idx = days - 1 - age;
+        totalBuckets[idx]++;
+        if (r.status === "COMPLETED") completedBuckets[idx]++;
+        if (r.status === "PENDING" || r.status === "PROCESSING")
+          pendingBuckets[idx]++;
+        if (r.riskScore != null) riskBuckets[idx].push(r.riskScore);
+      }
+    });
+
+    const riskSparkline = riskBuckets.map((bucket) =>
+      bucket.length > 0 ? bucket.reduce((a, b) => a + b, 0) / bucket.length : 0,
+    );
+
     return {
       total,
       completed,
       pending,
       failed,
       avgRisk: Math.round(avgRisk * 10) / 10,
+      totalTrend,
+      completedTrend,
+      totalTrendLabel:
+        totalDiff === 0
+          ? "No change"
+          : `${totalDiff > 0 ? "+" : ""}${totalDiff} this week`,
+      completedTrendLabel:
+        completedDiff === 0
+          ? "No change"
+          : `${completedDiff > 0 ? "+" : ""}${completedDiff} this week`,
+      completionRate: total > 0 ? Math.round((completed / total) * 100) : 0,
+      totalSparkline: totalBuckets,
+      completedSparkline: completedBuckets,
+      pendingSparkline: pendingBuckets,
+      riskSparkline,
     };
-  }, [reviews.data]);
-
-  const [currentTime] = useState(() => Date.now());
+  }, [reviews.data, currentTime]);
 
   const activityData = useMemo(() => {
     if (!reviews.data) return [];
@@ -1230,7 +1590,19 @@ export default function ReviewsPage() {
         </div>
         <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-24 rounded-xl" />
+            <div
+              key={i}
+              className="rounded-2xl border border-border/40 bg-linear-to-br from-card/90 via-card/70 to-card/50 p-4 sm:p-5 space-y-3"
+            >
+              <div className="flex items-center justify-between">
+                <Skeleton className="h-3 w-16 rounded" />
+                <Skeleton className="size-10 rounded-xl" />
+              </div>
+              <div className="space-y-1.5">
+                <Skeleton className="h-8 w-14 rounded-md" />
+                <Skeleton className="h-3 w-24 rounded" />
+              </div>
+            </div>
           ))}
         </div>
         <div className="flex gap-2">
@@ -1313,6 +1685,9 @@ export default function ReviewsPage() {
             color="bg-primary"
             subtitle={`${stats.completed} completed`}
             delay={0.05}
+            trend={stats.totalTrend}
+            trendLabel={stats.totalTrendLabel}
+            sparklineData={stats.totalSparkline}
           />
           <StatCard
             label="Completed"
@@ -1321,10 +1696,14 @@ export default function ReviewsPage() {
             color="bg-emerald-500"
             subtitle={
               stats.total > 0
-                ? `${Math.round((stats.completed / stats.total) * 100)}% success rate`
+                ? `${stats.completionRate}% success rate`
                 : undefined
             }
             delay={0.1}
+            trend={stats.completedTrend}
+            trendLabel={stats.completedTrendLabel}
+            sparklineData={stats.completedSparkline}
+            progress={stats.completionRate}
           />
           <StatCard
             label="In Progress"
@@ -1333,6 +1712,8 @@ export default function ReviewsPage() {
             color="bg-blue-500"
             subtitle="Pending & processing"
             delay={0.15}
+            live={stats.pending > 0}
+            sparklineData={stats.pendingSparkline}
           />
           <StatCard
             label="Avg. Risk"
@@ -1354,6 +1735,8 @@ export default function ReviewsPage() {
             subtitle={`${getRiskLevel(stats.avgRisk).label} risk overall`}
             delay={0.2}
             decimals={1}
+            sparklineData={stats.riskSparkline}
+            progress={stats.avgRisk * 10}
           />
         </div>
       )}
@@ -1547,4 +1930,3 @@ export default function ReviewsPage() {
     </div>
   );
 }
- 
