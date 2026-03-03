@@ -102,7 +102,7 @@ export default function NotFound() {
 
             {/* Floating Particles */}
             <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-                {Array.from({ length: 35 }).map((_, i) => (
+                {Array.from({ length: 40 }).map((_, i) => (
                     <div
                         key={i}
                         className={`particle absolute rounded-full ${i % 3 === 0 ? "bg-white/30" : "bg-purple-400/20"} blur-[1px] ${i % 3 === 0 ? "w-2 h-2" : i % 2 === 0 ? "w-4 h-4 shadow-[0_0_15px_rgba(255,255,255,0.2)]" : "w-6 h-6"

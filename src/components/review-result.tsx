@@ -30,13 +30,45 @@ import {
   TrendingUp,
   ArrowRight,
   Activity,
+  Search,
+  X,
+  ChevronsUpDown,
+  ChevronsDownUp,
+  Download,
+  FolderOpen,
+  List,
+  ArrowUpDown,
+  Filter,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import gsap from "gsap";
 
-// ---------------------------------------------------------------------------
 // Types
-// ---------------------------------------------------------------------------
+type SortKey = "severity" | "file" | "line" | "category";
+type SortDir = "asc" | "desc";
+type ViewMode = "list" | "grouped";
+
+const SEVERITY_ORDER: Record<string, number> = {
+  critical: 0,
+  high: 1,
+  medium: 2,
+  low: 3,
+};
+
+function timeAgo(date: Date): string {
+  const now = new Date();
+  const seconds = Math.floor((now.getTime() - new Date(date).getTime()) / 1000);
+  if (seconds < 60) return "just now";
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days}d ago`;
+  const months = Math.floor(days / 30);
+  return `${months}mo ago`;
+}
+
 interface ReviewComment {
   file: string;
   line: number;
@@ -60,9 +92,6 @@ interface ReviewResultProps {
   isRetrying?: boolean;
 }
 
-// ---------------------------------------------------------------------------
-// Animated number hook
-// ---------------------------------------------------------------------------
 function useAnimatedNumber(target: number, duration = 1200) {
   const [value, setValue] = useState(0);
   const rafRef = useRef<number>(undefined);
@@ -89,15 +118,27 @@ function useAnimatedNumber(target: number, duration = 1200) {
   return value;
 }
 
-// ---------------------------------------------------------------------------
-// Main component
-// ---------------------------------------------------------------------------
 export function ReviewResult({
   review,
   onRetry,
   isRetrying,
 }: ReviewResultProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const [activeSeverities, setActiveSeverities] = useState<Set<string>>(
+    new Set(),
+  );
+  const [activeCategories, setActiveCategories] = useState<Set<string>>(
+    new Set(),
+  );
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const [sortKey, setSortKey] = useState<SortKey>("severity");
+  const [sortDir, setSortDir] = useState<SortDir>("asc");
+
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
+  const [allExpanded, setAllExpanded] = useState<boolean | null>(null);
+  const [expandKey, setExpandKey] = useState(0);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -147,74 +188,277 @@ export function ReviewResult({
 
   const totalIssues = comments.length;
 
+  const allCategories = Array.from(
+    new Set(comments.map((c) => c.category).filter(Boolean) as string[]),
+  );
+
+  const toggleSeverity = (sev: string) => {
+    setActiveSeverities((prev) => {
+      const next = new Set(prev);
+      if (next.has(sev)) next.delete(sev);
+      else next.add(sev);
+      return next;
+    });
+  };
+
+  const toggleCategory = (cat: string) => {
+    setActiveCategories((prev) => {
+      const next = new Set(prev);
+      if (next.has(cat)) next.delete(cat);
+      else next.add(cat);
+      return next;
+    });
+  };
+
+  const clearFilters = () => {
+    setActiveSeverities(new Set());
+    setActiveCategories(new Set());
+    setSearchQuery("");
+  };
+
+  const toggleSort = (key: SortKey) => {
+    if (sortKey === key) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortKey(key);
+      setSortDir("asc");
+    }
+  };
+
+  const toggleExpandAll = () => {
+    setAllExpanded((prev) => prev !== true);
+    setExpandKey((k) => k + 1);
+  };
+
+  const filteredComments = comments.filter((c) => {
+    if (activeSeverities.size > 0 && !activeSeverities.has(c.severity))
+      return false;
+    if (
+      activeCategories.size > 0 &&
+      (!c.category || !activeCategories.has(c.category))
+    )
+      return false;
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      return (
+        c.message.toLowerCase().includes(q) ||
+        c.file.toLowerCase().includes(q) ||
+        (c.suggestion?.toLowerCase().includes(q) ?? false) ||
+        (c.category?.toLowerCase().includes(q) ?? false)
+      );
+    }
+    return true;
+  });
+
+  const sortedComments = [...filteredComments].sort((a, b) => {
+    let cmp = 0;
+    switch (sortKey) {
+      case "severity":
+        cmp =
+          (SEVERITY_ORDER[a.severity] ?? 99) -
+          (SEVERITY_ORDER[b.severity] ?? 99);
+        break;
+      case "file":
+        cmp = a.file.localeCompare(b.file);
+        break;
+      case "line":
+        cmp = a.line - b.line;
+        break;
+      case "category":
+        cmp = (a.category ?? "").localeCompare(b.category ?? "");
+        break;
+    }
+    return sortDir === "asc" ? cmp : -cmp;
+  });
+
+  const groupedByFile = sortedComments.reduce(
+    (acc, comment) => {
+      const key = comment.file;
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(comment);
+      return acc;
+    },
+    {} as Record<string, ReviewComment[]>,
+  );
+
+  const hasActiveFilters =
+    activeSeverities.size > 0 ||
+    activeCategories.size > 0 ||
+    searchQuery !== "";
+
+  const exportMarkdown = () => {
+    const lines: string[] = [];
+    lines.push(`# Code Review Report`);
+    lines.push("");
+    lines.push(`- **Risk Score:** ${review.riskScore ?? "N/A"} / 100`);
+    lines.push(`- **Total Issues:** ${totalIssues}`);
+    lines.push(`- **Date:** ${new Date(review.createdAt).toLocaleString()}`);
+    lines.push("");
+    if (review.summary) {
+      lines.push(`## AI Summary`);
+      lines.push("");
+      lines.push(review.summary);
+      lines.push("");
+    }
+    lines.push(`## Severity Breakdown`);
+    lines.push("");
+    lines.push(`| Severity | Count |`);
+    lines.push(`| -------- | ----- |`);
+    lines.push(`| Critical | ${severityCounts.critical} |`);
+    lines.push(`| High     | ${severityCounts.high} |`);
+    lines.push(`| Medium   | ${severityCounts.medium} |`);
+    lines.push(`| Low      | ${severityCounts.low} |`);
+    lines.push("");
+    if (comments.length > 0) {
+      lines.push(`## Issues`);
+      lines.push("");
+      comments.forEach((c, i) => {
+        lines.push(
+          `### ${i + 1}. [${c.severity.toUpperCase()}] ${c.file}:${c.line}`,
+        );
+        lines.push("");
+        if (c.category) lines.push(`**Category:** ${c.category}`);
+        lines.push("");
+        lines.push(c.message);
+        if (c.suggestion) {
+          lines.push("");
+          lines.push(`> **Suggestion:** ${c.suggestion}`);
+        }
+        lines.push("");
+        lines.push("---");
+        lines.push("");
+      });
+    }
+    const blob = new Blob([lines.join("\n")], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `review-${review.id}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div ref={containerRef} className="space-y-5">
-      {/* ── Hero: Risk Score ────────────────────────────────────────── */}
       <div data-animate-in>
         <RiskScoreCard
           score={review.riskScore ?? 0}
           totalIssues={totalIssues}
+          createdAt={review.createdAt}
         />
       </div>
 
-      {/* ── Severity Grid ───────────────────────────────────────────── */}
       <div data-animate-in className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <SeverityStatCard
           label="Critical"
           count={severityCounts.critical}
           icon={XCircle}
           color="red"
+          active={activeSeverities.has("critical")}
+          onClick={() => toggleSeverity("critical")}
         />
         <SeverityStatCard
           label="High"
           count={severityCounts.high}
           icon={AlertTriangle}
           color="orange"
+          active={activeSeverities.has("high")}
+          onClick={() => toggleSeverity("high")}
         />
         <SeverityStatCard
           label="Medium"
           count={severityCounts.medium}
           icon={Info}
           color="amber"
+          active={activeSeverities.has("medium")}
+          onClick={() => toggleSeverity("medium")}
         />
         <SeverityStatCard
           label="Low"
           count={severityCounts.low}
           icon={TrendingUp}
           color="slate"
+          active={activeSeverities.has("low")}
+          onClick={() => toggleSeverity("low")}
         />
       </div>
 
-      {/* ── Distribution Bar ────────────────────────────────────────── */}
       <div data-animate-in>
         <SeverityDistributionBar counts={severityCounts} total={totalIssues} />
       </div>
 
-      {/* ── AI Summary ──────────────────────────────────────────────── */}
       {review.summary && (
         <div data-animate-in>
           <AISummaryCard summary={review.summary} />
         </div>
       )}
 
-      {/* ── Comments ────────────────────────────────────────────────── */}
       {comments.length > 0 ? (
         <div data-animate-in className="space-y-3">
-          <div className="flex items-center justify-between px-1">
-            <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
-              <Activity className="size-4 text-muted-foreground" />
-              Review Comments
-            </h2>
-            <Badge variant="secondary" className="tabular-nums text-xs">
-              {comments.length} {comments.length === 1 ? "issue" : "issues"}
-            </Badge>
-          </div>
-
-          <div className="space-y-2.5">
-            {comments.map((comment, index) => (
-              <CommentCard key={index} comment={comment} index={index} />
-            ))}
-          </div>
+          <CommentsToolbar
+            totalComments={comments.length}
+            filteredCount={sortedComments.length}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            allCategories={allCategories}
+            activeCategories={activeCategories}
+            onToggleCategory={toggleCategory}
+            sortKey={sortKey}
+            sortDir={sortDir}
+            onToggleSort={toggleSort}
+            viewMode={viewMode}
+            onToggleViewMode={() =>
+              setViewMode((m) => (m === "list" ? "grouped" : "list"))
+            }
+            allExpanded={allExpanded}
+            onToggleExpandAll={toggleExpandAll}
+            hasActiveFilters={hasActiveFilters}
+            onClearFilters={clearFilters}
+            onExport={exportMarkdown}
+          />
+          {sortedComments.length === 0 ? (
+            <Card>
+              <CardContent className="py-12 text-center">
+                <Search className="size-8 text-muted-foreground/40 mx-auto mb-3" />
+                <p className="text-sm font-medium text-muted-foreground">
+                  No comments match your filters
+                </p>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="mt-3 text-xs gap-1.5"
+                  onClick={clearFilters}
+                >
+                  <X className="size-3" />
+                  Clear Filters
+                </Button>
+              </CardContent>
+            </Card>
+          ) : viewMode === "list" ? (
+            <div className="space-y-2.5">
+              {sortedComments.map((comment, index) => (
+                <CommentCard
+                  key={`${comment.file}:${comment.line}:${index}`}
+                  comment={comment}
+                  index={index}
+                  forceExpanded={allExpanded}
+                  expandKey={expandKey}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {Object.entries(groupedByFile).map(([file, fileComments]) => (
+                <FileGroup
+                  key={file}
+                  file={file}
+                  comments={fileComments}
+                  allExpanded={allExpanded}
+                  expandKey={expandKey}
+                />
+              ))}
+            </div>
+          )}
         </div>
       ) : (
         review.status === "COMPLETED" && (
@@ -227,9 +471,251 @@ export function ReviewResult({
   );
 }
 
-// ---------------------------------------------------------------------------
-// Pending Card
-// ---------------------------------------------------------------------------
+function CommentsToolbar({
+  totalComments,
+  filteredCount,
+  searchQuery,
+  onSearchChange,
+  allCategories,
+  activeCategories,
+  onToggleCategory,
+  sortKey,
+  sortDir,
+  onToggleSort,
+  viewMode,
+  onToggleViewMode,
+  allExpanded,
+  onToggleExpandAll,
+  hasActiveFilters,
+  onClearFilters,
+  onExport,
+}: {
+  totalComments: number;
+  filteredCount: number;
+  searchQuery: string;
+  onSearchChange: (q: string) => void;
+  allCategories: string[];
+  activeCategories: Set<string>;
+  onToggleCategory: (cat: string) => void;
+  sortKey: SortKey;
+  sortDir: SortDir;
+  onToggleSort: (key: SortKey) => void;
+  viewMode: ViewMode;
+  onToggleViewMode: () => void;
+  allExpanded: boolean | null;
+  onToggleExpandAll: () => void;
+  hasActiveFilters: boolean;
+  onClearFilters: () => void;
+  onExport: () => void;
+}) {
+  const [searchOpen, setSearchOpen] = useState(searchQuery !== "");
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center gap-2 flex-wrap">
+        <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
+          <Activity className="size-4 text-muted-foreground" />
+          Review Comments
+        </h2>
+        <Badge variant="secondary" className="tabular-nums text-xs">
+          {filteredCount !== totalComments
+            ? `${filteredCount} / ${totalComments}`
+            : totalComments}{" "}
+          {totalComments === 1 ? "issue" : "issues"}
+        </Badge>
+
+        <div className="flex-1" />
+
+        <Button
+          variant={searchOpen ? "secondary" : "ghost"}
+          size="sm"
+          className="size-8 p-0"
+          onClick={() => {
+            setSearchOpen((o) => !o);
+            if (searchOpen) onSearchChange("");
+          }}
+          title="Search comments"
+        >
+          <Search className="size-3.5" />
+        </Button>
+
+        <Button
+          variant={viewMode === "grouped" ? "secondary" : "ghost"}
+          size="sm"
+          className="size-8 p-0"
+          onClick={onToggleViewMode}
+          title={viewMode === "list" ? "Group by file" : "List view"}
+        >
+          {viewMode === "list" ? (
+            <FolderOpen className="size-3.5" />
+          ) : (
+            <List className="size-3.5" />
+          )}
+        </Button>
+
+        <Button
+          variant="ghost"
+          size="sm"
+          className="size-8 p-0"
+          onClick={onToggleExpandAll}
+          title={allExpanded ? "Collapse all" : "Expand all"}
+        >
+          {allExpanded ? (
+            <ChevronsDownUp className="size-3.5" />
+          ) : (
+            <ChevronsUpDown className="size-3.5" />
+          )}
+        </Button>
+
+        <Button
+          variant="ghost"
+          size="sm"
+          className="size-8 p-0"
+          onClick={onExport}
+          title="Export as Markdown"
+        >
+          <Download className="size-3.5" />
+        </Button>
+      </div>
+
+      {searchOpen && (
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => onSearchChange(e.target.value)}
+            placeholder="Search comments, files, suggestions…"
+            className="w-full h-9 pl-9 pr-9 text-sm rounded-lg border bg-background placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
+            autoFocus
+          />
+          {searchQuery && (
+            <button
+              onClick={() => onSearchChange("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            >
+              <X className="size-3.5" />
+            </button>
+          )}
+        </div>
+      )}
+
+      <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-1">
+          {(["severity", "file", "line", "category"] as SortKey[]).map(
+            (key) => (
+              <Button
+                key={key}
+                variant={sortKey === key ? "secondary" : "ghost"}
+                size="sm"
+                className="h-7 px-2.5 text-[11px] gap-1 capitalize"
+                onClick={() => onToggleSort(key)}
+              >
+                {key}
+                {sortKey === key && (
+                  <ArrowUpDown
+                    className={cn(
+                      "size-3 transition-transform",
+                      sortDir === "desc" && "rotate-180",
+                    )}
+                  />
+                )}
+              </Button>
+            ),
+          )}
+        </div>
+
+        {allCategories.length > 0 && (
+          <>
+            <div className="w-px h-5 bg-border mx-1" />
+            {allCategories.map((cat) => {
+              const CatIcon = getCategoryIcon(cat);
+              return (
+                <Button
+                  key={cat}
+                  variant={activeCategories.has(cat) ? "secondary" : "ghost"}
+                  size="sm"
+                  className="h-7 px-2.5 text-[11px] gap-1.5 capitalize"
+                  onClick={() => onToggleCategory(cat)}
+                >
+                  <CatIcon className="size-3" />
+                  {cat}
+                </Button>
+              );
+            })}
+          </>
+        )}
+
+        {hasActiveFilters && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-7 px-2.5 text-[11px] gap-1 text-destructive hover:text-destructive"
+            onClick={onClearFilters}
+          >
+            <X className="size-3" />
+            Clear
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function FileGroup({
+  file,
+  comments,
+  allExpanded,
+  expandKey,
+}: {
+  file: string;
+  comments: ReviewComment[];
+  allExpanded: boolean | null;
+  expandKey: number;
+}) {
+  const [open, setOpen] = useState(true);
+  const pathParts = file.split("/");
+  const fileName = pathParts.pop();
+  const directory = pathParts.join("/");
+
+  return (
+    <div className="space-y-2">
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className="flex items-center gap-2 px-1 w-full text-left"
+      >
+        {open ? (
+          <ChevronDown className="size-3.5 text-muted-foreground" />
+        ) : (
+          <ChevronRight className="size-3.5 text-muted-foreground" />
+        )}
+        <FolderOpen className="size-3.5 text-muted-foreground" />
+        <span className="text-xs font-mono text-muted-foreground">
+          {directory && <span className="opacity-50">{directory}/</span>}
+          <span className="font-semibold text-foreground">{fileName}</span>
+        </span>
+        <Badge variant="secondary" className="text-[10px] ml-auto">
+          {comments.length}
+        </Badge>
+      </button>
+
+      {open && (
+        <div className="space-y-2 pl-1">
+          {comments.map((comment, index) => (
+            <CommentCard
+              key={`${comment.file}:${comment.line}:${index}`}
+              comment={comment}
+              index={index}
+              forceExpanded={allExpanded}
+              expandKey={expandKey}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function PendingCard() {
   return (
     <Card className="overflow-hidden border-amber-500/20">
@@ -246,7 +732,6 @@ function PendingCard() {
           />
 
           <div className="relative flex flex-col items-center text-center">
-            {/* Pulsing ring around icon */}
             <div className="relative mb-6">
               <div
                 className="absolute inset-0 size-16 rounded-2xl bg-amber-500/20 animate-ping"
@@ -262,7 +747,6 @@ function PendingCard() {
               Your code review is in the queue and will be processed shortly.
             </p>
 
-            {/* Animated dots */}
             <div className="flex items-center gap-1.5 mt-6">
               {[0, 1, 2].map((i) => (
                 <div
@@ -288,9 +772,6 @@ function PendingCard() {
   );
 }
 
-// ---------------------------------------------------------------------------
-// Processing Card
-// ---------------------------------------------------------------------------
 function ProcessingCard() {
   const [dots, setDots] = useState("");
 
@@ -400,9 +881,6 @@ function ProcessingCard() {
   );
 }
 
-// ---------------------------------------------------------------------------
-// Failed Card
-// ---------------------------------------------------------------------------
 function FailedCard({
   error,
   onRetry,
@@ -464,15 +942,14 @@ function FailedCard({
   );
 }
 
-// ---------------------------------------------------------------------------
-// Risk Score Card (hero section with circular gauge)
-// ---------------------------------------------------------------------------
 function RiskScoreCard({
   score,
   totalIssues,
+  createdAt,
 }: {
   score: number;
   totalIssues: number;
+  createdAt?: Date;
 }) {
   const config = getRiskConfig(score);
   const RiskIcon = config.icon;
@@ -592,7 +1069,7 @@ function RiskScoreCard({
                 </div>
 
                 {/* Mini stats row */}
-                <div className="flex items-center gap-4 justify-center sm:justify-start">
+                <div className="flex items-center gap-4 justify-center sm:justify-start flex-wrap">
                   <div className="flex items-center gap-1.5 text-sm">
                     <Activity className="size-3.5 text-muted-foreground" />
                     <span className="font-semibold tabular-nums">
@@ -602,6 +1079,12 @@ function RiskScoreCard({
                       {totalIssues === 1 ? "issue" : "issues"} found
                     </span>
                   </div>
+                  {createdAt && (
+                    <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                      <Clock className="size-3.5" />
+                      <span>{timeAgo(createdAt)}</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Gradient risk bar */}
@@ -643,9 +1126,6 @@ function RiskScoreCard({
   );
 }
 
-// ---------------------------------------------------------------------------
-// Severity Stat Cards
-// ---------------------------------------------------------------------------
 const SEVERITY_COLORS = {
   red: {
     bg: "bg-red-500/8 dark:bg-red-500/10",
@@ -682,11 +1162,15 @@ function SeverityStatCard({
   count,
   icon: Icon,
   color,
+  active,
+  onClick,
 }: {
   label: string;
   count: number;
   icon: React.ComponentType<{ className?: string }>;
   color: keyof typeof SEVERITY_COLORS;
+  active?: boolean;
+  onClick?: () => void;
 }) {
   const c = SEVERITY_COLORS[color];
   const animatedCount = useAnimatedNumber(count, 800);
@@ -694,10 +1178,12 @@ function SeverityStatCard({
   return (
     <Card
       className={cn(
-        "overflow-hidden transition-all duration-300",
+        "overflow-hidden transition-all duration-300 cursor-pointer select-none",
         c.border,
         count > 0 && `shadow-lg ${c.glow}`,
+        active && "ring-2 ring-primary/30 border-primary/30",
       )}
+      onClick={onClick}
     >
       <CardContent className="p-4">
         <div className="flex items-center justify-between mb-2">
@@ -718,15 +1204,20 @@ function SeverityStatCard({
             {animatedCount}
           </span>
         </div>
-        <p className="text-xs font-medium text-muted-foreground">{label}</p>
+        <div className="flex items-center justify-between">
+          <p className="text-xs font-medium text-muted-foreground">{label}</p>
+          {active && (
+            <Badge variant="secondary" className="text-[9px] h-4 px-1.5">
+              <Filter className="size-2.5 mr-0.5" />
+              Active
+            </Badge>
+          )}
+        </div>
       </CardContent>
     </Card>
   );
 }
 
-// ---------------------------------------------------------------------------
-// Severity Distribution Bar (enhanced)
-// ---------------------------------------------------------------------------
 function SeverityDistributionBar({
   counts,
   total,
@@ -828,10 +1319,15 @@ function SeverityDistributionBar({
   );
 }
 
-// ---------------------------------------------------------------------------
-// AI Summary Card
-// ---------------------------------------------------------------------------
 function AISummaryCard({ summary }: { summary: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const copySummary = () => {
+    navigator.clipboard.writeText(summary);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <Card className="overflow-hidden border-primary/10">
       <CardContent className="p-0">
@@ -845,15 +1341,30 @@ function AISummaryCard({ summary }: { summary: string }) {
                 <Sparkles className="size-4 text-primary" />
               </div>
               <div className="flex-1 min-w-0 space-y-1.5">
-                <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                  AI Summary
-                  <Badge
-                    variant="secondary"
-                    className="text-[10px] font-medium"
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                    AI Summary
+                    <Badge
+                      variant="secondary"
+                      className="text-[10px] font-medium"
+                    >
+                      Auto-generated
+                    </Badge>
+                  </h3>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="size-7 p-0 shrink-0"
+                    onClick={copySummary}
+                    title="Copy summary"
                   >
-                    Auto-generated
-                  </Badge>
-                </h3>
+                    {copied ? (
+                      <Check className="size-3.5 text-emerald-500" />
+                    ) : (
+                      <Copy className="size-3.5" />
+                    )}
+                  </Button>
+                </div>
                 <p className="text-sm leading-relaxed text-foreground/80">
                   {summary}
                 </p>
@@ -866,9 +1377,6 @@ function AISummaryCard({ summary }: { summary: string }) {
   );
 }
 
-// ---------------------------------------------------------------------------
-// No Issues Card (celebration)
-// ---------------------------------------------------------------------------
 function NoIssuesCard() {
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -932,17 +1440,26 @@ function NoIssuesCard() {
   );
 }
 
-// ---------------------------------------------------------------------------
-// Comment Card (enhanced accordion)
-// ---------------------------------------------------------------------------
 function CommentCard({
   comment,
   index,
+  forceExpanded,
+  expandKey,
 }: {
   comment: ReviewComment;
   index: number;
+  forceExpanded?: boolean | null;
+  expandKey?: number;
 }) {
   const [expanded, setExpanded] = useState(index < 3);
+
+  // Sync with parent expand/collapse all
+  useEffect(() => {
+    if (forceExpanded !== null && forceExpanded !== undefined) {
+      setExpanded(forceExpanded);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [expandKey]);
   const [copied, setCopied] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const CategoryIcon = getCategoryIcon(comment.category);
@@ -1109,9 +1626,6 @@ function CommentCard({
   );
 }
 
-// ---------------------------------------------------------------------------
-// Severity icon component
-// ---------------------------------------------------------------------------
 function SeverityIcon({ severity }: { severity: string }) {
   switch (severity) {
     case "critical":
@@ -1125,9 +1639,6 @@ function SeverityIcon({ severity }: { severity: string }) {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Config / helpers
-// ---------------------------------------------------------------------------
 function getRiskConfig(score: number) {
   if (score < 25) {
     return {
