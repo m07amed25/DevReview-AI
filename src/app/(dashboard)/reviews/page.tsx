@@ -44,6 +44,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 
 type ReviewStatus = "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED";
 type SortKey = "date" | "risk" | "status" | "repo";
@@ -139,7 +140,7 @@ function AnimatedCounter({
   const ref = useRef<HTMLSpanElement>(null);
   const prevValue = useRef(0);
 
-  useEffect(() => {
+  useGSAP(() => {
     if (!ref.current) return;
     const el = ref.current;
     const obj = { val: prevValue.current };
@@ -155,7 +156,7 @@ function AnimatedCounter({
       },
     });
     prevValue.current = value;
-  }, [value, decimals]);
+  }, { dependencies: [value, decimals] });
 
   return (
     <span ref={ref} className={className}>
@@ -171,7 +172,7 @@ function MiniRiskGauge({ score, size = 44 }: { score: number; size?: number }) {
   const offset = circumference - (score / 10) * circumference;
   const gaugeRef = useRef<SVGCircleElement>(null);
 
-  useEffect(() => {
+  useGSAP(() => {
     if (!gaugeRef.current) return;
     gsap.fromTo(
       gaugeRef.current,
@@ -183,7 +184,7 @@ function MiniRiskGauge({ score, size = 44 }: { score: number; size?: number }) {
         ease: "power2.out",
       },
     );
-  }, [offset, circumference]);
+  }, { dependencies: [offset, circumference] });
 
   return (
     <div
@@ -245,7 +246,7 @@ function ActivitySparkline({
   });
   const lineRef = useRef<SVGPolylineElement>(null);
 
-  useEffect(() => {
+  useGSAP(() => {
     if (!lineRef.current) return;
     const length = lineRef.current.getTotalLength();
     gsap.fromTo(
@@ -253,7 +254,7 @@ function ActivitySparkline({
       { strokeDasharray: length, strokeDashoffset: length },
       { strokeDashoffset: 0, duration: 1.5, ease: "power2.out" },
     );
-  }, []);
+  });
 
   return (
     <svg
@@ -395,14 +396,14 @@ function EmptyState({
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useGSAP(() => {
     if (!containerRef.current) return;
     gsap.fromTo(
       containerRef.current,
       { opacity: 0, scale: 0.95 },
       { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)" },
     );
-  }, []);
+  }, { scope: containerRef });
 
   return (
     <div ref={containerRef}>
@@ -468,7 +469,7 @@ function StatCard({
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useGSAP(() => {
     if (!cardRef.current) return;
     gsap.fromTo(
       cardRef.current,
@@ -482,10 +483,10 @@ function StatCard({
         ease: "back.out(1.7)",
       },
     );
-  }, [delay]);
+  }, { scope: cardRef, dependencies: [delay] });
 
   return (
-    <div ref={cardRef} style={{ opacity: 0 }}>
+    <div ref={cardRef}>
       <div className="group relative overflow-hidden rounded-xl border border-border/50 bg-card/60 p-4 backdrop-blur-sm transition-all duration-300 hover:border-border hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-0.5">
         {/* Background glow accent */}
         <div
@@ -698,7 +699,7 @@ function ReviewCard({
   const recent =
     status === "COMPLETED" && isRecentlyCompleted(review.createdAt);
 
-  useEffect(() => {
+  useGSAP(() => {
     if (!cardRef.current) return;
     gsap.fromTo(
       cardRef.current,
@@ -712,12 +713,12 @@ function ReviewCard({
         ease: "power2.out",
       },
     );
-  }, [index]);
+  }, { scope: cardRef, dependencies: [index] });
 
   // Grid
   if (viewMode === "grid") {
     return (
-      <div ref={cardRef} style={{ opacity: 0 }}>
+      <div ref={cardRef}>
         <Link
           href={`/repo/${review.repositoryId}/pr/${review.prNumber}`}
           className="group block h-full"
@@ -819,7 +820,7 @@ function ReviewCard({
 
   // List
   return (
-    <div ref={cardRef} style={{ opacity: 0 }}>
+    <div ref={cardRef}>
       <Link
         href={`/repo/${review.repositoryId}/pr/${review.prNumber}`}
         className="group block"
@@ -1060,14 +1061,14 @@ export default function ReviewsPage() {
   const reviews = trpc.review.list.useQuery({ limit: 50 });
   const repos = trpc.repository.list.useQuery();
 
-  useEffect(() => {
+  useGSAP(() => {
     if (!headerRef.current) return;
     gsap.fromTo(
       headerRef.current,
       { opacity: 0, y: -15 },
       { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
     );
-  }, []);
+  }, { scope: headerRef });
 
   const stats = useMemo(() => {
     if (!reviews.data) return null;
@@ -1249,7 +1250,7 @@ export default function ReviewsPage() {
 
   return (
     <div className="space-y-5">
-      <div ref={headerRef} style={{ opacity: 0 }}>
+      <div ref={headerRef}>
         <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-linear-to-br from-card/80 via-card/60 to-transparent p-6 backdrop-blur-sm">
           <div className="absolute -right-20 -top-20 size-64 rounded-full bg-primary/5 blur-3xl" />
           <div className="absolute -left-10 -bottom-10 size-40 rounded-full bg-primary/3 blur-2xl" />
