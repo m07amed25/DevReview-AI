@@ -61,7 +61,7 @@ export const pullRequestRouter = createTRPCRouter({
           status: true,
           createdAt: true,
         },
-        orderBy: { createdAt: "desc" },
+        orderBy: { createdAt: "asc" },
       });
 
       const reviewMap = new Map(existingReviews.map((r) => [r.prNumber, r]));

@@ -1,5 +1,6 @@
 import { inngest } from "../client";
 import { db } from "@/server/db";
+import { reviewCode } from "@/server/services/ai";
 // import { reviewCode } from "@/server/services/ai";
 import {
   fetchPullRequest,
@@ -21,6 +22,28 @@ export const reviewPR = inngest.createFunction(
   {
     id: "review-pr",
     retries: 2,
+    onFailure: async ({
+      event: {
+        data: {
+          event: {
+            data: { reviewId },
+          },
+        },
+      },
+      error,
+    }) => {
+      if (reviewId) {
+        await db.review.update({
+          where: { id: reviewId },
+          data: {
+            status: "FAILED",
+            error:
+              error?.message ??
+              "An unexpected error occurred during the review",
+          },
+        });
+      }
+    },
   },
   { event: "review/pr.requested" },
   async ({ event, step }) => {
@@ -88,31 +111,47 @@ export const reviewPR = inngest.createFunction(
       return fetchPullRequest(accessToken, owner, repo, prNumber);
     });
 
-    const reviewResult = await step.run("generate-review", async () => {
-      return {
-        summary: `Summary for PR #${prNumber}`,
-        riskScore: 5,
-        comments: files.slice(0, 3).map((file) => ({
-          file: file.filename,
-          line: 10,
-          severity: "MEDIUM" as const,
-          message: `Potential issue found in ${file.filename}`,
-        })),
-      };
-    });
-
-    await step.run("save-review-result", async () => {
-      await db.review.update({
-        where: { id: reviewId },
-        data: {
-          status: "COMPLETED",
-          summary: reviewResult.summary,
-          riskScore: reviewResult.riskScore,
-          comments: reviewResult.comments,
-        },
+    try {
+      const reviewResult = await step.run("generate-review", async () => {
+        return reviewCode(
+          pr.title,
+          files.map((f) => ({
+            filename: f.filename,
+            status: f.status,
+            additions: f.additions,
+            deletions: f.deletions,
+            patch: f.patch,
+          })),
+        );
       });
-    });
 
-    return { success: true, reviewId };
+      await step.run("save-review-result", async () => {
+        await db.review.update({
+          where: { id: reviewId },
+          data: {
+            status: "COMPLETED",
+            summary: reviewResult.summary,
+            riskScore: reviewResult.riskScore,
+            comments: reviewResult.comments,
+          },
+        });
+      });
+
+      return { success: true, reviewId };
+    } catch (err) {
+      await step.run("mark-failed-error", async () => {
+        await db.review.update({
+          where: { id: reviewId },
+          data: {
+            status: "FAILED",
+            error:
+              err instanceof Error
+                ? err.message
+                : "An unexpected error occurred during the review",
+          },
+        });
+      });
+      return { success: false, error: String(err) };
+    }
   },
 );
