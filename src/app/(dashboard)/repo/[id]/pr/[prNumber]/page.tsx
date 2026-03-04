@@ -26,10 +26,13 @@ import {
   ArrowRight,
   Wand2,
   ScanSearch,
+  MessageCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DiffViewer } from "@/components/diff-viewer";
 import { ReviewResult } from "@/components/review-result";
+import { CollaborativeReview } from "@/components/collaborative-review";
+import { useSession } from "@/lib/auth-client";
 
 type PageProps = {
   params: Promise<{
@@ -41,7 +44,11 @@ type PageProps = {
 export default function PullRequestPage({ params }: PageProps) {
   const { id, prNumber } = use(params);
   const prNum = parseInt(prNumber, 10);
-  const [activeTab, setActiveTab] = useState<"review" | "files">("files");
+  const [activeTab, setActiveTab] = useState<"review" | "files" | "discussion">(
+    "files",
+  );
+
+  const { data: session } = useSession();
 
   const pr = trpc.pullRequest.get.useQuery(
     {
@@ -386,6 +393,12 @@ export default function PullRequestPage({ params }: PageProps) {
             label="Files changed"
             count={files.data?.length ?? 0}
           />
+          <TabButton
+            active={activeTab === "discussion"}
+            onClick={() => setActiveTab("discussion")}
+            icon={MessageCircle}
+            label="Discussion"
+          />
         </div>
       </div>
 
@@ -474,6 +487,25 @@ export default function PullRequestPage({ params }: PageProps) {
             </Card>
           )}
         </div>
+      )}
+      {activeTab === "discussion" && latestReview.data && session?.user && (
+        <CollaborativeReview
+          reviewId={latestReview.data.id}
+          currentUserId={session.user.id}
+          currentUserName={session.user.name}
+        />
+      )}
+      {activeTab === "discussion" && (!latestReview.data || !session?.user) && (
+        <Card className="border-dashed">
+          <CardContent className="py-12 text-center">
+            <MessageCircle className="size-8 text-muted-foreground/30 mx-auto mb-3" />
+            <p className="text-sm font-medium text-muted-foreground">
+              {!latestReview.data
+                ? "Run an AI review first to start a discussion"
+                : "Sign in to participate in discussions"}
+            </p>
+          </CardContent>
+        </Card>
       )}
     </div>
   );
@@ -676,7 +708,10 @@ function ReviewStatusBadge({
   const Icon = config.icon;
 
   return (
-    <Badge variant="outline" className={cn("gap-1.5 border whitespace-nowrap", config.className)}>
+    <Badge
+      variant="outline"
+      className={cn("gap-1.5 border whitespace-nowrap", config.className)}
+    >
       <Icon className={cn("h-3 w-3", config.spin && "animate-spin")} />
       {config.label}
     </Badge>
