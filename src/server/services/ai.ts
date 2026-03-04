@@ -23,16 +23,26 @@ export const ReviewCommentSchema = z.object({
   category: z.enum(["bug", "security", "performance", "style", "suggestion"]),
   message: z.string(),
   suggestion: z.string().optional(),
+  confidence: z.number().min(0).max(100).optional(),
+});
+
+export const QualityMetricsSchema = z.object({
+  complexity: z.number().min(0).max(100),
+  maintainability: z.number().min(0).max(100),
+  readability: z.number().min(0).max(100),
+  testability: z.number().min(0).max(100),
 });
 
 export const ReviewResultSchema = z.object({
   summary: z.string(),
   riskScore: z.number().min(0).max(100),
   comments: z.array(ReviewCommentSchema),
+  qualityMetrics: QualityMetricsSchema.optional(),
 });
 
 export type ReviewComment = z.infer<typeof ReviewCommentSchema>;
 export type ReviewResult = z.infer<typeof ReviewResultSchema>;
+export type QualityMetrics = z.infer<typeof QualityMetricsSchema>;
 
 interface FileChange {
   filename: string;
@@ -42,18 +52,26 @@ interface FileChange {
   patch?: string;
 }
 
-const BASE_SYSTEM_PROMPT = `You are an expert code reviewer. Analyze the provided pull request diff and provide a structured review.
+const BASE_SYSTEM_PROMPT = `You are an expert code reviewer. Analyze the provided pull request diff and provide a structured review with severity scoring and quality metrics.
 
 Your review should:
 1. Identify bugs and code style issues
 2. Provide a brief summary of the changes
 3. Assign a risk score (0-100) based on the complexity and potential issues
 4. Give specific, actionable feedback with line numbers
+5. Rate your confidence (0-100) for each issue found
+6. Provide quality metrics for the code changes
 
 Respond with valid JSON matching this schema:
 {
   "summary": "Brief summary of changes and overall assessment",
   "riskScore": 0-100,
+  "qualityMetrics": {
+    "complexity": 0-100,
+    "maintainability": 0-100,
+    "readability": 0-100,
+    "testability": 0-100
+  },
   "comments": [
     {
       "file": "path/to/file.ts",
@@ -61,7 +79,8 @@ Respond with valid JSON matching this schema:
       "severity": "critical" | "high" | "medium" | "low",
       "category": "bug" | "security" | "performance" | "style" | "suggestion",
       "message": "What the issue is",
-      "suggestion": "How to fix it (optional)"
+      "suggestion": "How to fix it (optional)",
+      "confidence": 0-100
     }
   ]
 }
@@ -71,6 +90,18 @@ Severity guide:
 - high: Bugs that will cause issues in production
 - medium: Should be fixed but won't break things
 - low: Style issues, minor improvements
+
+Confidence guide:
+- 90-100: Very certain this is a real issue
+- 70-89: Likely an issue but context may change assessment
+- 50-69: Possible issue, needs human review
+- 0-49: Low confidence, flagging for awareness
+
+Quality Metrics guide (higher is better):
+- complexity: How simple/complex is the code? 100 = very simple, 0 = extremely complex
+- maintainability: How easy is this code to maintain? 100 = very maintainable
+- readability: How readable is the code? 100 = crystal clear
+- testability: How testable is this code? 100 = easily testable
 
 Be concise but specific. Reference exact line numbers from the diff.`;
 
@@ -97,10 +128,7 @@ function buildSystemPrompt(preferences?: ReviewPreferences): string {
     }
 
     // Language hint
-    if (
-      preferences.defaultLanguage &&
-      preferences.defaultLanguage !== "auto"
-    ) {
+    if (preferences.defaultLanguage && preferences.defaultLanguage !== "auto") {
       parts.push(
         `\nNote: The primary language context for this project is ${preferences.defaultLanguage}. Use this context for language-specific best practices.`,
       );
@@ -243,4 +271,3 @@ ${diffContent}`;
     };
   }
 }
-

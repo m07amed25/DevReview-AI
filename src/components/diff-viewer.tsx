@@ -596,7 +596,7 @@ export function DiffViewer({ files }: DiffViewerProps) {
   const totalChanges = totalAdditions + totalDeletions;
 
   const [expandedFiles, setExpandedFiles] = useState<Set<string>>(
-    new Set(files.slice(0, 3).map((f) => f.sha)),
+    new Set(files.slice(0, 3).map((f) => f.filename)),
   );
   const [viewMode, setViewMode] = useState<ViewMode>("unified");
   const [searchQuery, setSearchQuery] = useState("");
@@ -625,11 +625,11 @@ export function DiffViewer({ files }: DiffViewerProps) {
     });
   }, [files, searchQuery, statusFilter]);
 
-  const toggleFile = useCallback((sha: string) => {
+  const toggleFile = useCallback((fileKey: string) => {
     setExpandedFiles((prev) => {
       const next = new Set(prev);
-      if (next.has(sha)) next.delete(sha);
-      else next.add(sha);
+      if (next.has(fileKey)) next.delete(fileKey);
+      else next.add(fileKey);
       return next;
     });
   }, []);
@@ -644,7 +644,7 @@ export function DiffViewer({ files }: DiffViewerProps) {
         return;
 
       if (e.key === "e" && !e.ctrlKey && !e.metaKey) {
-        setExpandedFiles(new Set(filteredFiles.map((f) => f.sha)));
+        setExpandedFiles(new Set(filteredFiles.map((f) => f.filename)));
       } else if (e.key === "w" && !e.ctrlKey && !e.metaKey) {
         setWrapLines((p) => !p);
       } else if (e.key === "/" && !e.ctrlKey && !e.metaKey) {
@@ -771,7 +771,7 @@ export function DiffViewer({ files }: DiffViewerProps) {
               size="sm"
               className="text-xs h-8"
               onClick={() =>
-                setExpandedFiles(new Set(filteredFiles.map((f) => f.sha)))
+                setExpandedFiles(new Set(filteredFiles.map((f) => f.filename)))
               }
             >
               Expand all
@@ -883,10 +883,10 @@ export function DiffViewer({ files }: DiffViewerProps) {
         ) : (
           filteredFiles.map((file) => (
             <DiffFileCard
-              key={file.sha}
+              key={file.filename}
               file={file}
-              expanded={expandedFiles.has(file.sha)}
-              onToggle={() => toggleFile(file.sha)}
+              expanded={expandedFiles.has(file.filename)}
+              onToggle={() => toggleFile(file.filename)}
               viewMode={viewMode}
               wordDiffEnabled={wordDiffEnabled}
               wrapLines={wrapLines}

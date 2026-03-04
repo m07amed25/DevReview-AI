@@ -76,6 +76,14 @@ interface ReviewComment {
   category?: string;
   message: string;
   suggestion?: string;
+  confidence?: number;
+}
+
+interface QualityMetrics {
+  complexity: number;
+  maintainability: number;
+  readability: number;
+  testability: number;
 }
 
 interface ReviewResultProps {
@@ -85,6 +93,7 @@ interface ReviewResultProps {
     summary: string | null;
     riskScore: number | null;
     comments: ReviewComment[] | unknown;
+    qualityMetrics?: QualityMetrics | unknown;
     error: string | null;
     createdAt: Date;
   };
@@ -178,6 +187,19 @@ export function ReviewResult({
   const comments = Array.isArray(review.comments)
     ? (review.comments as ReviewComment[])
     : [];
+
+  const qualityMetrics = (review.qualityMetrics &&
+    typeof review.qualityMetrics === "object" &&
+    !Array.isArray(review.qualityMetrics) &&
+    "complexity" in (review.qualityMetrics as Record<string, unknown>))
+    ? (review.qualityMetrics as QualityMetrics)
+    : null;
+
+  const avgConfidence = comments.length > 0
+    ? Math.round(
+        comments.reduce((sum, c) => sum + (c.confidence ?? 75), 0) / comments.length,
+      )
+    : null;
 
   const severityCounts = {
     critical: comments.filter((c) => c.severity === "critical").length,
@@ -309,6 +331,21 @@ export function ReviewResult({
     lines.push(`| Medium   | ${severityCounts.medium} |`);
     lines.push(`| Low      | ${severityCounts.low} |`);
     lines.push("");
+    if (qualityMetrics) {
+      lines.push(`## Quality Metrics`);
+      lines.push("");
+      lines.push(`| Metric          | Score |`);
+      lines.push(`| --------------- | ----- |`);
+      lines.push(`| Complexity      | ${qualityMetrics.complexity}/100 |`);
+      lines.push(`| Maintainability | ${qualityMetrics.maintainability}/100 |`);
+      lines.push(`| Readability     | ${qualityMetrics.readability}/100 |`);
+      lines.push(`| Testability     | ${qualityMetrics.testability}/100 |`);
+      lines.push("");
+      if (avgConfidence !== null) {
+        lines.push(`**Average AI Confidence:** ${avgConfidence}%`);
+        lines.push("");
+      }
+    }
     if (comments.length > 0) {
       lines.push(`## Issues`);
       lines.push("");
@@ -318,6 +355,8 @@ export function ReviewResult({
         );
         lines.push("");
         if (c.category) lines.push(`**Category:** ${c.category}`);
+        if (c.confidence !== undefined)
+          lines.push(`**Confidence:** ${c.confidence}%`);
         lines.push("");
         lines.push(c.message);
         if (c.suggestion) {
@@ -386,6 +425,12 @@ export function ReviewResult({
       <div data-animate-in>
         <SeverityDistributionBar counts={severityCounts} total={totalIssues} />
       </div>
+
+      {qualityMetrics && (
+        <div data-animate-in>
+          <QualityMetricsCard metrics={qualityMetrics} avgConfidence={avgConfidence} />
+        </div>
+      )}
 
       {review.summary && (
         <div data-animate-in>
@@ -1377,6 +1422,222 @@ function AISummaryCard({ summary }: { summary: string }) {
   );
 }
 
+function ConfidenceBadge({ confidence }: { confidence: number }) {
+  const getConfig = (c: number) => {
+    if (c >= 90)
+      return {
+        label: "Very High",
+        color: "text-emerald-600 dark:text-emerald-400",
+        bg: "bg-emerald-500/10 border-emerald-500/20",
+      };
+    if (c >= 70)
+      return {
+        label: "High",
+        color: "text-blue-600 dark:text-blue-400",
+        bg: "bg-blue-500/10 border-blue-500/20",
+      };
+    if (c >= 50)
+      return {
+        label: "Medium",
+        color: "text-amber-600 dark:text-amber-400",
+        bg: "bg-amber-500/10 border-amber-500/20",
+      };
+    return {
+      label: "Low",
+      color: "text-slate-500 dark:text-slate-400",
+      bg: "bg-slate-500/10 border-slate-500/20",
+    };
+  };
+
+  const config = getConfig(confidence);
+  return (
+    <Badge
+      variant="outline"
+      className={cn(
+        "text-[10px] font-medium gap-1 px-2",
+        config.bg,
+        config.color,
+      )}
+      title={`AI confidence: ${confidence}%`}
+    >
+      <Activity className="size-2.5" />
+      {confidence}%
+    </Badge>
+  );
+}
+
+function QualityMetricsCard({
+  metrics,
+  avgConfidence,
+}: {
+  metrics: QualityMetrics;
+  avgConfidence: number | null;
+}) {
+  const metricItems = [
+    {
+      key: "complexity",
+      label: "Complexity",
+      icon: Zap,
+      score: metrics.complexity,
+      description: "Code simplicity & structure",
+    },
+    {
+      key: "maintainability",
+      label: "Maintainability",
+      icon: Paintbrush,
+      score: metrics.maintainability,
+      description: "Ease of future changes",
+    },
+    {
+      key: "readability",
+      label: "Readability",
+      icon: FileCode2,
+      score: metrics.readability,
+      description: "Code clarity & naming",
+    },
+    {
+      key: "testability",
+      label: "Testability",
+      icon: Shield,
+      score: metrics.testability,
+      description: "Ease of writing tests",
+    },
+  ];
+
+  const overallScore = Math.round(
+    (metrics.complexity + metrics.maintainability + metrics.readability + metrics.testability) / 4,
+  );
+
+  const getScoreColor = (score: number) => {
+    if (score >= 80) return "text-emerald-500";
+    if (score >= 60) return "text-blue-500";
+    if (score >= 40) return "text-amber-500";
+    return "text-red-500";
+  };
+
+  const getBarColor = (score: number) => {
+    if (score >= 80) return "bg-emerald-500";
+    if (score >= 60) return "bg-blue-500";
+    if (score >= 40) return "bg-amber-500";
+    return "bg-red-500";
+  };
+
+  const getScoreLabel = (score: number) => {
+    if (score >= 80) return "Excellent";
+    if (score >= 60) return "Good";
+    if (score >= 40) return "Fair";
+    return "Needs Work";
+  };
+
+  return (
+    <Card className="overflow-hidden border-primary/10">
+      <CardContent className="p-0">
+        <div className="relative">
+          <div className="absolute inset-0 bg-linear-to-br from-primary/3 via-transparent to-primary/2" />
+
+          <div className="relative p-5 sm:p-6 space-y-5">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="size-9 rounded-xl bg-linear-to-br from-primary/15 to-primary/5 border border-primary/10 flex items-center justify-center">
+                  <Activity className="size-4 text-primary" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                    Quality Metrics
+                    <Badge variant="secondary" className="text-[10px] font-medium">
+                      AI-Scored
+                    </Badge>
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Code quality breakdown across 4 dimensions
+                  </p>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className={cn("text-2xl font-bold tabular-nums", getScoreColor(overallScore))}>
+                  {overallScore}
+                </div>
+                <div className="text-[10px] text-muted-foreground font-medium">
+                  Overall
+                </div>
+              </div>
+            </div>
+
+            {/* Metrics Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {metricItems.map((item) => (
+                <div
+                  key={item.key}
+                  className="group relative rounded-xl border bg-background/50 p-4 transition-all hover:border-primary/20 hover:shadow-sm"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="size-7 rounded-lg bg-muted flex items-center justify-center">
+                        <item.icon className="size-3.5 text-muted-foreground" />
+                      </div>
+                      <div>
+                        <span className="text-xs font-semibold">{item.label}</span>
+                        <p className="text-[10px] text-muted-foreground leading-tight">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+                    <span className={cn("text-lg font-bold tabular-nums", getScoreColor(item.score))}>
+                      {item.score}
+                    </span>
+                  </div>
+
+                  {/* Progress bar */}
+                  <div className="space-y-1.5">
+                    <div className="h-2 rounded-full bg-muted/70 overflow-hidden">
+                      <div
+                        className={cn("h-full rounded-full transition-all duration-700 ease-out", getBarColor(item.score))}
+                        style={{ width: `${item.score}%` }}
+                      />
+                    </div>
+                    <div className="flex justify-between">
+                      <span className={cn("text-[10px] font-medium", getScoreColor(item.score))}>
+                        {getScoreLabel(item.score)}
+                      </span>
+                      <span className="text-[10px] text-muted-foreground tabular-nums">
+                        {item.score}/100
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Average Confidence Bar */}
+            {avgConfidence !== null && (
+              <div className="flex items-center gap-3 rounded-lg border bg-muted/30 px-4 py-3">
+                <Activity className="size-4 text-muted-foreground shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs font-medium text-muted-foreground">
+                      Avg. AI Confidence
+                    </span>
+                    <span className={cn("text-xs font-bold tabular-nums", getScoreColor(avgConfidence))}>
+                      {avgConfidence}%
+                    </span>
+                  </div>
+                  <div className="h-1.5 rounded-full bg-muted/70 overflow-hidden">
+                    <div
+                      className={cn("h-full rounded-full transition-all duration-700 ease-out", getBarColor(avgConfidence))}
+                      style={{ width: `${avgConfidence}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 function NoIssuesCard() {
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -1536,6 +1797,10 @@ function CommentCard({
                   })}
                   {comment.category}
                 </Badge>
+              )}
+
+              {comment.confidence !== undefined && (
+                <ConfidenceBadge confidence={comment.confidence} />
               )}
 
               <div className="flex-1" />

@@ -195,6 +195,7 @@ exports.Prisma.ReviewScalarFieldEnum = {
   summary: 'summary',
   riskScore: 'riskScore',
   comments: 'comments',
+  qualityMetrics: 'qualityMetrics',
   error: 'error',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
