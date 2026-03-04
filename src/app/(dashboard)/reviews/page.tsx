@@ -373,6 +373,30 @@ function SeverityDonut({ comments }: { comments: ReviewComment[] }) {
   );
 }
 
+function QualityScorePill({ score }: { score: number }) {
+  const getConfig = (s: number) => {
+    if (s >= 80) return { color: "text-emerald-500", bg: "bg-emerald-500/10 border-emerald-500/20", label: "A" };
+    if (s >= 60) return { color: "text-blue-500", bg: "bg-blue-500/10 border-blue-500/20", label: "B" };
+    if (s >= 40) return { color: "text-amber-500", bg: "bg-amber-500/10 border-amber-500/20", label: "C" };
+    return { color: "text-red-500", bg: "bg-red-500/10 border-red-500/20", label: "D" };
+  };
+  const config = getConfig(score);
+  return (
+    <div
+      className={cn(
+        "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold tabular-nums",
+        config.bg,
+        config.color,
+      )}
+      title={`Quality Score: ${score}/100`}
+    >
+      <BarChart3 className="size-2.5" />
+      {config.label}
+      <span className="opacity-70">{score}</span>
+    </div>
+  );
+}
+
 function relativeTime(date: string | Date) {
   const now = new Date();
   const d = new Date(date);
@@ -956,6 +980,7 @@ function ReviewCard({
     summary?: string | null;
     riskScore?: number | null;
     comments?: unknown;
+    qualityMetrics?: unknown;
     error?: string | null;
     createdAt: string | Date;
     repository: {
@@ -975,6 +1000,15 @@ function ReviewCard({
   const comments = (
     Array.isArray(review.comments) ? review.comments : []
   ) as ReviewComment[];
+  const qualityMetrics = (review.qualityMetrics &&
+    typeof review.qualityMetrics === "object" &&
+    !Array.isArray(review.qualityMetrics) &&
+    "complexity" in (review.qualityMetrics as Record<string, unknown>))
+    ? (review.qualityMetrics as { complexity: number; maintainability: number; readability: number; testability: number })
+    : null;
+  const qualityScore = qualityMetrics
+    ? Math.round((qualityMetrics.complexity + qualityMetrics.maintainability + qualityMetrics.readability + qualityMetrics.testability) / 4)
+    : null;
   const recent =
     status === "COMPLETED" && isRecentlyCompleted(review.createdAt);
 
@@ -1082,6 +1116,9 @@ function ReviewCard({
                 </div>
                 {status === "COMPLETED" && comments.length > 0 && (
                   <SeverityDonut comments={comments} />
+                )}
+                {status === "COMPLETED" && qualityScore !== null && (
+                  <QualityScorePill score={qualityScore} />
                 )}
               </div>
 
@@ -1263,6 +1300,9 @@ function ReviewCard({
                     </Badge>
                     {status === "COMPLETED" && comments.length > 0 && (
                       <SeverityDonut comments={comments} />
+                    )}
+                    {status === "COMPLETED" && qualityScore !== null && (
+                      <QualityScorePill score={qualityScore} />
                     )}
                   </div>
                   <div className="flex items-center gap-1.5 text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-all duration-200 translate-x-1 group-hover:translate-x-0">

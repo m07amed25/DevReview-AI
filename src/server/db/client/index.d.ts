@@ -7172,6 +7172,7 @@ export namespace Prisma {
     summary: number
     riskScore: number
     comments: number
+    qualityMetrics: number
     error: number
     createdAt: number
     updatedAt: number
@@ -7230,6 +7231,7 @@ export namespace Prisma {
     summary?: true
     riskScore?: true
     comments?: true
+    qualityMetrics?: true
     error?: true
     createdAt?: true
     updatedAt?: true
@@ -7333,6 +7335,7 @@ export namespace Prisma {
     summary: string | null
     riskScore: number | null
     comments: JsonValue | null
+    qualityMetrics: JsonValue | null
     error: string | null
     createdAt: Date
     updatedAt: Date
@@ -7368,6 +7371,7 @@ export namespace Prisma {
     summary?: boolean
     riskScore?: boolean
     comments?: boolean
+    qualityMetrics?: boolean
     error?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7386,6 +7390,7 @@ export namespace Prisma {
     summary?: boolean
     riskScore?: boolean
     comments?: boolean
+    qualityMetrics?: boolean
     error?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7404,6 +7409,7 @@ export namespace Prisma {
     summary?: boolean
     riskScore?: boolean
     comments?: boolean
+    qualityMetrics?: boolean
     error?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7422,12 +7428,13 @@ export namespace Prisma {
     summary?: boolean
     riskScore?: boolean
     comments?: boolean
+    qualityMetrics?: boolean
     error?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ReviewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "repositoryId" | "userId" | "prNumber" | "prTitle" | "prUrl" | "status" | "summary" | "riskScore" | "comments" | "error" | "createdAt" | "updatedAt", ExtArgs["result"]["review"]>
+  export type ReviewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "repositoryId" | "userId" | "prNumber" | "prTitle" | "prUrl" | "status" | "summary" | "riskScore" | "comments" | "qualityMetrics" | "error" | "createdAt" | "updatedAt", ExtArgs["result"]["review"]>
   export type ReviewInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -7458,6 +7465,7 @@ export namespace Prisma {
       summary: string | null
       riskScore: number | null
       comments: Prisma.JsonValue | null
+      qualityMetrics: Prisma.JsonValue | null
       error: string | null
       createdAt: Date
       updatedAt: Date
@@ -7896,6 +7904,7 @@ export namespace Prisma {
     readonly summary: FieldRef<"Review", 'String'>
     readonly riskScore: FieldRef<"Review", 'Int'>
     readonly comments: FieldRef<"Review", 'Json'>
+    readonly qualityMetrics: FieldRef<"Review", 'Json'>
     readonly error: FieldRef<"Review", 'String'>
     readonly createdAt: FieldRef<"Review", 'DateTime'>
     readonly updatedAt: FieldRef<"Review", 'DateTime'>
@@ -8416,6 +8425,7 @@ export namespace Prisma {
     summary: 'summary',
     riskScore: 'riskScore',
     comments: 'comments',
+    qualityMetrics: 'qualityMetrics',
     error: 'error',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -8980,6 +8990,7 @@ export namespace Prisma {
     summary?: StringNullableFilter<"Review"> | string | null
     riskScore?: IntNullableFilter<"Review"> | number | null
     comments?: JsonNullableFilter<"Review">
+    qualityMetrics?: JsonNullableFilter<"Review">
     error?: StringNullableFilter<"Review"> | string | null
     createdAt?: DateTimeFilter<"Review"> | Date | string
     updatedAt?: DateTimeFilter<"Review"> | Date | string
@@ -8998,6 +9009,7 @@ export namespace Prisma {
     summary?: SortOrderInput | SortOrder
     riskScore?: SortOrderInput | SortOrder
     comments?: SortOrderInput | SortOrder
+    qualityMetrics?: SortOrderInput | SortOrder
     error?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -9019,6 +9031,7 @@ export namespace Prisma {
     summary?: StringNullableFilter<"Review"> | string | null
     riskScore?: IntNullableFilter<"Review"> | number | null
     comments?: JsonNullableFilter<"Review">
+    qualityMetrics?: JsonNullableFilter<"Review">
     error?: StringNullableFilter<"Review"> | string | null
     createdAt?: DateTimeFilter<"Review"> | Date | string
     updatedAt?: DateTimeFilter<"Review"> | Date | string
@@ -9037,6 +9050,7 @@ export namespace Prisma {
     summary?: SortOrderInput | SortOrder
     riskScore?: SortOrderInput | SortOrder
     comments?: SortOrderInput | SortOrder
+    qualityMetrics?: SortOrderInput | SortOrder
     error?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -9061,6 +9075,7 @@ export namespace Prisma {
     summary?: StringNullableWithAggregatesFilter<"Review"> | string | null
     riskScore?: IntNullableWithAggregatesFilter<"Review"> | number | null
     comments?: JsonNullableWithAggregatesFilter<"Review">
+    qualityMetrics?: JsonNullableWithAggregatesFilter<"Review">
     error?: StringNullableWithAggregatesFilter<"Review"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Review"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Review"> | Date | string
@@ -9533,6 +9548,7 @@ export namespace Prisma {
     summary?: string | null
     riskScore?: number | null
     comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -9551,6 +9567,7 @@ export namespace Prisma {
     summary?: string | null
     riskScore?: number | null
     comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -9565,6 +9582,7 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     riskScore?: NullableIntFieldUpdateOperationsInput | number | null
     comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9583,6 +9601,7 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     riskScore?: NullableIntFieldUpdateOperationsInput | number | null
     comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9599,6 +9618,7 @@ export namespace Prisma {
     summary?: string | null
     riskScore?: number | null
     comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -9613,6 +9633,7 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     riskScore?: NullableIntFieldUpdateOperationsInput | number | null
     comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9629,6 +9650,7 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     riskScore?: NullableIntFieldUpdateOperationsInput | number | null
     comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10099,6 +10121,7 @@ export namespace Prisma {
     summary?: SortOrder
     riskScore?: SortOrder
     comments?: SortOrder
+    qualityMetrics?: SortOrder
     error?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -10870,6 +10893,7 @@ export namespace Prisma {
     summary?: string | null
     riskScore?: number | null
     comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -10886,6 +10910,7 @@ export namespace Prisma {
     summary?: string | null
     riskScore?: number | null
     comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -11027,6 +11052,7 @@ export namespace Prisma {
     summary?: StringNullableFilter<"Review"> | string | null
     riskScore?: IntNullableFilter<"Review"> | number | null
     comments?: JsonNullableFilter<"Review">
+    qualityMetrics?: JsonNullableFilter<"Review">
     error?: StringNullableFilter<"Review"> | string | null
     createdAt?: DateTimeFilter<"Review"> | Date | string
     updatedAt?: DateTimeFilter<"Review"> | Date | string
@@ -11258,6 +11284,7 @@ export namespace Prisma {
     summary?: string | null
     riskScore?: number | null
     comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -11274,6 +11301,7 @@ export namespace Prisma {
     summary?: string | null
     riskScore?: number | null
     comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -11550,6 +11578,7 @@ export namespace Prisma {
     summary?: string | null
     riskScore?: number | null
     comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -11674,6 +11703,7 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     riskScore?: NullableIntFieldUpdateOperationsInput | number | null
     comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11690,6 +11720,7 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     riskScore?: NullableIntFieldUpdateOperationsInput | number | null
     comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11705,6 +11736,7 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     riskScore?: NullableIntFieldUpdateOperationsInput | number | null
     comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11720,6 +11752,7 @@ export namespace Prisma {
     summary?: string | null
     riskScore?: number | null
     comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -11734,6 +11767,7 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     riskScore?: NullableIntFieldUpdateOperationsInput | number | null
     comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11750,6 +11784,7 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     riskScore?: NullableIntFieldUpdateOperationsInput | number | null
     comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11765,6 +11800,7 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     riskScore?: NullableIntFieldUpdateOperationsInput | number | null
     comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

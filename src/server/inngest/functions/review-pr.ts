@@ -136,6 +136,7 @@ export const reviewPR = inngest.createFunction(
             summary: reviewResult.summary,
             riskScore: reviewResult.riskScore,
             comments: reviewResult.comments,
+            qualityMetrics: reviewResult.qualityMetrics ?? undefined,
           },
         });
       });
