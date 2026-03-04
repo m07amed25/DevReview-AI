@@ -50,6 +50,17 @@ export const reviewRouter = createTRPCRouter({
         input.prNumber,
       );
 
+      // Read user preferences for the AI review
+      const user = await ctx.db.user.findUnique({
+        where: { id: ctx.user.id },
+        select: {
+          reviewDepth: true,
+          defaultLanguage: true,
+          includeSecurityChecks: true,
+          includePerfSuggestions: true,
+        },
+      });
+
       const review = await ctx.db.review.create({
         data: {
           repositoryId: repository.id,
@@ -69,6 +80,14 @@ export const reviewRouter = createTRPCRouter({
             repositoryId: repository.id,
             prNumber: pr.number,
             userId: ctx.user.id,
+            preferences: user
+              ? {
+                  reviewDepth: user.reviewDepth,
+                  defaultLanguage: user.defaultLanguage,
+                  includeSecurityChecks: user.includeSecurityChecks,
+                  includePerfSuggestions: user.includePerfSuggestions,
+                }
+              : undefined,
           },
         });
       } catch (err) {

@@ -1,6 +1,7 @@
 import { inngest } from "../client";
 import { db } from "@/server/db";
 import { reviewCode } from "@/server/services/ai";
+import type { ReviewPreferences } from "@/server/services/ai";
 import {
   fetchPullRequest,
   fetchPullRequestFiles,
@@ -14,6 +15,7 @@ export type ReviewPREvent = {
     repositoryId: string;
     prNumber: number;
     userId: string;
+    preferences?: ReviewPreferences;
   };
 };
 
@@ -46,7 +48,8 @@ export const reviewPR = inngest.createFunction(
   },
   { event: "review/pr.requested" },
   async ({ event, step }) => {
-    const { reviewId, repositoryId, prNumber, userId } = event.data;
+    const { reviewId, repositoryId, prNumber, userId, preferences } =
+      event.data;
 
     await step.run("update-status-processing", async () => {
       await db.review.update({
@@ -121,6 +124,7 @@ export const reviewPR = inngest.createFunction(
             deletions: f.deletions,
             patch: f.patch,
           })),
+          preferences,
         );
       });
 
@@ -154,3 +158,4 @@ export const reviewPR = inngest.createFunction(
     }
   },
 );
+

@@ -42,10 +42,10 @@ interface FileChange {
   patch?: string;
 }
 
-const SYSTEM_PROMPT = `You are an expert code reviewer. Analyze the provided pull request diff and provide a structured review.
+const BASE_SYSTEM_PROMPT = `You are an expert code reviewer. Analyze the provided pull request diff and provide a structured review.
 
 Your review should:
-1. Identify bugs, security issues, performance problems, and code style issues
+1. Identify bugs and code style issues
 2. Provide a brief summary of the changes
 3. Assign a risk score (0-100) based on the complexity and potential issues
 4. Give specific, actionable feedback with line numbers
@@ -73,6 +73,64 @@ Severity guide:
 - low: Style issues, minor improvements
 
 Be concise but specific. Reference exact line numbers from the diff.`;
+
+export interface ReviewPreferences {
+  reviewDepth?: string;
+  defaultLanguage?: string;
+  includeSecurityChecks?: boolean;
+  includePerfSuggestions?: boolean;
+}
+
+function buildSystemPrompt(preferences?: ReviewPreferences): string {
+  const parts: string[] = [BASE_SYSTEM_PROMPT];
+
+  if (preferences) {
+    // Review depth customization
+    if (preferences.reviewDepth === "quick") {
+      parts.push(
+        "\nIMPORTANT: Provide a quick, high-level overview. Focus only on critical and high severity issues. Keep comments brief and limit to the most important findings.",
+      );
+    } else if (preferences.reviewDepth === "thorough") {
+      parts.push(
+        "\nIMPORTANT: Provide an exhaustive, detailed review. Examine every changed line carefully. Include low-severity style suggestions and minor improvements. Be thorough in your analysis and provide detailed explanations.",
+      );
+    }
+
+    // Language hint
+    if (
+      preferences.defaultLanguage &&
+      preferences.defaultLanguage !== "auto"
+    ) {
+      parts.push(
+        `\nNote: The primary language context for this project is ${preferences.defaultLanguage}. Use this context for language-specific best practices.`,
+      );
+    }
+
+    // Security checks
+    if (preferences.includeSecurityChecks === false) {
+      parts.push(
+        "\nDo NOT include security-related comments. Skip any security vulnerability analysis.",
+      );
+    } else {
+      parts.push(
+        "\nPay special attention to security vulnerabilities: injection attacks, authentication/authorization issues, sensitive data exposure, and insecure configurations.",
+      );
+    }
+
+    // Performance suggestions
+    if (preferences.includePerfSuggestions === false) {
+      parts.push(
+        "\nDo NOT include performance-related comments. Skip any performance optimization suggestions.",
+      );
+    } else {
+      parts.push(
+        "\nInclude performance analysis: identify potential bottlenecks, unnecessary computations, memory leaks, and suggest optimizations.",
+      );
+    }
+  }
+
+  return parts.join("\n");
+}
 
 /** Rough character limit to keep the prompt within model context limits (~128k tokens for llama-3.3-70b) */
 const MAX_DIFF_CHARS = 100_000;
@@ -116,6 +174,7 @@ function extractJSON(content: string): unknown {
 export async function reviewCode(
   prTitle: string,
   files: FileChange[],
+  preferences?: ReviewPreferences,
 ): Promise<ReviewResult> {
   const diffContent = truncateDiff(
     files
@@ -143,13 +202,14 @@ export async function reviewCode(
 ${diffContent}`;
 
   const groq = getGroqClient();
+  const systemPrompt = buildSystemPrompt(preferences);
 
   let content: string | undefined;
   try {
     const response = await groq.chat.completions.create({
       model: "llama-3.3-70b-versatile",
       messages: [
-        { role: "system", content: SYSTEM_PROMPT },
+        { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },
       ],
       max_tokens: 4096,
@@ -183,3 +243,4 @@ ${diffContent}`;
     };
   }
 }
+

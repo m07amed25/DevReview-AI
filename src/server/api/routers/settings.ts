@@ -99,4 +99,60 @@ export const settingsRouter = createTRPCRouter({
 
       return { success: true };
     }),
+
+  /**
+   * Get the current user's code review preferences
+   */
+  getPreferences: protectedProcedure.query(async ({ ctx }) => {
+    const user = await ctx.db.user.findUnique({
+      where: { id: ctx.user.id },
+      select: {
+        reviewDepth: true,
+        defaultLanguage: true,
+        autoReview: true,
+        includeSecurityChecks: true,
+        includePerfSuggestions: true,
+      },
+    });
+
+    if (!user) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "User not found",
+      });
+    }
+
+    return user;
+  }),
+
+  /**
+   * Update the current user's code review preferences
+   */
+  updatePreferences: protectedProcedure
+    .input(
+      z.object({
+        reviewDepth: z
+          .enum(["quick", "standard", "thorough"])
+          .optional(),
+        defaultLanguage: z.string().min(1).optional(),
+        autoReview: z.boolean().optional(),
+        includeSecurityChecks: z.boolean().optional(),
+        includePerfSuggestions: z.boolean().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const updated = await ctx.db.user.update({
+        where: { id: ctx.user.id },
+        data: input,
+        select: {
+          reviewDepth: true,
+          defaultLanguage: true,
+          autoReview: true,
+          includeSecurityChecks: true,
+          includePerfSuggestions: true,
+        },
+      });
+
+      return updated;
+    }),
 });

@@ -128,7 +128,12 @@ exports.Prisma.UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   image: 'image',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  reviewDepth: 'reviewDepth',
+  defaultLanguage: 'defaultLanguage',
+  autoReview: 'autoReview',
+  includeSecurityChecks: 'includeSecurityChecks',
+  includePerfSuggestions: 'includePerfSuggestions'
 };
 
 exports.Prisma.SessionScalarFieldEnum = {

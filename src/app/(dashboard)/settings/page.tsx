@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useSyncExternalStore } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { trpc } from "@/lib/trpc/client";
@@ -51,23 +51,10 @@ import {
 } from "lucide-react";
 
 // ─── Types ───────────────────────────────────────────────────────
-interface CodeReviewPreferences {
-  autoReview: boolean;
-  defaultLanguage: string;
-  reviewDepth: "quick" | "standard" | "thorough";
-  includeSecurityChecks: boolean;
-  includePerfSuggestions: boolean;
-}
 
-const DEFAULT_PREFERENCES: CodeReviewPreferences = {
-  autoReview: false,
-  defaultLanguage: "auto",
-  reviewDepth: "standard",
-  includeSecurityChecks: true,
-  includePerfSuggestions: true,
-};
 
 // ─── Helpers ─────────────────────────────────────────────────────
+
 function parseUserAgent(ua: string | null): {
   browser: string;
   os: string;
@@ -169,37 +156,33 @@ export default function SettingsPage() {
   const [revokeTarget, setRevokeTarget] = useState<string | null>(null);
   const [showAllSessions, setShowAllSessions] = useState(false);
 
-  // ── Code review preferences (localStorage) ──
-  const isClient = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  );
+  // ── Code review preferences (database-backed) ──
+  const {
+    data: prefs,
+    isLoading: prefsLoading,
+  } = trpc.settings.getPreferences.useQuery();
 
-  const [prefs, setPrefs] = useState<CodeReviewPreferences>(() => {
-    if (typeof window === "undefined") return DEFAULT_PREFERENCES;
-    try {
-      const stored = localStorage.getItem("code-review-preferences");
-      if (stored) return { ...DEFAULT_PREFERENCES, ...JSON.parse(stored) };
-    } catch {
-      // ignore
-    }
-    return DEFAULT_PREFERENCES;
-  });
+  const updatePreferencesMutation = trpc.settings.updatePreferences.useMutation(
+    {
+      onSuccess: () => {
+        void utils.settings.getPreferences.invalidate();
+        setMessage("Preferences saved.");
+        setTimeout(() => setMessage(null), 3000);
+      },
+      onError: (err) => {
+        setError(err.message);
+        setTimeout(() => setError(null), 5000);
+      },
+    },
+  );
 
   const updatePref = useCallback(
-    <K extends keyof CodeReviewPreferences>(
-      key: K,
-      value: CodeReviewPreferences[K],
-    ) => {
-      setPrefs((prev) => {
-        const next = { ...prev, [key]: value };
-        localStorage.setItem("code-review-preferences", JSON.stringify(next));
-        return next;
-      });
+    (key: string, value: string | boolean) => {
+      updatePreferencesMutation.mutate({ [key]: value });
     },
-    [],
+    [updatePreferencesMutation],
   );
+
 
   // ── Theme change with view-transition ──
   const handleThemeChange = useCallback(
@@ -366,12 +349,12 @@ export default function SettingsPage() {
               Code Review Preferences
             </CardTitle>
             <CardDescription>
-              Configure default behavior for AI-powered code reviews. Stored
-              locally.
+              Configure default behavior for AI-powered code reviews. Synced
+              to your account.
             </CardDescription>
           </CardHeader>
           <CardContent className="pb-6">
-            {!isClient ? (
+            {prefsLoading || !prefs ? (
               <div className="space-y-4">
                 <Skeleton className="h-10 w-full" />
                 <Skeleton className="h-10 w-full" />
@@ -405,7 +388,7 @@ export default function SettingsPage() {
                         icon: Bot,
                       },
                     ].map((depth) => {
-                      const isActive = prefs.reviewDepth === depth.id;
+                      const isActive = prefs?.reviewDepth === depth.id;
                       const Icon = depth.icon;
                       return (
                         <button
@@ -450,7 +433,7 @@ export default function SettingsPage() {
                     </div>
                   </div>
                   <select
-                    value={prefs.defaultLanguage}
+                    value={prefs?.defaultLanguage ?? "auto"}
                     onChange={(e) =>
                       updatePref("defaultLanguage", e.target.value)
                     }
@@ -494,7 +477,7 @@ export default function SettingsPage() {
                   },
                 ].map((item) => {
                   const Icon = item.icon;
-                  const checked = prefs[item.key] as boolean;
+                  const checked = !!(prefs as Record<string, unknown>)?.[item.key];
                   return (
                     <div
                       key={item.key}

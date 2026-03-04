@@ -29,6 +29,13 @@ model User {
   repositories   Repository[]
   reviews        Review[]
 
+  // Code review preferences
+  reviewDepth            String  @default("standard")
+  defaultLanguage        String  @default("auto")
+  autoReview             Boolean @default(false)
+  includeSecurityChecks  Boolean @default(true)
+  includePerfSuggestions Boolean @default(true)
+
   @@unique([email])
   @@map("user")
 }
