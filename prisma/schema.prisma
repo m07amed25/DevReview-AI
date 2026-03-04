@@ -28,6 +28,7 @@ model User {
 
   repositories   Repository[]
   reviews        Review[]
+  threadComments ReviewThreadComment[]
 
   // Code review preferences
   reviewDepth            String  @default("standard")
@@ -123,10 +124,41 @@ model Review {
 
   repository   Repository   @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
   user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  threads      ReviewThread[]
 
   @@index([repositoryId])
   @@index([userId])
   @@index([status])
+}
+
+model ReviewThread {
+  id         String   @id @default(cuid())
+  reviewId   String
+  file       String
+  line       Int
+  resolved   Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  review     Review               @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  comments   ReviewThreadComment[]
+
+  @@index([reviewId])
+}
+
+model ReviewThreadComment {
+  id        String   @id @default(cuid())
+  threadId  String
+  userId    String
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  thread    ReviewThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([threadId])
+  @@index([userId])
 }
 
 enum ReviewStatus {

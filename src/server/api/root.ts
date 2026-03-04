@@ -3,6 +3,7 @@ import { profileRouter } from "./routers/profile";
 import { repositoryRouter } from "./routers/repository";
 import { reviewRouter } from "./routers/review";
 import { settingsRouter } from "./routers/settings";
+import { collaborationRouter } from "./routers/collaboration";
 import { createCallerFactory, createTRPCRouter, publicProcedure } from "./trpc";
 
 export const appRouter = createTRPCRouter({
@@ -17,6 +18,7 @@ export const appRouter = createTRPCRouter({
   pullRequest: pullRequestRouter,
   review: reviewRouter,
   settings: settingsRouter,
+  collaboration: collaborationRouter,
 });
 
 export type AppRouter = typeof appRouter;

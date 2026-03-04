@@ -201,6 +201,25 @@ exports.Prisma.ReviewScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ReviewThreadScalarFieldEnum = {
+  id: 'id',
+  reviewId: 'reviewId',
+  file: 'file',
+  line: 'line',
+  resolved: 'resolved',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ReviewThreadCommentScalarFieldEnum = {
+  id: 'id',
+  threadId: 'threadId',
+  userId: 'userId',
+  content: 'content',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -239,7 +258,9 @@ exports.Prisma.ModelName = {
   Account: 'Account',
   Verification: 'Verification',
   Repository: 'Repository',
-  Review: 'Review'
+  Review: 'Review',
+  ReviewThread: 'ReviewThread',
+  ReviewThreadComment: 'ReviewThreadComment'
 };
 
 /**

@@ -43,6 +43,16 @@ export type Repository = $Result.DefaultSelection<Prisma.$RepositoryPayload>
  * 
  */
 export type Review = $Result.DefaultSelection<Prisma.$ReviewPayload>
+/**
+ * Model ReviewThread
+ * 
+ */
+export type ReviewThread = $Result.DefaultSelection<Prisma.$ReviewThreadPayload>
+/**
+ * Model ReviewThreadComment
+ * 
+ */
+export type ReviewThreadComment = $Result.DefaultSelection<Prisma.$ReviewThreadCommentPayload>
 
 /**
  * Enums
@@ -240,6 +250,26 @@ export class PrismaClient<
     * ```
     */
   get review(): Prisma.ReviewDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.reviewThread`: Exposes CRUD operations for the **ReviewThread** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ReviewThreads
+    * const reviewThreads = await prisma.reviewThread.findMany()
+    * ```
+    */
+  get reviewThread(): Prisma.ReviewThreadDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.reviewThreadComment`: Exposes CRUD operations for the **ReviewThreadComment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ReviewThreadComments
+    * const reviewThreadComments = await prisma.reviewThreadComment.findMany()
+    * ```
+    */
+  get reviewThreadComment(): Prisma.ReviewThreadCommentDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -686,7 +716,9 @@ export namespace Prisma {
     Account: 'Account',
     Verification: 'Verification',
     Repository: 'Repository',
-    Review: 'Review'
+    Review: 'Review',
+    ReviewThread: 'ReviewThread',
+    ReviewThreadComment: 'ReviewThreadComment'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -705,7 +737,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "repository" | "review"
+      modelProps: "user" | "session" | "account" | "verification" | "repository" | "review" | "reviewThread" | "reviewThreadComment"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1153,6 +1185,154 @@ export namespace Prisma {
           }
         }
       }
+      ReviewThread: {
+        payload: Prisma.$ReviewThreadPayload<ExtArgs>
+        fields: Prisma.ReviewThreadFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ReviewThreadFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReviewThreadPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ReviewThreadFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReviewThreadPayload>
+          }
+          findFirst: {
+            args: Prisma.ReviewThreadFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReviewThreadPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ReviewThreadFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReviewThreadPayload>
+          }
+          findMany: {
+            args: Prisma.ReviewThreadFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReviewThreadPayload>[]
+          }
+          create: {
+            args: Prisma.ReviewThreadCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReviewThreadPayload>
+          }
+          createMany: {
+            args: Prisma.ReviewThreadCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ReviewThreadCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReviewThreadPayload>[]
+          }
+          delete: {
+            args: Prisma.ReviewThreadDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReviewThreadPayload>
+          }
+          update: {
+            args: Prisma.ReviewThreadUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReviewThreadPayload>
+          }
+          deleteMany: {
+            args: Prisma.ReviewThreadDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ReviewThreadUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ReviewThreadUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReviewThreadPayload>[]
+          }
+          upsert: {
+            args: Prisma.ReviewThreadUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReviewThreadPayload>
+          }
+          aggregate: {
+            args: Prisma.ReviewThreadAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateReviewThread>
+          }
+          groupBy: {
+            args: Prisma.ReviewThreadGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ReviewThreadGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ReviewThreadCountArgs<ExtArgs>
+            result: $Utils.Optional<ReviewThreadCountAggregateOutputType> | number
+          }
+        }
+      }
+      ReviewThreadComment: {
+        payload: Prisma.$ReviewThreadCommentPayload<ExtArgs>
+        fields: Prisma.ReviewThreadCommentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ReviewThreadCommentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReviewThreadCommentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ReviewThreadCommentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReviewThreadCommentPayload>
+          }
+          findFirst: {
+            args: Prisma.ReviewThreadCommentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReviewThreadCommentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ReviewThreadCommentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReviewThreadCommentPayload>
+          }
+          findMany: {
+            args: Prisma.ReviewThreadCommentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReviewThreadCommentPayload>[]
+          }
+          create: {
+            args: Prisma.ReviewThreadCommentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReviewThreadCommentPayload>
+          }
+          createMany: {
+            args: Prisma.ReviewThreadCommentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ReviewThreadCommentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReviewThreadCommentPayload>[]
+          }
+          delete: {
+            args: Prisma.ReviewThreadCommentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReviewThreadCommentPayload>
+          }
+          update: {
+            args: Prisma.ReviewThreadCommentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReviewThreadCommentPayload>
+          }
+          deleteMany: {
+            args: Prisma.ReviewThreadCommentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ReviewThreadCommentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ReviewThreadCommentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReviewThreadCommentPayload>[]
+          }
+          upsert: {
+            args: Prisma.ReviewThreadCommentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReviewThreadCommentPayload>
+          }
+          aggregate: {
+            args: Prisma.ReviewThreadCommentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateReviewThreadComment>
+          }
+          groupBy: {
+            args: Prisma.ReviewThreadCommentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ReviewThreadCommentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ReviewThreadCommentCountArgs<ExtArgs>
+            result: $Utils.Optional<ReviewThreadCommentCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1255,6 +1435,8 @@ export namespace Prisma {
     verification?: VerificationOmit
     repository?: RepositoryOmit
     review?: ReviewOmit
+    reviewThread?: ReviewThreadOmit
+    reviewThreadComment?: ReviewThreadCommentOmit
   }
 
   /* Types for Logging */
@@ -1339,6 +1521,7 @@ export namespace Prisma {
     accounts: number
     repositories: number
     reviews: number
+    threadComments: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1346,6 +1529,7 @@ export namespace Prisma {
     accounts?: boolean | UserCountOutputTypeCountAccountsArgs
     repositories?: boolean | UserCountOutputTypeCountRepositoriesArgs
     reviews?: boolean | UserCountOutputTypeCountReviewsArgs
+    threadComments?: boolean | UserCountOutputTypeCountThreadCommentsArgs
   }
 
   // Custom InputTypes
@@ -1387,6 +1571,13 @@ export namespace Prisma {
     where?: ReviewWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountThreadCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReviewThreadCommentWhereInput
+  }
+
 
   /**
    * Count Type RepositoryCountOutputType
@@ -1416,6 +1607,68 @@ export namespace Prisma {
    */
   export type RepositoryCountOutputTypeCountReviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReviewWhereInput
+  }
+
+
+  /**
+   * Count Type ReviewCountOutputType
+   */
+
+  export type ReviewCountOutputType = {
+    threads: number
+  }
+
+  export type ReviewCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    threads?: boolean | ReviewCountOutputTypeCountThreadsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ReviewCountOutputType without action
+   */
+  export type ReviewCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewCountOutputType
+     */
+    select?: ReviewCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ReviewCountOutputType without action
+   */
+  export type ReviewCountOutputTypeCountThreadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReviewThreadWhereInput
+  }
+
+
+  /**
+   * Count Type ReviewThreadCountOutputType
+   */
+
+  export type ReviewThreadCountOutputType = {
+    comments: number
+  }
+
+  export type ReviewThreadCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    comments?: boolean | ReviewThreadCountOutputTypeCountCommentsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ReviewThreadCountOutputType without action
+   */
+  export type ReviewThreadCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThreadCountOutputType
+     */
+    select?: ReviewThreadCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ReviewThreadCountOutputType without action
+   */
+  export type ReviewThreadCountOutputTypeCountCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReviewThreadCommentWhereInput
   }
 
 
@@ -1647,6 +1900,7 @@ export namespace Prisma {
     accounts?: boolean | User$accountsArgs<ExtArgs>
     repositories?: boolean | User$repositoriesArgs<ExtArgs>
     reviews?: boolean | User$reviewsArgs<ExtArgs>
+    threadComments?: boolean | User$threadCommentsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1701,6 +1955,7 @@ export namespace Prisma {
     accounts?: boolean | User$accountsArgs<ExtArgs>
     repositories?: boolean | User$repositoriesArgs<ExtArgs>
     reviews?: boolean | User$reviewsArgs<ExtArgs>
+    threadComments?: boolean | User$threadCommentsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1713,6 +1968,7 @@ export namespace Prisma {
       accounts: Prisma.$AccountPayload<ExtArgs>[]
       repositories: Prisma.$RepositoryPayload<ExtArgs>[]
       reviews: Prisma.$ReviewPayload<ExtArgs>[]
+      threadComments: Prisma.$ReviewThreadCommentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2125,6 +2381,7 @@ export namespace Prisma {
     accounts<T extends User$accountsArgs<ExtArgs> = {}>(args?: Subset<T, User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     repositories<T extends User$repositoriesArgs<ExtArgs> = {}>(args?: Subset<T, User$repositoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RepositoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reviews<T extends User$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, User$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    threadComments<T extends User$threadCommentsArgs<ExtArgs> = {}>(args?: Subset<T, User$threadCommentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewThreadCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2647,6 +2904,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ReviewScalarFieldEnum | ReviewScalarFieldEnum[]
+  }
+
+  /**
+   * User.threadComments
+   */
+  export type User$threadCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThreadComment
+     */
+    select?: ReviewThreadCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewThreadComment
+     */
+    omit?: ReviewThreadCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewThreadCommentInclude<ExtArgs> | null
+    where?: ReviewThreadCommentWhereInput
+    orderBy?: ReviewThreadCommentOrderByWithRelationInput | ReviewThreadCommentOrderByWithRelationInput[]
+    cursor?: ReviewThreadCommentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ReviewThreadCommentScalarFieldEnum | ReviewThreadCommentScalarFieldEnum[]
   }
 
   /**
@@ -7377,6 +7658,8 @@ export namespace Prisma {
     updatedAt?: boolean
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
+    threads?: boolean | Review$threadsArgs<ExtArgs>
+    _count?: boolean | ReviewCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["review"]>
 
   export type ReviewSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -7438,6 +7721,8 @@ export namespace Prisma {
   export type ReviewInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
+    threads?: boolean | Review$threadsArgs<ExtArgs>
+    _count?: boolean | ReviewCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ReviewIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
@@ -7453,6 +7738,7 @@ export namespace Prisma {
     objects: {
       repository: Prisma.$RepositoryPayload<ExtArgs>
       user: Prisma.$UserPayload<ExtArgs>
+      threads: Prisma.$ReviewThreadPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -7865,6 +8151,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     repository<T extends RepositoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RepositoryDefaultArgs<ExtArgs>>): Prisma__RepositoryClient<$Result.GetResult<Prisma.$RepositoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    threads<T extends Review$threadsArgs<ExtArgs> = {}>(args?: Subset<T, Review$threadsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewThreadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8304,6 +8591,30 @@ export namespace Prisma {
   }
 
   /**
+   * Review.threads
+   */
+  export type Review$threadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThread
+     */
+    select?: ReviewThreadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewThread
+     */
+    omit?: ReviewThreadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewThreadInclude<ExtArgs> | null
+    where?: ReviewThreadWhereInput
+    orderBy?: ReviewThreadOrderByWithRelationInput | ReviewThreadOrderByWithRelationInput[]
+    cursor?: ReviewThreadWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ReviewThreadScalarFieldEnum | ReviewThreadScalarFieldEnum[]
+  }
+
+  /**
    * Review without action
    */
   export type ReviewDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8319,6 +8630,2233 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ReviewInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ReviewThread
+   */
+
+  export type AggregateReviewThread = {
+    _count: ReviewThreadCountAggregateOutputType | null
+    _avg: ReviewThreadAvgAggregateOutputType | null
+    _sum: ReviewThreadSumAggregateOutputType | null
+    _min: ReviewThreadMinAggregateOutputType | null
+    _max: ReviewThreadMaxAggregateOutputType | null
+  }
+
+  export type ReviewThreadAvgAggregateOutputType = {
+    line: number | null
+  }
+
+  export type ReviewThreadSumAggregateOutputType = {
+    line: number | null
+  }
+
+  export type ReviewThreadMinAggregateOutputType = {
+    id: string | null
+    reviewId: string | null
+    file: string | null
+    line: number | null
+    resolved: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ReviewThreadMaxAggregateOutputType = {
+    id: string | null
+    reviewId: string | null
+    file: string | null
+    line: number | null
+    resolved: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ReviewThreadCountAggregateOutputType = {
+    id: number
+    reviewId: number
+    file: number
+    line: number
+    resolved: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ReviewThreadAvgAggregateInputType = {
+    line?: true
+  }
+
+  export type ReviewThreadSumAggregateInputType = {
+    line?: true
+  }
+
+  export type ReviewThreadMinAggregateInputType = {
+    id?: true
+    reviewId?: true
+    file?: true
+    line?: true
+    resolved?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ReviewThreadMaxAggregateInputType = {
+    id?: true
+    reviewId?: true
+    file?: true
+    line?: true
+    resolved?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ReviewThreadCountAggregateInputType = {
+    id?: true
+    reviewId?: true
+    file?: true
+    line?: true
+    resolved?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ReviewThreadAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ReviewThread to aggregate.
+     */
+    where?: ReviewThreadWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ReviewThreads to fetch.
+     */
+    orderBy?: ReviewThreadOrderByWithRelationInput | ReviewThreadOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ReviewThreadWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ReviewThreads from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ReviewThreads.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ReviewThreads
+    **/
+    _count?: true | ReviewThreadCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ReviewThreadAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ReviewThreadSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ReviewThreadMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ReviewThreadMaxAggregateInputType
+  }
+
+  export type GetReviewThreadAggregateType<T extends ReviewThreadAggregateArgs> = {
+        [P in keyof T & keyof AggregateReviewThread]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateReviewThread[P]>
+      : GetScalarType<T[P], AggregateReviewThread[P]>
+  }
+
+
+
+
+  export type ReviewThreadGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReviewThreadWhereInput
+    orderBy?: ReviewThreadOrderByWithAggregationInput | ReviewThreadOrderByWithAggregationInput[]
+    by: ReviewThreadScalarFieldEnum[] | ReviewThreadScalarFieldEnum
+    having?: ReviewThreadScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ReviewThreadCountAggregateInputType | true
+    _avg?: ReviewThreadAvgAggregateInputType
+    _sum?: ReviewThreadSumAggregateInputType
+    _min?: ReviewThreadMinAggregateInputType
+    _max?: ReviewThreadMaxAggregateInputType
+  }
+
+  export type ReviewThreadGroupByOutputType = {
+    id: string
+    reviewId: string
+    file: string
+    line: number
+    resolved: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: ReviewThreadCountAggregateOutputType | null
+    _avg: ReviewThreadAvgAggregateOutputType | null
+    _sum: ReviewThreadSumAggregateOutputType | null
+    _min: ReviewThreadMinAggregateOutputType | null
+    _max: ReviewThreadMaxAggregateOutputType | null
+  }
+
+  type GetReviewThreadGroupByPayload<T extends ReviewThreadGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ReviewThreadGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ReviewThreadGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ReviewThreadGroupByOutputType[P]>
+            : GetScalarType<T[P], ReviewThreadGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ReviewThreadSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    reviewId?: boolean
+    file?: boolean
+    line?: boolean
+    resolved?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+    comments?: boolean | ReviewThread$commentsArgs<ExtArgs>
+    _count?: boolean | ReviewThreadCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["reviewThread"]>
+
+  export type ReviewThreadSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    reviewId?: boolean
+    file?: boolean
+    line?: boolean
+    resolved?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["reviewThread"]>
+
+  export type ReviewThreadSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    reviewId?: boolean
+    file?: boolean
+    line?: boolean
+    resolved?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["reviewThread"]>
+
+  export type ReviewThreadSelectScalar = {
+    id?: boolean
+    reviewId?: boolean
+    file?: boolean
+    line?: boolean
+    resolved?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ReviewThreadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "reviewId" | "file" | "line" | "resolved" | "createdAt" | "updatedAt", ExtArgs["result"]["reviewThread"]>
+  export type ReviewThreadInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+    comments?: boolean | ReviewThread$commentsArgs<ExtArgs>
+    _count?: boolean | ReviewThreadCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ReviewThreadIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+  }
+  export type ReviewThreadIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+  }
+
+  export type $ReviewThreadPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ReviewThread"
+    objects: {
+      review: Prisma.$ReviewPayload<ExtArgs>
+      comments: Prisma.$ReviewThreadCommentPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      reviewId: string
+      file: string
+      line: number
+      resolved: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["reviewThread"]>
+    composites: {}
+  }
+
+  type ReviewThreadGetPayload<S extends boolean | null | undefined | ReviewThreadDefaultArgs> = $Result.GetResult<Prisma.$ReviewThreadPayload, S>
+
+  type ReviewThreadCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ReviewThreadFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ReviewThreadCountAggregateInputType | true
+    }
+
+  export interface ReviewThreadDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ReviewThread'], meta: { name: 'ReviewThread' } }
+    /**
+     * Find zero or one ReviewThread that matches the filter.
+     * @param {ReviewThreadFindUniqueArgs} args - Arguments to find a ReviewThread
+     * @example
+     * // Get one ReviewThread
+     * const reviewThread = await prisma.reviewThread.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ReviewThreadFindUniqueArgs>(args: SelectSubset<T, ReviewThreadFindUniqueArgs<ExtArgs>>): Prisma__ReviewThreadClient<$Result.GetResult<Prisma.$ReviewThreadPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ReviewThread that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ReviewThreadFindUniqueOrThrowArgs} args - Arguments to find a ReviewThread
+     * @example
+     * // Get one ReviewThread
+     * const reviewThread = await prisma.reviewThread.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ReviewThreadFindUniqueOrThrowArgs>(args: SelectSubset<T, ReviewThreadFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ReviewThreadClient<$Result.GetResult<Prisma.$ReviewThreadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ReviewThread that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReviewThreadFindFirstArgs} args - Arguments to find a ReviewThread
+     * @example
+     * // Get one ReviewThread
+     * const reviewThread = await prisma.reviewThread.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ReviewThreadFindFirstArgs>(args?: SelectSubset<T, ReviewThreadFindFirstArgs<ExtArgs>>): Prisma__ReviewThreadClient<$Result.GetResult<Prisma.$ReviewThreadPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ReviewThread that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReviewThreadFindFirstOrThrowArgs} args - Arguments to find a ReviewThread
+     * @example
+     * // Get one ReviewThread
+     * const reviewThread = await prisma.reviewThread.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ReviewThreadFindFirstOrThrowArgs>(args?: SelectSubset<T, ReviewThreadFindFirstOrThrowArgs<ExtArgs>>): Prisma__ReviewThreadClient<$Result.GetResult<Prisma.$ReviewThreadPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ReviewThreads that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReviewThreadFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ReviewThreads
+     * const reviewThreads = await prisma.reviewThread.findMany()
+     * 
+     * // Get first 10 ReviewThreads
+     * const reviewThreads = await prisma.reviewThread.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const reviewThreadWithIdOnly = await prisma.reviewThread.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ReviewThreadFindManyArgs>(args?: SelectSubset<T, ReviewThreadFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewThreadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ReviewThread.
+     * @param {ReviewThreadCreateArgs} args - Arguments to create a ReviewThread.
+     * @example
+     * // Create one ReviewThread
+     * const ReviewThread = await prisma.reviewThread.create({
+     *   data: {
+     *     // ... data to create a ReviewThread
+     *   }
+     * })
+     * 
+     */
+    create<T extends ReviewThreadCreateArgs>(args: SelectSubset<T, ReviewThreadCreateArgs<ExtArgs>>): Prisma__ReviewThreadClient<$Result.GetResult<Prisma.$ReviewThreadPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ReviewThreads.
+     * @param {ReviewThreadCreateManyArgs} args - Arguments to create many ReviewThreads.
+     * @example
+     * // Create many ReviewThreads
+     * const reviewThread = await prisma.reviewThread.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ReviewThreadCreateManyArgs>(args?: SelectSubset<T, ReviewThreadCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ReviewThreads and returns the data saved in the database.
+     * @param {ReviewThreadCreateManyAndReturnArgs} args - Arguments to create many ReviewThreads.
+     * @example
+     * // Create many ReviewThreads
+     * const reviewThread = await prisma.reviewThread.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ReviewThreads and only return the `id`
+     * const reviewThreadWithIdOnly = await prisma.reviewThread.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ReviewThreadCreateManyAndReturnArgs>(args?: SelectSubset<T, ReviewThreadCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewThreadPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ReviewThread.
+     * @param {ReviewThreadDeleteArgs} args - Arguments to delete one ReviewThread.
+     * @example
+     * // Delete one ReviewThread
+     * const ReviewThread = await prisma.reviewThread.delete({
+     *   where: {
+     *     // ... filter to delete one ReviewThread
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ReviewThreadDeleteArgs>(args: SelectSubset<T, ReviewThreadDeleteArgs<ExtArgs>>): Prisma__ReviewThreadClient<$Result.GetResult<Prisma.$ReviewThreadPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ReviewThread.
+     * @param {ReviewThreadUpdateArgs} args - Arguments to update one ReviewThread.
+     * @example
+     * // Update one ReviewThread
+     * const reviewThread = await prisma.reviewThread.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ReviewThreadUpdateArgs>(args: SelectSubset<T, ReviewThreadUpdateArgs<ExtArgs>>): Prisma__ReviewThreadClient<$Result.GetResult<Prisma.$ReviewThreadPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ReviewThreads.
+     * @param {ReviewThreadDeleteManyArgs} args - Arguments to filter ReviewThreads to delete.
+     * @example
+     * // Delete a few ReviewThreads
+     * const { count } = await prisma.reviewThread.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ReviewThreadDeleteManyArgs>(args?: SelectSubset<T, ReviewThreadDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ReviewThreads.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReviewThreadUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ReviewThreads
+     * const reviewThread = await prisma.reviewThread.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ReviewThreadUpdateManyArgs>(args: SelectSubset<T, ReviewThreadUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ReviewThreads and returns the data updated in the database.
+     * @param {ReviewThreadUpdateManyAndReturnArgs} args - Arguments to update many ReviewThreads.
+     * @example
+     * // Update many ReviewThreads
+     * const reviewThread = await prisma.reviewThread.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ReviewThreads and only return the `id`
+     * const reviewThreadWithIdOnly = await prisma.reviewThread.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ReviewThreadUpdateManyAndReturnArgs>(args: SelectSubset<T, ReviewThreadUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewThreadPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ReviewThread.
+     * @param {ReviewThreadUpsertArgs} args - Arguments to update or create a ReviewThread.
+     * @example
+     * // Update or create a ReviewThread
+     * const reviewThread = await prisma.reviewThread.upsert({
+     *   create: {
+     *     // ... data to create a ReviewThread
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ReviewThread we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ReviewThreadUpsertArgs>(args: SelectSubset<T, ReviewThreadUpsertArgs<ExtArgs>>): Prisma__ReviewThreadClient<$Result.GetResult<Prisma.$ReviewThreadPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ReviewThreads.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReviewThreadCountArgs} args - Arguments to filter ReviewThreads to count.
+     * @example
+     * // Count the number of ReviewThreads
+     * const count = await prisma.reviewThread.count({
+     *   where: {
+     *     // ... the filter for the ReviewThreads we want to count
+     *   }
+     * })
+    **/
+    count<T extends ReviewThreadCountArgs>(
+      args?: Subset<T, ReviewThreadCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ReviewThreadCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ReviewThread.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReviewThreadAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ReviewThreadAggregateArgs>(args: Subset<T, ReviewThreadAggregateArgs>): Prisma.PrismaPromise<GetReviewThreadAggregateType<T>>
+
+    /**
+     * Group by ReviewThread.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReviewThreadGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ReviewThreadGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ReviewThreadGroupByArgs['orderBy'] }
+        : { orderBy?: ReviewThreadGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ReviewThreadGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetReviewThreadGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ReviewThread model
+   */
+  readonly fields: ReviewThreadFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ReviewThread.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ReviewThreadClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    review<T extends ReviewDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ReviewDefaultArgs<ExtArgs>>): Prisma__ReviewClient<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    comments<T extends ReviewThread$commentsArgs<ExtArgs> = {}>(args?: Subset<T, ReviewThread$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewThreadCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ReviewThread model
+   */
+  interface ReviewThreadFieldRefs {
+    readonly id: FieldRef<"ReviewThread", 'String'>
+    readonly reviewId: FieldRef<"ReviewThread", 'String'>
+    readonly file: FieldRef<"ReviewThread", 'String'>
+    readonly line: FieldRef<"ReviewThread", 'Int'>
+    readonly resolved: FieldRef<"ReviewThread", 'Boolean'>
+    readonly createdAt: FieldRef<"ReviewThread", 'DateTime'>
+    readonly updatedAt: FieldRef<"ReviewThread", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ReviewThread findUnique
+   */
+  export type ReviewThreadFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThread
+     */
+    select?: ReviewThreadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewThread
+     */
+    omit?: ReviewThreadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewThreadInclude<ExtArgs> | null
+    /**
+     * Filter, which ReviewThread to fetch.
+     */
+    where: ReviewThreadWhereUniqueInput
+  }
+
+  /**
+   * ReviewThread findUniqueOrThrow
+   */
+  export type ReviewThreadFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThread
+     */
+    select?: ReviewThreadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewThread
+     */
+    omit?: ReviewThreadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewThreadInclude<ExtArgs> | null
+    /**
+     * Filter, which ReviewThread to fetch.
+     */
+    where: ReviewThreadWhereUniqueInput
+  }
+
+  /**
+   * ReviewThread findFirst
+   */
+  export type ReviewThreadFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThread
+     */
+    select?: ReviewThreadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewThread
+     */
+    omit?: ReviewThreadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewThreadInclude<ExtArgs> | null
+    /**
+     * Filter, which ReviewThread to fetch.
+     */
+    where?: ReviewThreadWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ReviewThreads to fetch.
+     */
+    orderBy?: ReviewThreadOrderByWithRelationInput | ReviewThreadOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ReviewThreads.
+     */
+    cursor?: ReviewThreadWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ReviewThreads from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ReviewThreads.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ReviewThreads.
+     */
+    distinct?: ReviewThreadScalarFieldEnum | ReviewThreadScalarFieldEnum[]
+  }
+
+  /**
+   * ReviewThread findFirstOrThrow
+   */
+  export type ReviewThreadFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThread
+     */
+    select?: ReviewThreadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewThread
+     */
+    omit?: ReviewThreadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewThreadInclude<ExtArgs> | null
+    /**
+     * Filter, which ReviewThread to fetch.
+     */
+    where?: ReviewThreadWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ReviewThreads to fetch.
+     */
+    orderBy?: ReviewThreadOrderByWithRelationInput | ReviewThreadOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ReviewThreads.
+     */
+    cursor?: ReviewThreadWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ReviewThreads from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ReviewThreads.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ReviewThreads.
+     */
+    distinct?: ReviewThreadScalarFieldEnum | ReviewThreadScalarFieldEnum[]
+  }
+
+  /**
+   * ReviewThread findMany
+   */
+  export type ReviewThreadFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThread
+     */
+    select?: ReviewThreadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewThread
+     */
+    omit?: ReviewThreadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewThreadInclude<ExtArgs> | null
+    /**
+     * Filter, which ReviewThreads to fetch.
+     */
+    where?: ReviewThreadWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ReviewThreads to fetch.
+     */
+    orderBy?: ReviewThreadOrderByWithRelationInput | ReviewThreadOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ReviewThreads.
+     */
+    cursor?: ReviewThreadWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ReviewThreads from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ReviewThreads.
+     */
+    skip?: number
+    distinct?: ReviewThreadScalarFieldEnum | ReviewThreadScalarFieldEnum[]
+  }
+
+  /**
+   * ReviewThread create
+   */
+  export type ReviewThreadCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThread
+     */
+    select?: ReviewThreadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewThread
+     */
+    omit?: ReviewThreadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewThreadInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ReviewThread.
+     */
+    data: XOR<ReviewThreadCreateInput, ReviewThreadUncheckedCreateInput>
+  }
+
+  /**
+   * ReviewThread createMany
+   */
+  export type ReviewThreadCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ReviewThreads.
+     */
+    data: ReviewThreadCreateManyInput | ReviewThreadCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ReviewThread createManyAndReturn
+   */
+  export type ReviewThreadCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThread
+     */
+    select?: ReviewThreadSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewThread
+     */
+    omit?: ReviewThreadOmit<ExtArgs> | null
+    /**
+     * The data used to create many ReviewThreads.
+     */
+    data: ReviewThreadCreateManyInput | ReviewThreadCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewThreadIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ReviewThread update
+   */
+  export type ReviewThreadUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThread
+     */
+    select?: ReviewThreadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewThread
+     */
+    omit?: ReviewThreadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewThreadInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ReviewThread.
+     */
+    data: XOR<ReviewThreadUpdateInput, ReviewThreadUncheckedUpdateInput>
+    /**
+     * Choose, which ReviewThread to update.
+     */
+    where: ReviewThreadWhereUniqueInput
+  }
+
+  /**
+   * ReviewThread updateMany
+   */
+  export type ReviewThreadUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ReviewThreads.
+     */
+    data: XOR<ReviewThreadUpdateManyMutationInput, ReviewThreadUncheckedUpdateManyInput>
+    /**
+     * Filter which ReviewThreads to update
+     */
+    where?: ReviewThreadWhereInput
+    /**
+     * Limit how many ReviewThreads to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ReviewThread updateManyAndReturn
+   */
+  export type ReviewThreadUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThread
+     */
+    select?: ReviewThreadSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewThread
+     */
+    omit?: ReviewThreadOmit<ExtArgs> | null
+    /**
+     * The data used to update ReviewThreads.
+     */
+    data: XOR<ReviewThreadUpdateManyMutationInput, ReviewThreadUncheckedUpdateManyInput>
+    /**
+     * Filter which ReviewThreads to update
+     */
+    where?: ReviewThreadWhereInput
+    /**
+     * Limit how many ReviewThreads to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewThreadIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ReviewThread upsert
+   */
+  export type ReviewThreadUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThread
+     */
+    select?: ReviewThreadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewThread
+     */
+    omit?: ReviewThreadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewThreadInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ReviewThread to update in case it exists.
+     */
+    where: ReviewThreadWhereUniqueInput
+    /**
+     * In case the ReviewThread found by the `where` argument doesn't exist, create a new ReviewThread with this data.
+     */
+    create: XOR<ReviewThreadCreateInput, ReviewThreadUncheckedCreateInput>
+    /**
+     * In case the ReviewThread was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ReviewThreadUpdateInput, ReviewThreadUncheckedUpdateInput>
+  }
+
+  /**
+   * ReviewThread delete
+   */
+  export type ReviewThreadDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThread
+     */
+    select?: ReviewThreadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewThread
+     */
+    omit?: ReviewThreadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewThreadInclude<ExtArgs> | null
+    /**
+     * Filter which ReviewThread to delete.
+     */
+    where: ReviewThreadWhereUniqueInput
+  }
+
+  /**
+   * ReviewThread deleteMany
+   */
+  export type ReviewThreadDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ReviewThreads to delete
+     */
+    where?: ReviewThreadWhereInput
+    /**
+     * Limit how many ReviewThreads to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ReviewThread.comments
+   */
+  export type ReviewThread$commentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThreadComment
+     */
+    select?: ReviewThreadCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewThreadComment
+     */
+    omit?: ReviewThreadCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewThreadCommentInclude<ExtArgs> | null
+    where?: ReviewThreadCommentWhereInput
+    orderBy?: ReviewThreadCommentOrderByWithRelationInput | ReviewThreadCommentOrderByWithRelationInput[]
+    cursor?: ReviewThreadCommentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ReviewThreadCommentScalarFieldEnum | ReviewThreadCommentScalarFieldEnum[]
+  }
+
+  /**
+   * ReviewThread without action
+   */
+  export type ReviewThreadDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThread
+     */
+    select?: ReviewThreadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewThread
+     */
+    omit?: ReviewThreadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewThreadInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ReviewThreadComment
+   */
+
+  export type AggregateReviewThreadComment = {
+    _count: ReviewThreadCommentCountAggregateOutputType | null
+    _min: ReviewThreadCommentMinAggregateOutputType | null
+    _max: ReviewThreadCommentMaxAggregateOutputType | null
+  }
+
+  export type ReviewThreadCommentMinAggregateOutputType = {
+    id: string | null
+    threadId: string | null
+    userId: string | null
+    content: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ReviewThreadCommentMaxAggregateOutputType = {
+    id: string | null
+    threadId: string | null
+    userId: string | null
+    content: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ReviewThreadCommentCountAggregateOutputType = {
+    id: number
+    threadId: number
+    userId: number
+    content: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ReviewThreadCommentMinAggregateInputType = {
+    id?: true
+    threadId?: true
+    userId?: true
+    content?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ReviewThreadCommentMaxAggregateInputType = {
+    id?: true
+    threadId?: true
+    userId?: true
+    content?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ReviewThreadCommentCountAggregateInputType = {
+    id?: true
+    threadId?: true
+    userId?: true
+    content?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ReviewThreadCommentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ReviewThreadComment to aggregate.
+     */
+    where?: ReviewThreadCommentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ReviewThreadComments to fetch.
+     */
+    orderBy?: ReviewThreadCommentOrderByWithRelationInput | ReviewThreadCommentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ReviewThreadCommentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ReviewThreadComments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ReviewThreadComments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ReviewThreadComments
+    **/
+    _count?: true | ReviewThreadCommentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ReviewThreadCommentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ReviewThreadCommentMaxAggregateInputType
+  }
+
+  export type GetReviewThreadCommentAggregateType<T extends ReviewThreadCommentAggregateArgs> = {
+        [P in keyof T & keyof AggregateReviewThreadComment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateReviewThreadComment[P]>
+      : GetScalarType<T[P], AggregateReviewThreadComment[P]>
+  }
+
+
+
+
+  export type ReviewThreadCommentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReviewThreadCommentWhereInput
+    orderBy?: ReviewThreadCommentOrderByWithAggregationInput | ReviewThreadCommentOrderByWithAggregationInput[]
+    by: ReviewThreadCommentScalarFieldEnum[] | ReviewThreadCommentScalarFieldEnum
+    having?: ReviewThreadCommentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ReviewThreadCommentCountAggregateInputType | true
+    _min?: ReviewThreadCommentMinAggregateInputType
+    _max?: ReviewThreadCommentMaxAggregateInputType
+  }
+
+  export type ReviewThreadCommentGroupByOutputType = {
+    id: string
+    threadId: string
+    userId: string
+    content: string
+    createdAt: Date
+    updatedAt: Date
+    _count: ReviewThreadCommentCountAggregateOutputType | null
+    _min: ReviewThreadCommentMinAggregateOutputType | null
+    _max: ReviewThreadCommentMaxAggregateOutputType | null
+  }
+
+  type GetReviewThreadCommentGroupByPayload<T extends ReviewThreadCommentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ReviewThreadCommentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ReviewThreadCommentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ReviewThreadCommentGroupByOutputType[P]>
+            : GetScalarType<T[P], ReviewThreadCommentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ReviewThreadCommentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    threadId?: boolean
+    userId?: boolean
+    content?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    thread?: boolean | ReviewThreadDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["reviewThreadComment"]>
+
+  export type ReviewThreadCommentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    threadId?: boolean
+    userId?: boolean
+    content?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    thread?: boolean | ReviewThreadDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["reviewThreadComment"]>
+
+  export type ReviewThreadCommentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    threadId?: boolean
+    userId?: boolean
+    content?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    thread?: boolean | ReviewThreadDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["reviewThreadComment"]>
+
+  export type ReviewThreadCommentSelectScalar = {
+    id?: boolean
+    threadId?: boolean
+    userId?: boolean
+    content?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ReviewThreadCommentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "threadId" | "userId" | "content" | "createdAt" | "updatedAt", ExtArgs["result"]["reviewThreadComment"]>
+  export type ReviewThreadCommentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    thread?: boolean | ReviewThreadDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ReviewThreadCommentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    thread?: boolean | ReviewThreadDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ReviewThreadCommentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    thread?: boolean | ReviewThreadDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $ReviewThreadCommentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ReviewThreadComment"
+    objects: {
+      thread: Prisma.$ReviewThreadPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      threadId: string
+      userId: string
+      content: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["reviewThreadComment"]>
+    composites: {}
+  }
+
+  type ReviewThreadCommentGetPayload<S extends boolean | null | undefined | ReviewThreadCommentDefaultArgs> = $Result.GetResult<Prisma.$ReviewThreadCommentPayload, S>
+
+  type ReviewThreadCommentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ReviewThreadCommentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ReviewThreadCommentCountAggregateInputType | true
+    }
+
+  export interface ReviewThreadCommentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ReviewThreadComment'], meta: { name: 'ReviewThreadComment' } }
+    /**
+     * Find zero or one ReviewThreadComment that matches the filter.
+     * @param {ReviewThreadCommentFindUniqueArgs} args - Arguments to find a ReviewThreadComment
+     * @example
+     * // Get one ReviewThreadComment
+     * const reviewThreadComment = await prisma.reviewThreadComment.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ReviewThreadCommentFindUniqueArgs>(args: SelectSubset<T, ReviewThreadCommentFindUniqueArgs<ExtArgs>>): Prisma__ReviewThreadCommentClient<$Result.GetResult<Prisma.$ReviewThreadCommentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ReviewThreadComment that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ReviewThreadCommentFindUniqueOrThrowArgs} args - Arguments to find a ReviewThreadComment
+     * @example
+     * // Get one ReviewThreadComment
+     * const reviewThreadComment = await prisma.reviewThreadComment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ReviewThreadCommentFindUniqueOrThrowArgs>(args: SelectSubset<T, ReviewThreadCommentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ReviewThreadCommentClient<$Result.GetResult<Prisma.$ReviewThreadCommentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ReviewThreadComment that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReviewThreadCommentFindFirstArgs} args - Arguments to find a ReviewThreadComment
+     * @example
+     * // Get one ReviewThreadComment
+     * const reviewThreadComment = await prisma.reviewThreadComment.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ReviewThreadCommentFindFirstArgs>(args?: SelectSubset<T, ReviewThreadCommentFindFirstArgs<ExtArgs>>): Prisma__ReviewThreadCommentClient<$Result.GetResult<Prisma.$ReviewThreadCommentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ReviewThreadComment that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReviewThreadCommentFindFirstOrThrowArgs} args - Arguments to find a ReviewThreadComment
+     * @example
+     * // Get one ReviewThreadComment
+     * const reviewThreadComment = await prisma.reviewThreadComment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ReviewThreadCommentFindFirstOrThrowArgs>(args?: SelectSubset<T, ReviewThreadCommentFindFirstOrThrowArgs<ExtArgs>>): Prisma__ReviewThreadCommentClient<$Result.GetResult<Prisma.$ReviewThreadCommentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ReviewThreadComments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReviewThreadCommentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ReviewThreadComments
+     * const reviewThreadComments = await prisma.reviewThreadComment.findMany()
+     * 
+     * // Get first 10 ReviewThreadComments
+     * const reviewThreadComments = await prisma.reviewThreadComment.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const reviewThreadCommentWithIdOnly = await prisma.reviewThreadComment.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ReviewThreadCommentFindManyArgs>(args?: SelectSubset<T, ReviewThreadCommentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewThreadCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ReviewThreadComment.
+     * @param {ReviewThreadCommentCreateArgs} args - Arguments to create a ReviewThreadComment.
+     * @example
+     * // Create one ReviewThreadComment
+     * const ReviewThreadComment = await prisma.reviewThreadComment.create({
+     *   data: {
+     *     // ... data to create a ReviewThreadComment
+     *   }
+     * })
+     * 
+     */
+    create<T extends ReviewThreadCommentCreateArgs>(args: SelectSubset<T, ReviewThreadCommentCreateArgs<ExtArgs>>): Prisma__ReviewThreadCommentClient<$Result.GetResult<Prisma.$ReviewThreadCommentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ReviewThreadComments.
+     * @param {ReviewThreadCommentCreateManyArgs} args - Arguments to create many ReviewThreadComments.
+     * @example
+     * // Create many ReviewThreadComments
+     * const reviewThreadComment = await prisma.reviewThreadComment.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ReviewThreadCommentCreateManyArgs>(args?: SelectSubset<T, ReviewThreadCommentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ReviewThreadComments and returns the data saved in the database.
+     * @param {ReviewThreadCommentCreateManyAndReturnArgs} args - Arguments to create many ReviewThreadComments.
+     * @example
+     * // Create many ReviewThreadComments
+     * const reviewThreadComment = await prisma.reviewThreadComment.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ReviewThreadComments and only return the `id`
+     * const reviewThreadCommentWithIdOnly = await prisma.reviewThreadComment.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ReviewThreadCommentCreateManyAndReturnArgs>(args?: SelectSubset<T, ReviewThreadCommentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewThreadCommentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ReviewThreadComment.
+     * @param {ReviewThreadCommentDeleteArgs} args - Arguments to delete one ReviewThreadComment.
+     * @example
+     * // Delete one ReviewThreadComment
+     * const ReviewThreadComment = await prisma.reviewThreadComment.delete({
+     *   where: {
+     *     // ... filter to delete one ReviewThreadComment
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ReviewThreadCommentDeleteArgs>(args: SelectSubset<T, ReviewThreadCommentDeleteArgs<ExtArgs>>): Prisma__ReviewThreadCommentClient<$Result.GetResult<Prisma.$ReviewThreadCommentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ReviewThreadComment.
+     * @param {ReviewThreadCommentUpdateArgs} args - Arguments to update one ReviewThreadComment.
+     * @example
+     * // Update one ReviewThreadComment
+     * const reviewThreadComment = await prisma.reviewThreadComment.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ReviewThreadCommentUpdateArgs>(args: SelectSubset<T, ReviewThreadCommentUpdateArgs<ExtArgs>>): Prisma__ReviewThreadCommentClient<$Result.GetResult<Prisma.$ReviewThreadCommentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ReviewThreadComments.
+     * @param {ReviewThreadCommentDeleteManyArgs} args - Arguments to filter ReviewThreadComments to delete.
+     * @example
+     * // Delete a few ReviewThreadComments
+     * const { count } = await prisma.reviewThreadComment.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ReviewThreadCommentDeleteManyArgs>(args?: SelectSubset<T, ReviewThreadCommentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ReviewThreadComments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReviewThreadCommentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ReviewThreadComments
+     * const reviewThreadComment = await prisma.reviewThreadComment.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ReviewThreadCommentUpdateManyArgs>(args: SelectSubset<T, ReviewThreadCommentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ReviewThreadComments and returns the data updated in the database.
+     * @param {ReviewThreadCommentUpdateManyAndReturnArgs} args - Arguments to update many ReviewThreadComments.
+     * @example
+     * // Update many ReviewThreadComments
+     * const reviewThreadComment = await prisma.reviewThreadComment.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ReviewThreadComments and only return the `id`
+     * const reviewThreadCommentWithIdOnly = await prisma.reviewThreadComment.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ReviewThreadCommentUpdateManyAndReturnArgs>(args: SelectSubset<T, ReviewThreadCommentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewThreadCommentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ReviewThreadComment.
+     * @param {ReviewThreadCommentUpsertArgs} args - Arguments to update or create a ReviewThreadComment.
+     * @example
+     * // Update or create a ReviewThreadComment
+     * const reviewThreadComment = await prisma.reviewThreadComment.upsert({
+     *   create: {
+     *     // ... data to create a ReviewThreadComment
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ReviewThreadComment we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ReviewThreadCommentUpsertArgs>(args: SelectSubset<T, ReviewThreadCommentUpsertArgs<ExtArgs>>): Prisma__ReviewThreadCommentClient<$Result.GetResult<Prisma.$ReviewThreadCommentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ReviewThreadComments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReviewThreadCommentCountArgs} args - Arguments to filter ReviewThreadComments to count.
+     * @example
+     * // Count the number of ReviewThreadComments
+     * const count = await prisma.reviewThreadComment.count({
+     *   where: {
+     *     // ... the filter for the ReviewThreadComments we want to count
+     *   }
+     * })
+    **/
+    count<T extends ReviewThreadCommentCountArgs>(
+      args?: Subset<T, ReviewThreadCommentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ReviewThreadCommentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ReviewThreadComment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReviewThreadCommentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ReviewThreadCommentAggregateArgs>(args: Subset<T, ReviewThreadCommentAggregateArgs>): Prisma.PrismaPromise<GetReviewThreadCommentAggregateType<T>>
+
+    /**
+     * Group by ReviewThreadComment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReviewThreadCommentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ReviewThreadCommentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ReviewThreadCommentGroupByArgs['orderBy'] }
+        : { orderBy?: ReviewThreadCommentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ReviewThreadCommentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetReviewThreadCommentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ReviewThreadComment model
+   */
+  readonly fields: ReviewThreadCommentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ReviewThreadComment.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ReviewThreadCommentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    thread<T extends ReviewThreadDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ReviewThreadDefaultArgs<ExtArgs>>): Prisma__ReviewThreadClient<$Result.GetResult<Prisma.$ReviewThreadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ReviewThreadComment model
+   */
+  interface ReviewThreadCommentFieldRefs {
+    readonly id: FieldRef<"ReviewThreadComment", 'String'>
+    readonly threadId: FieldRef<"ReviewThreadComment", 'String'>
+    readonly userId: FieldRef<"ReviewThreadComment", 'String'>
+    readonly content: FieldRef<"ReviewThreadComment", 'String'>
+    readonly createdAt: FieldRef<"ReviewThreadComment", 'DateTime'>
+    readonly updatedAt: FieldRef<"ReviewThreadComment", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ReviewThreadComment findUnique
+   */
+  export type ReviewThreadCommentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThreadComment
+     */
+    select?: ReviewThreadCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewThreadComment
+     */
+    omit?: ReviewThreadCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewThreadCommentInclude<ExtArgs> | null
+    /**
+     * Filter, which ReviewThreadComment to fetch.
+     */
+    where: ReviewThreadCommentWhereUniqueInput
+  }
+
+  /**
+   * ReviewThreadComment findUniqueOrThrow
+   */
+  export type ReviewThreadCommentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThreadComment
+     */
+    select?: ReviewThreadCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewThreadComment
+     */
+    omit?: ReviewThreadCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewThreadCommentInclude<ExtArgs> | null
+    /**
+     * Filter, which ReviewThreadComment to fetch.
+     */
+    where: ReviewThreadCommentWhereUniqueInput
+  }
+
+  /**
+   * ReviewThreadComment findFirst
+   */
+  export type ReviewThreadCommentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThreadComment
+     */
+    select?: ReviewThreadCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewThreadComment
+     */
+    omit?: ReviewThreadCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewThreadCommentInclude<ExtArgs> | null
+    /**
+     * Filter, which ReviewThreadComment to fetch.
+     */
+    where?: ReviewThreadCommentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ReviewThreadComments to fetch.
+     */
+    orderBy?: ReviewThreadCommentOrderByWithRelationInput | ReviewThreadCommentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ReviewThreadComments.
+     */
+    cursor?: ReviewThreadCommentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ReviewThreadComments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ReviewThreadComments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ReviewThreadComments.
+     */
+    distinct?: ReviewThreadCommentScalarFieldEnum | ReviewThreadCommentScalarFieldEnum[]
+  }
+
+  /**
+   * ReviewThreadComment findFirstOrThrow
+   */
+  export type ReviewThreadCommentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThreadComment
+     */
+    select?: ReviewThreadCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewThreadComment
+     */
+    omit?: ReviewThreadCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewThreadCommentInclude<ExtArgs> | null
+    /**
+     * Filter, which ReviewThreadComment to fetch.
+     */
+    where?: ReviewThreadCommentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ReviewThreadComments to fetch.
+     */
+    orderBy?: ReviewThreadCommentOrderByWithRelationInput | ReviewThreadCommentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ReviewThreadComments.
+     */
+    cursor?: ReviewThreadCommentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ReviewThreadComments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ReviewThreadComments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ReviewThreadComments.
+     */
+    distinct?: ReviewThreadCommentScalarFieldEnum | ReviewThreadCommentScalarFieldEnum[]
+  }
+
+  /**
+   * ReviewThreadComment findMany
+   */
+  export type ReviewThreadCommentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThreadComment
+     */
+    select?: ReviewThreadCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewThreadComment
+     */
+    omit?: ReviewThreadCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewThreadCommentInclude<ExtArgs> | null
+    /**
+     * Filter, which ReviewThreadComments to fetch.
+     */
+    where?: ReviewThreadCommentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ReviewThreadComments to fetch.
+     */
+    orderBy?: ReviewThreadCommentOrderByWithRelationInput | ReviewThreadCommentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ReviewThreadComments.
+     */
+    cursor?: ReviewThreadCommentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ReviewThreadComments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ReviewThreadComments.
+     */
+    skip?: number
+    distinct?: ReviewThreadCommentScalarFieldEnum | ReviewThreadCommentScalarFieldEnum[]
+  }
+
+  /**
+   * ReviewThreadComment create
+   */
+  export type ReviewThreadCommentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThreadComment
+     */
+    select?: ReviewThreadCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewThreadComment
+     */
+    omit?: ReviewThreadCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewThreadCommentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ReviewThreadComment.
+     */
+    data: XOR<ReviewThreadCommentCreateInput, ReviewThreadCommentUncheckedCreateInput>
+  }
+
+  /**
+   * ReviewThreadComment createMany
+   */
+  export type ReviewThreadCommentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ReviewThreadComments.
+     */
+    data: ReviewThreadCommentCreateManyInput | ReviewThreadCommentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ReviewThreadComment createManyAndReturn
+   */
+  export type ReviewThreadCommentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThreadComment
+     */
+    select?: ReviewThreadCommentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewThreadComment
+     */
+    omit?: ReviewThreadCommentOmit<ExtArgs> | null
+    /**
+     * The data used to create many ReviewThreadComments.
+     */
+    data: ReviewThreadCommentCreateManyInput | ReviewThreadCommentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewThreadCommentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ReviewThreadComment update
+   */
+  export type ReviewThreadCommentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThreadComment
+     */
+    select?: ReviewThreadCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewThreadComment
+     */
+    omit?: ReviewThreadCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewThreadCommentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ReviewThreadComment.
+     */
+    data: XOR<ReviewThreadCommentUpdateInput, ReviewThreadCommentUncheckedUpdateInput>
+    /**
+     * Choose, which ReviewThreadComment to update.
+     */
+    where: ReviewThreadCommentWhereUniqueInput
+  }
+
+  /**
+   * ReviewThreadComment updateMany
+   */
+  export type ReviewThreadCommentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ReviewThreadComments.
+     */
+    data: XOR<ReviewThreadCommentUpdateManyMutationInput, ReviewThreadCommentUncheckedUpdateManyInput>
+    /**
+     * Filter which ReviewThreadComments to update
+     */
+    where?: ReviewThreadCommentWhereInput
+    /**
+     * Limit how many ReviewThreadComments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ReviewThreadComment updateManyAndReturn
+   */
+  export type ReviewThreadCommentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThreadComment
+     */
+    select?: ReviewThreadCommentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewThreadComment
+     */
+    omit?: ReviewThreadCommentOmit<ExtArgs> | null
+    /**
+     * The data used to update ReviewThreadComments.
+     */
+    data: XOR<ReviewThreadCommentUpdateManyMutationInput, ReviewThreadCommentUncheckedUpdateManyInput>
+    /**
+     * Filter which ReviewThreadComments to update
+     */
+    where?: ReviewThreadCommentWhereInput
+    /**
+     * Limit how many ReviewThreadComments to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewThreadCommentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ReviewThreadComment upsert
+   */
+  export type ReviewThreadCommentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThreadComment
+     */
+    select?: ReviewThreadCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewThreadComment
+     */
+    omit?: ReviewThreadCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewThreadCommentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ReviewThreadComment to update in case it exists.
+     */
+    where: ReviewThreadCommentWhereUniqueInput
+    /**
+     * In case the ReviewThreadComment found by the `where` argument doesn't exist, create a new ReviewThreadComment with this data.
+     */
+    create: XOR<ReviewThreadCommentCreateInput, ReviewThreadCommentUncheckedCreateInput>
+    /**
+     * In case the ReviewThreadComment was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ReviewThreadCommentUpdateInput, ReviewThreadCommentUncheckedUpdateInput>
+  }
+
+  /**
+   * ReviewThreadComment delete
+   */
+  export type ReviewThreadCommentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThreadComment
+     */
+    select?: ReviewThreadCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewThreadComment
+     */
+    omit?: ReviewThreadCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewThreadCommentInclude<ExtArgs> | null
+    /**
+     * Filter which ReviewThreadComment to delete.
+     */
+    where: ReviewThreadCommentWhereUniqueInput
+  }
+
+  /**
+   * ReviewThreadComment deleteMany
+   */
+  export type ReviewThreadCommentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ReviewThreadComments to delete
+     */
+    where?: ReviewThreadCommentWhereInput
+    /**
+     * Limit how many ReviewThreadComments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ReviewThreadComment without action
+   */
+  export type ReviewThreadCommentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThreadComment
+     */
+    select?: ReviewThreadCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewThreadComment
+     */
+    omit?: ReviewThreadCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewThreadCommentInclude<ExtArgs> | null
   }
 
 
@@ -8432,6 +10970,31 @@ export namespace Prisma {
   };
 
   export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
+
+
+  export const ReviewThreadScalarFieldEnum: {
+    id: 'id',
+    reviewId: 'reviewId',
+    file: 'file',
+    line: 'line',
+    resolved: 'resolved',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ReviewThreadScalarFieldEnum = (typeof ReviewThreadScalarFieldEnum)[keyof typeof ReviewThreadScalarFieldEnum]
+
+
+  export const ReviewThreadCommentScalarFieldEnum: {
+    id: 'id',
+    threadId: 'threadId',
+    userId: 'userId',
+    content: 'content',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ReviewThreadCommentScalarFieldEnum = (typeof ReviewThreadCommentScalarFieldEnum)[keyof typeof ReviewThreadCommentScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -8594,6 +11157,7 @@ export namespace Prisma {
     accounts?: AccountListRelationFilter
     repositories?: RepositoryListRelationFilter
     reviews?: ReviewListRelationFilter
+    threadComments?: ReviewThreadCommentListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -8613,6 +11177,7 @@ export namespace Prisma {
     accounts?: AccountOrderByRelationAggregateInput
     repositories?: RepositoryOrderByRelationAggregateInput
     reviews?: ReviewOrderByRelationAggregateInput
+    threadComments?: ReviewThreadCommentOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -8635,6 +11200,7 @@ export namespace Prisma {
     accounts?: AccountListRelationFilter
     repositories?: RepositoryListRelationFilter
     reviews?: ReviewListRelationFilter
+    threadComments?: ReviewThreadCommentListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -8996,6 +11562,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Review"> | Date | string
     repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    threads?: ReviewThreadListRelationFilter
   }
 
   export type ReviewOrderByWithRelationInput = {
@@ -9015,6 +11582,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     repository?: RepositoryOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
+    threads?: ReviewThreadOrderByRelationAggregateInput
   }
 
   export type ReviewWhereUniqueInput = Prisma.AtLeast<{
@@ -9037,6 +11605,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Review"> | Date | string
     repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    threads?: ReviewThreadListRelationFilter
   }, "id">
 
   export type ReviewOrderByWithAggregationInput = {
@@ -9081,6 +11650,139 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Review"> | Date | string
   }
 
+  export type ReviewThreadWhereInput = {
+    AND?: ReviewThreadWhereInput | ReviewThreadWhereInput[]
+    OR?: ReviewThreadWhereInput[]
+    NOT?: ReviewThreadWhereInput | ReviewThreadWhereInput[]
+    id?: StringFilter<"ReviewThread"> | string
+    reviewId?: StringFilter<"ReviewThread"> | string
+    file?: StringFilter<"ReviewThread"> | string
+    line?: IntFilter<"ReviewThread"> | number
+    resolved?: BoolFilter<"ReviewThread"> | boolean
+    createdAt?: DateTimeFilter<"ReviewThread"> | Date | string
+    updatedAt?: DateTimeFilter<"ReviewThread"> | Date | string
+    review?: XOR<ReviewScalarRelationFilter, ReviewWhereInput>
+    comments?: ReviewThreadCommentListRelationFilter
+  }
+
+  export type ReviewThreadOrderByWithRelationInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    file?: SortOrder
+    line?: SortOrder
+    resolved?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    review?: ReviewOrderByWithRelationInput
+    comments?: ReviewThreadCommentOrderByRelationAggregateInput
+  }
+
+  export type ReviewThreadWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ReviewThreadWhereInput | ReviewThreadWhereInput[]
+    OR?: ReviewThreadWhereInput[]
+    NOT?: ReviewThreadWhereInput | ReviewThreadWhereInput[]
+    reviewId?: StringFilter<"ReviewThread"> | string
+    file?: StringFilter<"ReviewThread"> | string
+    line?: IntFilter<"ReviewThread"> | number
+    resolved?: BoolFilter<"ReviewThread"> | boolean
+    createdAt?: DateTimeFilter<"ReviewThread"> | Date | string
+    updatedAt?: DateTimeFilter<"ReviewThread"> | Date | string
+    review?: XOR<ReviewScalarRelationFilter, ReviewWhereInput>
+    comments?: ReviewThreadCommentListRelationFilter
+  }, "id">
+
+  export type ReviewThreadOrderByWithAggregationInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    file?: SortOrder
+    line?: SortOrder
+    resolved?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ReviewThreadCountOrderByAggregateInput
+    _avg?: ReviewThreadAvgOrderByAggregateInput
+    _max?: ReviewThreadMaxOrderByAggregateInput
+    _min?: ReviewThreadMinOrderByAggregateInput
+    _sum?: ReviewThreadSumOrderByAggregateInput
+  }
+
+  export type ReviewThreadScalarWhereWithAggregatesInput = {
+    AND?: ReviewThreadScalarWhereWithAggregatesInput | ReviewThreadScalarWhereWithAggregatesInput[]
+    OR?: ReviewThreadScalarWhereWithAggregatesInput[]
+    NOT?: ReviewThreadScalarWhereWithAggregatesInput | ReviewThreadScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ReviewThread"> | string
+    reviewId?: StringWithAggregatesFilter<"ReviewThread"> | string
+    file?: StringWithAggregatesFilter<"ReviewThread"> | string
+    line?: IntWithAggregatesFilter<"ReviewThread"> | number
+    resolved?: BoolWithAggregatesFilter<"ReviewThread"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"ReviewThread"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ReviewThread"> | Date | string
+  }
+
+  export type ReviewThreadCommentWhereInput = {
+    AND?: ReviewThreadCommentWhereInput | ReviewThreadCommentWhereInput[]
+    OR?: ReviewThreadCommentWhereInput[]
+    NOT?: ReviewThreadCommentWhereInput | ReviewThreadCommentWhereInput[]
+    id?: StringFilter<"ReviewThreadComment"> | string
+    threadId?: StringFilter<"ReviewThreadComment"> | string
+    userId?: StringFilter<"ReviewThreadComment"> | string
+    content?: StringFilter<"ReviewThreadComment"> | string
+    createdAt?: DateTimeFilter<"ReviewThreadComment"> | Date | string
+    updatedAt?: DateTimeFilter<"ReviewThreadComment"> | Date | string
+    thread?: XOR<ReviewThreadScalarRelationFilter, ReviewThreadWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type ReviewThreadCommentOrderByWithRelationInput = {
+    id?: SortOrder
+    threadId?: SortOrder
+    userId?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    thread?: ReviewThreadOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type ReviewThreadCommentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ReviewThreadCommentWhereInput | ReviewThreadCommentWhereInput[]
+    OR?: ReviewThreadCommentWhereInput[]
+    NOT?: ReviewThreadCommentWhereInput | ReviewThreadCommentWhereInput[]
+    threadId?: StringFilter<"ReviewThreadComment"> | string
+    userId?: StringFilter<"ReviewThreadComment"> | string
+    content?: StringFilter<"ReviewThreadComment"> | string
+    createdAt?: DateTimeFilter<"ReviewThreadComment"> | Date | string
+    updatedAt?: DateTimeFilter<"ReviewThreadComment"> | Date | string
+    thread?: XOR<ReviewThreadScalarRelationFilter, ReviewThreadWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type ReviewThreadCommentOrderByWithAggregationInput = {
+    id?: SortOrder
+    threadId?: SortOrder
+    userId?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ReviewThreadCommentCountOrderByAggregateInput
+    _max?: ReviewThreadCommentMaxOrderByAggregateInput
+    _min?: ReviewThreadCommentMinOrderByAggregateInput
+  }
+
+  export type ReviewThreadCommentScalarWhereWithAggregatesInput = {
+    AND?: ReviewThreadCommentScalarWhereWithAggregatesInput | ReviewThreadCommentScalarWhereWithAggregatesInput[]
+    OR?: ReviewThreadCommentScalarWhereWithAggregatesInput[]
+    NOT?: ReviewThreadCommentScalarWhereWithAggregatesInput | ReviewThreadCommentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ReviewThreadComment"> | string
+    threadId?: StringWithAggregatesFilter<"ReviewThreadComment"> | string
+    userId?: StringWithAggregatesFilter<"ReviewThreadComment"> | string
+    content?: StringWithAggregatesFilter<"ReviewThreadComment"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"ReviewThreadComment"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ReviewThreadComment"> | Date | string
+  }
+
   export type UserCreateInput = {
     id: string
     name: string
@@ -9098,6 +11800,7 @@ export namespace Prisma {
     accounts?: AccountCreateNestedManyWithoutUserInput
     repositories?: RepositoryCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    threadComments?: ReviewThreadCommentCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -9117,6 +11820,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    threadComments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -9136,6 +11840,7 @@ export namespace Prisma {
     accounts?: AccountUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    threadComments?: ReviewThreadCommentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -9155,6 +11860,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    threadComments?: ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -9554,6 +12260,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     repository: RepositoryCreateNestedOneWithoutReviewsInput
     user: UserCreateNestedOneWithoutReviewsInput
+    threads?: ReviewThreadCreateNestedManyWithoutReviewInput
   }
 
   export type ReviewUncheckedCreateInput = {
@@ -9571,6 +12278,7 @@ export namespace Prisma {
     error?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
   }
 
   export type ReviewUpdateInput = {
@@ -9588,6 +12296,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
     user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
   }
 
   export type ReviewUncheckedUpdateInput = {
@@ -9605,6 +12314,7 @@ export namespace Prisma {
     error?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
   }
 
   export type ReviewCreateManyInput = {
@@ -9652,6 +12362,140 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReviewThreadCreateInput = {
+    id?: string
+    file: string
+    line: number
+    resolved?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    review: ReviewCreateNestedOneWithoutThreadsInput
+    comments?: ReviewThreadCommentCreateNestedManyWithoutThreadInput
+  }
+
+  export type ReviewThreadUncheckedCreateInput = {
+    id?: string
+    reviewId: string
+    file: string
+    line: number
+    resolved?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    comments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutThreadInput
+  }
+
+  export type ReviewThreadUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    file?: StringFieldUpdateOperationsInput | string
+    line?: IntFieldUpdateOperationsInput | number
+    resolved?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    review?: ReviewUpdateOneRequiredWithoutThreadsNestedInput
+    comments?: ReviewThreadCommentUpdateManyWithoutThreadNestedInput
+  }
+
+  export type ReviewThreadUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewId?: StringFieldUpdateOperationsInput | string
+    file?: StringFieldUpdateOperationsInput | string
+    line?: IntFieldUpdateOperationsInput | number
+    resolved?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    comments?: ReviewThreadCommentUncheckedUpdateManyWithoutThreadNestedInput
+  }
+
+  export type ReviewThreadCreateManyInput = {
+    id?: string
+    reviewId: string
+    file: string
+    line: number
+    resolved?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ReviewThreadUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    file?: StringFieldUpdateOperationsInput | string
+    line?: IntFieldUpdateOperationsInput | number
+    resolved?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReviewThreadUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewId?: StringFieldUpdateOperationsInput | string
+    file?: StringFieldUpdateOperationsInput | string
+    line?: IntFieldUpdateOperationsInput | number
+    resolved?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReviewThreadCommentCreateInput = {
+    id?: string
+    content: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    thread: ReviewThreadCreateNestedOneWithoutCommentsInput
+    user: UserCreateNestedOneWithoutThreadCommentsInput
+  }
+
+  export type ReviewThreadCommentUncheckedCreateInput = {
+    id?: string
+    threadId: string
+    userId: string
+    content: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ReviewThreadCommentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    thread?: ReviewThreadUpdateOneRequiredWithoutCommentsNestedInput
+    user?: UserUpdateOneRequiredWithoutThreadCommentsNestedInput
+  }
+
+  export type ReviewThreadCommentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReviewThreadCommentCreateManyInput = {
+    id?: string
+    threadId: string
+    userId: string
+    content: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ReviewThreadCommentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReviewThreadCommentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9726,6 +12570,12 @@ export namespace Prisma {
     none?: ReviewWhereInput
   }
 
+  export type ReviewThreadCommentListRelationFilter = {
+    every?: ReviewThreadCommentWhereInput
+    some?: ReviewThreadCommentWhereInput
+    none?: ReviewThreadCommentWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -9744,6 +12594,10 @@ export namespace Prisma {
   }
 
   export type ReviewOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ReviewThreadCommentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -10110,6 +12964,16 @@ export namespace Prisma {
     isNot?: RepositoryWhereInput
   }
 
+  export type ReviewThreadListRelationFilter = {
+    every?: ReviewThreadWhereInput
+    some?: ReviewThreadWhereInput
+    none?: ReviewThreadWhereInput
+  }
+
+  export type ReviewThreadOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type ReviewCountOrderByAggregateInput = {
     id?: SortOrder
     repositoryId?: SortOrder
@@ -10219,6 +13083,81 @@ export namespace Prisma {
     _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
+  export type ReviewScalarRelationFilter = {
+    is?: ReviewWhereInput
+    isNot?: ReviewWhereInput
+  }
+
+  export type ReviewThreadCountOrderByAggregateInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    file?: SortOrder
+    line?: SortOrder
+    resolved?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ReviewThreadAvgOrderByAggregateInput = {
+    line?: SortOrder
+  }
+
+  export type ReviewThreadMaxOrderByAggregateInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    file?: SortOrder
+    line?: SortOrder
+    resolved?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ReviewThreadMinOrderByAggregateInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    file?: SortOrder
+    line?: SortOrder
+    resolved?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ReviewThreadSumOrderByAggregateInput = {
+    line?: SortOrder
+  }
+
+  export type ReviewThreadScalarRelationFilter = {
+    is?: ReviewThreadWhereInput
+    isNot?: ReviewThreadWhereInput
+  }
+
+  export type ReviewThreadCommentCountOrderByAggregateInput = {
+    id?: SortOrder
+    threadId?: SortOrder
+    userId?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ReviewThreadCommentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    threadId?: SortOrder
+    userId?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ReviewThreadCommentMinOrderByAggregateInput = {
+    id?: SortOrder
+    threadId?: SortOrder
+    userId?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type SessionCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -10247,6 +13186,13 @@ export namespace Prisma {
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
   }
 
+  export type ReviewThreadCommentCreateNestedManyWithoutUserInput = {
+    create?: XOR<ReviewThreadCommentCreateWithoutUserInput, ReviewThreadCommentUncheckedCreateWithoutUserInput> | ReviewThreadCommentCreateWithoutUserInput[] | ReviewThreadCommentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReviewThreadCommentCreateOrConnectWithoutUserInput | ReviewThreadCommentCreateOrConnectWithoutUserInput[]
+    createMany?: ReviewThreadCommentCreateManyUserInputEnvelope
+    connect?: ReviewThreadCommentWhereUniqueInput | ReviewThreadCommentWhereUniqueInput[]
+  }
+
   export type SessionUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -10273,6 +13219,13 @@ export namespace Prisma {
     connectOrCreate?: ReviewCreateOrConnectWithoutUserInput | ReviewCreateOrConnectWithoutUserInput[]
     createMany?: ReviewCreateManyUserInputEnvelope
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+  }
+
+  export type ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ReviewThreadCommentCreateWithoutUserInput, ReviewThreadCommentUncheckedCreateWithoutUserInput> | ReviewThreadCommentCreateWithoutUserInput[] | ReviewThreadCommentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReviewThreadCommentCreateOrConnectWithoutUserInput | ReviewThreadCommentCreateOrConnectWithoutUserInput[]
+    createMany?: ReviewThreadCommentCreateManyUserInputEnvelope
+    connect?: ReviewThreadCommentWhereUniqueInput | ReviewThreadCommentWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -10347,6 +13300,20 @@ export namespace Prisma {
     deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
   }
 
+  export type ReviewThreadCommentUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ReviewThreadCommentCreateWithoutUserInput, ReviewThreadCommentUncheckedCreateWithoutUserInput> | ReviewThreadCommentCreateWithoutUserInput[] | ReviewThreadCommentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReviewThreadCommentCreateOrConnectWithoutUserInput | ReviewThreadCommentCreateOrConnectWithoutUserInput[]
+    upsert?: ReviewThreadCommentUpsertWithWhereUniqueWithoutUserInput | ReviewThreadCommentUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ReviewThreadCommentCreateManyUserInputEnvelope
+    set?: ReviewThreadCommentWhereUniqueInput | ReviewThreadCommentWhereUniqueInput[]
+    disconnect?: ReviewThreadCommentWhereUniqueInput | ReviewThreadCommentWhereUniqueInput[]
+    delete?: ReviewThreadCommentWhereUniqueInput | ReviewThreadCommentWhereUniqueInput[]
+    connect?: ReviewThreadCommentWhereUniqueInput | ReviewThreadCommentWhereUniqueInput[]
+    update?: ReviewThreadCommentUpdateWithWhereUniqueWithoutUserInput | ReviewThreadCommentUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ReviewThreadCommentUpdateManyWithWhereWithoutUserInput | ReviewThreadCommentUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ReviewThreadCommentScalarWhereInput | ReviewThreadCommentScalarWhereInput[]
+  }
+
   export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -10401,6 +13368,20 @@ export namespace Prisma {
     update?: ReviewUpdateWithWhereUniqueWithoutUserInput | ReviewUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: ReviewUpdateManyWithWhereWithoutUserInput | ReviewUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
+  }
+
+  export type ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ReviewThreadCommentCreateWithoutUserInput, ReviewThreadCommentUncheckedCreateWithoutUserInput> | ReviewThreadCommentCreateWithoutUserInput[] | ReviewThreadCommentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReviewThreadCommentCreateOrConnectWithoutUserInput | ReviewThreadCommentCreateOrConnectWithoutUserInput[]
+    upsert?: ReviewThreadCommentUpsertWithWhereUniqueWithoutUserInput | ReviewThreadCommentUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ReviewThreadCommentCreateManyUserInputEnvelope
+    set?: ReviewThreadCommentWhereUniqueInput | ReviewThreadCommentWhereUniqueInput[]
+    disconnect?: ReviewThreadCommentWhereUniqueInput | ReviewThreadCommentWhereUniqueInput[]
+    delete?: ReviewThreadCommentWhereUniqueInput | ReviewThreadCommentWhereUniqueInput[]
+    connect?: ReviewThreadCommentWhereUniqueInput | ReviewThreadCommentWhereUniqueInput[]
+    update?: ReviewThreadCommentUpdateWithWhereUniqueWithoutUserInput | ReviewThreadCommentUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ReviewThreadCommentUpdateManyWithWhereWithoutUserInput | ReviewThreadCommentUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ReviewThreadCommentScalarWhereInput | ReviewThreadCommentScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutSessionsInput = {
@@ -10511,6 +13492,20 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type ReviewThreadCreateNestedManyWithoutReviewInput = {
+    create?: XOR<ReviewThreadCreateWithoutReviewInput, ReviewThreadUncheckedCreateWithoutReviewInput> | ReviewThreadCreateWithoutReviewInput[] | ReviewThreadUncheckedCreateWithoutReviewInput[]
+    connectOrCreate?: ReviewThreadCreateOrConnectWithoutReviewInput | ReviewThreadCreateOrConnectWithoutReviewInput[]
+    createMany?: ReviewThreadCreateManyReviewInputEnvelope
+    connect?: ReviewThreadWhereUniqueInput | ReviewThreadWhereUniqueInput[]
+  }
+
+  export type ReviewThreadUncheckedCreateNestedManyWithoutReviewInput = {
+    create?: XOR<ReviewThreadCreateWithoutReviewInput, ReviewThreadUncheckedCreateWithoutReviewInput> | ReviewThreadCreateWithoutReviewInput[] | ReviewThreadUncheckedCreateWithoutReviewInput[]
+    connectOrCreate?: ReviewThreadCreateOrConnectWithoutReviewInput | ReviewThreadCreateOrConnectWithoutReviewInput[]
+    createMany?: ReviewThreadCreateManyReviewInputEnvelope
+    connect?: ReviewThreadWhereUniqueInput | ReviewThreadWhereUniqueInput[]
+  }
+
   export type EnumReviewStatusFieldUpdateOperationsInput = {
     set?: $Enums.ReviewStatus
   }
@@ -10537,6 +13532,118 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutReviewsInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReviewsInput, UserUpdateWithoutReviewsInput>, UserUncheckedUpdateWithoutReviewsInput>
+  }
+
+  export type ReviewThreadUpdateManyWithoutReviewNestedInput = {
+    create?: XOR<ReviewThreadCreateWithoutReviewInput, ReviewThreadUncheckedCreateWithoutReviewInput> | ReviewThreadCreateWithoutReviewInput[] | ReviewThreadUncheckedCreateWithoutReviewInput[]
+    connectOrCreate?: ReviewThreadCreateOrConnectWithoutReviewInput | ReviewThreadCreateOrConnectWithoutReviewInput[]
+    upsert?: ReviewThreadUpsertWithWhereUniqueWithoutReviewInput | ReviewThreadUpsertWithWhereUniqueWithoutReviewInput[]
+    createMany?: ReviewThreadCreateManyReviewInputEnvelope
+    set?: ReviewThreadWhereUniqueInput | ReviewThreadWhereUniqueInput[]
+    disconnect?: ReviewThreadWhereUniqueInput | ReviewThreadWhereUniqueInput[]
+    delete?: ReviewThreadWhereUniqueInput | ReviewThreadWhereUniqueInput[]
+    connect?: ReviewThreadWhereUniqueInput | ReviewThreadWhereUniqueInput[]
+    update?: ReviewThreadUpdateWithWhereUniqueWithoutReviewInput | ReviewThreadUpdateWithWhereUniqueWithoutReviewInput[]
+    updateMany?: ReviewThreadUpdateManyWithWhereWithoutReviewInput | ReviewThreadUpdateManyWithWhereWithoutReviewInput[]
+    deleteMany?: ReviewThreadScalarWhereInput | ReviewThreadScalarWhereInput[]
+  }
+
+  export type ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput = {
+    create?: XOR<ReviewThreadCreateWithoutReviewInput, ReviewThreadUncheckedCreateWithoutReviewInput> | ReviewThreadCreateWithoutReviewInput[] | ReviewThreadUncheckedCreateWithoutReviewInput[]
+    connectOrCreate?: ReviewThreadCreateOrConnectWithoutReviewInput | ReviewThreadCreateOrConnectWithoutReviewInput[]
+    upsert?: ReviewThreadUpsertWithWhereUniqueWithoutReviewInput | ReviewThreadUpsertWithWhereUniqueWithoutReviewInput[]
+    createMany?: ReviewThreadCreateManyReviewInputEnvelope
+    set?: ReviewThreadWhereUniqueInput | ReviewThreadWhereUniqueInput[]
+    disconnect?: ReviewThreadWhereUniqueInput | ReviewThreadWhereUniqueInput[]
+    delete?: ReviewThreadWhereUniqueInput | ReviewThreadWhereUniqueInput[]
+    connect?: ReviewThreadWhereUniqueInput | ReviewThreadWhereUniqueInput[]
+    update?: ReviewThreadUpdateWithWhereUniqueWithoutReviewInput | ReviewThreadUpdateWithWhereUniqueWithoutReviewInput[]
+    updateMany?: ReviewThreadUpdateManyWithWhereWithoutReviewInput | ReviewThreadUpdateManyWithWhereWithoutReviewInput[]
+    deleteMany?: ReviewThreadScalarWhereInput | ReviewThreadScalarWhereInput[]
+  }
+
+  export type ReviewCreateNestedOneWithoutThreadsInput = {
+    create?: XOR<ReviewCreateWithoutThreadsInput, ReviewUncheckedCreateWithoutThreadsInput>
+    connectOrCreate?: ReviewCreateOrConnectWithoutThreadsInput
+    connect?: ReviewWhereUniqueInput
+  }
+
+  export type ReviewThreadCommentCreateNestedManyWithoutThreadInput = {
+    create?: XOR<ReviewThreadCommentCreateWithoutThreadInput, ReviewThreadCommentUncheckedCreateWithoutThreadInput> | ReviewThreadCommentCreateWithoutThreadInput[] | ReviewThreadCommentUncheckedCreateWithoutThreadInput[]
+    connectOrCreate?: ReviewThreadCommentCreateOrConnectWithoutThreadInput | ReviewThreadCommentCreateOrConnectWithoutThreadInput[]
+    createMany?: ReviewThreadCommentCreateManyThreadInputEnvelope
+    connect?: ReviewThreadCommentWhereUniqueInput | ReviewThreadCommentWhereUniqueInput[]
+  }
+
+  export type ReviewThreadCommentUncheckedCreateNestedManyWithoutThreadInput = {
+    create?: XOR<ReviewThreadCommentCreateWithoutThreadInput, ReviewThreadCommentUncheckedCreateWithoutThreadInput> | ReviewThreadCommentCreateWithoutThreadInput[] | ReviewThreadCommentUncheckedCreateWithoutThreadInput[]
+    connectOrCreate?: ReviewThreadCommentCreateOrConnectWithoutThreadInput | ReviewThreadCommentCreateOrConnectWithoutThreadInput[]
+    createMany?: ReviewThreadCommentCreateManyThreadInputEnvelope
+    connect?: ReviewThreadCommentWhereUniqueInput | ReviewThreadCommentWhereUniqueInput[]
+  }
+
+  export type ReviewUpdateOneRequiredWithoutThreadsNestedInput = {
+    create?: XOR<ReviewCreateWithoutThreadsInput, ReviewUncheckedCreateWithoutThreadsInput>
+    connectOrCreate?: ReviewCreateOrConnectWithoutThreadsInput
+    upsert?: ReviewUpsertWithoutThreadsInput
+    connect?: ReviewWhereUniqueInput
+    update?: XOR<XOR<ReviewUpdateToOneWithWhereWithoutThreadsInput, ReviewUpdateWithoutThreadsInput>, ReviewUncheckedUpdateWithoutThreadsInput>
+  }
+
+  export type ReviewThreadCommentUpdateManyWithoutThreadNestedInput = {
+    create?: XOR<ReviewThreadCommentCreateWithoutThreadInput, ReviewThreadCommentUncheckedCreateWithoutThreadInput> | ReviewThreadCommentCreateWithoutThreadInput[] | ReviewThreadCommentUncheckedCreateWithoutThreadInput[]
+    connectOrCreate?: ReviewThreadCommentCreateOrConnectWithoutThreadInput | ReviewThreadCommentCreateOrConnectWithoutThreadInput[]
+    upsert?: ReviewThreadCommentUpsertWithWhereUniqueWithoutThreadInput | ReviewThreadCommentUpsertWithWhereUniqueWithoutThreadInput[]
+    createMany?: ReviewThreadCommentCreateManyThreadInputEnvelope
+    set?: ReviewThreadCommentWhereUniqueInput | ReviewThreadCommentWhereUniqueInput[]
+    disconnect?: ReviewThreadCommentWhereUniqueInput | ReviewThreadCommentWhereUniqueInput[]
+    delete?: ReviewThreadCommentWhereUniqueInput | ReviewThreadCommentWhereUniqueInput[]
+    connect?: ReviewThreadCommentWhereUniqueInput | ReviewThreadCommentWhereUniqueInput[]
+    update?: ReviewThreadCommentUpdateWithWhereUniqueWithoutThreadInput | ReviewThreadCommentUpdateWithWhereUniqueWithoutThreadInput[]
+    updateMany?: ReviewThreadCommentUpdateManyWithWhereWithoutThreadInput | ReviewThreadCommentUpdateManyWithWhereWithoutThreadInput[]
+    deleteMany?: ReviewThreadCommentScalarWhereInput | ReviewThreadCommentScalarWhereInput[]
+  }
+
+  export type ReviewThreadCommentUncheckedUpdateManyWithoutThreadNestedInput = {
+    create?: XOR<ReviewThreadCommentCreateWithoutThreadInput, ReviewThreadCommentUncheckedCreateWithoutThreadInput> | ReviewThreadCommentCreateWithoutThreadInput[] | ReviewThreadCommentUncheckedCreateWithoutThreadInput[]
+    connectOrCreate?: ReviewThreadCommentCreateOrConnectWithoutThreadInput | ReviewThreadCommentCreateOrConnectWithoutThreadInput[]
+    upsert?: ReviewThreadCommentUpsertWithWhereUniqueWithoutThreadInput | ReviewThreadCommentUpsertWithWhereUniqueWithoutThreadInput[]
+    createMany?: ReviewThreadCommentCreateManyThreadInputEnvelope
+    set?: ReviewThreadCommentWhereUniqueInput | ReviewThreadCommentWhereUniqueInput[]
+    disconnect?: ReviewThreadCommentWhereUniqueInput | ReviewThreadCommentWhereUniqueInput[]
+    delete?: ReviewThreadCommentWhereUniqueInput | ReviewThreadCommentWhereUniqueInput[]
+    connect?: ReviewThreadCommentWhereUniqueInput | ReviewThreadCommentWhereUniqueInput[]
+    update?: ReviewThreadCommentUpdateWithWhereUniqueWithoutThreadInput | ReviewThreadCommentUpdateWithWhereUniqueWithoutThreadInput[]
+    updateMany?: ReviewThreadCommentUpdateManyWithWhereWithoutThreadInput | ReviewThreadCommentUpdateManyWithWhereWithoutThreadInput[]
+    deleteMany?: ReviewThreadCommentScalarWhereInput | ReviewThreadCommentScalarWhereInput[]
+  }
+
+  export type ReviewThreadCreateNestedOneWithoutCommentsInput = {
+    create?: XOR<ReviewThreadCreateWithoutCommentsInput, ReviewThreadUncheckedCreateWithoutCommentsInput>
+    connectOrCreate?: ReviewThreadCreateOrConnectWithoutCommentsInput
+    connect?: ReviewThreadWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutThreadCommentsInput = {
+    create?: XOR<UserCreateWithoutThreadCommentsInput, UserUncheckedCreateWithoutThreadCommentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutThreadCommentsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ReviewThreadUpdateOneRequiredWithoutCommentsNestedInput = {
+    create?: XOR<ReviewThreadCreateWithoutCommentsInput, ReviewThreadUncheckedCreateWithoutCommentsInput>
+    connectOrCreate?: ReviewThreadCreateOrConnectWithoutCommentsInput
+    upsert?: ReviewThreadUpsertWithoutCommentsInput
+    connect?: ReviewThreadWhereUniqueInput
+    update?: XOR<XOR<ReviewThreadUpdateToOneWithWhereWithoutCommentsInput, ReviewThreadUpdateWithoutCommentsInput>, ReviewThreadUncheckedUpdateWithoutCommentsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutThreadCommentsNestedInput = {
+    create?: XOR<UserCreateWithoutThreadCommentsInput, UserUncheckedCreateWithoutThreadCommentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutThreadCommentsInput
+    upsert?: UserUpsertWithoutThreadCommentsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutThreadCommentsInput, UserUpdateWithoutThreadCommentsInput>, UserUncheckedUpdateWithoutThreadCommentsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -10898,6 +14005,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     repository: RepositoryCreateNestedOneWithoutReviewsInput
+    threads?: ReviewThreadCreateNestedManyWithoutReviewInput
   }
 
   export type ReviewUncheckedCreateWithoutUserInput = {
@@ -10914,6 +14022,7 @@ export namespace Prisma {
     error?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
   }
 
   export type ReviewCreateOrConnectWithoutUserInput = {
@@ -10923,6 +14032,32 @@ export namespace Prisma {
 
   export type ReviewCreateManyUserInputEnvelope = {
     data: ReviewCreateManyUserInput | ReviewCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ReviewThreadCommentCreateWithoutUserInput = {
+    id?: string
+    content: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    thread: ReviewThreadCreateNestedOneWithoutCommentsInput
+  }
+
+  export type ReviewThreadCommentUncheckedCreateWithoutUserInput = {
+    id?: string
+    threadId: string
+    content: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ReviewThreadCommentCreateOrConnectWithoutUserInput = {
+    where: ReviewThreadCommentWhereUniqueInput
+    create: XOR<ReviewThreadCommentCreateWithoutUserInput, ReviewThreadCommentUncheckedCreateWithoutUserInput>
+  }
+
+  export type ReviewThreadCommentCreateManyUserInputEnvelope = {
+    data: ReviewThreadCommentCreateManyUserInput | ReviewThreadCommentCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -11058,6 +14193,34 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Review"> | Date | string
   }
 
+  export type ReviewThreadCommentUpsertWithWhereUniqueWithoutUserInput = {
+    where: ReviewThreadCommentWhereUniqueInput
+    update: XOR<ReviewThreadCommentUpdateWithoutUserInput, ReviewThreadCommentUncheckedUpdateWithoutUserInput>
+    create: XOR<ReviewThreadCommentCreateWithoutUserInput, ReviewThreadCommentUncheckedCreateWithoutUserInput>
+  }
+
+  export type ReviewThreadCommentUpdateWithWhereUniqueWithoutUserInput = {
+    where: ReviewThreadCommentWhereUniqueInput
+    data: XOR<ReviewThreadCommentUpdateWithoutUserInput, ReviewThreadCommentUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ReviewThreadCommentUpdateManyWithWhereWithoutUserInput = {
+    where: ReviewThreadCommentScalarWhereInput
+    data: XOR<ReviewThreadCommentUpdateManyMutationInput, ReviewThreadCommentUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ReviewThreadCommentScalarWhereInput = {
+    AND?: ReviewThreadCommentScalarWhereInput | ReviewThreadCommentScalarWhereInput[]
+    OR?: ReviewThreadCommentScalarWhereInput[]
+    NOT?: ReviewThreadCommentScalarWhereInput | ReviewThreadCommentScalarWhereInput[]
+    id?: StringFilter<"ReviewThreadComment"> | string
+    threadId?: StringFilter<"ReviewThreadComment"> | string
+    userId?: StringFilter<"ReviewThreadComment"> | string
+    content?: StringFilter<"ReviewThreadComment"> | string
+    createdAt?: DateTimeFilter<"ReviewThreadComment"> | Date | string
+    updatedAt?: DateTimeFilter<"ReviewThreadComment"> | Date | string
+  }
+
   export type UserCreateWithoutSessionsInput = {
     id: string
     name: string
@@ -11074,6 +14237,7 @@ export namespace Prisma {
     accounts?: AccountCreateNestedManyWithoutUserInput
     repositories?: RepositoryCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    threadComments?: ReviewThreadCommentCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -11092,6 +14256,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    threadComments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -11126,6 +14291,7 @@ export namespace Prisma {
     accounts?: AccountUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    threadComments?: ReviewThreadCommentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -11144,6 +14310,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    threadComments?: ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAccountsInput = {
@@ -11162,6 +14329,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     repositories?: RepositoryCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    threadComments?: ReviewThreadCommentCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -11180,6 +14348,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    threadComments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -11214,6 +14383,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    threadComments?: ReviewThreadCommentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -11232,6 +14402,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    threadComments?: ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutRepositoriesInput = {
@@ -11250,6 +14421,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    threadComments?: ReviewThreadCommentCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRepositoriesInput = {
@@ -11268,6 +14440,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    threadComments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRepositoriesInput = {
@@ -11289,6 +14462,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutReviewsInput
+    threads?: ReviewThreadCreateNestedManyWithoutReviewInput
   }
 
   export type ReviewUncheckedCreateWithoutRepositoryInput = {
@@ -11305,6 +14479,7 @@ export namespace Prisma {
     error?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
   }
 
   export type ReviewCreateOrConnectWithoutRepositoryInput = {
@@ -11344,6 +14519,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    threadComments?: ReviewThreadCommentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRepositoriesInput = {
@@ -11362,6 +14538,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    threadComments?: ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ReviewUpsertWithWhereUniqueWithoutRepositoryInput = {
@@ -11425,6 +14602,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     repositories?: RepositoryCreateNestedManyWithoutUserInput
+    threadComments?: ReviewThreadCommentCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReviewsInput = {
@@ -11443,11 +14621,42 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
+    threadComments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewsInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutReviewsInput, UserUncheckedCreateWithoutReviewsInput>
+  }
+
+  export type ReviewThreadCreateWithoutReviewInput = {
+    id?: string
+    file: string
+    line: number
+    resolved?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    comments?: ReviewThreadCommentCreateNestedManyWithoutThreadInput
+  }
+
+  export type ReviewThreadUncheckedCreateWithoutReviewInput = {
+    id?: string
+    file: string
+    line: number
+    resolved?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    comments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutThreadInput
+  }
+
+  export type ReviewThreadCreateOrConnectWithoutReviewInput = {
+    where: ReviewThreadWhereUniqueInput
+    create: XOR<ReviewThreadCreateWithoutReviewInput, ReviewThreadUncheckedCreateWithoutReviewInput>
+  }
+
+  export type ReviewThreadCreateManyReviewInputEnvelope = {
+    data: ReviewThreadCreateManyReviewInput | ReviewThreadCreateManyReviewInput[]
+    skipDuplicates?: boolean
   }
 
   export type RepositoryUpsertWithoutReviewsInput = {
@@ -11512,6 +14721,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
+    threadComments?: ReviewThreadCommentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewsInput = {
@@ -11530,6 +14740,310 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
+    threadComments?: ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type ReviewThreadUpsertWithWhereUniqueWithoutReviewInput = {
+    where: ReviewThreadWhereUniqueInput
+    update: XOR<ReviewThreadUpdateWithoutReviewInput, ReviewThreadUncheckedUpdateWithoutReviewInput>
+    create: XOR<ReviewThreadCreateWithoutReviewInput, ReviewThreadUncheckedCreateWithoutReviewInput>
+  }
+
+  export type ReviewThreadUpdateWithWhereUniqueWithoutReviewInput = {
+    where: ReviewThreadWhereUniqueInput
+    data: XOR<ReviewThreadUpdateWithoutReviewInput, ReviewThreadUncheckedUpdateWithoutReviewInput>
+  }
+
+  export type ReviewThreadUpdateManyWithWhereWithoutReviewInput = {
+    where: ReviewThreadScalarWhereInput
+    data: XOR<ReviewThreadUpdateManyMutationInput, ReviewThreadUncheckedUpdateManyWithoutReviewInput>
+  }
+
+  export type ReviewThreadScalarWhereInput = {
+    AND?: ReviewThreadScalarWhereInput | ReviewThreadScalarWhereInput[]
+    OR?: ReviewThreadScalarWhereInput[]
+    NOT?: ReviewThreadScalarWhereInput | ReviewThreadScalarWhereInput[]
+    id?: StringFilter<"ReviewThread"> | string
+    reviewId?: StringFilter<"ReviewThread"> | string
+    file?: StringFilter<"ReviewThread"> | string
+    line?: IntFilter<"ReviewThread"> | number
+    resolved?: BoolFilter<"ReviewThread"> | boolean
+    createdAt?: DateTimeFilter<"ReviewThread"> | Date | string
+    updatedAt?: DateTimeFilter<"ReviewThread"> | Date | string
+  }
+
+  export type ReviewCreateWithoutThreadsInput = {
+    id?: string
+    prNumber: number
+    prTitle: string
+    prUrl: string
+    status?: $Enums.ReviewStatus
+    summary?: string | null
+    riskScore?: number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    repository: RepositoryCreateNestedOneWithoutReviewsInput
+    user: UserCreateNestedOneWithoutReviewsInput
+  }
+
+  export type ReviewUncheckedCreateWithoutThreadsInput = {
+    id?: string
+    repositoryId: string
+    userId: string
+    prNumber: number
+    prTitle: string
+    prUrl: string
+    status?: $Enums.ReviewStatus
+    summary?: string | null
+    riskScore?: number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ReviewCreateOrConnectWithoutThreadsInput = {
+    where: ReviewWhereUniqueInput
+    create: XOR<ReviewCreateWithoutThreadsInput, ReviewUncheckedCreateWithoutThreadsInput>
+  }
+
+  export type ReviewThreadCommentCreateWithoutThreadInput = {
+    id?: string
+    content: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutThreadCommentsInput
+  }
+
+  export type ReviewThreadCommentUncheckedCreateWithoutThreadInput = {
+    id?: string
+    userId: string
+    content: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ReviewThreadCommentCreateOrConnectWithoutThreadInput = {
+    where: ReviewThreadCommentWhereUniqueInput
+    create: XOR<ReviewThreadCommentCreateWithoutThreadInput, ReviewThreadCommentUncheckedCreateWithoutThreadInput>
+  }
+
+  export type ReviewThreadCommentCreateManyThreadInputEnvelope = {
+    data: ReviewThreadCommentCreateManyThreadInput | ReviewThreadCommentCreateManyThreadInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ReviewUpsertWithoutThreadsInput = {
+    update: XOR<ReviewUpdateWithoutThreadsInput, ReviewUncheckedUpdateWithoutThreadsInput>
+    create: XOR<ReviewCreateWithoutThreadsInput, ReviewUncheckedCreateWithoutThreadsInput>
+    where?: ReviewWhereInput
+  }
+
+  export type ReviewUpdateToOneWithWhereWithoutThreadsInput = {
+    where?: ReviewWhereInput
+    data: XOR<ReviewUpdateWithoutThreadsInput, ReviewUncheckedUpdateWithoutThreadsInput>
+  }
+
+  export type ReviewUpdateWithoutThreadsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    prNumber?: IntFieldUpdateOperationsInput | number
+    prTitle?: StringFieldUpdateOperationsInput | string
+    prUrl?: StringFieldUpdateOperationsInput | string
+    status?: EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    riskScore?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
+    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+  }
+
+  export type ReviewUncheckedUpdateWithoutThreadsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    repositoryId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    prNumber?: IntFieldUpdateOperationsInput | number
+    prTitle?: StringFieldUpdateOperationsInput | string
+    prUrl?: StringFieldUpdateOperationsInput | string
+    status?: EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    riskScore?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReviewThreadCommentUpsertWithWhereUniqueWithoutThreadInput = {
+    where: ReviewThreadCommentWhereUniqueInput
+    update: XOR<ReviewThreadCommentUpdateWithoutThreadInput, ReviewThreadCommentUncheckedUpdateWithoutThreadInput>
+    create: XOR<ReviewThreadCommentCreateWithoutThreadInput, ReviewThreadCommentUncheckedCreateWithoutThreadInput>
+  }
+
+  export type ReviewThreadCommentUpdateWithWhereUniqueWithoutThreadInput = {
+    where: ReviewThreadCommentWhereUniqueInput
+    data: XOR<ReviewThreadCommentUpdateWithoutThreadInput, ReviewThreadCommentUncheckedUpdateWithoutThreadInput>
+  }
+
+  export type ReviewThreadCommentUpdateManyWithWhereWithoutThreadInput = {
+    where: ReviewThreadCommentScalarWhereInput
+    data: XOR<ReviewThreadCommentUpdateManyMutationInput, ReviewThreadCommentUncheckedUpdateManyWithoutThreadInput>
+  }
+
+  export type ReviewThreadCreateWithoutCommentsInput = {
+    id?: string
+    file: string
+    line: number
+    resolved?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    review: ReviewCreateNestedOneWithoutThreadsInput
+  }
+
+  export type ReviewThreadUncheckedCreateWithoutCommentsInput = {
+    id?: string
+    reviewId: string
+    file: string
+    line: number
+    resolved?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ReviewThreadCreateOrConnectWithoutCommentsInput = {
+    where: ReviewThreadWhereUniqueInput
+    create: XOR<ReviewThreadCreateWithoutCommentsInput, ReviewThreadUncheckedCreateWithoutCommentsInput>
+  }
+
+  export type UserCreateWithoutThreadCommentsInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reviewDepth?: string
+    defaultLanguage?: string
+    autoReview?: boolean
+    includeSecurityChecks?: boolean
+    includePerfSuggestions?: boolean
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    repositories?: RepositoryCreateNestedManyWithoutUserInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutThreadCommentsInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reviewDepth?: string
+    defaultLanguage?: string
+    autoReview?: boolean
+    includeSecurityChecks?: boolean
+    includePerfSuggestions?: boolean
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutThreadCommentsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutThreadCommentsInput, UserUncheckedCreateWithoutThreadCommentsInput>
+  }
+
+  export type ReviewThreadUpsertWithoutCommentsInput = {
+    update: XOR<ReviewThreadUpdateWithoutCommentsInput, ReviewThreadUncheckedUpdateWithoutCommentsInput>
+    create: XOR<ReviewThreadCreateWithoutCommentsInput, ReviewThreadUncheckedCreateWithoutCommentsInput>
+    where?: ReviewThreadWhereInput
+  }
+
+  export type ReviewThreadUpdateToOneWithWhereWithoutCommentsInput = {
+    where?: ReviewThreadWhereInput
+    data: XOR<ReviewThreadUpdateWithoutCommentsInput, ReviewThreadUncheckedUpdateWithoutCommentsInput>
+  }
+
+  export type ReviewThreadUpdateWithoutCommentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    file?: StringFieldUpdateOperationsInput | string
+    line?: IntFieldUpdateOperationsInput | number
+    resolved?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    review?: ReviewUpdateOneRequiredWithoutThreadsNestedInput
+  }
+
+  export type ReviewThreadUncheckedUpdateWithoutCommentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewId?: StringFieldUpdateOperationsInput | string
+    file?: StringFieldUpdateOperationsInput | string
+    line?: IntFieldUpdateOperationsInput | number
+    resolved?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUpsertWithoutThreadCommentsInput = {
+    update: XOR<UserUpdateWithoutThreadCommentsInput, UserUncheckedUpdateWithoutThreadCommentsInput>
+    create: XOR<UserCreateWithoutThreadCommentsInput, UserUncheckedCreateWithoutThreadCommentsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutThreadCommentsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutThreadCommentsInput, UserUncheckedUpdateWithoutThreadCommentsInput>
+  }
+
+  export type UserUpdateWithoutThreadCommentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDepth?: StringFieldUpdateOperationsInput | string
+    defaultLanguage?: StringFieldUpdateOperationsInput | string
+    autoReview?: BoolFieldUpdateOperationsInput | boolean
+    includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
+    includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    repositories?: RepositoryUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutThreadCommentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDepth?: StringFieldUpdateOperationsInput | string
+    defaultLanguage?: StringFieldUpdateOperationsInput | string
+    autoReview?: BoolFieldUpdateOperationsInput | boolean
+    includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
+    includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SessionCreateManyUserInput = {
@@ -11580,6 +15094,14 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ReviewThreadCommentCreateManyUserInput = {
+    id?: string
+    threadId: string
+    content: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -11708,6 +15230,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
+    threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
   }
 
   export type ReviewUncheckedUpdateWithoutUserInput = {
@@ -11724,6 +15247,7 @@ export namespace Prisma {
     error?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
   }
 
   export type ReviewUncheckedUpdateManyWithoutUserInput = {
@@ -11738,6 +15262,30 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReviewThreadCommentUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    thread?: ReviewThreadUpdateOneRequiredWithoutCommentsNestedInput
+  }
+
+  export type ReviewThreadCommentUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReviewThreadCommentUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11772,6 +15320,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
   }
 
   export type ReviewUncheckedUpdateWithoutRepositoryInput = {
@@ -11788,6 +15337,7 @@ export namespace Prisma {
     error?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
   }
 
   export type ReviewUncheckedUpdateManyWithoutRepositoryInput = {
@@ -11802,6 +15352,76 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReviewThreadCreateManyReviewInput = {
+    id?: string
+    file: string
+    line: number
+    resolved?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ReviewThreadUpdateWithoutReviewInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    file?: StringFieldUpdateOperationsInput | string
+    line?: IntFieldUpdateOperationsInput | number
+    resolved?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    comments?: ReviewThreadCommentUpdateManyWithoutThreadNestedInput
+  }
+
+  export type ReviewThreadUncheckedUpdateWithoutReviewInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    file?: StringFieldUpdateOperationsInput | string
+    line?: IntFieldUpdateOperationsInput | number
+    resolved?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    comments?: ReviewThreadCommentUncheckedUpdateManyWithoutThreadNestedInput
+  }
+
+  export type ReviewThreadUncheckedUpdateManyWithoutReviewInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    file?: StringFieldUpdateOperationsInput | string
+    line?: IntFieldUpdateOperationsInput | number
+    resolved?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReviewThreadCommentCreateManyThreadInput = {
+    id?: string
+    userId: string
+    content: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ReviewThreadCommentUpdateWithoutThreadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutThreadCommentsNestedInput
+  }
+
+  export type ReviewThreadCommentUncheckedUpdateWithoutThreadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReviewThreadCommentUncheckedUpdateManyWithoutThreadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
