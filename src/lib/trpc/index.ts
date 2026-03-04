@@ -1,2 +1,2 @@
-import { trpc } from "./client";
-import { TRPCProvider } from "./provider";
+export { trpc } from "./client";
+export { TRPCProvider } from "./provider";

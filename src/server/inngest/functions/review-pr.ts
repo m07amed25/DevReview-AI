@@ -1,7 +1,6 @@
 import { inngest } from "../client";
 import { db } from "@/server/db";
 import { reviewCode } from "@/server/services/ai";
-// import { reviewCode } from "@/server/services/ai";
 import {
   fetchPullRequest,
   fetchPullRequestFiles,

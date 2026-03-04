@@ -93,9 +93,9 @@ export default function NotFound() {
             className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#030303] text-white selection:bg-purple-500/30"
         >
             {/* Dynamic Background Gradients */}
-            <div className="interactive-glow ambient-bg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] md:w-[900px] h-[600px] md:h-[900px] bg-indigo-600/25 rounded-full blur-[140px] pointer-events-none" />
-            <div className="interactive-glow ambient-bg absolute top-0 right-10 w-[400px] md:w-[600px] h-[400px] md:h-[600px] bg-purple-600/20 rounded-full blur-[120px] pointer-events-none delay-1000" />
-            <div className="interactive-glow ambient-bg absolute bottom-0 left-10 w-[400px] md:w-[600px] h-[400px] md:h-[600px] bg-blue-600/25 rounded-full blur-[120px] pointer-events-none delay-2000" />
+            <div className="interactive-glow ambient-bg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 md:w-225 h-150 md:h-225 bg-indigo-600/25 rounded-full blur-[140px] pointer-events-none" />
+            <div className="interactive-glow ambient-bg absolute top-0 right-10 w-100 md:w-150 h-100 md:h-150 bg-purple-600/20 rounded-full blur-[120px] pointer-events-none delay-1000" />
+            <div className="interactive-glow ambient-bg absolute bottom-0 left-10 w-100 md:w-150 h-100 md:h-150 bg-blue-600/25 rounded-full blur-[120px] pointer-events-none delay-2000" />
             
             {/* Fine noise overlay for texture */}
             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.25] mix-blend-overlay pointer-events-none"></div>
@@ -116,7 +116,7 @@ export default function NotFound() {
             </div>
 
             <div className="z-10 flex flex-col items-center px-6 md:px-0 text-center max-w-3xl mx-auto">
-                <div className="reveal-element inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.03] border border-white/10 text-sm font-medium text-neutral-300 mb-6 backdrop-blur-xl shadow-[0_0_20px_rgba(255,255,255,0.05)]">
+                <div className="reveal-element inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/3 border border-white/10 text-sm font-medium text-neutral-300 mb-6 backdrop-blur-xl shadow-[0_0_20px_rgba(255,255,255,0.05)]">
                     <Sparkles className="w-4 h-4 text-purple-400" />
                     <span className="tracking-wide">System Malfunction • Error 404</span>
                 </div>
@@ -133,15 +133,15 @@ export default function NotFound() {
                     </h1>
 
                     {/* Main text layer with intense gradient and glass reflection */}
-                    <h1 className="relative z-10 text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-neutral-500 font-black text-[12rem] md:text-[20rem] leading-[0.8] tracking-tighter drop-shadow-[0_0_80px_rgba(255,255,255,0.15)] group-hover:drop-shadow-[0_0_120px_rgba(168,85,247,0.4)] transition-all duration-700">
+                    <h1 className="relative z-10 text-transparent bg-clip-text bg-linear-to-br from-white via-white to-neutral-500 font-black text-[12rem] md:text-[20rem] leading-[0.8] tracking-tighter drop-shadow-[0_0_80px_rgba(255,255,255,0.15)] group-hover:drop-shadow-[0_0_120px_rgba(168,85,247,0.4)] transition-all duration-700">
                         404
                     </h1>
                     
                     {/* Holographic interference overlay (on hover) */}
-                    <div className="absolute inset-0 z-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay opacity-0 group-hover:opacity-40 transition-opacity duration-700 pointer-events-none [mask-image:linear-gradient(to_bottom,white,transparent)]" />
+                    <div className="absolute inset-0 z-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay opacity-0 group-hover:opacity-40 transition-opacity duration-700 pointer-events-none mask-[linear-gradient(to_bottom,white,transparent)]" />
                 </div>
 
-                <h2 className="reveal-element mt-6 md:mt-8 text-3xl md:text-5xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-neutral-500 mb-6">
+                <h2 className="reveal-element mt-6 md:mt-8 text-3xl md:text-5xl font-bold tracking-tight text-transparent bg-clip-text bg-linear-to-r from-white to-neutral-500 mb-6">
                     Drifting in Space
                 </h2>
 
@@ -153,11 +153,11 @@ export default function NotFound() {
                 <div className="reveal-element flex flex-col sm:flex-row items-center justify-center gap-5 w-full sm:w-auto">
                     <button
                         onClick={() => router.back()}
-                        className="group relative w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 text-sm font-semibold text-white transition-all bg-white/[0.03] border border-white/10 rounded-full hover:bg-white/10 hover:border-white/20 hover:pr-10 overflow-hidden backdrop-blur-sm"
+                        className="group relative w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 text-sm font-semibold text-white transition-all bg-white/3 border border-white/10 rounded-full hover:bg-white/10 hover:border-white/20 hover:pr-10 overflow-hidden backdrop-blur-sm"
                     >
                         <MoveLeft className="w-4 h-4 text-neutral-400 transition-transform group-hover:-translate-x-1 group-hover:text-white" />
                         <span className="relative z-10">Retrace Steps</span>
-                        <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+                        <div className="absolute inset-0 w-full h-full bg-linear-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
                     </button>
 
                     <Link

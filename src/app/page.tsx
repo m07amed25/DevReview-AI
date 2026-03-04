@@ -228,18 +228,18 @@ export default function HomePage() {
         <GridBackground />
 
         {/* Animated orbs */}
-        <div className="orb-1 absolute left-1/4 top-1/4 h-[500px] w-[500px] rounded-full bg-primary/8 blur-[120px] animate-pulse" />
+        <div className="orb-1 absolute left-1/4 top-1/4 h-125 w-125 rounded-full bg-primary/8 blur-[120px] animate-pulse" />
         <div
-          className="orb-2 absolute right-1/4 bottom-1/4 h-[400px] w-[400px] rounded-full bg-accent/6 blur-[100px] animate-pulse"
+          className="orb-2 absolute right-1/4 bottom-1/4 h-100 w-100 rounded-full bg-accent/6 blur-[100px] animate-pulse"
           style={{ animationDelay: "1s" }}
         />
         <div
-          className="orb-3 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-full bg-primary/3 blur-[150px] animate-pulse"
+          className="orb-3 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-150 w-150 rounded-full bg-primary/3 blur-[150px] animate-pulse"
           style={{ animationDelay: "2s" }}
         />
 
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-background to-background" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-primary/5 via-background to-background" />
       </div>
 
       {/* Skip to main content link for accessibility */}
@@ -252,7 +252,7 @@ export default function HomePage() {
 
       {/* Header */}
       <header
-        className="sticky top-0 z-50 border-b border-border/40 bg-background/60 backdrop-blur-xl supports-[backdrop-filter]:bg-background/40"
+        className="sticky top-0 z-50 border-b border-border/40 bg-background/60 backdrop-blur-xl supports-backdrop-filter:bg-background/40"
         role="banner"
       >
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -322,7 +322,7 @@ export default function HomePage() {
             >
               Ship better code,
               <br />
-              <span className="bg-gradient-to-r from-primary via-primary/80 to-accent bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-primary via-primary/80 to-accent bg-clip-text text-transparent">
                 faster
               </span>
             </h1>
@@ -630,7 +630,7 @@ export default function HomePage() {
                 >
                   {/* Hover gradient background */}
                   <div
-                    className={`absolute inset-0 bg-gradient-to-br from-primary/[0.06] via-transparent to-transparent opacity-0 transition-opacity duration-500 rounded-2xl -z-10 ${activeFeature === index ? "opacity-100" : ""}`}
+                    className={`absolute inset-0 bg-linear-to-br from-primary/6 via-transparent to-transparent opacity-0 transition-opacity duration-500 rounded-2xl -z-10 ${activeFeature === index ? "opacity-100" : ""}`}
                   />
 
                   <div className="relative p-5 rounded-2xl border border-transparent transition-all duration-300 hover:border-border/60">
@@ -719,7 +719,7 @@ export default function HomePage() {
                   role="listitem"
                 >
                   {/* Step number */}
-                  <div className="text-7xl font-bold text-primary/[0.08] absolute -top-3 -left-1 select-none group-hover:text-primary/[0.12] transition-colors duration-300">
+                  <div className="text-7xl font-bold text-primary/8 absolute -top-3 -left-1 select-none group-hover:text-primary/12 transition-colors duration-300">
                     {item.step}
                   </div>
 
@@ -739,7 +739,7 @@ export default function HomePage() {
 
                   {/* Connector line */}
                   {index < 2 && (
-                    <div className="hidden sm:block absolute top-[60px] left-[calc(50%+35px)] w-[calc(100%-70px)] h-px bg-gradient-to-r from-primary/20 to-transparent" />
+                    <div className="hidden sm:block absolute top-15 left-[calc(50%+35px)] w-[calc(100%-70px)] h-px bg-linear-to-r from-primary/20 to-transparent" />
                   )}
                 </div>
               ))}
@@ -803,11 +803,11 @@ export default function HomePage() {
         >
           {/* Background gradient */}
           <div
-            className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-accent/8"
+            className="absolute inset-0 bg-linear-to-br from-primary/8 via-transparent to-accent/8"
             aria-hidden="true"
           />
           <div
-            className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,_var(--primary)/5,_transparent_50%)]"
+            className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,var(--primary)/5,transparent_50%)]"
             aria-hidden="true"
           />
 
@@ -889,7 +889,7 @@ export default function HomePage() {
             </nav>
 
             <span className="text-sm text-muted-foreground">
-              © 2025 CodeReviewAI
+              © {new Date().getFullYear()} CodeReviewAI
             </span>
           </div>
 

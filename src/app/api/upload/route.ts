@@ -14,6 +14,9 @@ const ALLOWED_TYPES = [
   "image/svg+xml",
 ];
 
+/** Whitelist of allowed file extensions to prevent malicious uploads */
+const ALLOWED_EXTENSIONS = new Set(["jpg", "jpeg", "png", "gif", "webp", "svg"]);
+
 /**
  * When BLOB_READ_WRITE_TOKEN is set (Vercel production / preview) we upload to
  * Vercel Blob Storage.  Otherwise we fall back to the local filesystem so
@@ -50,8 +53,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Generate unique filename
-    const ext = file.name.split(".").pop() || "png";
+    // Generate unique filename with sanitized extension
+    const rawExt = file.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "") || "png";
+    const ext = ALLOWED_EXTENSIONS.has(rawExt) ? rawExt : "png";
     const hash = crypto.randomBytes(8).toString("hex");
     const filename = `avatars/${session.user.id}-${hash}.${ext}`;
 

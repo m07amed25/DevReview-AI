@@ -74,16 +74,58 @@ Severity guide:
 
 Be concise but specific. Reference exact line numbers from the diff.`;
 
+/** Rough character limit to keep the prompt within model context limits (~128k tokens for llama-3.3-70b) */
+const MAX_DIFF_CHARS = 100_000;
+
+/**
+ * Truncate diff content if it exceeds the character limit so we don't
+ * blow past the model's context window. Keeps the first N characters
+ * and appends a note about truncation.
+ */
+function truncateDiff(diff: string): string {
+  if (diff.length <= MAX_DIFF_CHARS) return diff;
+  return (
+    diff.slice(0, MAX_DIFF_CHARS) +
+    "\n\n... [diff truncated — file too large for full review] ..."
+  );
+}
+
+/**
+ * Attempt to extract valid JSON from a response that may contain
+ * markdown code fences (```json ... ```) or other wrapper text.
+ */
+function extractJSON(content: string): unknown {
+  // First try direct parse
+  try {
+    return JSON.parse(content);
+  } catch {
+    // Try to extract from markdown code fences
+    const fenceMatch = content.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/);
+    if (fenceMatch?.[1]) {
+      return JSON.parse(fenceMatch[1]);
+    }
+    // Try to find first { ... } block
+    const braceMatch = content.match(/\{[\s\S]*\}/);
+    if (braceMatch?.[0]) {
+      return JSON.parse(braceMatch[0]);
+    }
+    throw new Error("Could not extract valid JSON from AI response");
+  }
+}
+
 export async function reviewCode(
   prTitle: string,
   files: FileChange[],
 ): Promise<ReviewResult> {
-  const diffContent = files
-    .filter((f) => f.patch)
-    .map(
-      (f) => `### ${f.filename} (${f.status})\n\`\`\`diff\n${f.patch}\n\`\`\``,
-    )
-    .join("\n\n");
+  const diffContent = truncateDiff(
+    files
+      .filter((f) => f.patch)
+      .map(
+        (f) =>
+          `### ${f.filename} (${f.status})\n\`\`\`diff\n${f.patch}\n\`\`\``,
+      )
+      .join("\n\n"),
+  );
 
   if (!diffContent.trim()) {
     return {
@@ -101,22 +143,43 @@ export async function reviewCode(
 ${diffContent}`;
 
   const groq = getGroqClient();
-  const response = await groq.chat.completions.create({
-    model: "llama-3.3-70b-versatile",
-    messages: [
-      { role: "system", content: SYSTEM_PROMPT },
-      { role: "user", content: userPrompt },
-    ],
-    max_tokens: 2000,
-    temperature: 0.3,
-    response_format: { type: "json_object" },
-  });
 
-  const content = response.choices[0]?.message?.content;
-  if (!content) {
-    throw new Error("No response from AI");
+  let content: string | undefined;
+  try {
+    const response = await groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages: [
+        { role: "system", content: SYSTEM_PROMPT },
+        { role: "user", content: userPrompt },
+      ],
+      max_tokens: 4096,
+      temperature: 0.3,
+      response_format: { type: "json_object" },
+    });
+
+    content = response.choices[0]?.message?.content ?? undefined;
+  } catch (err) {
+    const message =
+      err instanceof Error ? err.message : "Unknown AI provider error";
+    throw new Error(`AI service request failed: ${message}`);
   }
 
-  const parsed = JSON.parse(content);
-  return ReviewResultSchema.parse(parsed);
+  if (!content) {
+    throw new Error("No response content from AI");
+  }
+
+  try {
+    const parsed = extractJSON(content);
+    return ReviewResultSchema.parse(parsed);
+  } catch (err) {
+    // If parsing/validation fails, return a degraded result rather than crashing
+    console.error("Failed to parse AI response:", err);
+    console.error("Raw AI response:", content.slice(0, 500));
+    return {
+      summary:
+        "The AI review completed but the response could not be fully parsed. Please try again.",
+      riskScore: 50,
+      comments: [],
+    };
+  }
 }

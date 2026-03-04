@@ -1,5 +1,47 @@
 import { db } from "@/server/db";
 
+/** Custom error for GitHub API failures with rate-limit and status info */
+export class GitHubAPIError extends Error {
+  constructor(
+    public readonly status: number,
+    public readonly url: string,
+    public readonly rateLimitRemaining?: number,
+    public readonly rateLimitReset?: Date,
+  ) {
+    super(`GitHub API error: ${status} for ${url}`);
+    this.name = "GitHubAPIError";
+  }
+}
+
+/**
+ * Shared fetch wrapper that includes auth headers and checks for errors.
+ * Throws GitHubAPIError with rate-limit metadata on failure.
+ */
+async function githubFetch(
+  url: string,
+  accessToken: string,
+): Promise<Response> {
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      Accept: "application/vnd.github.v3+json",
+    },
+  });
+
+  if (!response.ok) {
+    const remaining = response.headers.get("x-ratelimit-remaining");
+    const resetEpoch = response.headers.get("x-ratelimit-reset");
+    throw new GitHubAPIError(
+      response.status,
+      url,
+      remaining ? parseInt(remaining, 10) : undefined,
+      resetEpoch ? new Date(parseInt(resetEpoch, 10) * 1000) : undefined,
+    );
+  }
+
+  return response;
+}
+
 export interface GitHubPullRequestFile {
   sha: string;
   filename: string;
@@ -88,19 +130,10 @@ async function fetchAllPages<T>(
 
   while (true) {
     const separator = url.includes("?") ? "&" : "?";
-    const response = await fetch(
+    const response = await githubFetch(
       `${url}${separator}per_page=${perPage}&page=${page}`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          Accept: "application/vnd.github.v3+json",
-        },
-      },
+      accessToken,
     );
-
-    if (!response.ok) {
-      throw new Error(`GitHub API error: ${response.status} for ${url}`);
-    }
 
     const data = (await response.json()) as T[];
     results.push(...data);
@@ -149,7 +182,8 @@ export async function fetchGitHubRepos(
 
   // Return sorted by updated_at descending
   return Array.from(repoMap.values()).sort(
-    (a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
+    (a, b) =>
+      new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
   );
 }
 
@@ -159,27 +193,28 @@ export async function fetchPullRequests(
   repo: string,
   state: "open" | "closed" | "all" = "open",
 ): Promise<GitHubPullRequest[]> {
-  const response = await fetch(
+  const response = await githubFetch(
     `https://api.github.com/repos/${owner}/${repo}/pulls?state=${state}&per_page=30&sort=updated&direction=desc`,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        Accept: "application/vnd.github.v3+json",
-      },
-    },
+    accessToken,
   );
-
-  if (!response.ok) {
-    throw new Error(`GitHub API error: ${response.status}`);
-  }
 
   const pulls = (await response.json()) as GitHubPullRequest[];
 
   // The list endpoint doesn't include additions/deletions/changed_files,
   // so we fetch each PR individually to get those stats.
-  return Promise.all(
-    pulls.map((pr) => fetchPullRequest(accessToken, owner, repo, pr.number)),
-  );
+  // Batch in groups of 5 to avoid hitting GitHub rate limits.
+  const batchSize = 5;
+  const results: GitHubPullRequest[] = [];
+
+  for (let i = 0; i < pulls.length; i += batchSize) {
+    const batch = pulls.slice(i, i + batchSize);
+    const batchResults = await Promise.all(
+      batch.map((pr) => fetchPullRequest(accessToken, owner, repo, pr.number)),
+    );
+    results.push(...batchResults);
+  }
+
+  return results;
 }
 
 export async function fetchPullRequest(
@@ -188,19 +223,10 @@ export async function fetchPullRequest(
   repo: string,
   prNumber: number,
 ): Promise<GitHubPullRequest> {
-  const response = await fetch(
+  const response = await githubFetch(
     `https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}`,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        Accept: "application/vnd.github.v3+json",
-      },
-    },
+    accessToken,
   );
-
-  if (!response.ok) {
-    throw new Error(`GitHub API error: ${response.status}`);
-  }
 
   return (await response.json()) as GitHubPullRequest;
 }
@@ -216,19 +242,10 @@ export async function fetchPullRequestFiles(
   const perPage = 100;
 
   while (true) {
-    const response = await fetch(
+    const response = await githubFetch(
       `https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}/files?per_page=${perPage}&page=${page}`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          Accept: "application/vnd.github.v3+json",
-        },
-      },
+      accessToken,
     );
-
-    if (!response.ok) {
-      throw new Error(`GitHub API error: ${response.status}`);
-    }
 
     const data = (await response.json()) as GitHubPullRequestFile[];
     files.push(...data);
