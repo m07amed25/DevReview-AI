@@ -160,8 +160,16 @@ function buildSystemPrompt(preferences?: ReviewPreferences): string {
   return parts.join("\n");
 }
 
-/** Rough character limit to keep the prompt within model context limits (~128k tokens for llama-3.3-70b) */
-const MAX_DIFF_CHARS = 100_000;
+/**
+ * Rough character limit to keep the total request under Groq's
+ * 12 000 TPM rate-limit for the free/on-demand tier.
+ * ~30 000 chars ≈ 7 500 tokens for the diff, plus ~1 000 tokens
+ * for system + user prompt overhead → comfortably under 12k input tokens.
+ */
+const MAX_DIFF_CHARS = 30_000;
+
+/** Maximum characters for a single file's patch to avoid one huge file consuming the entire budget */
+const MAX_PATCH_CHARS_PER_FILE = 10_000;
 
 /**
  * Truncate diff content if it exceeds the character limit so we don't
@@ -207,10 +215,15 @@ export async function reviewCode(
   const diffContent = truncateDiff(
     files
       .filter((f) => f.patch)
-      .map(
-        (f) =>
-          `### ${f.filename} (${f.status})\n\`\`\`diff\n${f.patch}\n\`\`\``,
-      )
+      .map((f) => {
+        let patch = f.patch!;
+        if (patch.length > MAX_PATCH_CHARS_PER_FILE) {
+          patch =
+            patch.slice(0, MAX_PATCH_CHARS_PER_FILE) +
+            "\n... [patch truncated — file too large] ...";
+        }
+        return `### ${f.filename} (${f.status})\n\`\`\`diff\n${patch}\n\`\`\``;
+      })
       .join("\n\n"),
   );
 
