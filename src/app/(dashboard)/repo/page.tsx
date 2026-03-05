@@ -37,6 +37,7 @@ import {
   Github,
   ExternalLink,
   Calendar,
+  Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
@@ -374,6 +375,12 @@ export default function ReposPage() {
                       <p className="text-xs sm:text-sm text-muted-foreground truncate mt-0.5">
                         {repo.fullName}
                       </p>
+                    )}
+                    {(repo as any).team && (
+                      <Badge variant="outline" className="mt-1.5 text-xs w-fit gap-1">
+                        <Users className="size-3" />
+                        {(repo as any).team.name}
+                      </Badge>
                     )}
                     <div className="flex items-center justify-between gap-2 mt-auto pt-4 border-t border-border/50">
                       <span className="text-xs text-muted-foreground flex items-center gap-1.5">

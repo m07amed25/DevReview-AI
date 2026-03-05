@@ -175,6 +175,7 @@ exports.Prisma.VerificationScalarFieldEnum = {
 exports.Prisma.RepositoryScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  teamId: 'teamId',
   githubId: 'githubId',
   name: 'name',
   fullName: 'fullName',
@@ -220,6 +221,34 @@ exports.Prisma.ReviewThreadCommentScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.TeamScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  image: 'image',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TeamMemberScalarFieldEnum = {
+  id: 'id',
+  teamId: 'teamId',
+  userId: 'userId',
+  role: 'role',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.NotificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  title: 'title',
+  message: 'message',
+  link: 'link',
+  read: 'read',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -252,6 +281,19 @@ exports.ReviewStatus = exports.$Enums.ReviewStatus = {
   FAILED: 'FAILED'
 };
 
+exports.TeamRole = exports.$Enums.TeamRole = {
+  OWNER: 'OWNER',
+  ADMIN: 'ADMIN',
+  MEMBER: 'MEMBER'
+};
+
+exports.NotificationType = exports.$Enums.NotificationType = {
+  TEAM_INVITE: 'TEAM_INVITE',
+  TEAM_MEMBER_ADDED: 'TEAM_MEMBER_ADDED',
+  REVIEW_COMPLETED: 'REVIEW_COMPLETED',
+  REVIEW_FAILED: 'REVIEW_FAILED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Session: 'Session',
@@ -260,7 +302,10 @@ exports.Prisma.ModelName = {
   Repository: 'Repository',
   Review: 'Review',
   ReviewThread: 'ReviewThread',
-  ReviewThreadComment: 'ReviewThreadComment'
+  ReviewThreadComment: 'ReviewThreadComment',
+  Team: 'Team',
+  TeamMember: 'TeamMember',
+  Notification: 'Notification'
 };
 
 /**

@@ -8,6 +8,27 @@ import {
   fetchPullRequestFiles,
 } from "@/server/services/github";
 
+/**
+ * Get a repository the user can access — either as owner or team member.
+ */
+async function getAccessibleRepository(
+  db: any,
+  userId: string,
+  repositoryId: string,
+) {
+  const ownedRepo = await db.repository.findUnique({
+    where: { id: repositoryId, userId },
+  });
+  if (ownedRepo) return ownedRepo;
+
+  return db.repository.findFirst({
+    where: {
+      id: repositoryId,
+      team: { members: { some: { userId } } },
+    },
+  });
+}
+
 export const pullRequestRouter = createTRPCRouter({
   list: protectedProcedure
     .input(
@@ -17,9 +38,11 @@ export const pullRequestRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      const repository = await ctx.db.repository.findUnique({
-        where: { id: input.repositoryId, userId: ctx.user.id },
-      });
+      const repository = await getAccessibleRepository(
+        ctx.db,
+        ctx.user.id,
+        input.repositoryId,
+      );
 
       if (!repository) {
         throw new TRPCError({
@@ -28,7 +51,7 @@ export const pullRequestRouter = createTRPCRouter({
         });
       }
 
-      const accessToken = await getGitHubAccessToken(ctx.user.id);
+      const accessToken = await getGitHubAccessToken(repository.userId);
       if (!accessToken) {
         throw new TRPCError({
           code: "PRECONDITION_FAILED",
@@ -97,9 +120,11 @@ export const pullRequestRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      const repository = await ctx.db.repository.findUnique({
-        where: { id: input.repositoryId, userId: ctx.user.id },
-      });
+      const repository = await getAccessibleRepository(
+        ctx.db,
+        ctx.user.id,
+        input.repositoryId,
+      );
 
       if (!repository) {
         throw new TRPCError({
@@ -108,7 +133,7 @@ export const pullRequestRouter = createTRPCRouter({
         });
       }
 
-      const accessToken = await getGitHubAccessToken(ctx.user.id);
+      const accessToken = await getGitHubAccessToken(repository.userId);
       if (!accessToken) {
         throw new TRPCError({
           code: "PRECONDITION_FAILED",
@@ -171,9 +196,11 @@ export const pullRequestRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      const repository = await ctx.db.repository.findUnique({
-        where: { id: input.repositoryId, userId: ctx.user.id },
-      });
+      const repository = await getAccessibleRepository(
+        ctx.db,
+        ctx.user.id,
+        input.repositoryId,
+      );
 
       if (!repository) {
         throw new TRPCError({
@@ -182,7 +209,7 @@ export const pullRequestRouter = createTRPCRouter({
         });
       }
 
-      const accessToken = await getGitHubAccessToken(ctx.user.id);
+      const accessToken = await getGitHubAccessToken(repository.userId);
       if (!accessToken) {
         throw new TRPCError({
           code: "PRECONDITION_FAILED",

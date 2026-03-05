@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { FolderGit2, GitPullRequest } from "lucide-react";
+import { FolderGit2, GitPullRequest, Users } from "lucide-react";
 import { UserMenu } from "./user-menu";
+import { Notifications } from "./notifications";
 
 interface User {
   id: string;
@@ -27,6 +28,11 @@ const navItems = [
     href: "/reviews",
     label: "Reviews",
     icon: GitPullRequest,
+  },
+  {
+    href: "/teams",
+    label: "Teams",
+    icon: Users,
   },
 ];
 
@@ -62,6 +68,7 @@ export function Header({ user }: HeaderProps) {
         </div>
 
         <div className="flex items-center gap-2">
+          <Notifications />
           <UserMenu user={user} />
         </div>
       </div>

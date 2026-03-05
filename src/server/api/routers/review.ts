@@ -7,6 +7,33 @@ import {
   getGitHubAccessToken,
 } from "@/server/services/github";
 
+/**
+ * Check if the user has access to a repository — either as the owner
+ * or as a member of a team the repo is shared with.
+ */
+async function getAccessibleRepository(
+  db: any,
+  userId: string,
+  repositoryId: string,
+) {
+  // Direct ownership
+  const ownedRepo = await db.repository.findUnique({
+    where: { id: repositoryId, userId },
+  });
+  if (ownedRepo) return ownedRepo;
+
+  // Team membership
+  const teamRepo = await db.repository.findFirst({
+    where: {
+      id: repositoryId,
+      team: {
+        members: { some: { userId } },
+      },
+    },
+  });
+  return teamRepo;
+}
+
 export const reviewRouter = createTRPCRouter({
   trigger: protectedProcedure
     .input(
@@ -16,9 +43,11 @@ export const reviewRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const repository = await ctx.db.repository.findUnique({
-        where: { id: input.repositoryId, userId: ctx.user.id },
-      });
+      const repository = await getAccessibleRepository(
+        ctx.db,
+        ctx.user.id,
+        input.repositoryId,
+      );
 
       if (!repository) {
         throw new TRPCError({
@@ -27,7 +56,8 @@ export const reviewRouter = createTRPCRouter({
         });
       }
 
-      const accessToken = await getGitHubAccessToken(ctx.user.id);
+      // Use the repo owner's token for GitHub API calls
+      const accessToken = await getGitHubAccessToken(repository.userId);
       if (!accessToken) {
         throw new TRPCError({
           code: "PRECONDITION_FAILED",
@@ -112,10 +142,24 @@ export const reviewRouter = createTRPCRouter({
   get: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      const review = await ctx.db.review.findUnique({
+      // Try direct ownership first, then team access
+      let review = await ctx.db.review.findUnique({
         where: { id: input.id, userId: ctx.user.id },
         include: { repository: true },
       });
+
+      if (!review) {
+        // Check if user has team access to this review's repository
+        review = await ctx.db.review.findFirst({
+          where: {
+            id: input.id,
+            repository: {
+              team: { members: { some: { userId: ctx.user.id } } },
+            },
+          },
+          include: { repository: true },
+        });
+      }
 
       if (!review) {
         throw new TRPCError({
@@ -134,12 +178,24 @@ export const reviewRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
+      // Get IDs of team-shared repositories the user can access
+      const teamRepoIds = await ctx.db.repository.findMany({
+        where: {
+          team: { members: { some: { userId: ctx.user.id } } },
+        },
+        select: { id: true },
+      });
+      const teamRepoIdSet = teamRepoIds.map((r: { id: string }) => r.id);
+
       return ctx.db.review.findMany({
         where: {
-          userId: ctx.user.id,
+          OR: [
+            { userId: ctx.user.id },
+            { repositoryId: { in: teamRepoIdSet } },
+          ],
           ...(input.repositoryId && { repositoryId: input.repositoryId }),
         },
-        include: { repository: true },
+        include: { repository: true, user: { select: { id: true, name: true, image: true } } },
         orderBy: { createdAt: "desc" },
         take: input.limit,
       });
@@ -156,7 +212,14 @@ export const reviewRouter = createTRPCRouter({
         where: {
           repositoryId: input.repositoryId,
           prNumber: input.prNumber,
-          userId: ctx.user.id,
+          OR: [
+            { userId: ctx.user.id },
+            {
+              repository: {
+                team: { members: { some: { userId: ctx.user.id } } },
+              },
+            },
+          ],
         },
         orderBy: { createdAt: "desc" },
       });
