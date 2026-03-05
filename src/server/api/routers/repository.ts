@@ -25,7 +25,14 @@ export const repositoryRouter = createTRPCRouter({
 
       return ctx.db.repository.findMany({
         where: {
-          userId: ctx.user.id,
+          OR: [
+            { userId: ctx.user.id },
+            { team: { members: { some: { userId: ctx.user.id } } } },
+          ],
+        },
+        include: {
+          team: { select: { id: true, name: true } },
+          user: { select: { id: true, name: true } },
         },
         orderBy: {
           [sortBy]: order,

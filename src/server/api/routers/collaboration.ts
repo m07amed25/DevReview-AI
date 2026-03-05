@@ -8,9 +8,19 @@ export const collaborationRouter = createTRPCRouter({
   getThreads: protectedProcedure
     .input(z.object({ reviewId: z.string() }))
     .query(async ({ ctx, input }) => {
-      // Verify the user owns this review
-      const review = await ctx.db.review.findUnique({
-        where: { id: input.reviewId, userId: ctx.user.id },
+      // Verify the user owns this review or is a team member
+      const review = await ctx.db.review.findFirst({
+        where: {
+          id: input.reviewId,
+          OR: [
+            { userId: ctx.user.id },
+            {
+              repository: {
+                team: { members: { some: { userId: ctx.user.id } } },
+              },
+            },
+          ],
+        },
         select: { id: true },
       });
       if (!review) {
@@ -44,8 +54,18 @@ export const collaborationRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const review = await ctx.db.review.findUnique({
-        where: { id: input.reviewId, userId: ctx.user.id },
+      const review = await ctx.db.review.findFirst({
+        where: {
+          id: input.reviewId,
+          OR: [
+            { userId: ctx.user.id },
+            {
+              repository: {
+                team: { members: { some: { userId: ctx.user.id } } },
+              },
+            },
+          ],
+        },
         select: { id: true },
       });
       if (!review) {
@@ -99,10 +119,25 @@ export const collaborationRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const thread = await ctx.db.reviewThread.findUnique({
         where: { id: input.threadId },
-        include: { review: { select: { id: true, userId: true } } },
+        include: { review: { select: { id: true, userId: true, repository: { select: { teamId: true } } } } },
       });
-      if (!thread || thread.review.userId !== ctx.user.id) {
+      if (!thread) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Thread not found" });
+      }
+
+      // Check access: owner or team member
+      if (thread.review.userId !== ctx.user.id) {
+        if (!thread.review.repository.teamId) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Thread not found" });
+        }
+        const isMember = await ctx.db.teamMember.findUnique({
+          where: {
+            teamId_userId: { teamId: thread.review.repository.teamId, userId: ctx.user.id },
+          },
+        });
+        if (!isMember) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Thread not found" });
+        }
       }
 
       const comment = await ctx.db.reviewThreadComment.create({
@@ -137,10 +172,25 @@ export const collaborationRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const thread = await ctx.db.reviewThread.findUnique({
         where: { id: input.threadId },
-        include: { review: { select: { id: true, userId: true } } },
+        include: { review: { select: { id: true, userId: true, repository: { select: { teamId: true } } } } },
       });
-      if (!thread || thread.review.userId !== ctx.user.id) {
+      if (!thread) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Thread not found" });
+      }
+
+      // Check access: owner or team member
+      if (thread.review.userId !== ctx.user.id) {
+        if (!thread.review.repository.teamId) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Thread not found" });
+        }
+        const isMember = await ctx.db.teamMember.findUnique({
+          where: {
+            teamId_userId: { teamId: thread.review.repository.teamId, userId: ctx.user.id },
+          },
+        });
+        if (!isMember) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Thread not found" });
+        }
       }
 
       const updated = await ctx.db.reviewThread.update({

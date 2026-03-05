@@ -29,6 +29,8 @@ model User {
   repositories   Repository[]
   reviews        Review[]
   threadComments ReviewThreadComment[]
+  teamMembers    TeamMember[]
+  notifications  Notification[]
 
   // Code review preferences
   reviewDepth            String  @default("standard")
@@ -92,6 +94,7 @@ model Verification {
 model Repository {
   id        String   @id @default(cuid())
   userId    String
+  teamId    String?
   githubId  Int
   name      String
   fullName  String
@@ -101,9 +104,11 @@ model Repository {
   updatedAt DateTime @updatedAt
 
   user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team    Team?    @relation(fields: [teamId], references: [id], onDelete: SetNull)
   reviews Review[]
 
   @@unique([userId, githubId])
+  @@index([teamId])
 }
 
 model Review {
@@ -166,4 +171,59 @@ enum ReviewStatus {
   PROCESSING
   COMPLETED
   FAILED
+}
+
+model Team {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  image     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members      TeamMember[]
+  repositories Repository[]
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  teamId    String
+  userId    String
+  role      TeamRole @default(MEMBER)
+  createdAt DateTime @default(now())
+
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([teamId, userId])
+  @@index([userId])
+}
+
+enum TeamRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  message   String
+  link      String?
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, read])
+}
+
+enum NotificationType {
+  TEAM_INVITE
+  TEAM_MEMBER_ADDED
+  REVIEW_COMPLETED
+  REVIEW_FAILED
 }
