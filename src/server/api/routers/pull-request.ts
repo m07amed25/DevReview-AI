@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
+import type { PrismaClient } from "@/server/db/client";
 import {
   fetchPullRequests,
   fetchPullRequest,
@@ -12,7 +13,7 @@ import {
  * Get a repository the user can access — either as owner or team member.
  */
 async function getAccessibleRepository(
-  db: any,
+  db: PrismaClient,
   userId: string,
   repositoryId: string,
 ) {
@@ -164,6 +165,20 @@ export const pullRequestRouter = createTRPCRouter({
         orderBy: { createdAt: "desc" },
       });
 
+      let isAdmin = false;
+      if (repository.userId === ctx.user.id) {
+        isAdmin = true;
+      } else if (repository.teamId) {
+        const membership = await ctx.db.teamMember.findUnique({
+          where: {
+            teamId_userId: { teamId: repository.teamId, userId: ctx.user.id },
+          },
+        });
+        if (membership && (membership.role === "ADMIN" || membership.role === "OWNER")) {
+          isAdmin = true;
+        }
+      }
+
       return {
         id: pr.id,
         number: pr.number,
@@ -185,6 +200,7 @@ export const pullRequestRouter = createTRPCRouter({
         updatedAt: pr.updated_at,
         mergedAt: pr.merged_at,
         review: existingReview,
+        isAdmin,
       };
     }),
 

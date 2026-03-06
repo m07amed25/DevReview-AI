@@ -51,7 +51,6 @@ const NativeSelect = React.forwardRef<HTMLSelectElement, NativeSelectProps>(
       className,
       triggerClassName,
       children,
-      id,
       value,
       onChange,
       placeholder,
@@ -148,7 +147,6 @@ const DropdownSelect = React.forwardRef<HTMLButtonElement, DropdownSelectProps>(
       children,
       className,
       placeholder = "Select...",
-      id,
     },
     ref,
   ) => {
@@ -180,7 +178,7 @@ const DropdownSelect = React.forwardRef<HTMLButtonElement, DropdownSelectProps>(
           type="button"
           id={`${selectId}-trigger`}
           className={cn(
-            "flex h-9 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=open]:ring-1 data-[state=open]:ring-ring transition-all duration-150",
+            "flex h-9 w-full items-center justify-between rounded-lg border border-input bg-background px-3 py-2 text-sm shadow-sm hover:shadow transition-all duration-200 ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-50 data-[state=open]:border-primary/50 data-[state=open]:ring-2 data-[state=open]:ring-primary/20",
             className,
           )}
           data-state={isOpen ? "open" : "closed"}
@@ -195,9 +193,9 @@ const DropdownSelect = React.forwardRef<HTMLButtonElement, DropdownSelectProps>(
         </button>
 
         {isOpen && (
-          <div className="absolute z-50 mt-1 w-full min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2">
+          <div className="absolute z-50 mt-1.5 w-full min-w-[8rem] overflow-hidden rounded-lg border border-border/60 bg-popover text-popover-foreground shadow-lg shadow-black/5 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2">
             <div
-              className="p-1 space-y-0.5"
+              className="p-1 space-y-0.5 max-h-64 overflow-y-auto"
               role="listbox"
               aria-labelledby={`${selectId}-trigger`}
               onMouseLeave={() => setIsOpen(false)}
@@ -221,11 +219,11 @@ const DropdownSelect = React.forwardRef<HTMLButtonElement, DropdownSelectProps>(
                       value === childProps.value ? "checked" : "unchecked"
                     }
                     className={cn(
-                      "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-2 text-sm outline-none transition-colors",
-                      "focus:bg-accent focus:text-accent-foreground",
+                      "relative flex w-full cursor-pointer select-none items-center rounded-md py-2 pl-3 pr-2 text-sm outline-none transition-all duration-200",
+                      "hover:bg-muted/60 hover:text-foreground focus:bg-accent focus:text-accent-foreground",
                       childProps.disabled && "pointer-events-none opacity-50",
                       value === childProps.value &&
-                        "bg-accent text-accent-foreground",
+                        "bg-primary/10 text-primary font-medium hover:bg-primary/15",
                     )}
                     onClick={() => {
                       if (!childProps.disabled) {

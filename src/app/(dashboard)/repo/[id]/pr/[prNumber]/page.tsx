@@ -493,6 +493,8 @@ export default function PullRequestPage({ params }: PageProps) {
           reviewId={latestReview.data.id}
           currentUserId={session.user.id}
           currentUserName={session.user.name}
+          isAdmin={pr.data?.isAdmin}
+          prFiles={files.data?.map((f) => f.filename) || []}
         />
       )}
       {activeTab === "discussion" && (!latestReview.data || !session?.user) && (

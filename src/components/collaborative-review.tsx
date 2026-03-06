@@ -1,6 +1,7 @@
+
 "use client";
 
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { trpc } from "@/lib/trpc/client";
 import {
   PusherProvider,
@@ -22,7 +23,6 @@ import {
   RotateCcw,
   Trash2,
   FileCode2,
-  Users,
   Wifi,
   WifiOff,
   Loader2,
@@ -31,6 +31,15 @@ import {
   ChevronRight,
   Circle,
 } from "lucide-react";
+import {
+  DropdownSelect,
+} from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 
 // ─── Types ─────────────────────────────────────────────────────────
@@ -58,6 +67,8 @@ interface CollaborativeReviewProps {
   reviewId: string;
   currentUserId: string;
   currentUserName: string;
+  isAdmin?: boolean;
+  prFiles?: string[];
 }
 
 // ─── Main Component (wrapped in PusherProvider) ────────────────────
@@ -73,6 +84,8 @@ function CollaborativeReviewInner({
   reviewId,
   currentUserId,
   currentUserName,
+  isAdmin,
+  prFiles = [],
 }: CollaborativeReviewProps) {
   const channelName = reviewChannel(reviewId);
   const { members, myId } = usePresenceChannel(channelName);
@@ -114,36 +127,36 @@ function CollaborativeReviewInner({
   const activeThreads = threads.filter((t) => !t.resolved);
   const resolvedThreads = threads.filter((t) => t.resolved);
 
-  const otherMembers = members.filter((m) => m.id !== myId);
-
   return (
     <div className="space-y-4">
       {/* ── Header: Presence + Stats ── */}
-      <Card>
+      <Card className="border-border/50 shadow-sm bg-gradient-to-br from-card to-muted/20">
         <CardContent className="p-4">
           <div className="flex items-center justify-between flex-wrap gap-3">
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
-                <MessageCircle className="size-4 text-muted-foreground" />
-                <h3 className="text-sm font-semibold">Discussion</h3>
+                <div className="p-1.5 bg-primary/10 rounded-md ring-1 ring-primary/20">
+                  <MessageCircle className="size-4 text-primary" />
+                </div>
+                <h3 className="text-sm font-semibold tracking-tight">Discussion</h3>
               </div>
-              <Badge variant="secondary" className="tabular-nums text-xs">
+              <Badge variant="secondary" className="tabular-nums text-xs font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
                 {activeThreads.length} open
               </Badge>
               {resolvedThreads.length > 0 && (
                 <Badge
                   variant="outline"
-                  className="tabular-nums text-xs text-muted-foreground cursor-pointer hover:bg-muted"
+                  className="tabular-nums text-xs cursor-pointer bg-emerald-500/10 border-emerald-500/20 text-emerald-600 hover:bg-emerald-500/20 transition-colors"
                   onClick={() => setShowResolved((v) => !v)}
                 >
-                  <CheckCircle2 className="size-3 mr-1 text-emerald-500" />
+                  <CheckCircle2 className="size-3.5 mr-1" />
                   {resolvedThreads.length} resolved
                 </Badge>
               )}
             </div>
 
             {/* Presence Avatars */}
-            <PresenceAvatars members={members} myId={myId} />
+            <PresenceAvatars members={members} myId={myId} isAdmin={isAdmin} />
           </div>
 
           {/* Typing Indicator */}
@@ -176,10 +189,10 @@ function CollaborativeReviewInner({
         <Button
           variant="outline"
           size="sm"
-          className="gap-2 w-full border-dashed"
+          className="gap-2 w-full border-dashed border-2 hover:border-primary/50 hover:bg-primary/5 group transition-all duration-300 h-10"
           onClick={() => setNewThread({ file: "", line: 0 })}
         >
-          <MessageCircle className="size-3.5" />
+          <MessageCircle className="size-4 text-muted-foreground group-hover:text-primary transition-colors" />
           Start a Discussion Thread
         </Button>
       )}
@@ -196,6 +209,7 @@ function CollaborativeReviewInner({
           currentUserId={currentUserId}
           currentUserName={currentUserName}
           triggerTyping={triggerTyping}
+          prFiles={prFiles}
         />
       )}
 
@@ -206,14 +220,19 @@ function CollaborativeReviewInner({
           Loading discussions…
         </div>
       ) : activeThreads.length === 0 && resolvedThreads.length === 0 ? (
-        <Card className="border-dashed">
-          <CardContent className="py-12 text-center">
-            <MessageCircle className="size-8 text-muted-foreground/30 mx-auto mb-3" />
-            <p className="text-sm font-medium text-muted-foreground">
+        <Card className="border-dashed bg-muted/30 border-primary/20">
+          <CardContent className="py-16 text-center flex flex-col items-center justify-center">
+            <div className="relative mb-5 group cursor-default">
+              <div className="size-16 rounded-2xl bg-primary/10 flex items-center justify-center ring-1 ring-primary/20 shadow-inner group-hover:scale-105 transition-transform duration-500">
+                <MessageCircle className="size-8 text-primary" />
+              </div>
+              <div className="absolute -top-1 -right-1 size-4 rounded-full bg-emerald-500 border-2 border-background animate-pulse" />
+            </div>
+            <p className="text-base font-semibold text-foreground tracking-tight">
               No discussions yet
             </p>
-            <p className="text-xs text-muted-foreground/60 mt-1">
-              Start a thread to collaborate on this review
+            <p className="text-sm text-muted-foreground max-w-xs mt-2 leading-relaxed">
+              Start a thread to collaborate, ask questions, or suggest improvements.
             </p>
           </CardContent>
         </Card>
@@ -223,10 +242,8 @@ function CollaborativeReviewInner({
             <ThreadCard
               key={thread.id}
               thread={thread}
-              reviewId={reviewId}
               currentUserId={currentUserId}
               currentUserName={currentUserName}
-              channelName={channelName}
               triggerTyping={triggerTyping}
             />
           ))}
@@ -244,10 +261,8 @@ function CollaborativeReviewInner({
             <ThreadCard
               key={thread.id}
               thread={thread}
-              reviewId={reviewId}
               currentUserId={currentUserId}
               currentUserName={currentUserName}
-              channelName={channelName}
               triggerTyping={triggerTyping}
             />
           ))}
@@ -268,24 +283,28 @@ function CollaborativeReviewInner({
 function PresenceAvatars({
   members,
   myId,
+  isAdmin,
 }: {
   members: PresenceMember[];
   myId: string | null;
+  isAdmin?: boolean;
 }) {
   if (members.length === 0) {
     return (
-      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-        <WifiOff className="size-3" />
-        Offline
+      <div className="flex items-center gap-1.5 text-xs text-muted-foreground bg-muted/50 px-2.5 py-1.5 rounded-md border border-border/50 shadow-sm">
+        <WifiOff className="size-3.5" />
+        <span className="font-medium">Offline</span>
       </div>
     );
   }
 
   return (
-    <div className="flex items-center gap-2">
-      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-        <Wifi className="size-3 text-emerald-500" />
-        <Users className="size-3" />
+    <div className="flex items-center gap-3 bg-card px-3 py-1.5 rounded-full border border-border shadow-sm ring-1 ring-background/5">
+      <div className="flex items-center gap-2 text-xs font-medium">
+        <div className="relative flex items-center justify-center size-4">
+          <div className="absolute inset-0 bg-emerald-400 rounded-full animate-ping opacity-30" />
+          <Wifi className="size-3.5 text-emerald-500 relative z-10" />
+        </div>
       </div>
       <div className="flex -space-x-2">
         {members.slice(0, 5).map((m) => (
@@ -309,19 +328,50 @@ function PresenceAvatars({
           </Avatar>
         ))}
         {members.length > 5 && (
-          <div className="size-7 rounded-full bg-muted ring-2 ring-background flex items-center justify-center text-[10px] font-semibold text-muted-foreground">
+          <div className="size-7 rounded-full bg-muted ring-2 ring-background flex items-center justify-center text-[10px] font-semibold text-muted-foreground shadow-sm">
             +{members.length - 5}
           </div>
         )}
       </div>
-      <span className="text-[11px] text-muted-foreground tabular-nums">
-        {members.length} online
-      </span>
+      <div className="h-4 w-px bg-border/60 mx-1" />
+      {isAdmin ? (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="text-[11px] font-semibold text-muted-foreground hover:text-foreground transition-colors tabular-nums focus:outline-none flex items-center gap-1 cursor-pointer">
+              {members.length} online
+              <ChevronDown className="size-3" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48 p-2" sideOffset={8}>
+            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+              Online Members
+            </div>
+            <div className="space-y-1">
+              {members.map((m) => (
+                <DropdownMenuItem key={m.id} className="gap-2.5 rounded-md px-2 py-1.5 focus:bg-muted cursor-default">
+                  <Avatar className="size-5 shrink-0">
+                    <AvatarImage src={m.info.image ?? undefined} />
+                    <AvatarFallback className="text-[8px] bg-primary/10">
+                      {m.info.name.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="text-xs font-medium truncate">
+                    {m.info.name} {m.id === myId && <span className="text-muted-foreground opacity-70">(you)</span>}
+                  </span>
+                </DropdownMenuItem>
+              ))}
+            </div>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ) : (
+        <span className="text-[11px] font-semibold text-muted-foreground tabular-nums">
+          {members.length} online
+        </span>
+      )}
     </div>
   );
 }
 
-// ─── New Thread Form ───────────────────────────────────────────────
 function NewThreadForm({
   reviewId,
   onCancel,
@@ -329,6 +379,7 @@ function NewThreadForm({
   currentUserId,
   currentUserName,
   triggerTyping,
+  prFiles,
 }: {
   reviewId: string;
   onCancel: () => void;
@@ -336,6 +387,7 @@ function NewThreadForm({
   currentUserId: string;
   currentUserName: string;
   triggerTyping: (userId: string, name: string) => void;
+  prFiles: string[];
 }) {
   const [file, setFile] = useState("");
   const [line, setLine] = useState("");
@@ -363,65 +415,81 @@ function NewThreadForm({
 
   return (
     <Card className="border-primary/20 shadow-sm shadow-primary/5">
-      <CardContent className="p-4">
-        <form onSubmit={handleSubmit} className="space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              New Thread
+      <CardContent className="p-5">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="flex items-center justify-between pb-2 border-b border-border/50">
+            <span className="text-sm font-semibold text-foreground tracking-tight">
+              Start a New Discussion
             </span>
             <Button
               type="button"
               variant="ghost"
-              size="sm"
-              className="size-7 p-0"
+              size="icon"
+              className="size-8 rounded-full text-muted-foreground hover:bg-muted"
               onClick={onCancel}
             >
-              <X className="size-3.5" />
+              <X className="size-4" />
             </Button>
           </div>
 
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={file}
-              onChange={(e) => setFile(e.target.value)}
-              placeholder="File path (optional)"
-              className="flex-1 h-8 px-3 text-xs rounded-md border bg-background placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring"
-            />
-            <input
-              type="number"
-              value={line}
-              onChange={(e) => setLine(e.target.value)}
-              placeholder="Line"
-              className="w-20 h-8 px-3 text-xs rounded-md border bg-background placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring"
+          <div className="flex gap-3">
+            <div className="relative flex-1">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-muted-foreground/50 z-10">
+                <FileCode2 className="size-4" />
+              </div>
+              <DropdownSelect
+                value={file}
+                onValueChange={setFile}
+                className="w-full h-9 pl-9 pr-3 text-sm rounded-lg border border-border shadow-sm text-foreground bg-background focus:ring-2 focus:ring-primary/30 transition-shadow transition-colors"
+                placeholder="File path (optional)"
+              >
+                <option value="general">General (No specific file)</option>
+                {prFiles.map((f) => (
+                  <option key={f} value={f}>
+                    {f}
+                  </option>
+                ))}
+              </DropdownSelect>
+            </div>
+            <div className="relative w-28">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-muted-foreground/50 text-sm font-mono">:</span>
+              <input
+                type="number"
+                value={line}
+                onChange={(e) => setLine(e.target.value)}
+                placeholder="Line"
+                className="w-full h-9 pl-7 pr-3 text-sm rounded-lg border border-border shadow-sm bg-background placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-shadow transition-colors"
+              />
+            </div>
+          </div>
+
+          <div className="relative group">
+            <textarea
+              ref={textareaRef}
+              value={content}
+              onChange={(e) => {
+                setContent(e.target.value);
+                triggerTyping(currentUserId, currentUserName);
+              }}
+              placeholder="Write your comment…"
+              rows={3}
+              className="w-full px-4 py-3 text-sm rounded-lg border border-border shadow-sm bg-background placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-shadow transition-colors resize-none leading-relaxed"
             />
           </div>
 
-          <textarea
-            ref={textareaRef}
-            value={content}
-            onChange={(e) => {
-              setContent(e.target.value);
-              triggerTyping(currentUserId, currentUserName);
-            }}
-            placeholder="Write your comment…"
-            rows={3}
-            className="w-full px-3 py-2 text-sm rounded-md border bg-background placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring resize-none"
-          />
-
-          <div className="flex justify-end">
+          <div className="flex justify-end pt-2">
             <Button
               type="submit"
               size="sm"
-              className="gap-1.5"
+              className="gap-2 shadow-sm px-6 font-medium"
               disabled={!content.trim() || createThread.isPending}
             >
               {createThread.isPending ? (
-                <Loader2 className="size-3.5 animate-spin" />
+                <Loader2 className="size-4 animate-spin" />
               ) : (
-                <Send className="size-3.5" />
+                <Send className="size-4" />
               )}
-              Submit
+              Start Discussion
             </Button>
           </div>
         </form>
@@ -433,17 +501,13 @@ function NewThreadForm({
 // ─── Thread Card ───────────────────────────────────────────────────
 function ThreadCard({
   thread,
-  reviewId,
   currentUserId,
   currentUserName,
-  channelName,
   triggerTyping,
 }: {
   thread: Thread;
-  reviewId: string;
   currentUserId: string;
   currentUserName: string;
-  channelName: string;
   triggerTyping: (userId: string, name: string) => void;
 }) {
   const [expanded, setExpanded] = useState(!thread.resolved);
@@ -467,16 +531,17 @@ function ThreadCard({
   return (
     <Card
       className={cn(
-        "overflow-hidden transition-all",
+        "overflow-hidden transition-all duration-300",
         thread.resolved
-          ? "border-emerald-500/10 opacity-70"
-          : "border-border/50",
+          ? "border-emerald-500/20 bg-emerald-500/5 opacity-80"
+          : "border-border/50 shadow-sm hover:shadow-md",
+        expanded && !thread.resolved ? "ring-1 ring-primary/20 shadow-md" : ""
       )}
     >
       {/* Thread Header */}
       <button
         onClick={() => setExpanded((v) => !v)}
-        className="w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-muted/30 transition-colors"
+        className="w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-muted/40 transition-colors focus-visible:outline-none focus-visible:bg-muted/40"
       >
         {expanded ? (
           <ChevronDown className="size-3.5 text-muted-foreground shrink-0" />
@@ -502,7 +567,7 @@ function ThreadCard({
         )}
 
         {/* First comment preview */}
-        <span className="text-sm text-foreground/80 truncate flex-1">
+        <span className={cn("text-sm truncate flex-1 transition-colors", expanded ? "text-foreground font-medium" : "text-foreground/80")}>
           {firstComment?.content.slice(0, 100)}
         </span>
 
@@ -521,13 +586,13 @@ function ThreadCard({
       {expanded && (
         <div className="border-t">
           {/* Comments */}
-          <div className="divide-y">
+          <div className="divide-y divide-border/50 bg-background/50">
             {thread.comments.map((comment) => (
               <div
                 key={comment.id}
-                className="px-4 py-3 flex gap-3 group/comment"
+                className="px-5 py-4 flex gap-3.5 group/comment transition-colors hover:bg-muted/20"
               >
-                <Avatar className="size-7 shrink-0 mt-0.5">
+                <Avatar className="size-8 shrink-0 shadow-sm mt-0.5 ring-1 ring-border/50">
                   <AvatarImage src={comment.user.image ?? undefined} />
                   <AvatarFallback className="text-[10px] font-semibold bg-primary/10">
                     {comment.user.name
@@ -558,7 +623,7 @@ function ThreadCard({
                       </button>
                     )}
                   </div>
-                  <p className="text-sm text-foreground/85 leading-relaxed mt-1 whitespace-pre-wrap">
+                  <p className="text-sm text-foreground/90 leading-relaxed mt-1.5 whitespace-pre-wrap">
                     {comment.content}
                   </p>
                 </div>
@@ -567,24 +632,24 @@ function ThreadCard({
           </div>
 
           {/* Actions */}
-          <div className="px-4 py-2.5 bg-muted/20 flex items-center gap-2 border-t">
+          <div className="px-5 py-3 bg-muted/30 flex items-center gap-2 border-t backdrop-blur-sm">
             <Button
-              variant="ghost"
+              variant="secondary"
               size="sm"
-              className="h-7 text-xs gap-1.5"
+              className="h-8 text-xs gap-1.5 font-medium shadow-sm transition-all hover:bg-secondary/80"
               onClick={() => setShowReply((v) => !v)}
             >
-              <MessageCircle className="size-3" />
+              <MessageCircle className="size-3.5" />
               Reply
             </Button>
             <Button
-              variant="ghost"
+              variant="outline"
               size="sm"
               className={cn(
-                "h-7 text-xs gap-1.5",
+                "h-8 text-xs gap-1.5 font-medium shadow-sm transition-all",
                 thread.resolved
-                  ? "text-amber-600 hover:text-amber-700"
-                  : "text-emerald-600 hover:text-emerald-700",
+                  ? "text-amber-600 hover:text-amber-700 hover:bg-amber-500/10 border-amber-500/20"
+                  : "text-emerald-600 hover:text-emerald-700 hover:bg-emerald-500/10 border-emerald-500/20",
               )}
               onClick={() => toggleResolve.mutate({ threadId: thread.id })}
               disabled={toggleResolve.isPending}
