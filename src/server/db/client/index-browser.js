@@ -238,6 +238,21 @@ exports.Prisma.TeamMemberScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.TeamActionScalarFieldEnum = {
+  id: 'id',
+  teamId: 'teamId',
+  actionType: 'actionType',
+  status: 'status',
+  requestedBy: 'requestedBy',
+  targetUserId: 'targetUserId',
+  targetRepoId: 'targetRepoId',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  resolvedAt: 'resolvedAt',
+  resolvedBy: 'resolvedBy'
+};
+
 exports.Prisma.NotificationScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -287,6 +302,21 @@ exports.TeamRole = exports.$Enums.TeamRole = {
   MEMBER: 'MEMBER'
 };
 
+exports.ActionType = exports.$Enums.ActionType = {
+  INVITE_MEMBER: 'INVITE_MEMBER',
+  REMOVE_MEMBER: 'REMOVE_MEMBER',
+  UPDATE_ROLE: 'UPDATE_ROLE',
+  SHARE_REPOSITORY: 'SHARE_REPOSITORY',
+  UNSHARE_REPOSITORY: 'UNSHARE_REPOSITORY',
+  DELETE_TEAM: 'DELETE_TEAM'
+};
+
+exports.ActionStatus = exports.$Enums.ActionStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+};
+
 exports.NotificationType = exports.$Enums.NotificationType = {
   TEAM_INVITE: 'TEAM_INVITE',
   TEAM_MEMBER_ADDED: 'TEAM_MEMBER_ADDED',
@@ -305,6 +335,7 @@ exports.Prisma.ModelName = {
   ReviewThreadComment: 'ReviewThreadComment',
   Team: 'Team',
   TeamMember: 'TeamMember',
+  TeamAction: 'TeamAction',
   Notification: 'Notification'
 };
 

@@ -40,6 +40,7 @@ import {
   Bell,
   Loader2,
   Check,
+  Users,
 } from "lucide-react";
 
 interface UserProps {
@@ -251,6 +252,21 @@ export function UserMenu({ user }: { user: UserProps }) {
             Workspace
           </DropdownMenuLabel>
           <DropdownMenuGroup>
+            <DropdownMenuItem
+              className="gap-3 px-2 py-2 cursor-pointer rounded-md"
+              onClick={() => router.push("/teams")}
+            >
+              <div className="flex items-center justify-center size-8 rounded-md bg-indigo-500/10">
+                <Users className="size-4 text-indigo-500" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-sm font-medium">Teams</span>
+                <span className="text-[11px] text-muted-foreground">
+                  Collaborate securely
+                </span>
+              </div>
+            </DropdownMenuItem>
+
             <DropdownMenuItem
               className="gap-3 px-2 py-2 cursor-pointer rounded-md"
               onClick={() => router.push("/repo")}

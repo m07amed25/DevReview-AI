@@ -3,6 +3,20 @@ import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import type { PrismaClient } from "@/server/db/client";
 
+// Type for JSON metadata
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type JsonValue = any;
+
+// Action types that require approval when requested by MEMBER role
+const ACTIONS_REQUIRING_APPROVAL = [
+  "INVITE_MEMBER",
+  "REMOVE_MEMBER",
+  "UPDATE_ROLE",
+  "SHARE_REPOSITORY",
+  "UNSHARE_REPOSITORY",
+  "DELETE_TEAM",
+] as const;
+
 function slugify(text: string): string {
   return text
     .toLowerCase()
@@ -32,7 +46,6 @@ export const teamRouter = createTRPCRouter({
     }));
   }),
 
-  // ─── Get team details ────────────────────────────────────────────
   get: protectedProcedure
     .input(z.object({ teamId: z.string() }))
     .query(async ({ ctx, input }) => {
@@ -68,7 +81,6 @@ export const teamRouter = createTRPCRouter({
       return { ...team, currentUserRole: membership.role };
     }),
 
-  // ─── Create a team ───────────────────────────────────────────────
   create: protectedProcedure
     .input(
       z.object({
@@ -102,7 +114,6 @@ export const teamRouter = createTRPCRouter({
       return team;
     }),
 
-  // ─── Update team name ────────────────────────────────────────────
   update: protectedProcedure
     .input(
       z.object({
@@ -119,7 +130,6 @@ export const teamRouter = createTRPCRouter({
       });
     }),
 
-  // ─── Delete team (owner only) ────────────────────────────────────
   delete: protectedProcedure
     .input(z.object({ teamId: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -135,7 +145,6 @@ export const teamRouter = createTRPCRouter({
       return { deleted: true };
     }),
 
-  // ─── Invite a member by email ────────────────────────────────────
   inviteMember: protectedProcedure
     .input(
       z.object({
@@ -316,6 +325,213 @@ export const teamRouter = createTRPCRouter({
         data: { teamId: null },
       });
     }),
+
+  // ─── Get pending action requests for a team (for admins/owners) ──────
+  getPendingActions: protectedProcedure
+    .input(z.object({ teamId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      // Must be a member to view pending actions
+      await assertRole(ctx, input.teamId, ["OWNER", "ADMIN", "MEMBER"]);
+
+      return ctx.db.teamAction.findMany({
+        where: {
+          teamId: input.teamId,
+          status: "PENDING",
+        },
+        orderBy: { createdAt: "desc" },
+        include: {
+          team: {
+            select: { id: true, name: true },
+          },
+        },
+      });
+    }),
+
+  // ─── Get my requested actions (for all members) ───────────────────────
+  getMyRequestedActions: protectedProcedure
+    .input(z.object({ teamId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      // Must be a member to view their own requested actions
+      await assertRole(ctx, input.teamId, ["OWNER", "ADMIN", "MEMBER"]);
+
+      return ctx.db.teamAction.findMany({
+        where: {
+          teamId: input.teamId,
+          requestedBy: ctx.user.id,
+        },
+        orderBy: { createdAt: "desc" },
+      });
+    }),
+
+  // ─── Request an action that requires approval ─────────────────────────
+  requestAction: protectedProcedure
+    .input(
+      z.object({
+        teamId: z.string(),
+        actionType: z.enum([
+          "INVITE_MEMBER",
+          "REMOVE_MEMBER",
+          "UPDATE_ROLE",
+          "SHARE_REPOSITORY",
+          "UNSHARE_REPOSITORY",
+          "DELETE_TEAM",
+          "REVIEW_PR",
+          "APPROVE_DISCUSSION",
+        ]),
+        targetUserId: z.string().optional(),
+        targetRepoId: z.string().optional(),
+        metadata: z
+          .object({
+            email: z.string().optional(),
+            role: z.string().optional(),
+            prNumber: z.number().optional(),
+            discussionId: z.string().optional(),
+          })
+          .optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const membership = await assertRole(ctx, input.teamId, [
+        "OWNER",
+        "ADMIN",
+        "MEMBER",
+      ]);
+
+      // Check if approval is required (MEMBER role needs approval for certain actions)
+      const requiresApproval = membership.role === "MEMBER";
+
+      // Create the action request
+      const action = await ctx.db.teamAction.create({
+        data: {
+          teamId: input.teamId,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          actionType: input.actionType as any,
+          status: requiresApproval ? "PENDING" : "APPROVED",
+          requestedBy: ctx.user.id,
+          targetUserId: input.targetUserId,
+          targetRepoId: input.targetRepoId,
+          metadata: input.metadata ?? undefined,
+          resolvedAt: requiresApproval ? null : new Date(),
+          resolvedBy: requiresApproval ? null : ctx.user.id,
+        },
+      });
+
+      // If no approval needed, execute the action immediately
+      if (!requiresApproval) {
+        await executeApprovedAction(ctx, action);
+      } else {
+        // Notify admins/owners about the pending action
+        await notifyAdmins(ctx, input.teamId, action);
+      }
+
+      return {
+        ...action,
+        requiresApproval,
+      };
+    }),
+
+  // ─── Approve a pending action (owner/admin only) ───────────────────────
+  approveAction: protectedProcedure
+    .input(
+      z.object({
+        actionId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const action = await ctx.db.teamAction.findUnique({
+        where: { id: input.actionId },
+      });
+
+      if (!action) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Action not found",
+        });
+      }
+
+      // Only owner/admin can approve
+      await assertRole(ctx, action.teamId, ["OWNER", "ADMIN"]);
+
+      if (action.status !== "PENDING") {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Action is not pending",
+        });
+      }
+
+      // Update action status
+      const updatedAction = await ctx.db.teamAction.update({
+        where: { id: input.actionId },
+        data: {
+          status: "APPROVED",
+          resolvedAt: new Date(),
+          resolvedBy: ctx.user.id,
+        },
+      });
+
+      // Execute the approved action
+      await executeApprovedAction(ctx, updatedAction);
+
+      return updatedAction;
+    }),
+
+  // ─── Reject a pending action (owner/admin only) ───────────────────────
+  rejectAction: protectedProcedure
+    .input(
+      z.object({
+        actionId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const action = await ctx.db.teamAction.findUnique({
+        where: { id: input.actionId },
+      });
+
+      if (!action) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Action not found",
+        });
+      }
+
+      // Only owner/admin can reject
+      await assertRole(ctx, action.teamId, ["OWNER", "ADMIN"]);
+
+      if (action.status !== "PENDING") {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Action is not pending",
+        });
+      }
+
+      // Update action status
+      const updatedAction = await ctx.db.teamAction.update({
+        where: { id: input.actionId },
+        data: {
+          status: "REJECTED",
+          resolvedAt: new Date(),
+          resolvedBy: ctx.user.id,
+        },
+      });
+
+      // Notify the requester that their action was rejected
+      const team = await ctx.db.team.findUnique({
+        where: { id: action.teamId },
+        select: { name: true },
+      });
+
+      await ctx.db.notification.create({
+        data: {
+          userId: action.requestedBy,
+          type: "TEAM_MEMBER_ADDED",
+          title: `Action rejected in "${team?.name ?? "team"}"`,
+          message: `Your request to ${action.actionType.toLowerCase().replace("_", " ")} was rejected by an administrator.`,
+          link: `/teams/${action.teamId}`,
+        },
+      });
+
+      return updatedAction;
+    }),
 });
 
 // ─── Helper: assert the caller has one of the required roles ─────────
@@ -336,4 +552,174 @@ async function assertRole(
     });
   }
   return membership;
+}
+
+// ─── Helper: execute an approved action ────────────────────────────────
+async function executeApprovedAction(
+  ctx: { db: PrismaClient; user: { id: string } },
+  action: {
+    id: string;
+    actionType: string;
+    teamId: string;
+    targetUserId: string | null;
+    targetRepoId: string | null;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    metadata: any;
+    requestedBy: string;
+  },
+) {
+  switch (action.actionType) {
+    case "INVITE_MEMBER": {
+      const meta = action.metadata as { email?: string; role?: string } | null;
+      if (meta?.email) {
+        const user = await ctx.db.user.findUnique({
+          where: { email: meta.email },
+        });
+        if (user) {
+          await ctx.db.teamMember.upsert({
+            where: {
+              teamId_userId: { teamId: action.teamId, userId: user.id },
+            },
+            create: {
+              teamId: action.teamId,
+              userId: user.id,
+              role: (meta.role as "ADMIN" | "MEMBER") || "MEMBER",
+            },
+            update: {
+              role: (meta.role as "ADMIN" | "MEMBER") || "MEMBER",
+            },
+          });
+
+          // Create notification for the invited user
+          const team = await ctx.db.team.findUnique({
+            where: { id: action.teamId },
+            select: { name: true },
+          });
+
+          await ctx.db.notification.create({
+            data: {
+              userId: user.id,
+              type: "TEAM_INVITE",
+              title: `You've been added to "${team?.name ?? "a team"}"`,
+              message: `You have been added to the team as a ${meta.role?.toLowerCase() ?? "member"}.`,
+              link: `/teams/${action.teamId}`,
+            },
+          });
+        }
+      }
+      break;
+    }
+
+    case "REMOVE_MEMBER":
+      if (action.targetUserId) {
+        await ctx.db.teamMember.delete({
+          where: {
+            teamId_userId: { teamId: action.teamId, userId: action.targetUserId },
+          },
+        });
+      }
+      break;
+
+    case "UPDATE_ROLE":
+      if (action.targetUserId) {
+        const meta = action.metadata as { role?: string } | null;
+        await ctx.db.teamMember.update({
+          where: {
+            teamId_userId: { teamId: action.teamId, userId: action.targetUserId },
+          },
+          data: {
+            role: (meta?.role as "ADMIN" | "MEMBER") || "MEMBER",
+          },
+        });
+      }
+      break;
+
+    case "SHARE_REPOSITORY":
+      if (action.targetRepoId) {
+        await ctx.db.repository.update({
+          where: { id: action.targetRepoId },
+          data: { teamId: action.teamId },
+        });
+      }
+      break;
+
+    case "UNSHARE_REPOSITORY":
+      if (action.targetRepoId) {
+        await ctx.db.repository.update({
+          where: { id: action.targetRepoId },
+          data: { teamId: null },
+        });
+      }
+      break;
+
+    case "DELETE_TEAM":
+      // Unlink repositories
+      await ctx.db.repository.updateMany({
+        where: { teamId: action.teamId },
+        data: { teamId: null },
+      });
+      // Delete the team
+      await ctx.db.team.delete({ where: { id: action.teamId } });
+      break;
+
+    case "REVIEW_PR": {
+      // This action is handled by the review system
+      // The approval means the user can now proceed with reviewing the PR
+      const meta = action.metadata as { prNumber?: number } | null;
+      console.log(`PR review approved for PR #${meta?.prNumber} in team ${action.teamId}`);
+      break;
+    }
+
+    case "APPROVE_DISCUSSION": {
+      // This action is handled by the collaboration system
+      // The approval means the user can now approve a discussion
+      const meta = action.metadata as { discussionId?: string } | null;
+      console.log(`Discussion approval approved for discussion ${meta?.discussionId} in team ${action.teamId}`);
+      break;
+    }
+  }
+}
+async function notifyAdmins(
+  ctx: { db: PrismaClient; user: { id: string } },
+  teamId: string,
+  action: { id: string; actionType: string; requestedBy: string },
+) {
+  const team = await ctx.db.team.findUnique({
+    where: { id: teamId },
+    select: { name: true },
+  });
+
+  // Get all admins and owners
+  const admins = await ctx.db.teamMember.findMany({
+    where: {
+      teamId,
+      role: { in: ["OWNER", "ADMIN"] },
+    },
+    select: { userId: true },
+  });
+
+  // Create notifications for each admin
+  const requester = await ctx.db.user.findUnique({
+    where: { id: action.requestedBy },
+    select: { name: true },
+  });
+
+  const actionDescription = action.actionType
+    .toLowerCase()
+    .replace("_", " ");
+
+  for (const admin of admins) {
+    // Don't notify the person who made the request
+    if (admin.userId !== action.requestedBy) {
+      await ctx.db.notification.create({
+        data: {
+          userId: admin.userId,
+          type: "TEAM_MEMBER_ADDED",
+          title: `Action requires approval in "${team?.name ?? "team"}"`,
+          message: `${requester?.name ?? "A member"} has requested to ${actionDescription}. Please review and approve or reject.`,
+          link: `/teams/${teamId}`,
+        },
+      });
+    }
+  }
 }
