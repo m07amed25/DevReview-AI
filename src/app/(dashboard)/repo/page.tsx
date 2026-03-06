@@ -2,10 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ConnectGithub } from "@/components/connect-github";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -13,10 +11,8 @@ import {
   AlertDialogTitle,
   AlertDialogDescription,
   AlertDialogFooter,
-  AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import {
-  GitBranch,
   Lock,
   Globe,
   RefreshCw,
@@ -29,8 +25,6 @@ import {
   X,
   CheckCircle,
   FolderGit2,
-  Type,
-  CircleDot,
   Check,
   Minus,
   Square,
@@ -43,19 +37,9 @@ import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { trpc } from "@/lib/trpc/client";
-import { languageColors, RepoSelectItem } from "@/components/RepoSelectItem";
+import { RepoSelectItem } from "@/components/RepoSelectItem";
 import Link from "next/link";
-interface GitHubRepo {
-  githubId: number;
-  name: string;
-  fullName: string;
-  private: boolean;
-  htmlUrl: string;
-  description: string | null;
-  language: string | null;
-  stars: number;
-  updatedAt: string;
-}
+
 
 function formatConnectedDate(dateString: string): string {
   const date = new Date(dateString);
@@ -71,14 +55,7 @@ function formatConnectedDate(dateString: string): string {
   return `Connected ${Math.floor(diffDays / 365)}y ago`;
 }
 
-function formatFullDate(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-}
+
 
 export default function ReposPage() {
   const [selectedRepos, setSelectedRepos] = useState<Set<number>>(new Set());
@@ -347,98 +324,134 @@ export default function ReposPage() {
           <CardContent className="p-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[...Array(2)].map((_, i) => (
-                <Skeleton key={i} className="h-20 rounded-xl" />
+                <Skeleton key={i} className="h-40 rounded-xl" />
               ))}
             </div>
           </CardContent>
         ) : connectedRepos.data && connectedRepos.data.length > 0 ? (
           <CardContent className="p-4 sm:p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-              {connectedRepos.data.map((repo) => (
-                <div
-                  key={repo.id}
-                  className="flex flex-col sm:flex-row items-start gap-3 p-3 sm:p-4 rounded-xl border border-border/60 bg-card hover:bg-muted/50 hover:border-primary/40 transition-colors"
-                >
-                  <FolderGit2 className="size-5 text-muted-foreground shrink-0 mt-0.5" />
-                  <div className="flex-1 min-w-0 w-full">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-medium truncate text-sm sm:text-base">
-                        {repo.name}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {connectedRepos.data.map((repo) => {
+                return (
+                  <article
+                    key={repo.id}
+                    className="group relative flex flex-col p-4 sm:p-5 rounded-xl border border-border/60 bg-card hover:bg-muted/50 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300"
+                    aria-labelledby={`repo-name-${repo.id}`}
+                  >
+                    {/* Connection Status Indicator */}
+                    <div className="absolute top-4 right-4 flex items-center gap-1.5">
+                      <span className="relative flex h-3 w-3">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-80"></span>
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6),0_0_16px_rgba(52,211,153,0.3)]" aria-hidden="true"></span>
                       </span>
-                      {repo.private ? (
-                        <Lock className="size-3.5 text-muted-foreground shrink-0" />
-                      ) : (
-                        <Globe className="size-3.5 text-muted-foreground shrink-0" />
-                      )}
+                      <span className="text-xs font-semibold text-emerald-400 drop-shadow-[0_0_6px_rgba(52,211,153,0.5)]">
+                        Connected
+                      </span>
                     </div>
-                    {repo.fullName && (
-                      <p className="text-xs sm:text-sm text-muted-foreground truncate mt-0.5">
-                        {repo.fullName}
-                      </p>
+
+                    {/* Header Section */}
+                    <div className="flex items-start gap-3 mb-3 pr-20">
+                      <div className="flex shrink-0 items-center justify-center rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-400 group-hover:bg-violet-500/20 group-hover:scale-105 transition-all duration-300 size-11">
+                        <FolderGit2 className="size-5" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <h3
+                            id={`repo-name-${repo.id}`}
+                            className="font-semibold text-foreground truncate text-sm sm:text-base"
+                          >
+                            {repo.name}
+                          </h3>
+                          {repo.private ? (
+                            <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400">
+                              <Lock className="size-3" />
+                              Private
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+                              <Globe className="size-3" />
+                              Public
+                            </span>
+                          )}
+                        </div>
+                        {repo.fullName && (
+                          <p className="text-xs sm:text-sm text-muted-foreground truncate mt-0.5 font-mono">
+                            {repo.fullName}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Team Badge */}
+                    {repo.team && (
+                      <div className="flex items-center gap-2 flex-wrap mb-3">
+                        <Badge variant="outline" className="text-xs gap-1">
+                          <Users className="size-3" />
+                          {repo.team.name}
+                        </Badge>
+                      </div>
                     )}
-                    {(repo as any).team && (
-                      <Badge variant="outline" className="mt-1.5 text-xs w-fit gap-1">
-                        <Users className="size-3" />
-                        {(repo as any).team.name}
-                      </Badge>
-                    )}
-                    <div className="flex items-center justify-between gap-2 mt-auto pt-4 border-t border-border/50">
-                      <span className="text-xs text-muted-foreground flex items-center gap-1.5">
-                        <Calendar className="size-3" aria-hidden="true" />
+
+                    {/* Footer Section */}
+                    <div className="flex items-center justify-between gap-3 mt-auto pt-3 border-t border-border/50">
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                        <Calendar className="size-3.5" aria-hidden="true" />
                         <time dateTime={repo.createdAt.toString()}>
                           {formatConnectedDate(repo.createdAt.toString())}
                         </time>
-                      </span>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="gap-1.5 text-muted-foreground hover:text-foreground hover:border-primary/50 shrink-0 text-xs h-8 transition-colors"
-                        asChild
-                      >
-                        <Link
-                          href={`/repo/${repo.id}`}
-                          rel="noopener noreferrer"
-                          className="flex items-center"
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="gap-1.5 text-muted-foreground hover:text-foreground hover:border-primary/50 transition-colors text-xs h-8"
+                          asChild
                         >
-                          <GitPullRequest
-                            className="size-4"
-                            aria-hidden="true"
-                          />
-                          <span>PRs</span>
-                          <ArrowRight className="size-3" aria-hidden="true" />
-                        </Link>
-                      </Button>
+                          <Link
+                            href={`/repo/${repo.id}`}
+                            rel="noopener noreferrer"
+                            className="flex items-center"
+                          >
+                            <GitPullRequest
+                              className="size-4"
+                              aria-hidden="true"
+                            />
+                            <span>PRs</span>
+                            <ArrowRight className="size-3" aria-hidden="true" />
+                          </Link>
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="text-muted-foreground hover:text-foreground h-8 w-8 sm:h-9 sm:w-9"
+                          asChild
+                        >
+                          <a
+                            href={repo.htmlUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`Open ${repo.name} on GitHub`}
+                          >
+                            <ExternalLink className="size-4" />
+                          </a>
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="text-destructive hover:text-destructive h-8 w-8 sm:h-9 sm:w-9"
+                          onClick={() => {
+                            setRepoToDelete({ id: repo.id, name: repo.name });
+                          }}
+                          disabled={disconnectMutation.isPending}
+                          aria-label={`Disconnect ${repo.name}`}
+                        >
+                          <Trash2 className="size-4" />
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-1 w-full sm:w-auto mt-3 sm:mt-0">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-muted-foreground hover:text-foreground shrink-0 h-9 w-9 sm:h-10 sm:w-10"
-                      asChild
-                    >
-                      <a
-                        href={repo.htmlUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <ExternalLink className="size-4" />
-                      </a>
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-destructive hover:text-destructive shrink-0 h-9 w-9 sm:h-10 sm:w-10"
-                      onClick={() => {
-                        setRepoToDelete({ id: repo.id, name: repo.name });
-                      }}
-                      disabled={disconnectMutation.isPending}
-                    >
-                      <Trash2 className="size-4" />
-                    </Button>
-                  </div>
-                </div>
-              ))}
+                  </article>
+                );
+              })}
             </div>
           </CardContent>
         ) : (
