@@ -17,6 +17,10 @@ async function getAccessibleRepository(
   userId: string,
   repositoryId: string,
 ) {
+  if (!db || typeof db.repository === "undefined") {
+    throw new Error("Invalid database client instance");
+  }
+
   const ownedRepo = await db.repository.findUnique({
     where: { id: repositoryId, userId },
   });
