@@ -256,3 +256,113 @@ export async function fetchPullRequestFiles(
 
   return files;
 }
+
+export interface GitHubCommit {
+  sha: string;
+  commit: {
+    message: string;
+    author: {
+      name: string;
+      email: string;
+      date: string;
+    };
+    committer: {
+      name: string;
+      email: string;
+      date: string;
+    };
+  };
+  author: {
+    login: string;
+    avatar_url: string;
+  } | null;
+  committer: {
+    login: string;
+    avatar_url: string;
+  } | null;
+  html_url: string;
+  parents: {
+    sha: string;
+    url: string;
+  }[];
+}
+
+export interface GitHubBranch {
+  name: string;
+  commit: {
+    sha: string;
+    url: string;
+  };
+  protected: boolean;
+}
+
+/**
+ * Fetches commits from a GitHub repository with pagination support.
+ * Includes parent commits for branch visualization.
+ */
+export async function fetchCommits(
+  accessToken: string,
+  owner: string,
+  repo: string,
+  options: {
+    perPage?: number;
+    page?: number;
+    sha?: string; // Branch or ref to list commits from
+  } = {},
+): Promise<GitHubCommit[]> {
+  const { perPage = 30, page = 1, sha } = options;
+
+  let url = `https://api.github.com/repos/${owner}/${repo}/commits?per_page=${perPage}&page=${page}`;
+  if (sha) {
+    url += `&sha=${encodeURIComponent(sha)}`;
+  }
+
+  const response = await githubFetch(url, accessToken);
+  return (await response.json()) as GitHubCommit[];
+}
+
+/**
+ * Fetches a single commit with full details including diff stats.
+ */
+export async function fetchCommit(
+  accessToken: string,
+  owner: string,
+  repo: string,
+  sha: string,
+): Promise<GitHubCommit> {
+  const response = await githubFetch(
+    `https://api.github.com/repos/${owner}/${repo}/commits/${sha}`,
+    accessToken,
+  );
+  return (await response.json()) as GitHubCommit;
+}
+
+/**
+ * Fetches all branches from a GitHub repository.
+ */
+export async function fetchBranches(
+  accessToken: string,
+  owner: string,
+  repo: string,
+): Promise<GitHubBranch[]> {
+  return fetchAllPages<GitHubBranch>(
+    `https://api.github.com/repos/${owner}/${repo}/branches`,
+    accessToken,
+  );
+}
+
+/**
+ * Fetches the default branch of a repository.
+ */
+export async function fetchDefaultBranch(
+  accessToken: string,
+  owner: string,
+  repo: string,
+): Promise<string> {
+  const response = await githubFetch(
+    `https://api.github.com/repos/${owner}/${repo}`,
+    accessToken,
+  );
+  const data = (await response.json()) as { default_branch: string };
+  return data.default_branch;
+}

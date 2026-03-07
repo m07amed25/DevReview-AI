@@ -13,6 +13,7 @@ import {
   ArrowLeft,
   GitPullRequest,
   GitMerge,
+  GitCommit,
   Clock,
   Plus,
   Minus,
@@ -32,6 +33,7 @@ import {
   Eye,
 } from "lucide-react";
 import { cn, formatDate } from "@/lib/utils";
+import { CodeTimeline } from "@/components/code-timeline";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -410,6 +412,15 @@ export default function RepositoryDetailPage({ params }: PageProps) {
             <PullRequestCard key={pr.id} pr={pr} repositoryId={id} />
           ))
         )}
+      </div>
+
+      {/* Commit Timeline */}
+      <div>
+        <h2 className="text-xl font-semibold tracking-tight mb-4 flex items-center gap-2">
+          <GitCommit className="size-5" />
+          Commit History
+        </h2>
+        <CodeTimeline repositoryId={id} />
       </div>
 
       {/* Developer Credit */}
