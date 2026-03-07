@@ -5,6 +5,7 @@ import "./globals.css";
 import { TRPCProvider } from "@/lib/trpc/provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { PageTransitionProvider } from "@/components/animations/page-transition";
+import { ErrorBoundary } from "@/components/error-boundary";
 
 export const metadata: Metadata = {
   title: {
@@ -13,7 +14,14 @@ export const metadata: Metadata = {
   },
   description:
     "AI-powered code reviews that catch bugs, security issues, and maintainability problems before they reach production.",
-  keywords: ["code review", "AI", "GitHub", "pull request", "security", "developer tools"],
+  keywords: [
+    "code review",
+    "AI",
+    "GitHub",
+    "pull request",
+    "security",
+    "developer tools",
+  ],
   authors: [{ name: "Mohamed Reda" }],
   openGraph: {
     title: "DevReview AI",
@@ -35,7 +43,9 @@ export default function RootLayout({
       >
         <ThemeProvider attribute="class" defaultTheme="dark">
           <TRPCProvider>
-            <PageTransitionProvider>{children}</PageTransitionProvider>
+            <PageTransitionProvider>
+              <ErrorBoundary>{children}</ErrorBoundary>
+            </PageTransitionProvider>
           </TRPCProvider>
         </ThemeProvider>
       </body>
