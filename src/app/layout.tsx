@@ -23,6 +23,10 @@ export const metadata: Metadata = {
     "developer tools",
   ],
   authors: [{ name: "Mohamed Reda" }],
+  icons: {
+    icon: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
   openGraph: {
     title: "DevReview AI",
     description:
