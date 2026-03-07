@@ -1,38 +1,13 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import type { PrismaClient } from "@/server/db/client";
+import { getAccessibleRepository } from "@/lib/repository";
 import {
   fetchPullRequests,
   fetchPullRequest,
   getGitHubAccessToken,
   fetchPullRequestFiles,
 } from "@/server/services/github";
-
-/**
- * Get a repository the user can access — either as owner or team member.
- */
-async function getAccessibleRepository(
-  db: PrismaClient,
-  userId: string,
-  repositoryId: string,
-) {
-  if (!db || typeof db.repository === "undefined") {
-    throw new Error("Invalid database client instance");
-  }
-
-  const ownedRepo = await db.repository.findUnique({
-    where: { id: repositoryId, userId },
-  });
-  if (ownedRepo) return ownedRepo;
-
-  return db.repository.findFirst({
-    where: {
-      id: repositoryId,
-      team: { members: { some: { userId } } },
-    },
-  });
-}
 
 export const pullRequestRouter = createTRPCRouter({
   list: protectedProcedure
@@ -178,7 +153,10 @@ export const pullRequestRouter = createTRPCRouter({
             teamId_userId: { teamId: repository.teamId, userId: ctx.user.id },
           },
         });
-        if (membership && (membership.role === "ADMIN" || membership.role === "OWNER")) {
+        if (
+          membership &&
+          (membership.role === "ADMIN" || membership.role === "OWNER")
+        ) {
           isAdmin = true;
         }
       }
