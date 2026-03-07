@@ -5,7 +5,6 @@
  * protection for API endpoints from abuse and ensuring fair usage.
  */
 
-import { TRPCError } from "@trpc/server";
 import type { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
 import {
   RateLimiterFactory,
@@ -49,16 +48,6 @@ export interface RateLimitMiddlewareOptions {
 }
 
 /**
- * Middleware function signature compatible with tRPC
- * Uses unknown for context to be compatible with any tRPC context
- */
-type TRPCMiddlewareFn = (opts: {
-  ctx: Record<string, unknown>;
-  next: () => Promise<Record<string, unknown>>;
-  path: string;
-}) => Promise<Record<string, unknown>>;
-
-/**
  * Default rate limiting middleware
  *
  * This middleware:
@@ -70,7 +59,7 @@ type TRPCMiddlewareFn = (opts: {
  */
 export function createRateLimitMiddleware(
   options: RateLimitMiddlewareOptions = {},
-): TRPCMiddlewareFn {
+) {
   const { config: providedConfig, getUserTier, errorMessage, skip } = options;
 
   // Initialize rate limiter
@@ -81,21 +70,21 @@ export function createRateLimitMiddleware(
   // Initialize the rate limiter
   const rateLimiter = RateLimiterFactory.initialize(config);
 
-  return async ({
-    ctx,
-    next,
-    path,
-  }: {
-    ctx: RateLimitContext;
+  // Return the middleware function directly
+  return async (opts: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ctx: any;
     next: () => Promise<unknown>;
     path: string;
   }) => {
-    // Get client information
-    const clientIP = ctx.clientIP || "unknown";
-    const apiKey = ctx.apiKey || null;
+    const { ctx, next, path } = opts;
+
+    // Get client information from headers
+    const clientIP = getClientIP(ctx.headers) || "unknown";
+    const apiKey = getAPIKey(ctx.headers);
 
     // Check if should skip rate limiting
-    if (skip?.(ctx, path)) {
+    if (skip && skip({ clientIP, apiKey } as RateLimitContext, path)) {
       return next();
     }
 
@@ -105,7 +94,7 @@ export function createRateLimitMiddleware(
     }
 
     // Get the appropriate rate limit rule
-    const tier = getUserTier?.(ctx);
+    const tier = getUserTier?.({ clientIP, apiKey } as RateLimitContext);
     let rule = matcher.findRule(path);
 
     // If user has a tier, try to use tier-based rule
@@ -165,24 +154,20 @@ export function createRateLimitMiddleware(
         });
       }
 
-      throw new TRPCError({
-        code: "TOO_MANY_REQUESTS",
-        message: errorMessage || result.error || "Too many requests",
-        cause: {
-          retryAfter: result.retryAfter,
-          limit: result.limit,
-          remaining: result.remaining,
-          reset: result.reset,
-        },
-      });
+      // Throw a simple error that tRPC will handle
+      const error = new Error(result.error || "Too many requests");
+      (error as any).code = "TOO_MANY_REQUESTS";
+      (error as any).cause = {
+        retryAfter: result.retryAfter,
+        limit: result.limit,
+        remaining: result.remaining,
+        reset: result.reset,
+      };
+      throw error;
     }
 
     // Proceed with the request
-    const response = await next();
-
-    // Add rate limit headers to the response
-    // These headers will be available through ctx._def.responseMeta
-    return response;
+    return next();
   };
 }
 

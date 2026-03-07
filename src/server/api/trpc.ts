@@ -39,6 +39,7 @@ export const createCallerFactory = t.createCallerFactory;
 
 export const createTRPCRouter = t.router;
 
+// Initialize rate limiter with default config
 const rateLimiter = RateLimiterFactory.initialize({
   ...getDefaultConfig(),
   onViolation: (data) => {
@@ -72,18 +73,24 @@ const defaultRule: RateLimitRule = {
 const whitelistIPs = new Set(["127.0.0.1", "::1", "localhost"]);
 
 export const publicProcedure = t.procedure.use(async ({ ctx, next, path }) => {
+  // Get client IP from headers
   const clientIP = getClientIP(ctx.headers) || "unknown";
 
+  // Skip rate limiting for whitelisted IPs
   if (whitelistIPs.has(clientIP)) {
     return next();
   }
 
+  // Get API key if available
   const apiKey = getAPIKey(ctx.headers);
 
+  // Build identifier
   const identifier = buildIdentifier(clientIP, apiKey, defaultRule.identifier);
 
+  // Check rate limit
   const result = await rateLimiter.check(identifier, path, defaultRule);
 
+  // If rate limit exceeded
   if (!result.success) {
     throw new TRPCError({
       code: "TOO_MANY_REQUESTS",
@@ -102,13 +109,18 @@ export const publicProcedure = t.procedure.use(async ({ ctx, next, path }) => {
 
 export const protectedProcedure = t.procedure.use(
   async ({ ctx, next, path }) => {
+    // Get client IP from headers
     const clientIP = getClientIP(ctx.headers) || "unknown";
 
+    // Skip rate limiting for whitelisted IPs
     if (!whitelistIPs.has(clientIP)) {
+      // Get API key if available
       const apiKey = getAPIKey(ctx.headers);
 
+      // Build identifier with both IP and API key for authenticated users
       const identifier = buildIdentifier(clientIP, apiKey, "ip+apiKey");
 
+      // Check rate limit with higher limit for authenticated users
       const userRule: RateLimitRule = {
         ...defaultRule,
         name: "authenticated",
@@ -132,6 +144,7 @@ export const protectedProcedure = t.procedure.use(
       }
     }
 
+    // Continue with auth check
     if (!ctx.session?.user) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
