@@ -41,6 +41,7 @@ import {
   Loader2,
   Check,
   Users,
+  BarChart3,
 } from "lucide-react";
 
 interface UserProps {
@@ -297,6 +298,21 @@ export function UserMenu({ user }: { user: UserProps }) {
               </div>
             </DropdownMenuItem>
 
+            <DropdownMenuItem
+              className="gap-3 px-2 py-2 cursor-pointer rounded-md"
+              onClick={() => router.push("/analytics")}
+            >
+              <div className="flex items-center justify-center size-8 rounded-md bg-cyan-500/10">
+                <BarChart3 className="size-4 text-cyan-500" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-sm font-medium">Analytics</span>
+                <span className="text-[11px] text-muted-foreground">
+                  Review metrics & insights
+                </span>
+              </div>
+            </DropdownMenuItem>
+
             {/* <DropdownMenuItem
               className="gap-3 px-2 py-2 cursor-pointer rounded-md"
               onClick={() => router.push("/security")}
@@ -348,48 +364,48 @@ export function UserMenu({ user }: { user: UserProps }) {
                   collisionPadding={16}
                 >
                   <DropdownMenuItem
-                  className="gap-2 cursor-pointer justify-between group/theme-item"
-                  onClick={(e) => handleThemeChange("light", e)}
-                >
-                  <div className="flex items-center gap-2">
-                    <div className="relative">
-                      <Sun className="size-4 transition-transform duration-300 group-hover/theme-item:rotate-90 group-hover/theme-item:text-amber-500" />
+                    className="gap-2 cursor-pointer justify-between group/theme-item"
+                    onClick={(e) => handleThemeChange("light", e)}
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className="relative">
+                        <Sun className="size-4 transition-transform duration-300 group-hover/theme-item:rotate-90 group-hover/theme-item:text-amber-500" />
+                      </div>
+                      <span>Light</span>
                     </div>
-                    <span>Light</span>
-                  </div>
-                  {theme === "light" && (
-                    <Check className="size-4 text-primary theme-check-enter" />
-                  )}
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="gap-2 cursor-pointer justify-between group/theme-item"
-                  onClick={(e) => handleThemeChange("dark", e)}
-                >
-                  <div className="flex items-center gap-2">
-                    <div className="relative">
-                      <Moon className="size-4 transition-transform duration-300 group-hover/theme-item:-rotate-12 group-hover/theme-item:scale-110 group-hover/theme-item:text-blue-400" />
+                    {theme === "light" && (
+                      <Check className="size-4 text-primary theme-check-enter" />
+                    )}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="gap-2 cursor-pointer justify-between group/theme-item"
+                    onClick={(e) => handleThemeChange("dark", e)}
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className="relative">
+                        <Moon className="size-4 transition-transform duration-300 group-hover/theme-item:-rotate-12 group-hover/theme-item:scale-110 group-hover/theme-item:text-blue-400" />
+                      </div>
+                      <span>Dark</span>
                     </div>
-                    <span>Dark</span>
-                  </div>
-                  {theme === "dark" && (
-                    <Check className="size-4 text-primary theme-check-enter" />
-                  )}
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="gap-2 cursor-pointer justify-between group/theme-item"
-                  onClick={(e) => handleThemeChange("system", e)}
-                >
-                  <div className="flex items-center gap-2">
-                    <div className="relative">
-                      <Monitor className="size-4 transition-transform duration-300 group-hover/theme-item:scale-110 group-hover/theme-item:text-violet-500" />
+                    {theme === "dark" && (
+                      <Check className="size-4 text-primary theme-check-enter" />
+                    )}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="gap-2 cursor-pointer justify-between group/theme-item"
+                    onClick={(e) => handleThemeChange("system", e)}
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className="relative">
+                        <Monitor className="size-4 transition-transform duration-300 group-hover/theme-item:scale-110 group-hover/theme-item:text-violet-500" />
+                      </div>
+                      <span>System</span>
                     </div>
-                    <span>System</span>
-                  </div>
-                  {theme === "system" && (
-                    <Check className="size-4 text-primary theme-check-enter" />
-                  )}
-                </DropdownMenuItem>
-              </DropdownMenuSubContent>
+                    {theme === "system" && (
+                      <Check className="size-4 text-primary theme-check-enter" />
+                    )}
+                  </DropdownMenuItem>
+                </DropdownMenuSubContent>
               </DropdownMenuPortal>
             </DropdownMenuSub>
 
