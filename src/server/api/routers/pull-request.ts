@@ -24,13 +24,6 @@ export const pullRequestRouter = createTRPCRouter({
         input.repositoryId,
       );
 
-      if (!repository) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Repository not found",
-        });
-      }
-
       const accessToken = await getGitHubAccessToken(repository.userId);
       if (!accessToken) {
         throw new TRPCError({
@@ -105,13 +98,6 @@ export const pullRequestRouter = createTRPCRouter({
         ctx.user.id,
         input.repositoryId,
       );
-
-      if (!repository) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Repository not found",
-        });
-      }
 
       const accessToken = await getGitHubAccessToken(repository.userId);
       if (!accessToken) {
@@ -199,13 +185,6 @@ export const pullRequestRouter = createTRPCRouter({
         ctx.user.id,
         input.repositoryId,
       );
-
-      if (!repository) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Repository not found",
-        });
-      }
 
       const accessToken = await getGitHubAccessToken(repository.userId);
       if (!accessToken) {
