@@ -23,13 +23,6 @@ export const reviewRouter = createTRPCRouter({
         input.repositoryId,
       );
 
-      if (!repository) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Repository not found",
-        });
-      }
-
       // Use the repo owner's token for GitHub API calls
       const accessToken = await getGitHubAccessToken(repository.userId);
       if (!accessToken) {
