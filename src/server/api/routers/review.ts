@@ -1,38 +1,12 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { getAccessibleRepository } from "@/lib/repository";
 import { inngest } from "@/server/inngest";
 import {
   fetchPullRequest,
   getGitHubAccessToken,
 } from "@/server/services/github";
-
-/**
- * Check if the user has access to a repository — either as the owner
- * or as a member of a team the repo is shared with.
- */
-async function getAccessibleRepository(
-  db: any,
-  userId: string,
-  repositoryId: string,
-) {
-  // Direct ownership
-  const ownedRepo = await db.repository.findUnique({
-    where: { id: repositoryId, userId },
-  });
-  if (ownedRepo) return ownedRepo;
-
-  // Team membership
-  const teamRepo = await db.repository.findFirst({
-    where: {
-      id: repositoryId,
-      team: {
-        members: { some: { userId } },
-      },
-    },
-  });
-  return teamRepo;
-}
 
 export const reviewRouter = createTRPCRouter({
   trigger: protectedProcedure
@@ -48,13 +22,6 @@ export const reviewRouter = createTRPCRouter({
         ctx.user.id,
         input.repositoryId,
       );
-
-      if (!repository) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Repository not found",
-        });
-      }
 
       // Use the repo owner's token for GitHub API calls
       const accessToken = await getGitHubAccessToken(repository.userId);
@@ -195,7 +162,10 @@ export const reviewRouter = createTRPCRouter({
           ],
           ...(input.repositoryId && { repositoryId: input.repositoryId }),
         },
-        include: { repository: true, user: { select: { id: true, name: true, image: true } } },
+        include: {
+          repository: true,
+          user: { select: { id: true, name: true, image: true } },
+        },
         orderBy: { createdAt: "desc" },
         take: input.limit,
       });

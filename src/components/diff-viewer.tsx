@@ -1,10 +1,17 @@
 "use client";
 
-import React, { useState, useMemo, useCallback, useEffect } from "react";
+import React, {
+  useState,
+  useMemo,
+  useCallback,
+  useEffect,
+  useRef,
+} from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   ChevronDown,
   ChevronRight,
@@ -603,6 +610,7 @@ export function DiffViewer({ files }: DiffViewerProps) {
   const [statusFilter, setStatusFilter] = useState<FileStatusFilter>("all");
   const [wordDiffEnabled, setWordDiffEnabled] = useState(true);
   const [wrapLines, setWrapLines] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const statusCounts = useMemo(() => {
     const counts: Record<string, number> = { all: files.length };
@@ -625,6 +633,58 @@ export function DiffViewer({ files }: DiffViewerProps) {
     });
   }, [files, searchQuery, statusFilter]);
 
+  // Virtualization constants - must be after filteredFiles
+  const VIRTUALIZATION_THRESHOLD = 50;
+  const ITEM_HEIGHT = 80; // Estimated height per file card
+  const OVERSCAN = 5;
+  const useVirtualization = filteredFiles.length > VIRTUALIZATION_THRESHOLD;
+
+  // Virtualization state
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [visibleRange, setVisibleRange] = useState({
+    start: 0,
+    end: useVirtualization ? 20 : filteredFiles.length,
+  });
+
+  // Handle scroll for virtualization
+  const handleScroll = useCallback(() => {
+    if (!containerRef.current || !useVirtualization) return;
+
+    const { scrollTop, clientHeight } = containerRef.current;
+
+    // Calculate visible range
+    const startIndex = Math.max(
+      0,
+      Math.floor(scrollTop / ITEM_HEIGHT) - OVERSCAN,
+    );
+    const endIndex = Math.min(
+      filteredFiles.length,
+      Math.ceil((scrollTop + clientHeight) / ITEM_HEIGHT) + OVERSCAN,
+    );
+
+    setVisibleRange({ start: startIndex, end: endIndex });
+  }, [filteredFiles.length, useVirtualization]);
+
+  // Reset visible range when filtered files change
+  useEffect(() => {
+    if (!useVirtualization) {
+      setVisibleRange({ start: 0, end: filteredFiles.length });
+    } else {
+      setVisibleRange({ start: 0, end: 20 });
+      if (containerRef.current) {
+        containerRef.current.scrollTop = 0;
+      }
+    }
+  }, [filteredFiles.length, searchQuery, statusFilter, useVirtualization]);
+
+  // Get visible files based on virtualization
+  const visibleFiles = useVirtualization
+    ? filteredFiles.slice(visibleRange.start, visibleRange.end)
+    : filteredFiles;
+
+  // Calculate total height for virtualization scroll
+  const totalHeight = filteredFiles.length * ITEM_HEIGHT;
+
   const toggleFile = useCallback((fileKey: string) => {
     setExpandedFiles((prev) => {
       const next = new Set(prev);
@@ -643,6 +703,35 @@ export function DiffViewer({ files }: DiffViewerProps) {
       )
         return;
 
+      // Arrow key navigation for virtualized list
+      if (useVirtualization && containerRef.current) {
+        const { scrollTop } = containerRef.current;
+        const currentIndex = Math.round(scrollTop / ITEM_HEIGHT);
+
+        if (e.key === "ArrowDown" && currentIndex < filteredFiles.length - 1) {
+          e.preventDefault();
+          containerRef.current.scrollTo({
+            top: (currentIndex + 1) * ITEM_HEIGHT,
+            behavior: "smooth",
+          });
+        } else if (e.key === "ArrowUp" && currentIndex > 0) {
+          e.preventDefault();
+          containerRef.current.scrollTo({
+            top: (currentIndex - 1) * ITEM_HEIGHT,
+            behavior: "smooth",
+          });
+        } else if (e.key === "Home") {
+          e.preventDefault();
+          containerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+        } else if (e.key === "End") {
+          e.preventDefault();
+          containerRef.current.scrollTo({
+            top: filteredFiles.length * ITEM_HEIGHT,
+            behavior: "smooth",
+          });
+        }
+      }
+
       if (e.key === "e" && !e.ctrlKey && !e.metaKey) {
         setExpandedFiles(new Set(filteredFiles.map((f) => f.filename)));
       } else if (e.key === "w" && !e.ctrlKey && !e.metaKey) {
@@ -654,7 +743,7 @@ export function DiffViewer({ files }: DiffViewerProps) {
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [filteredFiles]);
+  }, [filteredFiles, useVirtualization]);
 
   const addPercent =
     totalChanges > 0 ? (totalAdditions / totalChanges) * 100 : 50;
@@ -873,25 +962,77 @@ export function DiffViewer({ files }: DiffViewerProps) {
         </div>
       </div>
 
-      {/* File Cards */}
-      <div className="space-y-3">
-        {filteredFiles.length === 0 ? (
-          <div className="py-12 text-center text-sm text-muted-foreground">
-            <Search className="size-8 mx-auto mb-2 opacity-50" />
-            <p>No files match your filter criteria.</p>
+      {/* File Cards - Virtualized for large datasets */}
+      <div
+        ref={containerRef}
+        className="space-y-3"
+        onScroll={handleScroll}
+        style={{
+          maxHeight: useVirtualization ? "70vh" : "none",
+          overflowY: useVirtualization ? "auto" : "visible",
+        }}
+      >
+        {isLoading ? (
+          // Loading skeleton for initial render
+          <div className="space-y-3">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <div
+                key={i}
+                className="flex items-center gap-3 p-4 border rounded-lg"
+              >
+                <Skeleton className="h-4 w-4" />
+                <Skeleton className="h-8 w-8 rounded" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-3 w-1/2" />
+                </div>
+                <Skeleton className="h-4 w-16" />
+              </div>
+            ))}
+          </div>
+        ) : useVirtualization ? (
+          // Spacer to maintain scroll height
+          <div style={{ height: totalHeight, position: "relative" }}>
+            {/* Render visible items with offset */}
+            <div
+              style={{
+                transform: `translateY(${visibleRange.start * ITEM_HEIGHT}px)`,
+              }}
+            >
+              {visibleFiles.map((file, index) => (
+                <DiffFileCard
+                  key={file.filename}
+                  file={file}
+                  expanded={expandedFiles.has(file.filename)}
+                  onToggle={() => toggleFile(file.filename)}
+                  viewMode={viewMode}
+                  wordDiffEnabled={wordDiffEnabled}
+                  wrapLines={wrapLines}
+                />
+              ))}
+            </div>
           </div>
         ) : (
-          filteredFiles.map((file) => (
-            <DiffFileCard
-              key={file.filename}
-              file={file}
-              expanded={expandedFiles.has(file.filename)}
-              onToggle={() => toggleFile(file.filename)}
-              viewMode={viewMode}
-              wordDiffEnabled={wordDiffEnabled}
-              wrapLines={wrapLines}
-            />
-          ))
+          <>
+            {filteredFiles.length === 0 ? (
+              <div className="py-12 text-center text-sm text-muted-foreground">
+                <Search className="size-8 mx-auto mb-2 opacity-50" />
+                <p>No files match your filter criteria.</p>
+              </div>
+            ) : (
+              filteredFiles.map((file) => (
+                <DiffFileCard
+                  key={file.filename}
+                  file={file}
+                  expanded={expandedFiles.has(file.filename)}
+                  onToggle={() => toggleFile(file.filename)}
+                  viewMode={viewMode}
+                  wordDiffEnabled={wordDiffEnabled}
+                  wrapLines={wrapLines}
+                />
+              ))
+            )}
+          </>
         )}
       </div>
 

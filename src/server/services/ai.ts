@@ -116,7 +116,6 @@ function buildSystemPrompt(preferences?: ReviewPreferences): string {
   const parts: string[] = [BASE_SYSTEM_PROMPT];
 
   if (preferences) {
-    // Review depth customization
     if (preferences.reviewDepth === "quick") {
       parts.push(
         "\nIMPORTANT: Provide a quick, high-level overview. Focus only on critical and high severity issues. Keep comments brief and limit to the most important findings.",
@@ -127,7 +126,6 @@ function buildSystemPrompt(preferences?: ReviewPreferences): string {
       );
     }
 
-    // Language hint
     if (preferences.defaultLanguage && preferences.defaultLanguage !== "auto") {
       parts.push(
         `\nNote: The primary language context for this project is ${preferences.defaultLanguage}. Use this context for language-specific best practices.`,
@@ -160,22 +158,12 @@ function buildSystemPrompt(preferences?: ReviewPreferences): string {
   return parts.join("\n");
 }
 
-/**
- * Rough character limit to keep the total request under Groq's
- * 12 000 TPM rate-limit for the free/on-demand tier.
- * ~30 000 chars ≈ 7 500 tokens for the diff, plus ~1 000 tokens
- * for system + user prompt overhead → comfortably under 12k input tokens.
- */
+
 const MAX_DIFF_CHARS = 30_000;
 
-/** Maximum characters for a single file's patch to avoid one huge file consuming the entire budget */
 const MAX_PATCH_CHARS_PER_FILE = 10_000;
 
-/**
- * Truncate diff content if it exceeds the character limit so we don't
- * blow past the model's context window. Keeps the first N characters
- * and appends a note about truncation.
- */
+
 function truncateDiff(diff: string): string {
   if (diff.length <= MAX_DIFF_CHARS) return diff;
   return (

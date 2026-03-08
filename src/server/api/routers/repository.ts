@@ -4,6 +4,11 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import {
   fetchGitHubRepos,
   getGitHubAccessToken,
+  fetchCommits,
+  fetchBranches,
+  fetchDefaultBranch,
+  GitHubCommit,
+  GitHubBranch,
 } from "@/server/services/github";
 
 const sortOptions = ["name", "updatedAt", "createdAt"] as const;
@@ -125,6 +130,116 @@ export const repositoryRouter = createTRPCRouter({
       });
       return {
         success: true,
+      };
+    }),
+
+  getCommits: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        branch: z.string().optional(),
+        page: z.number().optional().default(1),
+        perPage: z.number().optional().default(30),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const repository = await ctx.db.repository.findFirst({
+        where: {
+          id: input.id,
+          OR: [
+            { userId: ctx.user.id },
+            { team: { members: { some: { userId: ctx.user.id } } } },
+          ],
+        },
+      });
+
+      if (!repository) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Repository not found",
+        });
+      }
+
+      const accessToken = await getGitHubAccessToken(ctx.user.id);
+      if (!accessToken) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message:
+            "GitHub access token not found. Please connect your GitHub account.",
+        });
+      }
+
+      const [owner, repo] = repository.fullName.split("/");
+      const commits = await fetchCommits(accessToken, owner, repo, {
+        page: input.page,
+        perPage: input.perPage,
+        sha: input.branch,
+      });
+
+      return commits.map((commit: GitHubCommit) => ({
+        sha: commit.sha,
+        message: commit.commit.message,
+        author: commit.author
+          ? {
+              login: commit.author.login,
+              avatarUrl: commit.author.avatar_url,
+            }
+          : {
+              login: commit.commit.author.name,
+              avatarUrl: null,
+            },
+        date: commit.commit.author.date,
+        htmlUrl: commit.html_url,
+        parents: commit.parents.map((p) => p.sha),
+      }));
+    }),
+
+  getBranches: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const repository = await ctx.db.repository.findFirst({
+        where: {
+          id: input.id,
+          OR: [
+            { userId: ctx.user.id },
+            { team: { members: { some: { userId: ctx.user.id } } } },
+          ],
+        },
+      });
+
+      if (!repository) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Repository not found",
+        });
+      }
+
+      const accessToken = await getGitHubAccessToken(ctx.user.id);
+      if (!accessToken) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message:
+            "GitHub access token not found. Please connect your GitHub account.",
+        });
+      }
+
+      const [owner, repo] = repository.fullName.split("/");
+      const [branches, defaultBranch] = await Promise.all([
+        fetchBranches(accessToken, owner, repo),
+        fetchDefaultBranch(accessToken, owner, repo),
+      ]);
+
+      return {
+        branches: branches.map((branch: GitHubBranch) => ({
+          name: branch.name,
+          sha: branch.commit.sha,
+          isProtected: branch.protected,
+        })),
+        defaultBranch,
       };
     }),
 });
