@@ -4,13 +4,7 @@ import React, { useState, useMemo, useCallback, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { trpc } from "@/lib/trpc/client";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -33,14 +27,10 @@ import {
   Code2,
   Zap,
   FileText,
-  ArrowUpRight,
   AlertCircle,
   Search,
   ArrowUpDown,
   Database,
-  Circle,
-  CheckCircle,
-  X,
 } from "lucide-react";
 
 type TimePeriod = "7d" | "30d" | "90d" | "6m" | "1y";
@@ -53,7 +43,6 @@ const TIME_PERIOD_LABELS: Record<TimePeriod, string> = {
   "1y": "Last year",
 };
 
-// Color palette
 const COLORS = {
   primary: "#3b82f6",
   success: "#22c55e",
@@ -72,7 +61,6 @@ interface TrendDataPoint {
   failed: number;
 }
 
-// Simple number display
 function AnimatedNumber({
   value,
   suffix = "",
@@ -88,7 +76,6 @@ function AnimatedNumber({
   );
 }
 
-// Metric card component
 function MetricCard({
   title,
   value,
@@ -171,7 +158,6 @@ function MetricCardSkeleton() {
   );
 }
 
-// Interactive line chart
 function InteractiveLineChart({
   data,
   dataKey,
@@ -336,7 +322,6 @@ function InteractiveLineChart({
   );
 }
 
-// Donut chart with animation
 function AnimatedDonutChart({
   data,
   size = 200,
@@ -402,48 +387,54 @@ function AnimatedDonutChart({
   }
 
   return (
-    <div className="flex items-center gap-6">
-      <svg ref={chartRef} width={size} height={size}>
-        {segments.map((segment, index) => (
-          <path
-            key={index}
-            d={segment.path}
-            fill={segment.color}
-            className="transition-all duration-300 hover:opacity-80 cursor-pointer"
+    <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6">
+      <div className="relative w-full max-w-[200px] aspect-square">
+        <svg
+          ref={chartRef}
+          viewBox={`0 0 ${size} ${size}`}
+          className="w-full h-full"
+        >
+          {segments.map((segment, index) => (
+            <path
+              key={index}
+              d={segment.path}
+              fill={segment.color}
+              className="transition-all duration-300 hover:opacity-80 cursor-pointer"
+            />
+          ))}
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={size / 2 - 35}
+            fill="var(--card)"
           />
-        ))}
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={size / 2 - 35}
-          fill="var(--card)"
-        />
-        <text
-          x={size / 2}
-          y={size / 2 - 8}
-          textAnchor="middle"
-          className="fill-foreground text-xl font-bold"
-        >
-          {total}
-        </text>
-        <text
-          x={size / 2}
-          y={size / 2 + 12}
-          textAnchor="middle"
-          className="fill-muted-foreground text-xs"
-        >
-          Total
-        </text>
-      </svg>
-      <div className="flex flex-col gap-2">
+          <text
+            x={size / 2}
+            y={size / 2 - 8}
+            textAnchor="middle"
+            className="fill-foreground text-xl font-bold"
+          >
+            {total}
+          </text>
+          <text
+            x={size / 2}
+            y={size / 2 + 12}
+            textAnchor="middle"
+            className="fill-muted-foreground text-xs"
+          >
+            Total
+          </text>
+        </svg>
+      </div>
+      <div className="flex flex-col gap-2 md:gap-3">
         {data.map((item, index) => (
           <div key={index} className="flex items-center gap-2">
             <div
-              className="w-3 h-3 rounded-full"
+              className="w-3 h-3 rounded-full shrink-0"
               style={{ backgroundColor: item.color }}
             />
             <span className="text-sm text-muted-foreground">{item.label}</span>
-            <span className="text-sm font-semibold">
+            <span className="text-sm font-semibold shrink-0">
               {Math.round((item.value / total) * 100)}%
             </span>
           </div>
@@ -453,127 +444,127 @@ function AnimatedDonutChart({
   );
 }
 
-// Data table with sorting
-function DataTable<T extends Record<string, unknown>>({
-  data,
-  columns,
-  title,
-}: {
-  data: T[];
-  columns: {
-    key: keyof T;
-    label: string;
-    sortable?: boolean;
-    render?: (item: T) => React.ReactNode;
-  }[];
-  title?: string;
-}) {
-  const [sortKey, setSortKey] = useState<keyof T | null>(null);
-  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
-  const [searchTerm, setSearchTerm] = useState("");
+// function DataTable<T extends Record<string, unknown>>({
+//   data,
+//   columns,
+//   title,
+// }: {
+//   data: T[];
+//   columns: {
+//     key: keyof T;
+//     label: string;
+//     sortable?: boolean;
+//     render?: (item: T) => React.ReactNode;
+//   }[];
+//   title?: string;
+// }) {
+//   const [sortKey, setSortKey] = useState<keyof T | null>(null);
+//   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+//   const [searchTerm, setSearchTerm] = useState("");
 
-  const sortedData = useMemo(() => {
-    let filtered = data;
+//   const sortedData = useMemo(() => {
+//     let filtered = data;
 
-    if (searchTerm) {
-      filtered = data.filter((item) =>
-        Object.values(item).some((val) =>
-          String(val).toLowerCase().includes(searchTerm.toLowerCase()),
-        ),
-      );
-    }
+//     if (searchTerm) {
+//       filtered = data.filter((item) =>
+//         Object.values(item).some((val) =>
+//           String(val).toLowerCase().includes(searchTerm.toLowerCase()),
+//         ),
+//       );
+//     }
 
-    if (!sortKey) return filtered;
+//     if (!sortKey) return filtered;
 
-    return [...filtered].sort((a, b) => {
-      const aVal = a[sortKey];
-      const bVal = b[sortKey];
+//     return [...filtered].sort((a, b) => {
+//       const aVal = a[sortKey];
+//       const bVal = b[sortKey];
 
-      if (typeof aVal === "number" && typeof bVal === "number") {
-        return sortDir === "asc" ? aVal - bVal : bVal - aVal;
-      }
+//       if (typeof aVal === "number" && typeof bVal === "number") {
+//         return sortDir === "asc" ? aVal - bVal : bVal - aVal;
+//       }
 
-      const aStr = String(aVal);
-      const bStr = String(bVal);
-      return sortDir === "asc"
-        ? aStr.localeCompare(bStr)
-        : bStr.localeCompare(aStr);
-    });
-  }, [data, sortKey, sortDir, searchTerm]);
+//       const aStr = String(aVal);
+//       const bStr = String(bVal);
+//       return sortDir === "asc"
+//         ? aStr.localeCompare(bStr)
+//         : bStr.localeCompare(aStr);
+//     });
+//   }, [data, sortKey, sortDir, searchTerm]);
 
-  const handleSort = (key: keyof T) => {
-    if (sortKey === key) {
-      setSortDir(sortDir === "asc" ? "desc" : "asc");
-    } else {
-      setSortKey(key);
-      setSortDir("asc");
-    }
-  };
+//   const handleSort = (key: keyof T) => {
+//     if (sortKey === key) {
+//       setSortDir(sortDir === "asc" ? "desc" : "asc");
+//     } else {
+//       setSortKey(key);
+//       setSortDir("asc");
+//     }
+//   };
 
-  return (
-    <div className="space-y-4">
-      {title && <h3 className="text-lg font-semibold">{title}</h3>}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <input
-          type="text"
-          placeholder="Search..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full h-10 pl-10 pr-4 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-        />
-      </div>
-      <div className="overflow-x-auto rounded-xl border border-border/50">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-border/50 bg-muted/30">
-              {columns.map((col) => (
-                <th
-                  key={String(col.key)}
-                  className={cn(
-                    "px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground",
-                    col.sortable &&
-                      "cursor-pointer hover:text-foreground transition-colors",
-                  )}
-                  onClick={() => col.sortable && handleSort(col.key)}
-                >
-                  <div className="flex items-center gap-2">
-                    {col.label}
-                    {col.sortable &&
-                      sortKey === col.key &&
-                      (sortDir === "asc" ? (
-                        <ArrowUpDown className="h-3 w-3" />
-                      ) : (
-                        <ArrowUpDown className="h-3 w-3 rotate-180" />
-                      ))}
-                  </div>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {sortedData.map((item, index) => (
-              <tr
-                key={index}
-                className="border-b border-border/30 hover:bg-muted/20 transition-colors"
-              >
-                {columns.map((col) => (
-                  <td key={String(col.key)} className="px-4 py-3 text-sm">
-                    {col.render
-                      ? col.render(item)
-                      : String(item[col.key] ?? "-")}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
+//   return (
+//     <div className="space-y-4">
+//       {title && <h3 className="text-lg font-semibold">{title}</h3>}
+//       <div className="relative">
+//         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+//         <input
+//           type="text"
+//           placeholder="Search..."
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           className="w-full h-10 pl-10 pr-4 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+//         />
+//       </div>
+//       <div className="overflow-x-auto rounded-xl border border-border/50">
+//         <table className="w-full">
+//           <thead>
+//             <tr className="border-b border-border/50 bg-muted/30">
+//               {columns.map((col) => (
+//                 <th
+//                   key={String(col.key)}
+//                   className={cn(
+//                     "px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground",
+//                     col.sortable &&
+//                       "cursor-pointer hover:text-foreground transition-colors",
+//                   )}
+//                   onClick={() => col.sortable && handleSort(col.key)}
+//                 >
+//                   <div className="flex items-center gap-2">
+//                     {col.label}
+//                     {col.sortable &&
+//                       sortKey === col.key &&
+//                       (sortDir === "asc" ? (
+//                         <ArrowUpDown className="h-3 w-3" />
+//                       ) : (
+//                         <ArrowUpDown className="h-3 w-3 rotate-180" />
+//                       ))}
+//                   </div>
+//                 </th>
+//               ))}
+//             </tr>
+//           </thead>
+//           <tbody>
+//             {sortedData.map((item, index) => (
+//               <tr
+//                 key={index}
+//                 className="border-b border-border/30 hover:bg-muted/20 transition-colors"
+//               >
+//                 {columns.map((col) => (
+//                   <td key={String(col.key)} className="px-4 py-3 text-sm">
+//                     {col.render
+//                       ? col.render(item)
+//                       : String(item[col.key] ?? "-")}
+//                   </td>
+//                 ))}
+//               </tr>
+//             ))}
+//           </tbody>
+//         </table>
+//       </div>
+//     </div>
+//   );
+// }
 
 // Alert banner
+
 function AnomalyAlert({
   severity,
   message,
@@ -624,7 +615,7 @@ function AnomalyAlert({
 export default function AnalyticsPage() {
   const router = useRouter();
   const [timePeriod, setTimePeriod] = useState<TimePeriod>("30d");
-  const [selectedReviewer, setSelectedReviewer] = useState<string>("all");
+  // const [selectedReviewer, setSelectedReviewer] = useState<string>("all");
   const [granularity, setGranularity] = useState<
     "daily" | "weekly" | "monthly"
   >("daily");
@@ -695,10 +686,9 @@ export default function AnalyticsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <div className="border-b border-border/60">
         <div className="container mx-auto px-4 py-8">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold tracking-tight">
                 Analytics Dashboard
@@ -707,7 +697,7 @@ export default function AnalyticsPage() {
                 Comprehensive insights into your code review performance
               </p>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3">
               <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
                 <Button
                   variant={timePeriod === "7d" ? "default" : "ghost"}
@@ -755,7 +745,6 @@ export default function AnalyticsPage() {
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        {/* Anomaly Alerts */}
         {!anomaliesLoading && filteredAnomalies.length > 0 && (
           <div className="mb-8 space-y-3">
             {filteredAnomalies.map((anomaly, index) => (
