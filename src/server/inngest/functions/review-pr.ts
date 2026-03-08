@@ -7,6 +7,7 @@ import {
   fetchPullRequestFiles,
   getGitHubAccessToken,
 } from "@/server/services/github";
+import { sendReviewCompletedEmailNotification } from "@/server/email/integrations/review";
 
 export type ReviewPREvent = {
   name: "review/pr.requested";
@@ -141,6 +142,14 @@ export const reviewPR = inngest.createFunction(
         });
       });
 
+      // Send email notification (non-blocking)
+      await step.run("send-review-email", async () => {
+        await sendReviewCompletedEmailNotification({
+          db,
+          reviewId,
+        });
+      });
+
       return { success: true, reviewId };
     } catch (err) {
       await step.run("mark-failed-error", async () => {
@@ -159,4 +168,3 @@ export const reviewPR = inngest.createFunction(
     }
   },
 );
-
