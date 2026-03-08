@@ -3,42 +3,19 @@
 import { useState, useCallback } from "react";
 import { trpc } from "@/lib/trpc/client";
 import { useRouter } from "next/navigation";
+import type {
+  TeamRole,
+  TeamMember,
+  TeamRepository,
+  TeamData,
+  PendingAction,
+  TeamActionType,
+  TeamActionStatus,
+} from "@/types/team";
+import { ACTIONS_REQUIRING_APPROVAL } from "@/types/team";
 
-export type TeamRole = "OWNER" | "ADMIN" | "MEMBER";
-
-export interface TeamMember {
-  id: string;
-  role: TeamRole;
-  user: {
-    id: string;
-    name: string;
-    email: string;
-    image: string | null;
-  };
-}
-
-export interface TeamRepository {
-  id: string;
-  fullName: string;
-  private: boolean;
-}
-
-export interface Team {
-  id: string;
-  name: string;
-  slug: string;
-  currentUserRole: TeamRole;
-  members?: TeamMember[];
-  repositories?: TeamRepository[];
-}
-
-export interface PendingAction {
-  id: string;
-  actionType: string;
-  status: "PENDING" | "APPROVED" | "REJECTED";
-  createdAt: Date;
-  metadata?: Record<string, unknown>;
-}
+export type { TeamRole, TeamMember, TeamRepository, TeamData, PendingAction };
+export { ACTIONS_REQUIRING_APPROVAL };
 
 export interface UseTeamOptions {
   teamId?: string;
@@ -49,7 +26,6 @@ export function useTeam({ teamId, onError }: UseTeamOptions = {}) {
   const router = useRouter();
   const utils = trpc.useUtils();
 
-  // Team queries
   const teams = trpc.team.list.useQuery(undefined, {
     staleTime: 30000, // 30 seconds
     refetchOnWindowFocus: false,

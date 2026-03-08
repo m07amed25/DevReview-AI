@@ -183,6 +183,7 @@ model Team {
 
   members      TeamMember[]
   repositories Repository[]
+  actions      TeamAction[]
 }
 
 model TeamMember {
@@ -203,6 +204,44 @@ enum TeamRole {
   OWNER
   ADMIN
   MEMBER
+}
+
+enum ActionType {
+  INVITE_MEMBER
+  REMOVE_MEMBER
+  UPDATE_ROLE
+  SHARE_REPOSITORY
+  UNSHARE_REPOSITORY
+  DELETE_TEAM
+  REVIEW_PR
+  APPROVE_DISCUSSION
+}
+
+enum ActionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model TeamAction {
+  id           String       @id @default(cuid())
+  teamId       String
+  actionType   ActionType
+  status       ActionStatus @default(PENDING)
+  requestedBy  String // userId of requester
+  targetUserId String? // userId affected by the action
+  targetRepoId String? // repositoryId affected by the action
+  metadata     Json? // additional data like email, role, etc.
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  resolvedAt   DateTime?
+  resolvedBy   String?
+
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@index([teamId])
+  @@index([requestedBy])
+  @@index([status])
 }
 
 model Notification {

@@ -16,16 +16,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Users,
-  UserPlus,
-  MoreVertical,
-  Shield,
-  Trash2,
-  Crown,
-  User,
-} from "lucide-react";
+import { Users, MoreVertical, Shield, Trash2, Crown, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { TeamRole, TeamMember } from "@/types/team";
+
+export type { TeamMember };
 
 const roleIcon = {
   OWNER: Crown,
@@ -39,23 +34,10 @@ const roleColor = {
   MEMBER: "text-muted-foreground",
 } as const;
 
-export type MemberRole = "OWNER" | "ADMIN" | "MEMBER";
-
-export interface TeamMember {
-  id: string;
-  role: MemberRole;
-  user: {
-    id: string;
-    name: string;
-    email: string;
-    image: string | null;
-  };
-}
-
 export interface TeamMemberListProps {
   members: TeamMember[];
   isOwner: boolean;
-  currentUserRole: MemberRole;
+  currentUserRole: TeamRole;
   onUpdateRole?: (userId: string, role: "ADMIN" | "MEMBER") => void;
   onRemoveMember?: (userId: string) => void;
   isUpdatingRole?: boolean;

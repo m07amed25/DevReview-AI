@@ -1,15 +1,25 @@
+export type {
+  TeamRole,
+  TeamMember,
+  TeamRepository,
+  TeamMemberPreview,
+  TeamData,
+  PendingAction,
+  TeamActionType,
+  TeamActionStatus,
+} from "@/types/team";
+
+export {
+  ACTIONS_REQUIRING_APPROVAL,
+  ROLE_DISPLAY_NAMES,
+  ROLE_PERMISSIONS,
+} from "@/types/team";
+
 export { TeamCard, TeamCardSkeleton } from "./team-card";
-export type { TeamCardProps, TeamRole, TeamMemberPreview } from "./team-card";
 
 export { TeamMemberList, TeamMemberListSkeleton } from "./team-member-list";
-export type {
-  TeamMemberListProps,
-  TeamMember,
-  MemberRole,
-} from "./team-member-list";
 
 export { TeamRepoList, TeamRepoListSkeleton } from "./team-repo-list";
-export type { TeamRepoListProps, TeamRepository } from "./team-repo-list";
 
 export {
   CreateTeamDialog,
