@@ -493,7 +493,7 @@ export default function PullRequestPage({ params }: PageProps) {
           reviewId={latestReview.data.id}
           currentUserId={session.user.id}
           currentUserName={session.user.name}
-          isAdmin={pr.data?.isAdmin}
+          isAdmin={Boolean(pr.data?.isAdmin)}
           prFiles={files.data?.map((f) => f.filename) || []}
         />
       )}

@@ -193,7 +193,6 @@ export default function HomePage() {
         },
       );
 
-      // CTA section animation
       const ctaSection = document.querySelector(".cta-section");
       if (ctaSection) {
         gsap.fromTo(

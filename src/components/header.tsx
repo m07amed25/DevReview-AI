@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { FolderGit2, GitPullRequest, Users } from "lucide-react";
+import { FolderGit2, GitPullRequest, Users, BarChart3 } from "lucide-react";
 import { UserMenu } from "./user-menu";
 import { Notifications } from "./notifications";
 
@@ -33,6 +33,11 @@ const navItems = [
     href: "/teams",
     label: "Teams",
     icon: Users,
+  },
+  {
+    href: "/analytics",
+    label: "Analytics",
+    icon: BarChart3,
   },
 ];
 
