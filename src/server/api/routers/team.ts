@@ -391,43 +391,56 @@ export const teamRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const membership = await assertRole(ctx, input.teamId, [
-        "OWNER",
-        "ADMIN",
-        "MEMBER",
-      ]);
+      try {
+        const membership = await assertRole(ctx, input.teamId, [
+          "OWNER",
+          "ADMIN",
+          "MEMBER",
+        ]);
 
-      // Check if approval is required (MEMBER role needs approval for certain actions)
-      const requiresApproval = membership.role === "MEMBER";
+        // Check if approval is required (MEMBER role needs approval for certain actions)
+        const requiresApproval = membership.role === "MEMBER";
 
-      // Create the action request
-      const action = await ctx.db.teamAction.create({
-        data: {
-          teamId: input.teamId,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          actionType: input.actionType as any,
-          status: requiresApproval ? "PENDING" : "APPROVED",
-          requestedBy: ctx.user.id,
-          targetUserId: input.targetUserId,
-          targetRepoId: input.targetRepoId,
-          metadata: input.metadata ?? undefined,
-          resolvedAt: requiresApproval ? null : new Date(),
-          resolvedBy: requiresApproval ? null : ctx.user.id,
-        },
-      });
+        // Create the action request
+        const action = await ctx.db.teamAction.create({
+          data: {
+            teamId: input.teamId,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            actionType: input.actionType as any,
+            status: requiresApproval ? "PENDING" : "APPROVED",
+            requestedBy: ctx.user.id,
+            targetUserId: input.targetUserId,
+            targetRepoId: input.targetRepoId,
+            metadata: input.metadata ?? undefined,
+            resolvedAt: requiresApproval ? null : new Date(),
+            resolvedBy: requiresApproval ? null : ctx.user.id,
+          },
+        });
 
-      // If no approval needed, execute the action immediately
-      if (!requiresApproval) {
-        await executeApprovedAction(ctx, action);
-      } else {
-        // Notify admins/owners about the pending action
-        await notifyAdmins(ctx, input.teamId, action);
+        // If no approval needed, execute the action immediately
+        if (!requiresApproval) {
+          await executeApprovedAction(ctx, action);
+        } else {
+          // Notify admins/owners about the pending action
+          await notifyAdmins(ctx, input.teamId, action);
+        }
+
+        return {
+          ...action,
+          requiresApproval,
+        };
+      } catch (error) {
+        // Handle specific error cases
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+        // Log the error for debugging
+        console.error("Error in requestAction:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to process action request. Please try again.",
+        });
       }
-
-      return {
-        ...action,
-        requiresApproval,
-      };
     }),
 
   // ─── Approve a pending action (owner/admin only) ───────────────────────
