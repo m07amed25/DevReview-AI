@@ -1,12 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -19,23 +17,13 @@ import {
 import { Users, Plus, FolderGit2, Search } from "lucide-react";
 import { TeamCard, TeamCardSkeleton } from "@/components/teams/team-card";
 import { useTeamList } from "@/hooks/use-team";
-import type { TeamRole } from "@/components/teams/team-card";
-
-interface TeamData {
-  id: string;
-  name: string;
-  slug: string;
-  role: TeamRole;
-  memberCount: number;
-  repoCount: number;
-}
+import type { TeamData } from "@/types/team";
 
 export default function TeamsPage() {
   const [creating, setCreating] = useState(false);
   const [teamName, setTeamName] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  // Search and filter
   const {
     searchQuery,
     setSearchQuery,
@@ -56,7 +44,6 @@ export default function TeamsPage() {
     onError: (err) => setError(err.message),
   });
 
-  // Filter teams based on search and role
   const filteredTeams = filterTeams(teams.data as TeamData[] | undefined);
 
   const handleCreateTeam = (name: string) => {
@@ -65,7 +52,6 @@ export default function TeamsPage() {
 
   return (
     <div className="relative min-h-[calc(100vh-8rem)]">
-      {/* Abstract Background Pattern */}
       <div className="pointer-events-none absolute inset-0 -z-10 h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#1f2937_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-50"></div>
 
       <div className="space-y-8 max-w-6xl mx-auto pb-12 pt-4 px-4 sm:px-6 lg:px-8">
@@ -89,7 +75,6 @@ export default function TeamsPage() {
           </Button>
         </div>
 
-        {/* Search and Filter */}
         {teams.data && teams.data.length > 0 && (
           <div className="flex flex-col sm:flex-row gap-3 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="relative flex-1 max-w-md">
@@ -117,7 +102,6 @@ export default function TeamsPage() {
           </div>
         )}
 
-        {/* Error dialog */}
         <AlertDialog open={!!error} onOpenChange={() => setError(null)}>
           <AlertDialogContent>
             <AlertDialogHeader>
@@ -132,7 +116,6 @@ export default function TeamsPage() {
           </AlertDialogContent>
         </AlertDialog>
 
-        {/* Create team dialog */}
         <AlertDialog open={creating} onOpenChange={setCreating}>
           <AlertDialogContent className="sm:max-w-md border-border/60 bg-card/95 backdrop-blur-xl shadow-2xl">
             <AlertDialogHeader>
@@ -181,7 +164,6 @@ export default function TeamsPage() {
           </AlertDialogContent>
         </AlertDialog>
 
-        {/* Loading */}
         {teams.isLoading && (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {[1, 2, 3].map((i) => (

@@ -3,13 +3,7 @@
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  Avatar,
-  AvatarImage,
-  AvatarFallback,
-  AvatarGroup,
-  AvatarGroupCount,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Users,
@@ -20,10 +14,10 @@ import {
   User,
   Calendar,
   MoreHorizontal,
-  Settings,
-  MessageSquare,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { TeamRole, TeamMemberPreview } from "@/types/team";
+import { ROLE_DISPLAY_NAMES } from "@/types/team";
 
 const roleIcon = {
   OWNER: Crown,
@@ -31,13 +25,7 @@ const roleIcon = {
   MEMBER: User,
 } as const;
 
-export type TeamRole = "OWNER" | "ADMIN" | "MEMBER";
-
-export interface TeamMemberPreview {
-  id: string;
-  name: string;
-  image: string | null;
-}
+export type { TeamRole, TeamMemberPreview };
 
 export interface TeamCardProps {
   id: string;
