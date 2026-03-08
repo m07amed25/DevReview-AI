@@ -2,6 +2,7 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import type { PrismaClient } from "@/server/db/client";
+import { sendTeamInviteEmailNotification } from "@/server/email/integrations/team";
 
 // Type for JSON metadata
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -205,6 +206,15 @@ export const teamRouter = createTRPCRouter({
           message: `${ctx.user.name ?? "A team admin"} has added you as a ${input.role.toLowerCase()} to the team.`,
           link: `/teams/${input.teamId}`,
         },
+      });
+
+      // Send email notification (non-blocking)
+      sendTeamInviteEmailNotification({
+        db: ctx.db,
+        teamId: input.teamId,
+        invitedUserId: user.id,
+        role: input.role,
+        inviterId: ctx.user.id,
       });
 
       return membership;
@@ -627,7 +637,10 @@ async function executeApprovedAction(
       if (action.targetUserId) {
         await ctx.db.teamMember.delete({
           where: {
-            teamId_userId: { teamId: action.teamId, userId: action.targetUserId },
+            teamId_userId: {
+              teamId: action.teamId,
+              userId: action.targetUserId,
+            },
           },
         });
       }
@@ -638,7 +651,10 @@ async function executeApprovedAction(
         const meta = action.metadata as { role?: string } | null;
         await ctx.db.teamMember.update({
           where: {
-            teamId_userId: { teamId: action.teamId, userId: action.targetUserId },
+            teamId_userId: {
+              teamId: action.teamId,
+              userId: action.targetUserId,
+            },
           },
           data: {
             role: (meta?.role as "ADMIN" | "MEMBER") || "MEMBER",
@@ -679,7 +695,9 @@ async function executeApprovedAction(
       // This action is handled by the review system
       // The approval means the user can now proceed with reviewing the PR
       const meta = action.metadata as { prNumber?: number } | null;
-      console.log(`PR review approved for PR #${meta?.prNumber} in team ${action.teamId}`);
+      console.log(
+        `PR review approved for PR #${meta?.prNumber} in team ${action.teamId}`,
+      );
       break;
     }
 
@@ -687,7 +705,9 @@ async function executeApprovedAction(
       // This action is handled by the collaboration system
       // The approval means the user can now approve a discussion
       const meta = action.metadata as { discussionId?: string } | null;
-      console.log(`Discussion approval approved for discussion ${meta?.discussionId} in team ${action.teamId}`);
+      console.log(
+        `Discussion approval approved for discussion ${meta?.discussionId} in team ${action.teamId}`,
+      );
       break;
     }
   }
@@ -717,9 +737,7 @@ async function notifyAdmins(
     select: { name: true },
   });
 
-  const actionDescription = action.actionType
-    .toLowerCase()
-    .replace("_", " ");
+  const actionDescription = action.actionType.toLowerCase().replace("_", " ");
 
   for (const admin of admins) {
     // Don't notify the person who made the request
