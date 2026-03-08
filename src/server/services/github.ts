@@ -1,6 +1,5 @@
 import { db } from "@/server/db";
 
-/** Custom error for GitHub API failures with rate-limit and status info */
 export class GitHubAPIError extends Error {
   constructor(
     public readonly status: number,
@@ -180,7 +179,6 @@ export async function fetchGitHubRepos(
     }
   }
 
-  // Return sorted by updated_at descending
   return Array.from(repoMap.values()).sort(
     (a, b) =>
       new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
