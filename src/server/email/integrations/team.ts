@@ -1,18 +1,11 @@
 import { sendTeamMemberAddedEmail, getAppUrl } from "../index";
 import type { PrismaClient } from "@/server/db/client";
 
-
 const ALLOWED_DOMAINS = [
   "dev-review-ai-silk.vercel.app",
   "localhost",
   "localhost:3000",
 ];
-
-function isValidUUID(value: string): boolean {
-  const uuidRegex =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  return uuidRegex.test(value);
-}
 
 function buildTeamUrl(appUrl: string, teamSlug: string): string {
   if (!/^[a-zA-Z0-9-_]+$/.test(teamSlug)) {
