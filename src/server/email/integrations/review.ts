@@ -5,27 +5,43 @@ import {
 } from "../index";
 import type { PrismaClient } from "@/server/db/client";
 
-/**
- * Integration utilities for review-related email notifications
- * These functions can be called from your review router or Inngest functions
- */
+const ALLOWED_DOMAINS = [
+  "dev-review-ai-silk.vercel.app",
+  "localhost",
+  "localhost:3000",
+];
+
+function isValidUUID(value: string): boolean {
+  const uuidRegex =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  return uuidRegex.test(value);
+}
+
+function buildReviewUrl(appUrl: string, reviewId: string): string {
+  if (!isValidUUID(reviewId)) {
+    throw new Error(`Invalid review ID format: ${reviewId}`);
+  }
+
+  const url = new URL(`${appUrl}/reviews/${encodeURIComponent(reviewId)}`);
+
+  if (
+    !ALLOWED_DOMAINS.includes(url.hostname) &&
+    !url.hostname.endsWith(".localhost")
+  ) {
+    throw new Error(`Invalid URL domain: ${url.hostname}`);
+  }
+
+  url.searchParams.set("utm_source", "email");
+  url.searchParams.set("utm_medium", "notification");
+
+  return url.toString();
+}
 
 interface SendReviewCompletedEmailParams {
   db: PrismaClient;
   reviewId: string;
 }
 
-/**
- * Send a review completed notification email
- * Call this after a review is completed (status changed to COMPLETED)
- *
- * @example
- * // In your Inngest function or review router:
- * await sendReviewCompletedEmailNotification({
- *   db: prismaClient,
- *   reviewId: review.id,
- * });
- */
 export async function sendReviewCompletedEmailNotification({
   db,
   reviewId,
@@ -58,17 +74,16 @@ export async function sendReviewCompletedEmailNotification({
       return;
     }
 
-    // Determine review status based on the review data
     const reviewStatus = determineReviewStatus(review.status);
 
-    // Count issues from comments (if available)
     const comments = review.comments as Array<{ issues?: unknown[] }> | null;
     const issuesFound =
       comments?.reduce((acc, c) => acc + (c.issues?.length ?? 0), 0) ?? 0;
 
     const appUrl = getAppUrl();
 
-    // Send the email
+    const viewReviewUrl = buildReviewUrl(appUrl, review.id);
+
     const result = await sendReviewCompletedEmail({
       to: review.user.email,
       recipientName: review.user.name || "Developer",
@@ -82,7 +97,7 @@ export async function sendReviewCompletedEmailNotification({
       reviewStatus,
       summary: review.summary || undefined,
       issuesFound,
-      viewReviewUrl: `${appUrl}/reviews/${review.id}`,
+      viewReviewUrl,
     });
 
     if (!result.success) {
@@ -92,15 +107,10 @@ export async function sendReviewCompletedEmailNotification({
       );
     }
   } catch (error) {
-    // Don't throw - email sending should not block the main operation
     console.error("❌ Error in sendReviewCompletedEmailNotification:", error);
   }
 }
 
-/**
- * Determine review status from review data
- * This is a simple implementation - adjust based on your actual review model
- */
 function determineReviewStatus(status: string) {
   // Map Prisma ReviewStatus to our email status
   switch (status) {
@@ -119,10 +129,6 @@ function determineReviewStatus(status: string) {
   }
 }
 
-/**
- * Alternative: Send review completed email with explicit parameters
- * Use this when you have all the data available
- */
 interface SendReviewCompletedEmailExplicitParams {
   to: string;
   recipientName: string;
@@ -139,9 +145,6 @@ interface SendReviewCompletedEmailExplicitParams {
   reviewId: string;
 }
 
-/**
- * Send a review completed notification with explicit parameters
- */
 export async function sendReviewCompletedEmailExplicit({
   to,
   recipientName,
@@ -160,6 +163,9 @@ export async function sendReviewCompletedEmailExplicit({
   try {
     const appUrl = getAppUrl();
 
+    // Use safe URL construction to prevent injection attacks
+    const viewReviewUrl = buildReviewUrl(appUrl, reviewId);
+
     const statusConfig =
       REVIEW_STATUS_CONFIG[reviewStatus] || REVIEW_STATUS_CONFIG.COMMENTED;
 
@@ -176,7 +182,7 @@ export async function sendReviewCompletedEmailExplicit({
       reviewStatus: statusConfig,
       summary,
       issuesFound,
-      viewReviewUrl: `${appUrl}/reviews/${reviewId}`,
+      viewReviewUrl,
     });
 
     if (!result.success) {
@@ -189,36 +195,3 @@ export async function sendReviewCompletedEmailExplicit({
     console.error("❌ Error in sendReviewCompletedEmailExplicit:", error);
   }
 }
-
-/**
- * Example usage in an Inngest function (review-pr.ts):
- *
- * import { sendReviewCompletedEmailNotification } from "@/server/email/integrations/review";
- *
- * // After completing a review:
- * await sendReviewCompletedEmailNotification({
- *   db: prisma,
- *   reviewId: review.id,
- * });
- *
- * Example usage in a review router:
- *
- * import { sendReviewCompletedEmailExplicit } from "@/server/email/integrations/review";
- *
- * // When updating review status:
- * await sendReviewCompletedEmailExplicit({
- *   to: authorEmail,
- *   recipientName: authorName,
- *   reviewerName: reviewerName,
- *   reviewerEmail: reviewerEmail,
- *   prTitle: pr.title,
- *   prNumber: pr.number,
- *   prUrl: pr.html_url,
- *   repositoryName: repo.name,
- *   repositoryFullName: repo.fullName,
- *   reviewStatus: "APPROVED",
- *   summary: reviewSummary,
- *   issuesFound: issues.length,
- *   reviewId: review.id,
- * });
- */

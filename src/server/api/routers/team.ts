@@ -208,8 +208,8 @@ export const teamRouter = createTRPCRouter({
         },
       });
 
-      // Send email notification (non-blocking)
-      sendTeamInviteEmailNotification({
+      // Send email notification with proper error handling
+      await sendTeamInviteEmailNotification({
         db: ctx.db,
         teamId: input.teamId,
         invitedUserId: user.id,
