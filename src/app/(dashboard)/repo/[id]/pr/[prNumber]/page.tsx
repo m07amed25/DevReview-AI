@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useMemo, useState } from "react";
+import { use, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
@@ -89,6 +89,10 @@ export default function PullRequestPage({ params }: PageProps) {
     return `${diffMonths}mo ago`;
   }, [createdAt]);
 
+  // Track when polling started to enforce a max polling duration (5 min)
+  const MAX_POLL_DURATION_MS = 5 * 60 * 1000;
+  const pollStartRef = useRef<number | null>(null);
+
   const latestReview = trpc.review.getLatestForPR.useQuery(
     {
       repositoryId: id,
@@ -98,14 +102,37 @@ export default function PullRequestPage({ params }: PageProps) {
       enabled: !!id && !isNaN(prNum),
       refetchInterval: (query) => {
         const status = query.state.data?.status;
-        if (status === "PROCESSING" || status === "PENDING") return 2000;
+        if (status === "PROCESSING" || status === "PENDING") {
+          // Start tracking poll time on first poll
+          if (pollStartRef.current === null) {
+            pollStartRef.current = Date.now();
+          }
+          // Stop polling after max duration to prevent infinite requests
+          if (Date.now() - pollStartRef.current > MAX_POLL_DURATION_MS) {
+            return false;
+          }
+          return 3000;
+        }
+        // Reset poll timer when no longer in a polling state
+        pollStartRef.current = null;
         return false;
       },
     },
   );
 
+  // Reset poll timer when a new review is triggered
+  useEffect(() => {
+    if (latestReview.data?.status === "PROCESSING" || latestReview.data?.status === "PENDING") {
+      if (pollStartRef.current === null) {
+        pollStartRef.current = Date.now();
+      }
+    }
+  }, [latestReview.data?.status]);
+
   const triggerReview = trpc.review.trigger.useMutation({
     onSuccess: () => {
+      // Reset poll timer for the new review
+      pollStartRef.current = Date.now();
       latestReview.refetch();
       pr.refetch();
     },
