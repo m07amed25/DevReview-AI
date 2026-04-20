@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useMemo, useRef, useState } from "react";
+import { use, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
@@ -92,6 +92,7 @@ export default function PullRequestPage({ params }: PageProps) {
   // Track when polling started to enforce a max polling duration (5 min)
   const MAX_POLL_DURATION_MS = 5 * 60 * 1000;
   const pollStartRef = useRef<number | null>(null);
+  const [pollTimedOut, setPollTimedOut] = useState(false);
 
   const latestReview = trpc.review.getLatestForPR.useQuery(
     {
@@ -107,40 +108,35 @@ export default function PullRequestPage({ params }: PageProps) {
           if (pollStartRef.current === null) {
             pollStartRef.current = Date.now();
           }
-          // Stop polling after max duration to prevent infinite requests
           if (Date.now() - pollStartRef.current > MAX_POLL_DURATION_MS) {
+            pollStartRef.current = null;
+            setPollTimedOut(true);
             return false;
           }
           return 3000;
         }
-        // Reset poll timer when no longer in a polling state
         pollStartRef.current = null;
+        setPollTimedOut(false);
         return false;
       },
     },
   );
 
-  // Reset poll timer when a new review is triggered
-  useEffect(() => {
-    if (latestReview.data?.status === "PROCESSING" || latestReview.data?.status === "PENDING") {
-      if (pollStartRef.current === null) {
-        pollStartRef.current = Date.now();
-      }
-    }
-  }, [latestReview.data?.status]);
 
   const triggerReview = trpc.review.trigger.useMutation({
     onSuccess: () => {
-      // Reset poll timer for the new review
+      // Reset poll timer and timeout state for the new review
       pollStartRef.current = Date.now();
+      setPollTimedOut(false);
       latestReview.refetch();
       pr.refetch();
     },
   });
 
   const isReviewing =
-    latestReview.data?.status === "PROCESSING" ||
-    latestReview.data?.status === "PENDING";
+    !pollTimedOut &&
+    (latestReview.data?.status === "PROCESSING" ||
+      latestReview.data?.status === "PENDING");
 
   if (pr.isLoading) {
     return (
@@ -360,7 +356,7 @@ export default function PullRequestPage({ params }: PageProps) {
           {/* Bottom row: Review status */}
           <div className="border-t border-border/60 px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-3 bg-muted/30">
             <ReviewStatusBadge
-              status={latestReview.data?.status ?? null}
+              status={pollTimedOut ? "TIMED_OUT" : (latestReview.data?.status ?? null)}
               completedAt={
                 latestReview.data?.status === "COMPLETED"
                   ? latestReview.data.createdAt
@@ -390,7 +386,7 @@ export default function PullRequestPage({ params }: PageProps) {
                 ) : (
                   <Wand2 className="size-3.5" />
                 )}
-                {latestReview.data ? "Re-run Review" : "Run AI Review"}
+                {pollTimedOut ? "Retry Review" : latestReview.data ? "Re-run Review" : "Run AI Review"}
               </Button>
             )}
           </div>
@@ -727,6 +723,12 @@ function ReviewStatusBadge({
       label: "Review failed",
       className:
         "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20",
+    },
+    TIMED_OUT: {
+      icon: Clock,
+      label: "Review timed out — tap retry",
+      className:
+        "bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20",
     },
   }[status] ?? {
     icon: Clock,

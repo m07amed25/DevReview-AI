@@ -9,7 +9,10 @@ import {
   fetchDefaultBranch,
   GitHubCommit,
   GitHubBranch,
+  registerWebhook,
+  deleteWebhook,
 } from "@/server/services/github";
+import { getAccessibleRepository } from "@/lib/repository";
 
 const sortOptions = ["name", "updatedAt", "createdAt"] as const;
 export type SortOption = (typeof sortOptions)[number];
@@ -131,6 +134,209 @@ export const repositoryRouter = createTRPCRouter({
       return {
         success: true,
       };
+    }),
+
+  getWebhookConfig: protectedProcedure
+    .input(
+      z.object({
+        repositoryId: z.string().cuid(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      await getAccessibleRepository(ctx.db, ctx.user.id, input.repositoryId);
+
+      return ctx.db.webhookConfig.findUnique({
+        where: { repositoryId: input.repositoryId },
+      });
+    }),
+
+  updateWebhookConfig: protectedProcedure
+    .input(
+      z.object({
+        repositoryId: z.string().cuid(),
+        enabled: z.boolean(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const repository = await ctx.db.repository.findFirst({
+        where: {
+          id: input.repositoryId,
+          OR: [
+            { userId: ctx.user.id },
+            {
+              team: {
+                members: {
+                  some: {
+                    userId: ctx.user.id,
+                    role: { in: ["OWNER", "ADMIN"] },
+                  },
+                },
+              },
+            },
+          ],
+        },
+      });
+
+      if (!repository) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Only repository owners or team admins can update webhook config",
+        });
+      }
+
+      const accessToken = await getGitHubAccessToken(repository.userId);
+      if (!accessToken) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "GitHub access token not found for repository owner",
+        });
+      }
+
+      const appBaseUrl = process.env.APP_BASE_URL ?? process.env.BETTER_AUTH_URL;
+      const webhookSecret = process.env.GITHUB_WEBHOOK_SECRET;
+
+      if (!appBaseUrl || !webhookSecret) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "APP_BASE_URL and GITHUB_WEBHOOK_SECRET are required",
+        });
+      }
+
+      const existingConfig = await ctx.db.webhookConfig.findUnique({
+        where: { repositoryId: repository.id },
+      });
+
+      try {
+        if (input.enabled) {
+          const githubWebhookId = await registerWebhook(
+            accessToken,
+            repository.fullName,
+            `${appBaseUrl}/api/webhooks/github`,
+            webhookSecret,
+          );
+
+          return ctx.db.webhookConfig.upsert({
+            where: { repositoryId: repository.id },
+            create: {
+              repositoryId: repository.id,
+              enabled: true,
+              githubWebhookId,
+            },
+            update: {
+              enabled: true,
+              githubWebhookId,
+            },
+            select: {
+              id: true,
+              repositoryId: true,
+              enabled: true,
+              githubWebhookId: true,
+            },
+          });
+        }
+
+        if (existingConfig?.githubWebhookId) {
+          await deleteWebhook(
+            accessToken,
+            repository.fullName,
+            existingConfig.githubWebhookId,
+          );
+        }
+
+        return ctx.db.webhookConfig.upsert({
+          where: { repositoryId: repository.id },
+          create: {
+            repositoryId: repository.id,
+            enabled: false,
+            githubWebhookId: null,
+          },
+          update: {
+            enabled: false,
+            githubWebhookId: null,
+          },
+          select: {
+            id: true,
+            repositoryId: true,
+            enabled: true,
+            githubWebhookId: true,
+          },
+        });
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message:
+            error instanceof Error
+              ? error.message
+              : "Failed to update webhook configuration",
+        });
+      }
+    }),
+
+  getScheduledScanConfig: protectedProcedure
+    .input(
+      z.object({
+        repositoryId: z.string().cuid(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      await getAccessibleRepository(ctx.db, ctx.user.id, input.repositoryId);
+
+      return ctx.db.scheduledScanConfig.findUnique({
+        where: { repositoryId: input.repositoryId },
+      });
+    }),
+
+  updateScheduledScanConfig: protectedProcedure
+    .input(
+      z.object({
+        repositoryId: z.string().cuid(),
+        enabled: z.boolean(),
+        cadence: z.enum(["DAILY", "WEEKLY"]).optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const repository = await ctx.db.repository.findUnique({
+        where: { id: input.repositoryId },
+      });
+
+      if (!repository) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Repository not found" });
+      }
+
+      if (repository.userId !== ctx.user.id) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Only repository owner can update scheduled scan config",
+        });
+      }
+
+      const existingConfig = await ctx.db.scheduledScanConfig.findUnique({
+        where: { repositoryId: input.repositoryId },
+      });
+
+      const cadenceToSave =
+        input.cadence ?? existingConfig?.cadence ?? "WEEKLY";
+
+      return ctx.db.scheduledScanConfig.upsert({
+        where: { repositoryId: input.repositoryId },
+        create: {
+          repositoryId: input.repositoryId,
+          enabled: input.enabled,
+          cadence: cadenceToSave,
+        },
+        update: {
+          enabled: input.enabled,
+          ...(input.cadence ? { cadence: input.cadence } : {}),
+        },
+        select: {
+          id: true,
+          repositoryId: true,
+          enabled: true,
+          cadence: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
     }),
 
   getCommits: protectedProcedure

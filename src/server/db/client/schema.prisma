@@ -103,9 +103,13 @@ model Repository {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  team    Team?    @relation(fields: [teamId], references: [id], onDelete: SetNull)
-  reviews Review[]
+  user                 User                             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team                 Team?                            @relation(fields: [teamId], references: [id], onDelete: SetNull)
+  reviews              Review[]
+  webhookConfig        WebhookConfig?
+  scheduledScanConfig  ScheduledScanConfig?
+  githubComments       GitHubComment[]
+  branchProtectionRecs BranchProtectionRecommendation[]
 
   @@unique([userId, githubId])
   @@index([teamId])
@@ -127,9 +131,11 @@ model Review {
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 
-  repository Repository     @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
-  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  threads    ReviewThread[]
+  repository        Repository         @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  threads           ReviewThread[]
+  githubComment     GitHubComment?
+  githubStatusCheck GitHubStatusCheck?
 
   @@index([repositoryId])
   @@index([userId])
@@ -265,4 +271,125 @@ enum NotificationType {
   TEAM_MEMBER_ADDED
   REVIEW_COMPLETED
   REVIEW_FAILED
+  SCHEDULED_SCAN_COMPLETED
+}
+
+// ─── Phase 9: CI/CD & Automation ──────────────────────────────────────────────
+
+enum ScanCadence {
+  DAILY
+  WEEKLY
+}
+
+enum ScanRunStatus {
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+enum GitHubCheckState {
+  PENDING
+  SUCCESS
+  FAILURE
+  ERROR
+}
+
+enum RecommendationPriority {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+model WebhookConfig {
+  id              String  @id @default(cuid())
+  repositoryId    String  @unique
+  enabled         Boolean @default(false)
+  githubWebhookId Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  repository Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+
+  @@map("webhook_config")
+}
+
+model ScheduledScanConfig {
+  id           String      @id @default(cuid())
+  repositoryId String      @unique
+  enabled      Boolean     @default(false)
+  cadence      ScanCadence @default(WEEKLY)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  repository Repository         @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+  runs       ScheduledScanRun[]
+
+  @@map("scheduled_scan_config")
+}
+
+model ScheduledScanRun {
+  id            String        @id @default(cuid())
+  configId      String
+  triggeredAt   DateTime      @default(now())
+  completedAt   DateTime?
+  status        ScanRunStatus @default(RUNNING)
+  reviewsQueued Int           @default(0)
+  summary       String?
+
+  config ScheduledScanConfig @relation(fields: [configId], references: [id], onDelete: Cascade)
+
+  @@index([configId])
+  @@map("scheduled_scan_run")
+}
+
+model GitHubComment {
+  id             String @id @default(cuid())
+  reviewId       String @unique
+  githubReviewId Int
+  prNumber       Int
+  repositoryId   String
+  commitSha      String
+  findingCount   Int    @default(0)
+
+  createdAt DateTime @default(now())
+
+  review     Review     @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  repository Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+
+  @@index([reviewId])
+  @@index([repositoryId, prNumber])
+  @@map("github_comment")
+}
+
+model GitHubStatusCheck {
+  id        String           @id @default(cuid())
+  reviewId  String           @unique
+  commitSha String
+  state     GitHubCheckState @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  review Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@map("github_status_check")
+}
+
+model BranchProtectionRecommendation {
+  id           String                 @id @default(cuid())
+  repositoryId String
+  rule         String
+  rationale    String                 @db.Text
+  priority     RecommendationPriority
+  dismissed    Boolean                @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  repository Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+
+  @@index([repositoryId])
+  @@map("branch_protection_recommendation")
 }

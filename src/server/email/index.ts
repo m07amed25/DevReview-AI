@@ -1,7 +1,3 @@
-// Email module exports
-// This module provides email notification functionality using nodemailer and react-email
-
-// Transporter configuration
 export {
   createEmailTransporter,
   verifyEmailConnection,
@@ -10,23 +6,19 @@ export {
   getEmailTransporter,
 } from "./transporter";
 
-// Email service functions
 export {
   sendTeamMemberAddedEmail,
   sendReviewCompletedEmail,
   sendTestEmail,
 } from "./service";
 
-// Integration utilities for team notifications
 export { sendTeamInviteEmailNotification } from "./integrations/team";
 
-// Integration utilities for review notifications
 export {
   sendReviewCompletedEmailNotification,
   sendReviewCompletedEmailExplicit,
 } from "./integrations/review";
 
-// Email templates (for custom rendering if needed)
 export {
   TeamMemberAddedEmail,
   renderTeamMemberAddedEmail,

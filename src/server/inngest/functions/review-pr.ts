@@ -113,6 +113,7 @@ export const reviewPR = inngest.createFunction(
     const pr = await step.run("fetch-pr", async () => {
       return fetchPullRequest(accessToken, owner, repo, prNumber);
     });
+    const commitSha = pr.head.sha;
 
     try {
       const reviewResult = await step.run("generate-review", async () => {
@@ -142,6 +143,31 @@ export const reviewPR = inngest.createFunction(
         });
       });
 
+      await step.sendEvent("emit-review-completed", {
+        name: "review/pr.completed",
+        data: {
+          reviewId,
+          repositoryId,
+          prNumber,
+          userId,
+          commitSha,
+          status: "COMPLETED",
+          hasHighSeverity: Array.isArray(reviewResult.comments)
+            ? reviewResult.comments.some((comment) => {
+                const value = comment as
+                  | { severity?: string; severityLevel?: string; text?: string }
+                  | undefined;
+                const severity = `${value?.severity ?? value?.severityLevel ?? ""}`
+                  .toUpperCase();
+                if (severity === "HIGH" || severity === "CRITICAL") return true;
+                return `${value?.text ?? ""}`
+                  .toUpperCase()
+                  .includes("CRITICAL");
+              })
+            : false,
+        },
+      });
+
       // Send email notification (non-blocking)
       await step.run("send-review-email", async () => {
         await sendReviewCompletedEmailNotification({
@@ -164,6 +190,20 @@ export const reviewPR = inngest.createFunction(
           },
         });
       });
+
+      await step.sendEvent("emit-review-failed", {
+        name: "review/pr.completed",
+        data: {
+          reviewId,
+          repositoryId,
+          prNumber,
+          userId,
+          commitSha,
+          status: "FAILED",
+          hasHighSeverity: false,
+        },
+      });
+
       return { success: false, error: String(err) };
     }
   },

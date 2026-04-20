@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { trpc } from "@/lib/trpc/client";
@@ -31,7 +32,6 @@ import {
 import {
   Settings,
   Sun,
-  Moon,
   Monitor,
   Check,
   Code2,
@@ -50,10 +50,10 @@ import {
   RefreshCw,
 } from "lucide-react";
 
-// ─── Types ───────────────────────────────────────────────────────
-
-
-// ─── Helpers ─────────────────────────────────────────────────────
+const ThemeSelector = dynamic(
+  () => import("@/components/settings/theme-selector"),
+  { ssr: false },
+);
 
 function parseUserAgent(ua: string | null): {
   browser: string;
@@ -278,67 +278,7 @@ export default function SettingsPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="pb-6">
-            <div className="grid grid-cols-3 gap-3">
-              {[
-                {
-                  id: "light",
-                  label: "Light",
-                  icon: Sun,
-                  desc: "Bright & clean",
-                },
-                {
-                  id: "dark",
-                  label: "Dark",
-                  icon: Moon,
-                  desc: "Easy on the eyes",
-                },
-                {
-                  id: "system",
-                  label: "System",
-                  icon: Monitor,
-                  desc: "Follows your OS",
-                },
-              ].map((t) => {
-                const isActive = theme === t.id;
-                const Icon = t.icon;
-                return (
-                  <button
-                    key={t.id}
-                    onClick={(e) => handleThemeChange(t.id, e)}
-                    className={`relative flex flex-col items-center gap-2 rounded-xl border-2 p-4 transition-all cursor-pointer hover:shadow-md ${
-                      isActive
-                        ? "border-primary bg-primary/5 shadow-sm"
-                        : "border-transparent bg-muted/40 hover:bg-muted/60"
-                    }`}
-                  >
-                    {isActive && (
-                      <div className="absolute top-2 right-2">
-                        <Check className="size-4 text-primary" />
-                      </div>
-                    )}
-                    <div
-                      className={`flex items-center justify-center size-10 rounded-lg ${
-                        isActive ? "bg-primary/10" : "bg-muted"
-                      }`}
-                    >
-                      <Icon
-                        className={`size-5 ${isActive ? "text-primary" : "text-muted-foreground"}`}
-                      />
-                    </div>
-                    <div className="text-center">
-                      <p
-                        className={`text-sm font-medium ${isActive ? "text-primary" : ""}`}
-                      >
-                        {t.label}
-                      </p>
-                      <p className="text-[11px] text-muted-foreground">
-                        {t.desc}
-                      </p>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
+            <ThemeSelector theme={theme} onThemeChange={handleThemeChange} />
           </CardContent>
         </Card>
 

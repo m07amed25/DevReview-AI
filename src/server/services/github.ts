@@ -364,3 +364,241 @@ export async function fetchDefaultBranch(
   const data = (await response.json()) as { default_branch: string };
   return data.default_branch;
 }
+
+// ─── Phase 9: CI/CD & Automation ──────────────────────────────────────────────
+
+/**
+ * Registers a pull_request webhook on a GitHub repository.
+ * Returns the GitHub webhook ID assigned by the API.
+ * Requires: admin:repo_hook OAuth scope.
+ */
+export async function registerWebhook(
+  accessToken: string,
+  repoFullName: string,
+  webhookUrl: string,
+  secret: string,
+): Promise<number> {
+  const [owner, repo] = repoFullName.split("/");
+  const response = await fetch(
+    `https://api.github.com/repos/${owner}/${repo}/hooks`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        Accept: "application/vnd.github.v3+json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: "web",
+        active: true,
+        events: ["pull_request"],
+        config: {
+          url: webhookUrl,
+          content_type: "json",
+          secret,
+          insecure_ssl: "0",
+        },
+      }),
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `GitHub API error ${response.status} registering webhook for ${repoFullName}`,
+    );
+  }
+
+  const data = (await response.json()) as { id: number };
+  return data.id;
+}
+
+/**
+ * Deletes a previously registered webhook from a GitHub repository.
+ * Treats HTTP 404 as a no-op (webhook may have been deleted on GitHub directly).
+ * Requires: admin:repo_hook OAuth scope.
+ */
+export async function deleteWebhook(
+  accessToken: string,
+  repoFullName: string,
+  webhookId: number,
+): Promise<void> {
+  const [owner, repo] = repoFullName.split("/");
+  const response = await fetch(
+    `https://api.github.com/repos/${owner}/${repo}/hooks/${webhookId}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        Accept: "application/vnd.github.v3+json",
+      },
+    },
+  );
+
+  if (!response.ok && response.status !== 404) {
+    throw new Error(
+      `GitHub API error ${response.status} deleting webhook ${webhookId} for ${repoFullName}`,
+    );
+  }
+}
+
+/**
+ * Posts or updates a commit status check on GitHub.
+ * Builds target_url from APP_BASE_URL env var.
+ * Requires: repo:status OAuth scope.
+ */
+export async function postCommitStatus(
+  accessToken: string,
+  repoFullName: string,
+  commitSha: string,
+  state: "pending" | "success" | "failure" | "error",
+  reviewId: string,
+  description: string,
+): Promise<void> {
+  const [owner, repo] = repoFullName.split("/");
+  const appBaseUrl = process.env.APP_BASE_URL ?? process.env.BETTER_AUTH_URL;
+  if (!appBaseUrl) {
+    throw new Error("APP_BASE_URL (or BETTER_AUTH_URL) is required to post commit statuses");
+  }
+  const targetUrl = `${appBaseUrl}/reviews/${reviewId}`;
+
+  const response = await fetch(
+    `https://api.github.com/repos/${owner}/${repo}/statuses/${commitSha}`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        Accept: "application/vnd.github.v3+json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        state,
+        target_url: targetUrl,
+        description,
+        context: "devreview-ai/code-review",
+      }),
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `GitHub API error ${response.status} posting commit status for ${repoFullName}@${commitSha}`,
+    );
+  }
+}
+
+export type ReviewComment = {
+  path: string;
+  line: number;
+  body: string;
+};
+
+/**
+ * Submits AI review findings as a single GitHub PR review with inline comments.
+ * Review event is "COMMENT" (neutral, does not request changes or approve).
+ * Returns the GitHub PR review ID.
+ * Requires: repo OAuth scope.
+ */
+export async function submitPullRequestReview(
+  accessToken: string,
+  repoFullName: string,
+  pullNumber: number,
+  commitSha: string,
+  body: string,
+  comments: ReviewComment[],
+): Promise<number> {
+  const [owner, repo] = repoFullName.split("/");
+  const response = await fetch(
+    `https://api.github.com/repos/${owner}/${repo}/pulls/${pullNumber}/reviews`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        Accept: "application/vnd.github.v3+json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        commit_id: commitSha,
+        body,
+        event: "COMMENT",
+        comments: comments.map((c) => ({
+          path: c.path,
+          line: c.line,
+          body: c.body,
+        })),
+      }),
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `GitHub API error ${response.status} submitting PR review for ${repoFullName}#${pullNumber}`,
+    );
+  }
+
+  const data = (await response.json()) as { id: number };
+  return data.id;
+}
+
+/**
+ * Dismisses a previously submitted PR review.
+ * Treats HTTP 404 as a no-op (review already dismissed or deleted).
+ * Requires: repo OAuth scope.
+ */
+export async function dismissGitHubReview(
+  accessToken: string,
+  repoFullName: string,
+  pullNumber: number,
+  reviewId: number,
+  message: string,
+): Promise<void> {
+  const [owner, repo] = repoFullName.split("/");
+  const response = await fetch(
+    `https://api.github.com/repos/${owner}/${repo}/pulls/${pullNumber}/reviews/${reviewId}/dismissals`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        Accept: "application/vnd.github.v3+json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message,
+        event: "DISMISS",
+      }),
+    },
+  );
+
+  if (!response.ok && response.status !== 404) {
+    throw new Error(
+      `GitHub API error ${response.status} dismissing PR review ${reviewId} for ${repoFullName}#${pullNumber}`,
+    );
+  }
+}
+
+export type OpenPullRequest = {
+  number: number;
+  title: string;
+  html_url: string;
+  head: { sha: string };
+};
+
+/**
+ * Lists all open, non-draft pull requests for a repository.
+ * Requires: repo OAuth scope.
+ */
+export async function listOpenPullRequests(
+  accessToken: string,
+  repoFullName: string,
+): Promise<OpenPullRequest[]> {
+  const [owner, repo] = repoFullName.split("/");
+  const response = await githubFetch(
+    `https://api.github.com/repos/${owner}/${repo}/pulls?state=open&per_page=100`,
+    accessToken,
+  );
+
+  const pulls = (await response.json()) as (OpenPullRequest & {
+    draft: boolean;
+  })[];
+  return pulls.filter((pr) => !pr.draft);
+}
+
