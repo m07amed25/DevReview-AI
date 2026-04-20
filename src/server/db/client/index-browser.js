@@ -264,6 +264,65 @@ exports.Prisma.NotificationScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.WebhookConfigScalarFieldEnum = {
+  id: 'id',
+  repositoryId: 'repositoryId',
+  enabled: 'enabled',
+  githubWebhookId: 'githubWebhookId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ScheduledScanConfigScalarFieldEnum = {
+  id: 'id',
+  repositoryId: 'repositoryId',
+  enabled: 'enabled',
+  cadence: 'cadence',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ScheduledScanRunScalarFieldEnum = {
+  id: 'id',
+  configId: 'configId',
+  triggeredAt: 'triggeredAt',
+  completedAt: 'completedAt',
+  status: 'status',
+  reviewsQueued: 'reviewsQueued',
+  summary: 'summary'
+};
+
+exports.Prisma.GitHubCommentScalarFieldEnum = {
+  id: 'id',
+  reviewId: 'reviewId',
+  githubReviewId: 'githubReviewId',
+  prNumber: 'prNumber',
+  repositoryId: 'repositoryId',
+  commitSha: 'commitSha',
+  findingCount: 'findingCount',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.GitHubStatusCheckScalarFieldEnum = {
+  id: 'id',
+  reviewId: 'reviewId',
+  commitSha: 'commitSha',
+  state: 'state',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.BranchProtectionRecommendationScalarFieldEnum = {
+  id: 'id',
+  repositoryId: 'repositoryId',
+  rule: 'rule',
+  rationale: 'rationale',
+  priority: 'priority',
+  dismissed: 'dismissed',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -323,7 +382,32 @@ exports.NotificationType = exports.$Enums.NotificationType = {
   TEAM_INVITE: 'TEAM_INVITE',
   TEAM_MEMBER_ADDED: 'TEAM_MEMBER_ADDED',
   REVIEW_COMPLETED: 'REVIEW_COMPLETED',
-  REVIEW_FAILED: 'REVIEW_FAILED'
+  REVIEW_FAILED: 'REVIEW_FAILED',
+  SCHEDULED_SCAN_COMPLETED: 'SCHEDULED_SCAN_COMPLETED'
+};
+
+exports.ScanCadence = exports.$Enums.ScanCadence = {
+  DAILY: 'DAILY',
+  WEEKLY: 'WEEKLY'
+};
+
+exports.ScanRunStatus = exports.$Enums.ScanRunStatus = {
+  RUNNING: 'RUNNING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
+exports.GitHubCheckState = exports.$Enums.GitHubCheckState = {
+  PENDING: 'PENDING',
+  SUCCESS: 'SUCCESS',
+  FAILURE: 'FAILURE',
+  ERROR: 'ERROR'
+};
+
+exports.RecommendationPriority = exports.$Enums.RecommendationPriority = {
+  HIGH: 'HIGH',
+  MEDIUM: 'MEDIUM',
+  LOW: 'LOW'
 };
 
 exports.Prisma.ModelName = {
@@ -338,7 +422,13 @@ exports.Prisma.ModelName = {
   Team: 'Team',
   TeamMember: 'TeamMember',
   TeamAction: 'TeamAction',
-  Notification: 'Notification'
+  Notification: 'Notification',
+  WebhookConfig: 'WebhookConfig',
+  ScheduledScanConfig: 'ScheduledScanConfig',
+  ScheduledScanRun: 'ScheduledScanRun',
+  GitHubComment: 'GitHubComment',
+  GitHubStatusCheck: 'GitHubStatusCheck',
+  BranchProtectionRecommendation: 'BranchProtectionRecommendation'
 };
 
 /**

@@ -1,24 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
+import { z } from "zod";
 import { db } from "@/server/db";
 import { inngest } from "@/server/inngest";
+import { getGitHubAccessToken, postCommitStatus } from "@/server/services/github";
 
-interface PullRequestPayload {
-  action: string;
-  number: number;
-  pull_request: {
-    id: number;
-    number: number;
-    title: string;
-    html_url: string;
-    state: string;
-    draft: boolean;
-  };
-  repository: {
-    id: number;
-    full_name: string;
-  };
-}
+const pullRequestPayloadSchema = z.object({
+  action: z.string(),
+  pull_request: z.object({
+    number: z.number().int(),
+    title: z.string(),
+    html_url: z.string().url(),
+    draft: z.boolean().optional().default(false),
+    head: z.object({
+      sha: z.string().min(1),
+    }),
+  }),
+  repository: z.object({
+    id: z.number().int(),
+    full_name: z.string().min(1),
+  }),
+});
 
 function verifySignature(payload: string, signature: string | null): boolean {
   const secret = process.env.GITHUB_WEBHOOK_SECRET;
@@ -60,7 +62,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: "Event ignored" }, { status: 200 });
   }
 
-  const data = JSON.parse(payload) as PullRequestPayload;
+  const parsedPayload = pullRequestPayloadSchema.safeParse(JSON.parse(payload));
+  if (!parsedPayload.success) {
+    return NextResponse.json({ message: "Invalid payload" }, { status: 200 });
+  }
+
+  const data = parsedPayload.data;
 
   // Only trigger on open, synchronize (new commits), or reopen
   if (!["opened", "synchronize", "reopened"].includes(data.action)) {
@@ -86,6 +93,15 @@ export async function POST(request: NextRequest) {
       { message: "Repository not connected" },
       { status: 200 },
     );
+  }
+
+  const webhookConfig = await db.webhookConfig.findUnique({
+    where: { repositoryId: repository.id },
+    select: { enabled: true },
+  });
+
+  if (!webhookConfig?.enabled) {
+    return NextResponse.json({ message: "Auto-review disabled" }, { status: 200 });
   }
 
   // Check if there's already a review in progress
@@ -126,6 +142,38 @@ export async function POST(request: NextRequest) {
       userId: repository.userId,
     },
   });
+
+  // Post pending status check in background (do not block webhook response).
+  void (async () => {
+    try {
+      const accessToken = await getGitHubAccessToken(repository.userId);
+      if (!accessToken) return;
+
+      await postCommitStatus(
+        accessToken,
+        data.repository.full_name,
+        data.pull_request.head.sha,
+        "pending",
+        review.id,
+        "DevReview AI — review in progress",
+      );
+
+      await db.gitHubStatusCheck.upsert({
+        where: { reviewId: review.id },
+        create: {
+          reviewId: review.id,
+          commitSha: data.pull_request.head.sha,
+          state: "PENDING",
+        },
+        update: {
+          commitSha: data.pull_request.head.sha,
+          state: "PENDING",
+        },
+      });
+    } catch (error) {
+      console.error("Failed to post pending status check", error);
+    }
+  })();
 
   return NextResponse.json(
     { message: "Review triggered", reviewId: review.id },

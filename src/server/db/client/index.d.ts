@@ -73,6 +73,36 @@ export type TeamAction = $Result.DefaultSelection<Prisma.$TeamActionPayload>
  * 
  */
 export type Notification = $Result.DefaultSelection<Prisma.$NotificationPayload>
+/**
+ * Model WebhookConfig
+ * 
+ */
+export type WebhookConfig = $Result.DefaultSelection<Prisma.$WebhookConfigPayload>
+/**
+ * Model ScheduledScanConfig
+ * 
+ */
+export type ScheduledScanConfig = $Result.DefaultSelection<Prisma.$ScheduledScanConfigPayload>
+/**
+ * Model ScheduledScanRun
+ * 
+ */
+export type ScheduledScanRun = $Result.DefaultSelection<Prisma.$ScheduledScanRunPayload>
+/**
+ * Model GitHubComment
+ * 
+ */
+export type GitHubComment = $Result.DefaultSelection<Prisma.$GitHubCommentPayload>
+/**
+ * Model GitHubStatusCheck
+ * 
+ */
+export type GitHubStatusCheck = $Result.DefaultSelection<Prisma.$GitHubStatusCheckPayload>
+/**
+ * Model BranchProtectionRecommendation
+ * 
+ */
+export type BranchProtectionRecommendation = $Result.DefaultSelection<Prisma.$BranchProtectionRecommendationPayload>
 
 /**
  * Enums
@@ -124,10 +154,47 @@ export const NotificationType: {
   TEAM_INVITE: 'TEAM_INVITE',
   TEAM_MEMBER_ADDED: 'TEAM_MEMBER_ADDED',
   REVIEW_COMPLETED: 'REVIEW_COMPLETED',
-  REVIEW_FAILED: 'REVIEW_FAILED'
+  REVIEW_FAILED: 'REVIEW_FAILED',
+  SCHEDULED_SCAN_COMPLETED: 'SCHEDULED_SCAN_COMPLETED'
 };
 
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
+
+
+export const ScanCadence: {
+  DAILY: 'DAILY',
+  WEEKLY: 'WEEKLY'
+};
+
+export type ScanCadence = (typeof ScanCadence)[keyof typeof ScanCadence]
+
+
+export const ScanRunStatus: {
+  RUNNING: 'RUNNING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
+export type ScanRunStatus = (typeof ScanRunStatus)[keyof typeof ScanRunStatus]
+
+
+export const GitHubCheckState: {
+  PENDING: 'PENDING',
+  SUCCESS: 'SUCCESS',
+  FAILURE: 'FAILURE',
+  ERROR: 'ERROR'
+};
+
+export type GitHubCheckState = (typeof GitHubCheckState)[keyof typeof GitHubCheckState]
+
+
+export const RecommendationPriority: {
+  HIGH: 'HIGH',
+  MEDIUM: 'MEDIUM',
+  LOW: 'LOW'
+};
+
+export type RecommendationPriority = (typeof RecommendationPriority)[keyof typeof RecommendationPriority]
 
 }
 
@@ -150,6 +217,22 @@ export const ActionStatus: typeof $Enums.ActionStatus
 export type NotificationType = $Enums.NotificationType
 
 export const NotificationType: typeof $Enums.NotificationType
+
+export type ScanCadence = $Enums.ScanCadence
+
+export const ScanCadence: typeof $Enums.ScanCadence
+
+export type ScanRunStatus = $Enums.ScanRunStatus
+
+export const ScanRunStatus: typeof $Enums.ScanRunStatus
+
+export type GitHubCheckState = $Enums.GitHubCheckState
+
+export const GitHubCheckState: typeof $Enums.GitHubCheckState
+
+export type RecommendationPriority = $Enums.RecommendationPriority
+
+export const RecommendationPriority: typeof $Enums.RecommendationPriority
 
 /**
  * ##  Prisma Client ʲˢ
@@ -388,6 +471,66 @@ export class PrismaClient<
     * ```
     */
   get notification(): Prisma.NotificationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.webhookConfig`: Exposes CRUD operations for the **WebhookConfig** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more WebhookConfigs
+    * const webhookConfigs = await prisma.webhookConfig.findMany()
+    * ```
+    */
+  get webhookConfig(): Prisma.WebhookConfigDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.scheduledScanConfig`: Exposes CRUD operations for the **ScheduledScanConfig** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ScheduledScanConfigs
+    * const scheduledScanConfigs = await prisma.scheduledScanConfig.findMany()
+    * ```
+    */
+  get scheduledScanConfig(): Prisma.ScheduledScanConfigDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.scheduledScanRun`: Exposes CRUD operations for the **ScheduledScanRun** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ScheduledScanRuns
+    * const scheduledScanRuns = await prisma.scheduledScanRun.findMany()
+    * ```
+    */
+  get scheduledScanRun(): Prisma.ScheduledScanRunDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.gitHubComment`: Exposes CRUD operations for the **GitHubComment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more GitHubComments
+    * const gitHubComments = await prisma.gitHubComment.findMany()
+    * ```
+    */
+  get gitHubComment(): Prisma.GitHubCommentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.gitHubStatusCheck`: Exposes CRUD operations for the **GitHubStatusCheck** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more GitHubStatusChecks
+    * const gitHubStatusChecks = await prisma.gitHubStatusCheck.findMany()
+    * ```
+    */
+  get gitHubStatusCheck(): Prisma.GitHubStatusCheckDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.branchProtectionRecommendation`: Exposes CRUD operations for the **BranchProtectionRecommendation** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more BranchProtectionRecommendations
+    * const branchProtectionRecommendations = await prisma.branchProtectionRecommendation.findMany()
+    * ```
+    */
+  get branchProtectionRecommendation(): Prisma.BranchProtectionRecommendationDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -840,7 +983,13 @@ export namespace Prisma {
     Team: 'Team',
     TeamMember: 'TeamMember',
     TeamAction: 'TeamAction',
-    Notification: 'Notification'
+    Notification: 'Notification',
+    WebhookConfig: 'WebhookConfig',
+    ScheduledScanConfig: 'ScheduledScanConfig',
+    ScheduledScanRun: 'ScheduledScanRun',
+    GitHubComment: 'GitHubComment',
+    GitHubStatusCheck: 'GitHubStatusCheck',
+    BranchProtectionRecommendation: 'BranchProtectionRecommendation'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -859,7 +1008,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "repository" | "review" | "reviewThread" | "reviewThreadComment" | "team" | "teamMember" | "teamAction" | "notification"
+      modelProps: "user" | "session" | "account" | "verification" | "repository" | "review" | "reviewThread" | "reviewThreadComment" | "team" | "teamMember" | "teamAction" | "notification" | "webhookConfig" | "scheduledScanConfig" | "scheduledScanRun" | "gitHubComment" | "gitHubStatusCheck" | "branchProtectionRecommendation"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1751,6 +1900,450 @@ export namespace Prisma {
           }
         }
       }
+      WebhookConfig: {
+        payload: Prisma.$WebhookConfigPayload<ExtArgs>
+        fields: Prisma.WebhookConfigFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.WebhookConfigFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebhookConfigPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.WebhookConfigFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebhookConfigPayload>
+          }
+          findFirst: {
+            args: Prisma.WebhookConfigFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebhookConfigPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.WebhookConfigFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebhookConfigPayload>
+          }
+          findMany: {
+            args: Prisma.WebhookConfigFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebhookConfigPayload>[]
+          }
+          create: {
+            args: Prisma.WebhookConfigCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebhookConfigPayload>
+          }
+          createMany: {
+            args: Prisma.WebhookConfigCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.WebhookConfigCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebhookConfigPayload>[]
+          }
+          delete: {
+            args: Prisma.WebhookConfigDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebhookConfigPayload>
+          }
+          update: {
+            args: Prisma.WebhookConfigUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebhookConfigPayload>
+          }
+          deleteMany: {
+            args: Prisma.WebhookConfigDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.WebhookConfigUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.WebhookConfigUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebhookConfigPayload>[]
+          }
+          upsert: {
+            args: Prisma.WebhookConfigUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebhookConfigPayload>
+          }
+          aggregate: {
+            args: Prisma.WebhookConfigAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateWebhookConfig>
+          }
+          groupBy: {
+            args: Prisma.WebhookConfigGroupByArgs<ExtArgs>
+            result: $Utils.Optional<WebhookConfigGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.WebhookConfigCountArgs<ExtArgs>
+            result: $Utils.Optional<WebhookConfigCountAggregateOutputType> | number
+          }
+        }
+      }
+      ScheduledScanConfig: {
+        payload: Prisma.$ScheduledScanConfigPayload<ExtArgs>
+        fields: Prisma.ScheduledScanConfigFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ScheduledScanConfigFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledScanConfigPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ScheduledScanConfigFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledScanConfigPayload>
+          }
+          findFirst: {
+            args: Prisma.ScheduledScanConfigFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledScanConfigPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ScheduledScanConfigFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledScanConfigPayload>
+          }
+          findMany: {
+            args: Prisma.ScheduledScanConfigFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledScanConfigPayload>[]
+          }
+          create: {
+            args: Prisma.ScheduledScanConfigCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledScanConfigPayload>
+          }
+          createMany: {
+            args: Prisma.ScheduledScanConfigCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ScheduledScanConfigCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledScanConfigPayload>[]
+          }
+          delete: {
+            args: Prisma.ScheduledScanConfigDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledScanConfigPayload>
+          }
+          update: {
+            args: Prisma.ScheduledScanConfigUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledScanConfigPayload>
+          }
+          deleteMany: {
+            args: Prisma.ScheduledScanConfigDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ScheduledScanConfigUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ScheduledScanConfigUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledScanConfigPayload>[]
+          }
+          upsert: {
+            args: Prisma.ScheduledScanConfigUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledScanConfigPayload>
+          }
+          aggregate: {
+            args: Prisma.ScheduledScanConfigAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateScheduledScanConfig>
+          }
+          groupBy: {
+            args: Prisma.ScheduledScanConfigGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ScheduledScanConfigGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ScheduledScanConfigCountArgs<ExtArgs>
+            result: $Utils.Optional<ScheduledScanConfigCountAggregateOutputType> | number
+          }
+        }
+      }
+      ScheduledScanRun: {
+        payload: Prisma.$ScheduledScanRunPayload<ExtArgs>
+        fields: Prisma.ScheduledScanRunFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ScheduledScanRunFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledScanRunPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ScheduledScanRunFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledScanRunPayload>
+          }
+          findFirst: {
+            args: Prisma.ScheduledScanRunFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledScanRunPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ScheduledScanRunFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledScanRunPayload>
+          }
+          findMany: {
+            args: Prisma.ScheduledScanRunFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledScanRunPayload>[]
+          }
+          create: {
+            args: Prisma.ScheduledScanRunCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledScanRunPayload>
+          }
+          createMany: {
+            args: Prisma.ScheduledScanRunCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ScheduledScanRunCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledScanRunPayload>[]
+          }
+          delete: {
+            args: Prisma.ScheduledScanRunDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledScanRunPayload>
+          }
+          update: {
+            args: Prisma.ScheduledScanRunUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledScanRunPayload>
+          }
+          deleteMany: {
+            args: Prisma.ScheduledScanRunDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ScheduledScanRunUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ScheduledScanRunUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledScanRunPayload>[]
+          }
+          upsert: {
+            args: Prisma.ScheduledScanRunUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledScanRunPayload>
+          }
+          aggregate: {
+            args: Prisma.ScheduledScanRunAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateScheduledScanRun>
+          }
+          groupBy: {
+            args: Prisma.ScheduledScanRunGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ScheduledScanRunGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ScheduledScanRunCountArgs<ExtArgs>
+            result: $Utils.Optional<ScheduledScanRunCountAggregateOutputType> | number
+          }
+        }
+      }
+      GitHubComment: {
+        payload: Prisma.$GitHubCommentPayload<ExtArgs>
+        fields: Prisma.GitHubCommentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.GitHubCommentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GitHubCommentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.GitHubCommentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GitHubCommentPayload>
+          }
+          findFirst: {
+            args: Prisma.GitHubCommentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GitHubCommentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.GitHubCommentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GitHubCommentPayload>
+          }
+          findMany: {
+            args: Prisma.GitHubCommentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GitHubCommentPayload>[]
+          }
+          create: {
+            args: Prisma.GitHubCommentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GitHubCommentPayload>
+          }
+          createMany: {
+            args: Prisma.GitHubCommentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.GitHubCommentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GitHubCommentPayload>[]
+          }
+          delete: {
+            args: Prisma.GitHubCommentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GitHubCommentPayload>
+          }
+          update: {
+            args: Prisma.GitHubCommentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GitHubCommentPayload>
+          }
+          deleteMany: {
+            args: Prisma.GitHubCommentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.GitHubCommentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.GitHubCommentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GitHubCommentPayload>[]
+          }
+          upsert: {
+            args: Prisma.GitHubCommentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GitHubCommentPayload>
+          }
+          aggregate: {
+            args: Prisma.GitHubCommentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateGitHubComment>
+          }
+          groupBy: {
+            args: Prisma.GitHubCommentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<GitHubCommentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.GitHubCommentCountArgs<ExtArgs>
+            result: $Utils.Optional<GitHubCommentCountAggregateOutputType> | number
+          }
+        }
+      }
+      GitHubStatusCheck: {
+        payload: Prisma.$GitHubStatusCheckPayload<ExtArgs>
+        fields: Prisma.GitHubStatusCheckFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.GitHubStatusCheckFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GitHubStatusCheckPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.GitHubStatusCheckFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GitHubStatusCheckPayload>
+          }
+          findFirst: {
+            args: Prisma.GitHubStatusCheckFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GitHubStatusCheckPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.GitHubStatusCheckFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GitHubStatusCheckPayload>
+          }
+          findMany: {
+            args: Prisma.GitHubStatusCheckFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GitHubStatusCheckPayload>[]
+          }
+          create: {
+            args: Prisma.GitHubStatusCheckCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GitHubStatusCheckPayload>
+          }
+          createMany: {
+            args: Prisma.GitHubStatusCheckCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.GitHubStatusCheckCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GitHubStatusCheckPayload>[]
+          }
+          delete: {
+            args: Prisma.GitHubStatusCheckDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GitHubStatusCheckPayload>
+          }
+          update: {
+            args: Prisma.GitHubStatusCheckUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GitHubStatusCheckPayload>
+          }
+          deleteMany: {
+            args: Prisma.GitHubStatusCheckDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.GitHubStatusCheckUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.GitHubStatusCheckUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GitHubStatusCheckPayload>[]
+          }
+          upsert: {
+            args: Prisma.GitHubStatusCheckUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GitHubStatusCheckPayload>
+          }
+          aggregate: {
+            args: Prisma.GitHubStatusCheckAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateGitHubStatusCheck>
+          }
+          groupBy: {
+            args: Prisma.GitHubStatusCheckGroupByArgs<ExtArgs>
+            result: $Utils.Optional<GitHubStatusCheckGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.GitHubStatusCheckCountArgs<ExtArgs>
+            result: $Utils.Optional<GitHubStatusCheckCountAggregateOutputType> | number
+          }
+        }
+      }
+      BranchProtectionRecommendation: {
+        payload: Prisma.$BranchProtectionRecommendationPayload<ExtArgs>
+        fields: Prisma.BranchProtectionRecommendationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.BranchProtectionRecommendationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchProtectionRecommendationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.BranchProtectionRecommendationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchProtectionRecommendationPayload>
+          }
+          findFirst: {
+            args: Prisma.BranchProtectionRecommendationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchProtectionRecommendationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.BranchProtectionRecommendationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchProtectionRecommendationPayload>
+          }
+          findMany: {
+            args: Prisma.BranchProtectionRecommendationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchProtectionRecommendationPayload>[]
+          }
+          create: {
+            args: Prisma.BranchProtectionRecommendationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchProtectionRecommendationPayload>
+          }
+          createMany: {
+            args: Prisma.BranchProtectionRecommendationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.BranchProtectionRecommendationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchProtectionRecommendationPayload>[]
+          }
+          delete: {
+            args: Prisma.BranchProtectionRecommendationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchProtectionRecommendationPayload>
+          }
+          update: {
+            args: Prisma.BranchProtectionRecommendationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchProtectionRecommendationPayload>
+          }
+          deleteMany: {
+            args: Prisma.BranchProtectionRecommendationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.BranchProtectionRecommendationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.BranchProtectionRecommendationUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchProtectionRecommendationPayload>[]
+          }
+          upsert: {
+            args: Prisma.BranchProtectionRecommendationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchProtectionRecommendationPayload>
+          }
+          aggregate: {
+            args: Prisma.BranchProtectionRecommendationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBranchProtectionRecommendation>
+          }
+          groupBy: {
+            args: Prisma.BranchProtectionRecommendationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<BranchProtectionRecommendationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.BranchProtectionRecommendationCountArgs<ExtArgs>
+            result: $Utils.Optional<BranchProtectionRecommendationCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1859,6 +2452,12 @@ export namespace Prisma {
     teamMember?: TeamMemberOmit
     teamAction?: TeamActionOmit
     notification?: NotificationOmit
+    webhookConfig?: WebhookConfigOmit
+    scheduledScanConfig?: ScheduledScanConfigOmit
+    scheduledScanRun?: ScheduledScanRunOmit
+    gitHubComment?: GitHubCommentOmit
+    gitHubStatusCheck?: GitHubStatusCheckOmit
+    branchProtectionRecommendation?: BranchProtectionRecommendationOmit
   }
 
   /* Types for Logging */
@@ -2025,10 +2624,14 @@ export namespace Prisma {
 
   export type RepositoryCountOutputType = {
     reviews: number
+    githubComments: number
+    branchProtectionRecs: number
   }
 
   export type RepositoryCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     reviews?: boolean | RepositoryCountOutputTypeCountReviewsArgs
+    githubComments?: boolean | RepositoryCountOutputTypeCountGithubCommentsArgs
+    branchProtectionRecs?: boolean | RepositoryCountOutputTypeCountBranchProtectionRecsArgs
   }
 
   // Custom InputTypes
@@ -2047,6 +2650,20 @@ export namespace Prisma {
    */
   export type RepositoryCountOutputTypeCountReviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReviewWhereInput
+  }
+
+  /**
+   * RepositoryCountOutputType without action
+   */
+  export type RepositoryCountOutputTypeCountGithubCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GitHubCommentWhereInput
+  }
+
+  /**
+   * RepositoryCountOutputType without action
+   */
+  export type RepositoryCountOutputTypeCountBranchProtectionRecsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BranchProtectionRecommendationWhereInput
   }
 
 
@@ -2158,6 +2775,37 @@ export namespace Prisma {
    */
   export type TeamCountOutputTypeCountActionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TeamActionWhereInput
+  }
+
+
+  /**
+   * Count Type ScheduledScanConfigCountOutputType
+   */
+
+  export type ScheduledScanConfigCountOutputType = {
+    runs: number
+  }
+
+  export type ScheduledScanConfigCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    runs?: boolean | ScheduledScanConfigCountOutputTypeCountRunsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ScheduledScanConfigCountOutputType without action
+   */
+  export type ScheduledScanConfigCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledScanConfigCountOutputType
+     */
+    select?: ScheduledScanConfigCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ScheduledScanConfigCountOutputType without action
+   */
+  export type ScheduledScanConfigCountOutputTypeCountRunsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ScheduledScanRunWhereInput
   }
 
 
@@ -7002,6 +7650,10 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
     team?: boolean | Repository$teamArgs<ExtArgs>
     reviews?: boolean | Repository$reviewsArgs<ExtArgs>
+    webhookConfig?: boolean | Repository$webhookConfigArgs<ExtArgs>
+    scheduledScanConfig?: boolean | Repository$scheduledScanConfigArgs<ExtArgs>
+    githubComments?: boolean | Repository$githubCommentsArgs<ExtArgs>
+    branchProtectionRecs?: boolean | Repository$branchProtectionRecsArgs<ExtArgs>
     _count?: boolean | RepositoryCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["repository"]>
 
@@ -7053,6 +7705,10 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
     team?: boolean | Repository$teamArgs<ExtArgs>
     reviews?: boolean | Repository$reviewsArgs<ExtArgs>
+    webhookConfig?: boolean | Repository$webhookConfigArgs<ExtArgs>
+    scheduledScanConfig?: boolean | Repository$scheduledScanConfigArgs<ExtArgs>
+    githubComments?: boolean | Repository$githubCommentsArgs<ExtArgs>
+    branchProtectionRecs?: boolean | Repository$branchProtectionRecsArgs<ExtArgs>
     _count?: boolean | RepositoryCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type RepositoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7070,6 +7726,10 @@ export namespace Prisma {
       user: Prisma.$UserPayload<ExtArgs>
       team: Prisma.$TeamPayload<ExtArgs> | null
       reviews: Prisma.$ReviewPayload<ExtArgs>[]
+      webhookConfig: Prisma.$WebhookConfigPayload<ExtArgs> | null
+      scheduledScanConfig: Prisma.$ScheduledScanConfigPayload<ExtArgs> | null
+      githubComments: Prisma.$GitHubCommentPayload<ExtArgs>[]
+      branchProtectionRecs: Prisma.$BranchProtectionRecommendationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -7479,6 +8139,10 @@ export namespace Prisma {
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     team<T extends Repository$teamArgs<ExtArgs> = {}>(args?: Subset<T, Repository$teamArgs<ExtArgs>>): Prisma__TeamClient<$Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     reviews<T extends Repository$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, Repository$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    webhookConfig<T extends Repository$webhookConfigArgs<ExtArgs> = {}>(args?: Subset<T, Repository$webhookConfigArgs<ExtArgs>>): Prisma__WebhookConfigClient<$Result.GetResult<Prisma.$WebhookConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    scheduledScanConfig<T extends Repository$scheduledScanConfigArgs<ExtArgs> = {}>(args?: Subset<T, Repository$scheduledScanConfigArgs<ExtArgs>>): Prisma__ScheduledScanConfigClient<$Result.GetResult<Prisma.$ScheduledScanConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    githubComments<T extends Repository$githubCommentsArgs<ExtArgs> = {}>(args?: Subset<T, Repository$githubCommentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GitHubCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    branchProtectionRecs<T extends Repository$branchProtectionRecsArgs<ExtArgs> = {}>(args?: Subset<T, Repository$branchProtectionRecsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BranchProtectionRecommendationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7957,6 +8621,92 @@ export namespace Prisma {
   }
 
   /**
+   * Repository.webhookConfig
+   */
+  export type Repository$webhookConfigArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebhookConfig
+     */
+    select?: WebhookConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebhookConfig
+     */
+    omit?: WebhookConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WebhookConfigInclude<ExtArgs> | null
+    where?: WebhookConfigWhereInput
+  }
+
+  /**
+   * Repository.scheduledScanConfig
+   */
+  export type Repository$scheduledScanConfigArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledScanConfig
+     */
+    select?: ScheduledScanConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduledScanConfig
+     */
+    omit?: ScheduledScanConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledScanConfigInclude<ExtArgs> | null
+    where?: ScheduledScanConfigWhereInput
+  }
+
+  /**
+   * Repository.githubComments
+   */
+  export type Repository$githubCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GitHubComment
+     */
+    select?: GitHubCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GitHubComment
+     */
+    omit?: GitHubCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GitHubCommentInclude<ExtArgs> | null
+    where?: GitHubCommentWhereInput
+    orderBy?: GitHubCommentOrderByWithRelationInput | GitHubCommentOrderByWithRelationInput[]
+    cursor?: GitHubCommentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GitHubCommentScalarFieldEnum | GitHubCommentScalarFieldEnum[]
+  }
+
+  /**
+   * Repository.branchProtectionRecs
+   */
+  export type Repository$branchProtectionRecsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BranchProtectionRecommendation
+     */
+    select?: BranchProtectionRecommendationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BranchProtectionRecommendation
+     */
+    omit?: BranchProtectionRecommendationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchProtectionRecommendationInclude<ExtArgs> | null
+    where?: BranchProtectionRecommendationWhereInput
+    orderBy?: BranchProtectionRecommendationOrderByWithRelationInput | BranchProtectionRecommendationOrderByWithRelationInput[]
+    cursor?: BranchProtectionRecommendationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BranchProtectionRecommendationScalarFieldEnum | BranchProtectionRecommendationScalarFieldEnum[]
+  }
+
+  /**
    * Repository without action
    */
   export type RepositoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8244,6 +8994,8 @@ export namespace Prisma {
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     threads?: boolean | Review$threadsArgs<ExtArgs>
+    githubComment?: boolean | Review$githubCommentArgs<ExtArgs>
+    githubStatusCheck?: boolean | Review$githubStatusCheckArgs<ExtArgs>
     _count?: boolean | ReviewCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["review"]>
 
@@ -8307,6 +9059,8 @@ export namespace Prisma {
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     threads?: boolean | Review$threadsArgs<ExtArgs>
+    githubComment?: boolean | Review$githubCommentArgs<ExtArgs>
+    githubStatusCheck?: boolean | Review$githubStatusCheckArgs<ExtArgs>
     _count?: boolean | ReviewCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ReviewIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8324,6 +9078,8 @@ export namespace Prisma {
       repository: Prisma.$RepositoryPayload<ExtArgs>
       user: Prisma.$UserPayload<ExtArgs>
       threads: Prisma.$ReviewThreadPayload<ExtArgs>[]
+      githubComment: Prisma.$GitHubCommentPayload<ExtArgs> | null
+      githubStatusCheck: Prisma.$GitHubStatusCheckPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -8737,6 +9493,8 @@ export namespace Prisma {
     repository<T extends RepositoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RepositoryDefaultArgs<ExtArgs>>): Prisma__RepositoryClient<$Result.GetResult<Prisma.$RepositoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     threads<T extends Review$threadsArgs<ExtArgs> = {}>(args?: Subset<T, Review$threadsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewThreadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    githubComment<T extends Review$githubCommentArgs<ExtArgs> = {}>(args?: Subset<T, Review$githubCommentArgs<ExtArgs>>): Prisma__GitHubCommentClient<$Result.GetResult<Prisma.$GitHubCommentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    githubStatusCheck<T extends Review$githubStatusCheckArgs<ExtArgs> = {}>(args?: Subset<T, Review$githubStatusCheckArgs<ExtArgs>>): Prisma__GitHubStatusCheckClient<$Result.GetResult<Prisma.$GitHubStatusCheckPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9197,6 +9955,44 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ReviewThreadScalarFieldEnum | ReviewThreadScalarFieldEnum[]
+  }
+
+  /**
+   * Review.githubComment
+   */
+  export type Review$githubCommentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GitHubComment
+     */
+    select?: GitHubCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GitHubComment
+     */
+    omit?: GitHubCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GitHubCommentInclude<ExtArgs> | null
+    where?: GitHubCommentWhereInput
+  }
+
+  /**
+   * Review.githubStatusCheck
+   */
+  export type Review$githubStatusCheckArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GitHubStatusCheck
+     */
+    select?: GitHubStatusCheckSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GitHubStatusCheck
+     */
+    omit?: GitHubStatusCheckOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GitHubStatusCheckInclude<ExtArgs> | null
+    where?: GitHubStatusCheckWhereInput
   }
 
   /**
@@ -15893,6 +16689,6645 @@ export namespace Prisma {
 
 
   /**
+   * Model WebhookConfig
+   */
+
+  export type AggregateWebhookConfig = {
+    _count: WebhookConfigCountAggregateOutputType | null
+    _avg: WebhookConfigAvgAggregateOutputType | null
+    _sum: WebhookConfigSumAggregateOutputType | null
+    _min: WebhookConfigMinAggregateOutputType | null
+    _max: WebhookConfigMaxAggregateOutputType | null
+  }
+
+  export type WebhookConfigAvgAggregateOutputType = {
+    githubWebhookId: number | null
+  }
+
+  export type WebhookConfigSumAggregateOutputType = {
+    githubWebhookId: number | null
+  }
+
+  export type WebhookConfigMinAggregateOutputType = {
+    id: string | null
+    repositoryId: string | null
+    enabled: boolean | null
+    githubWebhookId: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type WebhookConfigMaxAggregateOutputType = {
+    id: string | null
+    repositoryId: string | null
+    enabled: boolean | null
+    githubWebhookId: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type WebhookConfigCountAggregateOutputType = {
+    id: number
+    repositoryId: number
+    enabled: number
+    githubWebhookId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type WebhookConfigAvgAggregateInputType = {
+    githubWebhookId?: true
+  }
+
+  export type WebhookConfigSumAggregateInputType = {
+    githubWebhookId?: true
+  }
+
+  export type WebhookConfigMinAggregateInputType = {
+    id?: true
+    repositoryId?: true
+    enabled?: true
+    githubWebhookId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type WebhookConfigMaxAggregateInputType = {
+    id?: true
+    repositoryId?: true
+    enabled?: true
+    githubWebhookId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type WebhookConfigCountAggregateInputType = {
+    id?: true
+    repositoryId?: true
+    enabled?: true
+    githubWebhookId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type WebhookConfigAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WebhookConfig to aggregate.
+     */
+    where?: WebhookConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WebhookConfigs to fetch.
+     */
+    orderBy?: WebhookConfigOrderByWithRelationInput | WebhookConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: WebhookConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WebhookConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WebhookConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned WebhookConfigs
+    **/
+    _count?: true | WebhookConfigCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: WebhookConfigAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: WebhookConfigSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: WebhookConfigMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: WebhookConfigMaxAggregateInputType
+  }
+
+  export type GetWebhookConfigAggregateType<T extends WebhookConfigAggregateArgs> = {
+        [P in keyof T & keyof AggregateWebhookConfig]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateWebhookConfig[P]>
+      : GetScalarType<T[P], AggregateWebhookConfig[P]>
+  }
+
+
+
+
+  export type WebhookConfigGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WebhookConfigWhereInput
+    orderBy?: WebhookConfigOrderByWithAggregationInput | WebhookConfigOrderByWithAggregationInput[]
+    by: WebhookConfigScalarFieldEnum[] | WebhookConfigScalarFieldEnum
+    having?: WebhookConfigScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: WebhookConfigCountAggregateInputType | true
+    _avg?: WebhookConfigAvgAggregateInputType
+    _sum?: WebhookConfigSumAggregateInputType
+    _min?: WebhookConfigMinAggregateInputType
+    _max?: WebhookConfigMaxAggregateInputType
+  }
+
+  export type WebhookConfigGroupByOutputType = {
+    id: string
+    repositoryId: string
+    enabled: boolean
+    githubWebhookId: number | null
+    createdAt: Date
+    updatedAt: Date
+    _count: WebhookConfigCountAggregateOutputType | null
+    _avg: WebhookConfigAvgAggregateOutputType | null
+    _sum: WebhookConfigSumAggregateOutputType | null
+    _min: WebhookConfigMinAggregateOutputType | null
+    _max: WebhookConfigMaxAggregateOutputType | null
+  }
+
+  type GetWebhookConfigGroupByPayload<T extends WebhookConfigGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<WebhookConfigGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof WebhookConfigGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], WebhookConfigGroupByOutputType[P]>
+            : GetScalarType<T[P], WebhookConfigGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type WebhookConfigSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    repositoryId?: boolean
+    enabled?: boolean
+    githubWebhookId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["webhookConfig"]>
+
+  export type WebhookConfigSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    repositoryId?: boolean
+    enabled?: boolean
+    githubWebhookId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["webhookConfig"]>
+
+  export type WebhookConfigSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    repositoryId?: boolean
+    enabled?: boolean
+    githubWebhookId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["webhookConfig"]>
+
+  export type WebhookConfigSelectScalar = {
+    id?: boolean
+    repositoryId?: boolean
+    enabled?: boolean
+    githubWebhookId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type WebhookConfigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "repositoryId" | "enabled" | "githubWebhookId" | "createdAt" | "updatedAt", ExtArgs["result"]["webhookConfig"]>
+  export type WebhookConfigInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+  }
+  export type WebhookConfigIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+  }
+  export type WebhookConfigIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+  }
+
+  export type $WebhookConfigPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "WebhookConfig"
+    objects: {
+      repository: Prisma.$RepositoryPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      repositoryId: string
+      enabled: boolean
+      githubWebhookId: number | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["webhookConfig"]>
+    composites: {}
+  }
+
+  type WebhookConfigGetPayload<S extends boolean | null | undefined | WebhookConfigDefaultArgs> = $Result.GetResult<Prisma.$WebhookConfigPayload, S>
+
+  type WebhookConfigCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<WebhookConfigFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: WebhookConfigCountAggregateInputType | true
+    }
+
+  export interface WebhookConfigDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['WebhookConfig'], meta: { name: 'WebhookConfig' } }
+    /**
+     * Find zero or one WebhookConfig that matches the filter.
+     * @param {WebhookConfigFindUniqueArgs} args - Arguments to find a WebhookConfig
+     * @example
+     * // Get one WebhookConfig
+     * const webhookConfig = await prisma.webhookConfig.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends WebhookConfigFindUniqueArgs>(args: SelectSubset<T, WebhookConfigFindUniqueArgs<ExtArgs>>): Prisma__WebhookConfigClient<$Result.GetResult<Prisma.$WebhookConfigPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one WebhookConfig that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {WebhookConfigFindUniqueOrThrowArgs} args - Arguments to find a WebhookConfig
+     * @example
+     * // Get one WebhookConfig
+     * const webhookConfig = await prisma.webhookConfig.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends WebhookConfigFindUniqueOrThrowArgs>(args: SelectSubset<T, WebhookConfigFindUniqueOrThrowArgs<ExtArgs>>): Prisma__WebhookConfigClient<$Result.GetResult<Prisma.$WebhookConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WebhookConfig that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WebhookConfigFindFirstArgs} args - Arguments to find a WebhookConfig
+     * @example
+     * // Get one WebhookConfig
+     * const webhookConfig = await prisma.webhookConfig.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends WebhookConfigFindFirstArgs>(args?: SelectSubset<T, WebhookConfigFindFirstArgs<ExtArgs>>): Prisma__WebhookConfigClient<$Result.GetResult<Prisma.$WebhookConfigPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WebhookConfig that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WebhookConfigFindFirstOrThrowArgs} args - Arguments to find a WebhookConfig
+     * @example
+     * // Get one WebhookConfig
+     * const webhookConfig = await prisma.webhookConfig.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends WebhookConfigFindFirstOrThrowArgs>(args?: SelectSubset<T, WebhookConfigFindFirstOrThrowArgs<ExtArgs>>): Prisma__WebhookConfigClient<$Result.GetResult<Prisma.$WebhookConfigPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more WebhookConfigs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WebhookConfigFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all WebhookConfigs
+     * const webhookConfigs = await prisma.webhookConfig.findMany()
+     * 
+     * // Get first 10 WebhookConfigs
+     * const webhookConfigs = await prisma.webhookConfig.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const webhookConfigWithIdOnly = await prisma.webhookConfig.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends WebhookConfigFindManyArgs>(args?: SelectSubset<T, WebhookConfigFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WebhookConfigPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a WebhookConfig.
+     * @param {WebhookConfigCreateArgs} args - Arguments to create a WebhookConfig.
+     * @example
+     * // Create one WebhookConfig
+     * const WebhookConfig = await prisma.webhookConfig.create({
+     *   data: {
+     *     // ... data to create a WebhookConfig
+     *   }
+     * })
+     * 
+     */
+    create<T extends WebhookConfigCreateArgs>(args: SelectSubset<T, WebhookConfigCreateArgs<ExtArgs>>): Prisma__WebhookConfigClient<$Result.GetResult<Prisma.$WebhookConfigPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many WebhookConfigs.
+     * @param {WebhookConfigCreateManyArgs} args - Arguments to create many WebhookConfigs.
+     * @example
+     * // Create many WebhookConfigs
+     * const webhookConfig = await prisma.webhookConfig.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends WebhookConfigCreateManyArgs>(args?: SelectSubset<T, WebhookConfigCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many WebhookConfigs and returns the data saved in the database.
+     * @param {WebhookConfigCreateManyAndReturnArgs} args - Arguments to create many WebhookConfigs.
+     * @example
+     * // Create many WebhookConfigs
+     * const webhookConfig = await prisma.webhookConfig.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many WebhookConfigs and only return the `id`
+     * const webhookConfigWithIdOnly = await prisma.webhookConfig.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends WebhookConfigCreateManyAndReturnArgs>(args?: SelectSubset<T, WebhookConfigCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WebhookConfigPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a WebhookConfig.
+     * @param {WebhookConfigDeleteArgs} args - Arguments to delete one WebhookConfig.
+     * @example
+     * // Delete one WebhookConfig
+     * const WebhookConfig = await prisma.webhookConfig.delete({
+     *   where: {
+     *     // ... filter to delete one WebhookConfig
+     *   }
+     * })
+     * 
+     */
+    delete<T extends WebhookConfigDeleteArgs>(args: SelectSubset<T, WebhookConfigDeleteArgs<ExtArgs>>): Prisma__WebhookConfigClient<$Result.GetResult<Prisma.$WebhookConfigPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one WebhookConfig.
+     * @param {WebhookConfigUpdateArgs} args - Arguments to update one WebhookConfig.
+     * @example
+     * // Update one WebhookConfig
+     * const webhookConfig = await prisma.webhookConfig.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends WebhookConfigUpdateArgs>(args: SelectSubset<T, WebhookConfigUpdateArgs<ExtArgs>>): Prisma__WebhookConfigClient<$Result.GetResult<Prisma.$WebhookConfigPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more WebhookConfigs.
+     * @param {WebhookConfigDeleteManyArgs} args - Arguments to filter WebhookConfigs to delete.
+     * @example
+     * // Delete a few WebhookConfigs
+     * const { count } = await prisma.webhookConfig.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends WebhookConfigDeleteManyArgs>(args?: SelectSubset<T, WebhookConfigDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WebhookConfigs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WebhookConfigUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many WebhookConfigs
+     * const webhookConfig = await prisma.webhookConfig.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends WebhookConfigUpdateManyArgs>(args: SelectSubset<T, WebhookConfigUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WebhookConfigs and returns the data updated in the database.
+     * @param {WebhookConfigUpdateManyAndReturnArgs} args - Arguments to update many WebhookConfigs.
+     * @example
+     * // Update many WebhookConfigs
+     * const webhookConfig = await prisma.webhookConfig.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more WebhookConfigs and only return the `id`
+     * const webhookConfigWithIdOnly = await prisma.webhookConfig.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends WebhookConfigUpdateManyAndReturnArgs>(args: SelectSubset<T, WebhookConfigUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WebhookConfigPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one WebhookConfig.
+     * @param {WebhookConfigUpsertArgs} args - Arguments to update or create a WebhookConfig.
+     * @example
+     * // Update or create a WebhookConfig
+     * const webhookConfig = await prisma.webhookConfig.upsert({
+     *   create: {
+     *     // ... data to create a WebhookConfig
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the WebhookConfig we want to update
+     *   }
+     * })
+     */
+    upsert<T extends WebhookConfigUpsertArgs>(args: SelectSubset<T, WebhookConfigUpsertArgs<ExtArgs>>): Prisma__WebhookConfigClient<$Result.GetResult<Prisma.$WebhookConfigPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of WebhookConfigs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WebhookConfigCountArgs} args - Arguments to filter WebhookConfigs to count.
+     * @example
+     * // Count the number of WebhookConfigs
+     * const count = await prisma.webhookConfig.count({
+     *   where: {
+     *     // ... the filter for the WebhookConfigs we want to count
+     *   }
+     * })
+    **/
+    count<T extends WebhookConfigCountArgs>(
+      args?: Subset<T, WebhookConfigCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], WebhookConfigCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a WebhookConfig.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WebhookConfigAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends WebhookConfigAggregateArgs>(args: Subset<T, WebhookConfigAggregateArgs>): Prisma.PrismaPromise<GetWebhookConfigAggregateType<T>>
+
+    /**
+     * Group by WebhookConfig.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WebhookConfigGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends WebhookConfigGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: WebhookConfigGroupByArgs['orderBy'] }
+        : { orderBy?: WebhookConfigGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, WebhookConfigGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetWebhookConfigGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the WebhookConfig model
+   */
+  readonly fields: WebhookConfigFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for WebhookConfig.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__WebhookConfigClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    repository<T extends RepositoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RepositoryDefaultArgs<ExtArgs>>): Prisma__RepositoryClient<$Result.GetResult<Prisma.$RepositoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the WebhookConfig model
+   */
+  interface WebhookConfigFieldRefs {
+    readonly id: FieldRef<"WebhookConfig", 'String'>
+    readonly repositoryId: FieldRef<"WebhookConfig", 'String'>
+    readonly enabled: FieldRef<"WebhookConfig", 'Boolean'>
+    readonly githubWebhookId: FieldRef<"WebhookConfig", 'Int'>
+    readonly createdAt: FieldRef<"WebhookConfig", 'DateTime'>
+    readonly updatedAt: FieldRef<"WebhookConfig", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * WebhookConfig findUnique
+   */
+  export type WebhookConfigFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebhookConfig
+     */
+    select?: WebhookConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebhookConfig
+     */
+    omit?: WebhookConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WebhookConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which WebhookConfig to fetch.
+     */
+    where: WebhookConfigWhereUniqueInput
+  }
+
+  /**
+   * WebhookConfig findUniqueOrThrow
+   */
+  export type WebhookConfigFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebhookConfig
+     */
+    select?: WebhookConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebhookConfig
+     */
+    omit?: WebhookConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WebhookConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which WebhookConfig to fetch.
+     */
+    where: WebhookConfigWhereUniqueInput
+  }
+
+  /**
+   * WebhookConfig findFirst
+   */
+  export type WebhookConfigFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebhookConfig
+     */
+    select?: WebhookConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebhookConfig
+     */
+    omit?: WebhookConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WebhookConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which WebhookConfig to fetch.
+     */
+    where?: WebhookConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WebhookConfigs to fetch.
+     */
+    orderBy?: WebhookConfigOrderByWithRelationInput | WebhookConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WebhookConfigs.
+     */
+    cursor?: WebhookConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WebhookConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WebhookConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WebhookConfigs.
+     */
+    distinct?: WebhookConfigScalarFieldEnum | WebhookConfigScalarFieldEnum[]
+  }
+
+  /**
+   * WebhookConfig findFirstOrThrow
+   */
+  export type WebhookConfigFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebhookConfig
+     */
+    select?: WebhookConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebhookConfig
+     */
+    omit?: WebhookConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WebhookConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which WebhookConfig to fetch.
+     */
+    where?: WebhookConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WebhookConfigs to fetch.
+     */
+    orderBy?: WebhookConfigOrderByWithRelationInput | WebhookConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WebhookConfigs.
+     */
+    cursor?: WebhookConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WebhookConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WebhookConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WebhookConfigs.
+     */
+    distinct?: WebhookConfigScalarFieldEnum | WebhookConfigScalarFieldEnum[]
+  }
+
+  /**
+   * WebhookConfig findMany
+   */
+  export type WebhookConfigFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebhookConfig
+     */
+    select?: WebhookConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebhookConfig
+     */
+    omit?: WebhookConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WebhookConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which WebhookConfigs to fetch.
+     */
+    where?: WebhookConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WebhookConfigs to fetch.
+     */
+    orderBy?: WebhookConfigOrderByWithRelationInput | WebhookConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing WebhookConfigs.
+     */
+    cursor?: WebhookConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WebhookConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WebhookConfigs.
+     */
+    skip?: number
+    distinct?: WebhookConfigScalarFieldEnum | WebhookConfigScalarFieldEnum[]
+  }
+
+  /**
+   * WebhookConfig create
+   */
+  export type WebhookConfigCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebhookConfig
+     */
+    select?: WebhookConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebhookConfig
+     */
+    omit?: WebhookConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WebhookConfigInclude<ExtArgs> | null
+    /**
+     * The data needed to create a WebhookConfig.
+     */
+    data: XOR<WebhookConfigCreateInput, WebhookConfigUncheckedCreateInput>
+  }
+
+  /**
+   * WebhookConfig createMany
+   */
+  export type WebhookConfigCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many WebhookConfigs.
+     */
+    data: WebhookConfigCreateManyInput | WebhookConfigCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * WebhookConfig createManyAndReturn
+   */
+  export type WebhookConfigCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebhookConfig
+     */
+    select?: WebhookConfigSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebhookConfig
+     */
+    omit?: WebhookConfigOmit<ExtArgs> | null
+    /**
+     * The data used to create many WebhookConfigs.
+     */
+    data: WebhookConfigCreateManyInput | WebhookConfigCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WebhookConfigIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WebhookConfig update
+   */
+  export type WebhookConfigUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebhookConfig
+     */
+    select?: WebhookConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebhookConfig
+     */
+    omit?: WebhookConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WebhookConfigInclude<ExtArgs> | null
+    /**
+     * The data needed to update a WebhookConfig.
+     */
+    data: XOR<WebhookConfigUpdateInput, WebhookConfigUncheckedUpdateInput>
+    /**
+     * Choose, which WebhookConfig to update.
+     */
+    where: WebhookConfigWhereUniqueInput
+  }
+
+  /**
+   * WebhookConfig updateMany
+   */
+  export type WebhookConfigUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update WebhookConfigs.
+     */
+    data: XOR<WebhookConfigUpdateManyMutationInput, WebhookConfigUncheckedUpdateManyInput>
+    /**
+     * Filter which WebhookConfigs to update
+     */
+    where?: WebhookConfigWhereInput
+    /**
+     * Limit how many WebhookConfigs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * WebhookConfig updateManyAndReturn
+   */
+  export type WebhookConfigUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebhookConfig
+     */
+    select?: WebhookConfigSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebhookConfig
+     */
+    omit?: WebhookConfigOmit<ExtArgs> | null
+    /**
+     * The data used to update WebhookConfigs.
+     */
+    data: XOR<WebhookConfigUpdateManyMutationInput, WebhookConfigUncheckedUpdateManyInput>
+    /**
+     * Filter which WebhookConfigs to update
+     */
+    where?: WebhookConfigWhereInput
+    /**
+     * Limit how many WebhookConfigs to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WebhookConfigIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WebhookConfig upsert
+   */
+  export type WebhookConfigUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebhookConfig
+     */
+    select?: WebhookConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebhookConfig
+     */
+    omit?: WebhookConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WebhookConfigInclude<ExtArgs> | null
+    /**
+     * The filter to search for the WebhookConfig to update in case it exists.
+     */
+    where: WebhookConfigWhereUniqueInput
+    /**
+     * In case the WebhookConfig found by the `where` argument doesn't exist, create a new WebhookConfig with this data.
+     */
+    create: XOR<WebhookConfigCreateInput, WebhookConfigUncheckedCreateInput>
+    /**
+     * In case the WebhookConfig was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<WebhookConfigUpdateInput, WebhookConfigUncheckedUpdateInput>
+  }
+
+  /**
+   * WebhookConfig delete
+   */
+  export type WebhookConfigDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebhookConfig
+     */
+    select?: WebhookConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebhookConfig
+     */
+    omit?: WebhookConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WebhookConfigInclude<ExtArgs> | null
+    /**
+     * Filter which WebhookConfig to delete.
+     */
+    where: WebhookConfigWhereUniqueInput
+  }
+
+  /**
+   * WebhookConfig deleteMany
+   */
+  export type WebhookConfigDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WebhookConfigs to delete
+     */
+    where?: WebhookConfigWhereInput
+    /**
+     * Limit how many WebhookConfigs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * WebhookConfig without action
+   */
+  export type WebhookConfigDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebhookConfig
+     */
+    select?: WebhookConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebhookConfig
+     */
+    omit?: WebhookConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WebhookConfigInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ScheduledScanConfig
+   */
+
+  export type AggregateScheduledScanConfig = {
+    _count: ScheduledScanConfigCountAggregateOutputType | null
+    _min: ScheduledScanConfigMinAggregateOutputType | null
+    _max: ScheduledScanConfigMaxAggregateOutputType | null
+  }
+
+  export type ScheduledScanConfigMinAggregateOutputType = {
+    id: string | null
+    repositoryId: string | null
+    enabled: boolean | null
+    cadence: $Enums.ScanCadence | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ScheduledScanConfigMaxAggregateOutputType = {
+    id: string | null
+    repositoryId: string | null
+    enabled: boolean | null
+    cadence: $Enums.ScanCadence | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ScheduledScanConfigCountAggregateOutputType = {
+    id: number
+    repositoryId: number
+    enabled: number
+    cadence: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ScheduledScanConfigMinAggregateInputType = {
+    id?: true
+    repositoryId?: true
+    enabled?: true
+    cadence?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ScheduledScanConfigMaxAggregateInputType = {
+    id?: true
+    repositoryId?: true
+    enabled?: true
+    cadence?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ScheduledScanConfigCountAggregateInputType = {
+    id?: true
+    repositoryId?: true
+    enabled?: true
+    cadence?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ScheduledScanConfigAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ScheduledScanConfig to aggregate.
+     */
+    where?: ScheduledScanConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScheduledScanConfigs to fetch.
+     */
+    orderBy?: ScheduledScanConfigOrderByWithRelationInput | ScheduledScanConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ScheduledScanConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScheduledScanConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScheduledScanConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ScheduledScanConfigs
+    **/
+    _count?: true | ScheduledScanConfigCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ScheduledScanConfigMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ScheduledScanConfigMaxAggregateInputType
+  }
+
+  export type GetScheduledScanConfigAggregateType<T extends ScheduledScanConfigAggregateArgs> = {
+        [P in keyof T & keyof AggregateScheduledScanConfig]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateScheduledScanConfig[P]>
+      : GetScalarType<T[P], AggregateScheduledScanConfig[P]>
+  }
+
+
+
+
+  export type ScheduledScanConfigGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ScheduledScanConfigWhereInput
+    orderBy?: ScheduledScanConfigOrderByWithAggregationInput | ScheduledScanConfigOrderByWithAggregationInput[]
+    by: ScheduledScanConfigScalarFieldEnum[] | ScheduledScanConfigScalarFieldEnum
+    having?: ScheduledScanConfigScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ScheduledScanConfigCountAggregateInputType | true
+    _min?: ScheduledScanConfigMinAggregateInputType
+    _max?: ScheduledScanConfigMaxAggregateInputType
+  }
+
+  export type ScheduledScanConfigGroupByOutputType = {
+    id: string
+    repositoryId: string
+    enabled: boolean
+    cadence: $Enums.ScanCadence
+    createdAt: Date
+    updatedAt: Date
+    _count: ScheduledScanConfigCountAggregateOutputType | null
+    _min: ScheduledScanConfigMinAggregateOutputType | null
+    _max: ScheduledScanConfigMaxAggregateOutputType | null
+  }
+
+  type GetScheduledScanConfigGroupByPayload<T extends ScheduledScanConfigGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ScheduledScanConfigGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ScheduledScanConfigGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ScheduledScanConfigGroupByOutputType[P]>
+            : GetScalarType<T[P], ScheduledScanConfigGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ScheduledScanConfigSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    repositoryId?: boolean
+    enabled?: boolean
+    cadence?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+    runs?: boolean | ScheduledScanConfig$runsArgs<ExtArgs>
+    _count?: boolean | ScheduledScanConfigCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["scheduledScanConfig"]>
+
+  export type ScheduledScanConfigSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    repositoryId?: boolean
+    enabled?: boolean
+    cadence?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["scheduledScanConfig"]>
+
+  export type ScheduledScanConfigSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    repositoryId?: boolean
+    enabled?: boolean
+    cadence?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["scheduledScanConfig"]>
+
+  export type ScheduledScanConfigSelectScalar = {
+    id?: boolean
+    repositoryId?: boolean
+    enabled?: boolean
+    cadence?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ScheduledScanConfigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "repositoryId" | "enabled" | "cadence" | "createdAt" | "updatedAt", ExtArgs["result"]["scheduledScanConfig"]>
+  export type ScheduledScanConfigInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+    runs?: boolean | ScheduledScanConfig$runsArgs<ExtArgs>
+    _count?: boolean | ScheduledScanConfigCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ScheduledScanConfigIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+  }
+  export type ScheduledScanConfigIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+  }
+
+  export type $ScheduledScanConfigPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ScheduledScanConfig"
+    objects: {
+      repository: Prisma.$RepositoryPayload<ExtArgs>
+      runs: Prisma.$ScheduledScanRunPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      repositoryId: string
+      enabled: boolean
+      cadence: $Enums.ScanCadence
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["scheduledScanConfig"]>
+    composites: {}
+  }
+
+  type ScheduledScanConfigGetPayload<S extends boolean | null | undefined | ScheduledScanConfigDefaultArgs> = $Result.GetResult<Prisma.$ScheduledScanConfigPayload, S>
+
+  type ScheduledScanConfigCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ScheduledScanConfigFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ScheduledScanConfigCountAggregateInputType | true
+    }
+
+  export interface ScheduledScanConfigDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ScheduledScanConfig'], meta: { name: 'ScheduledScanConfig' } }
+    /**
+     * Find zero or one ScheduledScanConfig that matches the filter.
+     * @param {ScheduledScanConfigFindUniqueArgs} args - Arguments to find a ScheduledScanConfig
+     * @example
+     * // Get one ScheduledScanConfig
+     * const scheduledScanConfig = await prisma.scheduledScanConfig.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ScheduledScanConfigFindUniqueArgs>(args: SelectSubset<T, ScheduledScanConfigFindUniqueArgs<ExtArgs>>): Prisma__ScheduledScanConfigClient<$Result.GetResult<Prisma.$ScheduledScanConfigPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ScheduledScanConfig that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ScheduledScanConfigFindUniqueOrThrowArgs} args - Arguments to find a ScheduledScanConfig
+     * @example
+     * // Get one ScheduledScanConfig
+     * const scheduledScanConfig = await prisma.scheduledScanConfig.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ScheduledScanConfigFindUniqueOrThrowArgs>(args: SelectSubset<T, ScheduledScanConfigFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ScheduledScanConfigClient<$Result.GetResult<Prisma.$ScheduledScanConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ScheduledScanConfig that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduledScanConfigFindFirstArgs} args - Arguments to find a ScheduledScanConfig
+     * @example
+     * // Get one ScheduledScanConfig
+     * const scheduledScanConfig = await prisma.scheduledScanConfig.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ScheduledScanConfigFindFirstArgs>(args?: SelectSubset<T, ScheduledScanConfigFindFirstArgs<ExtArgs>>): Prisma__ScheduledScanConfigClient<$Result.GetResult<Prisma.$ScheduledScanConfigPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ScheduledScanConfig that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduledScanConfigFindFirstOrThrowArgs} args - Arguments to find a ScheduledScanConfig
+     * @example
+     * // Get one ScheduledScanConfig
+     * const scheduledScanConfig = await prisma.scheduledScanConfig.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ScheduledScanConfigFindFirstOrThrowArgs>(args?: SelectSubset<T, ScheduledScanConfigFindFirstOrThrowArgs<ExtArgs>>): Prisma__ScheduledScanConfigClient<$Result.GetResult<Prisma.$ScheduledScanConfigPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ScheduledScanConfigs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduledScanConfigFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ScheduledScanConfigs
+     * const scheduledScanConfigs = await prisma.scheduledScanConfig.findMany()
+     * 
+     * // Get first 10 ScheduledScanConfigs
+     * const scheduledScanConfigs = await prisma.scheduledScanConfig.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const scheduledScanConfigWithIdOnly = await prisma.scheduledScanConfig.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ScheduledScanConfigFindManyArgs>(args?: SelectSubset<T, ScheduledScanConfigFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScheduledScanConfigPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ScheduledScanConfig.
+     * @param {ScheduledScanConfigCreateArgs} args - Arguments to create a ScheduledScanConfig.
+     * @example
+     * // Create one ScheduledScanConfig
+     * const ScheduledScanConfig = await prisma.scheduledScanConfig.create({
+     *   data: {
+     *     // ... data to create a ScheduledScanConfig
+     *   }
+     * })
+     * 
+     */
+    create<T extends ScheduledScanConfigCreateArgs>(args: SelectSubset<T, ScheduledScanConfigCreateArgs<ExtArgs>>): Prisma__ScheduledScanConfigClient<$Result.GetResult<Prisma.$ScheduledScanConfigPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ScheduledScanConfigs.
+     * @param {ScheduledScanConfigCreateManyArgs} args - Arguments to create many ScheduledScanConfigs.
+     * @example
+     * // Create many ScheduledScanConfigs
+     * const scheduledScanConfig = await prisma.scheduledScanConfig.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ScheduledScanConfigCreateManyArgs>(args?: SelectSubset<T, ScheduledScanConfigCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ScheduledScanConfigs and returns the data saved in the database.
+     * @param {ScheduledScanConfigCreateManyAndReturnArgs} args - Arguments to create many ScheduledScanConfigs.
+     * @example
+     * // Create many ScheduledScanConfigs
+     * const scheduledScanConfig = await prisma.scheduledScanConfig.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ScheduledScanConfigs and only return the `id`
+     * const scheduledScanConfigWithIdOnly = await prisma.scheduledScanConfig.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ScheduledScanConfigCreateManyAndReturnArgs>(args?: SelectSubset<T, ScheduledScanConfigCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScheduledScanConfigPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ScheduledScanConfig.
+     * @param {ScheduledScanConfigDeleteArgs} args - Arguments to delete one ScheduledScanConfig.
+     * @example
+     * // Delete one ScheduledScanConfig
+     * const ScheduledScanConfig = await prisma.scheduledScanConfig.delete({
+     *   where: {
+     *     // ... filter to delete one ScheduledScanConfig
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ScheduledScanConfigDeleteArgs>(args: SelectSubset<T, ScheduledScanConfigDeleteArgs<ExtArgs>>): Prisma__ScheduledScanConfigClient<$Result.GetResult<Prisma.$ScheduledScanConfigPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ScheduledScanConfig.
+     * @param {ScheduledScanConfigUpdateArgs} args - Arguments to update one ScheduledScanConfig.
+     * @example
+     * // Update one ScheduledScanConfig
+     * const scheduledScanConfig = await prisma.scheduledScanConfig.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ScheduledScanConfigUpdateArgs>(args: SelectSubset<T, ScheduledScanConfigUpdateArgs<ExtArgs>>): Prisma__ScheduledScanConfigClient<$Result.GetResult<Prisma.$ScheduledScanConfigPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ScheduledScanConfigs.
+     * @param {ScheduledScanConfigDeleteManyArgs} args - Arguments to filter ScheduledScanConfigs to delete.
+     * @example
+     * // Delete a few ScheduledScanConfigs
+     * const { count } = await prisma.scheduledScanConfig.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ScheduledScanConfigDeleteManyArgs>(args?: SelectSubset<T, ScheduledScanConfigDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ScheduledScanConfigs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduledScanConfigUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ScheduledScanConfigs
+     * const scheduledScanConfig = await prisma.scheduledScanConfig.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ScheduledScanConfigUpdateManyArgs>(args: SelectSubset<T, ScheduledScanConfigUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ScheduledScanConfigs and returns the data updated in the database.
+     * @param {ScheduledScanConfigUpdateManyAndReturnArgs} args - Arguments to update many ScheduledScanConfigs.
+     * @example
+     * // Update many ScheduledScanConfigs
+     * const scheduledScanConfig = await prisma.scheduledScanConfig.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ScheduledScanConfigs and only return the `id`
+     * const scheduledScanConfigWithIdOnly = await prisma.scheduledScanConfig.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ScheduledScanConfigUpdateManyAndReturnArgs>(args: SelectSubset<T, ScheduledScanConfigUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScheduledScanConfigPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ScheduledScanConfig.
+     * @param {ScheduledScanConfigUpsertArgs} args - Arguments to update or create a ScheduledScanConfig.
+     * @example
+     * // Update or create a ScheduledScanConfig
+     * const scheduledScanConfig = await prisma.scheduledScanConfig.upsert({
+     *   create: {
+     *     // ... data to create a ScheduledScanConfig
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ScheduledScanConfig we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ScheduledScanConfigUpsertArgs>(args: SelectSubset<T, ScheduledScanConfigUpsertArgs<ExtArgs>>): Prisma__ScheduledScanConfigClient<$Result.GetResult<Prisma.$ScheduledScanConfigPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ScheduledScanConfigs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduledScanConfigCountArgs} args - Arguments to filter ScheduledScanConfigs to count.
+     * @example
+     * // Count the number of ScheduledScanConfigs
+     * const count = await prisma.scheduledScanConfig.count({
+     *   where: {
+     *     // ... the filter for the ScheduledScanConfigs we want to count
+     *   }
+     * })
+    **/
+    count<T extends ScheduledScanConfigCountArgs>(
+      args?: Subset<T, ScheduledScanConfigCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ScheduledScanConfigCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ScheduledScanConfig.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduledScanConfigAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ScheduledScanConfigAggregateArgs>(args: Subset<T, ScheduledScanConfigAggregateArgs>): Prisma.PrismaPromise<GetScheduledScanConfigAggregateType<T>>
+
+    /**
+     * Group by ScheduledScanConfig.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduledScanConfigGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ScheduledScanConfigGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ScheduledScanConfigGroupByArgs['orderBy'] }
+        : { orderBy?: ScheduledScanConfigGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ScheduledScanConfigGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetScheduledScanConfigGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ScheduledScanConfig model
+   */
+  readonly fields: ScheduledScanConfigFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ScheduledScanConfig.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ScheduledScanConfigClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    repository<T extends RepositoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RepositoryDefaultArgs<ExtArgs>>): Prisma__RepositoryClient<$Result.GetResult<Prisma.$RepositoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    runs<T extends ScheduledScanConfig$runsArgs<ExtArgs> = {}>(args?: Subset<T, ScheduledScanConfig$runsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScheduledScanRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ScheduledScanConfig model
+   */
+  interface ScheduledScanConfigFieldRefs {
+    readonly id: FieldRef<"ScheduledScanConfig", 'String'>
+    readonly repositoryId: FieldRef<"ScheduledScanConfig", 'String'>
+    readonly enabled: FieldRef<"ScheduledScanConfig", 'Boolean'>
+    readonly cadence: FieldRef<"ScheduledScanConfig", 'ScanCadence'>
+    readonly createdAt: FieldRef<"ScheduledScanConfig", 'DateTime'>
+    readonly updatedAt: FieldRef<"ScheduledScanConfig", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ScheduledScanConfig findUnique
+   */
+  export type ScheduledScanConfigFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledScanConfig
+     */
+    select?: ScheduledScanConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduledScanConfig
+     */
+    omit?: ScheduledScanConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledScanConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which ScheduledScanConfig to fetch.
+     */
+    where: ScheduledScanConfigWhereUniqueInput
+  }
+
+  /**
+   * ScheduledScanConfig findUniqueOrThrow
+   */
+  export type ScheduledScanConfigFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledScanConfig
+     */
+    select?: ScheduledScanConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduledScanConfig
+     */
+    omit?: ScheduledScanConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledScanConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which ScheduledScanConfig to fetch.
+     */
+    where: ScheduledScanConfigWhereUniqueInput
+  }
+
+  /**
+   * ScheduledScanConfig findFirst
+   */
+  export type ScheduledScanConfigFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledScanConfig
+     */
+    select?: ScheduledScanConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduledScanConfig
+     */
+    omit?: ScheduledScanConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledScanConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which ScheduledScanConfig to fetch.
+     */
+    where?: ScheduledScanConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScheduledScanConfigs to fetch.
+     */
+    orderBy?: ScheduledScanConfigOrderByWithRelationInput | ScheduledScanConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ScheduledScanConfigs.
+     */
+    cursor?: ScheduledScanConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScheduledScanConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScheduledScanConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ScheduledScanConfigs.
+     */
+    distinct?: ScheduledScanConfigScalarFieldEnum | ScheduledScanConfigScalarFieldEnum[]
+  }
+
+  /**
+   * ScheduledScanConfig findFirstOrThrow
+   */
+  export type ScheduledScanConfigFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledScanConfig
+     */
+    select?: ScheduledScanConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduledScanConfig
+     */
+    omit?: ScheduledScanConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledScanConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which ScheduledScanConfig to fetch.
+     */
+    where?: ScheduledScanConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScheduledScanConfigs to fetch.
+     */
+    orderBy?: ScheduledScanConfigOrderByWithRelationInput | ScheduledScanConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ScheduledScanConfigs.
+     */
+    cursor?: ScheduledScanConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScheduledScanConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScheduledScanConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ScheduledScanConfigs.
+     */
+    distinct?: ScheduledScanConfigScalarFieldEnum | ScheduledScanConfigScalarFieldEnum[]
+  }
+
+  /**
+   * ScheduledScanConfig findMany
+   */
+  export type ScheduledScanConfigFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledScanConfig
+     */
+    select?: ScheduledScanConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduledScanConfig
+     */
+    omit?: ScheduledScanConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledScanConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which ScheduledScanConfigs to fetch.
+     */
+    where?: ScheduledScanConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScheduledScanConfigs to fetch.
+     */
+    orderBy?: ScheduledScanConfigOrderByWithRelationInput | ScheduledScanConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ScheduledScanConfigs.
+     */
+    cursor?: ScheduledScanConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScheduledScanConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScheduledScanConfigs.
+     */
+    skip?: number
+    distinct?: ScheduledScanConfigScalarFieldEnum | ScheduledScanConfigScalarFieldEnum[]
+  }
+
+  /**
+   * ScheduledScanConfig create
+   */
+  export type ScheduledScanConfigCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledScanConfig
+     */
+    select?: ScheduledScanConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduledScanConfig
+     */
+    omit?: ScheduledScanConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledScanConfigInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ScheduledScanConfig.
+     */
+    data: XOR<ScheduledScanConfigCreateInput, ScheduledScanConfigUncheckedCreateInput>
+  }
+
+  /**
+   * ScheduledScanConfig createMany
+   */
+  export type ScheduledScanConfigCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ScheduledScanConfigs.
+     */
+    data: ScheduledScanConfigCreateManyInput | ScheduledScanConfigCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ScheduledScanConfig createManyAndReturn
+   */
+  export type ScheduledScanConfigCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledScanConfig
+     */
+    select?: ScheduledScanConfigSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduledScanConfig
+     */
+    omit?: ScheduledScanConfigOmit<ExtArgs> | null
+    /**
+     * The data used to create many ScheduledScanConfigs.
+     */
+    data: ScheduledScanConfigCreateManyInput | ScheduledScanConfigCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledScanConfigIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ScheduledScanConfig update
+   */
+  export type ScheduledScanConfigUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledScanConfig
+     */
+    select?: ScheduledScanConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduledScanConfig
+     */
+    omit?: ScheduledScanConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledScanConfigInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ScheduledScanConfig.
+     */
+    data: XOR<ScheduledScanConfigUpdateInput, ScheduledScanConfigUncheckedUpdateInput>
+    /**
+     * Choose, which ScheduledScanConfig to update.
+     */
+    where: ScheduledScanConfigWhereUniqueInput
+  }
+
+  /**
+   * ScheduledScanConfig updateMany
+   */
+  export type ScheduledScanConfigUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ScheduledScanConfigs.
+     */
+    data: XOR<ScheduledScanConfigUpdateManyMutationInput, ScheduledScanConfigUncheckedUpdateManyInput>
+    /**
+     * Filter which ScheduledScanConfigs to update
+     */
+    where?: ScheduledScanConfigWhereInput
+    /**
+     * Limit how many ScheduledScanConfigs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ScheduledScanConfig updateManyAndReturn
+   */
+  export type ScheduledScanConfigUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledScanConfig
+     */
+    select?: ScheduledScanConfigSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduledScanConfig
+     */
+    omit?: ScheduledScanConfigOmit<ExtArgs> | null
+    /**
+     * The data used to update ScheduledScanConfigs.
+     */
+    data: XOR<ScheduledScanConfigUpdateManyMutationInput, ScheduledScanConfigUncheckedUpdateManyInput>
+    /**
+     * Filter which ScheduledScanConfigs to update
+     */
+    where?: ScheduledScanConfigWhereInput
+    /**
+     * Limit how many ScheduledScanConfigs to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledScanConfigIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ScheduledScanConfig upsert
+   */
+  export type ScheduledScanConfigUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledScanConfig
+     */
+    select?: ScheduledScanConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduledScanConfig
+     */
+    omit?: ScheduledScanConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledScanConfigInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ScheduledScanConfig to update in case it exists.
+     */
+    where: ScheduledScanConfigWhereUniqueInput
+    /**
+     * In case the ScheduledScanConfig found by the `where` argument doesn't exist, create a new ScheduledScanConfig with this data.
+     */
+    create: XOR<ScheduledScanConfigCreateInput, ScheduledScanConfigUncheckedCreateInput>
+    /**
+     * In case the ScheduledScanConfig was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ScheduledScanConfigUpdateInput, ScheduledScanConfigUncheckedUpdateInput>
+  }
+
+  /**
+   * ScheduledScanConfig delete
+   */
+  export type ScheduledScanConfigDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledScanConfig
+     */
+    select?: ScheduledScanConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduledScanConfig
+     */
+    omit?: ScheduledScanConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledScanConfigInclude<ExtArgs> | null
+    /**
+     * Filter which ScheduledScanConfig to delete.
+     */
+    where: ScheduledScanConfigWhereUniqueInput
+  }
+
+  /**
+   * ScheduledScanConfig deleteMany
+   */
+  export type ScheduledScanConfigDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ScheduledScanConfigs to delete
+     */
+    where?: ScheduledScanConfigWhereInput
+    /**
+     * Limit how many ScheduledScanConfigs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ScheduledScanConfig.runs
+   */
+  export type ScheduledScanConfig$runsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledScanRun
+     */
+    select?: ScheduledScanRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduledScanRun
+     */
+    omit?: ScheduledScanRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledScanRunInclude<ExtArgs> | null
+    where?: ScheduledScanRunWhereInput
+    orderBy?: ScheduledScanRunOrderByWithRelationInput | ScheduledScanRunOrderByWithRelationInput[]
+    cursor?: ScheduledScanRunWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ScheduledScanRunScalarFieldEnum | ScheduledScanRunScalarFieldEnum[]
+  }
+
+  /**
+   * ScheduledScanConfig without action
+   */
+  export type ScheduledScanConfigDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledScanConfig
+     */
+    select?: ScheduledScanConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduledScanConfig
+     */
+    omit?: ScheduledScanConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledScanConfigInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ScheduledScanRun
+   */
+
+  export type AggregateScheduledScanRun = {
+    _count: ScheduledScanRunCountAggregateOutputType | null
+    _avg: ScheduledScanRunAvgAggregateOutputType | null
+    _sum: ScheduledScanRunSumAggregateOutputType | null
+    _min: ScheduledScanRunMinAggregateOutputType | null
+    _max: ScheduledScanRunMaxAggregateOutputType | null
+  }
+
+  export type ScheduledScanRunAvgAggregateOutputType = {
+    reviewsQueued: number | null
+  }
+
+  export type ScheduledScanRunSumAggregateOutputType = {
+    reviewsQueued: number | null
+  }
+
+  export type ScheduledScanRunMinAggregateOutputType = {
+    id: string | null
+    configId: string | null
+    triggeredAt: Date | null
+    completedAt: Date | null
+    status: $Enums.ScanRunStatus | null
+    reviewsQueued: number | null
+    summary: string | null
+  }
+
+  export type ScheduledScanRunMaxAggregateOutputType = {
+    id: string | null
+    configId: string | null
+    triggeredAt: Date | null
+    completedAt: Date | null
+    status: $Enums.ScanRunStatus | null
+    reviewsQueued: number | null
+    summary: string | null
+  }
+
+  export type ScheduledScanRunCountAggregateOutputType = {
+    id: number
+    configId: number
+    triggeredAt: number
+    completedAt: number
+    status: number
+    reviewsQueued: number
+    summary: number
+    _all: number
+  }
+
+
+  export type ScheduledScanRunAvgAggregateInputType = {
+    reviewsQueued?: true
+  }
+
+  export type ScheduledScanRunSumAggregateInputType = {
+    reviewsQueued?: true
+  }
+
+  export type ScheduledScanRunMinAggregateInputType = {
+    id?: true
+    configId?: true
+    triggeredAt?: true
+    completedAt?: true
+    status?: true
+    reviewsQueued?: true
+    summary?: true
+  }
+
+  export type ScheduledScanRunMaxAggregateInputType = {
+    id?: true
+    configId?: true
+    triggeredAt?: true
+    completedAt?: true
+    status?: true
+    reviewsQueued?: true
+    summary?: true
+  }
+
+  export type ScheduledScanRunCountAggregateInputType = {
+    id?: true
+    configId?: true
+    triggeredAt?: true
+    completedAt?: true
+    status?: true
+    reviewsQueued?: true
+    summary?: true
+    _all?: true
+  }
+
+  export type ScheduledScanRunAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ScheduledScanRun to aggregate.
+     */
+    where?: ScheduledScanRunWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScheduledScanRuns to fetch.
+     */
+    orderBy?: ScheduledScanRunOrderByWithRelationInput | ScheduledScanRunOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ScheduledScanRunWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScheduledScanRuns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScheduledScanRuns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ScheduledScanRuns
+    **/
+    _count?: true | ScheduledScanRunCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ScheduledScanRunAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ScheduledScanRunSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ScheduledScanRunMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ScheduledScanRunMaxAggregateInputType
+  }
+
+  export type GetScheduledScanRunAggregateType<T extends ScheduledScanRunAggregateArgs> = {
+        [P in keyof T & keyof AggregateScheduledScanRun]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateScheduledScanRun[P]>
+      : GetScalarType<T[P], AggregateScheduledScanRun[P]>
+  }
+
+
+
+
+  export type ScheduledScanRunGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ScheduledScanRunWhereInput
+    orderBy?: ScheduledScanRunOrderByWithAggregationInput | ScheduledScanRunOrderByWithAggregationInput[]
+    by: ScheduledScanRunScalarFieldEnum[] | ScheduledScanRunScalarFieldEnum
+    having?: ScheduledScanRunScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ScheduledScanRunCountAggregateInputType | true
+    _avg?: ScheduledScanRunAvgAggregateInputType
+    _sum?: ScheduledScanRunSumAggregateInputType
+    _min?: ScheduledScanRunMinAggregateInputType
+    _max?: ScheduledScanRunMaxAggregateInputType
+  }
+
+  export type ScheduledScanRunGroupByOutputType = {
+    id: string
+    configId: string
+    triggeredAt: Date
+    completedAt: Date | null
+    status: $Enums.ScanRunStatus
+    reviewsQueued: number
+    summary: string | null
+    _count: ScheduledScanRunCountAggregateOutputType | null
+    _avg: ScheduledScanRunAvgAggregateOutputType | null
+    _sum: ScheduledScanRunSumAggregateOutputType | null
+    _min: ScheduledScanRunMinAggregateOutputType | null
+    _max: ScheduledScanRunMaxAggregateOutputType | null
+  }
+
+  type GetScheduledScanRunGroupByPayload<T extends ScheduledScanRunGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ScheduledScanRunGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ScheduledScanRunGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ScheduledScanRunGroupByOutputType[P]>
+            : GetScalarType<T[P], ScheduledScanRunGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ScheduledScanRunSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    configId?: boolean
+    triggeredAt?: boolean
+    completedAt?: boolean
+    status?: boolean
+    reviewsQueued?: boolean
+    summary?: boolean
+    config?: boolean | ScheduledScanConfigDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["scheduledScanRun"]>
+
+  export type ScheduledScanRunSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    configId?: boolean
+    triggeredAt?: boolean
+    completedAt?: boolean
+    status?: boolean
+    reviewsQueued?: boolean
+    summary?: boolean
+    config?: boolean | ScheduledScanConfigDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["scheduledScanRun"]>
+
+  export type ScheduledScanRunSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    configId?: boolean
+    triggeredAt?: boolean
+    completedAt?: boolean
+    status?: boolean
+    reviewsQueued?: boolean
+    summary?: boolean
+    config?: boolean | ScheduledScanConfigDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["scheduledScanRun"]>
+
+  export type ScheduledScanRunSelectScalar = {
+    id?: boolean
+    configId?: boolean
+    triggeredAt?: boolean
+    completedAt?: boolean
+    status?: boolean
+    reviewsQueued?: boolean
+    summary?: boolean
+  }
+
+  export type ScheduledScanRunOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "configId" | "triggeredAt" | "completedAt" | "status" | "reviewsQueued" | "summary", ExtArgs["result"]["scheduledScanRun"]>
+  export type ScheduledScanRunInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    config?: boolean | ScheduledScanConfigDefaultArgs<ExtArgs>
+  }
+  export type ScheduledScanRunIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    config?: boolean | ScheduledScanConfigDefaultArgs<ExtArgs>
+  }
+  export type ScheduledScanRunIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    config?: boolean | ScheduledScanConfigDefaultArgs<ExtArgs>
+  }
+
+  export type $ScheduledScanRunPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ScheduledScanRun"
+    objects: {
+      config: Prisma.$ScheduledScanConfigPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      configId: string
+      triggeredAt: Date
+      completedAt: Date | null
+      status: $Enums.ScanRunStatus
+      reviewsQueued: number
+      summary: string | null
+    }, ExtArgs["result"]["scheduledScanRun"]>
+    composites: {}
+  }
+
+  type ScheduledScanRunGetPayload<S extends boolean | null | undefined | ScheduledScanRunDefaultArgs> = $Result.GetResult<Prisma.$ScheduledScanRunPayload, S>
+
+  type ScheduledScanRunCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ScheduledScanRunFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ScheduledScanRunCountAggregateInputType | true
+    }
+
+  export interface ScheduledScanRunDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ScheduledScanRun'], meta: { name: 'ScheduledScanRun' } }
+    /**
+     * Find zero or one ScheduledScanRun that matches the filter.
+     * @param {ScheduledScanRunFindUniqueArgs} args - Arguments to find a ScheduledScanRun
+     * @example
+     * // Get one ScheduledScanRun
+     * const scheduledScanRun = await prisma.scheduledScanRun.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ScheduledScanRunFindUniqueArgs>(args: SelectSubset<T, ScheduledScanRunFindUniqueArgs<ExtArgs>>): Prisma__ScheduledScanRunClient<$Result.GetResult<Prisma.$ScheduledScanRunPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ScheduledScanRun that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ScheduledScanRunFindUniqueOrThrowArgs} args - Arguments to find a ScheduledScanRun
+     * @example
+     * // Get one ScheduledScanRun
+     * const scheduledScanRun = await prisma.scheduledScanRun.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ScheduledScanRunFindUniqueOrThrowArgs>(args: SelectSubset<T, ScheduledScanRunFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ScheduledScanRunClient<$Result.GetResult<Prisma.$ScheduledScanRunPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ScheduledScanRun that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduledScanRunFindFirstArgs} args - Arguments to find a ScheduledScanRun
+     * @example
+     * // Get one ScheduledScanRun
+     * const scheduledScanRun = await prisma.scheduledScanRun.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ScheduledScanRunFindFirstArgs>(args?: SelectSubset<T, ScheduledScanRunFindFirstArgs<ExtArgs>>): Prisma__ScheduledScanRunClient<$Result.GetResult<Prisma.$ScheduledScanRunPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ScheduledScanRun that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduledScanRunFindFirstOrThrowArgs} args - Arguments to find a ScheduledScanRun
+     * @example
+     * // Get one ScheduledScanRun
+     * const scheduledScanRun = await prisma.scheduledScanRun.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ScheduledScanRunFindFirstOrThrowArgs>(args?: SelectSubset<T, ScheduledScanRunFindFirstOrThrowArgs<ExtArgs>>): Prisma__ScheduledScanRunClient<$Result.GetResult<Prisma.$ScheduledScanRunPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ScheduledScanRuns that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduledScanRunFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ScheduledScanRuns
+     * const scheduledScanRuns = await prisma.scheduledScanRun.findMany()
+     * 
+     * // Get first 10 ScheduledScanRuns
+     * const scheduledScanRuns = await prisma.scheduledScanRun.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const scheduledScanRunWithIdOnly = await prisma.scheduledScanRun.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ScheduledScanRunFindManyArgs>(args?: SelectSubset<T, ScheduledScanRunFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScheduledScanRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ScheduledScanRun.
+     * @param {ScheduledScanRunCreateArgs} args - Arguments to create a ScheduledScanRun.
+     * @example
+     * // Create one ScheduledScanRun
+     * const ScheduledScanRun = await prisma.scheduledScanRun.create({
+     *   data: {
+     *     // ... data to create a ScheduledScanRun
+     *   }
+     * })
+     * 
+     */
+    create<T extends ScheduledScanRunCreateArgs>(args: SelectSubset<T, ScheduledScanRunCreateArgs<ExtArgs>>): Prisma__ScheduledScanRunClient<$Result.GetResult<Prisma.$ScheduledScanRunPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ScheduledScanRuns.
+     * @param {ScheduledScanRunCreateManyArgs} args - Arguments to create many ScheduledScanRuns.
+     * @example
+     * // Create many ScheduledScanRuns
+     * const scheduledScanRun = await prisma.scheduledScanRun.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ScheduledScanRunCreateManyArgs>(args?: SelectSubset<T, ScheduledScanRunCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ScheduledScanRuns and returns the data saved in the database.
+     * @param {ScheduledScanRunCreateManyAndReturnArgs} args - Arguments to create many ScheduledScanRuns.
+     * @example
+     * // Create many ScheduledScanRuns
+     * const scheduledScanRun = await prisma.scheduledScanRun.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ScheduledScanRuns and only return the `id`
+     * const scheduledScanRunWithIdOnly = await prisma.scheduledScanRun.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ScheduledScanRunCreateManyAndReturnArgs>(args?: SelectSubset<T, ScheduledScanRunCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScheduledScanRunPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ScheduledScanRun.
+     * @param {ScheduledScanRunDeleteArgs} args - Arguments to delete one ScheduledScanRun.
+     * @example
+     * // Delete one ScheduledScanRun
+     * const ScheduledScanRun = await prisma.scheduledScanRun.delete({
+     *   where: {
+     *     // ... filter to delete one ScheduledScanRun
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ScheduledScanRunDeleteArgs>(args: SelectSubset<T, ScheduledScanRunDeleteArgs<ExtArgs>>): Prisma__ScheduledScanRunClient<$Result.GetResult<Prisma.$ScheduledScanRunPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ScheduledScanRun.
+     * @param {ScheduledScanRunUpdateArgs} args - Arguments to update one ScheduledScanRun.
+     * @example
+     * // Update one ScheduledScanRun
+     * const scheduledScanRun = await prisma.scheduledScanRun.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ScheduledScanRunUpdateArgs>(args: SelectSubset<T, ScheduledScanRunUpdateArgs<ExtArgs>>): Prisma__ScheduledScanRunClient<$Result.GetResult<Prisma.$ScheduledScanRunPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ScheduledScanRuns.
+     * @param {ScheduledScanRunDeleteManyArgs} args - Arguments to filter ScheduledScanRuns to delete.
+     * @example
+     * // Delete a few ScheduledScanRuns
+     * const { count } = await prisma.scheduledScanRun.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ScheduledScanRunDeleteManyArgs>(args?: SelectSubset<T, ScheduledScanRunDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ScheduledScanRuns.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduledScanRunUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ScheduledScanRuns
+     * const scheduledScanRun = await prisma.scheduledScanRun.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ScheduledScanRunUpdateManyArgs>(args: SelectSubset<T, ScheduledScanRunUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ScheduledScanRuns and returns the data updated in the database.
+     * @param {ScheduledScanRunUpdateManyAndReturnArgs} args - Arguments to update many ScheduledScanRuns.
+     * @example
+     * // Update many ScheduledScanRuns
+     * const scheduledScanRun = await prisma.scheduledScanRun.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ScheduledScanRuns and only return the `id`
+     * const scheduledScanRunWithIdOnly = await prisma.scheduledScanRun.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ScheduledScanRunUpdateManyAndReturnArgs>(args: SelectSubset<T, ScheduledScanRunUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScheduledScanRunPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ScheduledScanRun.
+     * @param {ScheduledScanRunUpsertArgs} args - Arguments to update or create a ScheduledScanRun.
+     * @example
+     * // Update or create a ScheduledScanRun
+     * const scheduledScanRun = await prisma.scheduledScanRun.upsert({
+     *   create: {
+     *     // ... data to create a ScheduledScanRun
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ScheduledScanRun we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ScheduledScanRunUpsertArgs>(args: SelectSubset<T, ScheduledScanRunUpsertArgs<ExtArgs>>): Prisma__ScheduledScanRunClient<$Result.GetResult<Prisma.$ScheduledScanRunPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ScheduledScanRuns.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduledScanRunCountArgs} args - Arguments to filter ScheduledScanRuns to count.
+     * @example
+     * // Count the number of ScheduledScanRuns
+     * const count = await prisma.scheduledScanRun.count({
+     *   where: {
+     *     // ... the filter for the ScheduledScanRuns we want to count
+     *   }
+     * })
+    **/
+    count<T extends ScheduledScanRunCountArgs>(
+      args?: Subset<T, ScheduledScanRunCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ScheduledScanRunCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ScheduledScanRun.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduledScanRunAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ScheduledScanRunAggregateArgs>(args: Subset<T, ScheduledScanRunAggregateArgs>): Prisma.PrismaPromise<GetScheduledScanRunAggregateType<T>>
+
+    /**
+     * Group by ScheduledScanRun.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduledScanRunGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ScheduledScanRunGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ScheduledScanRunGroupByArgs['orderBy'] }
+        : { orderBy?: ScheduledScanRunGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ScheduledScanRunGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetScheduledScanRunGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ScheduledScanRun model
+   */
+  readonly fields: ScheduledScanRunFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ScheduledScanRun.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ScheduledScanRunClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    config<T extends ScheduledScanConfigDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ScheduledScanConfigDefaultArgs<ExtArgs>>): Prisma__ScheduledScanConfigClient<$Result.GetResult<Prisma.$ScheduledScanConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ScheduledScanRun model
+   */
+  interface ScheduledScanRunFieldRefs {
+    readonly id: FieldRef<"ScheduledScanRun", 'String'>
+    readonly configId: FieldRef<"ScheduledScanRun", 'String'>
+    readonly triggeredAt: FieldRef<"ScheduledScanRun", 'DateTime'>
+    readonly completedAt: FieldRef<"ScheduledScanRun", 'DateTime'>
+    readonly status: FieldRef<"ScheduledScanRun", 'ScanRunStatus'>
+    readonly reviewsQueued: FieldRef<"ScheduledScanRun", 'Int'>
+    readonly summary: FieldRef<"ScheduledScanRun", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ScheduledScanRun findUnique
+   */
+  export type ScheduledScanRunFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledScanRun
+     */
+    select?: ScheduledScanRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduledScanRun
+     */
+    omit?: ScheduledScanRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledScanRunInclude<ExtArgs> | null
+    /**
+     * Filter, which ScheduledScanRun to fetch.
+     */
+    where: ScheduledScanRunWhereUniqueInput
+  }
+
+  /**
+   * ScheduledScanRun findUniqueOrThrow
+   */
+  export type ScheduledScanRunFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledScanRun
+     */
+    select?: ScheduledScanRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduledScanRun
+     */
+    omit?: ScheduledScanRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledScanRunInclude<ExtArgs> | null
+    /**
+     * Filter, which ScheduledScanRun to fetch.
+     */
+    where: ScheduledScanRunWhereUniqueInput
+  }
+
+  /**
+   * ScheduledScanRun findFirst
+   */
+  export type ScheduledScanRunFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledScanRun
+     */
+    select?: ScheduledScanRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduledScanRun
+     */
+    omit?: ScheduledScanRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledScanRunInclude<ExtArgs> | null
+    /**
+     * Filter, which ScheduledScanRun to fetch.
+     */
+    where?: ScheduledScanRunWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScheduledScanRuns to fetch.
+     */
+    orderBy?: ScheduledScanRunOrderByWithRelationInput | ScheduledScanRunOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ScheduledScanRuns.
+     */
+    cursor?: ScheduledScanRunWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScheduledScanRuns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScheduledScanRuns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ScheduledScanRuns.
+     */
+    distinct?: ScheduledScanRunScalarFieldEnum | ScheduledScanRunScalarFieldEnum[]
+  }
+
+  /**
+   * ScheduledScanRun findFirstOrThrow
+   */
+  export type ScheduledScanRunFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledScanRun
+     */
+    select?: ScheduledScanRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduledScanRun
+     */
+    omit?: ScheduledScanRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledScanRunInclude<ExtArgs> | null
+    /**
+     * Filter, which ScheduledScanRun to fetch.
+     */
+    where?: ScheduledScanRunWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScheduledScanRuns to fetch.
+     */
+    orderBy?: ScheduledScanRunOrderByWithRelationInput | ScheduledScanRunOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ScheduledScanRuns.
+     */
+    cursor?: ScheduledScanRunWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScheduledScanRuns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScheduledScanRuns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ScheduledScanRuns.
+     */
+    distinct?: ScheduledScanRunScalarFieldEnum | ScheduledScanRunScalarFieldEnum[]
+  }
+
+  /**
+   * ScheduledScanRun findMany
+   */
+  export type ScheduledScanRunFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledScanRun
+     */
+    select?: ScheduledScanRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduledScanRun
+     */
+    omit?: ScheduledScanRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledScanRunInclude<ExtArgs> | null
+    /**
+     * Filter, which ScheduledScanRuns to fetch.
+     */
+    where?: ScheduledScanRunWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScheduledScanRuns to fetch.
+     */
+    orderBy?: ScheduledScanRunOrderByWithRelationInput | ScheduledScanRunOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ScheduledScanRuns.
+     */
+    cursor?: ScheduledScanRunWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScheduledScanRuns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScheduledScanRuns.
+     */
+    skip?: number
+    distinct?: ScheduledScanRunScalarFieldEnum | ScheduledScanRunScalarFieldEnum[]
+  }
+
+  /**
+   * ScheduledScanRun create
+   */
+  export type ScheduledScanRunCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledScanRun
+     */
+    select?: ScheduledScanRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduledScanRun
+     */
+    omit?: ScheduledScanRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledScanRunInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ScheduledScanRun.
+     */
+    data: XOR<ScheduledScanRunCreateInput, ScheduledScanRunUncheckedCreateInput>
+  }
+
+  /**
+   * ScheduledScanRun createMany
+   */
+  export type ScheduledScanRunCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ScheduledScanRuns.
+     */
+    data: ScheduledScanRunCreateManyInput | ScheduledScanRunCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ScheduledScanRun createManyAndReturn
+   */
+  export type ScheduledScanRunCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledScanRun
+     */
+    select?: ScheduledScanRunSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduledScanRun
+     */
+    omit?: ScheduledScanRunOmit<ExtArgs> | null
+    /**
+     * The data used to create many ScheduledScanRuns.
+     */
+    data: ScheduledScanRunCreateManyInput | ScheduledScanRunCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledScanRunIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ScheduledScanRun update
+   */
+  export type ScheduledScanRunUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledScanRun
+     */
+    select?: ScheduledScanRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduledScanRun
+     */
+    omit?: ScheduledScanRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledScanRunInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ScheduledScanRun.
+     */
+    data: XOR<ScheduledScanRunUpdateInput, ScheduledScanRunUncheckedUpdateInput>
+    /**
+     * Choose, which ScheduledScanRun to update.
+     */
+    where: ScheduledScanRunWhereUniqueInput
+  }
+
+  /**
+   * ScheduledScanRun updateMany
+   */
+  export type ScheduledScanRunUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ScheduledScanRuns.
+     */
+    data: XOR<ScheduledScanRunUpdateManyMutationInput, ScheduledScanRunUncheckedUpdateManyInput>
+    /**
+     * Filter which ScheduledScanRuns to update
+     */
+    where?: ScheduledScanRunWhereInput
+    /**
+     * Limit how many ScheduledScanRuns to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ScheduledScanRun updateManyAndReturn
+   */
+  export type ScheduledScanRunUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledScanRun
+     */
+    select?: ScheduledScanRunSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduledScanRun
+     */
+    omit?: ScheduledScanRunOmit<ExtArgs> | null
+    /**
+     * The data used to update ScheduledScanRuns.
+     */
+    data: XOR<ScheduledScanRunUpdateManyMutationInput, ScheduledScanRunUncheckedUpdateManyInput>
+    /**
+     * Filter which ScheduledScanRuns to update
+     */
+    where?: ScheduledScanRunWhereInput
+    /**
+     * Limit how many ScheduledScanRuns to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledScanRunIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ScheduledScanRun upsert
+   */
+  export type ScheduledScanRunUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledScanRun
+     */
+    select?: ScheduledScanRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduledScanRun
+     */
+    omit?: ScheduledScanRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledScanRunInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ScheduledScanRun to update in case it exists.
+     */
+    where: ScheduledScanRunWhereUniqueInput
+    /**
+     * In case the ScheduledScanRun found by the `where` argument doesn't exist, create a new ScheduledScanRun with this data.
+     */
+    create: XOR<ScheduledScanRunCreateInput, ScheduledScanRunUncheckedCreateInput>
+    /**
+     * In case the ScheduledScanRun was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ScheduledScanRunUpdateInput, ScheduledScanRunUncheckedUpdateInput>
+  }
+
+  /**
+   * ScheduledScanRun delete
+   */
+  export type ScheduledScanRunDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledScanRun
+     */
+    select?: ScheduledScanRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduledScanRun
+     */
+    omit?: ScheduledScanRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledScanRunInclude<ExtArgs> | null
+    /**
+     * Filter which ScheduledScanRun to delete.
+     */
+    where: ScheduledScanRunWhereUniqueInput
+  }
+
+  /**
+   * ScheduledScanRun deleteMany
+   */
+  export type ScheduledScanRunDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ScheduledScanRuns to delete
+     */
+    where?: ScheduledScanRunWhereInput
+    /**
+     * Limit how many ScheduledScanRuns to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ScheduledScanRun without action
+   */
+  export type ScheduledScanRunDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledScanRun
+     */
+    select?: ScheduledScanRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduledScanRun
+     */
+    omit?: ScheduledScanRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledScanRunInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model GitHubComment
+   */
+
+  export type AggregateGitHubComment = {
+    _count: GitHubCommentCountAggregateOutputType | null
+    _avg: GitHubCommentAvgAggregateOutputType | null
+    _sum: GitHubCommentSumAggregateOutputType | null
+    _min: GitHubCommentMinAggregateOutputType | null
+    _max: GitHubCommentMaxAggregateOutputType | null
+  }
+
+  export type GitHubCommentAvgAggregateOutputType = {
+    githubReviewId: number | null
+    prNumber: number | null
+    findingCount: number | null
+  }
+
+  export type GitHubCommentSumAggregateOutputType = {
+    githubReviewId: number | null
+    prNumber: number | null
+    findingCount: number | null
+  }
+
+  export type GitHubCommentMinAggregateOutputType = {
+    id: string | null
+    reviewId: string | null
+    githubReviewId: number | null
+    prNumber: number | null
+    repositoryId: string | null
+    commitSha: string | null
+    findingCount: number | null
+    createdAt: Date | null
+  }
+
+  export type GitHubCommentMaxAggregateOutputType = {
+    id: string | null
+    reviewId: string | null
+    githubReviewId: number | null
+    prNumber: number | null
+    repositoryId: string | null
+    commitSha: string | null
+    findingCount: number | null
+    createdAt: Date | null
+  }
+
+  export type GitHubCommentCountAggregateOutputType = {
+    id: number
+    reviewId: number
+    githubReviewId: number
+    prNumber: number
+    repositoryId: number
+    commitSha: number
+    findingCount: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type GitHubCommentAvgAggregateInputType = {
+    githubReviewId?: true
+    prNumber?: true
+    findingCount?: true
+  }
+
+  export type GitHubCommentSumAggregateInputType = {
+    githubReviewId?: true
+    prNumber?: true
+    findingCount?: true
+  }
+
+  export type GitHubCommentMinAggregateInputType = {
+    id?: true
+    reviewId?: true
+    githubReviewId?: true
+    prNumber?: true
+    repositoryId?: true
+    commitSha?: true
+    findingCount?: true
+    createdAt?: true
+  }
+
+  export type GitHubCommentMaxAggregateInputType = {
+    id?: true
+    reviewId?: true
+    githubReviewId?: true
+    prNumber?: true
+    repositoryId?: true
+    commitSha?: true
+    findingCount?: true
+    createdAt?: true
+  }
+
+  export type GitHubCommentCountAggregateInputType = {
+    id?: true
+    reviewId?: true
+    githubReviewId?: true
+    prNumber?: true
+    repositoryId?: true
+    commitSha?: true
+    findingCount?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type GitHubCommentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GitHubComment to aggregate.
+     */
+    where?: GitHubCommentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GitHubComments to fetch.
+     */
+    orderBy?: GitHubCommentOrderByWithRelationInput | GitHubCommentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: GitHubCommentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GitHubComments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GitHubComments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned GitHubComments
+    **/
+    _count?: true | GitHubCommentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: GitHubCommentAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: GitHubCommentSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: GitHubCommentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: GitHubCommentMaxAggregateInputType
+  }
+
+  export type GetGitHubCommentAggregateType<T extends GitHubCommentAggregateArgs> = {
+        [P in keyof T & keyof AggregateGitHubComment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateGitHubComment[P]>
+      : GetScalarType<T[P], AggregateGitHubComment[P]>
+  }
+
+
+
+
+  export type GitHubCommentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GitHubCommentWhereInput
+    orderBy?: GitHubCommentOrderByWithAggregationInput | GitHubCommentOrderByWithAggregationInput[]
+    by: GitHubCommentScalarFieldEnum[] | GitHubCommentScalarFieldEnum
+    having?: GitHubCommentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: GitHubCommentCountAggregateInputType | true
+    _avg?: GitHubCommentAvgAggregateInputType
+    _sum?: GitHubCommentSumAggregateInputType
+    _min?: GitHubCommentMinAggregateInputType
+    _max?: GitHubCommentMaxAggregateInputType
+  }
+
+  export type GitHubCommentGroupByOutputType = {
+    id: string
+    reviewId: string
+    githubReviewId: number
+    prNumber: number
+    repositoryId: string
+    commitSha: string
+    findingCount: number
+    createdAt: Date
+    _count: GitHubCommentCountAggregateOutputType | null
+    _avg: GitHubCommentAvgAggregateOutputType | null
+    _sum: GitHubCommentSumAggregateOutputType | null
+    _min: GitHubCommentMinAggregateOutputType | null
+    _max: GitHubCommentMaxAggregateOutputType | null
+  }
+
+  type GetGitHubCommentGroupByPayload<T extends GitHubCommentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<GitHubCommentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof GitHubCommentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], GitHubCommentGroupByOutputType[P]>
+            : GetScalarType<T[P], GitHubCommentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type GitHubCommentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    reviewId?: boolean
+    githubReviewId?: boolean
+    prNumber?: boolean
+    repositoryId?: boolean
+    commitSha?: boolean
+    findingCount?: boolean
+    createdAt?: boolean
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["gitHubComment"]>
+
+  export type GitHubCommentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    reviewId?: boolean
+    githubReviewId?: boolean
+    prNumber?: boolean
+    repositoryId?: boolean
+    commitSha?: boolean
+    findingCount?: boolean
+    createdAt?: boolean
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["gitHubComment"]>
+
+  export type GitHubCommentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    reviewId?: boolean
+    githubReviewId?: boolean
+    prNumber?: boolean
+    repositoryId?: boolean
+    commitSha?: boolean
+    findingCount?: boolean
+    createdAt?: boolean
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["gitHubComment"]>
+
+  export type GitHubCommentSelectScalar = {
+    id?: boolean
+    reviewId?: boolean
+    githubReviewId?: boolean
+    prNumber?: boolean
+    repositoryId?: boolean
+    commitSha?: boolean
+    findingCount?: boolean
+    createdAt?: boolean
+  }
+
+  export type GitHubCommentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "reviewId" | "githubReviewId" | "prNumber" | "repositoryId" | "commitSha" | "findingCount" | "createdAt", ExtArgs["result"]["gitHubComment"]>
+  export type GitHubCommentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+  }
+  export type GitHubCommentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+  }
+  export type GitHubCommentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+  }
+
+  export type $GitHubCommentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "GitHubComment"
+    objects: {
+      review: Prisma.$ReviewPayload<ExtArgs>
+      repository: Prisma.$RepositoryPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      reviewId: string
+      githubReviewId: number
+      prNumber: number
+      repositoryId: string
+      commitSha: string
+      findingCount: number
+      createdAt: Date
+    }, ExtArgs["result"]["gitHubComment"]>
+    composites: {}
+  }
+
+  type GitHubCommentGetPayload<S extends boolean | null | undefined | GitHubCommentDefaultArgs> = $Result.GetResult<Prisma.$GitHubCommentPayload, S>
+
+  type GitHubCommentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<GitHubCommentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: GitHubCommentCountAggregateInputType | true
+    }
+
+  export interface GitHubCommentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GitHubComment'], meta: { name: 'GitHubComment' } }
+    /**
+     * Find zero or one GitHubComment that matches the filter.
+     * @param {GitHubCommentFindUniqueArgs} args - Arguments to find a GitHubComment
+     * @example
+     * // Get one GitHubComment
+     * const gitHubComment = await prisma.gitHubComment.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends GitHubCommentFindUniqueArgs>(args: SelectSubset<T, GitHubCommentFindUniqueArgs<ExtArgs>>): Prisma__GitHubCommentClient<$Result.GetResult<Prisma.$GitHubCommentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one GitHubComment that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {GitHubCommentFindUniqueOrThrowArgs} args - Arguments to find a GitHubComment
+     * @example
+     * // Get one GitHubComment
+     * const gitHubComment = await prisma.gitHubComment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends GitHubCommentFindUniqueOrThrowArgs>(args: SelectSubset<T, GitHubCommentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GitHubCommentClient<$Result.GetResult<Prisma.$GitHubCommentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GitHubComment that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GitHubCommentFindFirstArgs} args - Arguments to find a GitHubComment
+     * @example
+     * // Get one GitHubComment
+     * const gitHubComment = await prisma.gitHubComment.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends GitHubCommentFindFirstArgs>(args?: SelectSubset<T, GitHubCommentFindFirstArgs<ExtArgs>>): Prisma__GitHubCommentClient<$Result.GetResult<Prisma.$GitHubCommentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GitHubComment that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GitHubCommentFindFirstOrThrowArgs} args - Arguments to find a GitHubComment
+     * @example
+     * // Get one GitHubComment
+     * const gitHubComment = await prisma.gitHubComment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends GitHubCommentFindFirstOrThrowArgs>(args?: SelectSubset<T, GitHubCommentFindFirstOrThrowArgs<ExtArgs>>): Prisma__GitHubCommentClient<$Result.GetResult<Prisma.$GitHubCommentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more GitHubComments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GitHubCommentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all GitHubComments
+     * const gitHubComments = await prisma.gitHubComment.findMany()
+     * 
+     * // Get first 10 GitHubComments
+     * const gitHubComments = await prisma.gitHubComment.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const gitHubCommentWithIdOnly = await prisma.gitHubComment.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends GitHubCommentFindManyArgs>(args?: SelectSubset<T, GitHubCommentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GitHubCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a GitHubComment.
+     * @param {GitHubCommentCreateArgs} args - Arguments to create a GitHubComment.
+     * @example
+     * // Create one GitHubComment
+     * const GitHubComment = await prisma.gitHubComment.create({
+     *   data: {
+     *     // ... data to create a GitHubComment
+     *   }
+     * })
+     * 
+     */
+    create<T extends GitHubCommentCreateArgs>(args: SelectSubset<T, GitHubCommentCreateArgs<ExtArgs>>): Prisma__GitHubCommentClient<$Result.GetResult<Prisma.$GitHubCommentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many GitHubComments.
+     * @param {GitHubCommentCreateManyArgs} args - Arguments to create many GitHubComments.
+     * @example
+     * // Create many GitHubComments
+     * const gitHubComment = await prisma.gitHubComment.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends GitHubCommentCreateManyArgs>(args?: SelectSubset<T, GitHubCommentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many GitHubComments and returns the data saved in the database.
+     * @param {GitHubCommentCreateManyAndReturnArgs} args - Arguments to create many GitHubComments.
+     * @example
+     * // Create many GitHubComments
+     * const gitHubComment = await prisma.gitHubComment.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many GitHubComments and only return the `id`
+     * const gitHubCommentWithIdOnly = await prisma.gitHubComment.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends GitHubCommentCreateManyAndReturnArgs>(args?: SelectSubset<T, GitHubCommentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GitHubCommentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a GitHubComment.
+     * @param {GitHubCommentDeleteArgs} args - Arguments to delete one GitHubComment.
+     * @example
+     * // Delete one GitHubComment
+     * const GitHubComment = await prisma.gitHubComment.delete({
+     *   where: {
+     *     // ... filter to delete one GitHubComment
+     *   }
+     * })
+     * 
+     */
+    delete<T extends GitHubCommentDeleteArgs>(args: SelectSubset<T, GitHubCommentDeleteArgs<ExtArgs>>): Prisma__GitHubCommentClient<$Result.GetResult<Prisma.$GitHubCommentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one GitHubComment.
+     * @param {GitHubCommentUpdateArgs} args - Arguments to update one GitHubComment.
+     * @example
+     * // Update one GitHubComment
+     * const gitHubComment = await prisma.gitHubComment.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends GitHubCommentUpdateArgs>(args: SelectSubset<T, GitHubCommentUpdateArgs<ExtArgs>>): Prisma__GitHubCommentClient<$Result.GetResult<Prisma.$GitHubCommentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more GitHubComments.
+     * @param {GitHubCommentDeleteManyArgs} args - Arguments to filter GitHubComments to delete.
+     * @example
+     * // Delete a few GitHubComments
+     * const { count } = await prisma.gitHubComment.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends GitHubCommentDeleteManyArgs>(args?: SelectSubset<T, GitHubCommentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GitHubComments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GitHubCommentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many GitHubComments
+     * const gitHubComment = await prisma.gitHubComment.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends GitHubCommentUpdateManyArgs>(args: SelectSubset<T, GitHubCommentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GitHubComments and returns the data updated in the database.
+     * @param {GitHubCommentUpdateManyAndReturnArgs} args - Arguments to update many GitHubComments.
+     * @example
+     * // Update many GitHubComments
+     * const gitHubComment = await prisma.gitHubComment.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more GitHubComments and only return the `id`
+     * const gitHubCommentWithIdOnly = await prisma.gitHubComment.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends GitHubCommentUpdateManyAndReturnArgs>(args: SelectSubset<T, GitHubCommentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GitHubCommentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one GitHubComment.
+     * @param {GitHubCommentUpsertArgs} args - Arguments to update or create a GitHubComment.
+     * @example
+     * // Update or create a GitHubComment
+     * const gitHubComment = await prisma.gitHubComment.upsert({
+     *   create: {
+     *     // ... data to create a GitHubComment
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the GitHubComment we want to update
+     *   }
+     * })
+     */
+    upsert<T extends GitHubCommentUpsertArgs>(args: SelectSubset<T, GitHubCommentUpsertArgs<ExtArgs>>): Prisma__GitHubCommentClient<$Result.GetResult<Prisma.$GitHubCommentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of GitHubComments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GitHubCommentCountArgs} args - Arguments to filter GitHubComments to count.
+     * @example
+     * // Count the number of GitHubComments
+     * const count = await prisma.gitHubComment.count({
+     *   where: {
+     *     // ... the filter for the GitHubComments we want to count
+     *   }
+     * })
+    **/
+    count<T extends GitHubCommentCountArgs>(
+      args?: Subset<T, GitHubCommentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], GitHubCommentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a GitHubComment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GitHubCommentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends GitHubCommentAggregateArgs>(args: Subset<T, GitHubCommentAggregateArgs>): Prisma.PrismaPromise<GetGitHubCommentAggregateType<T>>
+
+    /**
+     * Group by GitHubComment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GitHubCommentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends GitHubCommentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: GitHubCommentGroupByArgs['orderBy'] }
+        : { orderBy?: GitHubCommentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, GitHubCommentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGitHubCommentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the GitHubComment model
+   */
+  readonly fields: GitHubCommentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for GitHubComment.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__GitHubCommentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    review<T extends ReviewDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ReviewDefaultArgs<ExtArgs>>): Prisma__ReviewClient<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    repository<T extends RepositoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RepositoryDefaultArgs<ExtArgs>>): Prisma__RepositoryClient<$Result.GetResult<Prisma.$RepositoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the GitHubComment model
+   */
+  interface GitHubCommentFieldRefs {
+    readonly id: FieldRef<"GitHubComment", 'String'>
+    readonly reviewId: FieldRef<"GitHubComment", 'String'>
+    readonly githubReviewId: FieldRef<"GitHubComment", 'Int'>
+    readonly prNumber: FieldRef<"GitHubComment", 'Int'>
+    readonly repositoryId: FieldRef<"GitHubComment", 'String'>
+    readonly commitSha: FieldRef<"GitHubComment", 'String'>
+    readonly findingCount: FieldRef<"GitHubComment", 'Int'>
+    readonly createdAt: FieldRef<"GitHubComment", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * GitHubComment findUnique
+   */
+  export type GitHubCommentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GitHubComment
+     */
+    select?: GitHubCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GitHubComment
+     */
+    omit?: GitHubCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GitHubCommentInclude<ExtArgs> | null
+    /**
+     * Filter, which GitHubComment to fetch.
+     */
+    where: GitHubCommentWhereUniqueInput
+  }
+
+  /**
+   * GitHubComment findUniqueOrThrow
+   */
+  export type GitHubCommentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GitHubComment
+     */
+    select?: GitHubCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GitHubComment
+     */
+    omit?: GitHubCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GitHubCommentInclude<ExtArgs> | null
+    /**
+     * Filter, which GitHubComment to fetch.
+     */
+    where: GitHubCommentWhereUniqueInput
+  }
+
+  /**
+   * GitHubComment findFirst
+   */
+  export type GitHubCommentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GitHubComment
+     */
+    select?: GitHubCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GitHubComment
+     */
+    omit?: GitHubCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GitHubCommentInclude<ExtArgs> | null
+    /**
+     * Filter, which GitHubComment to fetch.
+     */
+    where?: GitHubCommentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GitHubComments to fetch.
+     */
+    orderBy?: GitHubCommentOrderByWithRelationInput | GitHubCommentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GitHubComments.
+     */
+    cursor?: GitHubCommentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GitHubComments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GitHubComments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GitHubComments.
+     */
+    distinct?: GitHubCommentScalarFieldEnum | GitHubCommentScalarFieldEnum[]
+  }
+
+  /**
+   * GitHubComment findFirstOrThrow
+   */
+  export type GitHubCommentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GitHubComment
+     */
+    select?: GitHubCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GitHubComment
+     */
+    omit?: GitHubCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GitHubCommentInclude<ExtArgs> | null
+    /**
+     * Filter, which GitHubComment to fetch.
+     */
+    where?: GitHubCommentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GitHubComments to fetch.
+     */
+    orderBy?: GitHubCommentOrderByWithRelationInput | GitHubCommentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GitHubComments.
+     */
+    cursor?: GitHubCommentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GitHubComments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GitHubComments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GitHubComments.
+     */
+    distinct?: GitHubCommentScalarFieldEnum | GitHubCommentScalarFieldEnum[]
+  }
+
+  /**
+   * GitHubComment findMany
+   */
+  export type GitHubCommentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GitHubComment
+     */
+    select?: GitHubCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GitHubComment
+     */
+    omit?: GitHubCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GitHubCommentInclude<ExtArgs> | null
+    /**
+     * Filter, which GitHubComments to fetch.
+     */
+    where?: GitHubCommentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GitHubComments to fetch.
+     */
+    orderBy?: GitHubCommentOrderByWithRelationInput | GitHubCommentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing GitHubComments.
+     */
+    cursor?: GitHubCommentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GitHubComments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GitHubComments.
+     */
+    skip?: number
+    distinct?: GitHubCommentScalarFieldEnum | GitHubCommentScalarFieldEnum[]
+  }
+
+  /**
+   * GitHubComment create
+   */
+  export type GitHubCommentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GitHubComment
+     */
+    select?: GitHubCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GitHubComment
+     */
+    omit?: GitHubCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GitHubCommentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a GitHubComment.
+     */
+    data: XOR<GitHubCommentCreateInput, GitHubCommentUncheckedCreateInput>
+  }
+
+  /**
+   * GitHubComment createMany
+   */
+  export type GitHubCommentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many GitHubComments.
+     */
+    data: GitHubCommentCreateManyInput | GitHubCommentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * GitHubComment createManyAndReturn
+   */
+  export type GitHubCommentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GitHubComment
+     */
+    select?: GitHubCommentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GitHubComment
+     */
+    omit?: GitHubCommentOmit<ExtArgs> | null
+    /**
+     * The data used to create many GitHubComments.
+     */
+    data: GitHubCommentCreateManyInput | GitHubCommentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GitHubCommentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GitHubComment update
+   */
+  export type GitHubCommentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GitHubComment
+     */
+    select?: GitHubCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GitHubComment
+     */
+    omit?: GitHubCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GitHubCommentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a GitHubComment.
+     */
+    data: XOR<GitHubCommentUpdateInput, GitHubCommentUncheckedUpdateInput>
+    /**
+     * Choose, which GitHubComment to update.
+     */
+    where: GitHubCommentWhereUniqueInput
+  }
+
+  /**
+   * GitHubComment updateMany
+   */
+  export type GitHubCommentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update GitHubComments.
+     */
+    data: XOR<GitHubCommentUpdateManyMutationInput, GitHubCommentUncheckedUpdateManyInput>
+    /**
+     * Filter which GitHubComments to update
+     */
+    where?: GitHubCommentWhereInput
+    /**
+     * Limit how many GitHubComments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * GitHubComment updateManyAndReturn
+   */
+  export type GitHubCommentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GitHubComment
+     */
+    select?: GitHubCommentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GitHubComment
+     */
+    omit?: GitHubCommentOmit<ExtArgs> | null
+    /**
+     * The data used to update GitHubComments.
+     */
+    data: XOR<GitHubCommentUpdateManyMutationInput, GitHubCommentUncheckedUpdateManyInput>
+    /**
+     * Filter which GitHubComments to update
+     */
+    where?: GitHubCommentWhereInput
+    /**
+     * Limit how many GitHubComments to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GitHubCommentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GitHubComment upsert
+   */
+  export type GitHubCommentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GitHubComment
+     */
+    select?: GitHubCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GitHubComment
+     */
+    omit?: GitHubCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GitHubCommentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the GitHubComment to update in case it exists.
+     */
+    where: GitHubCommentWhereUniqueInput
+    /**
+     * In case the GitHubComment found by the `where` argument doesn't exist, create a new GitHubComment with this data.
+     */
+    create: XOR<GitHubCommentCreateInput, GitHubCommentUncheckedCreateInput>
+    /**
+     * In case the GitHubComment was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<GitHubCommentUpdateInput, GitHubCommentUncheckedUpdateInput>
+  }
+
+  /**
+   * GitHubComment delete
+   */
+  export type GitHubCommentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GitHubComment
+     */
+    select?: GitHubCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GitHubComment
+     */
+    omit?: GitHubCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GitHubCommentInclude<ExtArgs> | null
+    /**
+     * Filter which GitHubComment to delete.
+     */
+    where: GitHubCommentWhereUniqueInput
+  }
+
+  /**
+   * GitHubComment deleteMany
+   */
+  export type GitHubCommentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GitHubComments to delete
+     */
+    where?: GitHubCommentWhereInput
+    /**
+     * Limit how many GitHubComments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * GitHubComment without action
+   */
+  export type GitHubCommentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GitHubComment
+     */
+    select?: GitHubCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GitHubComment
+     */
+    omit?: GitHubCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GitHubCommentInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model GitHubStatusCheck
+   */
+
+  export type AggregateGitHubStatusCheck = {
+    _count: GitHubStatusCheckCountAggregateOutputType | null
+    _min: GitHubStatusCheckMinAggregateOutputType | null
+    _max: GitHubStatusCheckMaxAggregateOutputType | null
+  }
+
+  export type GitHubStatusCheckMinAggregateOutputType = {
+    id: string | null
+    reviewId: string | null
+    commitSha: string | null
+    state: $Enums.GitHubCheckState | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type GitHubStatusCheckMaxAggregateOutputType = {
+    id: string | null
+    reviewId: string | null
+    commitSha: string | null
+    state: $Enums.GitHubCheckState | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type GitHubStatusCheckCountAggregateOutputType = {
+    id: number
+    reviewId: number
+    commitSha: number
+    state: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type GitHubStatusCheckMinAggregateInputType = {
+    id?: true
+    reviewId?: true
+    commitSha?: true
+    state?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type GitHubStatusCheckMaxAggregateInputType = {
+    id?: true
+    reviewId?: true
+    commitSha?: true
+    state?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type GitHubStatusCheckCountAggregateInputType = {
+    id?: true
+    reviewId?: true
+    commitSha?: true
+    state?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type GitHubStatusCheckAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GitHubStatusCheck to aggregate.
+     */
+    where?: GitHubStatusCheckWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GitHubStatusChecks to fetch.
+     */
+    orderBy?: GitHubStatusCheckOrderByWithRelationInput | GitHubStatusCheckOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: GitHubStatusCheckWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GitHubStatusChecks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GitHubStatusChecks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned GitHubStatusChecks
+    **/
+    _count?: true | GitHubStatusCheckCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: GitHubStatusCheckMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: GitHubStatusCheckMaxAggregateInputType
+  }
+
+  export type GetGitHubStatusCheckAggregateType<T extends GitHubStatusCheckAggregateArgs> = {
+        [P in keyof T & keyof AggregateGitHubStatusCheck]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateGitHubStatusCheck[P]>
+      : GetScalarType<T[P], AggregateGitHubStatusCheck[P]>
+  }
+
+
+
+
+  export type GitHubStatusCheckGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GitHubStatusCheckWhereInput
+    orderBy?: GitHubStatusCheckOrderByWithAggregationInput | GitHubStatusCheckOrderByWithAggregationInput[]
+    by: GitHubStatusCheckScalarFieldEnum[] | GitHubStatusCheckScalarFieldEnum
+    having?: GitHubStatusCheckScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: GitHubStatusCheckCountAggregateInputType | true
+    _min?: GitHubStatusCheckMinAggregateInputType
+    _max?: GitHubStatusCheckMaxAggregateInputType
+  }
+
+  export type GitHubStatusCheckGroupByOutputType = {
+    id: string
+    reviewId: string
+    commitSha: string
+    state: $Enums.GitHubCheckState
+    createdAt: Date
+    updatedAt: Date
+    _count: GitHubStatusCheckCountAggregateOutputType | null
+    _min: GitHubStatusCheckMinAggregateOutputType | null
+    _max: GitHubStatusCheckMaxAggregateOutputType | null
+  }
+
+  type GetGitHubStatusCheckGroupByPayload<T extends GitHubStatusCheckGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<GitHubStatusCheckGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof GitHubStatusCheckGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], GitHubStatusCheckGroupByOutputType[P]>
+            : GetScalarType<T[P], GitHubStatusCheckGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type GitHubStatusCheckSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    reviewId?: boolean
+    commitSha?: boolean
+    state?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["gitHubStatusCheck"]>
+
+  export type GitHubStatusCheckSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    reviewId?: boolean
+    commitSha?: boolean
+    state?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["gitHubStatusCheck"]>
+
+  export type GitHubStatusCheckSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    reviewId?: boolean
+    commitSha?: boolean
+    state?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["gitHubStatusCheck"]>
+
+  export type GitHubStatusCheckSelectScalar = {
+    id?: boolean
+    reviewId?: boolean
+    commitSha?: boolean
+    state?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type GitHubStatusCheckOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "reviewId" | "commitSha" | "state" | "createdAt" | "updatedAt", ExtArgs["result"]["gitHubStatusCheck"]>
+  export type GitHubStatusCheckInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+  }
+  export type GitHubStatusCheckIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+  }
+  export type GitHubStatusCheckIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+  }
+
+  export type $GitHubStatusCheckPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "GitHubStatusCheck"
+    objects: {
+      review: Prisma.$ReviewPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      reviewId: string
+      commitSha: string
+      state: $Enums.GitHubCheckState
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["gitHubStatusCheck"]>
+    composites: {}
+  }
+
+  type GitHubStatusCheckGetPayload<S extends boolean | null | undefined | GitHubStatusCheckDefaultArgs> = $Result.GetResult<Prisma.$GitHubStatusCheckPayload, S>
+
+  type GitHubStatusCheckCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<GitHubStatusCheckFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: GitHubStatusCheckCountAggregateInputType | true
+    }
+
+  export interface GitHubStatusCheckDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GitHubStatusCheck'], meta: { name: 'GitHubStatusCheck' } }
+    /**
+     * Find zero or one GitHubStatusCheck that matches the filter.
+     * @param {GitHubStatusCheckFindUniqueArgs} args - Arguments to find a GitHubStatusCheck
+     * @example
+     * // Get one GitHubStatusCheck
+     * const gitHubStatusCheck = await prisma.gitHubStatusCheck.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends GitHubStatusCheckFindUniqueArgs>(args: SelectSubset<T, GitHubStatusCheckFindUniqueArgs<ExtArgs>>): Prisma__GitHubStatusCheckClient<$Result.GetResult<Prisma.$GitHubStatusCheckPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one GitHubStatusCheck that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {GitHubStatusCheckFindUniqueOrThrowArgs} args - Arguments to find a GitHubStatusCheck
+     * @example
+     * // Get one GitHubStatusCheck
+     * const gitHubStatusCheck = await prisma.gitHubStatusCheck.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends GitHubStatusCheckFindUniqueOrThrowArgs>(args: SelectSubset<T, GitHubStatusCheckFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GitHubStatusCheckClient<$Result.GetResult<Prisma.$GitHubStatusCheckPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GitHubStatusCheck that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GitHubStatusCheckFindFirstArgs} args - Arguments to find a GitHubStatusCheck
+     * @example
+     * // Get one GitHubStatusCheck
+     * const gitHubStatusCheck = await prisma.gitHubStatusCheck.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends GitHubStatusCheckFindFirstArgs>(args?: SelectSubset<T, GitHubStatusCheckFindFirstArgs<ExtArgs>>): Prisma__GitHubStatusCheckClient<$Result.GetResult<Prisma.$GitHubStatusCheckPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GitHubStatusCheck that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GitHubStatusCheckFindFirstOrThrowArgs} args - Arguments to find a GitHubStatusCheck
+     * @example
+     * // Get one GitHubStatusCheck
+     * const gitHubStatusCheck = await prisma.gitHubStatusCheck.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends GitHubStatusCheckFindFirstOrThrowArgs>(args?: SelectSubset<T, GitHubStatusCheckFindFirstOrThrowArgs<ExtArgs>>): Prisma__GitHubStatusCheckClient<$Result.GetResult<Prisma.$GitHubStatusCheckPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more GitHubStatusChecks that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GitHubStatusCheckFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all GitHubStatusChecks
+     * const gitHubStatusChecks = await prisma.gitHubStatusCheck.findMany()
+     * 
+     * // Get first 10 GitHubStatusChecks
+     * const gitHubStatusChecks = await prisma.gitHubStatusCheck.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const gitHubStatusCheckWithIdOnly = await prisma.gitHubStatusCheck.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends GitHubStatusCheckFindManyArgs>(args?: SelectSubset<T, GitHubStatusCheckFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GitHubStatusCheckPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a GitHubStatusCheck.
+     * @param {GitHubStatusCheckCreateArgs} args - Arguments to create a GitHubStatusCheck.
+     * @example
+     * // Create one GitHubStatusCheck
+     * const GitHubStatusCheck = await prisma.gitHubStatusCheck.create({
+     *   data: {
+     *     // ... data to create a GitHubStatusCheck
+     *   }
+     * })
+     * 
+     */
+    create<T extends GitHubStatusCheckCreateArgs>(args: SelectSubset<T, GitHubStatusCheckCreateArgs<ExtArgs>>): Prisma__GitHubStatusCheckClient<$Result.GetResult<Prisma.$GitHubStatusCheckPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many GitHubStatusChecks.
+     * @param {GitHubStatusCheckCreateManyArgs} args - Arguments to create many GitHubStatusChecks.
+     * @example
+     * // Create many GitHubStatusChecks
+     * const gitHubStatusCheck = await prisma.gitHubStatusCheck.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends GitHubStatusCheckCreateManyArgs>(args?: SelectSubset<T, GitHubStatusCheckCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many GitHubStatusChecks and returns the data saved in the database.
+     * @param {GitHubStatusCheckCreateManyAndReturnArgs} args - Arguments to create many GitHubStatusChecks.
+     * @example
+     * // Create many GitHubStatusChecks
+     * const gitHubStatusCheck = await prisma.gitHubStatusCheck.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many GitHubStatusChecks and only return the `id`
+     * const gitHubStatusCheckWithIdOnly = await prisma.gitHubStatusCheck.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends GitHubStatusCheckCreateManyAndReturnArgs>(args?: SelectSubset<T, GitHubStatusCheckCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GitHubStatusCheckPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a GitHubStatusCheck.
+     * @param {GitHubStatusCheckDeleteArgs} args - Arguments to delete one GitHubStatusCheck.
+     * @example
+     * // Delete one GitHubStatusCheck
+     * const GitHubStatusCheck = await prisma.gitHubStatusCheck.delete({
+     *   where: {
+     *     // ... filter to delete one GitHubStatusCheck
+     *   }
+     * })
+     * 
+     */
+    delete<T extends GitHubStatusCheckDeleteArgs>(args: SelectSubset<T, GitHubStatusCheckDeleteArgs<ExtArgs>>): Prisma__GitHubStatusCheckClient<$Result.GetResult<Prisma.$GitHubStatusCheckPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one GitHubStatusCheck.
+     * @param {GitHubStatusCheckUpdateArgs} args - Arguments to update one GitHubStatusCheck.
+     * @example
+     * // Update one GitHubStatusCheck
+     * const gitHubStatusCheck = await prisma.gitHubStatusCheck.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends GitHubStatusCheckUpdateArgs>(args: SelectSubset<T, GitHubStatusCheckUpdateArgs<ExtArgs>>): Prisma__GitHubStatusCheckClient<$Result.GetResult<Prisma.$GitHubStatusCheckPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more GitHubStatusChecks.
+     * @param {GitHubStatusCheckDeleteManyArgs} args - Arguments to filter GitHubStatusChecks to delete.
+     * @example
+     * // Delete a few GitHubStatusChecks
+     * const { count } = await prisma.gitHubStatusCheck.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends GitHubStatusCheckDeleteManyArgs>(args?: SelectSubset<T, GitHubStatusCheckDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GitHubStatusChecks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GitHubStatusCheckUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many GitHubStatusChecks
+     * const gitHubStatusCheck = await prisma.gitHubStatusCheck.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends GitHubStatusCheckUpdateManyArgs>(args: SelectSubset<T, GitHubStatusCheckUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GitHubStatusChecks and returns the data updated in the database.
+     * @param {GitHubStatusCheckUpdateManyAndReturnArgs} args - Arguments to update many GitHubStatusChecks.
+     * @example
+     * // Update many GitHubStatusChecks
+     * const gitHubStatusCheck = await prisma.gitHubStatusCheck.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more GitHubStatusChecks and only return the `id`
+     * const gitHubStatusCheckWithIdOnly = await prisma.gitHubStatusCheck.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends GitHubStatusCheckUpdateManyAndReturnArgs>(args: SelectSubset<T, GitHubStatusCheckUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GitHubStatusCheckPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one GitHubStatusCheck.
+     * @param {GitHubStatusCheckUpsertArgs} args - Arguments to update or create a GitHubStatusCheck.
+     * @example
+     * // Update or create a GitHubStatusCheck
+     * const gitHubStatusCheck = await prisma.gitHubStatusCheck.upsert({
+     *   create: {
+     *     // ... data to create a GitHubStatusCheck
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the GitHubStatusCheck we want to update
+     *   }
+     * })
+     */
+    upsert<T extends GitHubStatusCheckUpsertArgs>(args: SelectSubset<T, GitHubStatusCheckUpsertArgs<ExtArgs>>): Prisma__GitHubStatusCheckClient<$Result.GetResult<Prisma.$GitHubStatusCheckPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of GitHubStatusChecks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GitHubStatusCheckCountArgs} args - Arguments to filter GitHubStatusChecks to count.
+     * @example
+     * // Count the number of GitHubStatusChecks
+     * const count = await prisma.gitHubStatusCheck.count({
+     *   where: {
+     *     // ... the filter for the GitHubStatusChecks we want to count
+     *   }
+     * })
+    **/
+    count<T extends GitHubStatusCheckCountArgs>(
+      args?: Subset<T, GitHubStatusCheckCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], GitHubStatusCheckCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a GitHubStatusCheck.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GitHubStatusCheckAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends GitHubStatusCheckAggregateArgs>(args: Subset<T, GitHubStatusCheckAggregateArgs>): Prisma.PrismaPromise<GetGitHubStatusCheckAggregateType<T>>
+
+    /**
+     * Group by GitHubStatusCheck.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GitHubStatusCheckGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends GitHubStatusCheckGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: GitHubStatusCheckGroupByArgs['orderBy'] }
+        : { orderBy?: GitHubStatusCheckGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, GitHubStatusCheckGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGitHubStatusCheckGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the GitHubStatusCheck model
+   */
+  readonly fields: GitHubStatusCheckFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for GitHubStatusCheck.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__GitHubStatusCheckClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    review<T extends ReviewDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ReviewDefaultArgs<ExtArgs>>): Prisma__ReviewClient<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the GitHubStatusCheck model
+   */
+  interface GitHubStatusCheckFieldRefs {
+    readonly id: FieldRef<"GitHubStatusCheck", 'String'>
+    readonly reviewId: FieldRef<"GitHubStatusCheck", 'String'>
+    readonly commitSha: FieldRef<"GitHubStatusCheck", 'String'>
+    readonly state: FieldRef<"GitHubStatusCheck", 'GitHubCheckState'>
+    readonly createdAt: FieldRef<"GitHubStatusCheck", 'DateTime'>
+    readonly updatedAt: FieldRef<"GitHubStatusCheck", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * GitHubStatusCheck findUnique
+   */
+  export type GitHubStatusCheckFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GitHubStatusCheck
+     */
+    select?: GitHubStatusCheckSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GitHubStatusCheck
+     */
+    omit?: GitHubStatusCheckOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GitHubStatusCheckInclude<ExtArgs> | null
+    /**
+     * Filter, which GitHubStatusCheck to fetch.
+     */
+    where: GitHubStatusCheckWhereUniqueInput
+  }
+
+  /**
+   * GitHubStatusCheck findUniqueOrThrow
+   */
+  export type GitHubStatusCheckFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GitHubStatusCheck
+     */
+    select?: GitHubStatusCheckSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GitHubStatusCheck
+     */
+    omit?: GitHubStatusCheckOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GitHubStatusCheckInclude<ExtArgs> | null
+    /**
+     * Filter, which GitHubStatusCheck to fetch.
+     */
+    where: GitHubStatusCheckWhereUniqueInput
+  }
+
+  /**
+   * GitHubStatusCheck findFirst
+   */
+  export type GitHubStatusCheckFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GitHubStatusCheck
+     */
+    select?: GitHubStatusCheckSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GitHubStatusCheck
+     */
+    omit?: GitHubStatusCheckOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GitHubStatusCheckInclude<ExtArgs> | null
+    /**
+     * Filter, which GitHubStatusCheck to fetch.
+     */
+    where?: GitHubStatusCheckWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GitHubStatusChecks to fetch.
+     */
+    orderBy?: GitHubStatusCheckOrderByWithRelationInput | GitHubStatusCheckOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GitHubStatusChecks.
+     */
+    cursor?: GitHubStatusCheckWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GitHubStatusChecks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GitHubStatusChecks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GitHubStatusChecks.
+     */
+    distinct?: GitHubStatusCheckScalarFieldEnum | GitHubStatusCheckScalarFieldEnum[]
+  }
+
+  /**
+   * GitHubStatusCheck findFirstOrThrow
+   */
+  export type GitHubStatusCheckFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GitHubStatusCheck
+     */
+    select?: GitHubStatusCheckSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GitHubStatusCheck
+     */
+    omit?: GitHubStatusCheckOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GitHubStatusCheckInclude<ExtArgs> | null
+    /**
+     * Filter, which GitHubStatusCheck to fetch.
+     */
+    where?: GitHubStatusCheckWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GitHubStatusChecks to fetch.
+     */
+    orderBy?: GitHubStatusCheckOrderByWithRelationInput | GitHubStatusCheckOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GitHubStatusChecks.
+     */
+    cursor?: GitHubStatusCheckWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GitHubStatusChecks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GitHubStatusChecks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GitHubStatusChecks.
+     */
+    distinct?: GitHubStatusCheckScalarFieldEnum | GitHubStatusCheckScalarFieldEnum[]
+  }
+
+  /**
+   * GitHubStatusCheck findMany
+   */
+  export type GitHubStatusCheckFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GitHubStatusCheck
+     */
+    select?: GitHubStatusCheckSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GitHubStatusCheck
+     */
+    omit?: GitHubStatusCheckOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GitHubStatusCheckInclude<ExtArgs> | null
+    /**
+     * Filter, which GitHubStatusChecks to fetch.
+     */
+    where?: GitHubStatusCheckWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GitHubStatusChecks to fetch.
+     */
+    orderBy?: GitHubStatusCheckOrderByWithRelationInput | GitHubStatusCheckOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing GitHubStatusChecks.
+     */
+    cursor?: GitHubStatusCheckWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GitHubStatusChecks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GitHubStatusChecks.
+     */
+    skip?: number
+    distinct?: GitHubStatusCheckScalarFieldEnum | GitHubStatusCheckScalarFieldEnum[]
+  }
+
+  /**
+   * GitHubStatusCheck create
+   */
+  export type GitHubStatusCheckCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GitHubStatusCheck
+     */
+    select?: GitHubStatusCheckSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GitHubStatusCheck
+     */
+    omit?: GitHubStatusCheckOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GitHubStatusCheckInclude<ExtArgs> | null
+    /**
+     * The data needed to create a GitHubStatusCheck.
+     */
+    data: XOR<GitHubStatusCheckCreateInput, GitHubStatusCheckUncheckedCreateInput>
+  }
+
+  /**
+   * GitHubStatusCheck createMany
+   */
+  export type GitHubStatusCheckCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many GitHubStatusChecks.
+     */
+    data: GitHubStatusCheckCreateManyInput | GitHubStatusCheckCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * GitHubStatusCheck createManyAndReturn
+   */
+  export type GitHubStatusCheckCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GitHubStatusCheck
+     */
+    select?: GitHubStatusCheckSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GitHubStatusCheck
+     */
+    omit?: GitHubStatusCheckOmit<ExtArgs> | null
+    /**
+     * The data used to create many GitHubStatusChecks.
+     */
+    data: GitHubStatusCheckCreateManyInput | GitHubStatusCheckCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GitHubStatusCheckIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GitHubStatusCheck update
+   */
+  export type GitHubStatusCheckUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GitHubStatusCheck
+     */
+    select?: GitHubStatusCheckSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GitHubStatusCheck
+     */
+    omit?: GitHubStatusCheckOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GitHubStatusCheckInclude<ExtArgs> | null
+    /**
+     * The data needed to update a GitHubStatusCheck.
+     */
+    data: XOR<GitHubStatusCheckUpdateInput, GitHubStatusCheckUncheckedUpdateInput>
+    /**
+     * Choose, which GitHubStatusCheck to update.
+     */
+    where: GitHubStatusCheckWhereUniqueInput
+  }
+
+  /**
+   * GitHubStatusCheck updateMany
+   */
+  export type GitHubStatusCheckUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update GitHubStatusChecks.
+     */
+    data: XOR<GitHubStatusCheckUpdateManyMutationInput, GitHubStatusCheckUncheckedUpdateManyInput>
+    /**
+     * Filter which GitHubStatusChecks to update
+     */
+    where?: GitHubStatusCheckWhereInput
+    /**
+     * Limit how many GitHubStatusChecks to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * GitHubStatusCheck updateManyAndReturn
+   */
+  export type GitHubStatusCheckUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GitHubStatusCheck
+     */
+    select?: GitHubStatusCheckSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GitHubStatusCheck
+     */
+    omit?: GitHubStatusCheckOmit<ExtArgs> | null
+    /**
+     * The data used to update GitHubStatusChecks.
+     */
+    data: XOR<GitHubStatusCheckUpdateManyMutationInput, GitHubStatusCheckUncheckedUpdateManyInput>
+    /**
+     * Filter which GitHubStatusChecks to update
+     */
+    where?: GitHubStatusCheckWhereInput
+    /**
+     * Limit how many GitHubStatusChecks to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GitHubStatusCheckIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GitHubStatusCheck upsert
+   */
+  export type GitHubStatusCheckUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GitHubStatusCheck
+     */
+    select?: GitHubStatusCheckSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GitHubStatusCheck
+     */
+    omit?: GitHubStatusCheckOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GitHubStatusCheckInclude<ExtArgs> | null
+    /**
+     * The filter to search for the GitHubStatusCheck to update in case it exists.
+     */
+    where: GitHubStatusCheckWhereUniqueInput
+    /**
+     * In case the GitHubStatusCheck found by the `where` argument doesn't exist, create a new GitHubStatusCheck with this data.
+     */
+    create: XOR<GitHubStatusCheckCreateInput, GitHubStatusCheckUncheckedCreateInput>
+    /**
+     * In case the GitHubStatusCheck was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<GitHubStatusCheckUpdateInput, GitHubStatusCheckUncheckedUpdateInput>
+  }
+
+  /**
+   * GitHubStatusCheck delete
+   */
+  export type GitHubStatusCheckDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GitHubStatusCheck
+     */
+    select?: GitHubStatusCheckSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GitHubStatusCheck
+     */
+    omit?: GitHubStatusCheckOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GitHubStatusCheckInclude<ExtArgs> | null
+    /**
+     * Filter which GitHubStatusCheck to delete.
+     */
+    where: GitHubStatusCheckWhereUniqueInput
+  }
+
+  /**
+   * GitHubStatusCheck deleteMany
+   */
+  export type GitHubStatusCheckDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GitHubStatusChecks to delete
+     */
+    where?: GitHubStatusCheckWhereInput
+    /**
+     * Limit how many GitHubStatusChecks to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * GitHubStatusCheck without action
+   */
+  export type GitHubStatusCheckDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GitHubStatusCheck
+     */
+    select?: GitHubStatusCheckSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GitHubStatusCheck
+     */
+    omit?: GitHubStatusCheckOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GitHubStatusCheckInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model BranchProtectionRecommendation
+   */
+
+  export type AggregateBranchProtectionRecommendation = {
+    _count: BranchProtectionRecommendationCountAggregateOutputType | null
+    _min: BranchProtectionRecommendationMinAggregateOutputType | null
+    _max: BranchProtectionRecommendationMaxAggregateOutputType | null
+  }
+
+  export type BranchProtectionRecommendationMinAggregateOutputType = {
+    id: string | null
+    repositoryId: string | null
+    rule: string | null
+    rationale: string | null
+    priority: $Enums.RecommendationPriority | null
+    dismissed: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BranchProtectionRecommendationMaxAggregateOutputType = {
+    id: string | null
+    repositoryId: string | null
+    rule: string | null
+    rationale: string | null
+    priority: $Enums.RecommendationPriority | null
+    dismissed: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BranchProtectionRecommendationCountAggregateOutputType = {
+    id: number
+    repositoryId: number
+    rule: number
+    rationale: number
+    priority: number
+    dismissed: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type BranchProtectionRecommendationMinAggregateInputType = {
+    id?: true
+    repositoryId?: true
+    rule?: true
+    rationale?: true
+    priority?: true
+    dismissed?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BranchProtectionRecommendationMaxAggregateInputType = {
+    id?: true
+    repositoryId?: true
+    rule?: true
+    rationale?: true
+    priority?: true
+    dismissed?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BranchProtectionRecommendationCountAggregateInputType = {
+    id?: true
+    repositoryId?: true
+    rule?: true
+    rationale?: true
+    priority?: true
+    dismissed?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type BranchProtectionRecommendationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BranchProtectionRecommendation to aggregate.
+     */
+    where?: BranchProtectionRecommendationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BranchProtectionRecommendations to fetch.
+     */
+    orderBy?: BranchProtectionRecommendationOrderByWithRelationInput | BranchProtectionRecommendationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: BranchProtectionRecommendationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BranchProtectionRecommendations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BranchProtectionRecommendations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned BranchProtectionRecommendations
+    **/
+    _count?: true | BranchProtectionRecommendationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: BranchProtectionRecommendationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: BranchProtectionRecommendationMaxAggregateInputType
+  }
+
+  export type GetBranchProtectionRecommendationAggregateType<T extends BranchProtectionRecommendationAggregateArgs> = {
+        [P in keyof T & keyof AggregateBranchProtectionRecommendation]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBranchProtectionRecommendation[P]>
+      : GetScalarType<T[P], AggregateBranchProtectionRecommendation[P]>
+  }
+
+
+
+
+  export type BranchProtectionRecommendationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BranchProtectionRecommendationWhereInput
+    orderBy?: BranchProtectionRecommendationOrderByWithAggregationInput | BranchProtectionRecommendationOrderByWithAggregationInput[]
+    by: BranchProtectionRecommendationScalarFieldEnum[] | BranchProtectionRecommendationScalarFieldEnum
+    having?: BranchProtectionRecommendationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: BranchProtectionRecommendationCountAggregateInputType | true
+    _min?: BranchProtectionRecommendationMinAggregateInputType
+    _max?: BranchProtectionRecommendationMaxAggregateInputType
+  }
+
+  export type BranchProtectionRecommendationGroupByOutputType = {
+    id: string
+    repositoryId: string
+    rule: string
+    rationale: string
+    priority: $Enums.RecommendationPriority
+    dismissed: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: BranchProtectionRecommendationCountAggregateOutputType | null
+    _min: BranchProtectionRecommendationMinAggregateOutputType | null
+    _max: BranchProtectionRecommendationMaxAggregateOutputType | null
+  }
+
+  type GetBranchProtectionRecommendationGroupByPayload<T extends BranchProtectionRecommendationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<BranchProtectionRecommendationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof BranchProtectionRecommendationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], BranchProtectionRecommendationGroupByOutputType[P]>
+            : GetScalarType<T[P], BranchProtectionRecommendationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type BranchProtectionRecommendationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    repositoryId?: boolean
+    rule?: boolean
+    rationale?: boolean
+    priority?: boolean
+    dismissed?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["branchProtectionRecommendation"]>
+
+  export type BranchProtectionRecommendationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    repositoryId?: boolean
+    rule?: boolean
+    rationale?: boolean
+    priority?: boolean
+    dismissed?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["branchProtectionRecommendation"]>
+
+  export type BranchProtectionRecommendationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    repositoryId?: boolean
+    rule?: boolean
+    rationale?: boolean
+    priority?: boolean
+    dismissed?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["branchProtectionRecommendation"]>
+
+  export type BranchProtectionRecommendationSelectScalar = {
+    id?: boolean
+    repositoryId?: boolean
+    rule?: boolean
+    rationale?: boolean
+    priority?: boolean
+    dismissed?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type BranchProtectionRecommendationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "repositoryId" | "rule" | "rationale" | "priority" | "dismissed" | "createdAt" | "updatedAt", ExtArgs["result"]["branchProtectionRecommendation"]>
+  export type BranchProtectionRecommendationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+  }
+  export type BranchProtectionRecommendationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+  }
+  export type BranchProtectionRecommendationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+  }
+
+  export type $BranchProtectionRecommendationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "BranchProtectionRecommendation"
+    objects: {
+      repository: Prisma.$RepositoryPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      repositoryId: string
+      rule: string
+      rationale: string
+      priority: $Enums.RecommendationPriority
+      dismissed: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["branchProtectionRecommendation"]>
+    composites: {}
+  }
+
+  type BranchProtectionRecommendationGetPayload<S extends boolean | null | undefined | BranchProtectionRecommendationDefaultArgs> = $Result.GetResult<Prisma.$BranchProtectionRecommendationPayload, S>
+
+  type BranchProtectionRecommendationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<BranchProtectionRecommendationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: BranchProtectionRecommendationCountAggregateInputType | true
+    }
+
+  export interface BranchProtectionRecommendationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['BranchProtectionRecommendation'], meta: { name: 'BranchProtectionRecommendation' } }
+    /**
+     * Find zero or one BranchProtectionRecommendation that matches the filter.
+     * @param {BranchProtectionRecommendationFindUniqueArgs} args - Arguments to find a BranchProtectionRecommendation
+     * @example
+     * // Get one BranchProtectionRecommendation
+     * const branchProtectionRecommendation = await prisma.branchProtectionRecommendation.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends BranchProtectionRecommendationFindUniqueArgs>(args: SelectSubset<T, BranchProtectionRecommendationFindUniqueArgs<ExtArgs>>): Prisma__BranchProtectionRecommendationClient<$Result.GetResult<Prisma.$BranchProtectionRecommendationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one BranchProtectionRecommendation that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {BranchProtectionRecommendationFindUniqueOrThrowArgs} args - Arguments to find a BranchProtectionRecommendation
+     * @example
+     * // Get one BranchProtectionRecommendation
+     * const branchProtectionRecommendation = await prisma.branchProtectionRecommendation.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends BranchProtectionRecommendationFindUniqueOrThrowArgs>(args: SelectSubset<T, BranchProtectionRecommendationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__BranchProtectionRecommendationClient<$Result.GetResult<Prisma.$BranchProtectionRecommendationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first BranchProtectionRecommendation that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BranchProtectionRecommendationFindFirstArgs} args - Arguments to find a BranchProtectionRecommendation
+     * @example
+     * // Get one BranchProtectionRecommendation
+     * const branchProtectionRecommendation = await prisma.branchProtectionRecommendation.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends BranchProtectionRecommendationFindFirstArgs>(args?: SelectSubset<T, BranchProtectionRecommendationFindFirstArgs<ExtArgs>>): Prisma__BranchProtectionRecommendationClient<$Result.GetResult<Prisma.$BranchProtectionRecommendationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first BranchProtectionRecommendation that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BranchProtectionRecommendationFindFirstOrThrowArgs} args - Arguments to find a BranchProtectionRecommendation
+     * @example
+     * // Get one BranchProtectionRecommendation
+     * const branchProtectionRecommendation = await prisma.branchProtectionRecommendation.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends BranchProtectionRecommendationFindFirstOrThrowArgs>(args?: SelectSubset<T, BranchProtectionRecommendationFindFirstOrThrowArgs<ExtArgs>>): Prisma__BranchProtectionRecommendationClient<$Result.GetResult<Prisma.$BranchProtectionRecommendationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more BranchProtectionRecommendations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BranchProtectionRecommendationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all BranchProtectionRecommendations
+     * const branchProtectionRecommendations = await prisma.branchProtectionRecommendation.findMany()
+     * 
+     * // Get first 10 BranchProtectionRecommendations
+     * const branchProtectionRecommendations = await prisma.branchProtectionRecommendation.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const branchProtectionRecommendationWithIdOnly = await prisma.branchProtectionRecommendation.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends BranchProtectionRecommendationFindManyArgs>(args?: SelectSubset<T, BranchProtectionRecommendationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BranchProtectionRecommendationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a BranchProtectionRecommendation.
+     * @param {BranchProtectionRecommendationCreateArgs} args - Arguments to create a BranchProtectionRecommendation.
+     * @example
+     * // Create one BranchProtectionRecommendation
+     * const BranchProtectionRecommendation = await prisma.branchProtectionRecommendation.create({
+     *   data: {
+     *     // ... data to create a BranchProtectionRecommendation
+     *   }
+     * })
+     * 
+     */
+    create<T extends BranchProtectionRecommendationCreateArgs>(args: SelectSubset<T, BranchProtectionRecommendationCreateArgs<ExtArgs>>): Prisma__BranchProtectionRecommendationClient<$Result.GetResult<Prisma.$BranchProtectionRecommendationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many BranchProtectionRecommendations.
+     * @param {BranchProtectionRecommendationCreateManyArgs} args - Arguments to create many BranchProtectionRecommendations.
+     * @example
+     * // Create many BranchProtectionRecommendations
+     * const branchProtectionRecommendation = await prisma.branchProtectionRecommendation.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends BranchProtectionRecommendationCreateManyArgs>(args?: SelectSubset<T, BranchProtectionRecommendationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many BranchProtectionRecommendations and returns the data saved in the database.
+     * @param {BranchProtectionRecommendationCreateManyAndReturnArgs} args - Arguments to create many BranchProtectionRecommendations.
+     * @example
+     * // Create many BranchProtectionRecommendations
+     * const branchProtectionRecommendation = await prisma.branchProtectionRecommendation.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many BranchProtectionRecommendations and only return the `id`
+     * const branchProtectionRecommendationWithIdOnly = await prisma.branchProtectionRecommendation.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends BranchProtectionRecommendationCreateManyAndReturnArgs>(args?: SelectSubset<T, BranchProtectionRecommendationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BranchProtectionRecommendationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a BranchProtectionRecommendation.
+     * @param {BranchProtectionRecommendationDeleteArgs} args - Arguments to delete one BranchProtectionRecommendation.
+     * @example
+     * // Delete one BranchProtectionRecommendation
+     * const BranchProtectionRecommendation = await prisma.branchProtectionRecommendation.delete({
+     *   where: {
+     *     // ... filter to delete one BranchProtectionRecommendation
+     *   }
+     * })
+     * 
+     */
+    delete<T extends BranchProtectionRecommendationDeleteArgs>(args: SelectSubset<T, BranchProtectionRecommendationDeleteArgs<ExtArgs>>): Prisma__BranchProtectionRecommendationClient<$Result.GetResult<Prisma.$BranchProtectionRecommendationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one BranchProtectionRecommendation.
+     * @param {BranchProtectionRecommendationUpdateArgs} args - Arguments to update one BranchProtectionRecommendation.
+     * @example
+     * // Update one BranchProtectionRecommendation
+     * const branchProtectionRecommendation = await prisma.branchProtectionRecommendation.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends BranchProtectionRecommendationUpdateArgs>(args: SelectSubset<T, BranchProtectionRecommendationUpdateArgs<ExtArgs>>): Prisma__BranchProtectionRecommendationClient<$Result.GetResult<Prisma.$BranchProtectionRecommendationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more BranchProtectionRecommendations.
+     * @param {BranchProtectionRecommendationDeleteManyArgs} args - Arguments to filter BranchProtectionRecommendations to delete.
+     * @example
+     * // Delete a few BranchProtectionRecommendations
+     * const { count } = await prisma.branchProtectionRecommendation.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends BranchProtectionRecommendationDeleteManyArgs>(args?: SelectSubset<T, BranchProtectionRecommendationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more BranchProtectionRecommendations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BranchProtectionRecommendationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many BranchProtectionRecommendations
+     * const branchProtectionRecommendation = await prisma.branchProtectionRecommendation.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends BranchProtectionRecommendationUpdateManyArgs>(args: SelectSubset<T, BranchProtectionRecommendationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more BranchProtectionRecommendations and returns the data updated in the database.
+     * @param {BranchProtectionRecommendationUpdateManyAndReturnArgs} args - Arguments to update many BranchProtectionRecommendations.
+     * @example
+     * // Update many BranchProtectionRecommendations
+     * const branchProtectionRecommendation = await prisma.branchProtectionRecommendation.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more BranchProtectionRecommendations and only return the `id`
+     * const branchProtectionRecommendationWithIdOnly = await prisma.branchProtectionRecommendation.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends BranchProtectionRecommendationUpdateManyAndReturnArgs>(args: SelectSubset<T, BranchProtectionRecommendationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BranchProtectionRecommendationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one BranchProtectionRecommendation.
+     * @param {BranchProtectionRecommendationUpsertArgs} args - Arguments to update or create a BranchProtectionRecommendation.
+     * @example
+     * // Update or create a BranchProtectionRecommendation
+     * const branchProtectionRecommendation = await prisma.branchProtectionRecommendation.upsert({
+     *   create: {
+     *     // ... data to create a BranchProtectionRecommendation
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the BranchProtectionRecommendation we want to update
+     *   }
+     * })
+     */
+    upsert<T extends BranchProtectionRecommendationUpsertArgs>(args: SelectSubset<T, BranchProtectionRecommendationUpsertArgs<ExtArgs>>): Prisma__BranchProtectionRecommendationClient<$Result.GetResult<Prisma.$BranchProtectionRecommendationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of BranchProtectionRecommendations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BranchProtectionRecommendationCountArgs} args - Arguments to filter BranchProtectionRecommendations to count.
+     * @example
+     * // Count the number of BranchProtectionRecommendations
+     * const count = await prisma.branchProtectionRecommendation.count({
+     *   where: {
+     *     // ... the filter for the BranchProtectionRecommendations we want to count
+     *   }
+     * })
+    **/
+    count<T extends BranchProtectionRecommendationCountArgs>(
+      args?: Subset<T, BranchProtectionRecommendationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], BranchProtectionRecommendationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a BranchProtectionRecommendation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BranchProtectionRecommendationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends BranchProtectionRecommendationAggregateArgs>(args: Subset<T, BranchProtectionRecommendationAggregateArgs>): Prisma.PrismaPromise<GetBranchProtectionRecommendationAggregateType<T>>
+
+    /**
+     * Group by BranchProtectionRecommendation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BranchProtectionRecommendationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends BranchProtectionRecommendationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: BranchProtectionRecommendationGroupByArgs['orderBy'] }
+        : { orderBy?: BranchProtectionRecommendationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, BranchProtectionRecommendationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBranchProtectionRecommendationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the BranchProtectionRecommendation model
+   */
+  readonly fields: BranchProtectionRecommendationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for BranchProtectionRecommendation.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__BranchProtectionRecommendationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    repository<T extends RepositoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RepositoryDefaultArgs<ExtArgs>>): Prisma__RepositoryClient<$Result.GetResult<Prisma.$RepositoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the BranchProtectionRecommendation model
+   */
+  interface BranchProtectionRecommendationFieldRefs {
+    readonly id: FieldRef<"BranchProtectionRecommendation", 'String'>
+    readonly repositoryId: FieldRef<"BranchProtectionRecommendation", 'String'>
+    readonly rule: FieldRef<"BranchProtectionRecommendation", 'String'>
+    readonly rationale: FieldRef<"BranchProtectionRecommendation", 'String'>
+    readonly priority: FieldRef<"BranchProtectionRecommendation", 'RecommendationPriority'>
+    readonly dismissed: FieldRef<"BranchProtectionRecommendation", 'Boolean'>
+    readonly createdAt: FieldRef<"BranchProtectionRecommendation", 'DateTime'>
+    readonly updatedAt: FieldRef<"BranchProtectionRecommendation", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * BranchProtectionRecommendation findUnique
+   */
+  export type BranchProtectionRecommendationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BranchProtectionRecommendation
+     */
+    select?: BranchProtectionRecommendationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BranchProtectionRecommendation
+     */
+    omit?: BranchProtectionRecommendationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchProtectionRecommendationInclude<ExtArgs> | null
+    /**
+     * Filter, which BranchProtectionRecommendation to fetch.
+     */
+    where: BranchProtectionRecommendationWhereUniqueInput
+  }
+
+  /**
+   * BranchProtectionRecommendation findUniqueOrThrow
+   */
+  export type BranchProtectionRecommendationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BranchProtectionRecommendation
+     */
+    select?: BranchProtectionRecommendationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BranchProtectionRecommendation
+     */
+    omit?: BranchProtectionRecommendationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchProtectionRecommendationInclude<ExtArgs> | null
+    /**
+     * Filter, which BranchProtectionRecommendation to fetch.
+     */
+    where: BranchProtectionRecommendationWhereUniqueInput
+  }
+
+  /**
+   * BranchProtectionRecommendation findFirst
+   */
+  export type BranchProtectionRecommendationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BranchProtectionRecommendation
+     */
+    select?: BranchProtectionRecommendationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BranchProtectionRecommendation
+     */
+    omit?: BranchProtectionRecommendationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchProtectionRecommendationInclude<ExtArgs> | null
+    /**
+     * Filter, which BranchProtectionRecommendation to fetch.
+     */
+    where?: BranchProtectionRecommendationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BranchProtectionRecommendations to fetch.
+     */
+    orderBy?: BranchProtectionRecommendationOrderByWithRelationInput | BranchProtectionRecommendationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BranchProtectionRecommendations.
+     */
+    cursor?: BranchProtectionRecommendationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BranchProtectionRecommendations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BranchProtectionRecommendations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BranchProtectionRecommendations.
+     */
+    distinct?: BranchProtectionRecommendationScalarFieldEnum | BranchProtectionRecommendationScalarFieldEnum[]
+  }
+
+  /**
+   * BranchProtectionRecommendation findFirstOrThrow
+   */
+  export type BranchProtectionRecommendationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BranchProtectionRecommendation
+     */
+    select?: BranchProtectionRecommendationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BranchProtectionRecommendation
+     */
+    omit?: BranchProtectionRecommendationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchProtectionRecommendationInclude<ExtArgs> | null
+    /**
+     * Filter, which BranchProtectionRecommendation to fetch.
+     */
+    where?: BranchProtectionRecommendationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BranchProtectionRecommendations to fetch.
+     */
+    orderBy?: BranchProtectionRecommendationOrderByWithRelationInput | BranchProtectionRecommendationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BranchProtectionRecommendations.
+     */
+    cursor?: BranchProtectionRecommendationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BranchProtectionRecommendations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BranchProtectionRecommendations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BranchProtectionRecommendations.
+     */
+    distinct?: BranchProtectionRecommendationScalarFieldEnum | BranchProtectionRecommendationScalarFieldEnum[]
+  }
+
+  /**
+   * BranchProtectionRecommendation findMany
+   */
+  export type BranchProtectionRecommendationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BranchProtectionRecommendation
+     */
+    select?: BranchProtectionRecommendationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BranchProtectionRecommendation
+     */
+    omit?: BranchProtectionRecommendationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchProtectionRecommendationInclude<ExtArgs> | null
+    /**
+     * Filter, which BranchProtectionRecommendations to fetch.
+     */
+    where?: BranchProtectionRecommendationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BranchProtectionRecommendations to fetch.
+     */
+    orderBy?: BranchProtectionRecommendationOrderByWithRelationInput | BranchProtectionRecommendationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing BranchProtectionRecommendations.
+     */
+    cursor?: BranchProtectionRecommendationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BranchProtectionRecommendations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BranchProtectionRecommendations.
+     */
+    skip?: number
+    distinct?: BranchProtectionRecommendationScalarFieldEnum | BranchProtectionRecommendationScalarFieldEnum[]
+  }
+
+  /**
+   * BranchProtectionRecommendation create
+   */
+  export type BranchProtectionRecommendationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BranchProtectionRecommendation
+     */
+    select?: BranchProtectionRecommendationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BranchProtectionRecommendation
+     */
+    omit?: BranchProtectionRecommendationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchProtectionRecommendationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a BranchProtectionRecommendation.
+     */
+    data: XOR<BranchProtectionRecommendationCreateInput, BranchProtectionRecommendationUncheckedCreateInput>
+  }
+
+  /**
+   * BranchProtectionRecommendation createMany
+   */
+  export type BranchProtectionRecommendationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many BranchProtectionRecommendations.
+     */
+    data: BranchProtectionRecommendationCreateManyInput | BranchProtectionRecommendationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * BranchProtectionRecommendation createManyAndReturn
+   */
+  export type BranchProtectionRecommendationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BranchProtectionRecommendation
+     */
+    select?: BranchProtectionRecommendationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the BranchProtectionRecommendation
+     */
+    omit?: BranchProtectionRecommendationOmit<ExtArgs> | null
+    /**
+     * The data used to create many BranchProtectionRecommendations.
+     */
+    data: BranchProtectionRecommendationCreateManyInput | BranchProtectionRecommendationCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchProtectionRecommendationIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * BranchProtectionRecommendation update
+   */
+  export type BranchProtectionRecommendationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BranchProtectionRecommendation
+     */
+    select?: BranchProtectionRecommendationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BranchProtectionRecommendation
+     */
+    omit?: BranchProtectionRecommendationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchProtectionRecommendationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a BranchProtectionRecommendation.
+     */
+    data: XOR<BranchProtectionRecommendationUpdateInput, BranchProtectionRecommendationUncheckedUpdateInput>
+    /**
+     * Choose, which BranchProtectionRecommendation to update.
+     */
+    where: BranchProtectionRecommendationWhereUniqueInput
+  }
+
+  /**
+   * BranchProtectionRecommendation updateMany
+   */
+  export type BranchProtectionRecommendationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update BranchProtectionRecommendations.
+     */
+    data: XOR<BranchProtectionRecommendationUpdateManyMutationInput, BranchProtectionRecommendationUncheckedUpdateManyInput>
+    /**
+     * Filter which BranchProtectionRecommendations to update
+     */
+    where?: BranchProtectionRecommendationWhereInput
+    /**
+     * Limit how many BranchProtectionRecommendations to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * BranchProtectionRecommendation updateManyAndReturn
+   */
+  export type BranchProtectionRecommendationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BranchProtectionRecommendation
+     */
+    select?: BranchProtectionRecommendationSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the BranchProtectionRecommendation
+     */
+    omit?: BranchProtectionRecommendationOmit<ExtArgs> | null
+    /**
+     * The data used to update BranchProtectionRecommendations.
+     */
+    data: XOR<BranchProtectionRecommendationUpdateManyMutationInput, BranchProtectionRecommendationUncheckedUpdateManyInput>
+    /**
+     * Filter which BranchProtectionRecommendations to update
+     */
+    where?: BranchProtectionRecommendationWhereInput
+    /**
+     * Limit how many BranchProtectionRecommendations to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchProtectionRecommendationIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * BranchProtectionRecommendation upsert
+   */
+  export type BranchProtectionRecommendationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BranchProtectionRecommendation
+     */
+    select?: BranchProtectionRecommendationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BranchProtectionRecommendation
+     */
+    omit?: BranchProtectionRecommendationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchProtectionRecommendationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the BranchProtectionRecommendation to update in case it exists.
+     */
+    where: BranchProtectionRecommendationWhereUniqueInput
+    /**
+     * In case the BranchProtectionRecommendation found by the `where` argument doesn't exist, create a new BranchProtectionRecommendation with this data.
+     */
+    create: XOR<BranchProtectionRecommendationCreateInput, BranchProtectionRecommendationUncheckedCreateInput>
+    /**
+     * In case the BranchProtectionRecommendation was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<BranchProtectionRecommendationUpdateInput, BranchProtectionRecommendationUncheckedUpdateInput>
+  }
+
+  /**
+   * BranchProtectionRecommendation delete
+   */
+  export type BranchProtectionRecommendationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BranchProtectionRecommendation
+     */
+    select?: BranchProtectionRecommendationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BranchProtectionRecommendation
+     */
+    omit?: BranchProtectionRecommendationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchProtectionRecommendationInclude<ExtArgs> | null
+    /**
+     * Filter which BranchProtectionRecommendation to delete.
+     */
+    where: BranchProtectionRecommendationWhereUniqueInput
+  }
+
+  /**
+   * BranchProtectionRecommendation deleteMany
+   */
+  export type BranchProtectionRecommendationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BranchProtectionRecommendations to delete
+     */
+    where?: BranchProtectionRecommendationWhereInput
+    /**
+     * Limit how many BranchProtectionRecommendations to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * BranchProtectionRecommendation without action
+   */
+  export type BranchProtectionRecommendationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BranchProtectionRecommendation
+     */
+    select?: BranchProtectionRecommendationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BranchProtectionRecommendation
+     */
+    omit?: BranchProtectionRecommendationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchProtectionRecommendationInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -16085,6 +23520,83 @@ export namespace Prisma {
   export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
 
 
+  export const WebhookConfigScalarFieldEnum: {
+    id: 'id',
+    repositoryId: 'repositoryId',
+    enabled: 'enabled',
+    githubWebhookId: 'githubWebhookId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type WebhookConfigScalarFieldEnum = (typeof WebhookConfigScalarFieldEnum)[keyof typeof WebhookConfigScalarFieldEnum]
+
+
+  export const ScheduledScanConfigScalarFieldEnum: {
+    id: 'id',
+    repositoryId: 'repositoryId',
+    enabled: 'enabled',
+    cadence: 'cadence',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ScheduledScanConfigScalarFieldEnum = (typeof ScheduledScanConfigScalarFieldEnum)[keyof typeof ScheduledScanConfigScalarFieldEnum]
+
+
+  export const ScheduledScanRunScalarFieldEnum: {
+    id: 'id',
+    configId: 'configId',
+    triggeredAt: 'triggeredAt',
+    completedAt: 'completedAt',
+    status: 'status',
+    reviewsQueued: 'reviewsQueued',
+    summary: 'summary'
+  };
+
+  export type ScheduledScanRunScalarFieldEnum = (typeof ScheduledScanRunScalarFieldEnum)[keyof typeof ScheduledScanRunScalarFieldEnum]
+
+
+  export const GitHubCommentScalarFieldEnum: {
+    id: 'id',
+    reviewId: 'reviewId',
+    githubReviewId: 'githubReviewId',
+    prNumber: 'prNumber',
+    repositoryId: 'repositoryId',
+    commitSha: 'commitSha',
+    findingCount: 'findingCount',
+    createdAt: 'createdAt'
+  };
+
+  export type GitHubCommentScalarFieldEnum = (typeof GitHubCommentScalarFieldEnum)[keyof typeof GitHubCommentScalarFieldEnum]
+
+
+  export const GitHubStatusCheckScalarFieldEnum: {
+    id: 'id',
+    reviewId: 'reviewId',
+    commitSha: 'commitSha',
+    state: 'state',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type GitHubStatusCheckScalarFieldEnum = (typeof GitHubStatusCheckScalarFieldEnum)[keyof typeof GitHubStatusCheckScalarFieldEnum]
+
+
+  export const BranchProtectionRecommendationScalarFieldEnum: {
+    id: 'id',
+    repositoryId: 'repositoryId',
+    rule: 'rule',
+    rationale: 'rationale',
+    priority: 'priority',
+    dismissed: 'dismissed',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type BranchProtectionRecommendationScalarFieldEnum = (typeof BranchProtectionRecommendationScalarFieldEnum)[keyof typeof BranchProtectionRecommendationScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -16261,6 +23773,62 @@ export namespace Prisma {
    * Reference to a field of type 'NotificationType[]'
    */
   export type ListEnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ScanCadence'
+   */
+  export type EnumScanCadenceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ScanCadence'>
+    
+
+
+  /**
+   * Reference to a field of type 'ScanCadence[]'
+   */
+  export type ListEnumScanCadenceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ScanCadence[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ScanRunStatus'
+   */
+  export type EnumScanRunStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ScanRunStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'ScanRunStatus[]'
+   */
+  export type ListEnumScanRunStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ScanRunStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'GitHubCheckState'
+   */
+  export type EnumGitHubCheckStateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GitHubCheckState'>
+    
+
+
+  /**
+   * Reference to a field of type 'GitHubCheckState[]'
+   */
+  export type ListEnumGitHubCheckStateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GitHubCheckState[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'RecommendationPriority'
+   */
+  export type EnumRecommendationPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RecommendationPriority'>
+    
+
+
+  /**
+   * Reference to a field of type 'RecommendationPriority[]'
+   */
+  export type ListEnumRecommendationPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RecommendationPriority[]'>
     
 
 
@@ -16628,6 +24196,10 @@ export namespace Prisma {
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     team?: XOR<TeamNullableScalarRelationFilter, TeamWhereInput> | null
     reviews?: ReviewListRelationFilter
+    webhookConfig?: XOR<WebhookConfigNullableScalarRelationFilter, WebhookConfigWhereInput> | null
+    scheduledScanConfig?: XOR<ScheduledScanConfigNullableScalarRelationFilter, ScheduledScanConfigWhereInput> | null
+    githubComments?: GitHubCommentListRelationFilter
+    branchProtectionRecs?: BranchProtectionRecommendationListRelationFilter
   }
 
   export type RepositoryOrderByWithRelationInput = {
@@ -16644,6 +24216,10 @@ export namespace Prisma {
     user?: UserOrderByWithRelationInput
     team?: TeamOrderByWithRelationInput
     reviews?: ReviewOrderByRelationAggregateInput
+    webhookConfig?: WebhookConfigOrderByWithRelationInput
+    scheduledScanConfig?: ScheduledScanConfigOrderByWithRelationInput
+    githubComments?: GitHubCommentOrderByRelationAggregateInput
+    branchProtectionRecs?: BranchProtectionRecommendationOrderByRelationAggregateInput
   }
 
   export type RepositoryWhereUniqueInput = Prisma.AtLeast<{
@@ -16664,6 +24240,10 @@ export namespace Prisma {
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     team?: XOR<TeamNullableScalarRelationFilter, TeamWhereInput> | null
     reviews?: ReviewListRelationFilter
+    webhookConfig?: XOR<WebhookConfigNullableScalarRelationFilter, WebhookConfigWhereInput> | null
+    scheduledScanConfig?: XOR<ScheduledScanConfigNullableScalarRelationFilter, ScheduledScanConfigWhereInput> | null
+    githubComments?: GitHubCommentListRelationFilter
+    branchProtectionRecs?: BranchProtectionRecommendationListRelationFilter
   }, "id" | "userId_githubId">
 
   export type RepositoryOrderByWithAggregationInput = {
@@ -16721,6 +24301,8 @@ export namespace Prisma {
     repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     threads?: ReviewThreadListRelationFilter
+    githubComment?: XOR<GitHubCommentNullableScalarRelationFilter, GitHubCommentWhereInput> | null
+    githubStatusCheck?: XOR<GitHubStatusCheckNullableScalarRelationFilter, GitHubStatusCheckWhereInput> | null
   }
 
   export type ReviewOrderByWithRelationInput = {
@@ -16741,6 +24323,8 @@ export namespace Prisma {
     repository?: RepositoryOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
     threads?: ReviewThreadOrderByRelationAggregateInput
+    githubComment?: GitHubCommentOrderByWithRelationInput
+    githubStatusCheck?: GitHubStatusCheckOrderByWithRelationInput
   }
 
   export type ReviewWhereUniqueInput = Prisma.AtLeast<{
@@ -16764,6 +24348,8 @@ export namespace Prisma {
     repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     threads?: ReviewThreadListRelationFilter
+    githubComment?: XOR<GitHubCommentNullableScalarRelationFilter, GitHubCommentWhereInput> | null
+    githubStatusCheck?: XOR<GitHubStatusCheckNullableScalarRelationFilter, GitHubStatusCheckWhereInput> | null
   }, "id">
 
   export type ReviewOrderByWithAggregationInput = {
@@ -17226,6 +24812,403 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Notification"> | Date | string
   }
 
+  export type WebhookConfigWhereInput = {
+    AND?: WebhookConfigWhereInput | WebhookConfigWhereInput[]
+    OR?: WebhookConfigWhereInput[]
+    NOT?: WebhookConfigWhereInput | WebhookConfigWhereInput[]
+    id?: StringFilter<"WebhookConfig"> | string
+    repositoryId?: StringFilter<"WebhookConfig"> | string
+    enabled?: BoolFilter<"WebhookConfig"> | boolean
+    githubWebhookId?: IntNullableFilter<"WebhookConfig"> | number | null
+    createdAt?: DateTimeFilter<"WebhookConfig"> | Date | string
+    updatedAt?: DateTimeFilter<"WebhookConfig"> | Date | string
+    repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
+  }
+
+  export type WebhookConfigOrderByWithRelationInput = {
+    id?: SortOrder
+    repositoryId?: SortOrder
+    enabled?: SortOrder
+    githubWebhookId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    repository?: RepositoryOrderByWithRelationInput
+  }
+
+  export type WebhookConfigWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    repositoryId?: string
+    AND?: WebhookConfigWhereInput | WebhookConfigWhereInput[]
+    OR?: WebhookConfigWhereInput[]
+    NOT?: WebhookConfigWhereInput | WebhookConfigWhereInput[]
+    enabled?: BoolFilter<"WebhookConfig"> | boolean
+    githubWebhookId?: IntNullableFilter<"WebhookConfig"> | number | null
+    createdAt?: DateTimeFilter<"WebhookConfig"> | Date | string
+    updatedAt?: DateTimeFilter<"WebhookConfig"> | Date | string
+    repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
+  }, "id" | "repositoryId">
+
+  export type WebhookConfigOrderByWithAggregationInput = {
+    id?: SortOrder
+    repositoryId?: SortOrder
+    enabled?: SortOrder
+    githubWebhookId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: WebhookConfigCountOrderByAggregateInput
+    _avg?: WebhookConfigAvgOrderByAggregateInput
+    _max?: WebhookConfigMaxOrderByAggregateInput
+    _min?: WebhookConfigMinOrderByAggregateInput
+    _sum?: WebhookConfigSumOrderByAggregateInput
+  }
+
+  export type WebhookConfigScalarWhereWithAggregatesInput = {
+    AND?: WebhookConfigScalarWhereWithAggregatesInput | WebhookConfigScalarWhereWithAggregatesInput[]
+    OR?: WebhookConfigScalarWhereWithAggregatesInput[]
+    NOT?: WebhookConfigScalarWhereWithAggregatesInput | WebhookConfigScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"WebhookConfig"> | string
+    repositoryId?: StringWithAggregatesFilter<"WebhookConfig"> | string
+    enabled?: BoolWithAggregatesFilter<"WebhookConfig"> | boolean
+    githubWebhookId?: IntNullableWithAggregatesFilter<"WebhookConfig"> | number | null
+    createdAt?: DateTimeWithAggregatesFilter<"WebhookConfig"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"WebhookConfig"> | Date | string
+  }
+
+  export type ScheduledScanConfigWhereInput = {
+    AND?: ScheduledScanConfigWhereInput | ScheduledScanConfigWhereInput[]
+    OR?: ScheduledScanConfigWhereInput[]
+    NOT?: ScheduledScanConfigWhereInput | ScheduledScanConfigWhereInput[]
+    id?: StringFilter<"ScheduledScanConfig"> | string
+    repositoryId?: StringFilter<"ScheduledScanConfig"> | string
+    enabled?: BoolFilter<"ScheduledScanConfig"> | boolean
+    cadence?: EnumScanCadenceFilter<"ScheduledScanConfig"> | $Enums.ScanCadence
+    createdAt?: DateTimeFilter<"ScheduledScanConfig"> | Date | string
+    updatedAt?: DateTimeFilter<"ScheduledScanConfig"> | Date | string
+    repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
+    runs?: ScheduledScanRunListRelationFilter
+  }
+
+  export type ScheduledScanConfigOrderByWithRelationInput = {
+    id?: SortOrder
+    repositoryId?: SortOrder
+    enabled?: SortOrder
+    cadence?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    repository?: RepositoryOrderByWithRelationInput
+    runs?: ScheduledScanRunOrderByRelationAggregateInput
+  }
+
+  export type ScheduledScanConfigWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    repositoryId?: string
+    AND?: ScheduledScanConfigWhereInput | ScheduledScanConfigWhereInput[]
+    OR?: ScheduledScanConfigWhereInput[]
+    NOT?: ScheduledScanConfigWhereInput | ScheduledScanConfigWhereInput[]
+    enabled?: BoolFilter<"ScheduledScanConfig"> | boolean
+    cadence?: EnumScanCadenceFilter<"ScheduledScanConfig"> | $Enums.ScanCadence
+    createdAt?: DateTimeFilter<"ScheduledScanConfig"> | Date | string
+    updatedAt?: DateTimeFilter<"ScheduledScanConfig"> | Date | string
+    repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
+    runs?: ScheduledScanRunListRelationFilter
+  }, "id" | "repositoryId">
+
+  export type ScheduledScanConfigOrderByWithAggregationInput = {
+    id?: SortOrder
+    repositoryId?: SortOrder
+    enabled?: SortOrder
+    cadence?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ScheduledScanConfigCountOrderByAggregateInput
+    _max?: ScheduledScanConfigMaxOrderByAggregateInput
+    _min?: ScheduledScanConfigMinOrderByAggregateInput
+  }
+
+  export type ScheduledScanConfigScalarWhereWithAggregatesInput = {
+    AND?: ScheduledScanConfigScalarWhereWithAggregatesInput | ScheduledScanConfigScalarWhereWithAggregatesInput[]
+    OR?: ScheduledScanConfigScalarWhereWithAggregatesInput[]
+    NOT?: ScheduledScanConfigScalarWhereWithAggregatesInput | ScheduledScanConfigScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ScheduledScanConfig"> | string
+    repositoryId?: StringWithAggregatesFilter<"ScheduledScanConfig"> | string
+    enabled?: BoolWithAggregatesFilter<"ScheduledScanConfig"> | boolean
+    cadence?: EnumScanCadenceWithAggregatesFilter<"ScheduledScanConfig"> | $Enums.ScanCadence
+    createdAt?: DateTimeWithAggregatesFilter<"ScheduledScanConfig"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ScheduledScanConfig"> | Date | string
+  }
+
+  export type ScheduledScanRunWhereInput = {
+    AND?: ScheduledScanRunWhereInput | ScheduledScanRunWhereInput[]
+    OR?: ScheduledScanRunWhereInput[]
+    NOT?: ScheduledScanRunWhereInput | ScheduledScanRunWhereInput[]
+    id?: StringFilter<"ScheduledScanRun"> | string
+    configId?: StringFilter<"ScheduledScanRun"> | string
+    triggeredAt?: DateTimeFilter<"ScheduledScanRun"> | Date | string
+    completedAt?: DateTimeNullableFilter<"ScheduledScanRun"> | Date | string | null
+    status?: EnumScanRunStatusFilter<"ScheduledScanRun"> | $Enums.ScanRunStatus
+    reviewsQueued?: IntFilter<"ScheduledScanRun"> | number
+    summary?: StringNullableFilter<"ScheduledScanRun"> | string | null
+    config?: XOR<ScheduledScanConfigScalarRelationFilter, ScheduledScanConfigWhereInput>
+  }
+
+  export type ScheduledScanRunOrderByWithRelationInput = {
+    id?: SortOrder
+    configId?: SortOrder
+    triggeredAt?: SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    status?: SortOrder
+    reviewsQueued?: SortOrder
+    summary?: SortOrderInput | SortOrder
+    config?: ScheduledScanConfigOrderByWithRelationInput
+  }
+
+  export type ScheduledScanRunWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ScheduledScanRunWhereInput | ScheduledScanRunWhereInput[]
+    OR?: ScheduledScanRunWhereInput[]
+    NOT?: ScheduledScanRunWhereInput | ScheduledScanRunWhereInput[]
+    configId?: StringFilter<"ScheduledScanRun"> | string
+    triggeredAt?: DateTimeFilter<"ScheduledScanRun"> | Date | string
+    completedAt?: DateTimeNullableFilter<"ScheduledScanRun"> | Date | string | null
+    status?: EnumScanRunStatusFilter<"ScheduledScanRun"> | $Enums.ScanRunStatus
+    reviewsQueued?: IntFilter<"ScheduledScanRun"> | number
+    summary?: StringNullableFilter<"ScheduledScanRun"> | string | null
+    config?: XOR<ScheduledScanConfigScalarRelationFilter, ScheduledScanConfigWhereInput>
+  }, "id">
+
+  export type ScheduledScanRunOrderByWithAggregationInput = {
+    id?: SortOrder
+    configId?: SortOrder
+    triggeredAt?: SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    status?: SortOrder
+    reviewsQueued?: SortOrder
+    summary?: SortOrderInput | SortOrder
+    _count?: ScheduledScanRunCountOrderByAggregateInput
+    _avg?: ScheduledScanRunAvgOrderByAggregateInput
+    _max?: ScheduledScanRunMaxOrderByAggregateInput
+    _min?: ScheduledScanRunMinOrderByAggregateInput
+    _sum?: ScheduledScanRunSumOrderByAggregateInput
+  }
+
+  export type ScheduledScanRunScalarWhereWithAggregatesInput = {
+    AND?: ScheduledScanRunScalarWhereWithAggregatesInput | ScheduledScanRunScalarWhereWithAggregatesInput[]
+    OR?: ScheduledScanRunScalarWhereWithAggregatesInput[]
+    NOT?: ScheduledScanRunScalarWhereWithAggregatesInput | ScheduledScanRunScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ScheduledScanRun"> | string
+    configId?: StringWithAggregatesFilter<"ScheduledScanRun"> | string
+    triggeredAt?: DateTimeWithAggregatesFilter<"ScheduledScanRun"> | Date | string
+    completedAt?: DateTimeNullableWithAggregatesFilter<"ScheduledScanRun"> | Date | string | null
+    status?: EnumScanRunStatusWithAggregatesFilter<"ScheduledScanRun"> | $Enums.ScanRunStatus
+    reviewsQueued?: IntWithAggregatesFilter<"ScheduledScanRun"> | number
+    summary?: StringNullableWithAggregatesFilter<"ScheduledScanRun"> | string | null
+  }
+
+  export type GitHubCommentWhereInput = {
+    AND?: GitHubCommentWhereInput | GitHubCommentWhereInput[]
+    OR?: GitHubCommentWhereInput[]
+    NOT?: GitHubCommentWhereInput | GitHubCommentWhereInput[]
+    id?: StringFilter<"GitHubComment"> | string
+    reviewId?: StringFilter<"GitHubComment"> | string
+    githubReviewId?: IntFilter<"GitHubComment"> | number
+    prNumber?: IntFilter<"GitHubComment"> | number
+    repositoryId?: StringFilter<"GitHubComment"> | string
+    commitSha?: StringFilter<"GitHubComment"> | string
+    findingCount?: IntFilter<"GitHubComment"> | number
+    createdAt?: DateTimeFilter<"GitHubComment"> | Date | string
+    review?: XOR<ReviewScalarRelationFilter, ReviewWhereInput>
+    repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
+  }
+
+  export type GitHubCommentOrderByWithRelationInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    githubReviewId?: SortOrder
+    prNumber?: SortOrder
+    repositoryId?: SortOrder
+    commitSha?: SortOrder
+    findingCount?: SortOrder
+    createdAt?: SortOrder
+    review?: ReviewOrderByWithRelationInput
+    repository?: RepositoryOrderByWithRelationInput
+  }
+
+  export type GitHubCommentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    reviewId?: string
+    AND?: GitHubCommentWhereInput | GitHubCommentWhereInput[]
+    OR?: GitHubCommentWhereInput[]
+    NOT?: GitHubCommentWhereInput | GitHubCommentWhereInput[]
+    githubReviewId?: IntFilter<"GitHubComment"> | number
+    prNumber?: IntFilter<"GitHubComment"> | number
+    repositoryId?: StringFilter<"GitHubComment"> | string
+    commitSha?: StringFilter<"GitHubComment"> | string
+    findingCount?: IntFilter<"GitHubComment"> | number
+    createdAt?: DateTimeFilter<"GitHubComment"> | Date | string
+    review?: XOR<ReviewScalarRelationFilter, ReviewWhereInput>
+    repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
+  }, "id" | "reviewId">
+
+  export type GitHubCommentOrderByWithAggregationInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    githubReviewId?: SortOrder
+    prNumber?: SortOrder
+    repositoryId?: SortOrder
+    commitSha?: SortOrder
+    findingCount?: SortOrder
+    createdAt?: SortOrder
+    _count?: GitHubCommentCountOrderByAggregateInput
+    _avg?: GitHubCommentAvgOrderByAggregateInput
+    _max?: GitHubCommentMaxOrderByAggregateInput
+    _min?: GitHubCommentMinOrderByAggregateInput
+    _sum?: GitHubCommentSumOrderByAggregateInput
+  }
+
+  export type GitHubCommentScalarWhereWithAggregatesInput = {
+    AND?: GitHubCommentScalarWhereWithAggregatesInput | GitHubCommentScalarWhereWithAggregatesInput[]
+    OR?: GitHubCommentScalarWhereWithAggregatesInput[]
+    NOT?: GitHubCommentScalarWhereWithAggregatesInput | GitHubCommentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"GitHubComment"> | string
+    reviewId?: StringWithAggregatesFilter<"GitHubComment"> | string
+    githubReviewId?: IntWithAggregatesFilter<"GitHubComment"> | number
+    prNumber?: IntWithAggregatesFilter<"GitHubComment"> | number
+    repositoryId?: StringWithAggregatesFilter<"GitHubComment"> | string
+    commitSha?: StringWithAggregatesFilter<"GitHubComment"> | string
+    findingCount?: IntWithAggregatesFilter<"GitHubComment"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"GitHubComment"> | Date | string
+  }
+
+  export type GitHubStatusCheckWhereInput = {
+    AND?: GitHubStatusCheckWhereInput | GitHubStatusCheckWhereInput[]
+    OR?: GitHubStatusCheckWhereInput[]
+    NOT?: GitHubStatusCheckWhereInput | GitHubStatusCheckWhereInput[]
+    id?: StringFilter<"GitHubStatusCheck"> | string
+    reviewId?: StringFilter<"GitHubStatusCheck"> | string
+    commitSha?: StringFilter<"GitHubStatusCheck"> | string
+    state?: EnumGitHubCheckStateFilter<"GitHubStatusCheck"> | $Enums.GitHubCheckState
+    createdAt?: DateTimeFilter<"GitHubStatusCheck"> | Date | string
+    updatedAt?: DateTimeFilter<"GitHubStatusCheck"> | Date | string
+    review?: XOR<ReviewScalarRelationFilter, ReviewWhereInput>
+  }
+
+  export type GitHubStatusCheckOrderByWithRelationInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    commitSha?: SortOrder
+    state?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    review?: ReviewOrderByWithRelationInput
+  }
+
+  export type GitHubStatusCheckWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    reviewId?: string
+    AND?: GitHubStatusCheckWhereInput | GitHubStatusCheckWhereInput[]
+    OR?: GitHubStatusCheckWhereInput[]
+    NOT?: GitHubStatusCheckWhereInput | GitHubStatusCheckWhereInput[]
+    commitSha?: StringFilter<"GitHubStatusCheck"> | string
+    state?: EnumGitHubCheckStateFilter<"GitHubStatusCheck"> | $Enums.GitHubCheckState
+    createdAt?: DateTimeFilter<"GitHubStatusCheck"> | Date | string
+    updatedAt?: DateTimeFilter<"GitHubStatusCheck"> | Date | string
+    review?: XOR<ReviewScalarRelationFilter, ReviewWhereInput>
+  }, "id" | "reviewId">
+
+  export type GitHubStatusCheckOrderByWithAggregationInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    commitSha?: SortOrder
+    state?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: GitHubStatusCheckCountOrderByAggregateInput
+    _max?: GitHubStatusCheckMaxOrderByAggregateInput
+    _min?: GitHubStatusCheckMinOrderByAggregateInput
+  }
+
+  export type GitHubStatusCheckScalarWhereWithAggregatesInput = {
+    AND?: GitHubStatusCheckScalarWhereWithAggregatesInput | GitHubStatusCheckScalarWhereWithAggregatesInput[]
+    OR?: GitHubStatusCheckScalarWhereWithAggregatesInput[]
+    NOT?: GitHubStatusCheckScalarWhereWithAggregatesInput | GitHubStatusCheckScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"GitHubStatusCheck"> | string
+    reviewId?: StringWithAggregatesFilter<"GitHubStatusCheck"> | string
+    commitSha?: StringWithAggregatesFilter<"GitHubStatusCheck"> | string
+    state?: EnumGitHubCheckStateWithAggregatesFilter<"GitHubStatusCheck"> | $Enums.GitHubCheckState
+    createdAt?: DateTimeWithAggregatesFilter<"GitHubStatusCheck"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"GitHubStatusCheck"> | Date | string
+  }
+
+  export type BranchProtectionRecommendationWhereInput = {
+    AND?: BranchProtectionRecommendationWhereInput | BranchProtectionRecommendationWhereInput[]
+    OR?: BranchProtectionRecommendationWhereInput[]
+    NOT?: BranchProtectionRecommendationWhereInput | BranchProtectionRecommendationWhereInput[]
+    id?: StringFilter<"BranchProtectionRecommendation"> | string
+    repositoryId?: StringFilter<"BranchProtectionRecommendation"> | string
+    rule?: StringFilter<"BranchProtectionRecommendation"> | string
+    rationale?: StringFilter<"BranchProtectionRecommendation"> | string
+    priority?: EnumRecommendationPriorityFilter<"BranchProtectionRecommendation"> | $Enums.RecommendationPriority
+    dismissed?: BoolFilter<"BranchProtectionRecommendation"> | boolean
+    createdAt?: DateTimeFilter<"BranchProtectionRecommendation"> | Date | string
+    updatedAt?: DateTimeFilter<"BranchProtectionRecommendation"> | Date | string
+    repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
+  }
+
+  export type BranchProtectionRecommendationOrderByWithRelationInput = {
+    id?: SortOrder
+    repositoryId?: SortOrder
+    rule?: SortOrder
+    rationale?: SortOrder
+    priority?: SortOrder
+    dismissed?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    repository?: RepositoryOrderByWithRelationInput
+  }
+
+  export type BranchProtectionRecommendationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: BranchProtectionRecommendationWhereInput | BranchProtectionRecommendationWhereInput[]
+    OR?: BranchProtectionRecommendationWhereInput[]
+    NOT?: BranchProtectionRecommendationWhereInput | BranchProtectionRecommendationWhereInput[]
+    repositoryId?: StringFilter<"BranchProtectionRecommendation"> | string
+    rule?: StringFilter<"BranchProtectionRecommendation"> | string
+    rationale?: StringFilter<"BranchProtectionRecommendation"> | string
+    priority?: EnumRecommendationPriorityFilter<"BranchProtectionRecommendation"> | $Enums.RecommendationPriority
+    dismissed?: BoolFilter<"BranchProtectionRecommendation"> | boolean
+    createdAt?: DateTimeFilter<"BranchProtectionRecommendation"> | Date | string
+    updatedAt?: DateTimeFilter<"BranchProtectionRecommendation"> | Date | string
+    repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
+  }, "id">
+
+  export type BranchProtectionRecommendationOrderByWithAggregationInput = {
+    id?: SortOrder
+    repositoryId?: SortOrder
+    rule?: SortOrder
+    rationale?: SortOrder
+    priority?: SortOrder
+    dismissed?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: BranchProtectionRecommendationCountOrderByAggregateInput
+    _max?: BranchProtectionRecommendationMaxOrderByAggregateInput
+    _min?: BranchProtectionRecommendationMinOrderByAggregateInput
+  }
+
+  export type BranchProtectionRecommendationScalarWhereWithAggregatesInput = {
+    AND?: BranchProtectionRecommendationScalarWhereWithAggregatesInput | BranchProtectionRecommendationScalarWhereWithAggregatesInput[]
+    OR?: BranchProtectionRecommendationScalarWhereWithAggregatesInput[]
+    NOT?: BranchProtectionRecommendationScalarWhereWithAggregatesInput | BranchProtectionRecommendationScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"BranchProtectionRecommendation"> | string
+    repositoryId?: StringWithAggregatesFilter<"BranchProtectionRecommendation"> | string
+    rule?: StringWithAggregatesFilter<"BranchProtectionRecommendation"> | string
+    rationale?: StringWithAggregatesFilter<"BranchProtectionRecommendation"> | string
+    priority?: EnumRecommendationPriorityWithAggregatesFilter<"BranchProtectionRecommendation"> | $Enums.RecommendationPriority
+    dismissed?: BoolWithAggregatesFilter<"BranchProtectionRecommendation"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"BranchProtectionRecommendation"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"BranchProtectionRecommendation"> | Date | string
+  }
+
   export type UserCreateInput = {
     id: string
     name: string
@@ -17621,6 +25604,10 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutRepositoriesInput
     team?: TeamCreateNestedOneWithoutRepositoriesInput
     reviews?: ReviewCreateNestedManyWithoutRepositoryInput
+    webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
+    githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
   }
 
   export type RepositoryUncheckedCreateInput = {
@@ -17635,6 +25622,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     reviews?: ReviewUncheckedCreateNestedManyWithoutRepositoryInput
+    webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
+    githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
   }
 
   export type RepositoryUpdateInput = {
@@ -17649,6 +25640,10 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutRepositoriesNestedInput
     team?: TeamUpdateOneWithoutRepositoriesNestedInput
     reviews?: ReviewUpdateManyWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
   }
 
   export type RepositoryUncheckedUpdateInput = {
@@ -17663,6 +25658,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviews?: ReviewUncheckedUpdateManyWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
   }
 
   export type RepositoryCreateManyInput = {
@@ -17718,6 +25717,8 @@ export namespace Prisma {
     repository: RepositoryCreateNestedOneWithoutReviewsInput
     user: UserCreateNestedOneWithoutReviewsInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
+    githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
+    githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
   }
 
   export type ReviewUncheckedCreateInput = {
@@ -17736,6 +25737,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
+    githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
+    githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
   }
 
   export type ReviewUpdateInput = {
@@ -17754,6 +25757,8 @@ export namespace Prisma {
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
     user?: UserUpdateOneRequiredWithoutReviewsNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
+    githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
+    githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
   }
 
   export type ReviewUncheckedUpdateInput = {
@@ -17772,6 +25777,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
+    githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
+    githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
   }
 
   export type ReviewCreateManyInput = {
@@ -18266,6 +26273,416 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type WebhookConfigCreateInput = {
+    id?: string
+    enabled?: boolean
+    githubWebhookId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    repository: RepositoryCreateNestedOneWithoutWebhookConfigInput
+  }
+
+  export type WebhookConfigUncheckedCreateInput = {
+    id?: string
+    repositoryId: string
+    enabled?: boolean
+    githubWebhookId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WebhookConfigUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    githubWebhookId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    repository?: RepositoryUpdateOneRequiredWithoutWebhookConfigNestedInput
+  }
+
+  export type WebhookConfigUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    repositoryId?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    githubWebhookId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WebhookConfigCreateManyInput = {
+    id?: string
+    repositoryId: string
+    enabled?: boolean
+    githubWebhookId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WebhookConfigUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    githubWebhookId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WebhookConfigUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    repositoryId?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    githubWebhookId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ScheduledScanConfigCreateInput = {
+    id?: string
+    enabled?: boolean
+    cadence?: $Enums.ScanCadence
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    repository: RepositoryCreateNestedOneWithoutScheduledScanConfigInput
+    runs?: ScheduledScanRunCreateNestedManyWithoutConfigInput
+  }
+
+  export type ScheduledScanConfigUncheckedCreateInput = {
+    id?: string
+    repositoryId: string
+    enabled?: boolean
+    cadence?: $Enums.ScanCadence
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    runs?: ScheduledScanRunUncheckedCreateNestedManyWithoutConfigInput
+  }
+
+  export type ScheduledScanConfigUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    cadence?: EnumScanCadenceFieldUpdateOperationsInput | $Enums.ScanCadence
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    repository?: RepositoryUpdateOneRequiredWithoutScheduledScanConfigNestedInput
+    runs?: ScheduledScanRunUpdateManyWithoutConfigNestedInput
+  }
+
+  export type ScheduledScanConfigUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    repositoryId?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    cadence?: EnumScanCadenceFieldUpdateOperationsInput | $Enums.ScanCadence
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    runs?: ScheduledScanRunUncheckedUpdateManyWithoutConfigNestedInput
+  }
+
+  export type ScheduledScanConfigCreateManyInput = {
+    id?: string
+    repositoryId: string
+    enabled?: boolean
+    cadence?: $Enums.ScanCadence
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ScheduledScanConfigUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    cadence?: EnumScanCadenceFieldUpdateOperationsInput | $Enums.ScanCadence
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ScheduledScanConfigUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    repositoryId?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    cadence?: EnumScanCadenceFieldUpdateOperationsInput | $Enums.ScanCadence
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ScheduledScanRunCreateInput = {
+    id?: string
+    triggeredAt?: Date | string
+    completedAt?: Date | string | null
+    status?: $Enums.ScanRunStatus
+    reviewsQueued?: number
+    summary?: string | null
+    config: ScheduledScanConfigCreateNestedOneWithoutRunsInput
+  }
+
+  export type ScheduledScanRunUncheckedCreateInput = {
+    id?: string
+    configId: string
+    triggeredAt?: Date | string
+    completedAt?: Date | string | null
+    status?: $Enums.ScanRunStatus
+    reviewsQueued?: number
+    summary?: string | null
+  }
+
+  export type ScheduledScanRunUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    triggeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumScanRunStatusFieldUpdateOperationsInput | $Enums.ScanRunStatus
+    reviewsQueued?: IntFieldUpdateOperationsInput | number
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    config?: ScheduledScanConfigUpdateOneRequiredWithoutRunsNestedInput
+  }
+
+  export type ScheduledScanRunUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    configId?: StringFieldUpdateOperationsInput | string
+    triggeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumScanRunStatusFieldUpdateOperationsInput | $Enums.ScanRunStatus
+    reviewsQueued?: IntFieldUpdateOperationsInput | number
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ScheduledScanRunCreateManyInput = {
+    id?: string
+    configId: string
+    triggeredAt?: Date | string
+    completedAt?: Date | string | null
+    status?: $Enums.ScanRunStatus
+    reviewsQueued?: number
+    summary?: string | null
+  }
+
+  export type ScheduledScanRunUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    triggeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumScanRunStatusFieldUpdateOperationsInput | $Enums.ScanRunStatus
+    reviewsQueued?: IntFieldUpdateOperationsInput | number
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ScheduledScanRunUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    configId?: StringFieldUpdateOperationsInput | string
+    triggeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumScanRunStatusFieldUpdateOperationsInput | $Enums.ScanRunStatus
+    reviewsQueued?: IntFieldUpdateOperationsInput | number
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type GitHubCommentCreateInput = {
+    id?: string
+    githubReviewId: number
+    prNumber: number
+    commitSha: string
+    findingCount?: number
+    createdAt?: Date | string
+    review: ReviewCreateNestedOneWithoutGithubCommentInput
+    repository: RepositoryCreateNestedOneWithoutGithubCommentsInput
+  }
+
+  export type GitHubCommentUncheckedCreateInput = {
+    id?: string
+    reviewId: string
+    githubReviewId: number
+    prNumber: number
+    repositoryId: string
+    commitSha: string
+    findingCount?: number
+    createdAt?: Date | string
+  }
+
+  export type GitHubCommentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    githubReviewId?: IntFieldUpdateOperationsInput | number
+    prNumber?: IntFieldUpdateOperationsInput | number
+    commitSha?: StringFieldUpdateOperationsInput | string
+    findingCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    review?: ReviewUpdateOneRequiredWithoutGithubCommentNestedInput
+    repository?: RepositoryUpdateOneRequiredWithoutGithubCommentsNestedInput
+  }
+
+  export type GitHubCommentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewId?: StringFieldUpdateOperationsInput | string
+    githubReviewId?: IntFieldUpdateOperationsInput | number
+    prNumber?: IntFieldUpdateOperationsInput | number
+    repositoryId?: StringFieldUpdateOperationsInput | string
+    commitSha?: StringFieldUpdateOperationsInput | string
+    findingCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GitHubCommentCreateManyInput = {
+    id?: string
+    reviewId: string
+    githubReviewId: number
+    prNumber: number
+    repositoryId: string
+    commitSha: string
+    findingCount?: number
+    createdAt?: Date | string
+  }
+
+  export type GitHubCommentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    githubReviewId?: IntFieldUpdateOperationsInput | number
+    prNumber?: IntFieldUpdateOperationsInput | number
+    commitSha?: StringFieldUpdateOperationsInput | string
+    findingCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GitHubCommentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewId?: StringFieldUpdateOperationsInput | string
+    githubReviewId?: IntFieldUpdateOperationsInput | number
+    prNumber?: IntFieldUpdateOperationsInput | number
+    repositoryId?: StringFieldUpdateOperationsInput | string
+    commitSha?: StringFieldUpdateOperationsInput | string
+    findingCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GitHubStatusCheckCreateInput = {
+    id?: string
+    commitSha: string
+    state?: $Enums.GitHubCheckState
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    review: ReviewCreateNestedOneWithoutGithubStatusCheckInput
+  }
+
+  export type GitHubStatusCheckUncheckedCreateInput = {
+    id?: string
+    reviewId: string
+    commitSha: string
+    state?: $Enums.GitHubCheckState
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GitHubStatusCheckUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    commitSha?: StringFieldUpdateOperationsInput | string
+    state?: EnumGitHubCheckStateFieldUpdateOperationsInput | $Enums.GitHubCheckState
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    review?: ReviewUpdateOneRequiredWithoutGithubStatusCheckNestedInput
+  }
+
+  export type GitHubStatusCheckUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewId?: StringFieldUpdateOperationsInput | string
+    commitSha?: StringFieldUpdateOperationsInput | string
+    state?: EnumGitHubCheckStateFieldUpdateOperationsInput | $Enums.GitHubCheckState
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GitHubStatusCheckCreateManyInput = {
+    id?: string
+    reviewId: string
+    commitSha: string
+    state?: $Enums.GitHubCheckState
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GitHubStatusCheckUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    commitSha?: StringFieldUpdateOperationsInput | string
+    state?: EnumGitHubCheckStateFieldUpdateOperationsInput | $Enums.GitHubCheckState
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GitHubStatusCheckUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewId?: StringFieldUpdateOperationsInput | string
+    commitSha?: StringFieldUpdateOperationsInput | string
+    state?: EnumGitHubCheckStateFieldUpdateOperationsInput | $Enums.GitHubCheckState
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BranchProtectionRecommendationCreateInput = {
+    id?: string
+    rule: string
+    rationale: string
+    priority: $Enums.RecommendationPriority
+    dismissed?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    repository: RepositoryCreateNestedOneWithoutBranchProtectionRecsInput
+  }
+
+  export type BranchProtectionRecommendationUncheckedCreateInput = {
+    id?: string
+    repositoryId: string
+    rule: string
+    rationale: string
+    priority: $Enums.RecommendationPriority
+    dismissed?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BranchProtectionRecommendationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rule?: StringFieldUpdateOperationsInput | string
+    rationale?: StringFieldUpdateOperationsInput | string
+    priority?: EnumRecommendationPriorityFieldUpdateOperationsInput | $Enums.RecommendationPriority
+    dismissed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    repository?: RepositoryUpdateOneRequiredWithoutBranchProtectionRecsNestedInput
+  }
+
+  export type BranchProtectionRecommendationUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    repositoryId?: StringFieldUpdateOperationsInput | string
+    rule?: StringFieldUpdateOperationsInput | string
+    rationale?: StringFieldUpdateOperationsInput | string
+    priority?: EnumRecommendationPriorityFieldUpdateOperationsInput | $Enums.RecommendationPriority
+    dismissed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BranchProtectionRecommendationCreateManyInput = {
+    id?: string
+    repositoryId: string
+    rule: string
+    rationale: string
+    priority: $Enums.RecommendationPriority
+    dismissed?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BranchProtectionRecommendationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rule?: StringFieldUpdateOperationsInput | string
+    rationale?: StringFieldUpdateOperationsInput | string
+    priority?: EnumRecommendationPriorityFieldUpdateOperationsInput | $Enums.RecommendationPriority
+    dismissed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BranchProtectionRecommendationUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    repositoryId?: StringFieldUpdateOperationsInput | string
+    rule?: StringFieldUpdateOperationsInput | string
+    rationale?: StringFieldUpdateOperationsInput | string
+    priority?: EnumRecommendationPriorityFieldUpdateOperationsInput | $Enums.RecommendationPriority
+    dismissed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -18644,6 +27061,36 @@ export namespace Prisma {
     isNot?: TeamWhereInput | null
   }
 
+  export type WebhookConfigNullableScalarRelationFilter = {
+    is?: WebhookConfigWhereInput | null
+    isNot?: WebhookConfigWhereInput | null
+  }
+
+  export type ScheduledScanConfigNullableScalarRelationFilter = {
+    is?: ScheduledScanConfigWhereInput | null
+    isNot?: ScheduledScanConfigWhereInput | null
+  }
+
+  export type GitHubCommentListRelationFilter = {
+    every?: GitHubCommentWhereInput
+    some?: GitHubCommentWhereInput
+    none?: GitHubCommentWhereInput
+  }
+
+  export type BranchProtectionRecommendationListRelationFilter = {
+    every?: BranchProtectionRecommendationWhereInput
+    some?: BranchProtectionRecommendationWhereInput
+    none?: BranchProtectionRecommendationWhereInput
+  }
+
+  export type GitHubCommentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type BranchProtectionRecommendationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type RepositoryUserIdGithubIdCompoundUniqueInput = {
     userId: string
     githubId: number
@@ -18762,6 +27209,16 @@ export namespace Prisma {
     every?: ReviewThreadWhereInput
     some?: ReviewThreadWhereInput
     none?: ReviewThreadWhereInput
+  }
+
+  export type GitHubCommentNullableScalarRelationFilter = {
+    is?: GitHubCommentWhereInput | null
+    isNot?: GitHubCommentWhereInput | null
+  }
+
+  export type GitHubStatusCheckNullableScalarRelationFilter = {
+    is?: GitHubStatusCheckWhereInput | null
+    isNot?: GitHubStatusCheckWhereInput | null
   }
 
   export type ReviewThreadOrderByRelationAggregateInput = {
@@ -19167,6 +27624,294 @@ export namespace Prisma {
     _max?: NestedEnumNotificationTypeFilter<$PrismaModel>
   }
 
+  export type WebhookConfigCountOrderByAggregateInput = {
+    id?: SortOrder
+    repositoryId?: SortOrder
+    enabled?: SortOrder
+    githubWebhookId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WebhookConfigAvgOrderByAggregateInput = {
+    githubWebhookId?: SortOrder
+  }
+
+  export type WebhookConfigMaxOrderByAggregateInput = {
+    id?: SortOrder
+    repositoryId?: SortOrder
+    enabled?: SortOrder
+    githubWebhookId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WebhookConfigMinOrderByAggregateInput = {
+    id?: SortOrder
+    repositoryId?: SortOrder
+    enabled?: SortOrder
+    githubWebhookId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WebhookConfigSumOrderByAggregateInput = {
+    githubWebhookId?: SortOrder
+  }
+
+  export type EnumScanCadenceFilter<$PrismaModel = never> = {
+    equals?: $Enums.ScanCadence | EnumScanCadenceFieldRefInput<$PrismaModel>
+    in?: $Enums.ScanCadence[] | ListEnumScanCadenceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ScanCadence[] | ListEnumScanCadenceFieldRefInput<$PrismaModel>
+    not?: NestedEnumScanCadenceFilter<$PrismaModel> | $Enums.ScanCadence
+  }
+
+  export type ScheduledScanRunListRelationFilter = {
+    every?: ScheduledScanRunWhereInput
+    some?: ScheduledScanRunWhereInput
+    none?: ScheduledScanRunWhereInput
+  }
+
+  export type ScheduledScanRunOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ScheduledScanConfigCountOrderByAggregateInput = {
+    id?: SortOrder
+    repositoryId?: SortOrder
+    enabled?: SortOrder
+    cadence?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ScheduledScanConfigMaxOrderByAggregateInput = {
+    id?: SortOrder
+    repositoryId?: SortOrder
+    enabled?: SortOrder
+    cadence?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ScheduledScanConfigMinOrderByAggregateInput = {
+    id?: SortOrder
+    repositoryId?: SortOrder
+    enabled?: SortOrder
+    cadence?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumScanCadenceWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ScanCadence | EnumScanCadenceFieldRefInput<$PrismaModel>
+    in?: $Enums.ScanCadence[] | ListEnumScanCadenceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ScanCadence[] | ListEnumScanCadenceFieldRefInput<$PrismaModel>
+    not?: NestedEnumScanCadenceWithAggregatesFilter<$PrismaModel> | $Enums.ScanCadence
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumScanCadenceFilter<$PrismaModel>
+    _max?: NestedEnumScanCadenceFilter<$PrismaModel>
+  }
+
+  export type EnumScanRunStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ScanRunStatus | EnumScanRunStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ScanRunStatus[] | ListEnumScanRunStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ScanRunStatus[] | ListEnumScanRunStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumScanRunStatusFilter<$PrismaModel> | $Enums.ScanRunStatus
+  }
+
+  export type ScheduledScanConfigScalarRelationFilter = {
+    is?: ScheduledScanConfigWhereInput
+    isNot?: ScheduledScanConfigWhereInput
+  }
+
+  export type ScheduledScanRunCountOrderByAggregateInput = {
+    id?: SortOrder
+    configId?: SortOrder
+    triggeredAt?: SortOrder
+    completedAt?: SortOrder
+    status?: SortOrder
+    reviewsQueued?: SortOrder
+    summary?: SortOrder
+  }
+
+  export type ScheduledScanRunAvgOrderByAggregateInput = {
+    reviewsQueued?: SortOrder
+  }
+
+  export type ScheduledScanRunMaxOrderByAggregateInput = {
+    id?: SortOrder
+    configId?: SortOrder
+    triggeredAt?: SortOrder
+    completedAt?: SortOrder
+    status?: SortOrder
+    reviewsQueued?: SortOrder
+    summary?: SortOrder
+  }
+
+  export type ScheduledScanRunMinOrderByAggregateInput = {
+    id?: SortOrder
+    configId?: SortOrder
+    triggeredAt?: SortOrder
+    completedAt?: SortOrder
+    status?: SortOrder
+    reviewsQueued?: SortOrder
+    summary?: SortOrder
+  }
+
+  export type ScheduledScanRunSumOrderByAggregateInput = {
+    reviewsQueued?: SortOrder
+  }
+
+  export type EnumScanRunStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ScanRunStatus | EnumScanRunStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ScanRunStatus[] | ListEnumScanRunStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ScanRunStatus[] | ListEnumScanRunStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumScanRunStatusWithAggregatesFilter<$PrismaModel> | $Enums.ScanRunStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumScanRunStatusFilter<$PrismaModel>
+    _max?: NestedEnumScanRunStatusFilter<$PrismaModel>
+  }
+
+  export type GitHubCommentCountOrderByAggregateInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    githubReviewId?: SortOrder
+    prNumber?: SortOrder
+    repositoryId?: SortOrder
+    commitSha?: SortOrder
+    findingCount?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type GitHubCommentAvgOrderByAggregateInput = {
+    githubReviewId?: SortOrder
+    prNumber?: SortOrder
+    findingCount?: SortOrder
+  }
+
+  export type GitHubCommentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    githubReviewId?: SortOrder
+    prNumber?: SortOrder
+    repositoryId?: SortOrder
+    commitSha?: SortOrder
+    findingCount?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type GitHubCommentMinOrderByAggregateInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    githubReviewId?: SortOrder
+    prNumber?: SortOrder
+    repositoryId?: SortOrder
+    commitSha?: SortOrder
+    findingCount?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type GitHubCommentSumOrderByAggregateInput = {
+    githubReviewId?: SortOrder
+    prNumber?: SortOrder
+    findingCount?: SortOrder
+  }
+
+  export type EnumGitHubCheckStateFilter<$PrismaModel = never> = {
+    equals?: $Enums.GitHubCheckState | EnumGitHubCheckStateFieldRefInput<$PrismaModel>
+    in?: $Enums.GitHubCheckState[] | ListEnumGitHubCheckStateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GitHubCheckState[] | ListEnumGitHubCheckStateFieldRefInput<$PrismaModel>
+    not?: NestedEnumGitHubCheckStateFilter<$PrismaModel> | $Enums.GitHubCheckState
+  }
+
+  export type GitHubStatusCheckCountOrderByAggregateInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    commitSha?: SortOrder
+    state?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GitHubStatusCheckMaxOrderByAggregateInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    commitSha?: SortOrder
+    state?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GitHubStatusCheckMinOrderByAggregateInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    commitSha?: SortOrder
+    state?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumGitHubCheckStateWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.GitHubCheckState | EnumGitHubCheckStateFieldRefInput<$PrismaModel>
+    in?: $Enums.GitHubCheckState[] | ListEnumGitHubCheckStateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GitHubCheckState[] | ListEnumGitHubCheckStateFieldRefInput<$PrismaModel>
+    not?: NestedEnumGitHubCheckStateWithAggregatesFilter<$PrismaModel> | $Enums.GitHubCheckState
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumGitHubCheckStateFilter<$PrismaModel>
+    _max?: NestedEnumGitHubCheckStateFilter<$PrismaModel>
+  }
+
+  export type EnumRecommendationPriorityFilter<$PrismaModel = never> = {
+    equals?: $Enums.RecommendationPriority | EnumRecommendationPriorityFieldRefInput<$PrismaModel>
+    in?: $Enums.RecommendationPriority[] | ListEnumRecommendationPriorityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RecommendationPriority[] | ListEnumRecommendationPriorityFieldRefInput<$PrismaModel>
+    not?: NestedEnumRecommendationPriorityFilter<$PrismaModel> | $Enums.RecommendationPriority
+  }
+
+  export type BranchProtectionRecommendationCountOrderByAggregateInput = {
+    id?: SortOrder
+    repositoryId?: SortOrder
+    rule?: SortOrder
+    rationale?: SortOrder
+    priority?: SortOrder
+    dismissed?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BranchProtectionRecommendationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    repositoryId?: SortOrder
+    rule?: SortOrder
+    rationale?: SortOrder
+    priority?: SortOrder
+    dismissed?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BranchProtectionRecommendationMinOrderByAggregateInput = {
+    id?: SortOrder
+    repositoryId?: SortOrder
+    rule?: SortOrder
+    rationale?: SortOrder
+    priority?: SortOrder
+    dismissed?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumRecommendationPriorityWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RecommendationPriority | EnumRecommendationPriorityFieldRefInput<$PrismaModel>
+    in?: $Enums.RecommendationPriority[] | ListEnumRecommendationPriorityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RecommendationPriority[] | ListEnumRecommendationPriorityFieldRefInput<$PrismaModel>
+    not?: NestedEnumRecommendationPriorityWithAggregatesFilter<$PrismaModel> | $Enums.RecommendationPriority
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRecommendationPriorityFilter<$PrismaModel>
+    _max?: NestedEnumRecommendationPriorityFilter<$PrismaModel>
+  }
+
   export type SessionCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -19528,11 +28273,63 @@ export namespace Prisma {
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
   }
 
+  export type WebhookConfigCreateNestedOneWithoutRepositoryInput = {
+    create?: XOR<WebhookConfigCreateWithoutRepositoryInput, WebhookConfigUncheckedCreateWithoutRepositoryInput>
+    connectOrCreate?: WebhookConfigCreateOrConnectWithoutRepositoryInput
+    connect?: WebhookConfigWhereUniqueInput
+  }
+
+  export type ScheduledScanConfigCreateNestedOneWithoutRepositoryInput = {
+    create?: XOR<ScheduledScanConfigCreateWithoutRepositoryInput, ScheduledScanConfigUncheckedCreateWithoutRepositoryInput>
+    connectOrCreate?: ScheduledScanConfigCreateOrConnectWithoutRepositoryInput
+    connect?: ScheduledScanConfigWhereUniqueInput
+  }
+
+  export type GitHubCommentCreateNestedManyWithoutRepositoryInput = {
+    create?: XOR<GitHubCommentCreateWithoutRepositoryInput, GitHubCommentUncheckedCreateWithoutRepositoryInput> | GitHubCommentCreateWithoutRepositoryInput[] | GitHubCommentUncheckedCreateWithoutRepositoryInput[]
+    connectOrCreate?: GitHubCommentCreateOrConnectWithoutRepositoryInput | GitHubCommentCreateOrConnectWithoutRepositoryInput[]
+    createMany?: GitHubCommentCreateManyRepositoryInputEnvelope
+    connect?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
+  }
+
+  export type BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput = {
+    create?: XOR<BranchProtectionRecommendationCreateWithoutRepositoryInput, BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput> | BranchProtectionRecommendationCreateWithoutRepositoryInput[] | BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput[]
+    connectOrCreate?: BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput | BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput[]
+    createMany?: BranchProtectionRecommendationCreateManyRepositoryInputEnvelope
+    connect?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
+  }
+
   export type ReviewUncheckedCreateNestedManyWithoutRepositoryInput = {
     create?: XOR<ReviewCreateWithoutRepositoryInput, ReviewUncheckedCreateWithoutRepositoryInput> | ReviewCreateWithoutRepositoryInput[] | ReviewUncheckedCreateWithoutRepositoryInput[]
     connectOrCreate?: ReviewCreateOrConnectWithoutRepositoryInput | ReviewCreateOrConnectWithoutRepositoryInput[]
     createMany?: ReviewCreateManyRepositoryInputEnvelope
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+  }
+
+  export type WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput = {
+    create?: XOR<WebhookConfigCreateWithoutRepositoryInput, WebhookConfigUncheckedCreateWithoutRepositoryInput>
+    connectOrCreate?: WebhookConfigCreateOrConnectWithoutRepositoryInput
+    connect?: WebhookConfigWhereUniqueInput
+  }
+
+  export type ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput = {
+    create?: XOR<ScheduledScanConfigCreateWithoutRepositoryInput, ScheduledScanConfigUncheckedCreateWithoutRepositoryInput>
+    connectOrCreate?: ScheduledScanConfigCreateOrConnectWithoutRepositoryInput
+    connect?: ScheduledScanConfigWhereUniqueInput
+  }
+
+  export type GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput = {
+    create?: XOR<GitHubCommentCreateWithoutRepositoryInput, GitHubCommentUncheckedCreateWithoutRepositoryInput> | GitHubCommentCreateWithoutRepositoryInput[] | GitHubCommentUncheckedCreateWithoutRepositoryInput[]
+    connectOrCreate?: GitHubCommentCreateOrConnectWithoutRepositoryInput | GitHubCommentCreateOrConnectWithoutRepositoryInput[]
+    createMany?: GitHubCommentCreateManyRepositoryInputEnvelope
+    connect?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
+  }
+
+  export type BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput = {
+    create?: XOR<BranchProtectionRecommendationCreateWithoutRepositoryInput, BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput> | BranchProtectionRecommendationCreateWithoutRepositoryInput[] | BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput[]
+    connectOrCreate?: BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput | BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput[]
+    createMany?: BranchProtectionRecommendationCreateManyRepositoryInputEnvelope
+    connect?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -19575,6 +28372,54 @@ export namespace Prisma {
     deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
   }
 
+  export type WebhookConfigUpdateOneWithoutRepositoryNestedInput = {
+    create?: XOR<WebhookConfigCreateWithoutRepositoryInput, WebhookConfigUncheckedCreateWithoutRepositoryInput>
+    connectOrCreate?: WebhookConfigCreateOrConnectWithoutRepositoryInput
+    upsert?: WebhookConfigUpsertWithoutRepositoryInput
+    disconnect?: WebhookConfigWhereInput | boolean
+    delete?: WebhookConfigWhereInput | boolean
+    connect?: WebhookConfigWhereUniqueInput
+    update?: XOR<XOR<WebhookConfigUpdateToOneWithWhereWithoutRepositoryInput, WebhookConfigUpdateWithoutRepositoryInput>, WebhookConfigUncheckedUpdateWithoutRepositoryInput>
+  }
+
+  export type ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput = {
+    create?: XOR<ScheduledScanConfigCreateWithoutRepositoryInput, ScheduledScanConfigUncheckedCreateWithoutRepositoryInput>
+    connectOrCreate?: ScheduledScanConfigCreateOrConnectWithoutRepositoryInput
+    upsert?: ScheduledScanConfigUpsertWithoutRepositoryInput
+    disconnect?: ScheduledScanConfigWhereInput | boolean
+    delete?: ScheduledScanConfigWhereInput | boolean
+    connect?: ScheduledScanConfigWhereUniqueInput
+    update?: XOR<XOR<ScheduledScanConfigUpdateToOneWithWhereWithoutRepositoryInput, ScheduledScanConfigUpdateWithoutRepositoryInput>, ScheduledScanConfigUncheckedUpdateWithoutRepositoryInput>
+  }
+
+  export type GitHubCommentUpdateManyWithoutRepositoryNestedInput = {
+    create?: XOR<GitHubCommentCreateWithoutRepositoryInput, GitHubCommentUncheckedCreateWithoutRepositoryInput> | GitHubCommentCreateWithoutRepositoryInput[] | GitHubCommentUncheckedCreateWithoutRepositoryInput[]
+    connectOrCreate?: GitHubCommentCreateOrConnectWithoutRepositoryInput | GitHubCommentCreateOrConnectWithoutRepositoryInput[]
+    upsert?: GitHubCommentUpsertWithWhereUniqueWithoutRepositoryInput | GitHubCommentUpsertWithWhereUniqueWithoutRepositoryInput[]
+    createMany?: GitHubCommentCreateManyRepositoryInputEnvelope
+    set?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
+    disconnect?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
+    delete?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
+    connect?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
+    update?: GitHubCommentUpdateWithWhereUniqueWithoutRepositoryInput | GitHubCommentUpdateWithWhereUniqueWithoutRepositoryInput[]
+    updateMany?: GitHubCommentUpdateManyWithWhereWithoutRepositoryInput | GitHubCommentUpdateManyWithWhereWithoutRepositoryInput[]
+    deleteMany?: GitHubCommentScalarWhereInput | GitHubCommentScalarWhereInput[]
+  }
+
+  export type BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput = {
+    create?: XOR<BranchProtectionRecommendationCreateWithoutRepositoryInput, BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput> | BranchProtectionRecommendationCreateWithoutRepositoryInput[] | BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput[]
+    connectOrCreate?: BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput | BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput[]
+    upsert?: BranchProtectionRecommendationUpsertWithWhereUniqueWithoutRepositoryInput | BranchProtectionRecommendationUpsertWithWhereUniqueWithoutRepositoryInput[]
+    createMany?: BranchProtectionRecommendationCreateManyRepositoryInputEnvelope
+    set?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
+    disconnect?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
+    delete?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
+    connect?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
+    update?: BranchProtectionRecommendationUpdateWithWhereUniqueWithoutRepositoryInput | BranchProtectionRecommendationUpdateWithWhereUniqueWithoutRepositoryInput[]
+    updateMany?: BranchProtectionRecommendationUpdateManyWithWhereWithoutRepositoryInput | BranchProtectionRecommendationUpdateManyWithWhereWithoutRepositoryInput[]
+    deleteMany?: BranchProtectionRecommendationScalarWhereInput | BranchProtectionRecommendationScalarWhereInput[]
+  }
+
   export type ReviewUncheckedUpdateManyWithoutRepositoryNestedInput = {
     create?: XOR<ReviewCreateWithoutRepositoryInput, ReviewUncheckedCreateWithoutRepositoryInput> | ReviewCreateWithoutRepositoryInput[] | ReviewUncheckedCreateWithoutRepositoryInput[]
     connectOrCreate?: ReviewCreateOrConnectWithoutRepositoryInput | ReviewCreateOrConnectWithoutRepositoryInput[]
@@ -19587,6 +28432,54 @@ export namespace Prisma {
     update?: ReviewUpdateWithWhereUniqueWithoutRepositoryInput | ReviewUpdateWithWhereUniqueWithoutRepositoryInput[]
     updateMany?: ReviewUpdateManyWithWhereWithoutRepositoryInput | ReviewUpdateManyWithWhereWithoutRepositoryInput[]
     deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
+  }
+
+  export type WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput = {
+    create?: XOR<WebhookConfigCreateWithoutRepositoryInput, WebhookConfigUncheckedCreateWithoutRepositoryInput>
+    connectOrCreate?: WebhookConfigCreateOrConnectWithoutRepositoryInput
+    upsert?: WebhookConfigUpsertWithoutRepositoryInput
+    disconnect?: WebhookConfigWhereInput | boolean
+    delete?: WebhookConfigWhereInput | boolean
+    connect?: WebhookConfigWhereUniqueInput
+    update?: XOR<XOR<WebhookConfigUpdateToOneWithWhereWithoutRepositoryInput, WebhookConfigUpdateWithoutRepositoryInput>, WebhookConfigUncheckedUpdateWithoutRepositoryInput>
+  }
+
+  export type ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput = {
+    create?: XOR<ScheduledScanConfigCreateWithoutRepositoryInput, ScheduledScanConfigUncheckedCreateWithoutRepositoryInput>
+    connectOrCreate?: ScheduledScanConfigCreateOrConnectWithoutRepositoryInput
+    upsert?: ScheduledScanConfigUpsertWithoutRepositoryInput
+    disconnect?: ScheduledScanConfigWhereInput | boolean
+    delete?: ScheduledScanConfigWhereInput | boolean
+    connect?: ScheduledScanConfigWhereUniqueInput
+    update?: XOR<XOR<ScheduledScanConfigUpdateToOneWithWhereWithoutRepositoryInput, ScheduledScanConfigUpdateWithoutRepositoryInput>, ScheduledScanConfigUncheckedUpdateWithoutRepositoryInput>
+  }
+
+  export type GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput = {
+    create?: XOR<GitHubCommentCreateWithoutRepositoryInput, GitHubCommentUncheckedCreateWithoutRepositoryInput> | GitHubCommentCreateWithoutRepositoryInput[] | GitHubCommentUncheckedCreateWithoutRepositoryInput[]
+    connectOrCreate?: GitHubCommentCreateOrConnectWithoutRepositoryInput | GitHubCommentCreateOrConnectWithoutRepositoryInput[]
+    upsert?: GitHubCommentUpsertWithWhereUniqueWithoutRepositoryInput | GitHubCommentUpsertWithWhereUniqueWithoutRepositoryInput[]
+    createMany?: GitHubCommentCreateManyRepositoryInputEnvelope
+    set?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
+    disconnect?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
+    delete?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
+    connect?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
+    update?: GitHubCommentUpdateWithWhereUniqueWithoutRepositoryInput | GitHubCommentUpdateWithWhereUniqueWithoutRepositoryInput[]
+    updateMany?: GitHubCommentUpdateManyWithWhereWithoutRepositoryInput | GitHubCommentUpdateManyWithWhereWithoutRepositoryInput[]
+    deleteMany?: GitHubCommentScalarWhereInput | GitHubCommentScalarWhereInput[]
+  }
+
+  export type BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput = {
+    create?: XOR<BranchProtectionRecommendationCreateWithoutRepositoryInput, BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput> | BranchProtectionRecommendationCreateWithoutRepositoryInput[] | BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput[]
+    connectOrCreate?: BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput | BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput[]
+    upsert?: BranchProtectionRecommendationUpsertWithWhereUniqueWithoutRepositoryInput | BranchProtectionRecommendationUpsertWithWhereUniqueWithoutRepositoryInput[]
+    createMany?: BranchProtectionRecommendationCreateManyRepositoryInputEnvelope
+    set?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
+    disconnect?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
+    delete?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
+    connect?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
+    update?: BranchProtectionRecommendationUpdateWithWhereUniqueWithoutRepositoryInput | BranchProtectionRecommendationUpdateWithWhereUniqueWithoutRepositoryInput[]
+    updateMany?: BranchProtectionRecommendationUpdateManyWithWhereWithoutRepositoryInput | BranchProtectionRecommendationUpdateManyWithWhereWithoutRepositoryInput[]
+    deleteMany?: BranchProtectionRecommendationScalarWhereInput | BranchProtectionRecommendationScalarWhereInput[]
   }
 
   export type RepositoryCreateNestedOneWithoutReviewsInput = {
@@ -19608,11 +28501,35 @@ export namespace Prisma {
     connect?: ReviewThreadWhereUniqueInput | ReviewThreadWhereUniqueInput[]
   }
 
+  export type GitHubCommentCreateNestedOneWithoutReviewInput = {
+    create?: XOR<GitHubCommentCreateWithoutReviewInput, GitHubCommentUncheckedCreateWithoutReviewInput>
+    connectOrCreate?: GitHubCommentCreateOrConnectWithoutReviewInput
+    connect?: GitHubCommentWhereUniqueInput
+  }
+
+  export type GitHubStatusCheckCreateNestedOneWithoutReviewInput = {
+    create?: XOR<GitHubStatusCheckCreateWithoutReviewInput, GitHubStatusCheckUncheckedCreateWithoutReviewInput>
+    connectOrCreate?: GitHubStatusCheckCreateOrConnectWithoutReviewInput
+    connect?: GitHubStatusCheckWhereUniqueInput
+  }
+
   export type ReviewThreadUncheckedCreateNestedManyWithoutReviewInput = {
     create?: XOR<ReviewThreadCreateWithoutReviewInput, ReviewThreadUncheckedCreateWithoutReviewInput> | ReviewThreadCreateWithoutReviewInput[] | ReviewThreadUncheckedCreateWithoutReviewInput[]
     connectOrCreate?: ReviewThreadCreateOrConnectWithoutReviewInput | ReviewThreadCreateOrConnectWithoutReviewInput[]
     createMany?: ReviewThreadCreateManyReviewInputEnvelope
     connect?: ReviewThreadWhereUniqueInput | ReviewThreadWhereUniqueInput[]
+  }
+
+  export type GitHubCommentUncheckedCreateNestedOneWithoutReviewInput = {
+    create?: XOR<GitHubCommentCreateWithoutReviewInput, GitHubCommentUncheckedCreateWithoutReviewInput>
+    connectOrCreate?: GitHubCommentCreateOrConnectWithoutReviewInput
+    connect?: GitHubCommentWhereUniqueInput
+  }
+
+  export type GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput = {
+    create?: XOR<GitHubStatusCheckCreateWithoutReviewInput, GitHubStatusCheckUncheckedCreateWithoutReviewInput>
+    connectOrCreate?: GitHubStatusCheckCreateOrConnectWithoutReviewInput
+    connect?: GitHubStatusCheckWhereUniqueInput
   }
 
   export type EnumReviewStatusFieldUpdateOperationsInput = {
@@ -19657,6 +28574,26 @@ export namespace Prisma {
     deleteMany?: ReviewThreadScalarWhereInput | ReviewThreadScalarWhereInput[]
   }
 
+  export type GitHubCommentUpdateOneWithoutReviewNestedInput = {
+    create?: XOR<GitHubCommentCreateWithoutReviewInput, GitHubCommentUncheckedCreateWithoutReviewInput>
+    connectOrCreate?: GitHubCommentCreateOrConnectWithoutReviewInput
+    upsert?: GitHubCommentUpsertWithoutReviewInput
+    disconnect?: GitHubCommentWhereInput | boolean
+    delete?: GitHubCommentWhereInput | boolean
+    connect?: GitHubCommentWhereUniqueInput
+    update?: XOR<XOR<GitHubCommentUpdateToOneWithWhereWithoutReviewInput, GitHubCommentUpdateWithoutReviewInput>, GitHubCommentUncheckedUpdateWithoutReviewInput>
+  }
+
+  export type GitHubStatusCheckUpdateOneWithoutReviewNestedInput = {
+    create?: XOR<GitHubStatusCheckCreateWithoutReviewInput, GitHubStatusCheckUncheckedCreateWithoutReviewInput>
+    connectOrCreate?: GitHubStatusCheckCreateOrConnectWithoutReviewInput
+    upsert?: GitHubStatusCheckUpsertWithoutReviewInput
+    disconnect?: GitHubStatusCheckWhereInput | boolean
+    delete?: GitHubStatusCheckWhereInput | boolean
+    connect?: GitHubStatusCheckWhereUniqueInput
+    update?: XOR<XOR<GitHubStatusCheckUpdateToOneWithWhereWithoutReviewInput, GitHubStatusCheckUpdateWithoutReviewInput>, GitHubStatusCheckUncheckedUpdateWithoutReviewInput>
+  }
+
   export type ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput = {
     create?: XOR<ReviewThreadCreateWithoutReviewInput, ReviewThreadUncheckedCreateWithoutReviewInput> | ReviewThreadCreateWithoutReviewInput[] | ReviewThreadUncheckedCreateWithoutReviewInput[]
     connectOrCreate?: ReviewThreadCreateOrConnectWithoutReviewInput | ReviewThreadCreateOrConnectWithoutReviewInput[]
@@ -19669,6 +28606,26 @@ export namespace Prisma {
     update?: ReviewThreadUpdateWithWhereUniqueWithoutReviewInput | ReviewThreadUpdateWithWhereUniqueWithoutReviewInput[]
     updateMany?: ReviewThreadUpdateManyWithWhereWithoutReviewInput | ReviewThreadUpdateManyWithWhereWithoutReviewInput[]
     deleteMany?: ReviewThreadScalarWhereInput | ReviewThreadScalarWhereInput[]
+  }
+
+  export type GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput = {
+    create?: XOR<GitHubCommentCreateWithoutReviewInput, GitHubCommentUncheckedCreateWithoutReviewInput>
+    connectOrCreate?: GitHubCommentCreateOrConnectWithoutReviewInput
+    upsert?: GitHubCommentUpsertWithoutReviewInput
+    disconnect?: GitHubCommentWhereInput | boolean
+    delete?: GitHubCommentWhereInput | boolean
+    connect?: GitHubCommentWhereUniqueInput
+    update?: XOR<XOR<GitHubCommentUpdateToOneWithWhereWithoutReviewInput, GitHubCommentUpdateWithoutReviewInput>, GitHubCommentUncheckedUpdateWithoutReviewInput>
+  }
+
+  export type GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput = {
+    create?: XOR<GitHubStatusCheckCreateWithoutReviewInput, GitHubStatusCheckUncheckedCreateWithoutReviewInput>
+    connectOrCreate?: GitHubStatusCheckCreateOrConnectWithoutReviewInput
+    upsert?: GitHubStatusCheckUpsertWithoutReviewInput
+    disconnect?: GitHubStatusCheckWhereInput | boolean
+    delete?: GitHubStatusCheckWhereInput | boolean
+    connect?: GitHubStatusCheckWhereUniqueInput
+    update?: XOR<XOR<GitHubStatusCheckUpdateToOneWithWhereWithoutReviewInput, GitHubStatusCheckUpdateWithoutReviewInput>, GitHubStatusCheckUncheckedUpdateWithoutReviewInput>
   }
 
   export type ReviewCreateNestedOneWithoutThreadsInput = {
@@ -19951,6 +28908,162 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutNotificationsInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutNotificationsInput, UserUpdateWithoutNotificationsInput>, UserUncheckedUpdateWithoutNotificationsInput>
+  }
+
+  export type RepositoryCreateNestedOneWithoutWebhookConfigInput = {
+    create?: XOR<RepositoryCreateWithoutWebhookConfigInput, RepositoryUncheckedCreateWithoutWebhookConfigInput>
+    connectOrCreate?: RepositoryCreateOrConnectWithoutWebhookConfigInput
+    connect?: RepositoryWhereUniqueInput
+  }
+
+  export type RepositoryUpdateOneRequiredWithoutWebhookConfigNestedInput = {
+    create?: XOR<RepositoryCreateWithoutWebhookConfigInput, RepositoryUncheckedCreateWithoutWebhookConfigInput>
+    connectOrCreate?: RepositoryCreateOrConnectWithoutWebhookConfigInput
+    upsert?: RepositoryUpsertWithoutWebhookConfigInput
+    connect?: RepositoryWhereUniqueInput
+    update?: XOR<XOR<RepositoryUpdateToOneWithWhereWithoutWebhookConfigInput, RepositoryUpdateWithoutWebhookConfigInput>, RepositoryUncheckedUpdateWithoutWebhookConfigInput>
+  }
+
+  export type RepositoryCreateNestedOneWithoutScheduledScanConfigInput = {
+    create?: XOR<RepositoryCreateWithoutScheduledScanConfigInput, RepositoryUncheckedCreateWithoutScheduledScanConfigInput>
+    connectOrCreate?: RepositoryCreateOrConnectWithoutScheduledScanConfigInput
+    connect?: RepositoryWhereUniqueInput
+  }
+
+  export type ScheduledScanRunCreateNestedManyWithoutConfigInput = {
+    create?: XOR<ScheduledScanRunCreateWithoutConfigInput, ScheduledScanRunUncheckedCreateWithoutConfigInput> | ScheduledScanRunCreateWithoutConfigInput[] | ScheduledScanRunUncheckedCreateWithoutConfigInput[]
+    connectOrCreate?: ScheduledScanRunCreateOrConnectWithoutConfigInput | ScheduledScanRunCreateOrConnectWithoutConfigInput[]
+    createMany?: ScheduledScanRunCreateManyConfigInputEnvelope
+    connect?: ScheduledScanRunWhereUniqueInput | ScheduledScanRunWhereUniqueInput[]
+  }
+
+  export type ScheduledScanRunUncheckedCreateNestedManyWithoutConfigInput = {
+    create?: XOR<ScheduledScanRunCreateWithoutConfigInput, ScheduledScanRunUncheckedCreateWithoutConfigInput> | ScheduledScanRunCreateWithoutConfigInput[] | ScheduledScanRunUncheckedCreateWithoutConfigInput[]
+    connectOrCreate?: ScheduledScanRunCreateOrConnectWithoutConfigInput | ScheduledScanRunCreateOrConnectWithoutConfigInput[]
+    createMany?: ScheduledScanRunCreateManyConfigInputEnvelope
+    connect?: ScheduledScanRunWhereUniqueInput | ScheduledScanRunWhereUniqueInput[]
+  }
+
+  export type EnumScanCadenceFieldUpdateOperationsInput = {
+    set?: $Enums.ScanCadence
+  }
+
+  export type RepositoryUpdateOneRequiredWithoutScheduledScanConfigNestedInput = {
+    create?: XOR<RepositoryCreateWithoutScheduledScanConfigInput, RepositoryUncheckedCreateWithoutScheduledScanConfigInput>
+    connectOrCreate?: RepositoryCreateOrConnectWithoutScheduledScanConfigInput
+    upsert?: RepositoryUpsertWithoutScheduledScanConfigInput
+    connect?: RepositoryWhereUniqueInput
+    update?: XOR<XOR<RepositoryUpdateToOneWithWhereWithoutScheduledScanConfigInput, RepositoryUpdateWithoutScheduledScanConfigInput>, RepositoryUncheckedUpdateWithoutScheduledScanConfigInput>
+  }
+
+  export type ScheduledScanRunUpdateManyWithoutConfigNestedInput = {
+    create?: XOR<ScheduledScanRunCreateWithoutConfigInput, ScheduledScanRunUncheckedCreateWithoutConfigInput> | ScheduledScanRunCreateWithoutConfigInput[] | ScheduledScanRunUncheckedCreateWithoutConfigInput[]
+    connectOrCreate?: ScheduledScanRunCreateOrConnectWithoutConfigInput | ScheduledScanRunCreateOrConnectWithoutConfigInput[]
+    upsert?: ScheduledScanRunUpsertWithWhereUniqueWithoutConfigInput | ScheduledScanRunUpsertWithWhereUniqueWithoutConfigInput[]
+    createMany?: ScheduledScanRunCreateManyConfigInputEnvelope
+    set?: ScheduledScanRunWhereUniqueInput | ScheduledScanRunWhereUniqueInput[]
+    disconnect?: ScheduledScanRunWhereUniqueInput | ScheduledScanRunWhereUniqueInput[]
+    delete?: ScheduledScanRunWhereUniqueInput | ScheduledScanRunWhereUniqueInput[]
+    connect?: ScheduledScanRunWhereUniqueInput | ScheduledScanRunWhereUniqueInput[]
+    update?: ScheduledScanRunUpdateWithWhereUniqueWithoutConfigInput | ScheduledScanRunUpdateWithWhereUniqueWithoutConfigInput[]
+    updateMany?: ScheduledScanRunUpdateManyWithWhereWithoutConfigInput | ScheduledScanRunUpdateManyWithWhereWithoutConfigInput[]
+    deleteMany?: ScheduledScanRunScalarWhereInput | ScheduledScanRunScalarWhereInput[]
+  }
+
+  export type ScheduledScanRunUncheckedUpdateManyWithoutConfigNestedInput = {
+    create?: XOR<ScheduledScanRunCreateWithoutConfigInput, ScheduledScanRunUncheckedCreateWithoutConfigInput> | ScheduledScanRunCreateWithoutConfigInput[] | ScheduledScanRunUncheckedCreateWithoutConfigInput[]
+    connectOrCreate?: ScheduledScanRunCreateOrConnectWithoutConfigInput | ScheduledScanRunCreateOrConnectWithoutConfigInput[]
+    upsert?: ScheduledScanRunUpsertWithWhereUniqueWithoutConfigInput | ScheduledScanRunUpsertWithWhereUniqueWithoutConfigInput[]
+    createMany?: ScheduledScanRunCreateManyConfigInputEnvelope
+    set?: ScheduledScanRunWhereUniqueInput | ScheduledScanRunWhereUniqueInput[]
+    disconnect?: ScheduledScanRunWhereUniqueInput | ScheduledScanRunWhereUniqueInput[]
+    delete?: ScheduledScanRunWhereUniqueInput | ScheduledScanRunWhereUniqueInput[]
+    connect?: ScheduledScanRunWhereUniqueInput | ScheduledScanRunWhereUniqueInput[]
+    update?: ScheduledScanRunUpdateWithWhereUniqueWithoutConfigInput | ScheduledScanRunUpdateWithWhereUniqueWithoutConfigInput[]
+    updateMany?: ScheduledScanRunUpdateManyWithWhereWithoutConfigInput | ScheduledScanRunUpdateManyWithWhereWithoutConfigInput[]
+    deleteMany?: ScheduledScanRunScalarWhereInput | ScheduledScanRunScalarWhereInput[]
+  }
+
+  export type ScheduledScanConfigCreateNestedOneWithoutRunsInput = {
+    create?: XOR<ScheduledScanConfigCreateWithoutRunsInput, ScheduledScanConfigUncheckedCreateWithoutRunsInput>
+    connectOrCreate?: ScheduledScanConfigCreateOrConnectWithoutRunsInput
+    connect?: ScheduledScanConfigWhereUniqueInput
+  }
+
+  export type EnumScanRunStatusFieldUpdateOperationsInput = {
+    set?: $Enums.ScanRunStatus
+  }
+
+  export type ScheduledScanConfigUpdateOneRequiredWithoutRunsNestedInput = {
+    create?: XOR<ScheduledScanConfigCreateWithoutRunsInput, ScheduledScanConfigUncheckedCreateWithoutRunsInput>
+    connectOrCreate?: ScheduledScanConfigCreateOrConnectWithoutRunsInput
+    upsert?: ScheduledScanConfigUpsertWithoutRunsInput
+    connect?: ScheduledScanConfigWhereUniqueInput
+    update?: XOR<XOR<ScheduledScanConfigUpdateToOneWithWhereWithoutRunsInput, ScheduledScanConfigUpdateWithoutRunsInput>, ScheduledScanConfigUncheckedUpdateWithoutRunsInput>
+  }
+
+  export type ReviewCreateNestedOneWithoutGithubCommentInput = {
+    create?: XOR<ReviewCreateWithoutGithubCommentInput, ReviewUncheckedCreateWithoutGithubCommentInput>
+    connectOrCreate?: ReviewCreateOrConnectWithoutGithubCommentInput
+    connect?: ReviewWhereUniqueInput
+  }
+
+  export type RepositoryCreateNestedOneWithoutGithubCommentsInput = {
+    create?: XOR<RepositoryCreateWithoutGithubCommentsInput, RepositoryUncheckedCreateWithoutGithubCommentsInput>
+    connectOrCreate?: RepositoryCreateOrConnectWithoutGithubCommentsInput
+    connect?: RepositoryWhereUniqueInput
+  }
+
+  export type ReviewUpdateOneRequiredWithoutGithubCommentNestedInput = {
+    create?: XOR<ReviewCreateWithoutGithubCommentInput, ReviewUncheckedCreateWithoutGithubCommentInput>
+    connectOrCreate?: ReviewCreateOrConnectWithoutGithubCommentInput
+    upsert?: ReviewUpsertWithoutGithubCommentInput
+    connect?: ReviewWhereUniqueInput
+    update?: XOR<XOR<ReviewUpdateToOneWithWhereWithoutGithubCommentInput, ReviewUpdateWithoutGithubCommentInput>, ReviewUncheckedUpdateWithoutGithubCommentInput>
+  }
+
+  export type RepositoryUpdateOneRequiredWithoutGithubCommentsNestedInput = {
+    create?: XOR<RepositoryCreateWithoutGithubCommentsInput, RepositoryUncheckedCreateWithoutGithubCommentsInput>
+    connectOrCreate?: RepositoryCreateOrConnectWithoutGithubCommentsInput
+    upsert?: RepositoryUpsertWithoutGithubCommentsInput
+    connect?: RepositoryWhereUniqueInput
+    update?: XOR<XOR<RepositoryUpdateToOneWithWhereWithoutGithubCommentsInput, RepositoryUpdateWithoutGithubCommentsInput>, RepositoryUncheckedUpdateWithoutGithubCommentsInput>
+  }
+
+  export type ReviewCreateNestedOneWithoutGithubStatusCheckInput = {
+    create?: XOR<ReviewCreateWithoutGithubStatusCheckInput, ReviewUncheckedCreateWithoutGithubStatusCheckInput>
+    connectOrCreate?: ReviewCreateOrConnectWithoutGithubStatusCheckInput
+    connect?: ReviewWhereUniqueInput
+  }
+
+  export type EnumGitHubCheckStateFieldUpdateOperationsInput = {
+    set?: $Enums.GitHubCheckState
+  }
+
+  export type ReviewUpdateOneRequiredWithoutGithubStatusCheckNestedInput = {
+    create?: XOR<ReviewCreateWithoutGithubStatusCheckInput, ReviewUncheckedCreateWithoutGithubStatusCheckInput>
+    connectOrCreate?: ReviewCreateOrConnectWithoutGithubStatusCheckInput
+    upsert?: ReviewUpsertWithoutGithubStatusCheckInput
+    connect?: ReviewWhereUniqueInput
+    update?: XOR<XOR<ReviewUpdateToOneWithWhereWithoutGithubStatusCheckInput, ReviewUpdateWithoutGithubStatusCheckInput>, ReviewUncheckedUpdateWithoutGithubStatusCheckInput>
+  }
+
+  export type RepositoryCreateNestedOneWithoutBranchProtectionRecsInput = {
+    create?: XOR<RepositoryCreateWithoutBranchProtectionRecsInput, RepositoryUncheckedCreateWithoutBranchProtectionRecsInput>
+    connectOrCreate?: RepositoryCreateOrConnectWithoutBranchProtectionRecsInput
+    connect?: RepositoryWhereUniqueInput
+  }
+
+  export type EnumRecommendationPriorityFieldUpdateOperationsInput = {
+    set?: $Enums.RecommendationPriority
+  }
+
+  export type RepositoryUpdateOneRequiredWithoutBranchProtectionRecsNestedInput = {
+    create?: XOR<RepositoryCreateWithoutBranchProtectionRecsInput, RepositoryUncheckedCreateWithoutBranchProtectionRecsInput>
+    connectOrCreate?: RepositoryCreateOrConnectWithoutBranchProtectionRecsInput
+    upsert?: RepositoryUpsertWithoutBranchProtectionRecsInput
+    connect?: RepositoryWhereUniqueInput
+    update?: XOR<XOR<RepositoryUpdateToOneWithWhereWithoutBranchProtectionRecsInput, RepositoryUpdateWithoutBranchProtectionRecsInput>, RepositoryUncheckedUpdateWithoutBranchProtectionRecsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -20262,6 +29375,74 @@ export namespace Prisma {
     _max?: NestedEnumNotificationTypeFilter<$PrismaModel>
   }
 
+  export type NestedEnumScanCadenceFilter<$PrismaModel = never> = {
+    equals?: $Enums.ScanCadence | EnumScanCadenceFieldRefInput<$PrismaModel>
+    in?: $Enums.ScanCadence[] | ListEnumScanCadenceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ScanCadence[] | ListEnumScanCadenceFieldRefInput<$PrismaModel>
+    not?: NestedEnumScanCadenceFilter<$PrismaModel> | $Enums.ScanCadence
+  }
+
+  export type NestedEnumScanCadenceWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ScanCadence | EnumScanCadenceFieldRefInput<$PrismaModel>
+    in?: $Enums.ScanCadence[] | ListEnumScanCadenceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ScanCadence[] | ListEnumScanCadenceFieldRefInput<$PrismaModel>
+    not?: NestedEnumScanCadenceWithAggregatesFilter<$PrismaModel> | $Enums.ScanCadence
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumScanCadenceFilter<$PrismaModel>
+    _max?: NestedEnumScanCadenceFilter<$PrismaModel>
+  }
+
+  export type NestedEnumScanRunStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ScanRunStatus | EnumScanRunStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ScanRunStatus[] | ListEnumScanRunStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ScanRunStatus[] | ListEnumScanRunStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumScanRunStatusFilter<$PrismaModel> | $Enums.ScanRunStatus
+  }
+
+  export type NestedEnumScanRunStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ScanRunStatus | EnumScanRunStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ScanRunStatus[] | ListEnumScanRunStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ScanRunStatus[] | ListEnumScanRunStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumScanRunStatusWithAggregatesFilter<$PrismaModel> | $Enums.ScanRunStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumScanRunStatusFilter<$PrismaModel>
+    _max?: NestedEnumScanRunStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumGitHubCheckStateFilter<$PrismaModel = never> = {
+    equals?: $Enums.GitHubCheckState | EnumGitHubCheckStateFieldRefInput<$PrismaModel>
+    in?: $Enums.GitHubCheckState[] | ListEnumGitHubCheckStateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GitHubCheckState[] | ListEnumGitHubCheckStateFieldRefInput<$PrismaModel>
+    not?: NestedEnumGitHubCheckStateFilter<$PrismaModel> | $Enums.GitHubCheckState
+  }
+
+  export type NestedEnumGitHubCheckStateWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.GitHubCheckState | EnumGitHubCheckStateFieldRefInput<$PrismaModel>
+    in?: $Enums.GitHubCheckState[] | ListEnumGitHubCheckStateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GitHubCheckState[] | ListEnumGitHubCheckStateFieldRefInput<$PrismaModel>
+    not?: NestedEnumGitHubCheckStateWithAggregatesFilter<$PrismaModel> | $Enums.GitHubCheckState
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumGitHubCheckStateFilter<$PrismaModel>
+    _max?: NestedEnumGitHubCheckStateFilter<$PrismaModel>
+  }
+
+  export type NestedEnumRecommendationPriorityFilter<$PrismaModel = never> = {
+    equals?: $Enums.RecommendationPriority | EnumRecommendationPriorityFieldRefInput<$PrismaModel>
+    in?: $Enums.RecommendationPriority[] | ListEnumRecommendationPriorityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RecommendationPriority[] | ListEnumRecommendationPriorityFieldRefInput<$PrismaModel>
+    not?: NestedEnumRecommendationPriorityFilter<$PrismaModel> | $Enums.RecommendationPriority
+  }
+
+  export type NestedEnumRecommendationPriorityWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RecommendationPriority | EnumRecommendationPriorityFieldRefInput<$PrismaModel>
+    in?: $Enums.RecommendationPriority[] | ListEnumRecommendationPriorityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RecommendationPriority[] | ListEnumRecommendationPriorityFieldRefInput<$PrismaModel>
+    not?: NestedEnumRecommendationPriorityWithAggregatesFilter<$PrismaModel> | $Enums.RecommendationPriority
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRecommendationPriorityFilter<$PrismaModel>
+    _max?: NestedEnumRecommendationPriorityFilter<$PrismaModel>
+  }
+
   export type SessionCreateWithoutUserInput = {
     id: string
     expiresAt: Date | string
@@ -20343,6 +29524,10 @@ export namespace Prisma {
     updatedAt?: Date | string
     team?: TeamCreateNestedOneWithoutRepositoriesInput
     reviews?: ReviewCreateNestedManyWithoutRepositoryInput
+    webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
+    githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
   }
 
   export type RepositoryUncheckedCreateWithoutUserInput = {
@@ -20356,6 +29541,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     reviews?: ReviewUncheckedCreateNestedManyWithoutRepositoryInput
+    webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
+    githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
   }
 
   export type RepositoryCreateOrConnectWithoutUserInput = {
@@ -20383,6 +29572,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     repository: RepositoryCreateNestedOneWithoutReviewsInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
+    githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
+    githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
   }
 
   export type ReviewUncheckedCreateWithoutUserInput = {
@@ -20400,6 +29591,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
+    githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
+    githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
   }
 
   export type ReviewCreateOrConnectWithoutUserInput = {
@@ -20999,6 +30192,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutReviewsInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
+    githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
+    githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
   }
 
   export type ReviewUncheckedCreateWithoutRepositoryInput = {
@@ -21016,6 +30211,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
+    githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
+    githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
   }
 
   export type ReviewCreateOrConnectWithoutRepositoryInput = {
@@ -21025,6 +30222,110 @@ export namespace Prisma {
 
   export type ReviewCreateManyRepositoryInputEnvelope = {
     data: ReviewCreateManyRepositoryInput | ReviewCreateManyRepositoryInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type WebhookConfigCreateWithoutRepositoryInput = {
+    id?: string
+    enabled?: boolean
+    githubWebhookId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WebhookConfigUncheckedCreateWithoutRepositoryInput = {
+    id?: string
+    enabled?: boolean
+    githubWebhookId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WebhookConfigCreateOrConnectWithoutRepositoryInput = {
+    where: WebhookConfigWhereUniqueInput
+    create: XOR<WebhookConfigCreateWithoutRepositoryInput, WebhookConfigUncheckedCreateWithoutRepositoryInput>
+  }
+
+  export type ScheduledScanConfigCreateWithoutRepositoryInput = {
+    id?: string
+    enabled?: boolean
+    cadence?: $Enums.ScanCadence
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    runs?: ScheduledScanRunCreateNestedManyWithoutConfigInput
+  }
+
+  export type ScheduledScanConfigUncheckedCreateWithoutRepositoryInput = {
+    id?: string
+    enabled?: boolean
+    cadence?: $Enums.ScanCadence
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    runs?: ScheduledScanRunUncheckedCreateNestedManyWithoutConfigInput
+  }
+
+  export type ScheduledScanConfigCreateOrConnectWithoutRepositoryInput = {
+    where: ScheduledScanConfigWhereUniqueInput
+    create: XOR<ScheduledScanConfigCreateWithoutRepositoryInput, ScheduledScanConfigUncheckedCreateWithoutRepositoryInput>
+  }
+
+  export type GitHubCommentCreateWithoutRepositoryInput = {
+    id?: string
+    githubReviewId: number
+    prNumber: number
+    commitSha: string
+    findingCount?: number
+    createdAt?: Date | string
+    review: ReviewCreateNestedOneWithoutGithubCommentInput
+  }
+
+  export type GitHubCommentUncheckedCreateWithoutRepositoryInput = {
+    id?: string
+    reviewId: string
+    githubReviewId: number
+    prNumber: number
+    commitSha: string
+    findingCount?: number
+    createdAt?: Date | string
+  }
+
+  export type GitHubCommentCreateOrConnectWithoutRepositoryInput = {
+    where: GitHubCommentWhereUniqueInput
+    create: XOR<GitHubCommentCreateWithoutRepositoryInput, GitHubCommentUncheckedCreateWithoutRepositoryInput>
+  }
+
+  export type GitHubCommentCreateManyRepositoryInputEnvelope = {
+    data: GitHubCommentCreateManyRepositoryInput | GitHubCommentCreateManyRepositoryInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type BranchProtectionRecommendationCreateWithoutRepositoryInput = {
+    id?: string
+    rule: string
+    rationale: string
+    priority: $Enums.RecommendationPriority
+    dismissed?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput = {
+    id?: string
+    rule: string
+    rationale: string
+    priority: $Enums.RecommendationPriority
+    dismissed?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput = {
+    where: BranchProtectionRecommendationWhereUniqueInput
+    create: XOR<BranchProtectionRecommendationCreateWithoutRepositoryInput, BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput>
+  }
+
+  export type BranchProtectionRecommendationCreateManyRepositoryInputEnvelope = {
+    data: BranchProtectionRecommendationCreateManyRepositoryInput | BranchProtectionRecommendationCreateManyRepositoryInput[]
     skipDuplicates?: boolean
   }
 
@@ -21130,6 +30431,122 @@ export namespace Prisma {
     data: XOR<ReviewUpdateManyMutationInput, ReviewUncheckedUpdateManyWithoutRepositoryInput>
   }
 
+  export type WebhookConfigUpsertWithoutRepositoryInput = {
+    update: XOR<WebhookConfigUpdateWithoutRepositoryInput, WebhookConfigUncheckedUpdateWithoutRepositoryInput>
+    create: XOR<WebhookConfigCreateWithoutRepositoryInput, WebhookConfigUncheckedCreateWithoutRepositoryInput>
+    where?: WebhookConfigWhereInput
+  }
+
+  export type WebhookConfigUpdateToOneWithWhereWithoutRepositoryInput = {
+    where?: WebhookConfigWhereInput
+    data: XOR<WebhookConfigUpdateWithoutRepositoryInput, WebhookConfigUncheckedUpdateWithoutRepositoryInput>
+  }
+
+  export type WebhookConfigUpdateWithoutRepositoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    githubWebhookId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WebhookConfigUncheckedUpdateWithoutRepositoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    githubWebhookId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ScheduledScanConfigUpsertWithoutRepositoryInput = {
+    update: XOR<ScheduledScanConfigUpdateWithoutRepositoryInput, ScheduledScanConfigUncheckedUpdateWithoutRepositoryInput>
+    create: XOR<ScheduledScanConfigCreateWithoutRepositoryInput, ScheduledScanConfigUncheckedCreateWithoutRepositoryInput>
+    where?: ScheduledScanConfigWhereInput
+  }
+
+  export type ScheduledScanConfigUpdateToOneWithWhereWithoutRepositoryInput = {
+    where?: ScheduledScanConfigWhereInput
+    data: XOR<ScheduledScanConfigUpdateWithoutRepositoryInput, ScheduledScanConfigUncheckedUpdateWithoutRepositoryInput>
+  }
+
+  export type ScheduledScanConfigUpdateWithoutRepositoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    cadence?: EnumScanCadenceFieldUpdateOperationsInput | $Enums.ScanCadence
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    runs?: ScheduledScanRunUpdateManyWithoutConfigNestedInput
+  }
+
+  export type ScheduledScanConfigUncheckedUpdateWithoutRepositoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    cadence?: EnumScanCadenceFieldUpdateOperationsInput | $Enums.ScanCadence
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    runs?: ScheduledScanRunUncheckedUpdateManyWithoutConfigNestedInput
+  }
+
+  export type GitHubCommentUpsertWithWhereUniqueWithoutRepositoryInput = {
+    where: GitHubCommentWhereUniqueInput
+    update: XOR<GitHubCommentUpdateWithoutRepositoryInput, GitHubCommentUncheckedUpdateWithoutRepositoryInput>
+    create: XOR<GitHubCommentCreateWithoutRepositoryInput, GitHubCommentUncheckedCreateWithoutRepositoryInput>
+  }
+
+  export type GitHubCommentUpdateWithWhereUniqueWithoutRepositoryInput = {
+    where: GitHubCommentWhereUniqueInput
+    data: XOR<GitHubCommentUpdateWithoutRepositoryInput, GitHubCommentUncheckedUpdateWithoutRepositoryInput>
+  }
+
+  export type GitHubCommentUpdateManyWithWhereWithoutRepositoryInput = {
+    where: GitHubCommentScalarWhereInput
+    data: XOR<GitHubCommentUpdateManyMutationInput, GitHubCommentUncheckedUpdateManyWithoutRepositoryInput>
+  }
+
+  export type GitHubCommentScalarWhereInput = {
+    AND?: GitHubCommentScalarWhereInput | GitHubCommentScalarWhereInput[]
+    OR?: GitHubCommentScalarWhereInput[]
+    NOT?: GitHubCommentScalarWhereInput | GitHubCommentScalarWhereInput[]
+    id?: StringFilter<"GitHubComment"> | string
+    reviewId?: StringFilter<"GitHubComment"> | string
+    githubReviewId?: IntFilter<"GitHubComment"> | number
+    prNumber?: IntFilter<"GitHubComment"> | number
+    repositoryId?: StringFilter<"GitHubComment"> | string
+    commitSha?: StringFilter<"GitHubComment"> | string
+    findingCount?: IntFilter<"GitHubComment"> | number
+    createdAt?: DateTimeFilter<"GitHubComment"> | Date | string
+  }
+
+  export type BranchProtectionRecommendationUpsertWithWhereUniqueWithoutRepositoryInput = {
+    where: BranchProtectionRecommendationWhereUniqueInput
+    update: XOR<BranchProtectionRecommendationUpdateWithoutRepositoryInput, BranchProtectionRecommendationUncheckedUpdateWithoutRepositoryInput>
+    create: XOR<BranchProtectionRecommendationCreateWithoutRepositoryInput, BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput>
+  }
+
+  export type BranchProtectionRecommendationUpdateWithWhereUniqueWithoutRepositoryInput = {
+    where: BranchProtectionRecommendationWhereUniqueInput
+    data: XOR<BranchProtectionRecommendationUpdateWithoutRepositoryInput, BranchProtectionRecommendationUncheckedUpdateWithoutRepositoryInput>
+  }
+
+  export type BranchProtectionRecommendationUpdateManyWithWhereWithoutRepositoryInput = {
+    where: BranchProtectionRecommendationScalarWhereInput
+    data: XOR<BranchProtectionRecommendationUpdateManyMutationInput, BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryInput>
+  }
+
+  export type BranchProtectionRecommendationScalarWhereInput = {
+    AND?: BranchProtectionRecommendationScalarWhereInput | BranchProtectionRecommendationScalarWhereInput[]
+    OR?: BranchProtectionRecommendationScalarWhereInput[]
+    NOT?: BranchProtectionRecommendationScalarWhereInput | BranchProtectionRecommendationScalarWhereInput[]
+    id?: StringFilter<"BranchProtectionRecommendation"> | string
+    repositoryId?: StringFilter<"BranchProtectionRecommendation"> | string
+    rule?: StringFilter<"BranchProtectionRecommendation"> | string
+    rationale?: StringFilter<"BranchProtectionRecommendation"> | string
+    priority?: EnumRecommendationPriorityFilter<"BranchProtectionRecommendation"> | $Enums.RecommendationPriority
+    dismissed?: BoolFilter<"BranchProtectionRecommendation"> | boolean
+    createdAt?: DateTimeFilter<"BranchProtectionRecommendation"> | Date | string
+    updatedAt?: DateTimeFilter<"BranchProtectionRecommendation"> | Date | string
+  }
+
   export type RepositoryCreateWithoutReviewsInput = {
     id?: string
     githubId: number
@@ -21141,6 +30558,10 @@ export namespace Prisma {
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutRepositoriesInput
     team?: TeamCreateNestedOneWithoutRepositoriesInput
+    webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
+    githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
   }
 
   export type RepositoryUncheckedCreateWithoutReviewsInput = {
@@ -21154,6 +30575,10 @@ export namespace Prisma {
     htmlUrl: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
+    githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
   }
 
   export type RepositoryCreateOrConnectWithoutReviewsInput = {
@@ -21238,6 +30663,52 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type GitHubCommentCreateWithoutReviewInput = {
+    id?: string
+    githubReviewId: number
+    prNumber: number
+    commitSha: string
+    findingCount?: number
+    createdAt?: Date | string
+    repository: RepositoryCreateNestedOneWithoutGithubCommentsInput
+  }
+
+  export type GitHubCommentUncheckedCreateWithoutReviewInput = {
+    id?: string
+    githubReviewId: number
+    prNumber: number
+    repositoryId: string
+    commitSha: string
+    findingCount?: number
+    createdAt?: Date | string
+  }
+
+  export type GitHubCommentCreateOrConnectWithoutReviewInput = {
+    where: GitHubCommentWhereUniqueInput
+    create: XOR<GitHubCommentCreateWithoutReviewInput, GitHubCommentUncheckedCreateWithoutReviewInput>
+  }
+
+  export type GitHubStatusCheckCreateWithoutReviewInput = {
+    id?: string
+    commitSha: string
+    state?: $Enums.GitHubCheckState
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GitHubStatusCheckUncheckedCreateWithoutReviewInput = {
+    id?: string
+    commitSha: string
+    state?: $Enums.GitHubCheckState
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GitHubStatusCheckCreateOrConnectWithoutReviewInput = {
+    where: GitHubStatusCheckWhereUniqueInput
+    create: XOR<GitHubStatusCheckCreateWithoutReviewInput, GitHubStatusCheckUncheckedCreateWithoutReviewInput>
+  }
+
   export type RepositoryUpsertWithoutReviewsInput = {
     update: XOR<RepositoryUpdateWithoutReviewsInput, RepositoryUncheckedUpdateWithoutReviewsInput>
     create: XOR<RepositoryCreateWithoutReviewsInput, RepositoryUncheckedCreateWithoutReviewsInput>
@@ -21260,6 +30731,10 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutRepositoriesNestedInput
     team?: TeamUpdateOneWithoutRepositoriesNestedInput
+    webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
   }
 
   export type RepositoryUncheckedUpdateWithoutReviewsInput = {
@@ -21273,6 +30748,10 @@ export namespace Prisma {
     htmlUrl?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
   }
 
   export type UserUpsertWithoutReviewsInput = {
@@ -21357,6 +30836,64 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"ReviewThread"> | Date | string
   }
 
+  export type GitHubCommentUpsertWithoutReviewInput = {
+    update: XOR<GitHubCommentUpdateWithoutReviewInput, GitHubCommentUncheckedUpdateWithoutReviewInput>
+    create: XOR<GitHubCommentCreateWithoutReviewInput, GitHubCommentUncheckedCreateWithoutReviewInput>
+    where?: GitHubCommentWhereInput
+  }
+
+  export type GitHubCommentUpdateToOneWithWhereWithoutReviewInput = {
+    where?: GitHubCommentWhereInput
+    data: XOR<GitHubCommentUpdateWithoutReviewInput, GitHubCommentUncheckedUpdateWithoutReviewInput>
+  }
+
+  export type GitHubCommentUpdateWithoutReviewInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    githubReviewId?: IntFieldUpdateOperationsInput | number
+    prNumber?: IntFieldUpdateOperationsInput | number
+    commitSha?: StringFieldUpdateOperationsInput | string
+    findingCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    repository?: RepositoryUpdateOneRequiredWithoutGithubCommentsNestedInput
+  }
+
+  export type GitHubCommentUncheckedUpdateWithoutReviewInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    githubReviewId?: IntFieldUpdateOperationsInput | number
+    prNumber?: IntFieldUpdateOperationsInput | number
+    repositoryId?: StringFieldUpdateOperationsInput | string
+    commitSha?: StringFieldUpdateOperationsInput | string
+    findingCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GitHubStatusCheckUpsertWithoutReviewInput = {
+    update: XOR<GitHubStatusCheckUpdateWithoutReviewInput, GitHubStatusCheckUncheckedUpdateWithoutReviewInput>
+    create: XOR<GitHubStatusCheckCreateWithoutReviewInput, GitHubStatusCheckUncheckedCreateWithoutReviewInput>
+    where?: GitHubStatusCheckWhereInput
+  }
+
+  export type GitHubStatusCheckUpdateToOneWithWhereWithoutReviewInput = {
+    where?: GitHubStatusCheckWhereInput
+    data: XOR<GitHubStatusCheckUpdateWithoutReviewInput, GitHubStatusCheckUncheckedUpdateWithoutReviewInput>
+  }
+
+  export type GitHubStatusCheckUpdateWithoutReviewInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    commitSha?: StringFieldUpdateOperationsInput | string
+    state?: EnumGitHubCheckStateFieldUpdateOperationsInput | $Enums.GitHubCheckState
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GitHubStatusCheckUncheckedUpdateWithoutReviewInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    commitSha?: StringFieldUpdateOperationsInput | string
+    state?: EnumGitHubCheckStateFieldUpdateOperationsInput | $Enums.GitHubCheckState
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ReviewCreateWithoutThreadsInput = {
     id?: string
     prNumber: number
@@ -21372,6 +30909,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     repository: RepositoryCreateNestedOneWithoutReviewsInput
     user: UserCreateNestedOneWithoutReviewsInput
+    githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
+    githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
   }
 
   export type ReviewUncheckedCreateWithoutThreadsInput = {
@@ -21389,6 +30928,8 @@ export namespace Prisma {
     error?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
+    githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
   }
 
   export type ReviewCreateOrConnectWithoutThreadsInput = {
@@ -21448,6 +30989,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
     user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
+    githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
   }
 
   export type ReviewUncheckedUpdateWithoutThreadsInput = {
@@ -21465,6 +31008,8 @@ export namespace Prisma {
     error?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
+    githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
   }
 
   export type ReviewThreadCommentUpsertWithWhereUniqueWithoutThreadInput = {
@@ -21674,6 +31219,10 @@ export namespace Prisma {
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutRepositoriesInput
     reviews?: ReviewCreateNestedManyWithoutRepositoryInput
+    webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
+    githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
   }
 
   export type RepositoryUncheckedCreateWithoutTeamInput = {
@@ -21687,6 +31236,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     reviews?: ReviewUncheckedCreateNestedManyWithoutRepositoryInput
+    webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
+    githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
   }
 
   export type RepositoryCreateOrConnectWithoutTeamInput = {
@@ -22123,6 +31676,635 @@ export namespace Prisma {
     teamMembers?: TeamMemberUncheckedUpdateManyWithoutUserNestedInput
   }
 
+  export type RepositoryCreateWithoutWebhookConfigInput = {
+    id?: string
+    githubId: number
+    name: string
+    fullName: string
+    private?: boolean
+    htmlUrl: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutRepositoriesInput
+    team?: TeamCreateNestedOneWithoutRepositoriesInput
+    reviews?: ReviewCreateNestedManyWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
+    githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
+  }
+
+  export type RepositoryUncheckedCreateWithoutWebhookConfigInput = {
+    id?: string
+    userId: string
+    teamId?: string | null
+    githubId: number
+    name: string
+    fullName: string
+    private?: boolean
+    htmlUrl: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reviews?: ReviewUncheckedCreateNestedManyWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
+    githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
+  }
+
+  export type RepositoryCreateOrConnectWithoutWebhookConfigInput = {
+    where: RepositoryWhereUniqueInput
+    create: XOR<RepositoryCreateWithoutWebhookConfigInput, RepositoryUncheckedCreateWithoutWebhookConfigInput>
+  }
+
+  export type RepositoryUpsertWithoutWebhookConfigInput = {
+    update: XOR<RepositoryUpdateWithoutWebhookConfigInput, RepositoryUncheckedUpdateWithoutWebhookConfigInput>
+    create: XOR<RepositoryCreateWithoutWebhookConfigInput, RepositoryUncheckedCreateWithoutWebhookConfigInput>
+    where?: RepositoryWhereInput
+  }
+
+  export type RepositoryUpdateToOneWithWhereWithoutWebhookConfigInput = {
+    where?: RepositoryWhereInput
+    data: XOR<RepositoryUpdateWithoutWebhookConfigInput, RepositoryUncheckedUpdateWithoutWebhookConfigInput>
+  }
+
+  export type RepositoryUpdateWithoutWebhookConfigInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    githubId?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    private?: BoolFieldUpdateOperationsInput | boolean
+    htmlUrl?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutRepositoriesNestedInput
+    team?: TeamUpdateOneWithoutRepositoriesNestedInput
+    reviews?: ReviewUpdateManyWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
+  }
+
+  export type RepositoryUncheckedUpdateWithoutWebhookConfigInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    teamId?: NullableStringFieldUpdateOperationsInput | string | null
+    githubId?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    private?: BoolFieldUpdateOperationsInput | boolean
+    htmlUrl?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviews?: ReviewUncheckedUpdateManyWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
+  }
+
+  export type RepositoryCreateWithoutScheduledScanConfigInput = {
+    id?: string
+    githubId: number
+    name: string
+    fullName: string
+    private?: boolean
+    htmlUrl: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutRepositoriesInput
+    team?: TeamCreateNestedOneWithoutRepositoriesInput
+    reviews?: ReviewCreateNestedManyWithoutRepositoryInput
+    webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
+    githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
+  }
+
+  export type RepositoryUncheckedCreateWithoutScheduledScanConfigInput = {
+    id?: string
+    userId: string
+    teamId?: string | null
+    githubId: number
+    name: string
+    fullName: string
+    private?: boolean
+    htmlUrl: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reviews?: ReviewUncheckedCreateNestedManyWithoutRepositoryInput
+    webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
+    githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
+  }
+
+  export type RepositoryCreateOrConnectWithoutScheduledScanConfigInput = {
+    where: RepositoryWhereUniqueInput
+    create: XOR<RepositoryCreateWithoutScheduledScanConfigInput, RepositoryUncheckedCreateWithoutScheduledScanConfigInput>
+  }
+
+  export type ScheduledScanRunCreateWithoutConfigInput = {
+    id?: string
+    triggeredAt?: Date | string
+    completedAt?: Date | string | null
+    status?: $Enums.ScanRunStatus
+    reviewsQueued?: number
+    summary?: string | null
+  }
+
+  export type ScheduledScanRunUncheckedCreateWithoutConfigInput = {
+    id?: string
+    triggeredAt?: Date | string
+    completedAt?: Date | string | null
+    status?: $Enums.ScanRunStatus
+    reviewsQueued?: number
+    summary?: string | null
+  }
+
+  export type ScheduledScanRunCreateOrConnectWithoutConfigInput = {
+    where: ScheduledScanRunWhereUniqueInput
+    create: XOR<ScheduledScanRunCreateWithoutConfigInput, ScheduledScanRunUncheckedCreateWithoutConfigInput>
+  }
+
+  export type ScheduledScanRunCreateManyConfigInputEnvelope = {
+    data: ScheduledScanRunCreateManyConfigInput | ScheduledScanRunCreateManyConfigInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type RepositoryUpsertWithoutScheduledScanConfigInput = {
+    update: XOR<RepositoryUpdateWithoutScheduledScanConfigInput, RepositoryUncheckedUpdateWithoutScheduledScanConfigInput>
+    create: XOR<RepositoryCreateWithoutScheduledScanConfigInput, RepositoryUncheckedCreateWithoutScheduledScanConfigInput>
+    where?: RepositoryWhereInput
+  }
+
+  export type RepositoryUpdateToOneWithWhereWithoutScheduledScanConfigInput = {
+    where?: RepositoryWhereInput
+    data: XOR<RepositoryUpdateWithoutScheduledScanConfigInput, RepositoryUncheckedUpdateWithoutScheduledScanConfigInput>
+  }
+
+  export type RepositoryUpdateWithoutScheduledScanConfigInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    githubId?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    private?: BoolFieldUpdateOperationsInput | boolean
+    htmlUrl?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutRepositoriesNestedInput
+    team?: TeamUpdateOneWithoutRepositoriesNestedInput
+    reviews?: ReviewUpdateManyWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
+  }
+
+  export type RepositoryUncheckedUpdateWithoutScheduledScanConfigInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    teamId?: NullableStringFieldUpdateOperationsInput | string | null
+    githubId?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    private?: BoolFieldUpdateOperationsInput | boolean
+    htmlUrl?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviews?: ReviewUncheckedUpdateManyWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
+  }
+
+  export type ScheduledScanRunUpsertWithWhereUniqueWithoutConfigInput = {
+    where: ScheduledScanRunWhereUniqueInput
+    update: XOR<ScheduledScanRunUpdateWithoutConfigInput, ScheduledScanRunUncheckedUpdateWithoutConfigInput>
+    create: XOR<ScheduledScanRunCreateWithoutConfigInput, ScheduledScanRunUncheckedCreateWithoutConfigInput>
+  }
+
+  export type ScheduledScanRunUpdateWithWhereUniqueWithoutConfigInput = {
+    where: ScheduledScanRunWhereUniqueInput
+    data: XOR<ScheduledScanRunUpdateWithoutConfigInput, ScheduledScanRunUncheckedUpdateWithoutConfigInput>
+  }
+
+  export type ScheduledScanRunUpdateManyWithWhereWithoutConfigInput = {
+    where: ScheduledScanRunScalarWhereInput
+    data: XOR<ScheduledScanRunUpdateManyMutationInput, ScheduledScanRunUncheckedUpdateManyWithoutConfigInput>
+  }
+
+  export type ScheduledScanRunScalarWhereInput = {
+    AND?: ScheduledScanRunScalarWhereInput | ScheduledScanRunScalarWhereInput[]
+    OR?: ScheduledScanRunScalarWhereInput[]
+    NOT?: ScheduledScanRunScalarWhereInput | ScheduledScanRunScalarWhereInput[]
+    id?: StringFilter<"ScheduledScanRun"> | string
+    configId?: StringFilter<"ScheduledScanRun"> | string
+    triggeredAt?: DateTimeFilter<"ScheduledScanRun"> | Date | string
+    completedAt?: DateTimeNullableFilter<"ScheduledScanRun"> | Date | string | null
+    status?: EnumScanRunStatusFilter<"ScheduledScanRun"> | $Enums.ScanRunStatus
+    reviewsQueued?: IntFilter<"ScheduledScanRun"> | number
+    summary?: StringNullableFilter<"ScheduledScanRun"> | string | null
+  }
+
+  export type ScheduledScanConfigCreateWithoutRunsInput = {
+    id?: string
+    enabled?: boolean
+    cadence?: $Enums.ScanCadence
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    repository: RepositoryCreateNestedOneWithoutScheduledScanConfigInput
+  }
+
+  export type ScheduledScanConfigUncheckedCreateWithoutRunsInput = {
+    id?: string
+    repositoryId: string
+    enabled?: boolean
+    cadence?: $Enums.ScanCadence
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ScheduledScanConfigCreateOrConnectWithoutRunsInput = {
+    where: ScheduledScanConfigWhereUniqueInput
+    create: XOR<ScheduledScanConfigCreateWithoutRunsInput, ScheduledScanConfigUncheckedCreateWithoutRunsInput>
+  }
+
+  export type ScheduledScanConfigUpsertWithoutRunsInput = {
+    update: XOR<ScheduledScanConfigUpdateWithoutRunsInput, ScheduledScanConfigUncheckedUpdateWithoutRunsInput>
+    create: XOR<ScheduledScanConfigCreateWithoutRunsInput, ScheduledScanConfigUncheckedCreateWithoutRunsInput>
+    where?: ScheduledScanConfigWhereInput
+  }
+
+  export type ScheduledScanConfigUpdateToOneWithWhereWithoutRunsInput = {
+    where?: ScheduledScanConfigWhereInput
+    data: XOR<ScheduledScanConfigUpdateWithoutRunsInput, ScheduledScanConfigUncheckedUpdateWithoutRunsInput>
+  }
+
+  export type ScheduledScanConfigUpdateWithoutRunsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    cadence?: EnumScanCadenceFieldUpdateOperationsInput | $Enums.ScanCadence
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    repository?: RepositoryUpdateOneRequiredWithoutScheduledScanConfigNestedInput
+  }
+
+  export type ScheduledScanConfigUncheckedUpdateWithoutRunsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    repositoryId?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    cadence?: EnumScanCadenceFieldUpdateOperationsInput | $Enums.ScanCadence
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReviewCreateWithoutGithubCommentInput = {
+    id?: string
+    prNumber: number
+    prTitle: string
+    prUrl: string
+    status?: $Enums.ReviewStatus
+    summary?: string | null
+    riskScore?: number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    repository: RepositoryCreateNestedOneWithoutReviewsInput
+    user: UserCreateNestedOneWithoutReviewsInput
+    threads?: ReviewThreadCreateNestedManyWithoutReviewInput
+    githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
+  }
+
+  export type ReviewUncheckedCreateWithoutGithubCommentInput = {
+    id?: string
+    repositoryId: string
+    userId: string
+    prNumber: number
+    prTitle: string
+    prUrl: string
+    status?: $Enums.ReviewStatus
+    summary?: string | null
+    riskScore?: number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
+    githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
+  }
+
+  export type ReviewCreateOrConnectWithoutGithubCommentInput = {
+    where: ReviewWhereUniqueInput
+    create: XOR<ReviewCreateWithoutGithubCommentInput, ReviewUncheckedCreateWithoutGithubCommentInput>
+  }
+
+  export type RepositoryCreateWithoutGithubCommentsInput = {
+    id?: string
+    githubId: number
+    name: string
+    fullName: string
+    private?: boolean
+    htmlUrl: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutRepositoriesInput
+    team?: TeamCreateNestedOneWithoutRepositoriesInput
+    reviews?: ReviewCreateNestedManyWithoutRepositoryInput
+    webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
+  }
+
+  export type RepositoryUncheckedCreateWithoutGithubCommentsInput = {
+    id?: string
+    userId: string
+    teamId?: string | null
+    githubId: number
+    name: string
+    fullName: string
+    private?: boolean
+    htmlUrl: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reviews?: ReviewUncheckedCreateNestedManyWithoutRepositoryInput
+    webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
+  }
+
+  export type RepositoryCreateOrConnectWithoutGithubCommentsInput = {
+    where: RepositoryWhereUniqueInput
+    create: XOR<RepositoryCreateWithoutGithubCommentsInput, RepositoryUncheckedCreateWithoutGithubCommentsInput>
+  }
+
+  export type ReviewUpsertWithoutGithubCommentInput = {
+    update: XOR<ReviewUpdateWithoutGithubCommentInput, ReviewUncheckedUpdateWithoutGithubCommentInput>
+    create: XOR<ReviewCreateWithoutGithubCommentInput, ReviewUncheckedCreateWithoutGithubCommentInput>
+    where?: ReviewWhereInput
+  }
+
+  export type ReviewUpdateToOneWithWhereWithoutGithubCommentInput = {
+    where?: ReviewWhereInput
+    data: XOR<ReviewUpdateWithoutGithubCommentInput, ReviewUncheckedUpdateWithoutGithubCommentInput>
+  }
+
+  export type ReviewUpdateWithoutGithubCommentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    prNumber?: IntFieldUpdateOperationsInput | number
+    prTitle?: StringFieldUpdateOperationsInput | string
+    prUrl?: StringFieldUpdateOperationsInput | string
+    status?: EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    riskScore?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
+    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
+    githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
+  }
+
+  export type ReviewUncheckedUpdateWithoutGithubCommentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    repositoryId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    prNumber?: IntFieldUpdateOperationsInput | number
+    prTitle?: StringFieldUpdateOperationsInput | string
+    prUrl?: StringFieldUpdateOperationsInput | string
+    status?: EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    riskScore?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
+    githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
+  }
+
+  export type RepositoryUpsertWithoutGithubCommentsInput = {
+    update: XOR<RepositoryUpdateWithoutGithubCommentsInput, RepositoryUncheckedUpdateWithoutGithubCommentsInput>
+    create: XOR<RepositoryCreateWithoutGithubCommentsInput, RepositoryUncheckedCreateWithoutGithubCommentsInput>
+    where?: RepositoryWhereInput
+  }
+
+  export type RepositoryUpdateToOneWithWhereWithoutGithubCommentsInput = {
+    where?: RepositoryWhereInput
+    data: XOR<RepositoryUpdateWithoutGithubCommentsInput, RepositoryUncheckedUpdateWithoutGithubCommentsInput>
+  }
+
+  export type RepositoryUpdateWithoutGithubCommentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    githubId?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    private?: BoolFieldUpdateOperationsInput | boolean
+    htmlUrl?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutRepositoriesNestedInput
+    team?: TeamUpdateOneWithoutRepositoriesNestedInput
+    reviews?: ReviewUpdateManyWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
+  }
+
+  export type RepositoryUncheckedUpdateWithoutGithubCommentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    teamId?: NullableStringFieldUpdateOperationsInput | string | null
+    githubId?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    private?: BoolFieldUpdateOperationsInput | boolean
+    htmlUrl?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviews?: ReviewUncheckedUpdateManyWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
+  }
+
+  export type ReviewCreateWithoutGithubStatusCheckInput = {
+    id?: string
+    prNumber: number
+    prTitle: string
+    prUrl: string
+    status?: $Enums.ReviewStatus
+    summary?: string | null
+    riskScore?: number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    repository: RepositoryCreateNestedOneWithoutReviewsInput
+    user: UserCreateNestedOneWithoutReviewsInput
+    threads?: ReviewThreadCreateNestedManyWithoutReviewInput
+    githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
+  }
+
+  export type ReviewUncheckedCreateWithoutGithubStatusCheckInput = {
+    id?: string
+    repositoryId: string
+    userId: string
+    prNumber: number
+    prTitle: string
+    prUrl: string
+    status?: $Enums.ReviewStatus
+    summary?: string | null
+    riskScore?: number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
+    githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
+  }
+
+  export type ReviewCreateOrConnectWithoutGithubStatusCheckInput = {
+    where: ReviewWhereUniqueInput
+    create: XOR<ReviewCreateWithoutGithubStatusCheckInput, ReviewUncheckedCreateWithoutGithubStatusCheckInput>
+  }
+
+  export type ReviewUpsertWithoutGithubStatusCheckInput = {
+    update: XOR<ReviewUpdateWithoutGithubStatusCheckInput, ReviewUncheckedUpdateWithoutGithubStatusCheckInput>
+    create: XOR<ReviewCreateWithoutGithubStatusCheckInput, ReviewUncheckedCreateWithoutGithubStatusCheckInput>
+    where?: ReviewWhereInput
+  }
+
+  export type ReviewUpdateToOneWithWhereWithoutGithubStatusCheckInput = {
+    where?: ReviewWhereInput
+    data: XOR<ReviewUpdateWithoutGithubStatusCheckInput, ReviewUncheckedUpdateWithoutGithubStatusCheckInput>
+  }
+
+  export type ReviewUpdateWithoutGithubStatusCheckInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    prNumber?: IntFieldUpdateOperationsInput | number
+    prTitle?: StringFieldUpdateOperationsInput | string
+    prUrl?: StringFieldUpdateOperationsInput | string
+    status?: EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    riskScore?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
+    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
+    githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
+  }
+
+  export type ReviewUncheckedUpdateWithoutGithubStatusCheckInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    repositoryId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    prNumber?: IntFieldUpdateOperationsInput | number
+    prTitle?: StringFieldUpdateOperationsInput | string
+    prUrl?: StringFieldUpdateOperationsInput | string
+    status?: EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    riskScore?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
+    githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
+  }
+
+  export type RepositoryCreateWithoutBranchProtectionRecsInput = {
+    id?: string
+    githubId: number
+    name: string
+    fullName: string
+    private?: boolean
+    htmlUrl: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutRepositoriesInput
+    team?: TeamCreateNestedOneWithoutRepositoriesInput
+    reviews?: ReviewCreateNestedManyWithoutRepositoryInput
+    webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
+    githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
+  }
+
+  export type RepositoryUncheckedCreateWithoutBranchProtectionRecsInput = {
+    id?: string
+    userId: string
+    teamId?: string | null
+    githubId: number
+    name: string
+    fullName: string
+    private?: boolean
+    htmlUrl: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reviews?: ReviewUncheckedCreateNestedManyWithoutRepositoryInput
+    webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
+    githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
+  }
+
+  export type RepositoryCreateOrConnectWithoutBranchProtectionRecsInput = {
+    where: RepositoryWhereUniqueInput
+    create: XOR<RepositoryCreateWithoutBranchProtectionRecsInput, RepositoryUncheckedCreateWithoutBranchProtectionRecsInput>
+  }
+
+  export type RepositoryUpsertWithoutBranchProtectionRecsInput = {
+    update: XOR<RepositoryUpdateWithoutBranchProtectionRecsInput, RepositoryUncheckedUpdateWithoutBranchProtectionRecsInput>
+    create: XOR<RepositoryCreateWithoutBranchProtectionRecsInput, RepositoryUncheckedCreateWithoutBranchProtectionRecsInput>
+    where?: RepositoryWhereInput
+  }
+
+  export type RepositoryUpdateToOneWithWhereWithoutBranchProtectionRecsInput = {
+    where?: RepositoryWhereInput
+    data: XOR<RepositoryUpdateWithoutBranchProtectionRecsInput, RepositoryUncheckedUpdateWithoutBranchProtectionRecsInput>
+  }
+
+  export type RepositoryUpdateWithoutBranchProtectionRecsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    githubId?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    private?: BoolFieldUpdateOperationsInput | boolean
+    htmlUrl?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutRepositoriesNestedInput
+    team?: TeamUpdateOneWithoutRepositoriesNestedInput
+    reviews?: ReviewUpdateManyWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
+  }
+
+  export type RepositoryUncheckedUpdateWithoutBranchProtectionRecsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    teamId?: NullableStringFieldUpdateOperationsInput | string | null
+    githubId?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    private?: BoolFieldUpdateOperationsInput | boolean
+    htmlUrl?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviews?: ReviewUncheckedUpdateManyWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
+  }
+
   export type SessionCreateManyUserInput = {
     id: string
     expiresAt: Date | string
@@ -22287,6 +32469,10 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     team?: TeamUpdateOneWithoutRepositoriesNestedInput
     reviews?: ReviewUpdateManyWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
   }
 
   export type RepositoryUncheckedUpdateWithoutUserInput = {
@@ -22300,6 +32486,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviews?: ReviewUncheckedUpdateManyWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
   }
 
   export type RepositoryUncheckedUpdateManyWithoutUserInput = {
@@ -22329,6 +32519,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
+    githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
+    githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
   }
 
   export type ReviewUncheckedUpdateWithoutUserInput = {
@@ -22346,6 +32538,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
+    githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
+    githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
   }
 
   export type ReviewUncheckedUpdateManyWithoutUserInput = {
@@ -22455,6 +32649,26 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type GitHubCommentCreateManyRepositoryInput = {
+    id?: string
+    reviewId: string
+    githubReviewId: number
+    prNumber: number
+    commitSha: string
+    findingCount?: number
+    createdAt?: Date | string
+  }
+
+  export type BranchProtectionRecommendationCreateManyRepositoryInput = {
+    id?: string
+    rule: string
+    rationale: string
+    priority: $Enums.RecommendationPriority
+    dismissed?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type ReviewUpdateWithoutRepositoryInput = {
     id?: StringFieldUpdateOperationsInput | string
     prNumber?: IntFieldUpdateOperationsInput | number
@@ -22470,6 +32684,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutReviewsNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
+    githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
+    githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
   }
 
   export type ReviewUncheckedUpdateWithoutRepositoryInput = {
@@ -22487,6 +32703,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
+    githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
+    githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
   }
 
   export type ReviewUncheckedUpdateManyWithoutRepositoryInput = {
@@ -22501,6 +32719,66 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GitHubCommentUpdateWithoutRepositoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    githubReviewId?: IntFieldUpdateOperationsInput | number
+    prNumber?: IntFieldUpdateOperationsInput | number
+    commitSha?: StringFieldUpdateOperationsInput | string
+    findingCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    review?: ReviewUpdateOneRequiredWithoutGithubCommentNestedInput
+  }
+
+  export type GitHubCommentUncheckedUpdateWithoutRepositoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewId?: StringFieldUpdateOperationsInput | string
+    githubReviewId?: IntFieldUpdateOperationsInput | number
+    prNumber?: IntFieldUpdateOperationsInput | number
+    commitSha?: StringFieldUpdateOperationsInput | string
+    findingCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GitHubCommentUncheckedUpdateManyWithoutRepositoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewId?: StringFieldUpdateOperationsInput | string
+    githubReviewId?: IntFieldUpdateOperationsInput | number
+    prNumber?: IntFieldUpdateOperationsInput | number
+    commitSha?: StringFieldUpdateOperationsInput | string
+    findingCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BranchProtectionRecommendationUpdateWithoutRepositoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rule?: StringFieldUpdateOperationsInput | string
+    rationale?: StringFieldUpdateOperationsInput | string
+    priority?: EnumRecommendationPriorityFieldUpdateOperationsInput | $Enums.RecommendationPriority
+    dismissed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BranchProtectionRecommendationUncheckedUpdateWithoutRepositoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rule?: StringFieldUpdateOperationsInput | string
+    rationale?: StringFieldUpdateOperationsInput | string
+    priority?: EnumRecommendationPriorityFieldUpdateOperationsInput | $Enums.RecommendationPriority
+    dismissed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rule?: StringFieldUpdateOperationsInput | string
+    rationale?: StringFieldUpdateOperationsInput | string
+    priority?: EnumRecommendationPriorityFieldUpdateOperationsInput | $Enums.RecommendationPriority
+    dismissed?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22640,6 +32918,10 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutRepositoriesNestedInput
     reviews?: ReviewUpdateManyWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
   }
 
   export type RepositoryUncheckedUpdateWithoutTeamInput = {
@@ -22653,6 +32935,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviews?: ReviewUncheckedUpdateManyWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
   }
 
   export type RepositoryUncheckedUpdateManyWithoutTeamInput = {
@@ -22707,6 +32993,42 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ScheduledScanRunCreateManyConfigInput = {
+    id?: string
+    triggeredAt?: Date | string
+    completedAt?: Date | string | null
+    status?: $Enums.ScanRunStatus
+    reviewsQueued?: number
+    summary?: string | null
+  }
+
+  export type ScheduledScanRunUpdateWithoutConfigInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    triggeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumScanRunStatusFieldUpdateOperationsInput | $Enums.ScanRunStatus
+    reviewsQueued?: IntFieldUpdateOperationsInput | number
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ScheduledScanRunUncheckedUpdateWithoutConfigInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    triggeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumScanRunStatusFieldUpdateOperationsInput | $Enums.ScanRunStatus
+    reviewsQueued?: IntFieldUpdateOperationsInput | number
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ScheduledScanRunUncheckedUpdateManyWithoutConfigInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    triggeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumScanRunStatusFieldUpdateOperationsInput | $Enums.ScanRunStatus
+    reviewsQueued?: IntFieldUpdateOperationsInput | number
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 
