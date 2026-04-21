@@ -12,10 +12,6 @@ export class GitHubAPIError extends Error {
   }
 }
 
-/**
- * Shared fetch wrapper that includes auth headers and checks for errors.
- * Throws GitHubAPIError with rate-limit metadata on failure.
- */
 async function githubFetch(
   url: string,
   accessToken: string,
@@ -146,19 +142,16 @@ async function fetchAllPages<T>(
 export async function fetchGitHubRepos(
   accessToken: string,
 ): Promise<GitHubRepo[]> {
-  // Fetch user repos (owned, collaborator, and org-member repos)
   const userRepos = await fetchAllPages<GitHubRepo>(
     "https://api.github.com/user/repos?sort=updated&affiliation=owner,collaborator,organization_member",
     accessToken,
   );
 
-  // Fetch all orgs the user belongs to
   const orgs = await fetchAllPages<GitHubOrg>(
     "https://api.github.com/user/orgs",
     accessToken,
   );
 
-  // Fetch repos from each org (includes repos visible to the user in that org)
   const orgRepoArrays = await Promise.all(
     orgs.map((org) =>
       fetchAllPages<GitHubRepo>(
@@ -168,7 +161,6 @@ export async function fetchGitHubRepos(
     ),
   );
 
-  // Deduplicate by repo ID
   const repoMap = new Map<number, GitHubRepo>();
   for (const repo of userRepos) {
     repoMap.set(repo.id, repo);
@@ -198,9 +190,6 @@ export async function fetchPullRequests(
 
   const pulls = (await response.json()) as GitHubPullRequest[];
 
-  // The list endpoint doesn't include additions/deletions/changed_files,
-  // so we fetch each PR individually to get those stats.
-  // Batch in groups of 5 to avoid hitting GitHub rate limits.
   const batchSize = 5;
   const results: GitHubPullRequest[] = [];
 
@@ -229,9 +218,6 @@ export async function fetchPullRequest(
   return (await response.json()) as GitHubPullRequest;
 }
 
-/**
- * Convenience wrapper for fetching a pull request when only full repo name is known.
- */
 export async function fetchPullRequestByFullName(
   accessToken: string,
   repoFullName: string,
@@ -310,10 +296,6 @@ export interface GitHubBranch {
   protected: boolean;
 }
 
-/**
- * Fetches commits from a GitHub repository with pagination support.
- * Includes parent commits for branch visualization.
- */
 export async function fetchCommits(
   accessToken: string,
   owner: string,
@@ -335,9 +317,6 @@ export async function fetchCommits(
   return (await response.json()) as GitHubCommit[];
 }
 
-/**
- * Fetches a single commit with full details including diff stats.
- */
 export async function fetchCommit(
   accessToken: string,
   owner: string,
@@ -351,9 +330,6 @@ export async function fetchCommit(
   return (await response.json()) as GitHubCommit;
 }
 
-/**
- * Fetches all branches from a GitHub repository.
- */
 export async function fetchBranches(
   accessToken: string,
   owner: string,
@@ -365,9 +341,6 @@ export async function fetchBranches(
   );
 }
 
-/**
- * Fetches the default branch of a repository.
- */
 export async function fetchDefaultBranch(
   accessToken: string,
   owner: string,
@@ -381,13 +354,6 @@ export async function fetchDefaultBranch(
   return data.default_branch;
 }
 
-// ─── Phase 9: CI/CD & Automation ──────────────────────────────────────────────
-
-/**
- * Registers a pull_request webhook on a GitHub repository.
- * Returns the GitHub webhook ID assigned by the API.
- * Requires: admin:repo_hook OAuth scope.
- */
 export async function registerWebhook(
   accessToken: string,
   repoFullName: string,
@@ -428,11 +394,6 @@ export async function registerWebhook(
   return data.id;
 }
 
-/**
- * Deletes a previously registered webhook from a GitHub repository.
- * Treats HTTP 404 as a no-op (webhook may have been deleted on GitHub directly).
- * Requires: admin:repo_hook OAuth scope.
- */
 export async function deleteWebhook(
   accessToken: string,
   repoFullName: string,
@@ -457,11 +418,6 @@ export async function deleteWebhook(
   }
 }
 
-/**
- * Posts or updates a commit status check on GitHub.
- * Builds target_url from APP_BASE_URL env var.
- * Requires: repo:status OAuth scope.
- */
 export async function postCommitStatus(
   accessToken: string,
   repoFullName: string,
@@ -473,7 +429,9 @@ export async function postCommitStatus(
   const [owner, repo] = repoFullName.split("/");
   const appBaseUrl = process.env.APP_BASE_URL ?? process.env.BETTER_AUTH_URL;
   if (!appBaseUrl) {
-    throw new Error("APP_BASE_URL (or BETTER_AUTH_URL) is required to post commit statuses");
+    throw new Error(
+      "APP_BASE_URL (or BETTER_AUTH_URL) is required to post commit statuses",
+    );
   }
   const targetUrl = `${appBaseUrl}/reviews/${reviewId}`;
 
@@ -508,12 +466,6 @@ export type ReviewComment = {
   body: string;
 };
 
-/**
- * Submits AI review findings as a single GitHub PR review with inline comments.
- * Review event is "COMMENT" (neutral, does not request changes or approve).
- * Returns the GitHub PR review ID.
- * Requires: repo OAuth scope.
- */
 export async function submitPullRequestReview(
   accessToken: string,
   repoFullName: string,
@@ -555,11 +507,6 @@ export async function submitPullRequestReview(
   return data.id;
 }
 
-/**
- * Dismisses a previously submitted PR review.
- * Treats HTTP 404 as a no-op (review already dismissed or deleted).
- * Requires: repo OAuth scope.
- */
 export async function dismissGitHubReview(
   accessToken: string,
   repoFullName: string,
@@ -598,10 +545,6 @@ export type OpenPullRequest = {
   head: { sha: string };
 };
 
-/**
- * Lists all open, non-draft pull requests for a repository.
- * Requires: repo OAuth scope.
- */
 export async function listOpenPullRequests(
   accessToken: string,
   repoFullName: string,
@@ -617,4 +560,3 @@ export async function listOpenPullRequests(
   })[];
   return pulls.filter((pr) => !pr.draft);
 }
-

@@ -101,13 +101,11 @@ function formatRelative(date: Date | string): string {
   });
 }
 
-// ─── Main Component ──────────────────────────────────────────────
 export default function SettingsPage() {
   const router = useRouter();
   const utils = trpc.useUtils();
   const { theme, setTheme } = useTheme();
 
-  // ── Server state ──
   const { data: sessions, isLoading: sessionsLoading } =
     trpc.settings.getSessions.useQuery();
 
@@ -148,7 +146,6 @@ export default function SettingsPage() {
     },
   });
 
-  // ── Client state ──
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState("");
@@ -156,11 +153,8 @@ export default function SettingsPage() {
   const [revokeTarget, setRevokeTarget] = useState<string | null>(null);
   const [showAllSessions, setShowAllSessions] = useState(false);
 
-  // ── Code review preferences (database-backed) ──
-  const {
-    data: prefs,
-    isLoading: prefsLoading,
-  } = trpc.settings.getPreferences.useQuery();
+  const { data: prefs, isLoading: prefsLoading } =
+    trpc.settings.getPreferences.useQuery();
 
   const updatePreferencesMutation = trpc.settings.updatePreferences.useMutation(
     {
@@ -183,8 +177,6 @@ export default function SettingsPage() {
     [updatePreferencesMutation],
   );
 
-
-  // ── Theme change with view-transition ──
   const handleThemeChange = useCallback(
     (newTheme: string, event?: React.MouseEvent) => {
       const x = event?.clientX ?? window.innerWidth / 2;
@@ -237,7 +229,6 @@ export default function SettingsPage() {
 
   return (
     <div className="max-w-3xl mx-auto">
-      {/* Page Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3">
           <div className="flex items-center justify-center size-10 rounded-lg bg-orange-500/10">
@@ -252,7 +243,6 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* Toast Messages */}
       {message && (
         <div className="mb-6 flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-700 dark:border-green-800 dark:bg-green-950/30 dark:text-green-400">
           <Check className="size-4 shrink-0" />
@@ -289,8 +279,8 @@ export default function SettingsPage() {
               Code Review Preferences
             </CardTitle>
             <CardDescription>
-              Configure default behavior for AI-powered code reviews. Synced
-              to your account.
+              Configure default behavior for AI-powered code reviews. Synced to
+              your account.
             </CardDescription>
           </CardHeader>
           <CardContent className="pb-6">
@@ -302,7 +292,6 @@ export default function SettingsPage() {
               </div>
             ) : (
               <div className="space-y-6">
-                {/* Review Depth */}
                 <div className="space-y-2">
                   <Label className="text-xs text-muted-foreground uppercase tracking-wider">
                     Review Depth
@@ -359,7 +348,6 @@ export default function SettingsPage() {
 
                 <Separator />
 
-                {/* Default Language */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="flex items-center justify-center size-8 rounded-md bg-blue-500/10">
@@ -417,7 +405,9 @@ export default function SettingsPage() {
                   },
                 ].map((item) => {
                   const Icon = item.icon;
-                  const checked = !!(prefs as Record<string, unknown>)?.[item.key];
+                  const checked = !!(prefs as Record<string, unknown>)?.[
+                    item.key
+                  ];
                   return (
                     <div
                       key={item.key}
@@ -675,7 +665,6 @@ export default function SettingsPage() {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* ═══ Delete Account Confirmation ═══ */}
       <AlertDialog
         open={showDeleteDialog}
         onOpenChange={(open) => {

@@ -55,7 +55,6 @@ export default function TeamsPage() {
       <div className="pointer-events-none absolute inset-0 -z-10 h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#1f2937_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-50"></div>
 
       <div className="space-y-8 max-w-6xl mx-auto pb-12 pt-4 px-4 sm:px-6 lg:px-8">
-        {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
             <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-br from-foreground via-foreground/90 to-muted-foreground bg-clip-text text-transparent drop-shadow-sm">
@@ -172,11 +171,9 @@ export default function TeamsPage() {
           </div>
         )}
 
-        {/* Empty state */}
         {teams.data && teams.data.length === 0 && (
           <Card className="border-dashed bg-muted/10 shadow-sm border-border/60 animate-in fade-in zoom-in-95 duration-700">
             <CardContent className="py-24 text-center flex flex-col items-center justify-center relative overflow-hidden">
-              {/* Background glowing orb */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
 
               <div className="relative size-24 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center mb-6 shadow-inner border border-primary/10 rotate-3 transition-transform hover:rotate-6 duration-500">
@@ -208,7 +205,6 @@ export default function TeamsPage() {
           </Card>
         )}
 
-        {/* No search results */}
         {teams.data && teams.data.length > 0 && filteredTeams.length === 0 && (
           <div className="text-center py-12 animate-in fade-in duration-500">
             <div className="size-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
@@ -233,7 +229,6 @@ export default function TeamsPage() {
           </div>
         )}
 
-        {/* Team cards */}
         {teams.data && filteredTeams.length > 0 && (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filteredTeams.map((team, index) => (

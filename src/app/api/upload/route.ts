@@ -14,18 +14,18 @@ const ALLOWED_TYPES = [
   "image/svg+xml",
 ];
 
-/** Whitelist of allowed file extensions to prevent malicious uploads */
-const ALLOWED_EXTENSIONS = new Set(["jpg", "jpeg", "png", "gif", "webp", "svg"]);
+const ALLOWED_EXTENSIONS = new Set([
+  "jpg",
+  "jpeg",
+  "png",
+  "gif",
+  "webp",
+  "svg",
+]);
 
-/**
- * When BLOB_READ_WRITE_TOKEN is set (Vercel production / preview) we upload to
- * Vercel Blob Storage.  Otherwise we fall back to the local filesystem so
- * development works without any external service.
- */
 const useBlob = !!process.env.BLOB_READ_WRITE_TOKEN;
 
 export async function POST(request: NextRequest) {
-  // Authenticate user
   const session = await auth.api.getSession({ headers: request.headers });
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -53,8 +53,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Generate unique filename with sanitized extension
-    const rawExt = file.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "") || "png";
+    const rawExt =
+      file.name
+        .split(".")
+        .pop()
+        ?.toLowerCase()
+        .replace(/[^a-z0-9]/g, "") || "png";
     const ext = ALLOWED_EXTENSIONS.has(rawExt) ? rawExt : "png";
     const hash = crypto.randomBytes(8).toString("hex");
     const filename = `avatars/${session.user.id}-${hash}.${ext}`;
@@ -62,14 +66,12 @@ export async function POST(request: NextRequest) {
     let url: string;
 
     if (useBlob) {
-      // ── Vercel Blob Storage (production) ──────────────────────────
       const blob = await put(filename, file, {
         access: "public",
         addRandomSuffix: false,
       });
       url = blob.url;
     } else {
-      // ── Local filesystem (development) ────────────────────────────
       const uploadDir = path.join(
         process.cwd(),
         "public",

@@ -48,7 +48,6 @@ export function useTeam({ teamId, onError }: UseTeamOptions = {}) {
 
   const myRepos = trpc.repository.list.useQuery();
 
-  // Mutations
   const createTeam = trpc.team.create.useMutation({
     onSuccess: () => {
       utils.team.list.invalidate();
@@ -127,30 +126,25 @@ export function useTeam({ teamId, onError }: UseTeamOptions = {}) {
     onError: (err) => onError?.(new Error(err.message)),
   });
 
-  // Computed values
   const isOwnerOrAdmin =
     team.data?.currentUserRole === "OWNER" ||
     team.data?.currentUserRole === "ADMIN";
   const isOwner = team.data?.currentUserRole === "OWNER";
 
-  // Get repos that can be shared with this team
   const sharableRepos =
     myRepos.data?.filter((r) => !r.team || r.team.id !== teamId) ?? [];
 
   return {
-    // Queries
     teams,
     team,
     pendingActions,
     myRequests,
     myRepos,
 
-    // Computed
     isOwnerOrAdmin,
     isOwner,
     sharableRepos,
 
-    // Mutations
     createTeam,
     deleteTeam,
     inviteMember,
@@ -162,12 +156,10 @@ export function useTeam({ teamId, onError }: UseTeamOptions = {}) {
     rejectAction,
     requestAction,
 
-    // Utils
     utils,
   };
 }
 
-// Hook for managing team list state (search, filter)
 export function useTeamList() {
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState<"ALL" | TeamRole>("ALL");

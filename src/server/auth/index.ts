@@ -5,12 +5,10 @@ import { db } from "../db";
 const getTrustedOrigins = () => {
   const origins = ["http://localhost:3000"];
 
-  // Add production URL if set
   if (process.env.BETTER_AUTH_URL) {
     origins.push(process.env.BETTER_AUTH_URL);
   }
 
-  // Also add Vercel's default preview/deployment URLs if available
   if (process.env.VERCEL_URL) {
     origins.push(`https://${process.env.VERCEL_URL}`);
   }
@@ -29,7 +27,14 @@ export const auth = betterAuth({
     github: {
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
-      scope: ["read:user", "user:email", "repo", "read:org", "admin:repo_hook", "repo:status"],
+      scope: [
+        "read:user",
+        "user:email",
+        "repo",
+        "read:org",
+        "admin:repo_hook",
+        "repo:status",
+      ],
     },
     ...(process.env.DISCORD_CLIENT_ID && process.env.DISCORD_CLIENT_SECRET
       ? {

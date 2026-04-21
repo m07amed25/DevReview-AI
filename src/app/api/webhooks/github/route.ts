@@ -29,12 +29,13 @@ const pullRequestPayloadSchema = z.object({
 function verifySignature(payload: string, signature: string | null): boolean {
   const secret = process.env.GITHUB_WEBHOOK_SECRET;
   if (!secret) {
-    // In production, always require webhook secret — fail closed.
     if (process.env.NODE_ENV === "production") {
       console.error("GITHUB_WEBHOOK_SECRET is not set in production!");
       return false;
     }
-    console.warn("GITHUB_WEBHOOK_SECRET not set, skipping verification (dev only)");
+    console.warn(
+      "GITHUB_WEBHOOK_SECRET not set, skipping verification (dev only)",
+    );
     return true;
   }
 
@@ -56,12 +57,10 @@ export async function POST(request: NextRequest) {
   const signature = request.headers.get("x-hub-signature-256");
   const event = request.headers.get("x-github-event");
 
-  // Verify the webhook signature
   if (!verifySignature(payload, signature)) {
     return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
   }
 
-  // Only handle pull_request events
   if (event !== "pull_request") {
     return NextResponse.json({ message: "Event ignored" }, { status: 200 });
   }
@@ -73,7 +72,6 @@ export async function POST(request: NextRequest) {
 
   const data = parsedPayload.data;
 
-  // Only trigger on open, synchronize (new commits), or reopen
   if (!["opened", "synchronize", "reopened"].includes(data.action)) {
     return NextResponse.json(
       { message: `Action '${data.action}' ignored` },
@@ -81,12 +79,10 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Skip draft PRs
   if (data.pull_request.draft) {
     return NextResponse.json({ message: "Draft PR ignored" }, { status: 200 });
   }
 
-  // Find the repository in our database
   const repository = await db.repository.findFirst({
     where: { githubId: data.repository.id },
     include: { user: true },
@@ -105,7 +101,10 @@ export async function POST(request: NextRequest) {
   });
 
   if (!webhookConfig?.enabled) {
-    return NextResponse.json({ message: "Auto-review disabled" }, { status: 200 });
+    return NextResponse.json(
+      { message: "Auto-review disabled" },
+      { status: 200 },
+    );
   }
 
   const accessToken = await getGitHubAccessToken(repository.userId);
@@ -116,7 +115,6 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Fetch latest PR details from GitHub so webhook + website-triggered reviews share identical source data.
   let livePr = null as {
     number: number;
     title: string;
@@ -131,7 +129,6 @@ export async function POST(request: NextRequest) {
       data.pull_request.number,
     );
   } catch {
-    // Fall back to webhook payload if GitHub API transiently fails.
     livePr = {
       number: data.pull_request.number,
       title: data.pull_request.title,
@@ -140,7 +137,6 @@ export async function POST(request: NextRequest) {
     };
   }
 
-  // Check if there's already a review in progress
   const existingReview = await db.review.findFirst({
     where: {
       repositoryId: repository.id,
@@ -166,7 +162,6 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  // Create a new review record
   const review = await db.review.create({
     data: {
       repositoryId: repository.id,
@@ -178,7 +173,6 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  // Trigger the Inngest job
   await inngest.send({
     name: "review/pr.requested",
     data: {
@@ -197,7 +191,6 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  // Post pending status check in background (do not block webhook response).
   void (async () => {
     try {
       await postCommitStatus(

@@ -62,7 +62,6 @@ export default function SignUpPage() {
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Entrance animation
     gsap.fromTo(
       cardRef.current,
       { opacity: 0, y: 30, scale: 0.95 },
@@ -164,7 +163,6 @@ export default function SignUpPage() {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center p-4">
-      {/* Animated background */}
       <div className="fixed inset-0 -z-10" aria-hidden="true">
         <AuroraBackground />
         <GridBackground />
@@ -378,7 +376,6 @@ export default function SignUpPage() {
             </Link>
           </p>
 
-          {/* Developer Credit */}
           <div className="mt-6 pt-4 border-t border-border/30 text-center pb-4">
             <p className="text-xs text-muted-foreground">
               Developed by{" "}

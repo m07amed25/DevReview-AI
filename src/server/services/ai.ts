@@ -118,39 +118,37 @@ function buildSystemPrompt(preferences?: ReviewPreferences): string {
   if (preferences) {
     if (preferences.reviewDepth === "quick") {
       parts.push(
-          "\nIMPORTANT: Provide a quick, high-level overview. Focus only on critical and high severity issues. Keep comments brief and limit to the most important findings.",
+        "\nIMPORTANT: Provide a quick, high-level overview. Focus only on critical and high severity issues. Keep comments brief and limit to the most important findings.",
       );
     } else if (preferences.reviewDepth === "thorough") {
       parts.push(
-          "\nIMPORTANT: Provide an exhaustive, detailed review. Examine every changed line carefully. Include low-severity style suggestions and minor improvements. Be thorough in your analysis and provide detailed explanations.",
+        "\nIMPORTANT: Provide an exhaustive, detailed review. Examine every changed line carefully. Include low-severity style suggestions and minor improvements. Be thorough in your analysis and provide detailed explanations.",
       );
     }
 
     if (preferences.defaultLanguage && preferences.defaultLanguage !== "auto") {
       parts.push(
-          `\nNote: The primary language context for this project is ${preferences.defaultLanguage}. Use this context for language-specific best practices.`,
+        `\nNote: The primary language context for this project is ${preferences.defaultLanguage}. Use this context for language-specific best practices.`,
       );
     }
 
-    // Security checks
     if (preferences.includeSecurityChecks === false) {
       parts.push(
-          "\nDo NOT include security-related comments. Skip any security vulnerability analysis.",
+        "\nDo NOT include security-related comments. Skip any security vulnerability analysis.",
       );
     } else {
       parts.push(
-          "\nPay special attention to security vulnerabilities: injection attacks, authentication/authorization issues, sensitive data exposure, and insecure configurations.",
+        "\nPay special attention to security vulnerabilities: injection attacks, authentication/authorization issues, sensitive data exposure, and insecure configurations.",
       );
     }
 
-    // Performance suggestions
     if (preferences.includePerfSuggestions === false) {
       parts.push(
-          "\nDo NOT include performance-related comments. Skip any performance optimization suggestions.",
+        "\nDo NOT include performance-related comments. Skip any performance optimization suggestions.",
       );
     } else {
       parts.push(
-          "\nInclude performance analysis: identify potential bottlenecks, unnecessary computations, memory leaks, and suggest optimizations.",
+        "\nInclude performance analysis: identify potential bottlenecks, unnecessary computations, memory leaks, and suggest optimizations.",
       );
     }
   }
@@ -158,37 +156,25 @@ function buildSystemPrompt(preferences?: ReviewPreferences): string {
   return parts.join("\n");
 }
 
-// Stay within Groq free tier's 12k TPM limit.
-// For code, ~1 token ≈ 2-3 chars (not 4 — code has many short tokens).
-// System prompt ≈ 1500-2000 tokens, max_completion_tokens = 1500 → leaves ~8500 for user prompt.
-// 8500 tokens × 2.5 chars/token ≈ 21k chars, but we cap conservatively at 6k
-// to leave headroom for the prompt wrapper, preferences, and safety margin.
 const MAX_DIFF_CHARS = 6_000;
 const MAX_PATCH_CHARS_PER_FILE = 2_500;
 
 function truncateDiff(diff: string): string {
   if (diff.length <= MAX_DIFF_CHARS) return diff;
   return (
-      diff.slice(0, MAX_DIFF_CHARS) +
-      "\n\n... [diff truncated — file too large for full review] ..."
+    diff.slice(0, MAX_DIFF_CHARS) +
+    "\n\n... [diff truncated — file too large for full review] ..."
   );
 }
 
-/**
- * Attempt to extract valid JSON from a response that may contain
- * markdown code fences (```json ... ```) or other wrapper text.
- */
 function extractJSON(content: string): unknown {
-  // First try direct parse
   try {
     return JSON.parse(content);
   } catch {
-    // Try to extract from markdown code fences
     const fenceMatch = content.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/);
     if (fenceMatch?.[1]) {
       return JSON.parse(fenceMatch[1]);
     }
-    // Try to find first { ... } block
     const braceMatch = content.match(/\{[\s\S]*\}/);
     if (braceMatch?.[0]) {
       return JSON.parse(braceMatch[0]);
@@ -217,23 +203,23 @@ async function callGroq(
 }
 
 export async function reviewCode(
-    prTitle: string,
-    files: FileChange[],
-    preferences?: ReviewPreferences,
+  prTitle: string,
+  files: FileChange[],
+  preferences?: ReviewPreferences,
 ): Promise<ReviewResult> {
   const diffContent = truncateDiff(
-      files
-          .filter((f) => f.patch)
-          .map((f) => {
-            let patch = f.patch!;
-            if (patch.length > MAX_PATCH_CHARS_PER_FILE) {
-              patch =
-                  patch.slice(0, MAX_PATCH_CHARS_PER_FILE) +
-                  "\n... [patch truncated — file too large] ...";
-            }
-            return `### ${f.filename} (${f.status})\n\`\`\`diff\n${patch}\n\`\`\``;
-          })
-          .join("\n\n"),
+    files
+      .filter((f) => f.patch)
+      .map((f) => {
+        let patch = f.patch!;
+        if (patch.length > MAX_PATCH_CHARS_PER_FILE) {
+          patch =
+            patch.slice(0, MAX_PATCH_CHARS_PER_FILE) +
+            "\n... [patch truncated — file too large] ...";
+        }
+        return `### ${f.filename} (${f.status})\n\`\`\`diff\n${patch}\n\`\`\``;
+      })
+      .join("\n\n"),
   );
 
   if (!diffContent.trim()) {
@@ -256,17 +242,34 @@ ${diffContent}`;
 
   let content: string | undefined;
   try {
-    content = await callGroq(groq, systemPrompt, userPrompt, "llama-3.3-70b-versatile");
+    content = await callGroq(
+      groq,
+      systemPrompt,
+      userPrompt,
+      "llama-3.3-70b-versatile",
+    );
   } catch (err) {
-    // If rate-limited (413/429), retry with a smaller & faster model
     const errMsg = err instanceof Error ? err.message : String(err);
-    if (errMsg.includes("413") || errMsg.includes("429") || errMsg.includes("rate_limit")) {
+    if (
+      errMsg.includes("413") ||
+      errMsg.includes("429") ||
+      errMsg.includes("rate_limit")
+    ) {
       try {
-        content = await callGroq(groq, systemPrompt, userPrompt, "llama-3.1-8b-instant");
+        content = await callGroq(
+          groq,
+          systemPrompt,
+          userPrompt,
+          "llama-3.1-8b-instant",
+        );
       } catch (fallbackErr) {
         const fallbackMsg =
-          fallbackErr instanceof Error ? fallbackErr.message : "Unknown AI provider error";
-        throw new Error(`AI service request failed (fallback model): ${fallbackMsg}`);
+          fallbackErr instanceof Error
+            ? fallbackErr.message
+            : "Unknown AI provider error";
+        throw new Error(
+          `AI service request failed (fallback model): ${fallbackMsg}`,
+        );
       }
     } else {
       throw new Error(`AI service request failed: ${errMsg}`);
@@ -281,12 +284,11 @@ ${diffContent}`;
     const parsed = extractJSON(content);
     return ReviewResultSchema.parse(parsed);
   } catch (err) {
-    // If parsing/validation fails, return a degraded result rather than crashing
     console.error("Failed to parse AI response:", err);
     console.error("Raw AI response:", content.slice(0, 500));
     return {
       summary:
-          "The AI review completed but the response could not be fully parsed. Please try again.",
+        "The AI review completed but the response could not be fully parsed. Please try again.",
       riskScore: 50,
       comments: [],
     };

@@ -13,7 +13,6 @@ import PusherClient from "pusher-js";
 import type { PresenceChannel, Members } from "pusher-js";
 import { PUSHER_EVENTS } from "@/server/pusher";
 
-// ─── Types ─────────────────────────────────────────────────────────
 export interface PresenceMember {
   id: string;
   info: {
@@ -27,16 +26,11 @@ interface PusherContextValue {
   isConnected: boolean;
 }
 
-// ─── Context ───────────────────────────────────────────────────────
 const PusherContext = createContext<PusherContextValue>({
   client: null,
   isConnected: false,
 });
 
-/**
- * Wrap your app (or a subtree) with this provider to enable real-time features.
- * Requires NEXT_PUBLIC_PUSHER_KEY and NEXT_PUBLIC_PUSHER_CLUSTER env vars.
- */
 export function PusherProvider({ children }: { children: ReactNode }) {
   const [isConnected, setIsConnected] = useState(false);
   const clientRef = useRef<PusherClient | null>(null);
@@ -46,7 +40,6 @@ export function PusherProvider({ children }: { children: ReactNode }) {
     const cluster = process.env.NEXT_PUBLIC_PUSHER_CLUSTER;
 
     if (!key || !cluster) {
-      // Real-time disabled – Pusher env vars not set
       return;
     }
 
@@ -69,9 +62,7 @@ export function PusherProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <PusherContext.Provider
-      value={{ client: clientRef.current, isConnected }}
-    >
+    <PusherContext.Provider value={{ client: clientRef.current, isConnected }}>
       {children}
     </PusherContext.Provider>
   );
@@ -81,7 +72,6 @@ export function usePusher() {
   return useContext(PusherContext);
 }
 
-// ─── Presence channel hook ─────────────────────────────────────────
 export function usePresenceChannel(channelName: string | null) {
   const { client } = usePusher();
   const [members, setMembers] = useState<PresenceMember[]>([]);
@@ -130,7 +120,6 @@ export function usePresenceChannel(channelName: string | null) {
   return { members, myId, channel: channelRef.current };
 }
 
-// ─── Channel event listener ────────────────────────────────────────
 export function useChannelEvent<T = unknown>(
   channelName: string | null,
   event: string,
@@ -155,24 +144,20 @@ export function useChannelEvent<T = unknown>(
   }, [client, channelName, event]);
 }
 
-// ─── Typing indicator hook ─────────────────────────────────────────
 export function useTypingIndicator(channelName: string | null) {
   const { client } = usePusher();
   const [typingUsers, setTypingUsers] = useState<
     Map<string, { name: string; timeout: ReturnType<typeof setTimeout> }>
   >(new Map());
 
-  // Listen for typing events from others
   useChannelEvent<{ userId: string; name: string }>(
     channelName,
     PUSHER_EVENTS.CLIENT_TYPING,
     useCallback((data) => {
       setTypingUsers((prev) => {
         const next = new Map(prev);
-        // Clear existing timeout
         const existing = next.get(data.userId);
         if (existing) clearTimeout(existing.timeout);
-        // Auto-clear after 3s
         const timeout = setTimeout(() => {
           setTypingUsers((p) => {
             const n = new Map(p);
@@ -186,7 +171,6 @@ export function useTypingIndicator(channelName: string | null) {
     }, []),
   );
 
-  // Trigger typing event
   const triggerTyping = useCallback(
     (userId: string, name: string) => {
       if (!client || !channelName) return;

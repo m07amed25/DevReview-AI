@@ -26,7 +26,6 @@ export default function HomePage() {
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      // Hero section animations
       gsap.fromTo(
         badgeRef.current,
         { opacity: 0, y: 20 },
@@ -63,7 +62,6 @@ export default function HomePage() {
         { opacity: 1, y: 0, duration: 1.2, delay: 0.5, ease: "power3.out" },
       );
 
-      // Background orbs floating animation
       gsap.to(".orb-1", {
         y: -30,
         x: 20,
@@ -93,7 +91,6 @@ export default function HomePage() {
         delay: 2,
       });
 
-      // Stats counter animation with scroll trigger
       const statValues = document.querySelectorAll(".stat-value");
       statValues.forEach((stat) => {
         gsap.fromTo(
@@ -113,7 +110,6 @@ export default function HomePage() {
         );
       });
 
-      // Features cards animation with scroll trigger
       const featureCards = document.querySelectorAll(".feature-card");
       gsap.fromTo(
         featureCards,
@@ -132,7 +128,6 @@ export default function HomePage() {
         },
       );
 
-      // How it works steps animation
       const steps = document.querySelectorAll(".step-card");
       gsap.fromTo(
         steps,
@@ -151,7 +146,6 @@ export default function HomePage() {
         },
       );
 
-      // Language badges animation
       const langBadges = document.querySelectorAll(".lang-badge");
       gsap.fromTo(
         langBadges,

@@ -1,9 +1,6 @@
 import nodemailer, { type Transporter } from "nodemailer";
 import type { EmailServiceConfig } from "@/types/email";
 
-/**
- * Email configuration from environment variables
- */
 function getEmailConfig(): EmailServiceConfig {
   const host = process.env.SMTP_HOST;
   const port = parseInt(process.env.SMTP_PORT || "587", 10);
@@ -12,7 +9,6 @@ function getEmailConfig(): EmailServiceConfig {
   const from = process.env.SMTP_FROM;
   const fromName = process.env.SMTP_FROM_NAME || "DEPI Code Review";
 
-  // Validate required environment variables
   if (!host || !user || !pass || !from) {
     console.warn(
       "⚠️  SMTP configuration incomplete. Emails will be logged but not sent.",
@@ -26,9 +22,9 @@ function getEmailConfig(): EmailServiceConfig {
   }
 
   return {
-    host: host || "smtp.ethereal.email", // Fallback for development
+    host: host || "smtp.ethereal.email",
     port,
-    secure: port === 465, // Use SSL for port 465
+    secure: port === 465,
     auth: {
       user: user || "test@ethereal.email",
       pass: pass || "testpassword",
@@ -38,10 +34,6 @@ function getEmailConfig(): EmailServiceConfig {
   };
 }
 
-/**
- * Create and configure the nodemailer transporter
- * Uses environment variables for SMTP settings
- */
 export function createEmailTransporter(): Transporter {
   const config = getEmailConfig();
 
@@ -52,7 +44,6 @@ export function createEmailTransporter(): Transporter {
     auth: config.auth,
   });
 
-  // Log transporter configuration (without sensitive data)
   console.log("📧 Email transporter configured:", {
     host: config.host,
     port: config.port,
@@ -63,10 +54,6 @@ export function createEmailTransporter(): Transporter {
   return transporter;
 }
 
-/**
- * Verify the SMTP connection
- * Useful for testing configuration
- */
 export async function verifyEmailConnection(
   transporter: Transporter,
 ): Promise<boolean> {
@@ -80,27 +67,17 @@ export async function verifyEmailConnection(
   }
 }
 
-/**
- * Get the configured from address
- */
 export function getFromAddress(): string {
   const config = getEmailConfig();
   return config.from;
 }
 
-/**
- * Get the application URL for generating links
- */
 export function getAppUrl(): string {
   return process.env.APP_URL || "http://localhost:3000";
 }
 
-// Singleton transporter instance
 let emailTransporter: Transporter | null = null;
 
-/**
- * Get the singleton email transporter instance
- */
 export function getEmailTransporter(): Transporter {
   if (!emailTransporter) {
     emailTransporter = createEmailTransporter();

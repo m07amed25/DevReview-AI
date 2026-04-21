@@ -28,7 +28,6 @@ export {
   renderReviewCompletedEmail,
 } from "./templates/review-completed";
 
-// Types
 export type {
   TeamMemberAddedEmailParams,
   ReviewCompletionEmailParams,

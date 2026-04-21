@@ -1,12 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-/**
- * Next.js Middleware — intercepts specific routes before they reach handlers.
- *
- * Currently handles:
- * - Redirecting better-auth's default error page to a user-friendly error UI.
- */
 export function middleware(request: NextRequest) {
   if (request.nextUrl.pathname === "/api/auth/error") {
     const error = request.nextUrl.searchParams.get("error") ?? "unknown";

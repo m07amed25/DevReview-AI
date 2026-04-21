@@ -1,16 +1,7 @@
-// ============================================
-// Email Notification Types
-// ============================================
-
-// Base email interface
 export interface BaseEmailParams {
   to: string;
   subject: string;
 }
-
-// ============================================
-// Team Addition Email Types
-// ============================================
 
 export interface TeamMemberAddedEmailParams {
   to: string;
@@ -24,10 +15,6 @@ export interface TeamMemberAddedEmailParams {
   role: "OWNER" | "ADMIN" | "MEMBER";
   teamUrl: string;
 }
-
-// ============================================
-// Review Completion Email Types
-// ============================================
 
 export interface ReviewStatus {
   status: "APPROVED" | "CHANGES_REQUESTED" | "COMMENTED";
@@ -51,10 +38,6 @@ export interface ReviewCompletionEmailParams {
   viewReviewUrl: string;
 }
 
-// ============================================
-// Email Service Result Types
-// ============================================
-
 export interface EmailSendResult {
   success: boolean;
   messageId?: string;
@@ -73,10 +56,6 @@ export interface EmailServiceConfig {
   fromName: string;
 }
 
-// ============================================
-// Environment Variable Types (for .env)
-// ============================================
-
 export interface EmailEnvConfig {
   SMTP_HOST: string;
   SMTP_PORT: string;
@@ -87,24 +66,20 @@ export interface EmailEnvConfig {
   APP_URL: string;
 }
 
-// ============================================
-// Default Review Statuses
-// ============================================
-
 export const REVIEW_STATUS_CONFIG: Record<string, ReviewStatus> = {
   APPROVED: {
     status: "APPROVED",
     label: "Approved",
-    color: "#10b981", // green
+    color: "#10b981",
   },
   CHANGES_REQUESTED: {
     status: "CHANGES_REQUESTED",
     label: "Changes Requested",
-    color: "#f59e0b", // amber
+    color: "#f59e0b",
   },
   COMMENTED: {
     status: "COMMENTED",
     label: "Commented",
-    color: "#6366f1", // indigo
+    color: "#6366f1",
   },
 };

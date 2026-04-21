@@ -1,7 +1,5 @@
-// Team role types
 export type TeamRole = "OWNER" | "ADMIN" | "MEMBER";
 
-// Team action types for approval workflow
 export type TeamActionType =
   | "INVITE_MEMBER"
   | "REMOVE_MEMBER"
@@ -12,17 +10,14 @@ export type TeamActionType =
   | "REVIEW_PR"
   | "APPROVE_DISCUSSION";
 
-// Team action status
 export type TeamActionStatus = "PENDING" | "APPROVED" | "REJECTED";
 
-// Team member preview for avatar display
 export interface TeamMemberPreview {
   id: string;
   name: string;
   image: string | null;
 }
 
-// Full team member with details
 export interface TeamMember {
   id: string;
   role: TeamRole;
@@ -34,14 +29,12 @@ export interface TeamMember {
   };
 }
 
-// Team repository
 export interface TeamRepository {
   id: string;
   fullName: string;
   private: boolean;
 }
 
-// Pending action for approval workflow
 export interface PendingAction {
   id: string;
   actionType: TeamActionType;
@@ -54,7 +47,6 @@ export interface PendingAction {
   };
 }
 
-// Team data structure from API
 export interface TeamData {
   id: string;
   name: string;
@@ -70,7 +62,6 @@ export interface TeamData {
   repositories?: TeamRepository[];
 }
 
-// Action types that require approval when requested by MEMBER role
 export const ACTIONS_REQUIRING_APPROVAL: TeamActionType[] = [
   "INVITE_MEMBER",
   "REMOVE_MEMBER",
@@ -80,14 +71,12 @@ export const ACTIONS_REQUIRING_APPROVAL: TeamActionType[] = [
   "DELETE_TEAM",
 ] as const;
 
-// Role display names
 export const ROLE_DISPLAY_NAMES: Record<TeamRole, string> = {
   OWNER: "Owner",
   ADMIN: "Admin",
   MEMBER: "Member",
 };
 
-// Role permissions
 export const ROLE_PERMISSIONS: Record<TeamRole, string[]> = {
   OWNER: [
     "manage_team",
