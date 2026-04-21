@@ -48,8 +48,6 @@ interface QualityMetricsData {
   testability: number;
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
 function buildProgressBar(value: number, max = 100, length = 20): string {
   const filled = Math.round((value / max) * length);
   return "█".repeat(filled) + "░".repeat(length - filled);
@@ -85,15 +83,100 @@ function qualityGrade(score: number): string {
   return "❌ Needs Work";
 }
 
-function confidenceLabel(confidence: number): string {
-  if (confidence >= 90) return "Very High";
-  if (confidence >= 70) return "High";
-  if (confidence >= 50) return "Medium";
-  return "Low";
+function qualityLetter(score: number): string {
+  if (score >= 90) return "A+";
+  if (score >= 80) return "A";
+  if (score >= 70) return "B";
+  if (score >= 60) return "C";
+  if (score >= 50) return "D";
+  return "F";
 }
 
 function shortSha(sha: string): string {
   return sha.slice(0, 7);
+}
+
+// ─── Self-hosted badge-maker helpers ─────────────────────────────────────────
+// Badges are rendered server-side via our own /api/badge endpoint (badge-maker
+// v5).  GitHub PR comments load Markdown images, so these appear as richly
+// coloured inline SVG pills — no external shields.io dependency.
+
+/**
+ * Builds a URL to our self-hosted /api/badge endpoint.
+ * Falls back to the BETTER_AUTH_URL env var when APP_BASE_URL is not set
+ * (mirrors the review-URL logic elsewhere in this file).
+ */
+function badgeUrl(
+  label: string,
+  message: string,
+  color: string,
+  opts: { style?: string; labelColor?: string } = {},
+): string {
+  const base  = process.env.APP_BASE_URL ?? process.env.BETTER_AUTH_URL ?? "";
+  const style = opts.style ?? "flat-square";
+  const params = new URLSearchParams({
+    label,
+    message,
+    color,
+    style,
+    ...(opts.labelColor ? { labelColor: opts.labelColor } : {}),
+  });
+  return `${base}/api/badge?${params.toString()}`;
+}
+
+/**
+ * Returns a Markdown image tag backed by badge-maker (via /api/badge).
+ * Optionally wraps the image in a hyperlink.
+ */
+function badge(
+  label: string,
+  message: string,
+  color: string,
+  opts: { style?: string; labelColor?: string; link?: string } = {},
+): string {
+  const url  = badgeUrl(label, message, color, opts);
+  const alt  = [label, message].filter(Boolean).join(": ");
+  const img  = `![${alt}](${url})`;
+  return opts.link ? `[${img}](${opts.link})` : img;
+}
+
+/** badge-maker color for a 0-100 risk score */
+function riskBadgeColor(score: number): string {
+  if (score < 25) return "#2ea44f";   // GitHub green
+  if (score < 50) return "#dbab09";   // GitHub yellow
+  if (score < 75) return "#e36209";   // GitHub orange
+  return "#cb2431";                    // GitHub red
+}
+
+/** badge-maker color for a severity string */
+function severityBadgeColor(severity: string): string {
+  switch (severity.toLowerCase()) {
+    case "critical": return "critical";    // alias → #e05d44
+    case "high":     return "important";   // alias → #fe7d37
+    case "medium":   return "#dbab09";
+    default:         return "informational"; // alias → #007ec6
+  }
+}
+
+/** badge-maker color for a 0-100 quality score */
+function qualityBadgeColor(score: number): string {
+  if (score >= 80) return "#2ea44f";
+  if (score >= 60) return "#28a745";
+  if (score >= 40) return "#dbab09";
+  return "#cb2431";
+}
+
+/** badge-maker color for pass/fail overall status */
+function statusBadgeColor(hasCritical: boolean, hasFailed: boolean): string {
+  if (hasFailed)   return "critical";
+  if (hasCritical) return "important";
+  return "#2ea44f";
+}
+
+function statusBadgeLabel(hasCritical: boolean, hasFailed: boolean): string {
+  if (hasFailed)   return "Error";
+  if (hasCritical) return "Failed";
+  return "Passed";
 }
 
 // ─── Main Payload Builder ─────────────────────────────────────────────────────
@@ -106,6 +189,9 @@ export type ReviewPayloadOptions = {
   summary?: string | null;
   riskScore?: number | null;
   qualityMetrics?: unknown;
+  /** Overall review processing status */
+  overallStatus?: "COMPLETED" | "FAILED";
+  hasHighSeverity?: boolean;
 };
 
 export function mapFindingsToReviewPayload(
@@ -116,18 +202,17 @@ export function mapFindingsToReviewPayload(
 ): { body: string; inlineComments: ReviewComment[] } {
   const values = Array.isArray(findings) ? (findings as StoredFinding[]) : [];
 
-  const appBaseUrl = process.env.APP_BASE_URL ?? process.env.BETTER_AUTH_URL ?? "";
-  const reviewUrl = `${appBaseUrl}/repo/${repositoryId}/reviews/${reviewId}`;
+  const appBaseUrl    = process.env.APP_BASE_URL ?? process.env.BETTER_AUTH_URL ?? "";
+  const reviewUrl     = `${appBaseUrl}/repo/${repositoryId}/reviews/${reviewId}`;
 
-  const prTitle    = options?.prTitle ?? null;
-  const commitSha  = options?.commitSha ?? null;
-  const aiSummary  = options?.summary ?? null;
-  const riskScore  = options?.riskScore ?? null;
-  const qmRaw      = options?.qualityMetrics;
+  const prTitle       = options?.prTitle       ?? null;
+  const commitSha     = options?.commitSha     ?? null;
+  const aiSummary     = options?.summary       ?? null;
+  const riskScore     = options?.riskScore     ?? null;
+  const overallStatus = options?.overallStatus ?? "COMPLETED";
+  const qmRaw         = options?.qualityMetrics;
   const qualityMetrics: QualityMetricsData | null =
-    qmRaw &&
-    typeof qmRaw === "object" &&
-    !Array.isArray(qmRaw) &&
+    qmRaw && typeof qmRaw === "object" && !Array.isArray(qmRaw) &&
     "complexity" in (qmRaw as Record<string, unknown>)
       ? (qmRaw as QualityMetricsData)
       : null;
@@ -142,24 +227,23 @@ export function mapFindingsToReviewPayload(
       const severity    = (finding.severity ?? finding.severityLevel ?? "low").toUpperCase();
       const text        = finding.message ?? finding.text ?? "Issue detected";
       const emoji       = severityEmoji(severity);
-      const categoryLine = finding.category
-        ? `\n**Category:** \`${finding.category}\``
+      // Shields.io badges for inline comments
+      const sevBadge    = badge(severity, "DevReview AI", severityBadgeColor(severity), { style: "flat-square" });
+      const catBadge    = finding.category
+        ? ` ${badge("category", finding.category, "blueviolet", { style: "flat-square" })}`
+        : "";
+      const confBadge   = typeof finding.confidence === "number"
+        ? ` ${badge("confidence", `${finding.confidence}%`, qualityBadgeColor(finding.confidence), { style: "flat-square" })}`
         : "";
       const suggestionLine = finding.suggestion
-        ? `\n\n> 💡 **Suggestion:** ${finding.suggestion}`
-        : "";
-      const confidenceLine = typeof finding.confidence === "number"
-        ? `\n\n_AI Confidence: **${finding.confidence}%** (${confidenceLabel(finding.confidence)})_`
+        ? `\n\n> 💡 **Suggestion**\n> ${finding.suggestion}`
         : "";
 
       const body = [
-        `### ${emoji} ${severity} — DevReview AI`,
+        `${emoji} ${sevBadge}${catBadge}${confBadge}`,
         "",
-        `**Finding:**`,
-        text,
-        categoryLine,
+        `**Finding:** ${text}`,
         suggestionLine,
-        confidenceLine,
         "",
         "---",
         `🤖 [View full review ↗](${reviewUrl})`,
@@ -172,53 +256,108 @@ export function mapFindingsToReviewPayload(
   }
 
   // ── Severity counts ──────────────────────────────────────────────────────
-  const allFindings = values;
   const counts = {
-    critical: allFindings.filter(f => (f.severity ?? f.severityLevel ?? "").toLowerCase() === "critical").length,
-    high:     allFindings.filter(f => (f.severity ?? f.severityLevel ?? "").toLowerCase() === "high").length,
-    medium:   allFindings.filter(f => (f.severity ?? f.severityLevel ?? "").toLowerCase() === "medium").length,
-    low:      allFindings.filter(f => {
+    critical: values.filter(f => (f.severity ?? f.severityLevel ?? "").toLowerCase() === "critical").length,
+    high:     values.filter(f => (f.severity ?? f.severityLevel ?? "").toLowerCase() === "high").length,
+    medium:   values.filter(f => (f.severity ?? f.severityLevel ?? "").toLowerCase() === "medium").length,
+    low:      values.filter(f => {
       const s = (f.severity ?? f.severityLevel ?? "").toLowerCase();
       return s === "low" || (s !== "critical" && s !== "high" && s !== "medium");
     }).length,
   };
-  const totalIssues = allFindings.length;
+  const totalIssues = values.length;
+  const hasCritical = counts.critical > 0;
+  const hasFailed   = overallStatus === "FAILED";
 
-  // ── Build summary comment body ───────────────────────────────────────────
+  // ── Quality overall ──────────────────────────────────────────────────────
+  const qualityOverall = qualityMetrics
+    ? Math.round(
+        (qualityMetrics.complexity + qualityMetrics.maintainability +
+         qualityMetrics.readability + qualityMetrics.testability) / 4,
+      )
+    : null;
+
+  // ────────────────────────────────────────────────────────────────────────
+  // Build the Markdown body
+  // ────────────────────────────────────────────────────────────────────────
   const lines: string[] = [];
 
-  // Header
+  // ── Title ─────────────────────────────────────────────────────────────────
   lines.push(`## 🤖 DevReview AI — Automated Code Review`);
   lines.push("");
 
-  // Meta line
+  // ── Meta quote (PR title + commit) ───────────────────────────────────────
   const metaParts: string[] = [];
   if (prTitle)   metaParts.push(`**PR:** ${prTitle}`);
   if (commitSha) metaParts.push(`**Commit:** \`${shortSha(commitSha)}\``);
-  if (riskScore !== null) {
-    metaParts.push(`**Risk Score:** ${riskEmoji(riskScore)} ${riskScore}/100 — ${riskLabel(riskScore)}`);
-  }
   if (metaParts.length > 0) {
     lines.push(`> ${metaParts.join(" &nbsp;·&nbsp; ")}`);
     lines.push("");
   }
 
+  // ── Hero badges (shields.io — for-the-badge style) ───────────────────────
+  const heroBadges: string[] = [];
+
+  heroBadges.push(
+    badge(
+      "Review",
+      statusBadgeLabel(hasCritical, hasFailed),
+      statusBadgeColor(hasCritical, hasFailed),
+      { style: "for-the-badge", labelColor: "#24292e", link: reviewUrl },
+    ),
+  );
+  if (riskScore !== null) {
+    heroBadges.push(
+      badge(
+        "Risk Score",
+        `${riskScore} of 100`,
+        riskBadgeColor(riskScore),
+        { style: "for-the-badge", link: reviewUrl },
+      ),
+    );
+  }
+  heroBadges.push(
+    badge(
+      "Issues",
+      totalIssues === 0 ? "None" : String(totalIssues),
+      totalIssues === 0 ? "brightgreen" : hasCritical ? "critical" : "orange",
+      { style: "for-the-badge", link: reviewUrl },
+    ),
+  );
+  if (qualityOverall !== null) {
+    heroBadges.push(
+      badge(
+        "Quality",
+        `${qualityLetter(qualityOverall)} (${qualityOverall}/100)`,
+        qualityBadgeColor(qualityOverall),
+        { style: "for-the-badge", link: reviewUrl },
+      ),
+    );
+  }
+
+  lines.push(heroBadges.join(" "));
+  lines.push("");
   lines.push("---");
   lines.push("");
 
-  // Risk Score Section
+  // ── Risk Assessment ────────────────────────────────────────────────────────
   if (riskScore !== null) {
-    lines.push(`### ${riskEmoji(riskScore)} Risk Score: ${riskScore}/100 — ${riskLabel(riskScore)}`);
+    lines.push(`### ${riskEmoji(riskScore)} Risk Assessment`);
     lines.push("");
-    lines.push(`\`Safe ${buildProgressBar(riskScore)} Critical\``);
+    lines.push("| | |");
+    lines.push("|:---|:---|");
+    lines.push(`| **Risk Score** | ${badge(riskLabel(riskScore), `${riskScore}/100`, riskBadgeColor(riskScore))} |`);
+    lines.push(`| **Total Issues** | **${totalIssues}**${inlineComments.length > 0 ? ` _(${inlineComments.length} inline comment${inlineComments.length !== 1 ? "s" : ""})_` : ""} |`);
+    lines.push("");
+    lines.push(`\`Safe ${buildProgressBar(riskScore, 100, 24)} Critical\``);
     lines.push("");
     lines.push("---");
     lines.push("");
   }
 
-  // AI Summary
+  // ── AI Summary ────────────────────────────────────────────────────────────
   if (aiSummary) {
-    lines.push("### 📝 AI Summary");
+    lines.push(`### 📝 AI Summary`);
     lines.push("");
     lines.push(`> ${aiSummary.replace(/\n/g, "\n> ")}`);
     lines.push("");
@@ -226,61 +365,84 @@ export function mapFindingsToReviewPayload(
     lines.push("");
   }
 
-  // Issue Breakdown
+  // ── Issue Breakdown ────────────────────────────────────────────────────────
   if (totalIssues > 0) {
-    lines.push("### 🔢 Issue Breakdown");
+    lines.push("### 📊 Issue Breakdown");
     lines.push("");
-    lines.push("| Severity | Count | Distribution |");
-    lines.push("|----------|------:|--------------|");
-    if (counts.critical > 0)
-      lines.push(`| 🔴 Critical | ${counts.critical} | \`${buildProgressBar(counts.critical, totalIssues, 12)}\` |`);
-    if (counts.high > 0)
-      lines.push(`| 🟠 High | ${counts.high} | \`${buildProgressBar(counts.high, totalIssues, 12)}\` |`);
-    if (counts.medium > 0)
-      lines.push(`| 🟡 Medium | ${counts.medium} | \`${buildProgressBar(counts.medium, totalIssues, 12)}\` |`);
-    if (counts.low > 0)
-      lines.push(`| 🔵 Low | ${counts.low} | \`${buildProgressBar(counts.low, totalIssues, 12)}\` |`);
-    lines.push(`| **Total** | **${totalIssues}** | ${inlineComments.length > 0 ? `_${inlineComments.length} inline comment${inlineComments.length !== 1 ? "s" : ""}_ ` : ""} |`);
+
+    // Colored severity pill badges
+    const sevBadges: string[] = [];
+    if (counts.critical > 0) sevBadges.push(badge("Critical", String(counts.critical), "critical",      { style: "flat-square" }));
+    if (counts.high > 0)     sevBadges.push(badge("High",     String(counts.high),     "important",     { style: "flat-square" }));
+    if (counts.medium > 0)   sevBadges.push(badge("Medium",   String(counts.medium),   "yellow",        { style: "flat-square" }));
+    if (counts.low > 0)      sevBadges.push(badge("Low",      String(counts.low),      "informational", { style: "flat-square" }));
+    lines.push(sevBadges.join(" "));
+    lines.push("");
+
+    lines.push("| Severity | Count | Distribution | Share |");
+    lines.push("|:---------|------:|:-------------|------:|");
+    const row = (emoji: string, lbl: string, count: number) => {
+      const pct = Math.round((count / totalIssues) * 100);
+      return `| ${emoji} **${lbl}** | ${count} | \`${buildProgressBar(count, totalIssues, 14)}\` | ${pct}% |`;
+    };
+    if (counts.critical > 0) lines.push(row("🔴", "Critical", counts.critical));
+    if (counts.high > 0)     lines.push(row("🟠", "High",     counts.high));
+    if (counts.medium > 0)   lines.push(row("🟡", "Medium",   counts.medium));
+    if (counts.low > 0)      lines.push(row("🔵", "Low",      counts.low));
+    lines.push(`| — | **${totalIssues}** | | 100% |`);
     lines.push("");
     lines.push("---");
     lines.push("");
   }
 
-  // Quality Metrics
-  if (qualityMetrics) {
-    const overall = Math.round(
-      (qualityMetrics.complexity + qualityMetrics.maintainability +
-       qualityMetrics.readability + qualityMetrics.testability) / 4,
-    );
+  // ── Quality Metrics ────────────────────────────────────────────────────────
+  if (qualityMetrics && qualityOverall !== null) {
     lines.push("### 📐 Quality Metrics");
     lines.push("");
+
+    // Grade badges row
+    const qBadges = [
+      badge("Complexity",      qualityLetter(qualityMetrics.complexity),      qualityBadgeColor(qualityMetrics.complexity),      { style: "flat-square" }),
+      badge("Maintainability", qualityLetter(qualityMetrics.maintainability), qualityBadgeColor(qualityMetrics.maintainability), { style: "flat-square" }),
+      badge("Readability",     qualityLetter(qualityMetrics.readability),     qualityBadgeColor(qualityMetrics.readability),     { style: "flat-square" }),
+      badge("Testability",     qualityLetter(qualityMetrics.testability),     qualityBadgeColor(qualityMetrics.testability),     { style: "flat-square" }),
+      badge("Overall",         qualityLetter(qualityOverall),                 qualityBadgeColor(qualityOverall),                 { style: "flat-square" }),
+    ];
+    lines.push(qBadges.join(" "));
+    lines.push("");
+
     lines.push("| Metric | Score | Bar | Grade |");
-    lines.push("|--------|------:|-----|-------|");
-    lines.push(`| Complexity | ${qualityMetrics.complexity}/100 | \`${buildProgressBar(qualityMetrics.complexity, 100, 10)}\` | ${qualityGrade(qualityMetrics.complexity)} |`);
-    lines.push(`| Maintainability | ${qualityMetrics.maintainability}/100 | \`${buildProgressBar(qualityMetrics.maintainability, 100, 10)}\` | ${qualityGrade(qualityMetrics.maintainability)} |`);
-    lines.push(`| Readability | ${qualityMetrics.readability}/100 | \`${buildProgressBar(qualityMetrics.readability, 100, 10)}\` | ${qualityGrade(qualityMetrics.readability)} |`);
-    lines.push(`| Testability | ${qualityMetrics.testability}/100 | \`${buildProgressBar(qualityMetrics.testability, 100, 10)}\` | ${qualityGrade(qualityMetrics.testability)} |`);
-    lines.push(`| **Overall** | **${overall}/100** | \`${buildProgressBar(overall, 100, 10)}\` | **${qualityGrade(overall)}** |`);
+    lines.push("|:-------|------:|:----|:------|");
+    const qRow = (label: string, score: number) =>
+      `| ${label} | ${score}/100 | \`${buildProgressBar(score, 100, 12)}\` | ${qualityGrade(score)} |`;
+    lines.push(qRow("Complexity",      qualityMetrics.complexity));
+    lines.push(qRow("Maintainability", qualityMetrics.maintainability));
+    lines.push(qRow("Readability",     qualityMetrics.readability));
+    lines.push(qRow("Testability",     qualityMetrics.testability));
+    lines.push(`| **Overall** | **${qualityOverall}/100** | \`${buildProgressBar(qualityOverall, 100, 12)}\` | **${qualityGrade(qualityOverall)}** |`);
     lines.push("");
     lines.push("---");
     lines.push("");
   }
 
-  // General Findings (not tied to a specific file/line)
+  // ── General Findings ──────────────────────────────────────────────────────
   if (summaryFindings.length > 0) {
     lines.push("### ⚠️ General Findings");
     lines.push("");
     lines.push(`<details>`);
-    lines.push(`<summary>View ${summaryFindings.length} general finding${summaryFindings.length !== 1 ? "s" : ""}</summary>`);
+    lines.push(`<summary>📋 View ${summaryFindings.length} general finding${summaryFindings.length !== 1 ? "s" : ""}</summary>`);
     lines.push("");
     for (const finding of summaryFindings) {
-      const severity = (finding.severity ?? finding.severityLevel ?? "low").toUpperCase();
-      const text = finding.message ?? finding.text ?? "Issue detected";
-      const emoji = severityEmoji(severity);
-      const categoryTag = finding.category ? ` \`${finding.category}\`` : "";
-      lines.push(`- ${emoji} **[${severity}]**${categoryTag} ${text}`);
+      const severity  = (finding.severity ?? finding.severityLevel ?? "low").toUpperCase();
+      const text      = finding.message ?? finding.text ?? "Issue detected";
+      const emoji     = severityEmoji(severity);
+      const sevBadge  = badge(severity, "", severityBadgeColor(severity), { style: "flat-square" });
+      const catBadge  = finding.category
+        ? ` ${badge("", finding.category, "blueviolet", { style: "flat-square" })}`
+        : "";
+      lines.push(`- ${emoji} ${sevBadge}${catBadge} ${text}`);
       if (finding.suggestion) {
-        lines.push(`  > 💡 ${finding.suggestion}`);
+        lines.push(`  > 💡 **Suggestion:** ${finding.suggestion}`);
       }
     }
     lines.push("");
@@ -291,17 +453,26 @@ export function mapFindingsToReviewPayload(
   } else if (totalIssues === 0) {
     lines.push("### ✅ No Issues Found");
     lines.push("");
+    lines.push(
+      badge("Status", "Clean", "#2ea44f", {
+        style: "for-the-badge",
+      }),
+    );
+    lines.push("");
     lines.push("> 🎉 Excellent! No issues were detected. The code appears clean, secure, and well-structured.");
     lines.push("");
     lines.push("---");
     lines.push("");
   }
 
-  // Footer
-  const footerParts: string[] = [
-    `🤖 Powered by **DevReview AI**`,
-    `[📋 View Full Report](${reviewUrl})`,
-  ];
+  // ── Footer ────────────────────────────────────────────────────────────────
+  const footerBadge = badge(
+    "DevReview AI",
+    "Automated Review",
+    "#24292e",
+    { style: "flat-square", labelColor: "#586069", link: reviewUrl },
+  );
+  const footerParts = [footerBadge, `[📋 View Full Report](${reviewUrl})`];
   if (commitSha) footerParts.push(`Commit: \`${shortSha(commitSha)}\``);
   lines.push(`<sub>${footerParts.join(" · ")}</sub>`);
 
@@ -406,11 +577,13 @@ export async function runPostReviewToGitHub(
       review.repositoryId,
       review.id,
       {
-        prTitle:        review.prTitle,
-        commitSha:      completedEvent.data.commitSha,
-        summary:        review.summary,
-        riskScore:      review.riskScore,
-        qualityMetrics: review.qualityMetrics,
+        prTitle:         review.prTitle,
+        commitSha:       completedEvent.data.commitSha,
+        summary:         review.summary,
+        riskScore:       review.riskScore,
+        qualityMetrics:  review.qualityMetrics,
+        overallStatus:   completedEvent.data.status,
+        hasHighSeverity: completedEvent.data.hasHighSeverity,
       },
     );
 
@@ -508,12 +681,6 @@ export const postReviewToGitHub = inngest.createFunction(
   async ({ event, step }) =>
     runPostReviewToGitHub(event as ReviewCompletedEvent, step, defaultDeps),
 );
-
-
-
-
-
-
 
 
 
