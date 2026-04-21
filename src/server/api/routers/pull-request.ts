@@ -55,12 +55,47 @@ export const pullRequestRouter = createTRPCRouter({
         select: {
           prNumber: true,
           status: true,
+          summary: true,
+          riskScore: true,
+          comments: true,
           createdAt: true,
         },
         orderBy: { createdAt: "asc" },
       });
 
-      const reviewMap = new Map(existingReviews.map((r) => [r.prNumber, r]));
+      const reviewMap = new Map(
+        existingReviews.map((r) => {
+          // Compute severity counts from comments JSON
+          const comments = Array.isArray(r.comments)
+            ? (r.comments as Array<{ severity?: string; category?: string }>)
+            : [];
+          const severityCounts = {
+            critical: comments.filter((c) => c.severity === "critical").length,
+            high: comments.filter((c) => c.severity === "high").length,
+            medium: comments.filter((c) => c.severity === "medium").length,
+            low: comments.filter((c) => c.severity === "low").length,
+          };
+          const categories = Array.from(
+            new Set(
+              comments
+                .map((c: { category?: string }) => c.category)
+                .filter((cat): cat is string => typeof cat === "string"),
+            ),
+          );
+          return [
+            r.prNumber,
+            {
+              prNumber: r.prNumber,
+              status: r.status,
+              summary: r.summary,
+              riskScore: r.riskScore,
+              severityCounts,
+              categories,
+              createdAt: r.createdAt,
+            },
+          ];
+        }),
+      );
 
       return prs.map((pr) => ({
         id: pr.id,

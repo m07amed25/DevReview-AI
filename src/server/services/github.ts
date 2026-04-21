@@ -229,6 +229,22 @@ export async function fetchPullRequest(
   return (await response.json()) as GitHubPullRequest;
 }
 
+/**
+ * Convenience wrapper for fetching a pull request when only full repo name is known.
+ */
+export async function fetchPullRequestByFullName(
+  accessToken: string,
+  repoFullName: string,
+  prNumber: number,
+): Promise<GitHubPullRequest> {
+  const [owner, repo] = repoFullName.split("/");
+  if (!owner || !repo) {
+    throw new Error(`Invalid repository full name: ${repoFullName}`);
+  }
+
+  return fetchPullRequest(accessToken, owner, repo, prNumber);
+}
+
 export async function fetchPullRequestFiles(
   accessToken: string,
   owner: string,
