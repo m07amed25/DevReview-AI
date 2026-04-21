@@ -3,7 +3,11 @@ import crypto from "crypto";
 import { z } from "zod";
 import { db } from "@/server/db";
 import { inngest } from "@/server/inngest";
-import { getGitHubAccessToken, postCommitStatus } from "@/server/services/github";
+import {
+  fetchPullRequestByFullName,
+  getGitHubAccessToken,
+  postCommitStatus,
+} from "@/server/services/github";
 
 const pullRequestPayloadSchema = z.object({
   action: z.string(),
@@ -104,11 +108,43 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: "Auto-review disabled" }, { status: 200 });
   }
 
+  const accessToken = await getGitHubAccessToken(repository.userId);
+  if (!accessToken) {
+    return NextResponse.json(
+      { message: "Repository owner GitHub token not available" },
+      { status: 200 },
+    );
+  }
+
+  // Fetch latest PR details from GitHub so webhook + website-triggered reviews share identical source data.
+  let livePr = null as {
+    number: number;
+    title: string;
+    html_url: string;
+    head: { sha: string };
+  } | null;
+
+  try {
+    livePr = await fetchPullRequestByFullName(
+      accessToken,
+      repository.fullName,
+      data.pull_request.number,
+    );
+  } catch {
+    // Fall back to webhook payload if GitHub API transiently fails.
+    livePr = {
+      number: data.pull_request.number,
+      title: data.pull_request.title,
+      html_url: data.pull_request.html_url,
+      head: { sha: data.pull_request.head.sha },
+    };
+  }
+
   // Check if there's already a review in progress
   const existingReview = await db.review.findFirst({
     where: {
       repositoryId: repository.id,
-      prNumber: data.pull_request.number,
+      prNumber: livePr.number,
       status: { in: ["PENDING", "PROCESSING"] },
     },
   });
@@ -120,14 +156,24 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  const ownerPreferences = await db.user.findUnique({
+    where: { id: repository.userId },
+    select: {
+      reviewDepth: true,
+      defaultLanguage: true,
+      includeSecurityChecks: true,
+      includePerfSuggestions: true,
+    },
+  });
+
   // Create a new review record
   const review = await db.review.create({
     data: {
       repositoryId: repository.id,
       userId: repository.userId,
-      prNumber: data.pull_request.number,
-      prTitle: data.pull_request.title,
-      prUrl: data.pull_request.html_url,
+      prNumber: livePr.number,
+      prTitle: livePr.title,
+      prUrl: livePr.html_url,
       status: "PENDING",
     },
   });
@@ -138,21 +184,26 @@ export async function POST(request: NextRequest) {
     data: {
       reviewId: review.id,
       repositoryId: repository.id,
-      prNumber: data.pull_request.number,
+      prNumber: livePr.number,
       userId: repository.userId,
+      preferences: ownerPreferences
+        ? {
+            reviewDepth: ownerPreferences.reviewDepth,
+            defaultLanguage: ownerPreferences.defaultLanguage,
+            includeSecurityChecks: ownerPreferences.includeSecurityChecks,
+            includePerfSuggestions: ownerPreferences.includePerfSuggestions,
+          }
+        : undefined,
     },
   });
 
   // Post pending status check in background (do not block webhook response).
   void (async () => {
     try {
-      const accessToken = await getGitHubAccessToken(repository.userId);
-      if (!accessToken) return;
-
       await postCommitStatus(
         accessToken,
         data.repository.full_name,
-        data.pull_request.head.sha,
+        livePr.head.sha,
         "pending",
         review.id,
         "DevReview AI — review in progress",
@@ -162,11 +213,11 @@ export async function POST(request: NextRequest) {
         where: { reviewId: review.id },
         create: {
           reviewId: review.id,
-          commitSha: data.pull_request.head.sha,
+          commitSha: livePr.head.sha,
           state: "PENDING",
         },
         update: {
-          commitSha: data.pull_request.head.sha,
+          commitSha: livePr.head.sha,
           state: "PENDING",
         },
       });

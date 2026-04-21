@@ -4,7 +4,7 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { getAccessibleRepository } from "@/lib/repository";
 import { inngest } from "@/server/inngest";
 import {
-  fetchPullRequest,
+  fetchPullRequestByFullName,
   getGitHubAccessToken,
 } from "@/server/services/github";
 
@@ -32,24 +32,15 @@ export const reviewRouter = createTRPCRouter({
         });
       }
 
-      const [owner, repo] = repository.fullName.split("/");
-      if (!owner || !repo) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Invalid repository name",
-        });
-      }
-
-      const pr = await fetchPullRequest(
+      const pr = await fetchPullRequestByFullName(
         accessToken,
-        owner,
-        repo,
+        repository.fullName,
         input.prNumber,
       );
 
       // Read user preferences for the AI review
       const user = await ctx.db.user.findUnique({
-        where: { id: ctx.user.id },
+        where: { id: repository.userId },
         select: {
           reviewDepth: true,
           defaultLanguage: true,
@@ -61,7 +52,7 @@ export const reviewRouter = createTRPCRouter({
       const review = await ctx.db.review.create({
         data: {
           repositoryId: repository.id,
-          userId: ctx.user.id,
+          userId: repository.userId,
           prNumber: pr.number,
           prTitle: pr.title,
           prUrl: pr.html_url,
@@ -76,7 +67,7 @@ export const reviewRouter = createTRPCRouter({
             reviewId: review.id,
             repositoryId: repository.id,
             prNumber: pr.number,
-            userId: ctx.user.id,
+            userId: repository.userId,
             preferences: user
               ? {
                   reviewDepth: user.reviewDepth,
