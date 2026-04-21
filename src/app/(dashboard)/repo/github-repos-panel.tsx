@@ -24,9 +24,10 @@ interface GitHubRepo {
   fullName: string;
   private: boolean;
   htmlUrl: string;
-  description?: string | null;
-  stars?: number;
-  language?: string | null;
+  description: string | null;
+  stars: number;
+  language: string | null;
+  updatedAt: string;
 }
 
 interface GithubReposPanelProps {
@@ -166,7 +167,7 @@ export function GithubReposPanel({
             </div>
 
             {/* Sticky footer */}
-            <div className="sticky bottom-0 flex items-center justify-between px-6 py-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-t border-border/40 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] dark:shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.2)]">
+            <div className="sticky bottom-0 flex items-center justify-between px-6 py-4 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 border-t border-border/40 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] dark:shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.2)]">
               <div className="flex items-center gap-3">
                 <div
                   className={cn(
@@ -213,7 +214,7 @@ export function GithubReposPanel({
                 <Button
                   disabled={selectedRepos.size === 0 || isConnecting}
                   onClick={onConnect}
-                  className="min-w-[140px]"
+                  className="min-w-35"
                 >
                   {isConnecting ? (
                     <>

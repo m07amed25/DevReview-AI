@@ -13,14 +13,7 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
 } from "@/components/ui/alert-dialog";
-import {
-  Plus,
-  X,
-  RefreshCw,
-  FolderGit2,
-  Github,
-  CheckCircle,
-} from "lucide-react";
+import { Plus, X, RefreshCw, FolderGit2, Github } from "lucide-react";
 import { trpc } from "@/lib/trpc/client";
 import { StatsCards } from "./stats-cards";
 import { ConnectedRepoCard } from "./connected-repo-card";
@@ -181,7 +174,7 @@ export default function ReposPage() {
           <CardContent className="py-16 text-center">
             <div className="flex flex-col items-center max-w-sm mx-auto">
               <div className="relative mb-6">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-violet-500/20 to-purple-500/20 flex items-center justify-center">
+                <div className="w-20 h-20 rounded-full bg-linear-to-br from-violet-500/20 to-purple-500/20 flex items-center justify-center">
                   <FolderGit2 className="w-10 h-10 text-violet-500" />
                 </div>
                 <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-background border-2 border-border flex items-center justify-center">
@@ -236,7 +229,12 @@ export default function ReposPage() {
           searchQuery={searchQuery}
           isLoading={githubRepos.isLoading}
           isFetching={githubRepos.isFetching}
-          error={githubRepos.error}
+          error={
+            githubRepos.error as {
+              message?: string;
+              data?: { code?: string };
+            } | null
+          }
           isConnecting={connectMutation.isPending}
           onToggle={toggleRepo}
           onSelectAll={() =>
