@@ -156,8 +156,8 @@ function buildSystemPrompt(preferences?: ReviewPreferences): string {
   return parts.join("\n");
 }
 
-const MAX_DIFF_CHARS = 6_000;
-const MAX_PATCH_CHARS_PER_FILE = 2_500;
+const MAX_DIFF_CHARS = 8_000;
+const MAX_PATCH_CHARS_PER_FILE = 3_000;
 
 function truncateDiff(diff: string): string {
   if (diff.length <= MAX_DIFF_CHARS) return diff;
