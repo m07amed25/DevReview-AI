@@ -34,6 +34,7 @@ export interface ReviewResultProps {
     riskScore: number | null;
     comments: ReviewComment[] | unknown;
     qualityMetrics?: QualityMetrics | unknown;
+    resolvedComments?: string[];
     error: string | null;
     createdAt: Date;
   };

@@ -16,6 +16,7 @@ import {
   Lightbulb,
   ArrowRight,
   FolderOpen,
+  CheckCircle2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getSeverityStyles, getCategoryIcon } from "./helpers";
@@ -40,11 +41,15 @@ export function FileGroup({
   comments,
   allExpanded,
   expandKey,
+  resolvedKeys,
+  onToggleResolved,
 }: {
   file: string;
   comments: ReviewComment[];
   allExpanded: boolean | null;
   expandKey: number;
+  resolvedKeys?: Set<string>;
+  onToggleResolved?: (key: string) => void;
 }) {
   const [open, setOpen] = useState(true);
   const pathParts = file.split("/");
@@ -73,15 +78,22 @@ export function FileGroup({
       </button>
       {open && (
         <div className="space-y-2 pl-1">
-          {comments.map((comment, index) => (
-            <CommentCard
-              key={`${comment.file}:${comment.line}:${index}`}
-              comment={comment}
-              index={index}
-              forceExpanded={allExpanded}
-              expandKey={expandKey}
-            />
-          ))}
+          {comments.map((comment, index) => {
+            const rKey = `${comment.file}:${comment.line}:${comment.severity}:${comment.category ?? ""}`;
+            return (
+              <CommentCard
+                key={`${comment.file}:${comment.line}:${index}`}
+                comment={comment}
+                index={index}
+                forceExpanded={allExpanded}
+                expandKey={expandKey}
+                resolved={resolvedKeys?.has(rKey)}
+                onToggleResolved={
+                  onToggleResolved ? () => onToggleResolved(rKey) : undefined
+                }
+              />
+            );
+          })}
         </div>
       )}
     </div>
@@ -93,11 +105,15 @@ export function CommentCard({
   index,
   forceExpanded,
   expandKey,
+  resolved,
+  onToggleResolved,
 }: {
   comment: ReviewComment;
   index: number;
   forceExpanded?: boolean | null;
   expandKey?: number;
+  resolved?: boolean;
+  onToggleResolved?: () => void;
 }) {
   const [expanded, setExpanded] = useState(index < 3);
 
@@ -129,12 +145,21 @@ export function CommentCard({
   return (
     <Card
       className={cn(
-        "overflow-hidden transition-all duration-200",
-        severityConfig.borderHover,
-        expanded && severityConfig.activeBorder,
+        "overflow-hidden transition-all duration-300",
+        resolved
+          ? "opacity-60 border-emerald-500/25 bg-emerald-500/2"
+          : cn(
+              severityConfig.borderHover,
+              expanded && severityConfig.activeBorder,
+            ),
       )}
     >
-      <div className={cn("h-0.5 w-full", severityConfig.bar)} />
+      <div
+        className={cn(
+          "h-0.5 w-full",
+          resolved ? "bg-emerald-500/40" : severityConfig.bar,
+        )}
+      />
       <div
         role="button"
         tabIndex={0}
@@ -180,6 +205,24 @@ export function CommentCard({
                 <ConfidenceBadge confidence={comment.confidence} />
               )}
               <div className="flex-1" />
+              {onToggleResolved && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onToggleResolved();
+                  }}
+                  className={cn(
+                    "flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full border transition-all",
+                    resolved
+                      ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                      : "border-border/60 bg-transparent text-muted-foreground hover:border-emerald-500/30 hover:text-emerald-600 hover:bg-emerald-500/5",
+                  )}
+                  title={resolved ? "Mark as unresolved" : "Mark as resolved"}
+                >
+                  <CheckCircle2 className="size-3" />
+                  {resolved ? "Resolved" : "Resolve"}
+                </button>
+              )}
               <div
                 className={cn(
                   "size-6 rounded-md flex items-center justify-center transition-colors",
@@ -197,6 +240,7 @@ export function CommentCard({
               className={cn(
                 "text-sm leading-relaxed text-foreground/90",
                 !expanded && "line-clamp-2",
+                resolved && "line-through opacity-60",
               )}
             >
               {comment.message}

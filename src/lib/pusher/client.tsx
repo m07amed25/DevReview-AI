@@ -188,3 +188,31 @@ export function useTypingIndicator(channelName: string | null) {
 }
 
 export { PUSHER_EVENTS };
+
+/**
+ * Subscribe to a private Pusher channel and bind to a specific event.
+ * Returns the latest event data received.
+ */
+export function usePrivateChannel<T = unknown>(
+  channelName: string | null | undefined,
+  event: string,
+  onEvent: (data: T) => void,
+) {
+  const { client } = usePusher();
+  const callbackRef = useRef(onEvent);
+  callbackRef.current = onEvent;
+
+  useEffect(() => {
+    if (!client || !channelName) return;
+
+    const channel = client.subscribe(channelName);
+
+    const handler = (data: T) => callbackRef.current(data);
+    channel.bind(event, handler);
+
+    return () => {
+      channel.unbind(event, handler);
+      client.unsubscribe(channelName);
+    };
+  }, [client, channelName, event]);
+}

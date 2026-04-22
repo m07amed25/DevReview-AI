@@ -3,16 +3,42 @@
 import { useState, useEffect, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Search, X, AlertTriangle, Info, TrendingUp, XCircle } from "lucide-react";
+import {
+  Search,
+  X,
+  AlertTriangle,
+  Info,
+  TrendingUp,
+  XCircle,
+} from "lucide-react";
 import gsap from "gsap";
+import { trpc } from "@/lib/trpc/client";
 
 import { RiskScoreCard } from "./review-result/risk-score-card";
-import { SeverityStatCard, SeverityDistributionBar } from "./review-result/severity-cards";
-import { AISummaryCard, QualityMetricsCard } from "./review-result/quality-metrics-card";
+import {
+  SeverityStatCard,
+  SeverityDistributionBar,
+} from "./review-result/severity-cards";
+import {
+  AISummaryCard,
+  QualityMetricsCard,
+} from "./review-result/quality-metrics-card";
 import { CommentCard, FileGroup } from "./review-result/comment-card";
 import { CommentsToolbar } from "./review-result/comments-toolbar";
-import { PendingCard, ProcessingCard, FailedCard, NoIssuesCard } from "./review-result/status-cards";
-import type { ReviewResultProps, ReviewComment, QualityMetrics, SortKey, SortDir, ViewMode } from "./review-result/types";
+import {
+  PendingCard,
+  ProcessingCard,
+  FailedCard,
+  NoIssuesCard,
+} from "./review-result/status-cards";
+import type {
+  ReviewResultProps,
+  ReviewComment,
+  QualityMetrics,
+  SortKey,
+  SortDir,
+  ViewMode,
+} from "./review-result/types";
 import { SEVERITY_ORDER } from "./review-result/types";
 
 export function ReviewResult({
@@ -36,6 +62,17 @@ export function ReviewResult({
   const [viewMode, setViewMode] = useState<ViewMode>("list");
   const [allExpanded, setAllExpanded] = useState<boolean | null>(null);
   const [expandKey, setExpandKey] = useState(0);
+
+  const [resolvedKeys, setResolvedKeys] = useState<Set<string>>(
+    () => new Set(review.resolvedComments ?? []),
+  );
+  useEffect(() => {
+    setResolvedKeys(new Set(review.resolvedComments ?? []));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [review.id]);
+  const [showResolved, setShowResolved] = useState(true);
+  const toggleResolvedMutation =
+    trpc.review.toggleResolvedComment.useMutation();
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -76,18 +113,21 @@ export function ReviewResult({
     ? (review.comments as ReviewComment[])
     : [];
 
-  const qualityMetrics = (review.qualityMetrics &&
+  const qualityMetrics =
+    review.qualityMetrics &&
     typeof review.qualityMetrics === "object" &&
     !Array.isArray(review.qualityMetrics) &&
-    "complexity" in (review.qualityMetrics as Record<string, unknown>))
-    ? (review.qualityMetrics as QualityMetrics)
-    : null;
+    "complexity" in (review.qualityMetrics as Record<string, unknown>)
+      ? (review.qualityMetrics as QualityMetrics)
+      : null;
 
-  const avgConfidence = comments.length > 0
-    ? Math.round(
-        comments.reduce((sum, c) => sum + (c.confidence ?? 75), 0) / comments.length,
-      )
-    : null;
+  const avgConfidence =
+    comments.length > 0
+      ? Math.round(
+          comments.reduce((sum, c) => sum + (c.confidence ?? 75), 0) /
+            comments.length,
+        )
+      : null;
 
   const severityCounts = {
     critical: comments.filter((c) => c.severity === "critical").length,
@@ -140,6 +180,34 @@ export function ReviewResult({
     setExpandKey((k) => k + 1);
   };
 
+  const getCommentKey = (c: ReviewComment) =>
+    `${c.file}:${c.line}:${c.severity}:${c.category ?? ""}`;
+
+  const toggleResolved = (key: string) => {
+    const nextResolved = !resolvedKeys.has(key);
+    // Optimistic update
+    setResolvedKeys((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+    // Persist to DB, rollback on error
+    toggleResolvedMutation.mutate(
+      { reviewId: review.id, commentKey: key, resolved: nextResolved },
+      {
+        onError: () => {
+          setResolvedKeys((prev) => {
+            const next = new Set(prev);
+            if (nextResolved) next.delete(key);
+            else next.add(key);
+            return next;
+          });
+        },
+      },
+    );
+  };
+
   const filteredComments = comments.filter((c) => {
     if (activeSeverities.size > 0 && !activeSeverities.has(c.severity))
       return false;
@@ -190,6 +258,11 @@ export function ReviewResult({
     },
     {} as Record<string, ReviewComment[]>,
   );
+
+  // If hiding resolved, remove them from the visible list
+  const visibleComments = showResolved
+    ? sortedComments
+    : sortedComments.filter((c) => !resolvedKeys.has(getCommentKey(c)));
 
   const hasActiveFilters =
     activeSeverities.size > 0 ||
@@ -316,7 +389,10 @@ export function ReviewResult({
 
       {qualityMetrics && (
         <div data-animate-in>
-          <QualityMetricsCard metrics={qualityMetrics} avgConfidence={avgConfidence} />
+          <QualityMetricsCard
+            metrics={qualityMetrics}
+            avgConfidence={avgConfidence}
+          />
         </div>
       )}
 
@@ -330,7 +406,7 @@ export function ReviewResult({
         <div data-animate-in className="space-y-3">
           <CommentsToolbar
             totalComments={comments.length}
-            filteredCount={sortedComments.length}
+            filteredCount={visibleComments.length}
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
             allCategories={allCategories}
@@ -348,6 +424,9 @@ export function ReviewResult({
             hasActiveFilters={hasActiveFilters}
             onClearFilters={clearFilters}
             onExport={exportMarkdown}
+            resolvedCount={resolvedKeys.size}
+            showResolved={showResolved}
+            onToggleShowResolved={() => setShowResolved((v) => !v)}
           />
           {sortedComments.length === 0 ? (
             <Card>
@@ -369,13 +448,17 @@ export function ReviewResult({
             </Card>
           ) : viewMode === "list" ? (
             <div className="space-y-2.5">
-              {sortedComments.map((comment, index) => (
+              {visibleComments.map((comment, index) => (
                 <CommentCard
                   key={`${comment.file}:${comment.line}:${index}`}
                   comment={comment}
                   index={index}
                   forceExpanded={allExpanded}
                   expandKey={expandKey}
+                  resolved={resolvedKeys.has(getCommentKey(comment))}
+                  onToggleResolved={() =>
+                    toggleResolved(getCommentKey(comment))
+                  }
                 />
               ))}
             </div>
@@ -388,6 +471,8 @@ export function ReviewResult({
                   comments={fileComments}
                   allExpanded={allExpanded}
                   expandKey={expandKey}
+                  resolvedKeys={resolvedKeys}
+                  onToggleResolved={toggleResolved}
                 />
               ))}
             </div>
@@ -403,4 +488,3 @@ export function ReviewResult({
     </div>
   );
 }
-

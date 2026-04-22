@@ -50,3 +50,5 @@ next-env.d.ts
 .vscode
 .specify
 specs
+.github
+.agents

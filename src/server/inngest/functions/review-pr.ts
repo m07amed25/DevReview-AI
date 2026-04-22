@@ -8,6 +8,7 @@ import {
   getGitHubAccessToken,
 } from "@/server/services/github";
 import { sendReviewCompletedEmailNotification } from "@/server/email/integrations/review";
+import { matchTriggerRules } from "@/server/services/diagram-generator";
 
 export type ReviewPREvent = {
   name: "review/pr.requested";
@@ -143,6 +144,40 @@ export const reviewPR = inngest.createFunction(
         });
       });
 
+      // Dispatch diagram generation for matched trigger rules
+      await step.run("trigger-diagram-generation", async () => {
+        const changedFilePaths = files.map((f) => f.filename);
+        const matchedTypes = matchTriggerRules(changedFilePaths);
+        if (matchedTypes.length === 0) return;
+
+        for (const diagramType of matchedTypes) {
+          const diagram = await db.diagram.upsert({
+            where: { reviewId_type: { reviewId, type: diagramType } },
+            create: { reviewId, type: diagramType, status: "PENDING" },
+            update: {
+              status: "PENDING",
+              definition: null,
+              nodes: undefined,
+              edges: undefined,
+              error: null,
+              generatedAt: null,
+            },
+          });
+
+          await inngest.send({
+            name: "diagram/generation.requested",
+            data: {
+              diagramId: diagram.id,
+              reviewId,
+              repositoryId,
+              userId,
+              prNumber,
+              type: diagramType,
+            },
+          });
+        }
+      });
+
       await step.sendEvent("emit-review-completed", {
         name: "review/pr.completed",
         data: {
@@ -157,8 +192,8 @@ export const reviewPR = inngest.createFunction(
                 const value = comment as
                   | { severity?: string; severityLevel?: string; text?: string }
                   | undefined;
-                const severity = `${value?.severity ?? value?.severityLevel ?? ""}`
-                  .toUpperCase();
+                const severity =
+                  `${value?.severity ?? value?.severityLevel ?? ""}`.toUpperCase();
                 if (severity === "HIGH" || severity === "CRITICAL") return true;
                 return `${value?.text ?? ""}`
                   .toUpperCase()

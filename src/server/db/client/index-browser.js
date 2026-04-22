@@ -323,6 +323,20 @@ exports.Prisma.BranchProtectionRecommendationScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.DiagramScalarFieldEnum = {
+  id: 'id',
+  reviewId: 'reviewId',
+  type: 'type',
+  status: 'status',
+  definition: 'definition',
+  nodes: 'nodes',
+  edges: 'edges',
+  error: 'error',
+  generatedAt: 'generatedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -410,6 +424,18 @@ exports.RecommendationPriority = exports.$Enums.RecommendationPriority = {
   LOW: 'LOW'
 };
 
+exports.DiagramType = exports.$Enums.DiagramType = {
+  ERD: 'ERD',
+  CLASS: 'CLASS',
+  USE_CASE: 'USE_CASE'
+};
+
+exports.DiagramStatus = exports.$Enums.DiagramStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Session: 'Session',
@@ -428,7 +454,8 @@ exports.Prisma.ModelName = {
   ScheduledScanRun: 'ScheduledScanRun',
   GitHubComment: 'GitHubComment',
   GitHubStatusCheck: 'GitHubStatusCheck',
-  BranchProtectionRecommendation: 'BranchProtectionRecommendation'
+  BranchProtectionRecommendation: 'BranchProtectionRecommendation',
+  Diagram: 'Diagram'
 };
 
 /**

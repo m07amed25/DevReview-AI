@@ -183,6 +183,58 @@ export const reviewRouter = createTRPCRouter({
           ],
         },
         orderBy: { createdAt: "desc" },
+      }) as Promise<
+        | (Awaited<ReturnType<typeof ctx.db.review.findFirst>> & {
+            resolvedComments: string[];
+          })
+        | null
+      >;
+    }),
+
+  toggleResolvedComment: protectedProcedure
+    .input(
+      z.object({
+        reviewId: z.string(),
+        commentKey: z.string(),
+        resolved: z.boolean(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Verify access
+      const review = await ctx.db.review.findFirst({
+        where: {
+          id: input.reviewId,
+          OR: [
+            { userId: ctx.user.id },
+            {
+              repository: {
+                team: { members: { some: { userId: ctx.user.id } } },
+              },
+            },
+          ],
+        },
+        select: { id: true },
       });
+
+      if (!review) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Review not found" });
+      }
+
+      if (input.resolved) {
+        // Remove then re-append to avoid duplicates (idempotent)
+        await ctx.db.$executeRaw`
+          UPDATE "Review"
+          SET "resolvedComments" = array_append(array_remove("resolvedComments", ${input.commentKey}), ${input.commentKey})
+          WHERE id = ${input.reviewId}
+        `;
+      } else {
+        await ctx.db.$executeRaw`
+          UPDATE "Review"
+          SET "resolvedComments" = array_remove("resolvedComments", ${input.commentKey})
+          WHERE id = ${input.reviewId}
+        `;
+      }
+
+      return { success: true };
     }),
 });

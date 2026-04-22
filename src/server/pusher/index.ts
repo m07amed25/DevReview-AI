@@ -34,6 +34,10 @@ export function reviewChannel(reviewId: string) {
   return `presence-review-${reviewId}`;
 }
 
+export function privateDiagramChannel(reviewId: string) {
+  return `private-review-${reviewId}`;
+}
+
 // ─── Event names ───────────────────────────────────────────────────
 export const PUSHER_EVENTS = {
   // Thread events

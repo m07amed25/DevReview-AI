@@ -6,6 +6,7 @@ export {
   weeklyScheduledScan,
   handleScanCompleted,
 } from "./functions/scheduled-scan";
+export { generateDiagram } from "./functions/generate-diagram";
 
 import { reviewPR } from "./functions/review-pr";
 import { postReviewToGitHub } from "./functions/post-review-to-github";
@@ -14,6 +15,7 @@ import {
   weeklyScheduledScan,
   handleScanCompleted,
 } from "./functions/scheduled-scan";
+import { generateDiagram } from "./functions/generate-diagram";
 
 export const functions = [
   reviewPR,
@@ -21,4 +23,5 @@ export const functions = [
   dailyScheduledScan,
   weeklyScheduledScan,
   handleScanCompleted,
+  generateDiagram,
 ];

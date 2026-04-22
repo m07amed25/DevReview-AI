@@ -8,6 +8,7 @@ import { teamRouter } from "./routers/team";
 import { notificationRouter } from "./routers/notification";
 import { analyticsRouter } from "./routers/analytics";
 import { automationRouter } from "./routers/automation";
+import { diagramRouter } from "./routers/diagram";
 import { createCallerFactory, createTRPCRouter, publicProcedure } from "./trpc";
 
 export const appRouter = createTRPCRouter({
@@ -27,6 +28,7 @@ export const appRouter = createTRPCRouter({
   notification: notificationRouter,
   analytics: analyticsRouter,
   automation: automationRouter,
+  diagram: diagramRouter,
 });
 
 export type AppRouter = typeof appRouter;

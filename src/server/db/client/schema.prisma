@@ -134,6 +134,7 @@ model Review {
   repository        Repository         @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
   user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   threads           ReviewThread[]
+  diagrams          Diagram[]
   githubComment     GitHubComment?
   githubStatusCheck GitHubStatusCheck?
 
@@ -274,8 +275,6 @@ enum NotificationType {
   SCHEDULED_SCAN_COMPLETED
 }
 
-// ─── Phase 9: CI/CD & Automation ──────────────────────────────────────────────
-
 enum ScanCadence {
   DAILY
   WEEKLY
@@ -392,4 +391,35 @@ model BranchProtectionRecommendation {
 
   @@index([repositoryId])
   @@map("branch_protection_recommendation")
+}
+
+enum DiagramType {
+  ERD
+  CLASS
+  USE_CASE
+}
+
+enum DiagramStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+model Diagram {
+  id          String        @id @default(cuid())
+  reviewId    String
+  type        DiagramType
+  status      DiagramStatus @default(PENDING)
+  definition  String?       @db.Text
+  nodes       Json?
+  edges       Json?
+  error       String?
+  generatedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  review Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@unique([reviewId, type])
+  @@index([reviewId])
 }

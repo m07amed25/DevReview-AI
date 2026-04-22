@@ -13,6 +13,7 @@ import {
   ChevronsDownUp,
   Download,
   ArrowUpDown,
+  CheckCircle2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getCategoryIcon } from "./helpers";
@@ -36,6 +37,9 @@ export function CommentsToolbar({
   hasActiveFilters,
   onClearFilters,
   onExport,
+  resolvedCount,
+  showResolved,
+  onToggleShowResolved,
 }: {
   totalComments: number;
   filteredCount: number;
@@ -54,6 +58,9 @@ export function CommentsToolbar({
   hasActiveFilters: boolean;
   onClearFilters: () => void;
   onExport: () => void;
+  resolvedCount: number;
+  showResolved: boolean;
+  onToggleShowResolved: () => void;
 }) {
   const [searchOpen, setSearchOpen] = useState(searchQuery !== "");
 
@@ -113,6 +120,26 @@ export function CommentsToolbar({
             <ChevronsUpDown className="size-3.5" />
           )}
         </Button>
+
+        {resolvedCount > 0 && (
+          <Button
+            variant={!showResolved ? "secondary" : "ghost"}
+            size="sm"
+            className="size-8 p-0 relative"
+            onClick={onToggleShowResolved}
+            title={showResolved ? "Hide resolved" : "Show resolved"}
+          >
+            <CheckCircle2
+              className={cn(
+                "size-3.5",
+                !showResolved ? "text-emerald-500" : "text-muted-foreground",
+              )}
+            />
+            <span className="absolute -top-1 -right-1 size-3.5 rounded-full bg-emerald-500 text-white text-[8px] flex items-center justify-center font-bold leading-none">
+              {resolvedCount}
+            </span>
+          </Button>
+        )}
 
         <Button
           variant="ghost"

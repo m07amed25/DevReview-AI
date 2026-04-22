@@ -103,6 +103,11 @@ export type GitHubStatusCheck = $Result.DefaultSelection<Prisma.$GitHubStatusChe
  * 
  */
 export type BranchProtectionRecommendation = $Result.DefaultSelection<Prisma.$BranchProtectionRecommendationPayload>
+/**
+ * Model Diagram
+ * 
+ */
+export type Diagram = $Result.DefaultSelection<Prisma.$DiagramPayload>
 
 /**
  * Enums
@@ -196,6 +201,24 @@ export const RecommendationPriority: {
 
 export type RecommendationPriority = (typeof RecommendationPriority)[keyof typeof RecommendationPriority]
 
+
+export const DiagramType: {
+  ERD: 'ERD',
+  CLASS: 'CLASS',
+  USE_CASE: 'USE_CASE'
+};
+
+export type DiagramType = (typeof DiagramType)[keyof typeof DiagramType]
+
+
+export const DiagramStatus: {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
+export type DiagramStatus = (typeof DiagramStatus)[keyof typeof DiagramStatus]
+
 }
 
 export type ReviewStatus = $Enums.ReviewStatus
@@ -233,6 +256,14 @@ export const GitHubCheckState: typeof $Enums.GitHubCheckState
 export type RecommendationPriority = $Enums.RecommendationPriority
 
 export const RecommendationPriority: typeof $Enums.RecommendationPriority
+
+export type DiagramType = $Enums.DiagramType
+
+export const DiagramType: typeof $Enums.DiagramType
+
+export type DiagramStatus = $Enums.DiagramStatus
+
+export const DiagramStatus: typeof $Enums.DiagramStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -531,6 +562,16 @@ export class PrismaClient<
     * ```
     */
   get branchProtectionRecommendation(): Prisma.BranchProtectionRecommendationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.diagram`: Exposes CRUD operations for the **Diagram** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Diagrams
+    * const diagrams = await prisma.diagram.findMany()
+    * ```
+    */
+  get diagram(): Prisma.DiagramDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -989,7 +1030,8 @@ export namespace Prisma {
     ScheduledScanRun: 'ScheduledScanRun',
     GitHubComment: 'GitHubComment',
     GitHubStatusCheck: 'GitHubStatusCheck',
-    BranchProtectionRecommendation: 'BranchProtectionRecommendation'
+    BranchProtectionRecommendation: 'BranchProtectionRecommendation',
+    Diagram: 'Diagram'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1008,7 +1050,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "repository" | "review" | "reviewThread" | "reviewThreadComment" | "team" | "teamMember" | "teamAction" | "notification" | "webhookConfig" | "scheduledScanConfig" | "scheduledScanRun" | "gitHubComment" | "gitHubStatusCheck" | "branchProtectionRecommendation"
+      modelProps: "user" | "session" | "account" | "verification" | "repository" | "review" | "reviewThread" | "reviewThreadComment" | "team" | "teamMember" | "teamAction" | "notification" | "webhookConfig" | "scheduledScanConfig" | "scheduledScanRun" | "gitHubComment" | "gitHubStatusCheck" | "branchProtectionRecommendation" | "diagram"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2344,6 +2386,80 @@ export namespace Prisma {
           }
         }
       }
+      Diagram: {
+        payload: Prisma.$DiagramPayload<ExtArgs>
+        fields: Prisma.DiagramFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DiagramFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiagramPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DiagramFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiagramPayload>
+          }
+          findFirst: {
+            args: Prisma.DiagramFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiagramPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DiagramFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiagramPayload>
+          }
+          findMany: {
+            args: Prisma.DiagramFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiagramPayload>[]
+          }
+          create: {
+            args: Prisma.DiagramCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiagramPayload>
+          }
+          createMany: {
+            args: Prisma.DiagramCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DiagramCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiagramPayload>[]
+          }
+          delete: {
+            args: Prisma.DiagramDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiagramPayload>
+          }
+          update: {
+            args: Prisma.DiagramUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiagramPayload>
+          }
+          deleteMany: {
+            args: Prisma.DiagramDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DiagramUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DiagramUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiagramPayload>[]
+          }
+          upsert: {
+            args: Prisma.DiagramUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiagramPayload>
+          }
+          aggregate: {
+            args: Prisma.DiagramAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDiagram>
+          }
+          groupBy: {
+            args: Prisma.DiagramGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DiagramGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DiagramCountArgs<ExtArgs>
+            result: $Utils.Optional<DiagramCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2458,6 +2574,7 @@ export namespace Prisma {
     gitHubComment?: GitHubCommentOmit
     gitHubStatusCheck?: GitHubStatusCheckOmit
     branchProtectionRecommendation?: BranchProtectionRecommendationOmit
+    diagram?: DiagramOmit
   }
 
   /* Types for Logging */
@@ -2673,10 +2790,12 @@ export namespace Prisma {
 
   export type ReviewCountOutputType = {
     threads: number
+    diagrams: number
   }
 
   export type ReviewCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     threads?: boolean | ReviewCountOutputTypeCountThreadsArgs
+    diagrams?: boolean | ReviewCountOutputTypeCountDiagramsArgs
   }
 
   // Custom InputTypes
@@ -2695,6 +2814,13 @@ export namespace Prisma {
    */
   export type ReviewCountOutputTypeCountThreadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReviewThreadWhereInput
+  }
+
+  /**
+   * ReviewCountOutputType without action
+   */
+  export type ReviewCountOutputTypeCountDiagramsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DiagramWhereInput
   }
 
 
@@ -8994,6 +9120,7 @@ export namespace Prisma {
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     threads?: boolean | Review$threadsArgs<ExtArgs>
+    diagrams?: boolean | Review$diagramsArgs<ExtArgs>
     githubComment?: boolean | Review$githubCommentArgs<ExtArgs>
     githubStatusCheck?: boolean | Review$githubStatusCheckArgs<ExtArgs>
     _count?: boolean | ReviewCountOutputTypeDefaultArgs<ExtArgs>
@@ -9059,6 +9186,7 @@ export namespace Prisma {
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     threads?: boolean | Review$threadsArgs<ExtArgs>
+    diagrams?: boolean | Review$diagramsArgs<ExtArgs>
     githubComment?: boolean | Review$githubCommentArgs<ExtArgs>
     githubStatusCheck?: boolean | Review$githubStatusCheckArgs<ExtArgs>
     _count?: boolean | ReviewCountOutputTypeDefaultArgs<ExtArgs>
@@ -9078,6 +9206,7 @@ export namespace Prisma {
       repository: Prisma.$RepositoryPayload<ExtArgs>
       user: Prisma.$UserPayload<ExtArgs>
       threads: Prisma.$ReviewThreadPayload<ExtArgs>[]
+      diagrams: Prisma.$DiagramPayload<ExtArgs>[]
       githubComment: Prisma.$GitHubCommentPayload<ExtArgs> | null
       githubStatusCheck: Prisma.$GitHubStatusCheckPayload<ExtArgs> | null
     }
@@ -9493,6 +9622,7 @@ export namespace Prisma {
     repository<T extends RepositoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RepositoryDefaultArgs<ExtArgs>>): Prisma__RepositoryClient<$Result.GetResult<Prisma.$RepositoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     threads<T extends Review$threadsArgs<ExtArgs> = {}>(args?: Subset<T, Review$threadsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewThreadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    diagrams<T extends Review$diagramsArgs<ExtArgs> = {}>(args?: Subset<T, Review$diagramsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DiagramPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     githubComment<T extends Review$githubCommentArgs<ExtArgs> = {}>(args?: Subset<T, Review$githubCommentArgs<ExtArgs>>): Prisma__GitHubCommentClient<$Result.GetResult<Prisma.$GitHubCommentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     githubStatusCheck<T extends Review$githubStatusCheckArgs<ExtArgs> = {}>(args?: Subset<T, Review$githubStatusCheckArgs<ExtArgs>>): Prisma__GitHubStatusCheckClient<$Result.GetResult<Prisma.$GitHubStatusCheckPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
@@ -9955,6 +10085,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ReviewThreadScalarFieldEnum | ReviewThreadScalarFieldEnum[]
+  }
+
+  /**
+   * Review.diagrams
+   */
+  export type Review$diagramsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Diagram
+     */
+    select?: DiagramSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Diagram
+     */
+    omit?: DiagramOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiagramInclude<ExtArgs> | null
+    where?: DiagramWhereInput
+    orderBy?: DiagramOrderByWithRelationInput | DiagramOrderByWithRelationInput[]
+    cursor?: DiagramWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DiagramScalarFieldEnum | DiagramScalarFieldEnum[]
   }
 
   /**
@@ -23328,6 +23482,1134 @@ export namespace Prisma {
 
 
   /**
+   * Model Diagram
+   */
+
+  export type AggregateDiagram = {
+    _count: DiagramCountAggregateOutputType | null
+    _min: DiagramMinAggregateOutputType | null
+    _max: DiagramMaxAggregateOutputType | null
+  }
+
+  export type DiagramMinAggregateOutputType = {
+    id: string | null
+    reviewId: string | null
+    type: $Enums.DiagramType | null
+    status: $Enums.DiagramStatus | null
+    definition: string | null
+    error: string | null
+    generatedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DiagramMaxAggregateOutputType = {
+    id: string | null
+    reviewId: string | null
+    type: $Enums.DiagramType | null
+    status: $Enums.DiagramStatus | null
+    definition: string | null
+    error: string | null
+    generatedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DiagramCountAggregateOutputType = {
+    id: number
+    reviewId: number
+    type: number
+    status: number
+    definition: number
+    nodes: number
+    edges: number
+    error: number
+    generatedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DiagramMinAggregateInputType = {
+    id?: true
+    reviewId?: true
+    type?: true
+    status?: true
+    definition?: true
+    error?: true
+    generatedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DiagramMaxAggregateInputType = {
+    id?: true
+    reviewId?: true
+    type?: true
+    status?: true
+    definition?: true
+    error?: true
+    generatedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DiagramCountAggregateInputType = {
+    id?: true
+    reviewId?: true
+    type?: true
+    status?: true
+    definition?: true
+    nodes?: true
+    edges?: true
+    error?: true
+    generatedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DiagramAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Diagram to aggregate.
+     */
+    where?: DiagramWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Diagrams to fetch.
+     */
+    orderBy?: DiagramOrderByWithRelationInput | DiagramOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DiagramWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Diagrams from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Diagrams.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Diagrams
+    **/
+    _count?: true | DiagramCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DiagramMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DiagramMaxAggregateInputType
+  }
+
+  export type GetDiagramAggregateType<T extends DiagramAggregateArgs> = {
+        [P in keyof T & keyof AggregateDiagram]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDiagram[P]>
+      : GetScalarType<T[P], AggregateDiagram[P]>
+  }
+
+
+
+
+  export type DiagramGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DiagramWhereInput
+    orderBy?: DiagramOrderByWithAggregationInput | DiagramOrderByWithAggregationInput[]
+    by: DiagramScalarFieldEnum[] | DiagramScalarFieldEnum
+    having?: DiagramScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DiagramCountAggregateInputType | true
+    _min?: DiagramMinAggregateInputType
+    _max?: DiagramMaxAggregateInputType
+  }
+
+  export type DiagramGroupByOutputType = {
+    id: string
+    reviewId: string
+    type: $Enums.DiagramType
+    status: $Enums.DiagramStatus
+    definition: string | null
+    nodes: JsonValue | null
+    edges: JsonValue | null
+    error: string | null
+    generatedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: DiagramCountAggregateOutputType | null
+    _min: DiagramMinAggregateOutputType | null
+    _max: DiagramMaxAggregateOutputType | null
+  }
+
+  type GetDiagramGroupByPayload<T extends DiagramGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DiagramGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DiagramGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DiagramGroupByOutputType[P]>
+            : GetScalarType<T[P], DiagramGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DiagramSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    reviewId?: boolean
+    type?: boolean
+    status?: boolean
+    definition?: boolean
+    nodes?: boolean
+    edges?: boolean
+    error?: boolean
+    generatedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["diagram"]>
+
+  export type DiagramSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    reviewId?: boolean
+    type?: boolean
+    status?: boolean
+    definition?: boolean
+    nodes?: boolean
+    edges?: boolean
+    error?: boolean
+    generatedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["diagram"]>
+
+  export type DiagramSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    reviewId?: boolean
+    type?: boolean
+    status?: boolean
+    definition?: boolean
+    nodes?: boolean
+    edges?: boolean
+    error?: boolean
+    generatedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["diagram"]>
+
+  export type DiagramSelectScalar = {
+    id?: boolean
+    reviewId?: boolean
+    type?: boolean
+    status?: boolean
+    definition?: boolean
+    nodes?: boolean
+    edges?: boolean
+    error?: boolean
+    generatedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DiagramOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "reviewId" | "type" | "status" | "definition" | "nodes" | "edges" | "error" | "generatedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["diagram"]>
+  export type DiagramInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+  }
+  export type DiagramIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+  }
+  export type DiagramIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+  }
+
+  export type $DiagramPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Diagram"
+    objects: {
+      review: Prisma.$ReviewPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      reviewId: string
+      type: $Enums.DiagramType
+      status: $Enums.DiagramStatus
+      definition: string | null
+      nodes: Prisma.JsonValue | null
+      edges: Prisma.JsonValue | null
+      error: string | null
+      generatedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["diagram"]>
+    composites: {}
+  }
+
+  type DiagramGetPayload<S extends boolean | null | undefined | DiagramDefaultArgs> = $Result.GetResult<Prisma.$DiagramPayload, S>
+
+  type DiagramCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DiagramFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DiagramCountAggregateInputType | true
+    }
+
+  export interface DiagramDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Diagram'], meta: { name: 'Diagram' } }
+    /**
+     * Find zero or one Diagram that matches the filter.
+     * @param {DiagramFindUniqueArgs} args - Arguments to find a Diagram
+     * @example
+     * // Get one Diagram
+     * const diagram = await prisma.diagram.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DiagramFindUniqueArgs>(args: SelectSubset<T, DiagramFindUniqueArgs<ExtArgs>>): Prisma__DiagramClient<$Result.GetResult<Prisma.$DiagramPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Diagram that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DiagramFindUniqueOrThrowArgs} args - Arguments to find a Diagram
+     * @example
+     * // Get one Diagram
+     * const diagram = await prisma.diagram.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DiagramFindUniqueOrThrowArgs>(args: SelectSubset<T, DiagramFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DiagramClient<$Result.GetResult<Prisma.$DiagramPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Diagram that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DiagramFindFirstArgs} args - Arguments to find a Diagram
+     * @example
+     * // Get one Diagram
+     * const diagram = await prisma.diagram.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DiagramFindFirstArgs>(args?: SelectSubset<T, DiagramFindFirstArgs<ExtArgs>>): Prisma__DiagramClient<$Result.GetResult<Prisma.$DiagramPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Diagram that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DiagramFindFirstOrThrowArgs} args - Arguments to find a Diagram
+     * @example
+     * // Get one Diagram
+     * const diagram = await prisma.diagram.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DiagramFindFirstOrThrowArgs>(args?: SelectSubset<T, DiagramFindFirstOrThrowArgs<ExtArgs>>): Prisma__DiagramClient<$Result.GetResult<Prisma.$DiagramPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Diagrams that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DiagramFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Diagrams
+     * const diagrams = await prisma.diagram.findMany()
+     * 
+     * // Get first 10 Diagrams
+     * const diagrams = await prisma.diagram.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const diagramWithIdOnly = await prisma.diagram.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DiagramFindManyArgs>(args?: SelectSubset<T, DiagramFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DiagramPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Diagram.
+     * @param {DiagramCreateArgs} args - Arguments to create a Diagram.
+     * @example
+     * // Create one Diagram
+     * const Diagram = await prisma.diagram.create({
+     *   data: {
+     *     // ... data to create a Diagram
+     *   }
+     * })
+     * 
+     */
+    create<T extends DiagramCreateArgs>(args: SelectSubset<T, DiagramCreateArgs<ExtArgs>>): Prisma__DiagramClient<$Result.GetResult<Prisma.$DiagramPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Diagrams.
+     * @param {DiagramCreateManyArgs} args - Arguments to create many Diagrams.
+     * @example
+     * // Create many Diagrams
+     * const diagram = await prisma.diagram.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DiagramCreateManyArgs>(args?: SelectSubset<T, DiagramCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Diagrams and returns the data saved in the database.
+     * @param {DiagramCreateManyAndReturnArgs} args - Arguments to create many Diagrams.
+     * @example
+     * // Create many Diagrams
+     * const diagram = await prisma.diagram.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Diagrams and only return the `id`
+     * const diagramWithIdOnly = await prisma.diagram.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DiagramCreateManyAndReturnArgs>(args?: SelectSubset<T, DiagramCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DiagramPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Diagram.
+     * @param {DiagramDeleteArgs} args - Arguments to delete one Diagram.
+     * @example
+     * // Delete one Diagram
+     * const Diagram = await prisma.diagram.delete({
+     *   where: {
+     *     // ... filter to delete one Diagram
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DiagramDeleteArgs>(args: SelectSubset<T, DiagramDeleteArgs<ExtArgs>>): Prisma__DiagramClient<$Result.GetResult<Prisma.$DiagramPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Diagram.
+     * @param {DiagramUpdateArgs} args - Arguments to update one Diagram.
+     * @example
+     * // Update one Diagram
+     * const diagram = await prisma.diagram.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DiagramUpdateArgs>(args: SelectSubset<T, DiagramUpdateArgs<ExtArgs>>): Prisma__DiagramClient<$Result.GetResult<Prisma.$DiagramPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Diagrams.
+     * @param {DiagramDeleteManyArgs} args - Arguments to filter Diagrams to delete.
+     * @example
+     * // Delete a few Diagrams
+     * const { count } = await prisma.diagram.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DiagramDeleteManyArgs>(args?: SelectSubset<T, DiagramDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Diagrams.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DiagramUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Diagrams
+     * const diagram = await prisma.diagram.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DiagramUpdateManyArgs>(args: SelectSubset<T, DiagramUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Diagrams and returns the data updated in the database.
+     * @param {DiagramUpdateManyAndReturnArgs} args - Arguments to update many Diagrams.
+     * @example
+     * // Update many Diagrams
+     * const diagram = await prisma.diagram.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Diagrams and only return the `id`
+     * const diagramWithIdOnly = await prisma.diagram.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DiagramUpdateManyAndReturnArgs>(args: SelectSubset<T, DiagramUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DiagramPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Diagram.
+     * @param {DiagramUpsertArgs} args - Arguments to update or create a Diagram.
+     * @example
+     * // Update or create a Diagram
+     * const diagram = await prisma.diagram.upsert({
+     *   create: {
+     *     // ... data to create a Diagram
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Diagram we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DiagramUpsertArgs>(args: SelectSubset<T, DiagramUpsertArgs<ExtArgs>>): Prisma__DiagramClient<$Result.GetResult<Prisma.$DiagramPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Diagrams.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DiagramCountArgs} args - Arguments to filter Diagrams to count.
+     * @example
+     * // Count the number of Diagrams
+     * const count = await prisma.diagram.count({
+     *   where: {
+     *     // ... the filter for the Diagrams we want to count
+     *   }
+     * })
+    **/
+    count<T extends DiagramCountArgs>(
+      args?: Subset<T, DiagramCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DiagramCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Diagram.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DiagramAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DiagramAggregateArgs>(args: Subset<T, DiagramAggregateArgs>): Prisma.PrismaPromise<GetDiagramAggregateType<T>>
+
+    /**
+     * Group by Diagram.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DiagramGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DiagramGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DiagramGroupByArgs['orderBy'] }
+        : { orderBy?: DiagramGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DiagramGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDiagramGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Diagram model
+   */
+  readonly fields: DiagramFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Diagram.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DiagramClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    review<T extends ReviewDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ReviewDefaultArgs<ExtArgs>>): Prisma__ReviewClient<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Diagram model
+   */
+  interface DiagramFieldRefs {
+    readonly id: FieldRef<"Diagram", 'String'>
+    readonly reviewId: FieldRef<"Diagram", 'String'>
+    readonly type: FieldRef<"Diagram", 'DiagramType'>
+    readonly status: FieldRef<"Diagram", 'DiagramStatus'>
+    readonly definition: FieldRef<"Diagram", 'String'>
+    readonly nodes: FieldRef<"Diagram", 'Json'>
+    readonly edges: FieldRef<"Diagram", 'Json'>
+    readonly error: FieldRef<"Diagram", 'String'>
+    readonly generatedAt: FieldRef<"Diagram", 'DateTime'>
+    readonly createdAt: FieldRef<"Diagram", 'DateTime'>
+    readonly updatedAt: FieldRef<"Diagram", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Diagram findUnique
+   */
+  export type DiagramFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Diagram
+     */
+    select?: DiagramSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Diagram
+     */
+    omit?: DiagramOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiagramInclude<ExtArgs> | null
+    /**
+     * Filter, which Diagram to fetch.
+     */
+    where: DiagramWhereUniqueInput
+  }
+
+  /**
+   * Diagram findUniqueOrThrow
+   */
+  export type DiagramFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Diagram
+     */
+    select?: DiagramSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Diagram
+     */
+    omit?: DiagramOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiagramInclude<ExtArgs> | null
+    /**
+     * Filter, which Diagram to fetch.
+     */
+    where: DiagramWhereUniqueInput
+  }
+
+  /**
+   * Diagram findFirst
+   */
+  export type DiagramFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Diagram
+     */
+    select?: DiagramSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Diagram
+     */
+    omit?: DiagramOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiagramInclude<ExtArgs> | null
+    /**
+     * Filter, which Diagram to fetch.
+     */
+    where?: DiagramWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Diagrams to fetch.
+     */
+    orderBy?: DiagramOrderByWithRelationInput | DiagramOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Diagrams.
+     */
+    cursor?: DiagramWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Diagrams from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Diagrams.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Diagrams.
+     */
+    distinct?: DiagramScalarFieldEnum | DiagramScalarFieldEnum[]
+  }
+
+  /**
+   * Diagram findFirstOrThrow
+   */
+  export type DiagramFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Diagram
+     */
+    select?: DiagramSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Diagram
+     */
+    omit?: DiagramOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiagramInclude<ExtArgs> | null
+    /**
+     * Filter, which Diagram to fetch.
+     */
+    where?: DiagramWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Diagrams to fetch.
+     */
+    orderBy?: DiagramOrderByWithRelationInput | DiagramOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Diagrams.
+     */
+    cursor?: DiagramWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Diagrams from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Diagrams.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Diagrams.
+     */
+    distinct?: DiagramScalarFieldEnum | DiagramScalarFieldEnum[]
+  }
+
+  /**
+   * Diagram findMany
+   */
+  export type DiagramFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Diagram
+     */
+    select?: DiagramSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Diagram
+     */
+    omit?: DiagramOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiagramInclude<ExtArgs> | null
+    /**
+     * Filter, which Diagrams to fetch.
+     */
+    where?: DiagramWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Diagrams to fetch.
+     */
+    orderBy?: DiagramOrderByWithRelationInput | DiagramOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Diagrams.
+     */
+    cursor?: DiagramWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Diagrams from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Diagrams.
+     */
+    skip?: number
+    distinct?: DiagramScalarFieldEnum | DiagramScalarFieldEnum[]
+  }
+
+  /**
+   * Diagram create
+   */
+  export type DiagramCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Diagram
+     */
+    select?: DiagramSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Diagram
+     */
+    omit?: DiagramOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiagramInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Diagram.
+     */
+    data: XOR<DiagramCreateInput, DiagramUncheckedCreateInput>
+  }
+
+  /**
+   * Diagram createMany
+   */
+  export type DiagramCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Diagrams.
+     */
+    data: DiagramCreateManyInput | DiagramCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Diagram createManyAndReturn
+   */
+  export type DiagramCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Diagram
+     */
+    select?: DiagramSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Diagram
+     */
+    omit?: DiagramOmit<ExtArgs> | null
+    /**
+     * The data used to create many Diagrams.
+     */
+    data: DiagramCreateManyInput | DiagramCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiagramIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Diagram update
+   */
+  export type DiagramUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Diagram
+     */
+    select?: DiagramSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Diagram
+     */
+    omit?: DiagramOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiagramInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Diagram.
+     */
+    data: XOR<DiagramUpdateInput, DiagramUncheckedUpdateInput>
+    /**
+     * Choose, which Diagram to update.
+     */
+    where: DiagramWhereUniqueInput
+  }
+
+  /**
+   * Diagram updateMany
+   */
+  export type DiagramUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Diagrams.
+     */
+    data: XOR<DiagramUpdateManyMutationInput, DiagramUncheckedUpdateManyInput>
+    /**
+     * Filter which Diagrams to update
+     */
+    where?: DiagramWhereInput
+    /**
+     * Limit how many Diagrams to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Diagram updateManyAndReturn
+   */
+  export type DiagramUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Diagram
+     */
+    select?: DiagramSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Diagram
+     */
+    omit?: DiagramOmit<ExtArgs> | null
+    /**
+     * The data used to update Diagrams.
+     */
+    data: XOR<DiagramUpdateManyMutationInput, DiagramUncheckedUpdateManyInput>
+    /**
+     * Filter which Diagrams to update
+     */
+    where?: DiagramWhereInput
+    /**
+     * Limit how many Diagrams to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiagramIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Diagram upsert
+   */
+  export type DiagramUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Diagram
+     */
+    select?: DiagramSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Diagram
+     */
+    omit?: DiagramOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiagramInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Diagram to update in case it exists.
+     */
+    where: DiagramWhereUniqueInput
+    /**
+     * In case the Diagram found by the `where` argument doesn't exist, create a new Diagram with this data.
+     */
+    create: XOR<DiagramCreateInput, DiagramUncheckedCreateInput>
+    /**
+     * In case the Diagram was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DiagramUpdateInput, DiagramUncheckedUpdateInput>
+  }
+
+  /**
+   * Diagram delete
+   */
+  export type DiagramDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Diagram
+     */
+    select?: DiagramSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Diagram
+     */
+    omit?: DiagramOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiagramInclude<ExtArgs> | null
+    /**
+     * Filter which Diagram to delete.
+     */
+    where: DiagramWhereUniqueInput
+  }
+
+  /**
+   * Diagram deleteMany
+   */
+  export type DiagramDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Diagrams to delete
+     */
+    where?: DiagramWhereInput
+    /**
+     * Limit how many Diagrams to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Diagram without action
+   */
+  export type DiagramDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Diagram
+     */
+    select?: DiagramSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Diagram
+     */
+    omit?: DiagramOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiagramInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -23597,6 +24879,23 @@ export namespace Prisma {
   export type BranchProtectionRecommendationScalarFieldEnum = (typeof BranchProtectionRecommendationScalarFieldEnum)[keyof typeof BranchProtectionRecommendationScalarFieldEnum]
 
 
+  export const DiagramScalarFieldEnum: {
+    id: 'id',
+    reviewId: 'reviewId',
+    type: 'type',
+    status: 'status',
+    definition: 'definition',
+    nodes: 'nodes',
+    edges: 'edges',
+    error: 'error',
+    generatedAt: 'generatedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DiagramScalarFieldEnum = (typeof DiagramScalarFieldEnum)[keyof typeof DiagramScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -23829,6 +25128,34 @@ export namespace Prisma {
    * Reference to a field of type 'RecommendationPriority[]'
    */
   export type ListEnumRecommendationPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RecommendationPriority[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'DiagramType'
+   */
+  export type EnumDiagramTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DiagramType'>
+    
+
+
+  /**
+   * Reference to a field of type 'DiagramType[]'
+   */
+  export type ListEnumDiagramTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DiagramType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'DiagramStatus'
+   */
+  export type EnumDiagramStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DiagramStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'DiagramStatus[]'
+   */
+  export type ListEnumDiagramStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DiagramStatus[]'>
     
 
 
@@ -24301,6 +25628,7 @@ export namespace Prisma {
     repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     threads?: ReviewThreadListRelationFilter
+    diagrams?: DiagramListRelationFilter
     githubComment?: XOR<GitHubCommentNullableScalarRelationFilter, GitHubCommentWhereInput> | null
     githubStatusCheck?: XOR<GitHubStatusCheckNullableScalarRelationFilter, GitHubStatusCheckWhereInput> | null
   }
@@ -24323,6 +25651,7 @@ export namespace Prisma {
     repository?: RepositoryOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
     threads?: ReviewThreadOrderByRelationAggregateInput
+    diagrams?: DiagramOrderByRelationAggregateInput
     githubComment?: GitHubCommentOrderByWithRelationInput
     githubStatusCheck?: GitHubStatusCheckOrderByWithRelationInput
   }
@@ -24348,6 +25677,7 @@ export namespace Prisma {
     repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     threads?: ReviewThreadListRelationFilter
+    diagrams?: DiagramListRelationFilter
     githubComment?: XOR<GitHubCommentNullableScalarRelationFilter, GitHubCommentWhereInput> | null
     githubStatusCheck?: XOR<GitHubStatusCheckNullableScalarRelationFilter, GitHubStatusCheckWhereInput> | null
   }, "id">
@@ -25209,6 +26539,92 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"BranchProtectionRecommendation"> | Date | string
   }
 
+  export type DiagramWhereInput = {
+    AND?: DiagramWhereInput | DiagramWhereInput[]
+    OR?: DiagramWhereInput[]
+    NOT?: DiagramWhereInput | DiagramWhereInput[]
+    id?: StringFilter<"Diagram"> | string
+    reviewId?: StringFilter<"Diagram"> | string
+    type?: EnumDiagramTypeFilter<"Diagram"> | $Enums.DiagramType
+    status?: EnumDiagramStatusFilter<"Diagram"> | $Enums.DiagramStatus
+    definition?: StringNullableFilter<"Diagram"> | string | null
+    nodes?: JsonNullableFilter<"Diagram">
+    edges?: JsonNullableFilter<"Diagram">
+    error?: StringNullableFilter<"Diagram"> | string | null
+    generatedAt?: DateTimeNullableFilter<"Diagram"> | Date | string | null
+    createdAt?: DateTimeFilter<"Diagram"> | Date | string
+    updatedAt?: DateTimeFilter<"Diagram"> | Date | string
+    review?: XOR<ReviewScalarRelationFilter, ReviewWhereInput>
+  }
+
+  export type DiagramOrderByWithRelationInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    definition?: SortOrderInput | SortOrder
+    nodes?: SortOrderInput | SortOrder
+    edges?: SortOrderInput | SortOrder
+    error?: SortOrderInput | SortOrder
+    generatedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    review?: ReviewOrderByWithRelationInput
+  }
+
+  export type DiagramWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    reviewId_type?: DiagramReviewIdTypeCompoundUniqueInput
+    AND?: DiagramWhereInput | DiagramWhereInput[]
+    OR?: DiagramWhereInput[]
+    NOT?: DiagramWhereInput | DiagramWhereInput[]
+    reviewId?: StringFilter<"Diagram"> | string
+    type?: EnumDiagramTypeFilter<"Diagram"> | $Enums.DiagramType
+    status?: EnumDiagramStatusFilter<"Diagram"> | $Enums.DiagramStatus
+    definition?: StringNullableFilter<"Diagram"> | string | null
+    nodes?: JsonNullableFilter<"Diagram">
+    edges?: JsonNullableFilter<"Diagram">
+    error?: StringNullableFilter<"Diagram"> | string | null
+    generatedAt?: DateTimeNullableFilter<"Diagram"> | Date | string | null
+    createdAt?: DateTimeFilter<"Diagram"> | Date | string
+    updatedAt?: DateTimeFilter<"Diagram"> | Date | string
+    review?: XOR<ReviewScalarRelationFilter, ReviewWhereInput>
+  }, "id" | "reviewId_type">
+
+  export type DiagramOrderByWithAggregationInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    definition?: SortOrderInput | SortOrder
+    nodes?: SortOrderInput | SortOrder
+    edges?: SortOrderInput | SortOrder
+    error?: SortOrderInput | SortOrder
+    generatedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DiagramCountOrderByAggregateInput
+    _max?: DiagramMaxOrderByAggregateInput
+    _min?: DiagramMinOrderByAggregateInput
+  }
+
+  export type DiagramScalarWhereWithAggregatesInput = {
+    AND?: DiagramScalarWhereWithAggregatesInput | DiagramScalarWhereWithAggregatesInput[]
+    OR?: DiagramScalarWhereWithAggregatesInput[]
+    NOT?: DiagramScalarWhereWithAggregatesInput | DiagramScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Diagram"> | string
+    reviewId?: StringWithAggregatesFilter<"Diagram"> | string
+    type?: EnumDiagramTypeWithAggregatesFilter<"Diagram"> | $Enums.DiagramType
+    status?: EnumDiagramStatusWithAggregatesFilter<"Diagram"> | $Enums.DiagramStatus
+    definition?: StringNullableWithAggregatesFilter<"Diagram"> | string | null
+    nodes?: JsonNullableWithAggregatesFilter<"Diagram">
+    edges?: JsonNullableWithAggregatesFilter<"Diagram">
+    error?: StringNullableWithAggregatesFilter<"Diagram"> | string | null
+    generatedAt?: DateTimeNullableWithAggregatesFilter<"Diagram"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Diagram"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Diagram"> | Date | string
+  }
+
   export type UserCreateInput = {
     id: string
     name: string
@@ -25717,6 +27133,7 @@ export namespace Prisma {
     repository: RepositoryCreateNestedOneWithoutReviewsInput
     user: UserCreateNestedOneWithoutReviewsInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
+    diagrams?: DiagramCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
   }
@@ -25737,6 +27154,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
+    diagrams?: DiagramUncheckedCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
   }
@@ -25757,6 +27175,7 @@ export namespace Prisma {
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
     user?: UserUpdateOneRequiredWithoutReviewsNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
+    diagrams?: DiagramUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
   }
@@ -25777,6 +27196,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
+    diagrams?: DiagramUncheckedUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
   }
@@ -26683,6 +28103,103 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DiagramCreateInput = {
+    id?: string
+    type: $Enums.DiagramType
+    status?: $Enums.DiagramStatus
+    definition?: string | null
+    nodes?: NullableJsonNullValueInput | InputJsonValue
+    edges?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    generatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    review: ReviewCreateNestedOneWithoutDiagramsInput
+  }
+
+  export type DiagramUncheckedCreateInput = {
+    id?: string
+    reviewId: string
+    type: $Enums.DiagramType
+    status?: $Enums.DiagramStatus
+    definition?: string | null
+    nodes?: NullableJsonNullValueInput | InputJsonValue
+    edges?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    generatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DiagramUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumDiagramTypeFieldUpdateOperationsInput | $Enums.DiagramType
+    status?: EnumDiagramStatusFieldUpdateOperationsInput | $Enums.DiagramStatus
+    definition?: NullableStringFieldUpdateOperationsInput | string | null
+    nodes?: NullableJsonNullValueInput | InputJsonValue
+    edges?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    generatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    review?: ReviewUpdateOneRequiredWithoutDiagramsNestedInput
+  }
+
+  export type DiagramUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewId?: StringFieldUpdateOperationsInput | string
+    type?: EnumDiagramTypeFieldUpdateOperationsInput | $Enums.DiagramType
+    status?: EnumDiagramStatusFieldUpdateOperationsInput | $Enums.DiagramStatus
+    definition?: NullableStringFieldUpdateOperationsInput | string | null
+    nodes?: NullableJsonNullValueInput | InputJsonValue
+    edges?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    generatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DiagramCreateManyInput = {
+    id?: string
+    reviewId: string
+    type: $Enums.DiagramType
+    status?: $Enums.DiagramStatus
+    definition?: string | null
+    nodes?: NullableJsonNullValueInput | InputJsonValue
+    edges?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    generatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DiagramUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumDiagramTypeFieldUpdateOperationsInput | $Enums.DiagramType
+    status?: EnumDiagramStatusFieldUpdateOperationsInput | $Enums.DiagramStatus
+    definition?: NullableStringFieldUpdateOperationsInput | string | null
+    nodes?: NullableJsonNullValueInput | InputJsonValue
+    edges?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    generatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DiagramUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewId?: StringFieldUpdateOperationsInput | string
+    type?: EnumDiagramTypeFieldUpdateOperationsInput | $Enums.DiagramType
+    status?: EnumDiagramStatusFieldUpdateOperationsInput | $Enums.DiagramStatus
+    definition?: NullableStringFieldUpdateOperationsInput | string | null
+    nodes?: NullableJsonNullValueInput | InputJsonValue
+    edges?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    generatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -27211,6 +28728,12 @@ export namespace Prisma {
     none?: ReviewThreadWhereInput
   }
 
+  export type DiagramListRelationFilter = {
+    every?: DiagramWhereInput
+    some?: DiagramWhereInput
+    none?: DiagramWhereInput
+  }
+
   export type GitHubCommentNullableScalarRelationFilter = {
     is?: GitHubCommentWhereInput | null
     isNot?: GitHubCommentWhereInput | null
@@ -27222,6 +28745,10 @@ export namespace Prisma {
   }
 
   export type ReviewThreadOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DiagramOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -27912,6 +29439,83 @@ export namespace Prisma {
     _max?: NestedEnumRecommendationPriorityFilter<$PrismaModel>
   }
 
+  export type EnumDiagramTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.DiagramType | EnumDiagramTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DiagramType[] | ListEnumDiagramTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DiagramType[] | ListEnumDiagramTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDiagramTypeFilter<$PrismaModel> | $Enums.DiagramType
+  }
+
+  export type EnumDiagramStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.DiagramStatus | EnumDiagramStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.DiagramStatus[] | ListEnumDiagramStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DiagramStatus[] | ListEnumDiagramStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumDiagramStatusFilter<$PrismaModel> | $Enums.DiagramStatus
+  }
+
+  export type DiagramReviewIdTypeCompoundUniqueInput = {
+    reviewId: string
+    type: $Enums.DiagramType
+  }
+
+  export type DiagramCountOrderByAggregateInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    definition?: SortOrder
+    nodes?: SortOrder
+    edges?: SortOrder
+    error?: SortOrder
+    generatedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DiagramMaxOrderByAggregateInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    definition?: SortOrder
+    error?: SortOrder
+    generatedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DiagramMinOrderByAggregateInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    definition?: SortOrder
+    error?: SortOrder
+    generatedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumDiagramTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DiagramType | EnumDiagramTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DiagramType[] | ListEnumDiagramTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DiagramType[] | ListEnumDiagramTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDiagramTypeWithAggregatesFilter<$PrismaModel> | $Enums.DiagramType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDiagramTypeFilter<$PrismaModel>
+    _max?: NestedEnumDiagramTypeFilter<$PrismaModel>
+  }
+
+  export type EnumDiagramStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DiagramStatus | EnumDiagramStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.DiagramStatus[] | ListEnumDiagramStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DiagramStatus[] | ListEnumDiagramStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumDiagramStatusWithAggregatesFilter<$PrismaModel> | $Enums.DiagramStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDiagramStatusFilter<$PrismaModel>
+    _max?: NestedEnumDiagramStatusFilter<$PrismaModel>
+  }
+
   export type SessionCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -28501,6 +30105,13 @@ export namespace Prisma {
     connect?: ReviewThreadWhereUniqueInput | ReviewThreadWhereUniqueInput[]
   }
 
+  export type DiagramCreateNestedManyWithoutReviewInput = {
+    create?: XOR<DiagramCreateWithoutReviewInput, DiagramUncheckedCreateWithoutReviewInput> | DiagramCreateWithoutReviewInput[] | DiagramUncheckedCreateWithoutReviewInput[]
+    connectOrCreate?: DiagramCreateOrConnectWithoutReviewInput | DiagramCreateOrConnectWithoutReviewInput[]
+    createMany?: DiagramCreateManyReviewInputEnvelope
+    connect?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
+  }
+
   export type GitHubCommentCreateNestedOneWithoutReviewInput = {
     create?: XOR<GitHubCommentCreateWithoutReviewInput, GitHubCommentUncheckedCreateWithoutReviewInput>
     connectOrCreate?: GitHubCommentCreateOrConnectWithoutReviewInput
@@ -28518,6 +30129,13 @@ export namespace Prisma {
     connectOrCreate?: ReviewThreadCreateOrConnectWithoutReviewInput | ReviewThreadCreateOrConnectWithoutReviewInput[]
     createMany?: ReviewThreadCreateManyReviewInputEnvelope
     connect?: ReviewThreadWhereUniqueInput | ReviewThreadWhereUniqueInput[]
+  }
+
+  export type DiagramUncheckedCreateNestedManyWithoutReviewInput = {
+    create?: XOR<DiagramCreateWithoutReviewInput, DiagramUncheckedCreateWithoutReviewInput> | DiagramCreateWithoutReviewInput[] | DiagramUncheckedCreateWithoutReviewInput[]
+    connectOrCreate?: DiagramCreateOrConnectWithoutReviewInput | DiagramCreateOrConnectWithoutReviewInput[]
+    createMany?: DiagramCreateManyReviewInputEnvelope
+    connect?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
   }
 
   export type GitHubCommentUncheckedCreateNestedOneWithoutReviewInput = {
@@ -28574,6 +30192,20 @@ export namespace Prisma {
     deleteMany?: ReviewThreadScalarWhereInput | ReviewThreadScalarWhereInput[]
   }
 
+  export type DiagramUpdateManyWithoutReviewNestedInput = {
+    create?: XOR<DiagramCreateWithoutReviewInput, DiagramUncheckedCreateWithoutReviewInput> | DiagramCreateWithoutReviewInput[] | DiagramUncheckedCreateWithoutReviewInput[]
+    connectOrCreate?: DiagramCreateOrConnectWithoutReviewInput | DiagramCreateOrConnectWithoutReviewInput[]
+    upsert?: DiagramUpsertWithWhereUniqueWithoutReviewInput | DiagramUpsertWithWhereUniqueWithoutReviewInput[]
+    createMany?: DiagramCreateManyReviewInputEnvelope
+    set?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
+    disconnect?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
+    delete?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
+    connect?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
+    update?: DiagramUpdateWithWhereUniqueWithoutReviewInput | DiagramUpdateWithWhereUniqueWithoutReviewInput[]
+    updateMany?: DiagramUpdateManyWithWhereWithoutReviewInput | DiagramUpdateManyWithWhereWithoutReviewInput[]
+    deleteMany?: DiagramScalarWhereInput | DiagramScalarWhereInput[]
+  }
+
   export type GitHubCommentUpdateOneWithoutReviewNestedInput = {
     create?: XOR<GitHubCommentCreateWithoutReviewInput, GitHubCommentUncheckedCreateWithoutReviewInput>
     connectOrCreate?: GitHubCommentCreateOrConnectWithoutReviewInput
@@ -28606,6 +30238,20 @@ export namespace Prisma {
     update?: ReviewThreadUpdateWithWhereUniqueWithoutReviewInput | ReviewThreadUpdateWithWhereUniqueWithoutReviewInput[]
     updateMany?: ReviewThreadUpdateManyWithWhereWithoutReviewInput | ReviewThreadUpdateManyWithWhereWithoutReviewInput[]
     deleteMany?: ReviewThreadScalarWhereInput | ReviewThreadScalarWhereInput[]
+  }
+
+  export type DiagramUncheckedUpdateManyWithoutReviewNestedInput = {
+    create?: XOR<DiagramCreateWithoutReviewInput, DiagramUncheckedCreateWithoutReviewInput> | DiagramCreateWithoutReviewInput[] | DiagramUncheckedCreateWithoutReviewInput[]
+    connectOrCreate?: DiagramCreateOrConnectWithoutReviewInput | DiagramCreateOrConnectWithoutReviewInput[]
+    upsert?: DiagramUpsertWithWhereUniqueWithoutReviewInput | DiagramUpsertWithWhereUniqueWithoutReviewInput[]
+    createMany?: DiagramCreateManyReviewInputEnvelope
+    set?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
+    disconnect?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
+    delete?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
+    connect?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
+    update?: DiagramUpdateWithWhereUniqueWithoutReviewInput | DiagramUpdateWithWhereUniqueWithoutReviewInput[]
+    updateMany?: DiagramUpdateManyWithWhereWithoutReviewInput | DiagramUpdateManyWithWhereWithoutReviewInput[]
+    deleteMany?: DiagramScalarWhereInput | DiagramScalarWhereInput[]
   }
 
   export type GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput = {
@@ -29066,6 +30712,28 @@ export namespace Prisma {
     update?: XOR<XOR<RepositoryUpdateToOneWithWhereWithoutBranchProtectionRecsInput, RepositoryUpdateWithoutBranchProtectionRecsInput>, RepositoryUncheckedUpdateWithoutBranchProtectionRecsInput>
   }
 
+  export type ReviewCreateNestedOneWithoutDiagramsInput = {
+    create?: XOR<ReviewCreateWithoutDiagramsInput, ReviewUncheckedCreateWithoutDiagramsInput>
+    connectOrCreate?: ReviewCreateOrConnectWithoutDiagramsInput
+    connect?: ReviewWhereUniqueInput
+  }
+
+  export type EnumDiagramTypeFieldUpdateOperationsInput = {
+    set?: $Enums.DiagramType
+  }
+
+  export type EnumDiagramStatusFieldUpdateOperationsInput = {
+    set?: $Enums.DiagramStatus
+  }
+
+  export type ReviewUpdateOneRequiredWithoutDiagramsNestedInput = {
+    create?: XOR<ReviewCreateWithoutDiagramsInput, ReviewUncheckedCreateWithoutDiagramsInput>
+    connectOrCreate?: ReviewCreateOrConnectWithoutDiagramsInput
+    upsert?: ReviewUpsertWithoutDiagramsInput
+    connect?: ReviewWhereUniqueInput
+    update?: XOR<XOR<ReviewUpdateToOneWithWhereWithoutDiagramsInput, ReviewUpdateWithoutDiagramsInput>, ReviewUncheckedUpdateWithoutDiagramsInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -29443,6 +31111,40 @@ export namespace Prisma {
     _max?: NestedEnumRecommendationPriorityFilter<$PrismaModel>
   }
 
+  export type NestedEnumDiagramTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.DiagramType | EnumDiagramTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DiagramType[] | ListEnumDiagramTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DiagramType[] | ListEnumDiagramTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDiagramTypeFilter<$PrismaModel> | $Enums.DiagramType
+  }
+
+  export type NestedEnumDiagramStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.DiagramStatus | EnumDiagramStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.DiagramStatus[] | ListEnumDiagramStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DiagramStatus[] | ListEnumDiagramStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumDiagramStatusFilter<$PrismaModel> | $Enums.DiagramStatus
+  }
+
+  export type NestedEnumDiagramTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DiagramType | EnumDiagramTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DiagramType[] | ListEnumDiagramTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DiagramType[] | ListEnumDiagramTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDiagramTypeWithAggregatesFilter<$PrismaModel> | $Enums.DiagramType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDiagramTypeFilter<$PrismaModel>
+    _max?: NestedEnumDiagramTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumDiagramStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DiagramStatus | EnumDiagramStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.DiagramStatus[] | ListEnumDiagramStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DiagramStatus[] | ListEnumDiagramStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumDiagramStatusWithAggregatesFilter<$PrismaModel> | $Enums.DiagramStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDiagramStatusFilter<$PrismaModel>
+    _max?: NestedEnumDiagramStatusFilter<$PrismaModel>
+  }
+
   export type SessionCreateWithoutUserInput = {
     id: string
     expiresAt: Date | string
@@ -29572,6 +31274,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     repository: RepositoryCreateNestedOneWithoutReviewsInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
+    diagrams?: DiagramCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
   }
@@ -29591,6 +31294,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
+    diagrams?: DiagramUncheckedCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
   }
@@ -30192,6 +31896,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutReviewsInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
+    diagrams?: DiagramCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
   }
@@ -30211,6 +31916,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
+    diagrams?: DiagramUncheckedCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
   }
@@ -30663,6 +32369,42 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type DiagramCreateWithoutReviewInput = {
+    id?: string
+    type: $Enums.DiagramType
+    status?: $Enums.DiagramStatus
+    definition?: string | null
+    nodes?: NullableJsonNullValueInput | InputJsonValue
+    edges?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    generatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DiagramUncheckedCreateWithoutReviewInput = {
+    id?: string
+    type: $Enums.DiagramType
+    status?: $Enums.DiagramStatus
+    definition?: string | null
+    nodes?: NullableJsonNullValueInput | InputJsonValue
+    edges?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    generatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DiagramCreateOrConnectWithoutReviewInput = {
+    where: DiagramWhereUniqueInput
+    create: XOR<DiagramCreateWithoutReviewInput, DiagramUncheckedCreateWithoutReviewInput>
+  }
+
+  export type DiagramCreateManyReviewInputEnvelope = {
+    data: DiagramCreateManyReviewInput | DiagramCreateManyReviewInput[]
+    skipDuplicates?: boolean
+  }
+
   export type GitHubCommentCreateWithoutReviewInput = {
     id?: string
     githubReviewId: number
@@ -30836,6 +32578,39 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"ReviewThread"> | Date | string
   }
 
+  export type DiagramUpsertWithWhereUniqueWithoutReviewInput = {
+    where: DiagramWhereUniqueInput
+    update: XOR<DiagramUpdateWithoutReviewInput, DiagramUncheckedUpdateWithoutReviewInput>
+    create: XOR<DiagramCreateWithoutReviewInput, DiagramUncheckedCreateWithoutReviewInput>
+  }
+
+  export type DiagramUpdateWithWhereUniqueWithoutReviewInput = {
+    where: DiagramWhereUniqueInput
+    data: XOR<DiagramUpdateWithoutReviewInput, DiagramUncheckedUpdateWithoutReviewInput>
+  }
+
+  export type DiagramUpdateManyWithWhereWithoutReviewInput = {
+    where: DiagramScalarWhereInput
+    data: XOR<DiagramUpdateManyMutationInput, DiagramUncheckedUpdateManyWithoutReviewInput>
+  }
+
+  export type DiagramScalarWhereInput = {
+    AND?: DiagramScalarWhereInput | DiagramScalarWhereInput[]
+    OR?: DiagramScalarWhereInput[]
+    NOT?: DiagramScalarWhereInput | DiagramScalarWhereInput[]
+    id?: StringFilter<"Diagram"> | string
+    reviewId?: StringFilter<"Diagram"> | string
+    type?: EnumDiagramTypeFilter<"Diagram"> | $Enums.DiagramType
+    status?: EnumDiagramStatusFilter<"Diagram"> | $Enums.DiagramStatus
+    definition?: StringNullableFilter<"Diagram"> | string | null
+    nodes?: JsonNullableFilter<"Diagram">
+    edges?: JsonNullableFilter<"Diagram">
+    error?: StringNullableFilter<"Diagram"> | string | null
+    generatedAt?: DateTimeNullableFilter<"Diagram"> | Date | string | null
+    createdAt?: DateTimeFilter<"Diagram"> | Date | string
+    updatedAt?: DateTimeFilter<"Diagram"> | Date | string
+  }
+
   export type GitHubCommentUpsertWithoutReviewInput = {
     update: XOR<GitHubCommentUpdateWithoutReviewInput, GitHubCommentUncheckedUpdateWithoutReviewInput>
     create: XOR<GitHubCommentCreateWithoutReviewInput, GitHubCommentUncheckedCreateWithoutReviewInput>
@@ -30909,6 +32684,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     repository: RepositoryCreateNestedOneWithoutReviewsInput
     user: UserCreateNestedOneWithoutReviewsInput
+    diagrams?: DiagramCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
   }
@@ -30928,6 +32704,7 @@ export namespace Prisma {
     error?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    diagrams?: DiagramUncheckedCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
   }
@@ -30989,6 +32766,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
     user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    diagrams?: DiagramUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
   }
@@ -31008,6 +32786,7 @@ export namespace Prisma {
     error?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    diagrams?: DiagramUncheckedUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
   }
@@ -31969,6 +33748,7 @@ export namespace Prisma {
     repository: RepositoryCreateNestedOneWithoutReviewsInput
     user: UserCreateNestedOneWithoutReviewsInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
+    diagrams?: DiagramCreateNestedManyWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
   }
 
@@ -31988,6 +33768,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
+    diagrams?: DiagramUncheckedCreateNestedManyWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
   }
 
@@ -32062,6 +33843,7 @@ export namespace Prisma {
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
     user?: UserUpdateOneRequiredWithoutReviewsNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
+    diagrams?: DiagramUpdateManyWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
   }
 
@@ -32081,6 +33863,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
+    diagrams?: DiagramUncheckedUpdateManyWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
   }
 
@@ -32145,6 +33928,7 @@ export namespace Prisma {
     repository: RepositoryCreateNestedOneWithoutReviewsInput
     user: UserCreateNestedOneWithoutReviewsInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
+    diagrams?: DiagramCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
   }
 
@@ -32164,6 +33948,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
+    diagrams?: DiagramUncheckedCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
   }
 
@@ -32199,6 +33984,7 @@ export namespace Prisma {
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
     user?: UserUpdateOneRequiredWithoutReviewsNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
+    diagrams?: DiagramUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
   }
 
@@ -32218,6 +34004,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
+    diagrams?: DiagramUncheckedUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
   }
 
@@ -32303,6 +34090,102 @@ export namespace Prisma {
     webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
     scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
     githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
+  }
+
+  export type ReviewCreateWithoutDiagramsInput = {
+    id?: string
+    prNumber: number
+    prTitle: string
+    prUrl: string
+    status?: $Enums.ReviewStatus
+    summary?: string | null
+    riskScore?: number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    repository: RepositoryCreateNestedOneWithoutReviewsInput
+    user: UserCreateNestedOneWithoutReviewsInput
+    threads?: ReviewThreadCreateNestedManyWithoutReviewInput
+    githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
+    githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
+  }
+
+  export type ReviewUncheckedCreateWithoutDiagramsInput = {
+    id?: string
+    repositoryId: string
+    userId: string
+    prNumber: number
+    prTitle: string
+    prUrl: string
+    status?: $Enums.ReviewStatus
+    summary?: string | null
+    riskScore?: number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
+    githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
+    githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
+  }
+
+  export type ReviewCreateOrConnectWithoutDiagramsInput = {
+    where: ReviewWhereUniqueInput
+    create: XOR<ReviewCreateWithoutDiagramsInput, ReviewUncheckedCreateWithoutDiagramsInput>
+  }
+
+  export type ReviewUpsertWithoutDiagramsInput = {
+    update: XOR<ReviewUpdateWithoutDiagramsInput, ReviewUncheckedUpdateWithoutDiagramsInput>
+    create: XOR<ReviewCreateWithoutDiagramsInput, ReviewUncheckedCreateWithoutDiagramsInput>
+    where?: ReviewWhereInput
+  }
+
+  export type ReviewUpdateToOneWithWhereWithoutDiagramsInput = {
+    where?: ReviewWhereInput
+    data: XOR<ReviewUpdateWithoutDiagramsInput, ReviewUncheckedUpdateWithoutDiagramsInput>
+  }
+
+  export type ReviewUpdateWithoutDiagramsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    prNumber?: IntFieldUpdateOperationsInput | number
+    prTitle?: StringFieldUpdateOperationsInput | string
+    prUrl?: StringFieldUpdateOperationsInput | string
+    status?: EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    riskScore?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
+    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
+    githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
+    githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
+  }
+
+  export type ReviewUncheckedUpdateWithoutDiagramsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    repositoryId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    prNumber?: IntFieldUpdateOperationsInput | number
+    prTitle?: StringFieldUpdateOperationsInput | string
+    prUrl?: StringFieldUpdateOperationsInput | string
+    status?: EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    riskScore?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
+    githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
+    githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
   }
 
   export type SessionCreateManyUserInput = {
@@ -32519,6 +34402,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
+    diagrams?: DiagramUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
   }
@@ -32538,6 +34422,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
+    diagrams?: DiagramUncheckedUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
   }
@@ -32684,6 +34569,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutReviewsNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
+    diagrams?: DiagramUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
   }
@@ -32703,6 +34589,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
+    diagrams?: DiagramUncheckedUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
   }
@@ -32792,6 +34679,19 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type DiagramCreateManyReviewInput = {
+    id?: string
+    type: $Enums.DiagramType
+    status?: $Enums.DiagramStatus
+    definition?: string | null
+    nodes?: NullableJsonNullValueInput | InputJsonValue
+    edges?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    generatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type ReviewThreadUpdateWithoutReviewInput = {
     id?: StringFieldUpdateOperationsInput | string
     file?: StringFieldUpdateOperationsInput | string
@@ -32817,6 +34717,45 @@ export namespace Prisma {
     file?: StringFieldUpdateOperationsInput | string
     line?: IntFieldUpdateOperationsInput | number
     resolved?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DiagramUpdateWithoutReviewInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumDiagramTypeFieldUpdateOperationsInput | $Enums.DiagramType
+    status?: EnumDiagramStatusFieldUpdateOperationsInput | $Enums.DiagramStatus
+    definition?: NullableStringFieldUpdateOperationsInput | string | null
+    nodes?: NullableJsonNullValueInput | InputJsonValue
+    edges?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    generatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DiagramUncheckedUpdateWithoutReviewInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumDiagramTypeFieldUpdateOperationsInput | $Enums.DiagramType
+    status?: EnumDiagramStatusFieldUpdateOperationsInput | $Enums.DiagramStatus
+    definition?: NullableStringFieldUpdateOperationsInput | string | null
+    nodes?: NullableJsonNullValueInput | InputJsonValue
+    edges?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    generatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DiagramUncheckedUpdateManyWithoutReviewInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumDiagramTypeFieldUpdateOperationsInput | $Enums.DiagramType
+    status?: EnumDiagramStatusFieldUpdateOperationsInput | $Enums.DiagramStatus
+    definition?: NullableStringFieldUpdateOperationsInput | string | null
+    nodes?: NullableJsonNullValueInput | InputJsonValue
+    edges?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    generatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
