@@ -46,6 +46,9 @@ yarn-error.log*
 next-env.d.ts
 
 /src/generated/prisma
+
+# Prisma generated client – temp engine files from repeated `prisma generate` runs
+src/server/db/client/query_engine-windows.dll.node.tmp*
 .idea
 .vscode
 .specify
