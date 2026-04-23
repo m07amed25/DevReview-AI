@@ -10,10 +10,21 @@ const nextConfig: NextConfig = {
     "@huggingface/inference",
     "nodemailer",
   ],
-  // Exclude browser-only packages from server function traces to stay under
-  // Vercel's 50 MB per-function limit.
+  // Exclude browser-only packages and large non-Linux binaries from server
+  // function traces to stay under Vercel's 250 MB per-function limit.
   outputFileTracingExcludes: {
     "*": [
+      // Prisma: exclude Windows engine (Vercel runs Linux rhel-openssl-3.0.x)
+      "./src/server/db/client/query_engine-windows.dll.node",
+      // Prisma: exclude WASM / edge-runtime engines (serverless uses native)
+      "./src/server/db/client/query_engine_bg.wasm",
+      "./src/server/db/client/query_engine_bg.js",
+      "./src/server/db/client/wasm-edge-light-loader.mjs",
+      "./src/server/db/client/wasm-worker-loader.mjs",
+      "./src/server/db/client/wasm.js",
+      // User-uploaded files are served statically – exclude from function bundles
+      "./public/uploads/**",
+      // Browser-only / large client-side packages
       "./node_modules/mermaid/**",
       "./node_modules/@mermaid-js/**",
       "./node_modules/gsap/**",
