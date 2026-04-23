@@ -337,33 +337,6 @@ exports.Prisma.DiagramScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.ErdTestAuthorScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  email: 'email',
-  bio: 'bio',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.ErdTestBookScalarFieldEnum = {
-  id: 'id',
-  title: 'title',
-  isbn: 'isbn',
-  authorId: 'authorId',
-  publishedAt: 'publishedAt',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.ErdTestTagScalarFieldEnum = {
-  id: 'id',
-  name: 'name'
-};
-
-exports.Prisma.ErdTestBookTagScalarFieldEnum = {
-  bookId: 'bookId',
-  tagId: 'tagId'
-};
-
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -482,11 +455,7 @@ exports.Prisma.ModelName = {
   GitHubComment: 'GitHubComment',
   GitHubStatusCheck: 'GitHubStatusCheck',
   BranchProtectionRecommendation: 'BranchProtectionRecommendation',
-  Diagram: 'Diagram',
-  ErdTestAuthor: 'ErdTestAuthor',
-  ErdTestBook: 'ErdTestBook',
-  ErdTestTag: 'ErdTestTag',
-  ErdTestBookTag: 'ErdTestBookTag'
+  Diagram: 'Diagram'
 };
 
 /**
