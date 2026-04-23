@@ -80,9 +80,6 @@ importers:
       inngest:
         specifier: ^3.52.5
         version: 3.52.5(@opentelemetry/core@2.5.1(@opentelemetry/api@1.9.0))(express@5.2.1)(hono@4.12.1)(next@16.1.6(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(typescript@5.9.3)(zod@4.3.6)
-      jest:
-        specifier: ^30.2.0
-        version: 30.2.0(@types/node@20.19.33)
       lucide-react:
         specifier: ^0.575.0
         version: 0.575.0(react@19.2.3)
@@ -171,6 +168,9 @@ importers:
       inngest-cli:
         specifier: ^1.17.1
         version: 1.17.1
+      jest:
+        specifier: ^30.2.0
+        version: 30.2.0(@types/node@20.19.33)
       prisma:
         specifier: ^6.19.2
         version: 6.19.2(typescript@5.9.3)
