@@ -427,3 +427,55 @@ model Diagram {
   @@index([reviewId])
 }
 
+// ─── ERD diagram test models ────────────────────────────────────────────────
+// These models exist solely to provide a realistic relational schema for
+// exercising the ERD diagram generator.
+
+model ErdTestAuthor {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  bio       String?  @db.Text
+  createdAt DateTime @default(now())
+
+  books ErdTestBook[]
+
+  @@map("erd_test_author")
+}
+
+model ErdTestBook {
+  id          String    @id @default(cuid())
+  title       String
+  isbn        String    @unique
+  authorId    String
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+
+  author ErdTestAuthor  @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  tags   ErdTestBookTag[]
+
+  @@index([authorId])
+  @@map("erd_test_book")
+}
+
+model ErdTestTag {
+  id   String @id @default(cuid())
+  name String @unique
+
+  books ErdTestBookTag[]
+
+  @@map("erd_test_tag")
+}
+
+/// Join table – many-to-many between ErdTestBook and ErdTestTag
+model ErdTestBookTag {
+  bookId String
+  tagId  String
+
+  book ErdTestBook @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  tag  ErdTestTag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([bookId, tagId])
+  @@map("erd_test_book_tag")
+}
+

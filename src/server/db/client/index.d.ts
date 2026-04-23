@@ -108,6 +108,26 @@ export type BranchProtectionRecommendation = $Result.DefaultSelection<Prisma.$Br
  * 
  */
 export type Diagram = $Result.DefaultSelection<Prisma.$DiagramPayload>
+/**
+ * Model ErdTestAuthor
+ * 
+ */
+export type ErdTestAuthor = $Result.DefaultSelection<Prisma.$ErdTestAuthorPayload>
+/**
+ * Model ErdTestBook
+ * 
+ */
+export type ErdTestBook = $Result.DefaultSelection<Prisma.$ErdTestBookPayload>
+/**
+ * Model ErdTestTag
+ * 
+ */
+export type ErdTestTag = $Result.DefaultSelection<Prisma.$ErdTestTagPayload>
+/**
+ * Model ErdTestBookTag
+ * Join table – many-to-many between ErdTestBook and ErdTestTag
+ */
+export type ErdTestBookTag = $Result.DefaultSelection<Prisma.$ErdTestBookTagPayload>
 
 /**
  * Enums
@@ -572,6 +592,46 @@ export class PrismaClient<
     * ```
     */
   get diagram(): Prisma.DiagramDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.erdTestAuthor`: Exposes CRUD operations for the **ErdTestAuthor** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ErdTestAuthors
+    * const erdTestAuthors = await prisma.erdTestAuthor.findMany()
+    * ```
+    */
+  get erdTestAuthor(): Prisma.ErdTestAuthorDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.erdTestBook`: Exposes CRUD operations for the **ErdTestBook** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ErdTestBooks
+    * const erdTestBooks = await prisma.erdTestBook.findMany()
+    * ```
+    */
+  get erdTestBook(): Prisma.ErdTestBookDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.erdTestTag`: Exposes CRUD operations for the **ErdTestTag** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ErdTestTags
+    * const erdTestTags = await prisma.erdTestTag.findMany()
+    * ```
+    */
+  get erdTestTag(): Prisma.ErdTestTagDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.erdTestBookTag`: Exposes CRUD operations for the **ErdTestBookTag** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ErdTestBookTags
+    * const erdTestBookTags = await prisma.erdTestBookTag.findMany()
+    * ```
+    */
+  get erdTestBookTag(): Prisma.ErdTestBookTagDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1031,7 +1091,11 @@ export namespace Prisma {
     GitHubComment: 'GitHubComment',
     GitHubStatusCheck: 'GitHubStatusCheck',
     BranchProtectionRecommendation: 'BranchProtectionRecommendation',
-    Diagram: 'Diagram'
+    Diagram: 'Diagram',
+    ErdTestAuthor: 'ErdTestAuthor',
+    ErdTestBook: 'ErdTestBook',
+    ErdTestTag: 'ErdTestTag',
+    ErdTestBookTag: 'ErdTestBookTag'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1050,7 +1114,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "repository" | "review" | "reviewThread" | "reviewThreadComment" | "team" | "teamMember" | "teamAction" | "notification" | "webhookConfig" | "scheduledScanConfig" | "scheduledScanRun" | "gitHubComment" | "gitHubStatusCheck" | "branchProtectionRecommendation" | "diagram"
+      modelProps: "user" | "session" | "account" | "verification" | "repository" | "review" | "reviewThread" | "reviewThreadComment" | "team" | "teamMember" | "teamAction" | "notification" | "webhookConfig" | "scheduledScanConfig" | "scheduledScanRun" | "gitHubComment" | "gitHubStatusCheck" | "branchProtectionRecommendation" | "diagram" | "erdTestAuthor" | "erdTestBook" | "erdTestTag" | "erdTestBookTag"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2460,6 +2524,302 @@ export namespace Prisma {
           }
         }
       }
+      ErdTestAuthor: {
+        payload: Prisma.$ErdTestAuthorPayload<ExtArgs>
+        fields: Prisma.ErdTestAuthorFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ErdTestAuthorFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestAuthorPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ErdTestAuthorFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestAuthorPayload>
+          }
+          findFirst: {
+            args: Prisma.ErdTestAuthorFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestAuthorPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ErdTestAuthorFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestAuthorPayload>
+          }
+          findMany: {
+            args: Prisma.ErdTestAuthorFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestAuthorPayload>[]
+          }
+          create: {
+            args: Prisma.ErdTestAuthorCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestAuthorPayload>
+          }
+          createMany: {
+            args: Prisma.ErdTestAuthorCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ErdTestAuthorCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestAuthorPayload>[]
+          }
+          delete: {
+            args: Prisma.ErdTestAuthorDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestAuthorPayload>
+          }
+          update: {
+            args: Prisma.ErdTestAuthorUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestAuthorPayload>
+          }
+          deleteMany: {
+            args: Prisma.ErdTestAuthorDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ErdTestAuthorUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ErdTestAuthorUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestAuthorPayload>[]
+          }
+          upsert: {
+            args: Prisma.ErdTestAuthorUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestAuthorPayload>
+          }
+          aggregate: {
+            args: Prisma.ErdTestAuthorAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateErdTestAuthor>
+          }
+          groupBy: {
+            args: Prisma.ErdTestAuthorGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ErdTestAuthorGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ErdTestAuthorCountArgs<ExtArgs>
+            result: $Utils.Optional<ErdTestAuthorCountAggregateOutputType> | number
+          }
+        }
+      }
+      ErdTestBook: {
+        payload: Prisma.$ErdTestBookPayload<ExtArgs>
+        fields: Prisma.ErdTestBookFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ErdTestBookFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestBookPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ErdTestBookFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestBookPayload>
+          }
+          findFirst: {
+            args: Prisma.ErdTestBookFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestBookPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ErdTestBookFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestBookPayload>
+          }
+          findMany: {
+            args: Prisma.ErdTestBookFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestBookPayload>[]
+          }
+          create: {
+            args: Prisma.ErdTestBookCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestBookPayload>
+          }
+          createMany: {
+            args: Prisma.ErdTestBookCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ErdTestBookCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestBookPayload>[]
+          }
+          delete: {
+            args: Prisma.ErdTestBookDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestBookPayload>
+          }
+          update: {
+            args: Prisma.ErdTestBookUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestBookPayload>
+          }
+          deleteMany: {
+            args: Prisma.ErdTestBookDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ErdTestBookUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ErdTestBookUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestBookPayload>[]
+          }
+          upsert: {
+            args: Prisma.ErdTestBookUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestBookPayload>
+          }
+          aggregate: {
+            args: Prisma.ErdTestBookAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateErdTestBook>
+          }
+          groupBy: {
+            args: Prisma.ErdTestBookGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ErdTestBookGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ErdTestBookCountArgs<ExtArgs>
+            result: $Utils.Optional<ErdTestBookCountAggregateOutputType> | number
+          }
+        }
+      }
+      ErdTestTag: {
+        payload: Prisma.$ErdTestTagPayload<ExtArgs>
+        fields: Prisma.ErdTestTagFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ErdTestTagFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestTagPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ErdTestTagFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestTagPayload>
+          }
+          findFirst: {
+            args: Prisma.ErdTestTagFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestTagPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ErdTestTagFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestTagPayload>
+          }
+          findMany: {
+            args: Prisma.ErdTestTagFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestTagPayload>[]
+          }
+          create: {
+            args: Prisma.ErdTestTagCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestTagPayload>
+          }
+          createMany: {
+            args: Prisma.ErdTestTagCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ErdTestTagCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestTagPayload>[]
+          }
+          delete: {
+            args: Prisma.ErdTestTagDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestTagPayload>
+          }
+          update: {
+            args: Prisma.ErdTestTagUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestTagPayload>
+          }
+          deleteMany: {
+            args: Prisma.ErdTestTagDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ErdTestTagUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ErdTestTagUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestTagPayload>[]
+          }
+          upsert: {
+            args: Prisma.ErdTestTagUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestTagPayload>
+          }
+          aggregate: {
+            args: Prisma.ErdTestTagAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateErdTestTag>
+          }
+          groupBy: {
+            args: Prisma.ErdTestTagGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ErdTestTagGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ErdTestTagCountArgs<ExtArgs>
+            result: $Utils.Optional<ErdTestTagCountAggregateOutputType> | number
+          }
+        }
+      }
+      ErdTestBookTag: {
+        payload: Prisma.$ErdTestBookTagPayload<ExtArgs>
+        fields: Prisma.ErdTestBookTagFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ErdTestBookTagFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestBookTagPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ErdTestBookTagFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestBookTagPayload>
+          }
+          findFirst: {
+            args: Prisma.ErdTestBookTagFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestBookTagPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ErdTestBookTagFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestBookTagPayload>
+          }
+          findMany: {
+            args: Prisma.ErdTestBookTagFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestBookTagPayload>[]
+          }
+          create: {
+            args: Prisma.ErdTestBookTagCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestBookTagPayload>
+          }
+          createMany: {
+            args: Prisma.ErdTestBookTagCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ErdTestBookTagCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestBookTagPayload>[]
+          }
+          delete: {
+            args: Prisma.ErdTestBookTagDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestBookTagPayload>
+          }
+          update: {
+            args: Prisma.ErdTestBookTagUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestBookTagPayload>
+          }
+          deleteMany: {
+            args: Prisma.ErdTestBookTagDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ErdTestBookTagUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ErdTestBookTagUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestBookTagPayload>[]
+          }
+          upsert: {
+            args: Prisma.ErdTestBookTagUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ErdTestBookTagPayload>
+          }
+          aggregate: {
+            args: Prisma.ErdTestBookTagAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateErdTestBookTag>
+          }
+          groupBy: {
+            args: Prisma.ErdTestBookTagGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ErdTestBookTagGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ErdTestBookTagCountArgs<ExtArgs>
+            result: $Utils.Optional<ErdTestBookTagCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2575,6 +2935,10 @@ export namespace Prisma {
     gitHubStatusCheck?: GitHubStatusCheckOmit
     branchProtectionRecommendation?: BranchProtectionRecommendationOmit
     diagram?: DiagramOmit
+    erdTestAuthor?: ErdTestAuthorOmit
+    erdTestBook?: ErdTestBookOmit
+    erdTestTag?: ErdTestTagOmit
+    erdTestBookTag?: ErdTestBookTagOmit
   }
 
   /* Types for Logging */
@@ -2932,6 +3296,99 @@ export namespace Prisma {
    */
   export type ScheduledScanConfigCountOutputTypeCountRunsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ScheduledScanRunWhereInput
+  }
+
+
+  /**
+   * Count Type ErdTestAuthorCountOutputType
+   */
+
+  export type ErdTestAuthorCountOutputType = {
+    books: number
+  }
+
+  export type ErdTestAuthorCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    books?: boolean | ErdTestAuthorCountOutputTypeCountBooksArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ErdTestAuthorCountOutputType without action
+   */
+  export type ErdTestAuthorCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestAuthorCountOutputType
+     */
+    select?: ErdTestAuthorCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ErdTestAuthorCountOutputType without action
+   */
+  export type ErdTestAuthorCountOutputTypeCountBooksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ErdTestBookWhereInput
+  }
+
+
+  /**
+   * Count Type ErdTestBookCountOutputType
+   */
+
+  export type ErdTestBookCountOutputType = {
+    tags: number
+  }
+
+  export type ErdTestBookCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    tags?: boolean | ErdTestBookCountOutputTypeCountTagsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ErdTestBookCountOutputType without action
+   */
+  export type ErdTestBookCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestBookCountOutputType
+     */
+    select?: ErdTestBookCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ErdTestBookCountOutputType without action
+   */
+  export type ErdTestBookCountOutputTypeCountTagsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ErdTestBookTagWhereInput
+  }
+
+
+  /**
+   * Count Type ErdTestTagCountOutputType
+   */
+
+  export type ErdTestTagCountOutputType = {
+    books: number
+  }
+
+  export type ErdTestTagCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    books?: boolean | ErdTestTagCountOutputTypeCountBooksArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ErdTestTagCountOutputType without action
+   */
+  export type ErdTestTagCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestTagCountOutputType
+     */
+    select?: ErdTestTagCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ErdTestTagCountOutputType without action
+   */
+  export type ErdTestTagCountOutputTypeCountBooksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ErdTestBookTagWhereInput
   }
 
 
@@ -24610,6 +25067,4235 @@ export namespace Prisma {
 
 
   /**
+   * Model ErdTestAuthor
+   */
+
+  export type AggregateErdTestAuthor = {
+    _count: ErdTestAuthorCountAggregateOutputType | null
+    _min: ErdTestAuthorMinAggregateOutputType | null
+    _max: ErdTestAuthorMaxAggregateOutputType | null
+  }
+
+  export type ErdTestAuthorMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    email: string | null
+    bio: string | null
+    createdAt: Date | null
+  }
+
+  export type ErdTestAuthorMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    email: string | null
+    bio: string | null
+    createdAt: Date | null
+  }
+
+  export type ErdTestAuthorCountAggregateOutputType = {
+    id: number
+    name: number
+    email: number
+    bio: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type ErdTestAuthorMinAggregateInputType = {
+    id?: true
+    name?: true
+    email?: true
+    bio?: true
+    createdAt?: true
+  }
+
+  export type ErdTestAuthorMaxAggregateInputType = {
+    id?: true
+    name?: true
+    email?: true
+    bio?: true
+    createdAt?: true
+  }
+
+  export type ErdTestAuthorCountAggregateInputType = {
+    id?: true
+    name?: true
+    email?: true
+    bio?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type ErdTestAuthorAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ErdTestAuthor to aggregate.
+     */
+    where?: ErdTestAuthorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ErdTestAuthors to fetch.
+     */
+    orderBy?: ErdTestAuthorOrderByWithRelationInput | ErdTestAuthorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ErdTestAuthorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ErdTestAuthors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ErdTestAuthors.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ErdTestAuthors
+    **/
+    _count?: true | ErdTestAuthorCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ErdTestAuthorMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ErdTestAuthorMaxAggregateInputType
+  }
+
+  export type GetErdTestAuthorAggregateType<T extends ErdTestAuthorAggregateArgs> = {
+        [P in keyof T & keyof AggregateErdTestAuthor]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateErdTestAuthor[P]>
+      : GetScalarType<T[P], AggregateErdTestAuthor[P]>
+  }
+
+
+
+
+  export type ErdTestAuthorGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ErdTestAuthorWhereInput
+    orderBy?: ErdTestAuthorOrderByWithAggregationInput | ErdTestAuthorOrderByWithAggregationInput[]
+    by: ErdTestAuthorScalarFieldEnum[] | ErdTestAuthorScalarFieldEnum
+    having?: ErdTestAuthorScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ErdTestAuthorCountAggregateInputType | true
+    _min?: ErdTestAuthorMinAggregateInputType
+    _max?: ErdTestAuthorMaxAggregateInputType
+  }
+
+  export type ErdTestAuthorGroupByOutputType = {
+    id: string
+    name: string
+    email: string
+    bio: string | null
+    createdAt: Date
+    _count: ErdTestAuthorCountAggregateOutputType | null
+    _min: ErdTestAuthorMinAggregateOutputType | null
+    _max: ErdTestAuthorMaxAggregateOutputType | null
+  }
+
+  type GetErdTestAuthorGroupByPayload<T extends ErdTestAuthorGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ErdTestAuthorGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ErdTestAuthorGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ErdTestAuthorGroupByOutputType[P]>
+            : GetScalarType<T[P], ErdTestAuthorGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ErdTestAuthorSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    email?: boolean
+    bio?: boolean
+    createdAt?: boolean
+    books?: boolean | ErdTestAuthor$booksArgs<ExtArgs>
+    _count?: boolean | ErdTestAuthorCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["erdTestAuthor"]>
+
+  export type ErdTestAuthorSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    email?: boolean
+    bio?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["erdTestAuthor"]>
+
+  export type ErdTestAuthorSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    email?: boolean
+    bio?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["erdTestAuthor"]>
+
+  export type ErdTestAuthorSelectScalar = {
+    id?: boolean
+    name?: boolean
+    email?: boolean
+    bio?: boolean
+    createdAt?: boolean
+  }
+
+  export type ErdTestAuthorOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "bio" | "createdAt", ExtArgs["result"]["erdTestAuthor"]>
+  export type ErdTestAuthorInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    books?: boolean | ErdTestAuthor$booksArgs<ExtArgs>
+    _count?: boolean | ErdTestAuthorCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ErdTestAuthorIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type ErdTestAuthorIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $ErdTestAuthorPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ErdTestAuthor"
+    objects: {
+      books: Prisma.$ErdTestBookPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      email: string
+      bio: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["erdTestAuthor"]>
+    composites: {}
+  }
+
+  type ErdTestAuthorGetPayload<S extends boolean | null | undefined | ErdTestAuthorDefaultArgs> = $Result.GetResult<Prisma.$ErdTestAuthorPayload, S>
+
+  type ErdTestAuthorCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ErdTestAuthorFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ErdTestAuthorCountAggregateInputType | true
+    }
+
+  export interface ErdTestAuthorDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ErdTestAuthor'], meta: { name: 'ErdTestAuthor' } }
+    /**
+     * Find zero or one ErdTestAuthor that matches the filter.
+     * @param {ErdTestAuthorFindUniqueArgs} args - Arguments to find a ErdTestAuthor
+     * @example
+     * // Get one ErdTestAuthor
+     * const erdTestAuthor = await prisma.erdTestAuthor.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ErdTestAuthorFindUniqueArgs>(args: SelectSubset<T, ErdTestAuthorFindUniqueArgs<ExtArgs>>): Prisma__ErdTestAuthorClient<$Result.GetResult<Prisma.$ErdTestAuthorPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ErdTestAuthor that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ErdTestAuthorFindUniqueOrThrowArgs} args - Arguments to find a ErdTestAuthor
+     * @example
+     * // Get one ErdTestAuthor
+     * const erdTestAuthor = await prisma.erdTestAuthor.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ErdTestAuthorFindUniqueOrThrowArgs>(args: SelectSubset<T, ErdTestAuthorFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ErdTestAuthorClient<$Result.GetResult<Prisma.$ErdTestAuthorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ErdTestAuthor that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ErdTestAuthorFindFirstArgs} args - Arguments to find a ErdTestAuthor
+     * @example
+     * // Get one ErdTestAuthor
+     * const erdTestAuthor = await prisma.erdTestAuthor.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ErdTestAuthorFindFirstArgs>(args?: SelectSubset<T, ErdTestAuthorFindFirstArgs<ExtArgs>>): Prisma__ErdTestAuthorClient<$Result.GetResult<Prisma.$ErdTestAuthorPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ErdTestAuthor that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ErdTestAuthorFindFirstOrThrowArgs} args - Arguments to find a ErdTestAuthor
+     * @example
+     * // Get one ErdTestAuthor
+     * const erdTestAuthor = await prisma.erdTestAuthor.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ErdTestAuthorFindFirstOrThrowArgs>(args?: SelectSubset<T, ErdTestAuthorFindFirstOrThrowArgs<ExtArgs>>): Prisma__ErdTestAuthorClient<$Result.GetResult<Prisma.$ErdTestAuthorPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ErdTestAuthors that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ErdTestAuthorFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ErdTestAuthors
+     * const erdTestAuthors = await prisma.erdTestAuthor.findMany()
+     * 
+     * // Get first 10 ErdTestAuthors
+     * const erdTestAuthors = await prisma.erdTestAuthor.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const erdTestAuthorWithIdOnly = await prisma.erdTestAuthor.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ErdTestAuthorFindManyArgs>(args?: SelectSubset<T, ErdTestAuthorFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ErdTestAuthorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ErdTestAuthor.
+     * @param {ErdTestAuthorCreateArgs} args - Arguments to create a ErdTestAuthor.
+     * @example
+     * // Create one ErdTestAuthor
+     * const ErdTestAuthor = await prisma.erdTestAuthor.create({
+     *   data: {
+     *     // ... data to create a ErdTestAuthor
+     *   }
+     * })
+     * 
+     */
+    create<T extends ErdTestAuthorCreateArgs>(args: SelectSubset<T, ErdTestAuthorCreateArgs<ExtArgs>>): Prisma__ErdTestAuthorClient<$Result.GetResult<Prisma.$ErdTestAuthorPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ErdTestAuthors.
+     * @param {ErdTestAuthorCreateManyArgs} args - Arguments to create many ErdTestAuthors.
+     * @example
+     * // Create many ErdTestAuthors
+     * const erdTestAuthor = await prisma.erdTestAuthor.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ErdTestAuthorCreateManyArgs>(args?: SelectSubset<T, ErdTestAuthorCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ErdTestAuthors and returns the data saved in the database.
+     * @param {ErdTestAuthorCreateManyAndReturnArgs} args - Arguments to create many ErdTestAuthors.
+     * @example
+     * // Create many ErdTestAuthors
+     * const erdTestAuthor = await prisma.erdTestAuthor.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ErdTestAuthors and only return the `id`
+     * const erdTestAuthorWithIdOnly = await prisma.erdTestAuthor.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ErdTestAuthorCreateManyAndReturnArgs>(args?: SelectSubset<T, ErdTestAuthorCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ErdTestAuthorPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ErdTestAuthor.
+     * @param {ErdTestAuthorDeleteArgs} args - Arguments to delete one ErdTestAuthor.
+     * @example
+     * // Delete one ErdTestAuthor
+     * const ErdTestAuthor = await prisma.erdTestAuthor.delete({
+     *   where: {
+     *     // ... filter to delete one ErdTestAuthor
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ErdTestAuthorDeleteArgs>(args: SelectSubset<T, ErdTestAuthorDeleteArgs<ExtArgs>>): Prisma__ErdTestAuthorClient<$Result.GetResult<Prisma.$ErdTestAuthorPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ErdTestAuthor.
+     * @param {ErdTestAuthorUpdateArgs} args - Arguments to update one ErdTestAuthor.
+     * @example
+     * // Update one ErdTestAuthor
+     * const erdTestAuthor = await prisma.erdTestAuthor.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ErdTestAuthorUpdateArgs>(args: SelectSubset<T, ErdTestAuthorUpdateArgs<ExtArgs>>): Prisma__ErdTestAuthorClient<$Result.GetResult<Prisma.$ErdTestAuthorPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ErdTestAuthors.
+     * @param {ErdTestAuthorDeleteManyArgs} args - Arguments to filter ErdTestAuthors to delete.
+     * @example
+     * // Delete a few ErdTestAuthors
+     * const { count } = await prisma.erdTestAuthor.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ErdTestAuthorDeleteManyArgs>(args?: SelectSubset<T, ErdTestAuthorDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ErdTestAuthors.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ErdTestAuthorUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ErdTestAuthors
+     * const erdTestAuthor = await prisma.erdTestAuthor.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ErdTestAuthorUpdateManyArgs>(args: SelectSubset<T, ErdTestAuthorUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ErdTestAuthors and returns the data updated in the database.
+     * @param {ErdTestAuthorUpdateManyAndReturnArgs} args - Arguments to update many ErdTestAuthors.
+     * @example
+     * // Update many ErdTestAuthors
+     * const erdTestAuthor = await prisma.erdTestAuthor.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ErdTestAuthors and only return the `id`
+     * const erdTestAuthorWithIdOnly = await prisma.erdTestAuthor.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ErdTestAuthorUpdateManyAndReturnArgs>(args: SelectSubset<T, ErdTestAuthorUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ErdTestAuthorPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ErdTestAuthor.
+     * @param {ErdTestAuthorUpsertArgs} args - Arguments to update or create a ErdTestAuthor.
+     * @example
+     * // Update or create a ErdTestAuthor
+     * const erdTestAuthor = await prisma.erdTestAuthor.upsert({
+     *   create: {
+     *     // ... data to create a ErdTestAuthor
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ErdTestAuthor we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ErdTestAuthorUpsertArgs>(args: SelectSubset<T, ErdTestAuthorUpsertArgs<ExtArgs>>): Prisma__ErdTestAuthorClient<$Result.GetResult<Prisma.$ErdTestAuthorPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ErdTestAuthors.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ErdTestAuthorCountArgs} args - Arguments to filter ErdTestAuthors to count.
+     * @example
+     * // Count the number of ErdTestAuthors
+     * const count = await prisma.erdTestAuthor.count({
+     *   where: {
+     *     // ... the filter for the ErdTestAuthors we want to count
+     *   }
+     * })
+    **/
+    count<T extends ErdTestAuthorCountArgs>(
+      args?: Subset<T, ErdTestAuthorCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ErdTestAuthorCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ErdTestAuthor.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ErdTestAuthorAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ErdTestAuthorAggregateArgs>(args: Subset<T, ErdTestAuthorAggregateArgs>): Prisma.PrismaPromise<GetErdTestAuthorAggregateType<T>>
+
+    /**
+     * Group by ErdTestAuthor.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ErdTestAuthorGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ErdTestAuthorGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ErdTestAuthorGroupByArgs['orderBy'] }
+        : { orderBy?: ErdTestAuthorGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ErdTestAuthorGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetErdTestAuthorGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ErdTestAuthor model
+   */
+  readonly fields: ErdTestAuthorFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ErdTestAuthor.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ErdTestAuthorClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    books<T extends ErdTestAuthor$booksArgs<ExtArgs> = {}>(args?: Subset<T, ErdTestAuthor$booksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ErdTestBookPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ErdTestAuthor model
+   */
+  interface ErdTestAuthorFieldRefs {
+    readonly id: FieldRef<"ErdTestAuthor", 'String'>
+    readonly name: FieldRef<"ErdTestAuthor", 'String'>
+    readonly email: FieldRef<"ErdTestAuthor", 'String'>
+    readonly bio: FieldRef<"ErdTestAuthor", 'String'>
+    readonly createdAt: FieldRef<"ErdTestAuthor", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ErdTestAuthor findUnique
+   */
+  export type ErdTestAuthorFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestAuthor
+     */
+    select?: ErdTestAuthorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestAuthor
+     */
+    omit?: ErdTestAuthorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestAuthorInclude<ExtArgs> | null
+    /**
+     * Filter, which ErdTestAuthor to fetch.
+     */
+    where: ErdTestAuthorWhereUniqueInput
+  }
+
+  /**
+   * ErdTestAuthor findUniqueOrThrow
+   */
+  export type ErdTestAuthorFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestAuthor
+     */
+    select?: ErdTestAuthorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestAuthor
+     */
+    omit?: ErdTestAuthorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestAuthorInclude<ExtArgs> | null
+    /**
+     * Filter, which ErdTestAuthor to fetch.
+     */
+    where: ErdTestAuthorWhereUniqueInput
+  }
+
+  /**
+   * ErdTestAuthor findFirst
+   */
+  export type ErdTestAuthorFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestAuthor
+     */
+    select?: ErdTestAuthorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestAuthor
+     */
+    omit?: ErdTestAuthorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestAuthorInclude<ExtArgs> | null
+    /**
+     * Filter, which ErdTestAuthor to fetch.
+     */
+    where?: ErdTestAuthorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ErdTestAuthors to fetch.
+     */
+    orderBy?: ErdTestAuthorOrderByWithRelationInput | ErdTestAuthorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ErdTestAuthors.
+     */
+    cursor?: ErdTestAuthorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ErdTestAuthors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ErdTestAuthors.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ErdTestAuthors.
+     */
+    distinct?: ErdTestAuthorScalarFieldEnum | ErdTestAuthorScalarFieldEnum[]
+  }
+
+  /**
+   * ErdTestAuthor findFirstOrThrow
+   */
+  export type ErdTestAuthorFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestAuthor
+     */
+    select?: ErdTestAuthorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestAuthor
+     */
+    omit?: ErdTestAuthorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestAuthorInclude<ExtArgs> | null
+    /**
+     * Filter, which ErdTestAuthor to fetch.
+     */
+    where?: ErdTestAuthorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ErdTestAuthors to fetch.
+     */
+    orderBy?: ErdTestAuthorOrderByWithRelationInput | ErdTestAuthorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ErdTestAuthors.
+     */
+    cursor?: ErdTestAuthorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ErdTestAuthors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ErdTestAuthors.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ErdTestAuthors.
+     */
+    distinct?: ErdTestAuthorScalarFieldEnum | ErdTestAuthorScalarFieldEnum[]
+  }
+
+  /**
+   * ErdTestAuthor findMany
+   */
+  export type ErdTestAuthorFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestAuthor
+     */
+    select?: ErdTestAuthorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestAuthor
+     */
+    omit?: ErdTestAuthorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestAuthorInclude<ExtArgs> | null
+    /**
+     * Filter, which ErdTestAuthors to fetch.
+     */
+    where?: ErdTestAuthorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ErdTestAuthors to fetch.
+     */
+    orderBy?: ErdTestAuthorOrderByWithRelationInput | ErdTestAuthorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ErdTestAuthors.
+     */
+    cursor?: ErdTestAuthorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ErdTestAuthors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ErdTestAuthors.
+     */
+    skip?: number
+    distinct?: ErdTestAuthorScalarFieldEnum | ErdTestAuthorScalarFieldEnum[]
+  }
+
+  /**
+   * ErdTestAuthor create
+   */
+  export type ErdTestAuthorCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestAuthor
+     */
+    select?: ErdTestAuthorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestAuthor
+     */
+    omit?: ErdTestAuthorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestAuthorInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ErdTestAuthor.
+     */
+    data: XOR<ErdTestAuthorCreateInput, ErdTestAuthorUncheckedCreateInput>
+  }
+
+  /**
+   * ErdTestAuthor createMany
+   */
+  export type ErdTestAuthorCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ErdTestAuthors.
+     */
+    data: ErdTestAuthorCreateManyInput | ErdTestAuthorCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ErdTestAuthor createManyAndReturn
+   */
+  export type ErdTestAuthorCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestAuthor
+     */
+    select?: ErdTestAuthorSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestAuthor
+     */
+    omit?: ErdTestAuthorOmit<ExtArgs> | null
+    /**
+     * The data used to create many ErdTestAuthors.
+     */
+    data: ErdTestAuthorCreateManyInput | ErdTestAuthorCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ErdTestAuthor update
+   */
+  export type ErdTestAuthorUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestAuthor
+     */
+    select?: ErdTestAuthorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestAuthor
+     */
+    omit?: ErdTestAuthorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestAuthorInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ErdTestAuthor.
+     */
+    data: XOR<ErdTestAuthorUpdateInput, ErdTestAuthorUncheckedUpdateInput>
+    /**
+     * Choose, which ErdTestAuthor to update.
+     */
+    where: ErdTestAuthorWhereUniqueInput
+  }
+
+  /**
+   * ErdTestAuthor updateMany
+   */
+  export type ErdTestAuthorUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ErdTestAuthors.
+     */
+    data: XOR<ErdTestAuthorUpdateManyMutationInput, ErdTestAuthorUncheckedUpdateManyInput>
+    /**
+     * Filter which ErdTestAuthors to update
+     */
+    where?: ErdTestAuthorWhereInput
+    /**
+     * Limit how many ErdTestAuthors to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ErdTestAuthor updateManyAndReturn
+   */
+  export type ErdTestAuthorUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestAuthor
+     */
+    select?: ErdTestAuthorSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestAuthor
+     */
+    omit?: ErdTestAuthorOmit<ExtArgs> | null
+    /**
+     * The data used to update ErdTestAuthors.
+     */
+    data: XOR<ErdTestAuthorUpdateManyMutationInput, ErdTestAuthorUncheckedUpdateManyInput>
+    /**
+     * Filter which ErdTestAuthors to update
+     */
+    where?: ErdTestAuthorWhereInput
+    /**
+     * Limit how many ErdTestAuthors to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ErdTestAuthor upsert
+   */
+  export type ErdTestAuthorUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestAuthor
+     */
+    select?: ErdTestAuthorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestAuthor
+     */
+    omit?: ErdTestAuthorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestAuthorInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ErdTestAuthor to update in case it exists.
+     */
+    where: ErdTestAuthorWhereUniqueInput
+    /**
+     * In case the ErdTestAuthor found by the `where` argument doesn't exist, create a new ErdTestAuthor with this data.
+     */
+    create: XOR<ErdTestAuthorCreateInput, ErdTestAuthorUncheckedCreateInput>
+    /**
+     * In case the ErdTestAuthor was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ErdTestAuthorUpdateInput, ErdTestAuthorUncheckedUpdateInput>
+  }
+
+  /**
+   * ErdTestAuthor delete
+   */
+  export type ErdTestAuthorDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestAuthor
+     */
+    select?: ErdTestAuthorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestAuthor
+     */
+    omit?: ErdTestAuthorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestAuthorInclude<ExtArgs> | null
+    /**
+     * Filter which ErdTestAuthor to delete.
+     */
+    where: ErdTestAuthorWhereUniqueInput
+  }
+
+  /**
+   * ErdTestAuthor deleteMany
+   */
+  export type ErdTestAuthorDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ErdTestAuthors to delete
+     */
+    where?: ErdTestAuthorWhereInput
+    /**
+     * Limit how many ErdTestAuthors to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ErdTestAuthor.books
+   */
+  export type ErdTestAuthor$booksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestBook
+     */
+    select?: ErdTestBookSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestBook
+     */
+    omit?: ErdTestBookOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestBookInclude<ExtArgs> | null
+    where?: ErdTestBookWhereInput
+    orderBy?: ErdTestBookOrderByWithRelationInput | ErdTestBookOrderByWithRelationInput[]
+    cursor?: ErdTestBookWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ErdTestBookScalarFieldEnum | ErdTestBookScalarFieldEnum[]
+  }
+
+  /**
+   * ErdTestAuthor without action
+   */
+  export type ErdTestAuthorDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestAuthor
+     */
+    select?: ErdTestAuthorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestAuthor
+     */
+    omit?: ErdTestAuthorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestAuthorInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ErdTestBook
+   */
+
+  export type AggregateErdTestBook = {
+    _count: ErdTestBookCountAggregateOutputType | null
+    _min: ErdTestBookMinAggregateOutputType | null
+    _max: ErdTestBookMaxAggregateOutputType | null
+  }
+
+  export type ErdTestBookMinAggregateOutputType = {
+    id: string | null
+    title: string | null
+    isbn: string | null
+    authorId: string | null
+    publishedAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type ErdTestBookMaxAggregateOutputType = {
+    id: string | null
+    title: string | null
+    isbn: string | null
+    authorId: string | null
+    publishedAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type ErdTestBookCountAggregateOutputType = {
+    id: number
+    title: number
+    isbn: number
+    authorId: number
+    publishedAt: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type ErdTestBookMinAggregateInputType = {
+    id?: true
+    title?: true
+    isbn?: true
+    authorId?: true
+    publishedAt?: true
+    createdAt?: true
+  }
+
+  export type ErdTestBookMaxAggregateInputType = {
+    id?: true
+    title?: true
+    isbn?: true
+    authorId?: true
+    publishedAt?: true
+    createdAt?: true
+  }
+
+  export type ErdTestBookCountAggregateInputType = {
+    id?: true
+    title?: true
+    isbn?: true
+    authorId?: true
+    publishedAt?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type ErdTestBookAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ErdTestBook to aggregate.
+     */
+    where?: ErdTestBookWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ErdTestBooks to fetch.
+     */
+    orderBy?: ErdTestBookOrderByWithRelationInput | ErdTestBookOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ErdTestBookWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ErdTestBooks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ErdTestBooks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ErdTestBooks
+    **/
+    _count?: true | ErdTestBookCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ErdTestBookMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ErdTestBookMaxAggregateInputType
+  }
+
+  export type GetErdTestBookAggregateType<T extends ErdTestBookAggregateArgs> = {
+        [P in keyof T & keyof AggregateErdTestBook]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateErdTestBook[P]>
+      : GetScalarType<T[P], AggregateErdTestBook[P]>
+  }
+
+
+
+
+  export type ErdTestBookGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ErdTestBookWhereInput
+    orderBy?: ErdTestBookOrderByWithAggregationInput | ErdTestBookOrderByWithAggregationInput[]
+    by: ErdTestBookScalarFieldEnum[] | ErdTestBookScalarFieldEnum
+    having?: ErdTestBookScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ErdTestBookCountAggregateInputType | true
+    _min?: ErdTestBookMinAggregateInputType
+    _max?: ErdTestBookMaxAggregateInputType
+  }
+
+  export type ErdTestBookGroupByOutputType = {
+    id: string
+    title: string
+    isbn: string
+    authorId: string
+    publishedAt: Date | null
+    createdAt: Date
+    _count: ErdTestBookCountAggregateOutputType | null
+    _min: ErdTestBookMinAggregateOutputType | null
+    _max: ErdTestBookMaxAggregateOutputType | null
+  }
+
+  type GetErdTestBookGroupByPayload<T extends ErdTestBookGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ErdTestBookGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ErdTestBookGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ErdTestBookGroupByOutputType[P]>
+            : GetScalarType<T[P], ErdTestBookGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ErdTestBookSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    isbn?: boolean
+    authorId?: boolean
+    publishedAt?: boolean
+    createdAt?: boolean
+    author?: boolean | ErdTestAuthorDefaultArgs<ExtArgs>
+    tags?: boolean | ErdTestBook$tagsArgs<ExtArgs>
+    _count?: boolean | ErdTestBookCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["erdTestBook"]>
+
+  export type ErdTestBookSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    isbn?: boolean
+    authorId?: boolean
+    publishedAt?: boolean
+    createdAt?: boolean
+    author?: boolean | ErdTestAuthorDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["erdTestBook"]>
+
+  export type ErdTestBookSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    isbn?: boolean
+    authorId?: boolean
+    publishedAt?: boolean
+    createdAt?: boolean
+    author?: boolean | ErdTestAuthorDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["erdTestBook"]>
+
+  export type ErdTestBookSelectScalar = {
+    id?: boolean
+    title?: boolean
+    isbn?: boolean
+    authorId?: boolean
+    publishedAt?: boolean
+    createdAt?: boolean
+  }
+
+  export type ErdTestBookOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "isbn" | "authorId" | "publishedAt" | "createdAt", ExtArgs["result"]["erdTestBook"]>
+  export type ErdTestBookInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    author?: boolean | ErdTestAuthorDefaultArgs<ExtArgs>
+    tags?: boolean | ErdTestBook$tagsArgs<ExtArgs>
+    _count?: boolean | ErdTestBookCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ErdTestBookIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    author?: boolean | ErdTestAuthorDefaultArgs<ExtArgs>
+  }
+  export type ErdTestBookIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    author?: boolean | ErdTestAuthorDefaultArgs<ExtArgs>
+  }
+
+  export type $ErdTestBookPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ErdTestBook"
+    objects: {
+      author: Prisma.$ErdTestAuthorPayload<ExtArgs>
+      tags: Prisma.$ErdTestBookTagPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      title: string
+      isbn: string
+      authorId: string
+      publishedAt: Date | null
+      createdAt: Date
+    }, ExtArgs["result"]["erdTestBook"]>
+    composites: {}
+  }
+
+  type ErdTestBookGetPayload<S extends boolean | null | undefined | ErdTestBookDefaultArgs> = $Result.GetResult<Prisma.$ErdTestBookPayload, S>
+
+  type ErdTestBookCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ErdTestBookFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ErdTestBookCountAggregateInputType | true
+    }
+
+  export interface ErdTestBookDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ErdTestBook'], meta: { name: 'ErdTestBook' } }
+    /**
+     * Find zero or one ErdTestBook that matches the filter.
+     * @param {ErdTestBookFindUniqueArgs} args - Arguments to find a ErdTestBook
+     * @example
+     * // Get one ErdTestBook
+     * const erdTestBook = await prisma.erdTestBook.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ErdTestBookFindUniqueArgs>(args: SelectSubset<T, ErdTestBookFindUniqueArgs<ExtArgs>>): Prisma__ErdTestBookClient<$Result.GetResult<Prisma.$ErdTestBookPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ErdTestBook that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ErdTestBookFindUniqueOrThrowArgs} args - Arguments to find a ErdTestBook
+     * @example
+     * // Get one ErdTestBook
+     * const erdTestBook = await prisma.erdTestBook.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ErdTestBookFindUniqueOrThrowArgs>(args: SelectSubset<T, ErdTestBookFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ErdTestBookClient<$Result.GetResult<Prisma.$ErdTestBookPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ErdTestBook that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ErdTestBookFindFirstArgs} args - Arguments to find a ErdTestBook
+     * @example
+     * // Get one ErdTestBook
+     * const erdTestBook = await prisma.erdTestBook.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ErdTestBookFindFirstArgs>(args?: SelectSubset<T, ErdTestBookFindFirstArgs<ExtArgs>>): Prisma__ErdTestBookClient<$Result.GetResult<Prisma.$ErdTestBookPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ErdTestBook that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ErdTestBookFindFirstOrThrowArgs} args - Arguments to find a ErdTestBook
+     * @example
+     * // Get one ErdTestBook
+     * const erdTestBook = await prisma.erdTestBook.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ErdTestBookFindFirstOrThrowArgs>(args?: SelectSubset<T, ErdTestBookFindFirstOrThrowArgs<ExtArgs>>): Prisma__ErdTestBookClient<$Result.GetResult<Prisma.$ErdTestBookPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ErdTestBooks that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ErdTestBookFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ErdTestBooks
+     * const erdTestBooks = await prisma.erdTestBook.findMany()
+     * 
+     * // Get first 10 ErdTestBooks
+     * const erdTestBooks = await prisma.erdTestBook.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const erdTestBookWithIdOnly = await prisma.erdTestBook.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ErdTestBookFindManyArgs>(args?: SelectSubset<T, ErdTestBookFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ErdTestBookPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ErdTestBook.
+     * @param {ErdTestBookCreateArgs} args - Arguments to create a ErdTestBook.
+     * @example
+     * // Create one ErdTestBook
+     * const ErdTestBook = await prisma.erdTestBook.create({
+     *   data: {
+     *     // ... data to create a ErdTestBook
+     *   }
+     * })
+     * 
+     */
+    create<T extends ErdTestBookCreateArgs>(args: SelectSubset<T, ErdTestBookCreateArgs<ExtArgs>>): Prisma__ErdTestBookClient<$Result.GetResult<Prisma.$ErdTestBookPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ErdTestBooks.
+     * @param {ErdTestBookCreateManyArgs} args - Arguments to create many ErdTestBooks.
+     * @example
+     * // Create many ErdTestBooks
+     * const erdTestBook = await prisma.erdTestBook.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ErdTestBookCreateManyArgs>(args?: SelectSubset<T, ErdTestBookCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ErdTestBooks and returns the data saved in the database.
+     * @param {ErdTestBookCreateManyAndReturnArgs} args - Arguments to create many ErdTestBooks.
+     * @example
+     * // Create many ErdTestBooks
+     * const erdTestBook = await prisma.erdTestBook.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ErdTestBooks and only return the `id`
+     * const erdTestBookWithIdOnly = await prisma.erdTestBook.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ErdTestBookCreateManyAndReturnArgs>(args?: SelectSubset<T, ErdTestBookCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ErdTestBookPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ErdTestBook.
+     * @param {ErdTestBookDeleteArgs} args - Arguments to delete one ErdTestBook.
+     * @example
+     * // Delete one ErdTestBook
+     * const ErdTestBook = await prisma.erdTestBook.delete({
+     *   where: {
+     *     // ... filter to delete one ErdTestBook
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ErdTestBookDeleteArgs>(args: SelectSubset<T, ErdTestBookDeleteArgs<ExtArgs>>): Prisma__ErdTestBookClient<$Result.GetResult<Prisma.$ErdTestBookPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ErdTestBook.
+     * @param {ErdTestBookUpdateArgs} args - Arguments to update one ErdTestBook.
+     * @example
+     * // Update one ErdTestBook
+     * const erdTestBook = await prisma.erdTestBook.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ErdTestBookUpdateArgs>(args: SelectSubset<T, ErdTestBookUpdateArgs<ExtArgs>>): Prisma__ErdTestBookClient<$Result.GetResult<Prisma.$ErdTestBookPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ErdTestBooks.
+     * @param {ErdTestBookDeleteManyArgs} args - Arguments to filter ErdTestBooks to delete.
+     * @example
+     * // Delete a few ErdTestBooks
+     * const { count } = await prisma.erdTestBook.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ErdTestBookDeleteManyArgs>(args?: SelectSubset<T, ErdTestBookDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ErdTestBooks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ErdTestBookUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ErdTestBooks
+     * const erdTestBook = await prisma.erdTestBook.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ErdTestBookUpdateManyArgs>(args: SelectSubset<T, ErdTestBookUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ErdTestBooks and returns the data updated in the database.
+     * @param {ErdTestBookUpdateManyAndReturnArgs} args - Arguments to update many ErdTestBooks.
+     * @example
+     * // Update many ErdTestBooks
+     * const erdTestBook = await prisma.erdTestBook.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ErdTestBooks and only return the `id`
+     * const erdTestBookWithIdOnly = await prisma.erdTestBook.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ErdTestBookUpdateManyAndReturnArgs>(args: SelectSubset<T, ErdTestBookUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ErdTestBookPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ErdTestBook.
+     * @param {ErdTestBookUpsertArgs} args - Arguments to update or create a ErdTestBook.
+     * @example
+     * // Update or create a ErdTestBook
+     * const erdTestBook = await prisma.erdTestBook.upsert({
+     *   create: {
+     *     // ... data to create a ErdTestBook
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ErdTestBook we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ErdTestBookUpsertArgs>(args: SelectSubset<T, ErdTestBookUpsertArgs<ExtArgs>>): Prisma__ErdTestBookClient<$Result.GetResult<Prisma.$ErdTestBookPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ErdTestBooks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ErdTestBookCountArgs} args - Arguments to filter ErdTestBooks to count.
+     * @example
+     * // Count the number of ErdTestBooks
+     * const count = await prisma.erdTestBook.count({
+     *   where: {
+     *     // ... the filter for the ErdTestBooks we want to count
+     *   }
+     * })
+    **/
+    count<T extends ErdTestBookCountArgs>(
+      args?: Subset<T, ErdTestBookCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ErdTestBookCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ErdTestBook.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ErdTestBookAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ErdTestBookAggregateArgs>(args: Subset<T, ErdTestBookAggregateArgs>): Prisma.PrismaPromise<GetErdTestBookAggregateType<T>>
+
+    /**
+     * Group by ErdTestBook.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ErdTestBookGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ErdTestBookGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ErdTestBookGroupByArgs['orderBy'] }
+        : { orderBy?: ErdTestBookGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ErdTestBookGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetErdTestBookGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ErdTestBook model
+   */
+  readonly fields: ErdTestBookFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ErdTestBook.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ErdTestBookClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    author<T extends ErdTestAuthorDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ErdTestAuthorDefaultArgs<ExtArgs>>): Prisma__ErdTestAuthorClient<$Result.GetResult<Prisma.$ErdTestAuthorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    tags<T extends ErdTestBook$tagsArgs<ExtArgs> = {}>(args?: Subset<T, ErdTestBook$tagsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ErdTestBookTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ErdTestBook model
+   */
+  interface ErdTestBookFieldRefs {
+    readonly id: FieldRef<"ErdTestBook", 'String'>
+    readonly title: FieldRef<"ErdTestBook", 'String'>
+    readonly isbn: FieldRef<"ErdTestBook", 'String'>
+    readonly authorId: FieldRef<"ErdTestBook", 'String'>
+    readonly publishedAt: FieldRef<"ErdTestBook", 'DateTime'>
+    readonly createdAt: FieldRef<"ErdTestBook", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ErdTestBook findUnique
+   */
+  export type ErdTestBookFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestBook
+     */
+    select?: ErdTestBookSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestBook
+     */
+    omit?: ErdTestBookOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestBookInclude<ExtArgs> | null
+    /**
+     * Filter, which ErdTestBook to fetch.
+     */
+    where: ErdTestBookWhereUniqueInput
+  }
+
+  /**
+   * ErdTestBook findUniqueOrThrow
+   */
+  export type ErdTestBookFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestBook
+     */
+    select?: ErdTestBookSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestBook
+     */
+    omit?: ErdTestBookOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestBookInclude<ExtArgs> | null
+    /**
+     * Filter, which ErdTestBook to fetch.
+     */
+    where: ErdTestBookWhereUniqueInput
+  }
+
+  /**
+   * ErdTestBook findFirst
+   */
+  export type ErdTestBookFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestBook
+     */
+    select?: ErdTestBookSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestBook
+     */
+    omit?: ErdTestBookOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestBookInclude<ExtArgs> | null
+    /**
+     * Filter, which ErdTestBook to fetch.
+     */
+    where?: ErdTestBookWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ErdTestBooks to fetch.
+     */
+    orderBy?: ErdTestBookOrderByWithRelationInput | ErdTestBookOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ErdTestBooks.
+     */
+    cursor?: ErdTestBookWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ErdTestBooks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ErdTestBooks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ErdTestBooks.
+     */
+    distinct?: ErdTestBookScalarFieldEnum | ErdTestBookScalarFieldEnum[]
+  }
+
+  /**
+   * ErdTestBook findFirstOrThrow
+   */
+  export type ErdTestBookFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestBook
+     */
+    select?: ErdTestBookSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestBook
+     */
+    omit?: ErdTestBookOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestBookInclude<ExtArgs> | null
+    /**
+     * Filter, which ErdTestBook to fetch.
+     */
+    where?: ErdTestBookWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ErdTestBooks to fetch.
+     */
+    orderBy?: ErdTestBookOrderByWithRelationInput | ErdTestBookOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ErdTestBooks.
+     */
+    cursor?: ErdTestBookWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ErdTestBooks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ErdTestBooks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ErdTestBooks.
+     */
+    distinct?: ErdTestBookScalarFieldEnum | ErdTestBookScalarFieldEnum[]
+  }
+
+  /**
+   * ErdTestBook findMany
+   */
+  export type ErdTestBookFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestBook
+     */
+    select?: ErdTestBookSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestBook
+     */
+    omit?: ErdTestBookOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestBookInclude<ExtArgs> | null
+    /**
+     * Filter, which ErdTestBooks to fetch.
+     */
+    where?: ErdTestBookWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ErdTestBooks to fetch.
+     */
+    orderBy?: ErdTestBookOrderByWithRelationInput | ErdTestBookOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ErdTestBooks.
+     */
+    cursor?: ErdTestBookWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ErdTestBooks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ErdTestBooks.
+     */
+    skip?: number
+    distinct?: ErdTestBookScalarFieldEnum | ErdTestBookScalarFieldEnum[]
+  }
+
+  /**
+   * ErdTestBook create
+   */
+  export type ErdTestBookCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestBook
+     */
+    select?: ErdTestBookSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestBook
+     */
+    omit?: ErdTestBookOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestBookInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ErdTestBook.
+     */
+    data: XOR<ErdTestBookCreateInput, ErdTestBookUncheckedCreateInput>
+  }
+
+  /**
+   * ErdTestBook createMany
+   */
+  export type ErdTestBookCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ErdTestBooks.
+     */
+    data: ErdTestBookCreateManyInput | ErdTestBookCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ErdTestBook createManyAndReturn
+   */
+  export type ErdTestBookCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestBook
+     */
+    select?: ErdTestBookSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestBook
+     */
+    omit?: ErdTestBookOmit<ExtArgs> | null
+    /**
+     * The data used to create many ErdTestBooks.
+     */
+    data: ErdTestBookCreateManyInput | ErdTestBookCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestBookIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ErdTestBook update
+   */
+  export type ErdTestBookUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestBook
+     */
+    select?: ErdTestBookSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestBook
+     */
+    omit?: ErdTestBookOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestBookInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ErdTestBook.
+     */
+    data: XOR<ErdTestBookUpdateInput, ErdTestBookUncheckedUpdateInput>
+    /**
+     * Choose, which ErdTestBook to update.
+     */
+    where: ErdTestBookWhereUniqueInput
+  }
+
+  /**
+   * ErdTestBook updateMany
+   */
+  export type ErdTestBookUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ErdTestBooks.
+     */
+    data: XOR<ErdTestBookUpdateManyMutationInput, ErdTestBookUncheckedUpdateManyInput>
+    /**
+     * Filter which ErdTestBooks to update
+     */
+    where?: ErdTestBookWhereInput
+    /**
+     * Limit how many ErdTestBooks to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ErdTestBook updateManyAndReturn
+   */
+  export type ErdTestBookUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestBook
+     */
+    select?: ErdTestBookSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestBook
+     */
+    omit?: ErdTestBookOmit<ExtArgs> | null
+    /**
+     * The data used to update ErdTestBooks.
+     */
+    data: XOR<ErdTestBookUpdateManyMutationInput, ErdTestBookUncheckedUpdateManyInput>
+    /**
+     * Filter which ErdTestBooks to update
+     */
+    where?: ErdTestBookWhereInput
+    /**
+     * Limit how many ErdTestBooks to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestBookIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ErdTestBook upsert
+   */
+  export type ErdTestBookUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestBook
+     */
+    select?: ErdTestBookSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestBook
+     */
+    omit?: ErdTestBookOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestBookInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ErdTestBook to update in case it exists.
+     */
+    where: ErdTestBookWhereUniqueInput
+    /**
+     * In case the ErdTestBook found by the `where` argument doesn't exist, create a new ErdTestBook with this data.
+     */
+    create: XOR<ErdTestBookCreateInput, ErdTestBookUncheckedCreateInput>
+    /**
+     * In case the ErdTestBook was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ErdTestBookUpdateInput, ErdTestBookUncheckedUpdateInput>
+  }
+
+  /**
+   * ErdTestBook delete
+   */
+  export type ErdTestBookDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestBook
+     */
+    select?: ErdTestBookSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestBook
+     */
+    omit?: ErdTestBookOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestBookInclude<ExtArgs> | null
+    /**
+     * Filter which ErdTestBook to delete.
+     */
+    where: ErdTestBookWhereUniqueInput
+  }
+
+  /**
+   * ErdTestBook deleteMany
+   */
+  export type ErdTestBookDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ErdTestBooks to delete
+     */
+    where?: ErdTestBookWhereInput
+    /**
+     * Limit how many ErdTestBooks to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ErdTestBook.tags
+   */
+  export type ErdTestBook$tagsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestBookTag
+     */
+    select?: ErdTestBookTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestBookTag
+     */
+    omit?: ErdTestBookTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestBookTagInclude<ExtArgs> | null
+    where?: ErdTestBookTagWhereInput
+    orderBy?: ErdTestBookTagOrderByWithRelationInput | ErdTestBookTagOrderByWithRelationInput[]
+    cursor?: ErdTestBookTagWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ErdTestBookTagScalarFieldEnum | ErdTestBookTagScalarFieldEnum[]
+  }
+
+  /**
+   * ErdTestBook without action
+   */
+  export type ErdTestBookDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestBook
+     */
+    select?: ErdTestBookSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestBook
+     */
+    omit?: ErdTestBookOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestBookInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ErdTestTag
+   */
+
+  export type AggregateErdTestTag = {
+    _count: ErdTestTagCountAggregateOutputType | null
+    _min: ErdTestTagMinAggregateOutputType | null
+    _max: ErdTestTagMaxAggregateOutputType | null
+  }
+
+  export type ErdTestTagMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+  }
+
+  export type ErdTestTagMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+  }
+
+  export type ErdTestTagCountAggregateOutputType = {
+    id: number
+    name: number
+    _all: number
+  }
+
+
+  export type ErdTestTagMinAggregateInputType = {
+    id?: true
+    name?: true
+  }
+
+  export type ErdTestTagMaxAggregateInputType = {
+    id?: true
+    name?: true
+  }
+
+  export type ErdTestTagCountAggregateInputType = {
+    id?: true
+    name?: true
+    _all?: true
+  }
+
+  export type ErdTestTagAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ErdTestTag to aggregate.
+     */
+    where?: ErdTestTagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ErdTestTags to fetch.
+     */
+    orderBy?: ErdTestTagOrderByWithRelationInput | ErdTestTagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ErdTestTagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ErdTestTags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ErdTestTags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ErdTestTags
+    **/
+    _count?: true | ErdTestTagCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ErdTestTagMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ErdTestTagMaxAggregateInputType
+  }
+
+  export type GetErdTestTagAggregateType<T extends ErdTestTagAggregateArgs> = {
+        [P in keyof T & keyof AggregateErdTestTag]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateErdTestTag[P]>
+      : GetScalarType<T[P], AggregateErdTestTag[P]>
+  }
+
+
+
+
+  export type ErdTestTagGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ErdTestTagWhereInput
+    orderBy?: ErdTestTagOrderByWithAggregationInput | ErdTestTagOrderByWithAggregationInput[]
+    by: ErdTestTagScalarFieldEnum[] | ErdTestTagScalarFieldEnum
+    having?: ErdTestTagScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ErdTestTagCountAggregateInputType | true
+    _min?: ErdTestTagMinAggregateInputType
+    _max?: ErdTestTagMaxAggregateInputType
+  }
+
+  export type ErdTestTagGroupByOutputType = {
+    id: string
+    name: string
+    _count: ErdTestTagCountAggregateOutputType | null
+    _min: ErdTestTagMinAggregateOutputType | null
+    _max: ErdTestTagMaxAggregateOutputType | null
+  }
+
+  type GetErdTestTagGroupByPayload<T extends ErdTestTagGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ErdTestTagGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ErdTestTagGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ErdTestTagGroupByOutputType[P]>
+            : GetScalarType<T[P], ErdTestTagGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ErdTestTagSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    books?: boolean | ErdTestTag$booksArgs<ExtArgs>
+    _count?: boolean | ErdTestTagCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["erdTestTag"]>
+
+  export type ErdTestTagSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+  }, ExtArgs["result"]["erdTestTag"]>
+
+  export type ErdTestTagSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+  }, ExtArgs["result"]["erdTestTag"]>
+
+  export type ErdTestTagSelectScalar = {
+    id?: boolean
+    name?: boolean
+  }
+
+  export type ErdTestTagOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name", ExtArgs["result"]["erdTestTag"]>
+  export type ErdTestTagInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    books?: boolean | ErdTestTag$booksArgs<ExtArgs>
+    _count?: boolean | ErdTestTagCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ErdTestTagIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type ErdTestTagIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $ErdTestTagPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ErdTestTag"
+    objects: {
+      books: Prisma.$ErdTestBookTagPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+    }, ExtArgs["result"]["erdTestTag"]>
+    composites: {}
+  }
+
+  type ErdTestTagGetPayload<S extends boolean | null | undefined | ErdTestTagDefaultArgs> = $Result.GetResult<Prisma.$ErdTestTagPayload, S>
+
+  type ErdTestTagCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ErdTestTagFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ErdTestTagCountAggregateInputType | true
+    }
+
+  export interface ErdTestTagDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ErdTestTag'], meta: { name: 'ErdTestTag' } }
+    /**
+     * Find zero or one ErdTestTag that matches the filter.
+     * @param {ErdTestTagFindUniqueArgs} args - Arguments to find a ErdTestTag
+     * @example
+     * // Get one ErdTestTag
+     * const erdTestTag = await prisma.erdTestTag.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ErdTestTagFindUniqueArgs>(args: SelectSubset<T, ErdTestTagFindUniqueArgs<ExtArgs>>): Prisma__ErdTestTagClient<$Result.GetResult<Prisma.$ErdTestTagPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ErdTestTag that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ErdTestTagFindUniqueOrThrowArgs} args - Arguments to find a ErdTestTag
+     * @example
+     * // Get one ErdTestTag
+     * const erdTestTag = await prisma.erdTestTag.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ErdTestTagFindUniqueOrThrowArgs>(args: SelectSubset<T, ErdTestTagFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ErdTestTagClient<$Result.GetResult<Prisma.$ErdTestTagPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ErdTestTag that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ErdTestTagFindFirstArgs} args - Arguments to find a ErdTestTag
+     * @example
+     * // Get one ErdTestTag
+     * const erdTestTag = await prisma.erdTestTag.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ErdTestTagFindFirstArgs>(args?: SelectSubset<T, ErdTestTagFindFirstArgs<ExtArgs>>): Prisma__ErdTestTagClient<$Result.GetResult<Prisma.$ErdTestTagPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ErdTestTag that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ErdTestTagFindFirstOrThrowArgs} args - Arguments to find a ErdTestTag
+     * @example
+     * // Get one ErdTestTag
+     * const erdTestTag = await prisma.erdTestTag.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ErdTestTagFindFirstOrThrowArgs>(args?: SelectSubset<T, ErdTestTagFindFirstOrThrowArgs<ExtArgs>>): Prisma__ErdTestTagClient<$Result.GetResult<Prisma.$ErdTestTagPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ErdTestTags that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ErdTestTagFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ErdTestTags
+     * const erdTestTags = await prisma.erdTestTag.findMany()
+     * 
+     * // Get first 10 ErdTestTags
+     * const erdTestTags = await prisma.erdTestTag.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const erdTestTagWithIdOnly = await prisma.erdTestTag.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ErdTestTagFindManyArgs>(args?: SelectSubset<T, ErdTestTagFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ErdTestTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ErdTestTag.
+     * @param {ErdTestTagCreateArgs} args - Arguments to create a ErdTestTag.
+     * @example
+     * // Create one ErdTestTag
+     * const ErdTestTag = await prisma.erdTestTag.create({
+     *   data: {
+     *     // ... data to create a ErdTestTag
+     *   }
+     * })
+     * 
+     */
+    create<T extends ErdTestTagCreateArgs>(args: SelectSubset<T, ErdTestTagCreateArgs<ExtArgs>>): Prisma__ErdTestTagClient<$Result.GetResult<Prisma.$ErdTestTagPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ErdTestTags.
+     * @param {ErdTestTagCreateManyArgs} args - Arguments to create many ErdTestTags.
+     * @example
+     * // Create many ErdTestTags
+     * const erdTestTag = await prisma.erdTestTag.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ErdTestTagCreateManyArgs>(args?: SelectSubset<T, ErdTestTagCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ErdTestTags and returns the data saved in the database.
+     * @param {ErdTestTagCreateManyAndReturnArgs} args - Arguments to create many ErdTestTags.
+     * @example
+     * // Create many ErdTestTags
+     * const erdTestTag = await prisma.erdTestTag.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ErdTestTags and only return the `id`
+     * const erdTestTagWithIdOnly = await prisma.erdTestTag.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ErdTestTagCreateManyAndReturnArgs>(args?: SelectSubset<T, ErdTestTagCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ErdTestTagPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ErdTestTag.
+     * @param {ErdTestTagDeleteArgs} args - Arguments to delete one ErdTestTag.
+     * @example
+     * // Delete one ErdTestTag
+     * const ErdTestTag = await prisma.erdTestTag.delete({
+     *   where: {
+     *     // ... filter to delete one ErdTestTag
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ErdTestTagDeleteArgs>(args: SelectSubset<T, ErdTestTagDeleteArgs<ExtArgs>>): Prisma__ErdTestTagClient<$Result.GetResult<Prisma.$ErdTestTagPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ErdTestTag.
+     * @param {ErdTestTagUpdateArgs} args - Arguments to update one ErdTestTag.
+     * @example
+     * // Update one ErdTestTag
+     * const erdTestTag = await prisma.erdTestTag.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ErdTestTagUpdateArgs>(args: SelectSubset<T, ErdTestTagUpdateArgs<ExtArgs>>): Prisma__ErdTestTagClient<$Result.GetResult<Prisma.$ErdTestTagPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ErdTestTags.
+     * @param {ErdTestTagDeleteManyArgs} args - Arguments to filter ErdTestTags to delete.
+     * @example
+     * // Delete a few ErdTestTags
+     * const { count } = await prisma.erdTestTag.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ErdTestTagDeleteManyArgs>(args?: SelectSubset<T, ErdTestTagDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ErdTestTags.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ErdTestTagUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ErdTestTags
+     * const erdTestTag = await prisma.erdTestTag.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ErdTestTagUpdateManyArgs>(args: SelectSubset<T, ErdTestTagUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ErdTestTags and returns the data updated in the database.
+     * @param {ErdTestTagUpdateManyAndReturnArgs} args - Arguments to update many ErdTestTags.
+     * @example
+     * // Update many ErdTestTags
+     * const erdTestTag = await prisma.erdTestTag.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ErdTestTags and only return the `id`
+     * const erdTestTagWithIdOnly = await prisma.erdTestTag.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ErdTestTagUpdateManyAndReturnArgs>(args: SelectSubset<T, ErdTestTagUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ErdTestTagPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ErdTestTag.
+     * @param {ErdTestTagUpsertArgs} args - Arguments to update or create a ErdTestTag.
+     * @example
+     * // Update or create a ErdTestTag
+     * const erdTestTag = await prisma.erdTestTag.upsert({
+     *   create: {
+     *     // ... data to create a ErdTestTag
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ErdTestTag we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ErdTestTagUpsertArgs>(args: SelectSubset<T, ErdTestTagUpsertArgs<ExtArgs>>): Prisma__ErdTestTagClient<$Result.GetResult<Prisma.$ErdTestTagPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ErdTestTags.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ErdTestTagCountArgs} args - Arguments to filter ErdTestTags to count.
+     * @example
+     * // Count the number of ErdTestTags
+     * const count = await prisma.erdTestTag.count({
+     *   where: {
+     *     // ... the filter for the ErdTestTags we want to count
+     *   }
+     * })
+    **/
+    count<T extends ErdTestTagCountArgs>(
+      args?: Subset<T, ErdTestTagCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ErdTestTagCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ErdTestTag.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ErdTestTagAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ErdTestTagAggregateArgs>(args: Subset<T, ErdTestTagAggregateArgs>): Prisma.PrismaPromise<GetErdTestTagAggregateType<T>>
+
+    /**
+     * Group by ErdTestTag.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ErdTestTagGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ErdTestTagGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ErdTestTagGroupByArgs['orderBy'] }
+        : { orderBy?: ErdTestTagGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ErdTestTagGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetErdTestTagGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ErdTestTag model
+   */
+  readonly fields: ErdTestTagFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ErdTestTag.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ErdTestTagClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    books<T extends ErdTestTag$booksArgs<ExtArgs> = {}>(args?: Subset<T, ErdTestTag$booksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ErdTestBookTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ErdTestTag model
+   */
+  interface ErdTestTagFieldRefs {
+    readonly id: FieldRef<"ErdTestTag", 'String'>
+    readonly name: FieldRef<"ErdTestTag", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ErdTestTag findUnique
+   */
+  export type ErdTestTagFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestTag
+     */
+    select?: ErdTestTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestTag
+     */
+    omit?: ErdTestTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestTagInclude<ExtArgs> | null
+    /**
+     * Filter, which ErdTestTag to fetch.
+     */
+    where: ErdTestTagWhereUniqueInput
+  }
+
+  /**
+   * ErdTestTag findUniqueOrThrow
+   */
+  export type ErdTestTagFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestTag
+     */
+    select?: ErdTestTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestTag
+     */
+    omit?: ErdTestTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestTagInclude<ExtArgs> | null
+    /**
+     * Filter, which ErdTestTag to fetch.
+     */
+    where: ErdTestTagWhereUniqueInput
+  }
+
+  /**
+   * ErdTestTag findFirst
+   */
+  export type ErdTestTagFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestTag
+     */
+    select?: ErdTestTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestTag
+     */
+    omit?: ErdTestTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestTagInclude<ExtArgs> | null
+    /**
+     * Filter, which ErdTestTag to fetch.
+     */
+    where?: ErdTestTagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ErdTestTags to fetch.
+     */
+    orderBy?: ErdTestTagOrderByWithRelationInput | ErdTestTagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ErdTestTags.
+     */
+    cursor?: ErdTestTagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ErdTestTags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ErdTestTags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ErdTestTags.
+     */
+    distinct?: ErdTestTagScalarFieldEnum | ErdTestTagScalarFieldEnum[]
+  }
+
+  /**
+   * ErdTestTag findFirstOrThrow
+   */
+  export type ErdTestTagFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestTag
+     */
+    select?: ErdTestTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestTag
+     */
+    omit?: ErdTestTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestTagInclude<ExtArgs> | null
+    /**
+     * Filter, which ErdTestTag to fetch.
+     */
+    where?: ErdTestTagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ErdTestTags to fetch.
+     */
+    orderBy?: ErdTestTagOrderByWithRelationInput | ErdTestTagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ErdTestTags.
+     */
+    cursor?: ErdTestTagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ErdTestTags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ErdTestTags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ErdTestTags.
+     */
+    distinct?: ErdTestTagScalarFieldEnum | ErdTestTagScalarFieldEnum[]
+  }
+
+  /**
+   * ErdTestTag findMany
+   */
+  export type ErdTestTagFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestTag
+     */
+    select?: ErdTestTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestTag
+     */
+    omit?: ErdTestTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestTagInclude<ExtArgs> | null
+    /**
+     * Filter, which ErdTestTags to fetch.
+     */
+    where?: ErdTestTagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ErdTestTags to fetch.
+     */
+    orderBy?: ErdTestTagOrderByWithRelationInput | ErdTestTagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ErdTestTags.
+     */
+    cursor?: ErdTestTagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ErdTestTags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ErdTestTags.
+     */
+    skip?: number
+    distinct?: ErdTestTagScalarFieldEnum | ErdTestTagScalarFieldEnum[]
+  }
+
+  /**
+   * ErdTestTag create
+   */
+  export type ErdTestTagCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestTag
+     */
+    select?: ErdTestTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestTag
+     */
+    omit?: ErdTestTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestTagInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ErdTestTag.
+     */
+    data: XOR<ErdTestTagCreateInput, ErdTestTagUncheckedCreateInput>
+  }
+
+  /**
+   * ErdTestTag createMany
+   */
+  export type ErdTestTagCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ErdTestTags.
+     */
+    data: ErdTestTagCreateManyInput | ErdTestTagCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ErdTestTag createManyAndReturn
+   */
+  export type ErdTestTagCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestTag
+     */
+    select?: ErdTestTagSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestTag
+     */
+    omit?: ErdTestTagOmit<ExtArgs> | null
+    /**
+     * The data used to create many ErdTestTags.
+     */
+    data: ErdTestTagCreateManyInput | ErdTestTagCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ErdTestTag update
+   */
+  export type ErdTestTagUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestTag
+     */
+    select?: ErdTestTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestTag
+     */
+    omit?: ErdTestTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestTagInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ErdTestTag.
+     */
+    data: XOR<ErdTestTagUpdateInput, ErdTestTagUncheckedUpdateInput>
+    /**
+     * Choose, which ErdTestTag to update.
+     */
+    where: ErdTestTagWhereUniqueInput
+  }
+
+  /**
+   * ErdTestTag updateMany
+   */
+  export type ErdTestTagUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ErdTestTags.
+     */
+    data: XOR<ErdTestTagUpdateManyMutationInput, ErdTestTagUncheckedUpdateManyInput>
+    /**
+     * Filter which ErdTestTags to update
+     */
+    where?: ErdTestTagWhereInput
+    /**
+     * Limit how many ErdTestTags to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ErdTestTag updateManyAndReturn
+   */
+  export type ErdTestTagUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestTag
+     */
+    select?: ErdTestTagSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestTag
+     */
+    omit?: ErdTestTagOmit<ExtArgs> | null
+    /**
+     * The data used to update ErdTestTags.
+     */
+    data: XOR<ErdTestTagUpdateManyMutationInput, ErdTestTagUncheckedUpdateManyInput>
+    /**
+     * Filter which ErdTestTags to update
+     */
+    where?: ErdTestTagWhereInput
+    /**
+     * Limit how many ErdTestTags to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ErdTestTag upsert
+   */
+  export type ErdTestTagUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestTag
+     */
+    select?: ErdTestTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestTag
+     */
+    omit?: ErdTestTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestTagInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ErdTestTag to update in case it exists.
+     */
+    where: ErdTestTagWhereUniqueInput
+    /**
+     * In case the ErdTestTag found by the `where` argument doesn't exist, create a new ErdTestTag with this data.
+     */
+    create: XOR<ErdTestTagCreateInput, ErdTestTagUncheckedCreateInput>
+    /**
+     * In case the ErdTestTag was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ErdTestTagUpdateInput, ErdTestTagUncheckedUpdateInput>
+  }
+
+  /**
+   * ErdTestTag delete
+   */
+  export type ErdTestTagDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestTag
+     */
+    select?: ErdTestTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestTag
+     */
+    omit?: ErdTestTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestTagInclude<ExtArgs> | null
+    /**
+     * Filter which ErdTestTag to delete.
+     */
+    where: ErdTestTagWhereUniqueInput
+  }
+
+  /**
+   * ErdTestTag deleteMany
+   */
+  export type ErdTestTagDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ErdTestTags to delete
+     */
+    where?: ErdTestTagWhereInput
+    /**
+     * Limit how many ErdTestTags to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ErdTestTag.books
+   */
+  export type ErdTestTag$booksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestBookTag
+     */
+    select?: ErdTestBookTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestBookTag
+     */
+    omit?: ErdTestBookTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestBookTagInclude<ExtArgs> | null
+    where?: ErdTestBookTagWhereInput
+    orderBy?: ErdTestBookTagOrderByWithRelationInput | ErdTestBookTagOrderByWithRelationInput[]
+    cursor?: ErdTestBookTagWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ErdTestBookTagScalarFieldEnum | ErdTestBookTagScalarFieldEnum[]
+  }
+
+  /**
+   * ErdTestTag without action
+   */
+  export type ErdTestTagDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestTag
+     */
+    select?: ErdTestTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestTag
+     */
+    omit?: ErdTestTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestTagInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ErdTestBookTag
+   */
+
+  export type AggregateErdTestBookTag = {
+    _count: ErdTestBookTagCountAggregateOutputType | null
+    _min: ErdTestBookTagMinAggregateOutputType | null
+    _max: ErdTestBookTagMaxAggregateOutputType | null
+  }
+
+  export type ErdTestBookTagMinAggregateOutputType = {
+    bookId: string | null
+    tagId: string | null
+  }
+
+  export type ErdTestBookTagMaxAggregateOutputType = {
+    bookId: string | null
+    tagId: string | null
+  }
+
+  export type ErdTestBookTagCountAggregateOutputType = {
+    bookId: number
+    tagId: number
+    _all: number
+  }
+
+
+  export type ErdTestBookTagMinAggregateInputType = {
+    bookId?: true
+    tagId?: true
+  }
+
+  export type ErdTestBookTagMaxAggregateInputType = {
+    bookId?: true
+    tagId?: true
+  }
+
+  export type ErdTestBookTagCountAggregateInputType = {
+    bookId?: true
+    tagId?: true
+    _all?: true
+  }
+
+  export type ErdTestBookTagAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ErdTestBookTag to aggregate.
+     */
+    where?: ErdTestBookTagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ErdTestBookTags to fetch.
+     */
+    orderBy?: ErdTestBookTagOrderByWithRelationInput | ErdTestBookTagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ErdTestBookTagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ErdTestBookTags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ErdTestBookTags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ErdTestBookTags
+    **/
+    _count?: true | ErdTestBookTagCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ErdTestBookTagMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ErdTestBookTagMaxAggregateInputType
+  }
+
+  export type GetErdTestBookTagAggregateType<T extends ErdTestBookTagAggregateArgs> = {
+        [P in keyof T & keyof AggregateErdTestBookTag]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateErdTestBookTag[P]>
+      : GetScalarType<T[P], AggregateErdTestBookTag[P]>
+  }
+
+
+
+
+  export type ErdTestBookTagGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ErdTestBookTagWhereInput
+    orderBy?: ErdTestBookTagOrderByWithAggregationInput | ErdTestBookTagOrderByWithAggregationInput[]
+    by: ErdTestBookTagScalarFieldEnum[] | ErdTestBookTagScalarFieldEnum
+    having?: ErdTestBookTagScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ErdTestBookTagCountAggregateInputType | true
+    _min?: ErdTestBookTagMinAggregateInputType
+    _max?: ErdTestBookTagMaxAggregateInputType
+  }
+
+  export type ErdTestBookTagGroupByOutputType = {
+    bookId: string
+    tagId: string
+    _count: ErdTestBookTagCountAggregateOutputType | null
+    _min: ErdTestBookTagMinAggregateOutputType | null
+    _max: ErdTestBookTagMaxAggregateOutputType | null
+  }
+
+  type GetErdTestBookTagGroupByPayload<T extends ErdTestBookTagGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ErdTestBookTagGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ErdTestBookTagGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ErdTestBookTagGroupByOutputType[P]>
+            : GetScalarType<T[P], ErdTestBookTagGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ErdTestBookTagSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    bookId?: boolean
+    tagId?: boolean
+    book?: boolean | ErdTestBookDefaultArgs<ExtArgs>
+    tag?: boolean | ErdTestTagDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["erdTestBookTag"]>
+
+  export type ErdTestBookTagSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    bookId?: boolean
+    tagId?: boolean
+    book?: boolean | ErdTestBookDefaultArgs<ExtArgs>
+    tag?: boolean | ErdTestTagDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["erdTestBookTag"]>
+
+  export type ErdTestBookTagSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    bookId?: boolean
+    tagId?: boolean
+    book?: boolean | ErdTestBookDefaultArgs<ExtArgs>
+    tag?: boolean | ErdTestTagDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["erdTestBookTag"]>
+
+  export type ErdTestBookTagSelectScalar = {
+    bookId?: boolean
+    tagId?: boolean
+  }
+
+  export type ErdTestBookTagOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"bookId" | "tagId", ExtArgs["result"]["erdTestBookTag"]>
+  export type ErdTestBookTagInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    book?: boolean | ErdTestBookDefaultArgs<ExtArgs>
+    tag?: boolean | ErdTestTagDefaultArgs<ExtArgs>
+  }
+  export type ErdTestBookTagIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    book?: boolean | ErdTestBookDefaultArgs<ExtArgs>
+    tag?: boolean | ErdTestTagDefaultArgs<ExtArgs>
+  }
+  export type ErdTestBookTagIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    book?: boolean | ErdTestBookDefaultArgs<ExtArgs>
+    tag?: boolean | ErdTestTagDefaultArgs<ExtArgs>
+  }
+
+  export type $ErdTestBookTagPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ErdTestBookTag"
+    objects: {
+      book: Prisma.$ErdTestBookPayload<ExtArgs>
+      tag: Prisma.$ErdTestTagPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      bookId: string
+      tagId: string
+    }, ExtArgs["result"]["erdTestBookTag"]>
+    composites: {}
+  }
+
+  type ErdTestBookTagGetPayload<S extends boolean | null | undefined | ErdTestBookTagDefaultArgs> = $Result.GetResult<Prisma.$ErdTestBookTagPayload, S>
+
+  type ErdTestBookTagCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ErdTestBookTagFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ErdTestBookTagCountAggregateInputType | true
+    }
+
+  export interface ErdTestBookTagDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ErdTestBookTag'], meta: { name: 'ErdTestBookTag' } }
+    /**
+     * Find zero or one ErdTestBookTag that matches the filter.
+     * @param {ErdTestBookTagFindUniqueArgs} args - Arguments to find a ErdTestBookTag
+     * @example
+     * // Get one ErdTestBookTag
+     * const erdTestBookTag = await prisma.erdTestBookTag.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ErdTestBookTagFindUniqueArgs>(args: SelectSubset<T, ErdTestBookTagFindUniqueArgs<ExtArgs>>): Prisma__ErdTestBookTagClient<$Result.GetResult<Prisma.$ErdTestBookTagPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ErdTestBookTag that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ErdTestBookTagFindUniqueOrThrowArgs} args - Arguments to find a ErdTestBookTag
+     * @example
+     * // Get one ErdTestBookTag
+     * const erdTestBookTag = await prisma.erdTestBookTag.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ErdTestBookTagFindUniqueOrThrowArgs>(args: SelectSubset<T, ErdTestBookTagFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ErdTestBookTagClient<$Result.GetResult<Prisma.$ErdTestBookTagPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ErdTestBookTag that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ErdTestBookTagFindFirstArgs} args - Arguments to find a ErdTestBookTag
+     * @example
+     * // Get one ErdTestBookTag
+     * const erdTestBookTag = await prisma.erdTestBookTag.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ErdTestBookTagFindFirstArgs>(args?: SelectSubset<T, ErdTestBookTagFindFirstArgs<ExtArgs>>): Prisma__ErdTestBookTagClient<$Result.GetResult<Prisma.$ErdTestBookTagPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ErdTestBookTag that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ErdTestBookTagFindFirstOrThrowArgs} args - Arguments to find a ErdTestBookTag
+     * @example
+     * // Get one ErdTestBookTag
+     * const erdTestBookTag = await prisma.erdTestBookTag.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ErdTestBookTagFindFirstOrThrowArgs>(args?: SelectSubset<T, ErdTestBookTagFindFirstOrThrowArgs<ExtArgs>>): Prisma__ErdTestBookTagClient<$Result.GetResult<Prisma.$ErdTestBookTagPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ErdTestBookTags that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ErdTestBookTagFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ErdTestBookTags
+     * const erdTestBookTags = await prisma.erdTestBookTag.findMany()
+     * 
+     * // Get first 10 ErdTestBookTags
+     * const erdTestBookTags = await prisma.erdTestBookTag.findMany({ take: 10 })
+     * 
+     * // Only select the `bookId`
+     * const erdTestBookTagWithBookIdOnly = await prisma.erdTestBookTag.findMany({ select: { bookId: true } })
+     * 
+     */
+    findMany<T extends ErdTestBookTagFindManyArgs>(args?: SelectSubset<T, ErdTestBookTagFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ErdTestBookTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ErdTestBookTag.
+     * @param {ErdTestBookTagCreateArgs} args - Arguments to create a ErdTestBookTag.
+     * @example
+     * // Create one ErdTestBookTag
+     * const ErdTestBookTag = await prisma.erdTestBookTag.create({
+     *   data: {
+     *     // ... data to create a ErdTestBookTag
+     *   }
+     * })
+     * 
+     */
+    create<T extends ErdTestBookTagCreateArgs>(args: SelectSubset<T, ErdTestBookTagCreateArgs<ExtArgs>>): Prisma__ErdTestBookTagClient<$Result.GetResult<Prisma.$ErdTestBookTagPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ErdTestBookTags.
+     * @param {ErdTestBookTagCreateManyArgs} args - Arguments to create many ErdTestBookTags.
+     * @example
+     * // Create many ErdTestBookTags
+     * const erdTestBookTag = await prisma.erdTestBookTag.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ErdTestBookTagCreateManyArgs>(args?: SelectSubset<T, ErdTestBookTagCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ErdTestBookTags and returns the data saved in the database.
+     * @param {ErdTestBookTagCreateManyAndReturnArgs} args - Arguments to create many ErdTestBookTags.
+     * @example
+     * // Create many ErdTestBookTags
+     * const erdTestBookTag = await prisma.erdTestBookTag.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ErdTestBookTags and only return the `bookId`
+     * const erdTestBookTagWithBookIdOnly = await prisma.erdTestBookTag.createManyAndReturn({
+     *   select: { bookId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ErdTestBookTagCreateManyAndReturnArgs>(args?: SelectSubset<T, ErdTestBookTagCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ErdTestBookTagPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ErdTestBookTag.
+     * @param {ErdTestBookTagDeleteArgs} args - Arguments to delete one ErdTestBookTag.
+     * @example
+     * // Delete one ErdTestBookTag
+     * const ErdTestBookTag = await prisma.erdTestBookTag.delete({
+     *   where: {
+     *     // ... filter to delete one ErdTestBookTag
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ErdTestBookTagDeleteArgs>(args: SelectSubset<T, ErdTestBookTagDeleteArgs<ExtArgs>>): Prisma__ErdTestBookTagClient<$Result.GetResult<Prisma.$ErdTestBookTagPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ErdTestBookTag.
+     * @param {ErdTestBookTagUpdateArgs} args - Arguments to update one ErdTestBookTag.
+     * @example
+     * // Update one ErdTestBookTag
+     * const erdTestBookTag = await prisma.erdTestBookTag.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ErdTestBookTagUpdateArgs>(args: SelectSubset<T, ErdTestBookTagUpdateArgs<ExtArgs>>): Prisma__ErdTestBookTagClient<$Result.GetResult<Prisma.$ErdTestBookTagPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ErdTestBookTags.
+     * @param {ErdTestBookTagDeleteManyArgs} args - Arguments to filter ErdTestBookTags to delete.
+     * @example
+     * // Delete a few ErdTestBookTags
+     * const { count } = await prisma.erdTestBookTag.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ErdTestBookTagDeleteManyArgs>(args?: SelectSubset<T, ErdTestBookTagDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ErdTestBookTags.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ErdTestBookTagUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ErdTestBookTags
+     * const erdTestBookTag = await prisma.erdTestBookTag.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ErdTestBookTagUpdateManyArgs>(args: SelectSubset<T, ErdTestBookTagUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ErdTestBookTags and returns the data updated in the database.
+     * @param {ErdTestBookTagUpdateManyAndReturnArgs} args - Arguments to update many ErdTestBookTags.
+     * @example
+     * // Update many ErdTestBookTags
+     * const erdTestBookTag = await prisma.erdTestBookTag.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ErdTestBookTags and only return the `bookId`
+     * const erdTestBookTagWithBookIdOnly = await prisma.erdTestBookTag.updateManyAndReturn({
+     *   select: { bookId: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ErdTestBookTagUpdateManyAndReturnArgs>(args: SelectSubset<T, ErdTestBookTagUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ErdTestBookTagPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ErdTestBookTag.
+     * @param {ErdTestBookTagUpsertArgs} args - Arguments to update or create a ErdTestBookTag.
+     * @example
+     * // Update or create a ErdTestBookTag
+     * const erdTestBookTag = await prisma.erdTestBookTag.upsert({
+     *   create: {
+     *     // ... data to create a ErdTestBookTag
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ErdTestBookTag we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ErdTestBookTagUpsertArgs>(args: SelectSubset<T, ErdTestBookTagUpsertArgs<ExtArgs>>): Prisma__ErdTestBookTagClient<$Result.GetResult<Prisma.$ErdTestBookTagPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ErdTestBookTags.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ErdTestBookTagCountArgs} args - Arguments to filter ErdTestBookTags to count.
+     * @example
+     * // Count the number of ErdTestBookTags
+     * const count = await prisma.erdTestBookTag.count({
+     *   where: {
+     *     // ... the filter for the ErdTestBookTags we want to count
+     *   }
+     * })
+    **/
+    count<T extends ErdTestBookTagCountArgs>(
+      args?: Subset<T, ErdTestBookTagCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ErdTestBookTagCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ErdTestBookTag.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ErdTestBookTagAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ErdTestBookTagAggregateArgs>(args: Subset<T, ErdTestBookTagAggregateArgs>): Prisma.PrismaPromise<GetErdTestBookTagAggregateType<T>>
+
+    /**
+     * Group by ErdTestBookTag.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ErdTestBookTagGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ErdTestBookTagGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ErdTestBookTagGroupByArgs['orderBy'] }
+        : { orderBy?: ErdTestBookTagGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ErdTestBookTagGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetErdTestBookTagGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ErdTestBookTag model
+   */
+  readonly fields: ErdTestBookTagFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ErdTestBookTag.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ErdTestBookTagClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    book<T extends ErdTestBookDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ErdTestBookDefaultArgs<ExtArgs>>): Prisma__ErdTestBookClient<$Result.GetResult<Prisma.$ErdTestBookPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    tag<T extends ErdTestTagDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ErdTestTagDefaultArgs<ExtArgs>>): Prisma__ErdTestTagClient<$Result.GetResult<Prisma.$ErdTestTagPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ErdTestBookTag model
+   */
+  interface ErdTestBookTagFieldRefs {
+    readonly bookId: FieldRef<"ErdTestBookTag", 'String'>
+    readonly tagId: FieldRef<"ErdTestBookTag", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ErdTestBookTag findUnique
+   */
+  export type ErdTestBookTagFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestBookTag
+     */
+    select?: ErdTestBookTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestBookTag
+     */
+    omit?: ErdTestBookTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestBookTagInclude<ExtArgs> | null
+    /**
+     * Filter, which ErdTestBookTag to fetch.
+     */
+    where: ErdTestBookTagWhereUniqueInput
+  }
+
+  /**
+   * ErdTestBookTag findUniqueOrThrow
+   */
+  export type ErdTestBookTagFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestBookTag
+     */
+    select?: ErdTestBookTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestBookTag
+     */
+    omit?: ErdTestBookTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestBookTagInclude<ExtArgs> | null
+    /**
+     * Filter, which ErdTestBookTag to fetch.
+     */
+    where: ErdTestBookTagWhereUniqueInput
+  }
+
+  /**
+   * ErdTestBookTag findFirst
+   */
+  export type ErdTestBookTagFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestBookTag
+     */
+    select?: ErdTestBookTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestBookTag
+     */
+    omit?: ErdTestBookTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestBookTagInclude<ExtArgs> | null
+    /**
+     * Filter, which ErdTestBookTag to fetch.
+     */
+    where?: ErdTestBookTagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ErdTestBookTags to fetch.
+     */
+    orderBy?: ErdTestBookTagOrderByWithRelationInput | ErdTestBookTagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ErdTestBookTags.
+     */
+    cursor?: ErdTestBookTagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ErdTestBookTags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ErdTestBookTags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ErdTestBookTags.
+     */
+    distinct?: ErdTestBookTagScalarFieldEnum | ErdTestBookTagScalarFieldEnum[]
+  }
+
+  /**
+   * ErdTestBookTag findFirstOrThrow
+   */
+  export type ErdTestBookTagFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestBookTag
+     */
+    select?: ErdTestBookTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestBookTag
+     */
+    omit?: ErdTestBookTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestBookTagInclude<ExtArgs> | null
+    /**
+     * Filter, which ErdTestBookTag to fetch.
+     */
+    where?: ErdTestBookTagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ErdTestBookTags to fetch.
+     */
+    orderBy?: ErdTestBookTagOrderByWithRelationInput | ErdTestBookTagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ErdTestBookTags.
+     */
+    cursor?: ErdTestBookTagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ErdTestBookTags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ErdTestBookTags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ErdTestBookTags.
+     */
+    distinct?: ErdTestBookTagScalarFieldEnum | ErdTestBookTagScalarFieldEnum[]
+  }
+
+  /**
+   * ErdTestBookTag findMany
+   */
+  export type ErdTestBookTagFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestBookTag
+     */
+    select?: ErdTestBookTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestBookTag
+     */
+    omit?: ErdTestBookTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestBookTagInclude<ExtArgs> | null
+    /**
+     * Filter, which ErdTestBookTags to fetch.
+     */
+    where?: ErdTestBookTagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ErdTestBookTags to fetch.
+     */
+    orderBy?: ErdTestBookTagOrderByWithRelationInput | ErdTestBookTagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ErdTestBookTags.
+     */
+    cursor?: ErdTestBookTagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ErdTestBookTags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ErdTestBookTags.
+     */
+    skip?: number
+    distinct?: ErdTestBookTagScalarFieldEnum | ErdTestBookTagScalarFieldEnum[]
+  }
+
+  /**
+   * ErdTestBookTag create
+   */
+  export type ErdTestBookTagCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestBookTag
+     */
+    select?: ErdTestBookTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestBookTag
+     */
+    omit?: ErdTestBookTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestBookTagInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ErdTestBookTag.
+     */
+    data: XOR<ErdTestBookTagCreateInput, ErdTestBookTagUncheckedCreateInput>
+  }
+
+  /**
+   * ErdTestBookTag createMany
+   */
+  export type ErdTestBookTagCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ErdTestBookTags.
+     */
+    data: ErdTestBookTagCreateManyInput | ErdTestBookTagCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ErdTestBookTag createManyAndReturn
+   */
+  export type ErdTestBookTagCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestBookTag
+     */
+    select?: ErdTestBookTagSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestBookTag
+     */
+    omit?: ErdTestBookTagOmit<ExtArgs> | null
+    /**
+     * The data used to create many ErdTestBookTags.
+     */
+    data: ErdTestBookTagCreateManyInput | ErdTestBookTagCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestBookTagIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ErdTestBookTag update
+   */
+  export type ErdTestBookTagUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestBookTag
+     */
+    select?: ErdTestBookTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestBookTag
+     */
+    omit?: ErdTestBookTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestBookTagInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ErdTestBookTag.
+     */
+    data: XOR<ErdTestBookTagUpdateInput, ErdTestBookTagUncheckedUpdateInput>
+    /**
+     * Choose, which ErdTestBookTag to update.
+     */
+    where: ErdTestBookTagWhereUniqueInput
+  }
+
+  /**
+   * ErdTestBookTag updateMany
+   */
+  export type ErdTestBookTagUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ErdTestBookTags.
+     */
+    data: XOR<ErdTestBookTagUpdateManyMutationInput, ErdTestBookTagUncheckedUpdateManyInput>
+    /**
+     * Filter which ErdTestBookTags to update
+     */
+    where?: ErdTestBookTagWhereInput
+    /**
+     * Limit how many ErdTestBookTags to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ErdTestBookTag updateManyAndReturn
+   */
+  export type ErdTestBookTagUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestBookTag
+     */
+    select?: ErdTestBookTagSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestBookTag
+     */
+    omit?: ErdTestBookTagOmit<ExtArgs> | null
+    /**
+     * The data used to update ErdTestBookTags.
+     */
+    data: XOR<ErdTestBookTagUpdateManyMutationInput, ErdTestBookTagUncheckedUpdateManyInput>
+    /**
+     * Filter which ErdTestBookTags to update
+     */
+    where?: ErdTestBookTagWhereInput
+    /**
+     * Limit how many ErdTestBookTags to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestBookTagIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ErdTestBookTag upsert
+   */
+  export type ErdTestBookTagUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestBookTag
+     */
+    select?: ErdTestBookTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestBookTag
+     */
+    omit?: ErdTestBookTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestBookTagInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ErdTestBookTag to update in case it exists.
+     */
+    where: ErdTestBookTagWhereUniqueInput
+    /**
+     * In case the ErdTestBookTag found by the `where` argument doesn't exist, create a new ErdTestBookTag with this data.
+     */
+    create: XOR<ErdTestBookTagCreateInput, ErdTestBookTagUncheckedCreateInput>
+    /**
+     * In case the ErdTestBookTag was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ErdTestBookTagUpdateInput, ErdTestBookTagUncheckedUpdateInput>
+  }
+
+  /**
+   * ErdTestBookTag delete
+   */
+  export type ErdTestBookTagDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestBookTag
+     */
+    select?: ErdTestBookTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestBookTag
+     */
+    omit?: ErdTestBookTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestBookTagInclude<ExtArgs> | null
+    /**
+     * Filter which ErdTestBookTag to delete.
+     */
+    where: ErdTestBookTagWhereUniqueInput
+  }
+
+  /**
+   * ErdTestBookTag deleteMany
+   */
+  export type ErdTestBookTagDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ErdTestBookTags to delete
+     */
+    where?: ErdTestBookTagWhereInput
+    /**
+     * Limit how many ErdTestBookTags to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ErdTestBookTag without action
+   */
+  export type ErdTestBookTagDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ErdTestBookTag
+     */
+    select?: ErdTestBookTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ErdTestBookTag
+     */
+    omit?: ErdTestBookTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ErdTestBookTagInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -24894,6 +29580,45 @@ export namespace Prisma {
   };
 
   export type DiagramScalarFieldEnum = (typeof DiagramScalarFieldEnum)[keyof typeof DiagramScalarFieldEnum]
+
+
+  export const ErdTestAuthorScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    email: 'email',
+    bio: 'bio',
+    createdAt: 'createdAt'
+  };
+
+  export type ErdTestAuthorScalarFieldEnum = (typeof ErdTestAuthorScalarFieldEnum)[keyof typeof ErdTestAuthorScalarFieldEnum]
+
+
+  export const ErdTestBookScalarFieldEnum: {
+    id: 'id',
+    title: 'title',
+    isbn: 'isbn',
+    authorId: 'authorId',
+    publishedAt: 'publishedAt',
+    createdAt: 'createdAt'
+  };
+
+  export type ErdTestBookScalarFieldEnum = (typeof ErdTestBookScalarFieldEnum)[keyof typeof ErdTestBookScalarFieldEnum]
+
+
+  export const ErdTestTagScalarFieldEnum: {
+    id: 'id',
+    name: 'name'
+  };
+
+  export type ErdTestTagScalarFieldEnum = (typeof ErdTestTagScalarFieldEnum)[keyof typeof ErdTestTagScalarFieldEnum]
+
+
+  export const ErdTestBookTagScalarFieldEnum: {
+    bookId: 'bookId',
+    tagId: 'tagId'
+  };
+
+  export type ErdTestBookTagScalarFieldEnum = (typeof ErdTestBookTagScalarFieldEnum)[keyof typeof ErdTestBookTagScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -26625,6 +31350,208 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Diagram"> | Date | string
   }
 
+  export type ErdTestAuthorWhereInput = {
+    AND?: ErdTestAuthorWhereInput | ErdTestAuthorWhereInput[]
+    OR?: ErdTestAuthorWhereInput[]
+    NOT?: ErdTestAuthorWhereInput | ErdTestAuthorWhereInput[]
+    id?: StringFilter<"ErdTestAuthor"> | string
+    name?: StringFilter<"ErdTestAuthor"> | string
+    email?: StringFilter<"ErdTestAuthor"> | string
+    bio?: StringNullableFilter<"ErdTestAuthor"> | string | null
+    createdAt?: DateTimeFilter<"ErdTestAuthor"> | Date | string
+    books?: ErdTestBookListRelationFilter
+  }
+
+  export type ErdTestAuthorOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    email?: SortOrder
+    bio?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    books?: ErdTestBookOrderByRelationAggregateInput
+  }
+
+  export type ErdTestAuthorWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    email?: string
+    AND?: ErdTestAuthorWhereInput | ErdTestAuthorWhereInput[]
+    OR?: ErdTestAuthorWhereInput[]
+    NOT?: ErdTestAuthorWhereInput | ErdTestAuthorWhereInput[]
+    name?: StringFilter<"ErdTestAuthor"> | string
+    bio?: StringNullableFilter<"ErdTestAuthor"> | string | null
+    createdAt?: DateTimeFilter<"ErdTestAuthor"> | Date | string
+    books?: ErdTestBookListRelationFilter
+  }, "id" | "email">
+
+  export type ErdTestAuthorOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    email?: SortOrder
+    bio?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: ErdTestAuthorCountOrderByAggregateInput
+    _max?: ErdTestAuthorMaxOrderByAggregateInput
+    _min?: ErdTestAuthorMinOrderByAggregateInput
+  }
+
+  export type ErdTestAuthorScalarWhereWithAggregatesInput = {
+    AND?: ErdTestAuthorScalarWhereWithAggregatesInput | ErdTestAuthorScalarWhereWithAggregatesInput[]
+    OR?: ErdTestAuthorScalarWhereWithAggregatesInput[]
+    NOT?: ErdTestAuthorScalarWhereWithAggregatesInput | ErdTestAuthorScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ErdTestAuthor"> | string
+    name?: StringWithAggregatesFilter<"ErdTestAuthor"> | string
+    email?: StringWithAggregatesFilter<"ErdTestAuthor"> | string
+    bio?: StringNullableWithAggregatesFilter<"ErdTestAuthor"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ErdTestAuthor"> | Date | string
+  }
+
+  export type ErdTestBookWhereInput = {
+    AND?: ErdTestBookWhereInput | ErdTestBookWhereInput[]
+    OR?: ErdTestBookWhereInput[]
+    NOT?: ErdTestBookWhereInput | ErdTestBookWhereInput[]
+    id?: StringFilter<"ErdTestBook"> | string
+    title?: StringFilter<"ErdTestBook"> | string
+    isbn?: StringFilter<"ErdTestBook"> | string
+    authorId?: StringFilter<"ErdTestBook"> | string
+    publishedAt?: DateTimeNullableFilter<"ErdTestBook"> | Date | string | null
+    createdAt?: DateTimeFilter<"ErdTestBook"> | Date | string
+    author?: XOR<ErdTestAuthorScalarRelationFilter, ErdTestAuthorWhereInput>
+    tags?: ErdTestBookTagListRelationFilter
+  }
+
+  export type ErdTestBookOrderByWithRelationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    isbn?: SortOrder
+    authorId?: SortOrder
+    publishedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    author?: ErdTestAuthorOrderByWithRelationInput
+    tags?: ErdTestBookTagOrderByRelationAggregateInput
+  }
+
+  export type ErdTestBookWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    isbn?: string
+    AND?: ErdTestBookWhereInput | ErdTestBookWhereInput[]
+    OR?: ErdTestBookWhereInput[]
+    NOT?: ErdTestBookWhereInput | ErdTestBookWhereInput[]
+    title?: StringFilter<"ErdTestBook"> | string
+    authorId?: StringFilter<"ErdTestBook"> | string
+    publishedAt?: DateTimeNullableFilter<"ErdTestBook"> | Date | string | null
+    createdAt?: DateTimeFilter<"ErdTestBook"> | Date | string
+    author?: XOR<ErdTestAuthorScalarRelationFilter, ErdTestAuthorWhereInput>
+    tags?: ErdTestBookTagListRelationFilter
+  }, "id" | "isbn">
+
+  export type ErdTestBookOrderByWithAggregationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    isbn?: SortOrder
+    authorId?: SortOrder
+    publishedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: ErdTestBookCountOrderByAggregateInput
+    _max?: ErdTestBookMaxOrderByAggregateInput
+    _min?: ErdTestBookMinOrderByAggregateInput
+  }
+
+  export type ErdTestBookScalarWhereWithAggregatesInput = {
+    AND?: ErdTestBookScalarWhereWithAggregatesInput | ErdTestBookScalarWhereWithAggregatesInput[]
+    OR?: ErdTestBookScalarWhereWithAggregatesInput[]
+    NOT?: ErdTestBookScalarWhereWithAggregatesInput | ErdTestBookScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ErdTestBook"> | string
+    title?: StringWithAggregatesFilter<"ErdTestBook"> | string
+    isbn?: StringWithAggregatesFilter<"ErdTestBook"> | string
+    authorId?: StringWithAggregatesFilter<"ErdTestBook"> | string
+    publishedAt?: DateTimeNullableWithAggregatesFilter<"ErdTestBook"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ErdTestBook"> | Date | string
+  }
+
+  export type ErdTestTagWhereInput = {
+    AND?: ErdTestTagWhereInput | ErdTestTagWhereInput[]
+    OR?: ErdTestTagWhereInput[]
+    NOT?: ErdTestTagWhereInput | ErdTestTagWhereInput[]
+    id?: StringFilter<"ErdTestTag"> | string
+    name?: StringFilter<"ErdTestTag"> | string
+    books?: ErdTestBookTagListRelationFilter
+  }
+
+  export type ErdTestTagOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    books?: ErdTestBookTagOrderByRelationAggregateInput
+  }
+
+  export type ErdTestTagWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    name?: string
+    AND?: ErdTestTagWhereInput | ErdTestTagWhereInput[]
+    OR?: ErdTestTagWhereInput[]
+    NOT?: ErdTestTagWhereInput | ErdTestTagWhereInput[]
+    books?: ErdTestBookTagListRelationFilter
+  }, "id" | "name">
+
+  export type ErdTestTagOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    _count?: ErdTestTagCountOrderByAggregateInput
+    _max?: ErdTestTagMaxOrderByAggregateInput
+    _min?: ErdTestTagMinOrderByAggregateInput
+  }
+
+  export type ErdTestTagScalarWhereWithAggregatesInput = {
+    AND?: ErdTestTagScalarWhereWithAggregatesInput | ErdTestTagScalarWhereWithAggregatesInput[]
+    OR?: ErdTestTagScalarWhereWithAggregatesInput[]
+    NOT?: ErdTestTagScalarWhereWithAggregatesInput | ErdTestTagScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ErdTestTag"> | string
+    name?: StringWithAggregatesFilter<"ErdTestTag"> | string
+  }
+
+  export type ErdTestBookTagWhereInput = {
+    AND?: ErdTestBookTagWhereInput | ErdTestBookTagWhereInput[]
+    OR?: ErdTestBookTagWhereInput[]
+    NOT?: ErdTestBookTagWhereInput | ErdTestBookTagWhereInput[]
+    bookId?: StringFilter<"ErdTestBookTag"> | string
+    tagId?: StringFilter<"ErdTestBookTag"> | string
+    book?: XOR<ErdTestBookScalarRelationFilter, ErdTestBookWhereInput>
+    tag?: XOR<ErdTestTagScalarRelationFilter, ErdTestTagWhereInput>
+  }
+
+  export type ErdTestBookTagOrderByWithRelationInput = {
+    bookId?: SortOrder
+    tagId?: SortOrder
+    book?: ErdTestBookOrderByWithRelationInput
+    tag?: ErdTestTagOrderByWithRelationInput
+  }
+
+  export type ErdTestBookTagWhereUniqueInput = Prisma.AtLeast<{
+    bookId_tagId?: ErdTestBookTagBookIdTagIdCompoundUniqueInput
+    AND?: ErdTestBookTagWhereInput | ErdTestBookTagWhereInput[]
+    OR?: ErdTestBookTagWhereInput[]
+    NOT?: ErdTestBookTagWhereInput | ErdTestBookTagWhereInput[]
+    bookId?: StringFilter<"ErdTestBookTag"> | string
+    tagId?: StringFilter<"ErdTestBookTag"> | string
+    book?: XOR<ErdTestBookScalarRelationFilter, ErdTestBookWhereInput>
+    tag?: XOR<ErdTestTagScalarRelationFilter, ErdTestTagWhereInput>
+  }, "bookId_tagId">
+
+  export type ErdTestBookTagOrderByWithAggregationInput = {
+    bookId?: SortOrder
+    tagId?: SortOrder
+    _count?: ErdTestBookTagCountOrderByAggregateInput
+    _max?: ErdTestBookTagMaxOrderByAggregateInput
+    _min?: ErdTestBookTagMinOrderByAggregateInput
+  }
+
+  export type ErdTestBookTagScalarWhereWithAggregatesInput = {
+    AND?: ErdTestBookTagScalarWhereWithAggregatesInput | ErdTestBookTagScalarWhereWithAggregatesInput[]
+    OR?: ErdTestBookTagScalarWhereWithAggregatesInput[]
+    NOT?: ErdTestBookTagScalarWhereWithAggregatesInput | ErdTestBookTagScalarWhereWithAggregatesInput[]
+    bookId?: StringWithAggregatesFilter<"ErdTestBookTag"> | string
+    tagId?: StringWithAggregatesFilter<"ErdTestBookTag"> | string
+  }
+
   export type UserCreateInput = {
     id: string
     name: string
@@ -28200,6 +33127,205 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ErdTestAuthorCreateInput = {
+    id?: string
+    name: string
+    email: string
+    bio?: string | null
+    createdAt?: Date | string
+    books?: ErdTestBookCreateNestedManyWithoutAuthorInput
+  }
+
+  export type ErdTestAuthorUncheckedCreateInput = {
+    id?: string
+    name: string
+    email: string
+    bio?: string | null
+    createdAt?: Date | string
+    books?: ErdTestBookUncheckedCreateNestedManyWithoutAuthorInput
+  }
+
+  export type ErdTestAuthorUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    books?: ErdTestBookUpdateManyWithoutAuthorNestedInput
+  }
+
+  export type ErdTestAuthorUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    books?: ErdTestBookUncheckedUpdateManyWithoutAuthorNestedInput
+  }
+
+  export type ErdTestAuthorCreateManyInput = {
+    id?: string
+    name: string
+    email: string
+    bio?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ErdTestAuthorUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ErdTestAuthorUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ErdTestBookCreateInput = {
+    id?: string
+    title: string
+    isbn: string
+    publishedAt?: Date | string | null
+    createdAt?: Date | string
+    author: ErdTestAuthorCreateNestedOneWithoutBooksInput
+    tags?: ErdTestBookTagCreateNestedManyWithoutBookInput
+  }
+
+  export type ErdTestBookUncheckedCreateInput = {
+    id?: string
+    title: string
+    isbn: string
+    authorId: string
+    publishedAt?: Date | string | null
+    createdAt?: Date | string
+    tags?: ErdTestBookTagUncheckedCreateNestedManyWithoutBookInput
+  }
+
+  export type ErdTestBookUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    isbn?: StringFieldUpdateOperationsInput | string
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    author?: ErdTestAuthorUpdateOneRequiredWithoutBooksNestedInput
+    tags?: ErdTestBookTagUpdateManyWithoutBookNestedInput
+  }
+
+  export type ErdTestBookUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    isbn?: StringFieldUpdateOperationsInput | string
+    authorId?: StringFieldUpdateOperationsInput | string
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tags?: ErdTestBookTagUncheckedUpdateManyWithoutBookNestedInput
+  }
+
+  export type ErdTestBookCreateManyInput = {
+    id?: string
+    title: string
+    isbn: string
+    authorId: string
+    publishedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type ErdTestBookUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    isbn?: StringFieldUpdateOperationsInput | string
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ErdTestBookUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    isbn?: StringFieldUpdateOperationsInput | string
+    authorId?: StringFieldUpdateOperationsInput | string
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ErdTestTagCreateInput = {
+    id?: string
+    name: string
+    books?: ErdTestBookTagCreateNestedManyWithoutTagInput
+  }
+
+  export type ErdTestTagUncheckedCreateInput = {
+    id?: string
+    name: string
+    books?: ErdTestBookTagUncheckedCreateNestedManyWithoutTagInput
+  }
+
+  export type ErdTestTagUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    books?: ErdTestBookTagUpdateManyWithoutTagNestedInput
+  }
+
+  export type ErdTestTagUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    books?: ErdTestBookTagUncheckedUpdateManyWithoutTagNestedInput
+  }
+
+  export type ErdTestTagCreateManyInput = {
+    id?: string
+    name: string
+  }
+
+  export type ErdTestTagUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ErdTestTagUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ErdTestBookTagCreateInput = {
+    book: ErdTestBookCreateNestedOneWithoutTagsInput
+    tag: ErdTestTagCreateNestedOneWithoutBooksInput
+  }
+
+  export type ErdTestBookTagUncheckedCreateInput = {
+    bookId: string
+    tagId: string
+  }
+
+  export type ErdTestBookTagUpdateInput = {
+    book?: ErdTestBookUpdateOneRequiredWithoutTagsNestedInput
+    tag?: ErdTestTagUpdateOneRequiredWithoutBooksNestedInput
+  }
+
+  export type ErdTestBookTagUncheckedUpdateInput = {
+    bookId?: StringFieldUpdateOperationsInput | string
+    tagId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ErdTestBookTagCreateManyInput = {
+    bookId: string
+    tagId: string
+  }
+
+  export type ErdTestBookTagUpdateManyMutationInput = {
+
+  }
+
+  export type ErdTestBookTagUncheckedUpdateManyInput = {
+    bookId?: StringFieldUpdateOperationsInput | string
+    tagId?: StringFieldUpdateOperationsInput | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -29516,6 +34642,127 @@ export namespace Prisma {
     _max?: NestedEnumDiagramStatusFilter<$PrismaModel>
   }
 
+  export type ErdTestBookListRelationFilter = {
+    every?: ErdTestBookWhereInput
+    some?: ErdTestBookWhereInput
+    none?: ErdTestBookWhereInput
+  }
+
+  export type ErdTestBookOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ErdTestAuthorCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    email?: SortOrder
+    bio?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ErdTestAuthorMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    email?: SortOrder
+    bio?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ErdTestAuthorMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    email?: SortOrder
+    bio?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ErdTestAuthorScalarRelationFilter = {
+    is?: ErdTestAuthorWhereInput
+    isNot?: ErdTestAuthorWhereInput
+  }
+
+  export type ErdTestBookTagListRelationFilter = {
+    every?: ErdTestBookTagWhereInput
+    some?: ErdTestBookTagWhereInput
+    none?: ErdTestBookTagWhereInput
+  }
+
+  export type ErdTestBookTagOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ErdTestBookCountOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    isbn?: SortOrder
+    authorId?: SortOrder
+    publishedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ErdTestBookMaxOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    isbn?: SortOrder
+    authorId?: SortOrder
+    publishedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ErdTestBookMinOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    isbn?: SortOrder
+    authorId?: SortOrder
+    publishedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ErdTestTagCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+  }
+
+  export type ErdTestTagMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+  }
+
+  export type ErdTestTagMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+  }
+
+  export type ErdTestBookScalarRelationFilter = {
+    is?: ErdTestBookWhereInput
+    isNot?: ErdTestBookWhereInput
+  }
+
+  export type ErdTestTagScalarRelationFilter = {
+    is?: ErdTestTagWhereInput
+    isNot?: ErdTestTagWhereInput
+  }
+
+  export type ErdTestBookTagBookIdTagIdCompoundUniqueInput = {
+    bookId: string
+    tagId: string
+  }
+
+  export type ErdTestBookTagCountOrderByAggregateInput = {
+    bookId?: SortOrder
+    tagId?: SortOrder
+  }
+
+  export type ErdTestBookTagMaxOrderByAggregateInput = {
+    bookId?: SortOrder
+    tagId?: SortOrder
+  }
+
+  export type ErdTestBookTagMinOrderByAggregateInput = {
+    bookId?: SortOrder
+    tagId?: SortOrder
+  }
+
   export type SessionCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -30732,6 +35979,174 @@ export namespace Prisma {
     upsert?: ReviewUpsertWithoutDiagramsInput
     connect?: ReviewWhereUniqueInput
     update?: XOR<XOR<ReviewUpdateToOneWithWhereWithoutDiagramsInput, ReviewUpdateWithoutDiagramsInput>, ReviewUncheckedUpdateWithoutDiagramsInput>
+  }
+
+  export type ErdTestBookCreateNestedManyWithoutAuthorInput = {
+    create?: XOR<ErdTestBookCreateWithoutAuthorInput, ErdTestBookUncheckedCreateWithoutAuthorInput> | ErdTestBookCreateWithoutAuthorInput[] | ErdTestBookUncheckedCreateWithoutAuthorInput[]
+    connectOrCreate?: ErdTestBookCreateOrConnectWithoutAuthorInput | ErdTestBookCreateOrConnectWithoutAuthorInput[]
+    createMany?: ErdTestBookCreateManyAuthorInputEnvelope
+    connect?: ErdTestBookWhereUniqueInput | ErdTestBookWhereUniqueInput[]
+  }
+
+  export type ErdTestBookUncheckedCreateNestedManyWithoutAuthorInput = {
+    create?: XOR<ErdTestBookCreateWithoutAuthorInput, ErdTestBookUncheckedCreateWithoutAuthorInput> | ErdTestBookCreateWithoutAuthorInput[] | ErdTestBookUncheckedCreateWithoutAuthorInput[]
+    connectOrCreate?: ErdTestBookCreateOrConnectWithoutAuthorInput | ErdTestBookCreateOrConnectWithoutAuthorInput[]
+    createMany?: ErdTestBookCreateManyAuthorInputEnvelope
+    connect?: ErdTestBookWhereUniqueInput | ErdTestBookWhereUniqueInput[]
+  }
+
+  export type ErdTestBookUpdateManyWithoutAuthorNestedInput = {
+    create?: XOR<ErdTestBookCreateWithoutAuthorInput, ErdTestBookUncheckedCreateWithoutAuthorInput> | ErdTestBookCreateWithoutAuthorInput[] | ErdTestBookUncheckedCreateWithoutAuthorInput[]
+    connectOrCreate?: ErdTestBookCreateOrConnectWithoutAuthorInput | ErdTestBookCreateOrConnectWithoutAuthorInput[]
+    upsert?: ErdTestBookUpsertWithWhereUniqueWithoutAuthorInput | ErdTestBookUpsertWithWhereUniqueWithoutAuthorInput[]
+    createMany?: ErdTestBookCreateManyAuthorInputEnvelope
+    set?: ErdTestBookWhereUniqueInput | ErdTestBookWhereUniqueInput[]
+    disconnect?: ErdTestBookWhereUniqueInput | ErdTestBookWhereUniqueInput[]
+    delete?: ErdTestBookWhereUniqueInput | ErdTestBookWhereUniqueInput[]
+    connect?: ErdTestBookWhereUniqueInput | ErdTestBookWhereUniqueInput[]
+    update?: ErdTestBookUpdateWithWhereUniqueWithoutAuthorInput | ErdTestBookUpdateWithWhereUniqueWithoutAuthorInput[]
+    updateMany?: ErdTestBookUpdateManyWithWhereWithoutAuthorInput | ErdTestBookUpdateManyWithWhereWithoutAuthorInput[]
+    deleteMany?: ErdTestBookScalarWhereInput | ErdTestBookScalarWhereInput[]
+  }
+
+  export type ErdTestBookUncheckedUpdateManyWithoutAuthorNestedInput = {
+    create?: XOR<ErdTestBookCreateWithoutAuthorInput, ErdTestBookUncheckedCreateWithoutAuthorInput> | ErdTestBookCreateWithoutAuthorInput[] | ErdTestBookUncheckedCreateWithoutAuthorInput[]
+    connectOrCreate?: ErdTestBookCreateOrConnectWithoutAuthorInput | ErdTestBookCreateOrConnectWithoutAuthorInput[]
+    upsert?: ErdTestBookUpsertWithWhereUniqueWithoutAuthorInput | ErdTestBookUpsertWithWhereUniqueWithoutAuthorInput[]
+    createMany?: ErdTestBookCreateManyAuthorInputEnvelope
+    set?: ErdTestBookWhereUniqueInput | ErdTestBookWhereUniqueInput[]
+    disconnect?: ErdTestBookWhereUniqueInput | ErdTestBookWhereUniqueInput[]
+    delete?: ErdTestBookWhereUniqueInput | ErdTestBookWhereUniqueInput[]
+    connect?: ErdTestBookWhereUniqueInput | ErdTestBookWhereUniqueInput[]
+    update?: ErdTestBookUpdateWithWhereUniqueWithoutAuthorInput | ErdTestBookUpdateWithWhereUniqueWithoutAuthorInput[]
+    updateMany?: ErdTestBookUpdateManyWithWhereWithoutAuthorInput | ErdTestBookUpdateManyWithWhereWithoutAuthorInput[]
+    deleteMany?: ErdTestBookScalarWhereInput | ErdTestBookScalarWhereInput[]
+  }
+
+  export type ErdTestAuthorCreateNestedOneWithoutBooksInput = {
+    create?: XOR<ErdTestAuthorCreateWithoutBooksInput, ErdTestAuthorUncheckedCreateWithoutBooksInput>
+    connectOrCreate?: ErdTestAuthorCreateOrConnectWithoutBooksInput
+    connect?: ErdTestAuthorWhereUniqueInput
+  }
+
+  export type ErdTestBookTagCreateNestedManyWithoutBookInput = {
+    create?: XOR<ErdTestBookTagCreateWithoutBookInput, ErdTestBookTagUncheckedCreateWithoutBookInput> | ErdTestBookTagCreateWithoutBookInput[] | ErdTestBookTagUncheckedCreateWithoutBookInput[]
+    connectOrCreate?: ErdTestBookTagCreateOrConnectWithoutBookInput | ErdTestBookTagCreateOrConnectWithoutBookInput[]
+    createMany?: ErdTestBookTagCreateManyBookInputEnvelope
+    connect?: ErdTestBookTagWhereUniqueInput | ErdTestBookTagWhereUniqueInput[]
+  }
+
+  export type ErdTestBookTagUncheckedCreateNestedManyWithoutBookInput = {
+    create?: XOR<ErdTestBookTagCreateWithoutBookInput, ErdTestBookTagUncheckedCreateWithoutBookInput> | ErdTestBookTagCreateWithoutBookInput[] | ErdTestBookTagUncheckedCreateWithoutBookInput[]
+    connectOrCreate?: ErdTestBookTagCreateOrConnectWithoutBookInput | ErdTestBookTagCreateOrConnectWithoutBookInput[]
+    createMany?: ErdTestBookTagCreateManyBookInputEnvelope
+    connect?: ErdTestBookTagWhereUniqueInput | ErdTestBookTagWhereUniqueInput[]
+  }
+
+  export type ErdTestAuthorUpdateOneRequiredWithoutBooksNestedInput = {
+    create?: XOR<ErdTestAuthorCreateWithoutBooksInput, ErdTestAuthorUncheckedCreateWithoutBooksInput>
+    connectOrCreate?: ErdTestAuthorCreateOrConnectWithoutBooksInput
+    upsert?: ErdTestAuthorUpsertWithoutBooksInput
+    connect?: ErdTestAuthorWhereUniqueInput
+    update?: XOR<XOR<ErdTestAuthorUpdateToOneWithWhereWithoutBooksInput, ErdTestAuthorUpdateWithoutBooksInput>, ErdTestAuthorUncheckedUpdateWithoutBooksInput>
+  }
+
+  export type ErdTestBookTagUpdateManyWithoutBookNestedInput = {
+    create?: XOR<ErdTestBookTagCreateWithoutBookInput, ErdTestBookTagUncheckedCreateWithoutBookInput> | ErdTestBookTagCreateWithoutBookInput[] | ErdTestBookTagUncheckedCreateWithoutBookInput[]
+    connectOrCreate?: ErdTestBookTagCreateOrConnectWithoutBookInput | ErdTestBookTagCreateOrConnectWithoutBookInput[]
+    upsert?: ErdTestBookTagUpsertWithWhereUniqueWithoutBookInput | ErdTestBookTagUpsertWithWhereUniqueWithoutBookInput[]
+    createMany?: ErdTestBookTagCreateManyBookInputEnvelope
+    set?: ErdTestBookTagWhereUniqueInput | ErdTestBookTagWhereUniqueInput[]
+    disconnect?: ErdTestBookTagWhereUniqueInput | ErdTestBookTagWhereUniqueInput[]
+    delete?: ErdTestBookTagWhereUniqueInput | ErdTestBookTagWhereUniqueInput[]
+    connect?: ErdTestBookTagWhereUniqueInput | ErdTestBookTagWhereUniqueInput[]
+    update?: ErdTestBookTagUpdateWithWhereUniqueWithoutBookInput | ErdTestBookTagUpdateWithWhereUniqueWithoutBookInput[]
+    updateMany?: ErdTestBookTagUpdateManyWithWhereWithoutBookInput | ErdTestBookTagUpdateManyWithWhereWithoutBookInput[]
+    deleteMany?: ErdTestBookTagScalarWhereInput | ErdTestBookTagScalarWhereInput[]
+  }
+
+  export type ErdTestBookTagUncheckedUpdateManyWithoutBookNestedInput = {
+    create?: XOR<ErdTestBookTagCreateWithoutBookInput, ErdTestBookTagUncheckedCreateWithoutBookInput> | ErdTestBookTagCreateWithoutBookInput[] | ErdTestBookTagUncheckedCreateWithoutBookInput[]
+    connectOrCreate?: ErdTestBookTagCreateOrConnectWithoutBookInput | ErdTestBookTagCreateOrConnectWithoutBookInput[]
+    upsert?: ErdTestBookTagUpsertWithWhereUniqueWithoutBookInput | ErdTestBookTagUpsertWithWhereUniqueWithoutBookInput[]
+    createMany?: ErdTestBookTagCreateManyBookInputEnvelope
+    set?: ErdTestBookTagWhereUniqueInput | ErdTestBookTagWhereUniqueInput[]
+    disconnect?: ErdTestBookTagWhereUniqueInput | ErdTestBookTagWhereUniqueInput[]
+    delete?: ErdTestBookTagWhereUniqueInput | ErdTestBookTagWhereUniqueInput[]
+    connect?: ErdTestBookTagWhereUniqueInput | ErdTestBookTagWhereUniqueInput[]
+    update?: ErdTestBookTagUpdateWithWhereUniqueWithoutBookInput | ErdTestBookTagUpdateWithWhereUniqueWithoutBookInput[]
+    updateMany?: ErdTestBookTagUpdateManyWithWhereWithoutBookInput | ErdTestBookTagUpdateManyWithWhereWithoutBookInput[]
+    deleteMany?: ErdTestBookTagScalarWhereInput | ErdTestBookTagScalarWhereInput[]
+  }
+
+  export type ErdTestBookTagCreateNestedManyWithoutTagInput = {
+    create?: XOR<ErdTestBookTagCreateWithoutTagInput, ErdTestBookTagUncheckedCreateWithoutTagInput> | ErdTestBookTagCreateWithoutTagInput[] | ErdTestBookTagUncheckedCreateWithoutTagInput[]
+    connectOrCreate?: ErdTestBookTagCreateOrConnectWithoutTagInput | ErdTestBookTagCreateOrConnectWithoutTagInput[]
+    createMany?: ErdTestBookTagCreateManyTagInputEnvelope
+    connect?: ErdTestBookTagWhereUniqueInput | ErdTestBookTagWhereUniqueInput[]
+  }
+
+  export type ErdTestBookTagUncheckedCreateNestedManyWithoutTagInput = {
+    create?: XOR<ErdTestBookTagCreateWithoutTagInput, ErdTestBookTagUncheckedCreateWithoutTagInput> | ErdTestBookTagCreateWithoutTagInput[] | ErdTestBookTagUncheckedCreateWithoutTagInput[]
+    connectOrCreate?: ErdTestBookTagCreateOrConnectWithoutTagInput | ErdTestBookTagCreateOrConnectWithoutTagInput[]
+    createMany?: ErdTestBookTagCreateManyTagInputEnvelope
+    connect?: ErdTestBookTagWhereUniqueInput | ErdTestBookTagWhereUniqueInput[]
+  }
+
+  export type ErdTestBookTagUpdateManyWithoutTagNestedInput = {
+    create?: XOR<ErdTestBookTagCreateWithoutTagInput, ErdTestBookTagUncheckedCreateWithoutTagInput> | ErdTestBookTagCreateWithoutTagInput[] | ErdTestBookTagUncheckedCreateWithoutTagInput[]
+    connectOrCreate?: ErdTestBookTagCreateOrConnectWithoutTagInput | ErdTestBookTagCreateOrConnectWithoutTagInput[]
+    upsert?: ErdTestBookTagUpsertWithWhereUniqueWithoutTagInput | ErdTestBookTagUpsertWithWhereUniqueWithoutTagInput[]
+    createMany?: ErdTestBookTagCreateManyTagInputEnvelope
+    set?: ErdTestBookTagWhereUniqueInput | ErdTestBookTagWhereUniqueInput[]
+    disconnect?: ErdTestBookTagWhereUniqueInput | ErdTestBookTagWhereUniqueInput[]
+    delete?: ErdTestBookTagWhereUniqueInput | ErdTestBookTagWhereUniqueInput[]
+    connect?: ErdTestBookTagWhereUniqueInput | ErdTestBookTagWhereUniqueInput[]
+    update?: ErdTestBookTagUpdateWithWhereUniqueWithoutTagInput | ErdTestBookTagUpdateWithWhereUniqueWithoutTagInput[]
+    updateMany?: ErdTestBookTagUpdateManyWithWhereWithoutTagInput | ErdTestBookTagUpdateManyWithWhereWithoutTagInput[]
+    deleteMany?: ErdTestBookTagScalarWhereInput | ErdTestBookTagScalarWhereInput[]
+  }
+
+  export type ErdTestBookTagUncheckedUpdateManyWithoutTagNestedInput = {
+    create?: XOR<ErdTestBookTagCreateWithoutTagInput, ErdTestBookTagUncheckedCreateWithoutTagInput> | ErdTestBookTagCreateWithoutTagInput[] | ErdTestBookTagUncheckedCreateWithoutTagInput[]
+    connectOrCreate?: ErdTestBookTagCreateOrConnectWithoutTagInput | ErdTestBookTagCreateOrConnectWithoutTagInput[]
+    upsert?: ErdTestBookTagUpsertWithWhereUniqueWithoutTagInput | ErdTestBookTagUpsertWithWhereUniqueWithoutTagInput[]
+    createMany?: ErdTestBookTagCreateManyTagInputEnvelope
+    set?: ErdTestBookTagWhereUniqueInput | ErdTestBookTagWhereUniqueInput[]
+    disconnect?: ErdTestBookTagWhereUniqueInput | ErdTestBookTagWhereUniqueInput[]
+    delete?: ErdTestBookTagWhereUniqueInput | ErdTestBookTagWhereUniqueInput[]
+    connect?: ErdTestBookTagWhereUniqueInput | ErdTestBookTagWhereUniqueInput[]
+    update?: ErdTestBookTagUpdateWithWhereUniqueWithoutTagInput | ErdTestBookTagUpdateWithWhereUniqueWithoutTagInput[]
+    updateMany?: ErdTestBookTagUpdateManyWithWhereWithoutTagInput | ErdTestBookTagUpdateManyWithWhereWithoutTagInput[]
+    deleteMany?: ErdTestBookTagScalarWhereInput | ErdTestBookTagScalarWhereInput[]
+  }
+
+  export type ErdTestBookCreateNestedOneWithoutTagsInput = {
+    create?: XOR<ErdTestBookCreateWithoutTagsInput, ErdTestBookUncheckedCreateWithoutTagsInput>
+    connectOrCreate?: ErdTestBookCreateOrConnectWithoutTagsInput
+    connect?: ErdTestBookWhereUniqueInput
+  }
+
+  export type ErdTestTagCreateNestedOneWithoutBooksInput = {
+    create?: XOR<ErdTestTagCreateWithoutBooksInput, ErdTestTagUncheckedCreateWithoutBooksInput>
+    connectOrCreate?: ErdTestTagCreateOrConnectWithoutBooksInput
+    connect?: ErdTestTagWhereUniqueInput
+  }
+
+  export type ErdTestBookUpdateOneRequiredWithoutTagsNestedInput = {
+    create?: XOR<ErdTestBookCreateWithoutTagsInput, ErdTestBookUncheckedCreateWithoutTagsInput>
+    connectOrCreate?: ErdTestBookCreateOrConnectWithoutTagsInput
+    upsert?: ErdTestBookUpsertWithoutTagsInput
+    connect?: ErdTestBookWhereUniqueInput
+    update?: XOR<XOR<ErdTestBookUpdateToOneWithWhereWithoutTagsInput, ErdTestBookUpdateWithoutTagsInput>, ErdTestBookUncheckedUpdateWithoutTagsInput>
+  }
+
+  export type ErdTestTagUpdateOneRequiredWithoutBooksNestedInput = {
+    create?: XOR<ErdTestTagCreateWithoutBooksInput, ErdTestTagUncheckedCreateWithoutBooksInput>
+    connectOrCreate?: ErdTestTagCreateOrConnectWithoutBooksInput
+    upsert?: ErdTestTagUpsertWithoutBooksInput
+    connect?: ErdTestTagWhereUniqueInput
+    update?: XOR<XOR<ErdTestTagUpdateToOneWithWhereWithoutBooksInput, ErdTestTagUpdateWithoutBooksInput>, ErdTestTagUncheckedUpdateWithoutBooksInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -34188,6 +39603,274 @@ export namespace Prisma {
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
   }
 
+  export type ErdTestBookCreateWithoutAuthorInput = {
+    id?: string
+    title: string
+    isbn: string
+    publishedAt?: Date | string | null
+    createdAt?: Date | string
+    tags?: ErdTestBookTagCreateNestedManyWithoutBookInput
+  }
+
+  export type ErdTestBookUncheckedCreateWithoutAuthorInput = {
+    id?: string
+    title: string
+    isbn: string
+    publishedAt?: Date | string | null
+    createdAt?: Date | string
+    tags?: ErdTestBookTagUncheckedCreateNestedManyWithoutBookInput
+  }
+
+  export type ErdTestBookCreateOrConnectWithoutAuthorInput = {
+    where: ErdTestBookWhereUniqueInput
+    create: XOR<ErdTestBookCreateWithoutAuthorInput, ErdTestBookUncheckedCreateWithoutAuthorInput>
+  }
+
+  export type ErdTestBookCreateManyAuthorInputEnvelope = {
+    data: ErdTestBookCreateManyAuthorInput | ErdTestBookCreateManyAuthorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ErdTestBookUpsertWithWhereUniqueWithoutAuthorInput = {
+    where: ErdTestBookWhereUniqueInput
+    update: XOR<ErdTestBookUpdateWithoutAuthorInput, ErdTestBookUncheckedUpdateWithoutAuthorInput>
+    create: XOR<ErdTestBookCreateWithoutAuthorInput, ErdTestBookUncheckedCreateWithoutAuthorInput>
+  }
+
+  export type ErdTestBookUpdateWithWhereUniqueWithoutAuthorInput = {
+    where: ErdTestBookWhereUniqueInput
+    data: XOR<ErdTestBookUpdateWithoutAuthorInput, ErdTestBookUncheckedUpdateWithoutAuthorInput>
+  }
+
+  export type ErdTestBookUpdateManyWithWhereWithoutAuthorInput = {
+    where: ErdTestBookScalarWhereInput
+    data: XOR<ErdTestBookUpdateManyMutationInput, ErdTestBookUncheckedUpdateManyWithoutAuthorInput>
+  }
+
+  export type ErdTestBookScalarWhereInput = {
+    AND?: ErdTestBookScalarWhereInput | ErdTestBookScalarWhereInput[]
+    OR?: ErdTestBookScalarWhereInput[]
+    NOT?: ErdTestBookScalarWhereInput | ErdTestBookScalarWhereInput[]
+    id?: StringFilter<"ErdTestBook"> | string
+    title?: StringFilter<"ErdTestBook"> | string
+    isbn?: StringFilter<"ErdTestBook"> | string
+    authorId?: StringFilter<"ErdTestBook"> | string
+    publishedAt?: DateTimeNullableFilter<"ErdTestBook"> | Date | string | null
+    createdAt?: DateTimeFilter<"ErdTestBook"> | Date | string
+  }
+
+  export type ErdTestAuthorCreateWithoutBooksInput = {
+    id?: string
+    name: string
+    email: string
+    bio?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ErdTestAuthorUncheckedCreateWithoutBooksInput = {
+    id?: string
+    name: string
+    email: string
+    bio?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ErdTestAuthorCreateOrConnectWithoutBooksInput = {
+    where: ErdTestAuthorWhereUniqueInput
+    create: XOR<ErdTestAuthorCreateWithoutBooksInput, ErdTestAuthorUncheckedCreateWithoutBooksInput>
+  }
+
+  export type ErdTestBookTagCreateWithoutBookInput = {
+    tag: ErdTestTagCreateNestedOneWithoutBooksInput
+  }
+
+  export type ErdTestBookTagUncheckedCreateWithoutBookInput = {
+    tagId: string
+  }
+
+  export type ErdTestBookTagCreateOrConnectWithoutBookInput = {
+    where: ErdTestBookTagWhereUniqueInput
+    create: XOR<ErdTestBookTagCreateWithoutBookInput, ErdTestBookTagUncheckedCreateWithoutBookInput>
+  }
+
+  export type ErdTestBookTagCreateManyBookInputEnvelope = {
+    data: ErdTestBookTagCreateManyBookInput | ErdTestBookTagCreateManyBookInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ErdTestAuthorUpsertWithoutBooksInput = {
+    update: XOR<ErdTestAuthorUpdateWithoutBooksInput, ErdTestAuthorUncheckedUpdateWithoutBooksInput>
+    create: XOR<ErdTestAuthorCreateWithoutBooksInput, ErdTestAuthorUncheckedCreateWithoutBooksInput>
+    where?: ErdTestAuthorWhereInput
+  }
+
+  export type ErdTestAuthorUpdateToOneWithWhereWithoutBooksInput = {
+    where?: ErdTestAuthorWhereInput
+    data: XOR<ErdTestAuthorUpdateWithoutBooksInput, ErdTestAuthorUncheckedUpdateWithoutBooksInput>
+  }
+
+  export type ErdTestAuthorUpdateWithoutBooksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ErdTestAuthorUncheckedUpdateWithoutBooksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ErdTestBookTagUpsertWithWhereUniqueWithoutBookInput = {
+    where: ErdTestBookTagWhereUniqueInput
+    update: XOR<ErdTestBookTagUpdateWithoutBookInput, ErdTestBookTagUncheckedUpdateWithoutBookInput>
+    create: XOR<ErdTestBookTagCreateWithoutBookInput, ErdTestBookTagUncheckedCreateWithoutBookInput>
+  }
+
+  export type ErdTestBookTagUpdateWithWhereUniqueWithoutBookInput = {
+    where: ErdTestBookTagWhereUniqueInput
+    data: XOR<ErdTestBookTagUpdateWithoutBookInput, ErdTestBookTagUncheckedUpdateWithoutBookInput>
+  }
+
+  export type ErdTestBookTagUpdateManyWithWhereWithoutBookInput = {
+    where: ErdTestBookTagScalarWhereInput
+    data: XOR<ErdTestBookTagUpdateManyMutationInput, ErdTestBookTagUncheckedUpdateManyWithoutBookInput>
+  }
+
+  export type ErdTestBookTagScalarWhereInput = {
+    AND?: ErdTestBookTagScalarWhereInput | ErdTestBookTagScalarWhereInput[]
+    OR?: ErdTestBookTagScalarWhereInput[]
+    NOT?: ErdTestBookTagScalarWhereInput | ErdTestBookTagScalarWhereInput[]
+    bookId?: StringFilter<"ErdTestBookTag"> | string
+    tagId?: StringFilter<"ErdTestBookTag"> | string
+  }
+
+  export type ErdTestBookTagCreateWithoutTagInput = {
+    book: ErdTestBookCreateNestedOneWithoutTagsInput
+  }
+
+  export type ErdTestBookTagUncheckedCreateWithoutTagInput = {
+    bookId: string
+  }
+
+  export type ErdTestBookTagCreateOrConnectWithoutTagInput = {
+    where: ErdTestBookTagWhereUniqueInput
+    create: XOR<ErdTestBookTagCreateWithoutTagInput, ErdTestBookTagUncheckedCreateWithoutTagInput>
+  }
+
+  export type ErdTestBookTagCreateManyTagInputEnvelope = {
+    data: ErdTestBookTagCreateManyTagInput | ErdTestBookTagCreateManyTagInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ErdTestBookTagUpsertWithWhereUniqueWithoutTagInput = {
+    where: ErdTestBookTagWhereUniqueInput
+    update: XOR<ErdTestBookTagUpdateWithoutTagInput, ErdTestBookTagUncheckedUpdateWithoutTagInput>
+    create: XOR<ErdTestBookTagCreateWithoutTagInput, ErdTestBookTagUncheckedCreateWithoutTagInput>
+  }
+
+  export type ErdTestBookTagUpdateWithWhereUniqueWithoutTagInput = {
+    where: ErdTestBookTagWhereUniqueInput
+    data: XOR<ErdTestBookTagUpdateWithoutTagInput, ErdTestBookTagUncheckedUpdateWithoutTagInput>
+  }
+
+  export type ErdTestBookTagUpdateManyWithWhereWithoutTagInput = {
+    where: ErdTestBookTagScalarWhereInput
+    data: XOR<ErdTestBookTagUpdateManyMutationInput, ErdTestBookTagUncheckedUpdateManyWithoutTagInput>
+  }
+
+  export type ErdTestBookCreateWithoutTagsInput = {
+    id?: string
+    title: string
+    isbn: string
+    publishedAt?: Date | string | null
+    createdAt?: Date | string
+    author: ErdTestAuthorCreateNestedOneWithoutBooksInput
+  }
+
+  export type ErdTestBookUncheckedCreateWithoutTagsInput = {
+    id?: string
+    title: string
+    isbn: string
+    authorId: string
+    publishedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type ErdTestBookCreateOrConnectWithoutTagsInput = {
+    where: ErdTestBookWhereUniqueInput
+    create: XOR<ErdTestBookCreateWithoutTagsInput, ErdTestBookUncheckedCreateWithoutTagsInput>
+  }
+
+  export type ErdTestTagCreateWithoutBooksInput = {
+    id?: string
+    name: string
+  }
+
+  export type ErdTestTagUncheckedCreateWithoutBooksInput = {
+    id?: string
+    name: string
+  }
+
+  export type ErdTestTagCreateOrConnectWithoutBooksInput = {
+    where: ErdTestTagWhereUniqueInput
+    create: XOR<ErdTestTagCreateWithoutBooksInput, ErdTestTagUncheckedCreateWithoutBooksInput>
+  }
+
+  export type ErdTestBookUpsertWithoutTagsInput = {
+    update: XOR<ErdTestBookUpdateWithoutTagsInput, ErdTestBookUncheckedUpdateWithoutTagsInput>
+    create: XOR<ErdTestBookCreateWithoutTagsInput, ErdTestBookUncheckedCreateWithoutTagsInput>
+    where?: ErdTestBookWhereInput
+  }
+
+  export type ErdTestBookUpdateToOneWithWhereWithoutTagsInput = {
+    where?: ErdTestBookWhereInput
+    data: XOR<ErdTestBookUpdateWithoutTagsInput, ErdTestBookUncheckedUpdateWithoutTagsInput>
+  }
+
+  export type ErdTestBookUpdateWithoutTagsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    isbn?: StringFieldUpdateOperationsInput | string
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    author?: ErdTestAuthorUpdateOneRequiredWithoutBooksNestedInput
+  }
+
+  export type ErdTestBookUncheckedUpdateWithoutTagsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    isbn?: StringFieldUpdateOperationsInput | string
+    authorId?: StringFieldUpdateOperationsInput | string
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ErdTestTagUpsertWithoutBooksInput = {
+    update: XOR<ErdTestTagUpdateWithoutBooksInput, ErdTestTagUncheckedUpdateWithoutBooksInput>
+    create: XOR<ErdTestTagCreateWithoutBooksInput, ErdTestTagUncheckedCreateWithoutBooksInput>
+    where?: ErdTestTagWhereInput
+  }
+
+  export type ErdTestTagUpdateToOneWithWhereWithoutBooksInput = {
+    where?: ErdTestTagWhereInput
+    data: XOR<ErdTestTagUpdateWithoutBooksInput, ErdTestTagUncheckedUpdateWithoutBooksInput>
+  }
+
+  export type ErdTestTagUpdateWithoutBooksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ErdTestTagUncheckedUpdateWithoutBooksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
   export type SessionCreateManyUserInput = {
     id: string
     expiresAt: Date | string
@@ -34968,6 +40651,72 @@ export namespace Prisma {
     status?: EnumScanRunStatusFieldUpdateOperationsInput | $Enums.ScanRunStatus
     reviewsQueued?: IntFieldUpdateOperationsInput | number
     summary?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ErdTestBookCreateManyAuthorInput = {
+    id?: string
+    title: string
+    isbn: string
+    publishedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type ErdTestBookUpdateWithoutAuthorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    isbn?: StringFieldUpdateOperationsInput | string
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tags?: ErdTestBookTagUpdateManyWithoutBookNestedInput
+  }
+
+  export type ErdTestBookUncheckedUpdateWithoutAuthorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    isbn?: StringFieldUpdateOperationsInput | string
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tags?: ErdTestBookTagUncheckedUpdateManyWithoutBookNestedInput
+  }
+
+  export type ErdTestBookUncheckedUpdateManyWithoutAuthorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    isbn?: StringFieldUpdateOperationsInput | string
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ErdTestBookTagCreateManyBookInput = {
+    tagId: string
+  }
+
+  export type ErdTestBookTagUpdateWithoutBookInput = {
+    tag?: ErdTestTagUpdateOneRequiredWithoutBooksNestedInput
+  }
+
+  export type ErdTestBookTagUncheckedUpdateWithoutBookInput = {
+    tagId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ErdTestBookTagUncheckedUpdateManyWithoutBookInput = {
+    tagId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ErdTestBookTagCreateManyTagInput = {
+    bookId: string
+  }
+
+  export type ErdTestBookTagUpdateWithoutTagInput = {
+    book?: ErdTestBookUpdateOneRequiredWithoutTagsNestedInput
+  }
+
+  export type ErdTestBookTagUncheckedUpdateWithoutTagInput = {
+    bookId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ErdTestBookTagUncheckedUpdateManyWithoutTagInput = {
+    bookId?: StringFieldUpdateOperationsInput | string
   }
 
 
