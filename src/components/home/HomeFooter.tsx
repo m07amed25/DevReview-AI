@@ -42,25 +42,6 @@ export function HomeFooter() {
           </span>
         </div>
 
-        {/* Developer Credit */}
-        <div className="mt-6 pt-6 border-t border-border/30 text-center">
-          <p className="text-sm text-muted-foreground">
-            Developed by{" "}
-            <a
-              href="mailto:m07hamedreda25@gmail.com"
-              className="text-primary hover:text-primary/80 font-medium transition-colors duration-200"
-            >
-              Mohamed Reda
-            </a>{" "}
-            -{" "}
-            <a
-              href="mailto:m07hamedreda25@gmail.com"
-              className="text-muted-foreground hover:text-foreground transition-colors duration-200"
-            >
-              m07hamedreda25@gmail.com
-            </a>
-          </p>
-        </div>
       </div>
     </footer>
   );

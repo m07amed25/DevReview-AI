@@ -375,25 +375,6 @@ export default function SignUpPage() {
               Sign in
             </Link>
           </p>
-
-          <div className="mt-6 pt-4 border-t border-border/30 text-center pb-4">
-            <p className="text-xs text-muted-foreground">
-              Developed by{" "}
-              <a
-                href="mailto:m07hamedreda25@gmail.com"
-                className="text-primary hover:text-primary/80 font-medium transition-colors duration-200"
-              >
-                Mohamed Reda
-              </a>{" "}
-              -{" "}
-              <a
-                href="mailto:m07hamedreda25@gmail.com"
-                className="text-muted-foreground hover:text-foreground transition-colors duration-200"
-              >
-                m07hamedreda25@gmail.com
-              </a>
-            </p>
-          </div>
         </CardContent>
       </Card>
     </div>
