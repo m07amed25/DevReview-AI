@@ -1,8 +1,7 @@
 "use client";
 
-import { Checkbox } from "./ui/checkbox";
-import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
   FolderGit2,
