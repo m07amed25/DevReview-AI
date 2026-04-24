@@ -55,3 +55,4 @@ src/server/db/client/query_engine-windows.dll.node.tmp*
 specs
 .github
 .agents
+plan.md

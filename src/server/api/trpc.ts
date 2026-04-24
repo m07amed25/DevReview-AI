@@ -158,3 +158,26 @@ export const protectedProcedure = t.procedure.use(
     });
   },
 );
+
+export const adminProcedure = t.procedure.use(async ({ ctx, next }) => {
+  if (!ctx.session?.user) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  const dbUser = await ctx.db.user.findUnique({
+    where: { id: ctx.session.user.id },
+    select: { id: true, role: true },
+  });
+
+  if (dbUser?.role !== "ADMIN") {
+    throw new TRPCError({ code: "FORBIDDEN" });
+  }
+
+  return next({
+    ctx: {
+      ...ctx,
+      session: ctx.session,
+      user: ctx.session.user,
+    },
+  });
+});

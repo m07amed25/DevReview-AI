@@ -1,6 +1,7 @@
 import { Header } from "@/components/header";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { auth } from "@/server/auth";
+import { db } from "@/server/db";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -13,6 +14,7 @@ export interface DashboardUser {
   name: string;
   email: string;
   image?: string | null | undefined;
+  role?: string;
 }
 
 function DashboardContent({
@@ -42,13 +44,17 @@ export default async function DashboardLayout({
     redirect("/sign-in");
   }
 
-  // Transform session user to match DashboardUser interface
-  // Provide fallback for name in case it's null/undefined
+  const dbUser = await db.user.findUnique({
+    where: { id: session.user.id },
+    select: { role: true },
+  });
+
   const user: DashboardUser = {
     id: session.user.id,
     name: session.user.name ?? "User",
     email: session.user.email,
     image: session.user.image ?? null,
+    role: dbUser?.role as string | undefined,
   };
 
   return <DashboardContent user={user}>{children}</DashboardContent>;

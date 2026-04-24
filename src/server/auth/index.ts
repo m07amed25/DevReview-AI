@@ -69,6 +69,18 @@ export const auth = betterAuth({
         }
       : {}),
   },
+  user: {
+    // Expose the `role` column in every session response so the
+    // middleware and client can gate on it without a DB round-trip.
+    additionalFields: {
+      role: {
+        type: "string",
+        required: false,
+        defaultValue: "USER",
+        input: false, // never let the client set this during sign-up
+      },
+    },
+  },
   account: {
     accountLinking: {
       enabled: true,

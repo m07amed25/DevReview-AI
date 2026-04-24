@@ -1,8 +1,39 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname === "/api/auth/error") {
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  if (pathname.startsWith("/admin")) {
+    const sessionCookie =
+      request.cookies.get("better-auth.session_token")?.value ??
+      request.cookies.get("__Secure-better-auth.session_token")?.value;
+
+    if (!sessionCookie) {
+      return NextResponse.redirect(new URL("/sign-in", request.url));
+    }
+
+    const sessionUrl = new URL("/api/auth/get-session", request.url);
+    const sessionRes = await fetch(sessionUrl.toString(), {
+      headers: { cookie: request.headers.get("cookie") ?? "" },
+    });
+
+    if (!sessionRes.ok) {
+      return NextResponse.redirect(new URL("/sign-in", request.url));
+    }
+
+    const data = (await sessionRes.json()) as {
+      user?: { id?: string; role?: string };
+    } | null;
+
+    if (data?.user?.role !== "ADMIN") {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+
+    return NextResponse.next();
+  }
+
+  if (pathname === "/api/auth/error") {
     const error = request.nextUrl.searchParams.get("error") ?? "unknown";
 
     const linkErrors = new Set([
@@ -26,5 +57,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/api/auth/error"],
+  matcher: ["/api/auth/error", "/admin/:path*"],
 };
