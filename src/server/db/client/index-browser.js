@@ -326,7 +326,7 @@ exports.Prisma.BranchProtectionRecommendationScalarFieldEnum = {
 
 exports.Prisma.DiagramScalarFieldEnum = {
   id: 'id',
-  reviewId: 'reviewId',
+  repositoryId: 'repositoryId',
   type: 'type',
   status: 'status',
   definition: 'definition',

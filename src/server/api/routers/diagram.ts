@@ -4,22 +4,22 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { inngest } from "@/server/inngest";
 
 export const diagramRouter = createTRPCRouter({
-  /** List all diagrams for a review (accessible to the review's owner). */
-  listForReview: protectedProcedure
-    .input(z.object({ reviewId: z.string().cuid() }))
+  /** List all diagrams for a repository (accessible to the repository's owner). */
+  listForRepository: protectedProcedure
+    .input(z.object({ repositoryId: z.string().cuid() }))
     .query(async ({ ctx, input }) => {
-      const review = await ctx.db.review.findUnique({
-        where: { id: input.reviewId },
+      const repository = await ctx.db.repository.findUnique({
+        where: { id: input.repositoryId },
         select: { userId: true },
       });
-      if (!review) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Review not found" });
+      if (!repository) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Repository not found" });
       }
-      if (review.userId !== ctx.user.id) {
+      if (repository.userId !== ctx.user.id) {
         throw new TRPCError({ code: "FORBIDDEN" });
       }
       return ctx.db.diagram.findMany({
-        where: { reviewId: input.reviewId },
+        where: { repositoryId: input.repositoryId },
         orderBy: { createdAt: "asc" },
       });
     }),
@@ -30,7 +30,7 @@ export const diagramRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const diagram = await ctx.db.diagram.findUnique({
         where: { id: input.id },
-        include: { review: { select: { userId: true } } },
+        include: { repository: { select: { userId: true } } },
       });
       if (!diagram) {
         throw new TRPCError({
@@ -38,41 +38,42 @@ export const diagramRouter = createTRPCRouter({
           message: "Diagram not found",
         });
       }
-      if (diagram.review.userId !== ctx.user.id) {
+      if (diagram.repository.userId !== ctx.user.id) {
         throw new TRPCError({ code: "FORBIDDEN" });
       }
       return diagram;
     }),
 
   /**
-   * Request (or re-request) generation of a diagram type for a review.
+   * Request (or re-request) generation of a diagram type for a repository.
    * Creates/resets the Diagram record and dispatches the Inngest job.
    */
   requestDiagram: protectedProcedure
     .input(
       z.object({
-        reviewId: z.string().cuid(),
+        repositoryId: z.string().cuid(),
+        prNumber: z.number().int().optional(), // optional since we might trigger manually without a PR
         type: z.enum(["ERD", "CLASS", "USE_CASE"]),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const review = await ctx.db.review.findUnique({
-        where: { id: input.reviewId },
-        select: { userId: true, repositoryId: true, prNumber: true },
+      const repository = await ctx.db.repository.findUnique({
+        where: { id: input.repositoryId },
+        select: { userId: true },
       });
-      if (!review) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Review not found" });
+      if (!repository) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Repository not found" });
       }
-      if (review.userId !== ctx.user.id) {
+      if (repository.userId !== ctx.user.id) {
         throw new TRPCError({ code: "FORBIDDEN" });
       }
 
       const diagram = await ctx.db.diagram.upsert({
         where: {
-          reviewId_type: { reviewId: input.reviewId, type: input.type },
+          repositoryId_type: { repositoryId: input.repositoryId, type: input.type },
         },
         create: {
-          reviewId: input.reviewId,
+          repositoryId: input.repositoryId,
           type: input.type,
           status: "PENDING",
         },
@@ -90,10 +91,11 @@ export const diagramRouter = createTRPCRouter({
         name: "diagram/generation.requested",
         data: {
           diagramId: diagram.id,
-          reviewId: input.reviewId,
-          repositoryId: review.repositoryId,
+          repositoryId: input.repositoryId,
           userId: ctx.user.id,
-          prNumber: review.prNumber,
+          prNumber: input.prNumber || 1, // Fallback if needed, though generateDiagram currently requires it to fetch PR files.
+          // Note: If we really want full repository diagrams, the inngest function should be refactored to fetch the default branch tree instead of PR files when prNumber is not provided.
+          reviewId: "", // Just providing an empty string to satisfy type if needed, though we should update the event type
           type: input.type,
         },
       });

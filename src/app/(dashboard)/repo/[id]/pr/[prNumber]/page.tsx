@@ -122,10 +122,10 @@ export default function PullRequestPage({ params }: PageProps) {
   const reviewId = latestReview.data?.id;
   const utils = trpc.useUtils();
 
-  const diagrams = trpc.diagram.listForReview.useQuery(
-    { reviewId: reviewId! },
+  const diagrams = trpc.diagram.listForRepository.useQuery(
+    { repositoryId: id },
     {
-      enabled: !!reviewId && latestReview.data?.status === "COMPLETED",
+      enabled: !!id,
       // Poll while any diagram is still generating (Pusher fallback)
       refetchInterval: (query) => {
         const { data } = query.state;
@@ -141,10 +141,10 @@ export default function PullRequestPage({ params }: PageProps) {
 
   // Pusher: invalidate and refetch the full diagram list so definition/nodes/edges are fresh
   usePrivateChannel<{ diagramId: string; status: string }>(
-    reviewId ? `private-review-${reviewId}` : null,
+    id ? `private-repository-${id}` : null,
     "diagram.updated",
     () => {
-      void utils.diagram.listForReview.invalidate({ reviewId: reviewId! });
+      void utils.diagram.listForRepository.invalidate({ repositoryId: id });
     },
   );
 
@@ -422,15 +422,13 @@ export default function PullRequestPage({ params }: PageProps) {
             icon={MessageCircle}
             label="Discussion"
           />
-          {latestReview.data?.status === "COMPLETED" && (
-            <TabButton
-              active={activeTab === "diagrams"}
-              onClick={() => setActiveTab("diagrams")}
-              icon={Network}
-              label="Diagrams"
-              count={diagrams.data?.length ?? 0}
-            />
-          )}
+          <TabButton
+            active={activeTab === "diagrams"}
+            onClick={() => setActiveTab("diagrams")}
+            icon={Network}
+            label="Diagrams"
+            count={diagrams.data?.length ?? 0}
+          />
         </div>
       </div>
 
@@ -514,12 +512,12 @@ export default function PullRequestPage({ params }: PageProps) {
           )}
         </div>
       )}
-      {activeTab === "diagrams" && reviewId && (
+      {activeTab === "diagrams" && (
         <DiagramPanel
           diagrams={diagrams.data ?? []}
-          reviewId={reviewId}
+          repositoryId={id}
           onRequestDiagram={(type) =>
-            requestDiagram.mutate({ reviewId: reviewId, type })
+            requestDiagram.mutate({ repositoryId: id, prNumber: prNum, type })
           }
         />
       )}

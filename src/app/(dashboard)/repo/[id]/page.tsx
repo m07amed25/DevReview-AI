@@ -3,6 +3,7 @@
 import { use, useState, useMemo } from "react";
 import Link from "next/link";
 import { trpc } from "@/lib/trpc/client";
+import { usePrivateChannel } from "@/lib/pusher/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -24,9 +25,11 @@ import {
   TrendingUp,
   Activity,
   ExternalLink,
+  Network,
 } from "lucide-react";
 import { cn, formatDate } from "@/lib/utils";
 import { CodeTimeline } from "@/features/code-timeline";
+import { DiagramPanel } from "@/features/review/components/diagram-panel";
 import { PullRequestCard } from "./pull-request-card";
 
 type PageProps = { params: Promise<{ id: string }> };
@@ -47,6 +50,24 @@ export default function RepositoryDetailPage({ params }: PageProps) {
   const allPullRequests = trpc.pullRequest.list.useQuery(
     { repositoryId: id, state: "all" },
     { enabled: !!id },
+  );
+
+  const utils = trpc.useUtils();
+  const diagrams = trpc.diagram.listForRepository.useQuery(
+    { repositoryId: id },
+    { enabled: !!id },
+  );
+  
+  const requestDiagram = trpc.diagram.requestDiagram.useMutation({
+    onSuccess: () => void diagrams.refetch(),
+  });
+
+  usePrivateChannel<{ diagramId: string; status: string }>(
+    id ? `private-repository-${id}` : null,
+    "diagram.updated",
+    () => {
+      void utils.diagram.listForRepository.invalidate({ repositoryId: id });
+    },
   );
 
   const filteredPRs = useMemo(() => {
@@ -396,6 +417,21 @@ export default function RepositoryDetailPage({ params }: PageProps) {
             <PullRequestCard key={pr.id} pr={pr} repositoryId={id} />
           ))
         )}
+      </div>
+
+      {/* Architecture Diagrams */}
+      <div>
+        <h2 className="text-xl font-semibold tracking-tight mb-4 flex items-center gap-2">
+          <Network className="size-5" />
+          Architecture Diagrams
+        </h2>
+        <DiagramPanel
+          diagrams={diagrams.data ?? []}
+          repositoryId={id}
+          onRequestDiagram={(type) =>
+            requestDiagram.mutate({ repositoryId: id, type })
+          }
+        />
       </div>
 
       {/* Commit Timeline */}

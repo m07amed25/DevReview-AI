@@ -257,6 +257,31 @@ export async function fetchPullRequestFiles(
   return files;
 }
 
+export interface GitHubTreeFile {
+  path: string;
+  mode: string;
+  type: "blob" | "tree";
+  sha: string;
+  size?: number;
+  url: string;
+}
+
+export async function fetchRepositoryFiles(
+  accessToken: string,
+  owner: string,
+  repo: string,
+  branch?: string,
+): Promise<GitHubTreeFile[]> {
+  const branchName = branch ?? (await fetchDefaultBranch(accessToken, owner, repo));
+  const response = await githubFetch(
+    `https://api.github.com/repos/${owner}/${repo}/git/trees/${branchName}?recursive=1`,
+    accessToken,
+  );
+  
+  const data = (await response.json()) as { tree: GitHubTreeFile[], truncated: boolean };
+  return data.tree.filter((t) => t.type === "blob");
+}
+
 export interface GitHubCommit {
   sha: string;
   commit: {

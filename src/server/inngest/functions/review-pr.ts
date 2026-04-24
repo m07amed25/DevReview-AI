@@ -152,8 +152,8 @@ export const reviewPR = inngest.createFunction(
 
         for (const diagramType of matchedTypes) {
           const diagram = await db.diagram.upsert({
-            where: { reviewId_type: { reviewId, type: diagramType } },
-            create: { reviewId, type: diagramType, status: "PENDING" },
+            where: { repositoryId_type: { repositoryId, type: diagramType } },
+            create: { repositoryId, type: diagramType, status: "PENDING" },
             update: {
               status: "PENDING",
               definition: null,

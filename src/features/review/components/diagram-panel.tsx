@@ -11,11 +11,10 @@ import DiagramViewer from "@/features/diagram/components/diagram-viewer";
 import { DiagramTriggerButton } from "@/features/diagram/components/diagram-trigger-button";
 import { Button } from "@/components/ui/button";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface DiagramPanelProps {
   diagrams: Diagram[];
-  reviewId: string;
+  repositoryId: string;
   onRequestDiagram?: (type: "ERD" | "CLASS" | "USE_CASE") => void;
 }
 
@@ -76,7 +75,7 @@ function DiagramTabButton({
 
 export function DiagramPanel({
   diagrams,
-  reviewId,
+  repositoryId,
   onRequestDiagram,
 }: DiagramPanelProps) {
   const [activeType, setActiveType] = useState<string>(
@@ -95,7 +94,7 @@ export function DiagramPanel({
           <div>
             <p className="font-medium">No diagrams generated yet</p>
             <p className="mt-1 text-sm text-muted-foreground">
-              Generate a diagram from the changed files in this PR.
+              Generate an architecture diagram for this repository.
             </p>
           </div>
           <div className="flex flex-wrap justify-center gap-2">
@@ -166,7 +165,7 @@ export function DiagramPanel({
         {onRequestDiagram && activeDiagram.status === "COMPLETED" && (
           <div className="ml-auto shrink-0 pb-1">
             <DiagramTriggerButton
-              reviewId={reviewId}
+              repositoryId={repositoryId}
               type={activeDiagram.type as "ERD" | "CLASS" | "USE_CASE"}
               onRequest={() =>
                 handleRequest(
@@ -249,7 +248,7 @@ export function DiagramPanel({
         )}
       </div>
 
-      <p className="sr-only">Review ID: {reviewId}</p>
+      <p className="sr-only">Repository ID: {repositoryId}</p>
     </div>
   );
 }

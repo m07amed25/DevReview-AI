@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import type { DiagramType } from "@/features/diagram/types";
 
 interface DiagramTriggerButtonProps {
-  reviewId: string;
+  repositoryId: string;
   type: DiagramType;
   onRequest: () => void;
   isLoading: boolean;
