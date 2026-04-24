@@ -31,6 +31,7 @@ import {
   FailedCard,
   NoIssuesCard,
 } from "./components/status-cards";
+import { FeedbackWidget } from "./components/feedback-widget";
 import type {
   ReviewResultProps,
   ReviewComment,
@@ -484,6 +485,12 @@ export function ReviewResult({
             <NoIssuesCard />
           </div>
         )
+      )}
+
+      {review.status === "COMPLETED" && (
+        <div data-animate-in>
+          <FeedbackWidget reviewId={review.id} />
+        </div>
       )}
     </div>
   );

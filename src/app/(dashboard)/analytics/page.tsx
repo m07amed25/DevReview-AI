@@ -11,6 +11,7 @@ import { ChartsRow } from "@/features/analytics/components/ChartsRow";
 import { QualityWorkloadRow } from "@/features/analytics/components/QualityWorkloadRow";
 import { IssuesTablesRow } from "@/features/analytics/components/IssuesTablesRow";
 import { QuickActionsCard } from "@/features/analytics/components/QuickActionsCard";
+import { FeedbackTrendRow } from "@/features/analytics/components/FeedbackTrendRow";
 
 export default function AnalyticsPage() {
   const router = useRouter();
@@ -36,6 +37,8 @@ export default function AnalyticsPage() {
   });
   const { data: anomaliesData, isLoading: anomaliesLoading } =
     trpc.analytics.getAnomalies.useQuery({ timePeriod });
+  const { data: feedbackStats, isLoading: feedbackLoading } =
+    trpc.review.getFeedbackStats.useQuery({});
 
   const handleExport = useCallback(() => {
     const exportData = {
@@ -128,6 +131,11 @@ export default function AnalyticsPage() {
           qualityLoading={qualityLoading}
           workloadData={workloadData}
           workloadLoading={workloadLoading}
+        />
+
+        <FeedbackTrendRow
+          data={feedbackStats}
+          isLoading={feedbackLoading}
         />
 
         <IssuesTablesRow issuesData={issuesData} />

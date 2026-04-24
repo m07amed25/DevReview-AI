@@ -287,4 +287,41 @@ export const adminRouter = createTRPCRouter({
       await ctx.db.team.delete({ where: { id: input.teamId } });
       return { success: true };
     }),
+
+  getFeedbacks: adminProcedure
+    .input(
+      z.object({
+        page: z.number().min(1).default(1),
+        limit: z.number().min(1).max(100).default(20),
+        rating: z.union([z.literal(1), z.literal(-1), z.literal(0)]).default(0),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { page, limit, rating } = input;
+      const skip = (page - 1) * limit;
+      const where = rating !== 0 ? { rating } : {};
+
+      const [feedbacks, total] = await Promise.all([
+        ctx.db.reviewFeedback.findMany({
+          where,
+          skip,
+          take: limit,
+          orderBy: { createdAt: "desc" },
+          include: {
+            user: { select: { name: true, email: true, image: true } },
+            review: {
+              select: {
+                id: true,
+                prTitle: true,
+                prNumber: true,
+                repository: { select: { id: true, fullName: true } },
+              },
+            },
+          },
+        }),
+        ctx.db.reviewFeedback.count({ where }),
+      ]);
+
+      return { feedbacks, total, pages: Math.ceil(total / limit) };
+    }),
 });

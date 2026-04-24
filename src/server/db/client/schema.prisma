@@ -32,11 +32,12 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
-  repositories   Repository[]
-  reviews        Review[]
-  threadComments ReviewThreadComment[]
-  teamMembers    TeamMember[]
-  notifications  Notification[]
+  repositories    Repository[]
+  reviews         Review[]
+  threadComments  ReviewThreadComment[]
+  teamMembers     TeamMember[]
+  notifications   Notification[]
+  reviewFeedbacks ReviewFeedback[]
 
   // Code review preferences
   reviewDepth            String  @default("standard")
@@ -143,10 +144,27 @@ model Review {
   threads           ReviewThread[]
   githubComment     GitHubComment?
   githubStatusCheck GitHubStatusCheck?
+  feedbacks         ReviewFeedback[]
 
   @@index([repositoryId])
   @@index([userId])
   @@index([status])
+}
+
+model ReviewFeedback {
+  id        String   @id @default(cuid())
+  reviewId  String
+  userId    String
+  rating    Int // 1 (up) or -1 (down)
+  comment   String?  @db.Text
+  createdAt DateTime @default(now())
+
+  review Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([reviewId, userId])
+  @@index([reviewId])
+  @@index([userId])
 }
 
 model ReviewThread {
