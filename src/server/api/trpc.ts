@@ -164,11 +164,12 @@ export const adminProcedure = t.procedure.use(async ({ ctx, next }) => {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
 
-  const rows = await ctx.db.$queryRaw<{ role: string }[]>`
-    SELECT role FROM "user" WHERE id = ${ctx.session.user.id} LIMIT 1
-  `;
+  const dbUser = await ctx.db.user.findUnique({
+    where: { id: ctx.session.user.id },
+    select: { id: true, role: true },
+  });
 
-  if (rows[0]?.role !== "ADMIN") {
+  if (dbUser?.role !== "ADMIN") {
     throw new TRPCError({ code: "FORBIDDEN" });
   }
 

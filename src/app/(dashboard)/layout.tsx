@@ -44,20 +44,17 @@ export default async function DashboardLayout({
     redirect("/sign-in");
   }
 
-  // Use raw SQL to bypass the stale generated Prisma client (which doesn't yet
-  // include the `role` column because `prisma generate` couldn't run while the
-  // dev server was locking the query-engine DLL on Windows).
-  const rows = await db.$queryRaw<{ role: string }[]>`
-    SELECT role FROM "user" WHERE id = ${session.user.id} LIMIT 1
-  `;
-  const role = rows[0]?.role ?? "USER";
+  const dbUser = await db.user.findUnique({
+    where: { id: session.user.id },
+    select: { role: true },
+  });
 
   const user: DashboardUser = {
     id: session.user.id,
     name: session.user.name ?? "User",
     email: session.user.email,
     image: session.user.image ?? null,
-    role,
+    role: dbUser?.role as string | undefined,
   };
 
   return <DashboardContent user={user}>{children}</DashboardContent>;

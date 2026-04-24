@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { UserRole } from "../../db/client";
 import { createTRPCRouter, adminProcedure } from "../trpc";
 
 export const adminRouter = createTRPCRouter({
@@ -123,6 +124,7 @@ export const adminRouter = createTRPCRouter({
             email: true,
             image: true,
             emailVerified: true,
+            role: true,
             createdAt: true,
             _count: {
               select: {
@@ -136,17 +138,7 @@ export const adminRouter = createTRPCRouter({
         ctx.db.user.count({ where }),
       ]);
 
-      // Fetch roles separately via raw SQL (stale generated client workaround)
-      const userIds = users.map((u) => u.id);
-      const roleRows = userIds.length
-        ? await ctx.db.$queryRaw<{ id: string; role: string }[]>`
-            SELECT id, role FROM "user" WHERE id = ANY(${userIds})
-          `
-        : [];
-      const roleMap = Object.fromEntries(roleRows.map((r) => [r.id, r.role]));
-      const usersWithRole = users.map((u) => ({ ...u, role: roleMap[u.id] ?? "USER" }));
-
-      return { users: usersWithRole, total, pages: Math.ceil(total / limit) };
+      return { users, total, pages: Math.ceil(total / limit) };
     }),
 
   getUser: adminProcedure
@@ -193,17 +185,17 @@ export const adminRouter = createTRPCRouter({
     .input(
       z.object({
         userId: z.string(),
-        role: z.enum(["USER", "ADMIN"]),
+        role: z.nativeEnum(UserRole),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       if (input.userId === ctx.user.id) {
         throw new Error("You cannot change your own role.");
       }
-      // Use raw SQL (stale generated client workaround — regenerate after restarting dev server)
-      await ctx.db.$executeRaw`
-        UPDATE "user" SET role = ${input.role}::"UserRole" WHERE id = ${input.userId}
-      `;
+      await ctx.db.user.update({
+        where: { id: input.userId },
+        data: { role: input.role },
+      });
       return { success: true };
     }),
 

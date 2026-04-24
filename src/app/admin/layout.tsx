@@ -20,11 +20,12 @@ export default async function AdminLayout({
     redirect("/sign-in");
   }
 
-  const rows = await db.$queryRaw<{ role: string }[]>`
-    SELECT role FROM "user" WHERE id = ${session.user.id} LIMIT 1
-  `;
+  const dbUser = await db.user.findUnique({
+    where: { id: session.user.id },
+    select: { role: true },
+  });
 
-  if (rows[0]?.role !== "ADMIN") {
+  if (dbUser?.role !== "ADMIN") {
     redirect("/");
   }
 
