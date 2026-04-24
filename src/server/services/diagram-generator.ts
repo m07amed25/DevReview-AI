@@ -7,7 +7,7 @@ import type {
   DiagramNodeDetailTable,
   DiagramNodeDetailClass,
   DiagramNodeDetailUseCase,
-} from "@/types/diagram";
+} from "@/features/diagram/types";
 
 export const DIAGRAM_TRIGGER_RULES: DiagramTriggerRule[] = [
   { type: "ERD", patterns: ["prisma/schema.prisma", "**/*.prisma"] },

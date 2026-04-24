@@ -3,15 +3,15 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { PageBackground } from "@/components/home/PageBackground";
-import { HomeHeader } from "@/components/home/HomeHeader";
-import { HeroSection } from "@/components/home/HeroSection";
-import { StatsSection } from "@/components/home/StatsSection";
-import { FeaturesSection } from "@/components/home/FeaturesSection";
-import { HowItWorksSection } from "@/components/home/HowItWorksSection";
-import { LanguagesSection } from "@/components/home/LanguagesSection";
-import { CtaSection } from "@/components/home/CtaSection";
-import { HomeFooter } from "@/components/home/HomeFooter";
+import { PageBackground } from "@/features/home/components/PageBackground";
+import { HomeHeader } from "@/features/home/components/HomeHeader";
+import { HeroSection } from "@/features/home/components/HeroSection";
+import { StatsSection } from "@/features/home/components/StatsSection";
+import { FeaturesSection } from "@/features/home/components/FeaturesSection";
+import { HowItWorksSection } from "@/features/home/components/HowItWorksSection";
+import { LanguagesSection } from "@/features/home/components/LanguagesSection";
+import { CtaSection } from "@/features/home/components/CtaSection";
+import { HomeFooter } from "@/features/home/components/HomeFooter";
 
 export default function HomePage() {
   const heroRef = useRef<HTMLDivElement>(null);

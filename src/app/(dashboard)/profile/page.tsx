@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import { trpc } from "@/lib/trpc/client";
 import { linkSocial } from "@/lib/auth-client";
-import { CropDialog } from "@/components/crop-dialog";
+import { CropDialog } from "@/features/profile/components/crop-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2, Check, Pencil, X, Save, FolderGit2, GitPullRequest } from "lucide-react";

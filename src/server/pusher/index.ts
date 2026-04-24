@@ -39,18 +39,4 @@ export function privateDiagramChannel(reviewId: string) {
 }
 
 // ─── Event names ───────────────────────────────────────────────────
-export const PUSHER_EVENTS = {
-  // Thread events
-  THREAD_CREATED: "thread:created",
-  THREAD_RESOLVED: "thread:resolved",
-  THREAD_REOPENED: "thread:reopened",
-
-  // Comment events
-  COMMENT_ADDED: "comment:added",
-  COMMENT_UPDATED: "comment:updated",
-  COMMENT_DELETED: "comment:deleted",
-
-  // Presence / cursor events (client events)
-  CLIENT_TYPING: "client-typing",
-  CLIENT_CURSOR: "client-cursor",
-} as const;
+export { PUSHER_EVENTS } from "@/lib/constants";

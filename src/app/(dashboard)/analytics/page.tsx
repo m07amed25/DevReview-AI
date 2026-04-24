@@ -3,14 +3,14 @@
 import { useState, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { trpc } from "@/lib/trpc/client";
-import { TimePeriod } from "@/components/analytics/analytics.types";
-import { AnalyticsHeader } from "@/components/analytics/AnalyticsHeader";
-import { AnomalyAlert } from "@/components/analytics/AnomalyAlert";
-import { KeyMetricsGrid } from "@/components/analytics/KeyMetricsGrid";
-import { ChartsRow } from "@/components/analytics/ChartsRow";
-import { QualityWorkloadRow } from "@/components/analytics/QualityWorkloadRow";
-import { IssuesTablesRow } from "@/components/analytics/IssuesTablesRow";
-import { QuickActionsCard } from "@/components/analytics/QuickActionsCard";
+import { TimePeriod } from "@/features/analytics/types";
+import { AnalyticsHeader } from "@/features/analytics/components/AnalyticsHeader";
+import { AnomalyAlert } from "@/features/analytics/components/AnomalyAlert";
+import { KeyMetricsGrid } from "@/features/analytics/components/KeyMetricsGrid";
+import { ChartsRow } from "@/features/analytics/components/ChartsRow";
+import { QualityWorkloadRow } from "@/features/analytics/components/QualityWorkloadRow";
+import { IssuesTablesRow } from "@/features/analytics/components/IssuesTablesRow";
+import { QuickActionsCard } from "@/features/analytics/components/QuickActionsCard";
 
 export default function AnalyticsPage() {
   const router = useRouter();

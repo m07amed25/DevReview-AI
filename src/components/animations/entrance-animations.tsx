@@ -8,25 +8,8 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-export const ANIMATION = {
-  duration: { fast: 0.3, normal: 0.5, slow: 0.8, verySlow: 1.2 },
-  delay: { small: 0.1, medium: 0.2, large: 0.4 },
-  ease: {
-    smooth: "power2.out",
-    smoothIn: "power2.in",
-    smoothInOut: "power2.inOut",
-    bounce: "back.out(1.7)",
-    elastic: "elastic.out(1, 0.3)",
-    sharp: "power3.out",
-    sharpIn: "power3.in",
-  },
-  stagger: { small: 0.05, medium: 0.1, large: 0.2 },
-  scrollTrigger: {
-    start: "top 85%",
-    end: "bottom 15%",
-    toggleActions: "play none none reverse",
-  },
-} as const;
+export { ANIMATION } from "@/lib/constants";
+import { ANIMATION } from "@/lib/constants";
 
 export type AnimationVariant =
   | "fadeIn"

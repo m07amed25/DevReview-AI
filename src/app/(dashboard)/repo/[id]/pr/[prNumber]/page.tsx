@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { use, useMemo, useRef, useState } from "react";
 import Link from "next/link";
@@ -28,10 +28,10 @@ import {
   Network,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { DiffViewer } from "@/components/diff-viewer";
-import { ReviewResult } from "@/components/review-result";
-import { CollaborativeReview } from "@/components/collaborative-review";
-import { DiagramPanel } from "@/components/review-result/diagram-panel";
+import { DiffViewer } from "@/features/diff-viewer";
+import { ReviewResult } from "@/features/review";
+import { CollaborativeReview } from "@/features/collaborative-review";
+import { DiagramPanel } from "@/features/review/components/diagram-panel";
 import { useSession } from "@/lib/auth-client";
 import { usePrivateChannel } from "@/lib/pusher/client";
 import {

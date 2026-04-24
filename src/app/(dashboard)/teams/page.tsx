@@ -15,9 +15,12 @@ import {
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import { Users, Plus, FolderGit2, Search } from "lucide-react";
-import { TeamCard, TeamCardSkeleton } from "@/components/teams/team-card";
-import { useTeamList } from "@/hooks/use-team";
-import type { TeamData } from "@/types/team";
+import {
+  TeamCard,
+  TeamCardSkeleton,
+} from "@/features/teams/components/team-card";
+import { useTeamList } from "@/features/teams/hooks/use-team";
+import type { TeamData } from "@/features/teams/types";
 
 export default function TeamsPage() {
   const [creating, setCreating] = useState(false);

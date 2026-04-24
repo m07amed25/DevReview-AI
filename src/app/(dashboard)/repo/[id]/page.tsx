@@ -26,7 +26,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { cn, formatDate } from "@/lib/utils";
-import { CodeTimeline } from "@/components/code-timeline";
+import { CodeTimeline } from "@/features/code-timeline";
 import { PullRequestCard } from "./pull-request-card";
 
 type PageProps = { params: Promise<{ id: string }> };

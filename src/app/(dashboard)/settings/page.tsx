@@ -41,7 +41,7 @@ import { PreferencesCardContent } from "./preferences-card";
 import { SessionsCardContent, SessionsCardHeader } from "./sessions-card";
 
 const ThemeSelector = dynamic(
-  () => import("@/components/settings/theme-selector"),
+  () => import("@/features/settings/components/theme-selector"),
   { ssr: false },
 );
 

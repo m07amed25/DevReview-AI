@@ -27,7 +27,7 @@ import {
   Save,
   ImageIcon,
 } from "lucide-react";
-import { CropDialog } from "@/components/crop-dialog";
+import { CropDialog } from "@/features/profile/components/crop-dialog";
 
 interface Profile {
   name: string;

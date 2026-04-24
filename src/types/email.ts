@@ -16,11 +16,8 @@ export interface TeamMemberAddedEmailParams {
   teamUrl: string;
 }
 
-export interface ReviewStatus {
-  status: "APPROVED" | "CHANGES_REQUESTED" | "COMMENTED";
-  label: string;
-  color: string;
-}
+import type { ReviewStatus } from "@/lib/constants";
+export type { ReviewStatus } from "@/lib/constants";
 
 export interface ReviewCompletionEmailParams {
   to: string;
@@ -66,20 +63,4 @@ export interface EmailEnvConfig {
   APP_URL: string;
 }
 
-export const REVIEW_STATUS_CONFIG: Record<string, ReviewStatus> = {
-  APPROVED: {
-    status: "APPROVED",
-    label: "Approved",
-    color: "#10b981",
-  },
-  CHANGES_REQUESTED: {
-    status: "CHANGES_REQUESTED",
-    label: "Changes Requested",
-    color: "#f59e0b",
-  },
-  COMMENTED: {
-    status: "COMMENTED",
-    label: "Commented",
-    color: "#6366f1",
-  },
-};
+export { REVIEW_STATUS_CONFIG } from "@/lib/constants";
