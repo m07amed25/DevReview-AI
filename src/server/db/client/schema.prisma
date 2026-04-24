@@ -116,6 +116,7 @@ model Repository {
   scheduledScanConfig  ScheduledScanConfig?
   githubComments       GitHubComment[]
   branchProtectionRecs BranchProtectionRecommendation[]
+  diagrams             Diagram[]
 
   @@unique([userId, githubId])
   @@index([teamId])
@@ -140,7 +141,6 @@ model Review {
   repository        Repository         @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
   user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   threads           ReviewThread[]
-  diagrams          Diagram[]
   githubComment     GitHubComment?
   githubStatusCheck GitHubStatusCheck?
 
@@ -412,20 +412,20 @@ enum DiagramStatus {
 }
 
 model Diagram {
-  id          String        @id @default(cuid())
-  reviewId    String
-  type        DiagramType
-  status      DiagramStatus @default(PENDING)
-  definition  String?       @db.Text
-  nodes       Json?
-  edges       Json?
-  error       String?
-  generatedAt DateTime?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id           String        @id @default(cuid())
+  repositoryId String
+  type         DiagramType
+  status       DiagramStatus @default(PENDING)
+  definition   String?       @db.Text
+  nodes        Json?
+  edges        Json?
+  error        String?
+  generatedAt  DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 
-  review Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  repository Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
 
-  @@unique([reviewId, type])
-  @@index([reviewId])
+  @@unique([repositoryId, type])
+  @@index([repositoryId])
 }

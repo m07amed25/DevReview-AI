@@ -2755,12 +2755,14 @@ export namespace Prisma {
     reviews: number
     githubComments: number
     branchProtectionRecs: number
+    diagrams: number
   }
 
   export type RepositoryCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     reviews?: boolean | RepositoryCountOutputTypeCountReviewsArgs
     githubComments?: boolean | RepositoryCountOutputTypeCountGithubCommentsArgs
     branchProtectionRecs?: boolean | RepositoryCountOutputTypeCountBranchProtectionRecsArgs
+    diagrams?: boolean | RepositoryCountOutputTypeCountDiagramsArgs
   }
 
   // Custom InputTypes
@@ -2795,6 +2797,13 @@ export namespace Prisma {
     where?: BranchProtectionRecommendationWhereInput
   }
 
+  /**
+   * RepositoryCountOutputType without action
+   */
+  export type RepositoryCountOutputTypeCountDiagramsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DiagramWhereInput
+  }
+
 
   /**
    * Count Type ReviewCountOutputType
@@ -2802,12 +2811,10 @@ export namespace Prisma {
 
   export type ReviewCountOutputType = {
     threads: number
-    diagrams: number
   }
 
   export type ReviewCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     threads?: boolean | ReviewCountOutputTypeCountThreadsArgs
-    diagrams?: boolean | ReviewCountOutputTypeCountDiagramsArgs
   }
 
   // Custom InputTypes
@@ -2826,13 +2833,6 @@ export namespace Prisma {
    */
   export type ReviewCountOutputTypeCountThreadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReviewThreadWhereInput
-  }
-
-  /**
-   * ReviewCountOutputType without action
-   */
-  export type ReviewCountOutputTypeCountDiagramsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: DiagramWhereInput
   }
 
 
@@ -7805,6 +7805,7 @@ export namespace Prisma {
     scheduledScanConfig?: boolean | Repository$scheduledScanConfigArgs<ExtArgs>
     githubComments?: boolean | Repository$githubCommentsArgs<ExtArgs>
     branchProtectionRecs?: boolean | Repository$branchProtectionRecsArgs<ExtArgs>
+    diagrams?: boolean | Repository$diagramsArgs<ExtArgs>
     _count?: boolean | RepositoryCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["repository"]>
 
@@ -7860,6 +7861,7 @@ export namespace Prisma {
     scheduledScanConfig?: boolean | Repository$scheduledScanConfigArgs<ExtArgs>
     githubComments?: boolean | Repository$githubCommentsArgs<ExtArgs>
     branchProtectionRecs?: boolean | Repository$branchProtectionRecsArgs<ExtArgs>
+    diagrams?: boolean | Repository$diagramsArgs<ExtArgs>
     _count?: boolean | RepositoryCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type RepositoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7881,6 +7883,7 @@ export namespace Prisma {
       scheduledScanConfig: Prisma.$ScheduledScanConfigPayload<ExtArgs> | null
       githubComments: Prisma.$GitHubCommentPayload<ExtArgs>[]
       branchProtectionRecs: Prisma.$BranchProtectionRecommendationPayload<ExtArgs>[]
+      diagrams: Prisma.$DiagramPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -8294,6 +8297,7 @@ export namespace Prisma {
     scheduledScanConfig<T extends Repository$scheduledScanConfigArgs<ExtArgs> = {}>(args?: Subset<T, Repository$scheduledScanConfigArgs<ExtArgs>>): Prisma__ScheduledScanConfigClient<$Result.GetResult<Prisma.$ScheduledScanConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     githubComments<T extends Repository$githubCommentsArgs<ExtArgs> = {}>(args?: Subset<T, Repository$githubCommentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GitHubCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     branchProtectionRecs<T extends Repository$branchProtectionRecsArgs<ExtArgs> = {}>(args?: Subset<T, Repository$branchProtectionRecsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BranchProtectionRecommendationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    diagrams<T extends Repository$diagramsArgs<ExtArgs> = {}>(args?: Subset<T, Repository$diagramsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DiagramPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8858,6 +8862,30 @@ export namespace Prisma {
   }
 
   /**
+   * Repository.diagrams
+   */
+  export type Repository$diagramsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Diagram
+     */
+    select?: DiagramSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Diagram
+     */
+    omit?: DiagramOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiagramInclude<ExtArgs> | null
+    where?: DiagramWhereInput
+    orderBy?: DiagramOrderByWithRelationInput | DiagramOrderByWithRelationInput[]
+    cursor?: DiagramWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DiagramScalarFieldEnum | DiagramScalarFieldEnum[]
+  }
+
+  /**
    * Repository without action
    */
   export type RepositoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9145,7 +9173,6 @@ export namespace Prisma {
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     threads?: boolean | Review$threadsArgs<ExtArgs>
-    diagrams?: boolean | Review$diagramsArgs<ExtArgs>
     githubComment?: boolean | Review$githubCommentArgs<ExtArgs>
     githubStatusCheck?: boolean | Review$githubStatusCheckArgs<ExtArgs>
     _count?: boolean | ReviewCountOutputTypeDefaultArgs<ExtArgs>
@@ -9211,7 +9238,6 @@ export namespace Prisma {
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     threads?: boolean | Review$threadsArgs<ExtArgs>
-    diagrams?: boolean | Review$diagramsArgs<ExtArgs>
     githubComment?: boolean | Review$githubCommentArgs<ExtArgs>
     githubStatusCheck?: boolean | Review$githubStatusCheckArgs<ExtArgs>
     _count?: boolean | ReviewCountOutputTypeDefaultArgs<ExtArgs>
@@ -9231,7 +9257,6 @@ export namespace Prisma {
       repository: Prisma.$RepositoryPayload<ExtArgs>
       user: Prisma.$UserPayload<ExtArgs>
       threads: Prisma.$ReviewThreadPayload<ExtArgs>[]
-      diagrams: Prisma.$DiagramPayload<ExtArgs>[]
       githubComment: Prisma.$GitHubCommentPayload<ExtArgs> | null
       githubStatusCheck: Prisma.$GitHubStatusCheckPayload<ExtArgs> | null
     }
@@ -9647,7 +9672,6 @@ export namespace Prisma {
     repository<T extends RepositoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RepositoryDefaultArgs<ExtArgs>>): Prisma__RepositoryClient<$Result.GetResult<Prisma.$RepositoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     threads<T extends Review$threadsArgs<ExtArgs> = {}>(args?: Subset<T, Review$threadsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewThreadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    diagrams<T extends Review$diagramsArgs<ExtArgs> = {}>(args?: Subset<T, Review$diagramsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DiagramPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     githubComment<T extends Review$githubCommentArgs<ExtArgs> = {}>(args?: Subset<T, Review$githubCommentArgs<ExtArgs>>): Prisma__GitHubCommentClient<$Result.GetResult<Prisma.$GitHubCommentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     githubStatusCheck<T extends Review$githubStatusCheckArgs<ExtArgs> = {}>(args?: Subset<T, Review$githubStatusCheckArgs<ExtArgs>>): Prisma__GitHubStatusCheckClient<$Result.GetResult<Prisma.$GitHubStatusCheckPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
@@ -10110,30 +10134,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ReviewThreadScalarFieldEnum | ReviewThreadScalarFieldEnum[]
-  }
-
-  /**
-   * Review.diagrams
-   */
-  export type Review$diagramsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Diagram
-     */
-    select?: DiagramSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Diagram
-     */
-    omit?: DiagramOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DiagramInclude<ExtArgs> | null
-    where?: DiagramWhereInput
-    orderBy?: DiagramOrderByWithRelationInput | DiagramOrderByWithRelationInput[]
-    cursor?: DiagramWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: DiagramScalarFieldEnum | DiagramScalarFieldEnum[]
   }
 
   /**
@@ -23518,7 +23518,7 @@ export namespace Prisma {
 
   export type DiagramMinAggregateOutputType = {
     id: string | null
-    reviewId: string | null
+    repositoryId: string | null
     type: $Enums.DiagramType | null
     status: $Enums.DiagramStatus | null
     definition: string | null
@@ -23530,7 +23530,7 @@ export namespace Prisma {
 
   export type DiagramMaxAggregateOutputType = {
     id: string | null
-    reviewId: string | null
+    repositoryId: string | null
     type: $Enums.DiagramType | null
     status: $Enums.DiagramStatus | null
     definition: string | null
@@ -23542,7 +23542,7 @@ export namespace Prisma {
 
   export type DiagramCountAggregateOutputType = {
     id: number
-    reviewId: number
+    repositoryId: number
     type: number
     status: number
     definition: number
@@ -23558,7 +23558,7 @@ export namespace Prisma {
 
   export type DiagramMinAggregateInputType = {
     id?: true
-    reviewId?: true
+    repositoryId?: true
     type?: true
     status?: true
     definition?: true
@@ -23570,7 +23570,7 @@ export namespace Prisma {
 
   export type DiagramMaxAggregateInputType = {
     id?: true
-    reviewId?: true
+    repositoryId?: true
     type?: true
     status?: true
     definition?: true
@@ -23582,7 +23582,7 @@ export namespace Prisma {
 
   export type DiagramCountAggregateInputType = {
     id?: true
-    reviewId?: true
+    repositoryId?: true
     type?: true
     status?: true
     definition?: true
@@ -23669,7 +23669,7 @@ export namespace Prisma {
 
   export type DiagramGroupByOutputType = {
     id: string
-    reviewId: string
+    repositoryId: string
     type: $Enums.DiagramType
     status: $Enums.DiagramStatus
     definition: string | null
@@ -23700,7 +23700,7 @@ export namespace Prisma {
 
   export type DiagramSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    reviewId?: boolean
+    repositoryId?: boolean
     type?: boolean
     status?: boolean
     definition?: boolean
@@ -23710,12 +23710,12 @@ export namespace Prisma {
     generatedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    review?: boolean | ReviewDefaultArgs<ExtArgs>
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["diagram"]>
 
   export type DiagramSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    reviewId?: boolean
+    repositoryId?: boolean
     type?: boolean
     status?: boolean
     definition?: boolean
@@ -23725,12 +23725,12 @@ export namespace Prisma {
     generatedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    review?: boolean | ReviewDefaultArgs<ExtArgs>
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["diagram"]>
 
   export type DiagramSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    reviewId?: boolean
+    repositoryId?: boolean
     type?: boolean
     status?: boolean
     definition?: boolean
@@ -23740,12 +23740,12 @@ export namespace Prisma {
     generatedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    review?: boolean | ReviewDefaultArgs<ExtArgs>
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["diagram"]>
 
   export type DiagramSelectScalar = {
     id?: boolean
-    reviewId?: boolean
+    repositoryId?: boolean
     type?: boolean
     status?: boolean
     definition?: boolean
@@ -23757,25 +23757,25 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type DiagramOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "reviewId" | "type" | "status" | "definition" | "nodes" | "edges" | "error" | "generatedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["diagram"]>
+  export type DiagramOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "repositoryId" | "type" | "status" | "definition" | "nodes" | "edges" | "error" | "generatedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["diagram"]>
   export type DiagramInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    review?: boolean | ReviewDefaultArgs<ExtArgs>
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
   }
   export type DiagramIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    review?: boolean | ReviewDefaultArgs<ExtArgs>
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
   }
   export type DiagramIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    review?: boolean | ReviewDefaultArgs<ExtArgs>
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
   }
 
   export type $DiagramPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Diagram"
     objects: {
-      review: Prisma.$ReviewPayload<ExtArgs>
+      repository: Prisma.$RepositoryPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      reviewId: string
+      repositoryId: string
       type: $Enums.DiagramType
       status: $Enums.DiagramStatus
       definition: string | null
@@ -24179,7 +24179,7 @@ export namespace Prisma {
    */
   export interface Prisma__DiagramClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    review<T extends ReviewDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ReviewDefaultArgs<ExtArgs>>): Prisma__ReviewClient<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    repository<T extends RepositoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RepositoryDefaultArgs<ExtArgs>>): Prisma__RepositoryClient<$Result.GetResult<Prisma.$RepositoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -24210,7 +24210,7 @@ export namespace Prisma {
    */
   interface DiagramFieldRefs {
     readonly id: FieldRef<"Diagram", 'String'>
-    readonly reviewId: FieldRef<"Diagram", 'String'>
+    readonly repositoryId: FieldRef<"Diagram", 'String'>
     readonly type: FieldRef<"Diagram", 'DiagramType'>
     readonly status: FieldRef<"Diagram", 'DiagramStatus'>
     readonly definition: FieldRef<"Diagram", 'String'>
@@ -24907,7 +24907,7 @@ export namespace Prisma {
 
   export const DiagramScalarFieldEnum: {
     id: 'id',
-    reviewId: 'reviewId',
+    repositoryId: 'repositoryId',
     type: 'type',
     status: 'status',
     definition: 'definition',
@@ -25572,6 +25572,7 @@ export namespace Prisma {
     scheduledScanConfig?: XOR<ScheduledScanConfigNullableScalarRelationFilter, ScheduledScanConfigWhereInput> | null
     githubComments?: GitHubCommentListRelationFilter
     branchProtectionRecs?: BranchProtectionRecommendationListRelationFilter
+    diagrams?: DiagramListRelationFilter
   }
 
   export type RepositoryOrderByWithRelationInput = {
@@ -25592,6 +25593,7 @@ export namespace Prisma {
     scheduledScanConfig?: ScheduledScanConfigOrderByWithRelationInput
     githubComments?: GitHubCommentOrderByRelationAggregateInput
     branchProtectionRecs?: BranchProtectionRecommendationOrderByRelationAggregateInput
+    diagrams?: DiagramOrderByRelationAggregateInput
   }
 
   export type RepositoryWhereUniqueInput = Prisma.AtLeast<{
@@ -25616,6 +25618,7 @@ export namespace Prisma {
     scheduledScanConfig?: XOR<ScheduledScanConfigNullableScalarRelationFilter, ScheduledScanConfigWhereInput> | null
     githubComments?: GitHubCommentListRelationFilter
     branchProtectionRecs?: BranchProtectionRecommendationListRelationFilter
+    diagrams?: DiagramListRelationFilter
   }, "id" | "userId_githubId">
 
   export type RepositoryOrderByWithAggregationInput = {
@@ -25673,7 +25676,6 @@ export namespace Prisma {
     repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     threads?: ReviewThreadListRelationFilter
-    diagrams?: DiagramListRelationFilter
     githubComment?: XOR<GitHubCommentNullableScalarRelationFilter, GitHubCommentWhereInput> | null
     githubStatusCheck?: XOR<GitHubStatusCheckNullableScalarRelationFilter, GitHubStatusCheckWhereInput> | null
   }
@@ -25696,7 +25698,6 @@ export namespace Prisma {
     repository?: RepositoryOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
     threads?: ReviewThreadOrderByRelationAggregateInput
-    diagrams?: DiagramOrderByRelationAggregateInput
     githubComment?: GitHubCommentOrderByWithRelationInput
     githubStatusCheck?: GitHubStatusCheckOrderByWithRelationInput
   }
@@ -25722,7 +25723,6 @@ export namespace Prisma {
     repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     threads?: ReviewThreadListRelationFilter
-    diagrams?: DiagramListRelationFilter
     githubComment?: XOR<GitHubCommentNullableScalarRelationFilter, GitHubCommentWhereInput> | null
     githubStatusCheck?: XOR<GitHubStatusCheckNullableScalarRelationFilter, GitHubStatusCheckWhereInput> | null
   }, "id">
@@ -26589,7 +26589,7 @@ export namespace Prisma {
     OR?: DiagramWhereInput[]
     NOT?: DiagramWhereInput | DiagramWhereInput[]
     id?: StringFilter<"Diagram"> | string
-    reviewId?: StringFilter<"Diagram"> | string
+    repositoryId?: StringFilter<"Diagram"> | string
     type?: EnumDiagramTypeFilter<"Diagram"> | $Enums.DiagramType
     status?: EnumDiagramStatusFilter<"Diagram"> | $Enums.DiagramStatus
     definition?: StringNullableFilter<"Diagram"> | string | null
@@ -26599,12 +26599,12 @@ export namespace Prisma {
     generatedAt?: DateTimeNullableFilter<"Diagram"> | Date | string | null
     createdAt?: DateTimeFilter<"Diagram"> | Date | string
     updatedAt?: DateTimeFilter<"Diagram"> | Date | string
-    review?: XOR<ReviewScalarRelationFilter, ReviewWhereInput>
+    repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
   }
 
   export type DiagramOrderByWithRelationInput = {
     id?: SortOrder
-    reviewId?: SortOrder
+    repositoryId?: SortOrder
     type?: SortOrder
     status?: SortOrder
     definition?: SortOrderInput | SortOrder
@@ -26614,16 +26614,16 @@ export namespace Prisma {
     generatedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    review?: ReviewOrderByWithRelationInput
+    repository?: RepositoryOrderByWithRelationInput
   }
 
   export type DiagramWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    reviewId_type?: DiagramReviewIdTypeCompoundUniqueInput
+    repositoryId_type?: DiagramRepositoryIdTypeCompoundUniqueInput
     AND?: DiagramWhereInput | DiagramWhereInput[]
     OR?: DiagramWhereInput[]
     NOT?: DiagramWhereInput | DiagramWhereInput[]
-    reviewId?: StringFilter<"Diagram"> | string
+    repositoryId?: StringFilter<"Diagram"> | string
     type?: EnumDiagramTypeFilter<"Diagram"> | $Enums.DiagramType
     status?: EnumDiagramStatusFilter<"Diagram"> | $Enums.DiagramStatus
     definition?: StringNullableFilter<"Diagram"> | string | null
@@ -26633,12 +26633,12 @@ export namespace Prisma {
     generatedAt?: DateTimeNullableFilter<"Diagram"> | Date | string | null
     createdAt?: DateTimeFilter<"Diagram"> | Date | string
     updatedAt?: DateTimeFilter<"Diagram"> | Date | string
-    review?: XOR<ReviewScalarRelationFilter, ReviewWhereInput>
-  }, "id" | "reviewId_type">
+    repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
+  }, "id" | "repositoryId_type">
 
   export type DiagramOrderByWithAggregationInput = {
     id?: SortOrder
-    reviewId?: SortOrder
+    repositoryId?: SortOrder
     type?: SortOrder
     status?: SortOrder
     definition?: SortOrderInput | SortOrder
@@ -26658,7 +26658,7 @@ export namespace Prisma {
     OR?: DiagramScalarWhereWithAggregatesInput[]
     NOT?: DiagramScalarWhereWithAggregatesInput | DiagramScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Diagram"> | string
-    reviewId?: StringWithAggregatesFilter<"Diagram"> | string
+    repositoryId?: StringWithAggregatesFilter<"Diagram"> | string
     type?: EnumDiagramTypeWithAggregatesFilter<"Diagram"> | $Enums.DiagramType
     status?: EnumDiagramStatusWithAggregatesFilter<"Diagram"> | $Enums.DiagramStatus
     definition?: StringNullableWithAggregatesFilter<"Diagram"> | string | null
@@ -27076,6 +27076,7 @@ export namespace Prisma {
     scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
     githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
     branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
+    diagrams?: DiagramCreateNestedManyWithoutRepositoryInput
   }
 
   export type RepositoryUncheckedCreateInput = {
@@ -27094,6 +27095,7 @@ export namespace Prisma {
     scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
     githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
     branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
+    diagrams?: DiagramUncheckedCreateNestedManyWithoutRepositoryInput
   }
 
   export type RepositoryUpdateInput = {
@@ -27112,6 +27114,7 @@ export namespace Prisma {
     scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
     githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
     branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
+    diagrams?: DiagramUpdateManyWithoutRepositoryNestedInput
   }
 
   export type RepositoryUncheckedUpdateInput = {
@@ -27130,6 +27133,7 @@ export namespace Prisma {
     scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
     githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
     branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
+    diagrams?: DiagramUncheckedUpdateManyWithoutRepositoryNestedInput
   }
 
   export type RepositoryCreateManyInput = {
@@ -27185,7 +27189,6 @@ export namespace Prisma {
     repository: RepositoryCreateNestedOneWithoutReviewsInput
     user: UserCreateNestedOneWithoutReviewsInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
-    diagrams?: DiagramCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
   }
@@ -27206,7 +27209,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
-    diagrams?: DiagramUncheckedCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
   }
@@ -27227,7 +27229,6 @@ export namespace Prisma {
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
     user?: UserUpdateOneRequiredWithoutReviewsNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
-    diagrams?: DiagramUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
   }
@@ -27248,7 +27249,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
-    diagrams?: DiagramUncheckedUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
   }
@@ -28166,12 +28166,12 @@ export namespace Prisma {
     generatedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    review: ReviewCreateNestedOneWithoutDiagramsInput
+    repository: RepositoryCreateNestedOneWithoutDiagramsInput
   }
 
   export type DiagramUncheckedCreateInput = {
     id?: string
-    reviewId: string
+    repositoryId: string
     type: $Enums.DiagramType
     status?: $Enums.DiagramStatus
     definition?: string | null
@@ -28194,12 +28194,12 @@ export namespace Prisma {
     generatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    review?: ReviewUpdateOneRequiredWithoutDiagramsNestedInput
+    repository?: RepositoryUpdateOneRequiredWithoutDiagramsNestedInput
   }
 
   export type DiagramUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    reviewId?: StringFieldUpdateOperationsInput | string
+    repositoryId?: StringFieldUpdateOperationsInput | string
     type?: EnumDiagramTypeFieldUpdateOperationsInput | $Enums.DiagramType
     status?: EnumDiagramStatusFieldUpdateOperationsInput | $Enums.DiagramStatus
     definition?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28213,7 +28213,7 @@ export namespace Prisma {
 
   export type DiagramCreateManyInput = {
     id?: string
-    reviewId: string
+    repositoryId: string
     type: $Enums.DiagramType
     status?: $Enums.DiagramStatus
     definition?: string | null
@@ -28240,7 +28240,7 @@ export namespace Prisma {
 
   export type DiagramUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    reviewId?: StringFieldUpdateOperationsInput | string
+    repositoryId?: StringFieldUpdateOperationsInput | string
     type?: EnumDiagramTypeFieldUpdateOperationsInput | $Enums.DiagramType
     status?: EnumDiagramStatusFieldUpdateOperationsInput | $Enums.DiagramStatus
     definition?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28672,11 +28672,21 @@ export namespace Prisma {
     none?: BranchProtectionRecommendationWhereInput
   }
 
+  export type DiagramListRelationFilter = {
+    every?: DiagramWhereInput
+    some?: DiagramWhereInput
+    none?: DiagramWhereInput
+  }
+
   export type GitHubCommentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type BranchProtectionRecommendationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DiagramOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -28800,12 +28810,6 @@ export namespace Prisma {
     none?: ReviewThreadWhereInput
   }
 
-  export type DiagramListRelationFilter = {
-    every?: DiagramWhereInput
-    some?: DiagramWhereInput
-    none?: DiagramWhereInput
-  }
-
   export type GitHubCommentNullableScalarRelationFilter = {
     is?: GitHubCommentWhereInput | null
     isNot?: GitHubCommentWhereInput | null
@@ -28817,10 +28821,6 @@ export namespace Prisma {
   }
 
   export type ReviewThreadOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type DiagramOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -29525,14 +29525,14 @@ export namespace Prisma {
     not?: NestedEnumDiagramStatusFilter<$PrismaModel> | $Enums.DiagramStatus
   }
 
-  export type DiagramReviewIdTypeCompoundUniqueInput = {
-    reviewId: string
+  export type DiagramRepositoryIdTypeCompoundUniqueInput = {
+    repositoryId: string
     type: $Enums.DiagramType
   }
 
   export type DiagramCountOrderByAggregateInput = {
     id?: SortOrder
-    reviewId?: SortOrder
+    repositoryId?: SortOrder
     type?: SortOrder
     status?: SortOrder
     definition?: SortOrder
@@ -29546,7 +29546,7 @@ export namespace Prisma {
 
   export type DiagramMaxOrderByAggregateInput = {
     id?: SortOrder
-    reviewId?: SortOrder
+    repositoryId?: SortOrder
     type?: SortOrder
     status?: SortOrder
     definition?: SortOrder
@@ -29558,7 +29558,7 @@ export namespace Prisma {
 
   export type DiagramMinOrderByAggregateInput = {
     id?: SortOrder
-    reviewId?: SortOrder
+    repositoryId?: SortOrder
     type?: SortOrder
     status?: SortOrder
     definition?: SortOrder
@@ -29979,6 +29979,13 @@ export namespace Prisma {
     connect?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
   }
 
+  export type DiagramCreateNestedManyWithoutRepositoryInput = {
+    create?: XOR<DiagramCreateWithoutRepositoryInput, DiagramUncheckedCreateWithoutRepositoryInput> | DiagramCreateWithoutRepositoryInput[] | DiagramUncheckedCreateWithoutRepositoryInput[]
+    connectOrCreate?: DiagramCreateOrConnectWithoutRepositoryInput | DiagramCreateOrConnectWithoutRepositoryInput[]
+    createMany?: DiagramCreateManyRepositoryInputEnvelope
+    connect?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
+  }
+
   export type ReviewUncheckedCreateNestedManyWithoutRepositoryInput = {
     create?: XOR<ReviewCreateWithoutRepositoryInput, ReviewUncheckedCreateWithoutRepositoryInput> | ReviewCreateWithoutRepositoryInput[] | ReviewUncheckedCreateWithoutRepositoryInput[]
     connectOrCreate?: ReviewCreateOrConnectWithoutRepositoryInput | ReviewCreateOrConnectWithoutRepositoryInput[]
@@ -30010,6 +30017,13 @@ export namespace Prisma {
     connectOrCreate?: BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput | BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput[]
     createMany?: BranchProtectionRecommendationCreateManyRepositoryInputEnvelope
     connect?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
+  }
+
+  export type DiagramUncheckedCreateNestedManyWithoutRepositoryInput = {
+    create?: XOR<DiagramCreateWithoutRepositoryInput, DiagramUncheckedCreateWithoutRepositoryInput> | DiagramCreateWithoutRepositoryInput[] | DiagramUncheckedCreateWithoutRepositoryInput[]
+    connectOrCreate?: DiagramCreateOrConnectWithoutRepositoryInput | DiagramCreateOrConnectWithoutRepositoryInput[]
+    createMany?: DiagramCreateManyRepositoryInputEnvelope
+    connect?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -30100,6 +30114,20 @@ export namespace Prisma {
     deleteMany?: BranchProtectionRecommendationScalarWhereInput | BranchProtectionRecommendationScalarWhereInput[]
   }
 
+  export type DiagramUpdateManyWithoutRepositoryNestedInput = {
+    create?: XOR<DiagramCreateWithoutRepositoryInput, DiagramUncheckedCreateWithoutRepositoryInput> | DiagramCreateWithoutRepositoryInput[] | DiagramUncheckedCreateWithoutRepositoryInput[]
+    connectOrCreate?: DiagramCreateOrConnectWithoutRepositoryInput | DiagramCreateOrConnectWithoutRepositoryInput[]
+    upsert?: DiagramUpsertWithWhereUniqueWithoutRepositoryInput | DiagramUpsertWithWhereUniqueWithoutRepositoryInput[]
+    createMany?: DiagramCreateManyRepositoryInputEnvelope
+    set?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
+    disconnect?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
+    delete?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
+    connect?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
+    update?: DiagramUpdateWithWhereUniqueWithoutRepositoryInput | DiagramUpdateWithWhereUniqueWithoutRepositoryInput[]
+    updateMany?: DiagramUpdateManyWithWhereWithoutRepositoryInput | DiagramUpdateManyWithWhereWithoutRepositoryInput[]
+    deleteMany?: DiagramScalarWhereInput | DiagramScalarWhereInput[]
+  }
+
   export type ReviewUncheckedUpdateManyWithoutRepositoryNestedInput = {
     create?: XOR<ReviewCreateWithoutRepositoryInput, ReviewUncheckedCreateWithoutRepositoryInput> | ReviewCreateWithoutRepositoryInput[] | ReviewUncheckedCreateWithoutRepositoryInput[]
     connectOrCreate?: ReviewCreateOrConnectWithoutRepositoryInput | ReviewCreateOrConnectWithoutRepositoryInput[]
@@ -30162,6 +30190,20 @@ export namespace Prisma {
     deleteMany?: BranchProtectionRecommendationScalarWhereInput | BranchProtectionRecommendationScalarWhereInput[]
   }
 
+  export type DiagramUncheckedUpdateManyWithoutRepositoryNestedInput = {
+    create?: XOR<DiagramCreateWithoutRepositoryInput, DiagramUncheckedCreateWithoutRepositoryInput> | DiagramCreateWithoutRepositoryInput[] | DiagramUncheckedCreateWithoutRepositoryInput[]
+    connectOrCreate?: DiagramCreateOrConnectWithoutRepositoryInput | DiagramCreateOrConnectWithoutRepositoryInput[]
+    upsert?: DiagramUpsertWithWhereUniqueWithoutRepositoryInput | DiagramUpsertWithWhereUniqueWithoutRepositoryInput[]
+    createMany?: DiagramCreateManyRepositoryInputEnvelope
+    set?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
+    disconnect?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
+    delete?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
+    connect?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
+    update?: DiagramUpdateWithWhereUniqueWithoutRepositoryInput | DiagramUpdateWithWhereUniqueWithoutRepositoryInput[]
+    updateMany?: DiagramUpdateManyWithWhereWithoutRepositoryInput | DiagramUpdateManyWithWhereWithoutRepositoryInput[]
+    deleteMany?: DiagramScalarWhereInput | DiagramScalarWhereInput[]
+  }
+
   export type RepositoryCreateNestedOneWithoutReviewsInput = {
     create?: XOR<RepositoryCreateWithoutReviewsInput, RepositoryUncheckedCreateWithoutReviewsInput>
     connectOrCreate?: RepositoryCreateOrConnectWithoutReviewsInput
@@ -30181,13 +30223,6 @@ export namespace Prisma {
     connect?: ReviewThreadWhereUniqueInput | ReviewThreadWhereUniqueInput[]
   }
 
-  export type DiagramCreateNestedManyWithoutReviewInput = {
-    create?: XOR<DiagramCreateWithoutReviewInput, DiagramUncheckedCreateWithoutReviewInput> | DiagramCreateWithoutReviewInput[] | DiagramUncheckedCreateWithoutReviewInput[]
-    connectOrCreate?: DiagramCreateOrConnectWithoutReviewInput | DiagramCreateOrConnectWithoutReviewInput[]
-    createMany?: DiagramCreateManyReviewInputEnvelope
-    connect?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
-  }
-
   export type GitHubCommentCreateNestedOneWithoutReviewInput = {
     create?: XOR<GitHubCommentCreateWithoutReviewInput, GitHubCommentUncheckedCreateWithoutReviewInput>
     connectOrCreate?: GitHubCommentCreateOrConnectWithoutReviewInput
@@ -30205,13 +30240,6 @@ export namespace Prisma {
     connectOrCreate?: ReviewThreadCreateOrConnectWithoutReviewInput | ReviewThreadCreateOrConnectWithoutReviewInput[]
     createMany?: ReviewThreadCreateManyReviewInputEnvelope
     connect?: ReviewThreadWhereUniqueInput | ReviewThreadWhereUniqueInput[]
-  }
-
-  export type DiagramUncheckedCreateNestedManyWithoutReviewInput = {
-    create?: XOR<DiagramCreateWithoutReviewInput, DiagramUncheckedCreateWithoutReviewInput> | DiagramCreateWithoutReviewInput[] | DiagramUncheckedCreateWithoutReviewInput[]
-    connectOrCreate?: DiagramCreateOrConnectWithoutReviewInput | DiagramCreateOrConnectWithoutReviewInput[]
-    createMany?: DiagramCreateManyReviewInputEnvelope
-    connect?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
   }
 
   export type GitHubCommentUncheckedCreateNestedOneWithoutReviewInput = {
@@ -30268,20 +30296,6 @@ export namespace Prisma {
     deleteMany?: ReviewThreadScalarWhereInput | ReviewThreadScalarWhereInput[]
   }
 
-  export type DiagramUpdateManyWithoutReviewNestedInput = {
-    create?: XOR<DiagramCreateWithoutReviewInput, DiagramUncheckedCreateWithoutReviewInput> | DiagramCreateWithoutReviewInput[] | DiagramUncheckedCreateWithoutReviewInput[]
-    connectOrCreate?: DiagramCreateOrConnectWithoutReviewInput | DiagramCreateOrConnectWithoutReviewInput[]
-    upsert?: DiagramUpsertWithWhereUniqueWithoutReviewInput | DiagramUpsertWithWhereUniqueWithoutReviewInput[]
-    createMany?: DiagramCreateManyReviewInputEnvelope
-    set?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
-    disconnect?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
-    delete?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
-    connect?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
-    update?: DiagramUpdateWithWhereUniqueWithoutReviewInput | DiagramUpdateWithWhereUniqueWithoutReviewInput[]
-    updateMany?: DiagramUpdateManyWithWhereWithoutReviewInput | DiagramUpdateManyWithWhereWithoutReviewInput[]
-    deleteMany?: DiagramScalarWhereInput | DiagramScalarWhereInput[]
-  }
-
   export type GitHubCommentUpdateOneWithoutReviewNestedInput = {
     create?: XOR<GitHubCommentCreateWithoutReviewInput, GitHubCommentUncheckedCreateWithoutReviewInput>
     connectOrCreate?: GitHubCommentCreateOrConnectWithoutReviewInput
@@ -30314,20 +30328,6 @@ export namespace Prisma {
     update?: ReviewThreadUpdateWithWhereUniqueWithoutReviewInput | ReviewThreadUpdateWithWhereUniqueWithoutReviewInput[]
     updateMany?: ReviewThreadUpdateManyWithWhereWithoutReviewInput | ReviewThreadUpdateManyWithWhereWithoutReviewInput[]
     deleteMany?: ReviewThreadScalarWhereInput | ReviewThreadScalarWhereInput[]
-  }
-
-  export type DiagramUncheckedUpdateManyWithoutReviewNestedInput = {
-    create?: XOR<DiagramCreateWithoutReviewInput, DiagramUncheckedCreateWithoutReviewInput> | DiagramCreateWithoutReviewInput[] | DiagramUncheckedCreateWithoutReviewInput[]
-    connectOrCreate?: DiagramCreateOrConnectWithoutReviewInput | DiagramCreateOrConnectWithoutReviewInput[]
-    upsert?: DiagramUpsertWithWhereUniqueWithoutReviewInput | DiagramUpsertWithWhereUniqueWithoutReviewInput[]
-    createMany?: DiagramCreateManyReviewInputEnvelope
-    set?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
-    disconnect?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
-    delete?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
-    connect?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
-    update?: DiagramUpdateWithWhereUniqueWithoutReviewInput | DiagramUpdateWithWhereUniqueWithoutReviewInput[]
-    updateMany?: DiagramUpdateManyWithWhereWithoutReviewInput | DiagramUpdateManyWithWhereWithoutReviewInput[]
-    deleteMany?: DiagramScalarWhereInput | DiagramScalarWhereInput[]
   }
 
   export type GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput = {
@@ -30788,10 +30788,10 @@ export namespace Prisma {
     update?: XOR<XOR<RepositoryUpdateToOneWithWhereWithoutBranchProtectionRecsInput, RepositoryUpdateWithoutBranchProtectionRecsInput>, RepositoryUncheckedUpdateWithoutBranchProtectionRecsInput>
   }
 
-  export type ReviewCreateNestedOneWithoutDiagramsInput = {
-    create?: XOR<ReviewCreateWithoutDiagramsInput, ReviewUncheckedCreateWithoutDiagramsInput>
-    connectOrCreate?: ReviewCreateOrConnectWithoutDiagramsInput
-    connect?: ReviewWhereUniqueInput
+  export type RepositoryCreateNestedOneWithoutDiagramsInput = {
+    create?: XOR<RepositoryCreateWithoutDiagramsInput, RepositoryUncheckedCreateWithoutDiagramsInput>
+    connectOrCreate?: RepositoryCreateOrConnectWithoutDiagramsInput
+    connect?: RepositoryWhereUniqueInput
   }
 
   export type EnumDiagramTypeFieldUpdateOperationsInput = {
@@ -30802,12 +30802,12 @@ export namespace Prisma {
     set?: $Enums.DiagramStatus
   }
 
-  export type ReviewUpdateOneRequiredWithoutDiagramsNestedInput = {
-    create?: XOR<ReviewCreateWithoutDiagramsInput, ReviewUncheckedCreateWithoutDiagramsInput>
-    connectOrCreate?: ReviewCreateOrConnectWithoutDiagramsInput
-    upsert?: ReviewUpsertWithoutDiagramsInput
-    connect?: ReviewWhereUniqueInput
-    update?: XOR<XOR<ReviewUpdateToOneWithWhereWithoutDiagramsInput, ReviewUpdateWithoutDiagramsInput>, ReviewUncheckedUpdateWithoutDiagramsInput>
+  export type RepositoryUpdateOneRequiredWithoutDiagramsNestedInput = {
+    create?: XOR<RepositoryCreateWithoutDiagramsInput, RepositoryUncheckedCreateWithoutDiagramsInput>
+    connectOrCreate?: RepositoryCreateOrConnectWithoutDiagramsInput
+    upsert?: RepositoryUpsertWithoutDiagramsInput
+    connect?: RepositoryWhereUniqueInput
+    update?: XOR<XOR<RepositoryUpdateToOneWithWhereWithoutDiagramsInput, RepositoryUpdateWithoutDiagramsInput>, RepositoryUncheckedUpdateWithoutDiagramsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -31323,6 +31323,7 @@ export namespace Prisma {
     scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
     githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
     branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
+    diagrams?: DiagramCreateNestedManyWithoutRepositoryInput
   }
 
   export type RepositoryUncheckedCreateWithoutUserInput = {
@@ -31340,6 +31341,7 @@ export namespace Prisma {
     scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
     githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
     branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
+    diagrams?: DiagramUncheckedCreateNestedManyWithoutRepositoryInput
   }
 
   export type RepositoryCreateOrConnectWithoutUserInput = {
@@ -31367,7 +31369,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     repository: RepositoryCreateNestedOneWithoutReviewsInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
-    diagrams?: DiagramCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
   }
@@ -31387,7 +31388,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
-    diagrams?: DiagramUncheckedCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
   }
@@ -31999,7 +31999,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutReviewsInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
-    diagrams?: DiagramCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
   }
@@ -32019,7 +32018,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
-    diagrams?: DiagramUncheckedCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
   }
@@ -32135,6 +32133,42 @@ export namespace Prisma {
 
   export type BranchProtectionRecommendationCreateManyRepositoryInputEnvelope = {
     data: BranchProtectionRecommendationCreateManyRepositoryInput | BranchProtectionRecommendationCreateManyRepositoryInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DiagramCreateWithoutRepositoryInput = {
+    id?: string
+    type: $Enums.DiagramType
+    status?: $Enums.DiagramStatus
+    definition?: string | null
+    nodes?: NullableJsonNullValueInput | InputJsonValue
+    edges?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    generatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DiagramUncheckedCreateWithoutRepositoryInput = {
+    id?: string
+    type: $Enums.DiagramType
+    status?: $Enums.DiagramStatus
+    definition?: string | null
+    nodes?: NullableJsonNullValueInput | InputJsonValue
+    edges?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    generatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DiagramCreateOrConnectWithoutRepositoryInput = {
+    where: DiagramWhereUniqueInput
+    create: XOR<DiagramCreateWithoutRepositoryInput, DiagramUncheckedCreateWithoutRepositoryInput>
+  }
+
+  export type DiagramCreateManyRepositoryInputEnvelope = {
+    data: DiagramCreateManyRepositoryInput | DiagramCreateManyRepositoryInput[]
     skipDuplicates?: boolean
   }
 
@@ -32358,6 +32392,39 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"BranchProtectionRecommendation"> | Date | string
   }
 
+  export type DiagramUpsertWithWhereUniqueWithoutRepositoryInput = {
+    where: DiagramWhereUniqueInput
+    update: XOR<DiagramUpdateWithoutRepositoryInput, DiagramUncheckedUpdateWithoutRepositoryInput>
+    create: XOR<DiagramCreateWithoutRepositoryInput, DiagramUncheckedCreateWithoutRepositoryInput>
+  }
+
+  export type DiagramUpdateWithWhereUniqueWithoutRepositoryInput = {
+    where: DiagramWhereUniqueInput
+    data: XOR<DiagramUpdateWithoutRepositoryInput, DiagramUncheckedUpdateWithoutRepositoryInput>
+  }
+
+  export type DiagramUpdateManyWithWhereWithoutRepositoryInput = {
+    where: DiagramScalarWhereInput
+    data: XOR<DiagramUpdateManyMutationInput, DiagramUncheckedUpdateManyWithoutRepositoryInput>
+  }
+
+  export type DiagramScalarWhereInput = {
+    AND?: DiagramScalarWhereInput | DiagramScalarWhereInput[]
+    OR?: DiagramScalarWhereInput[]
+    NOT?: DiagramScalarWhereInput | DiagramScalarWhereInput[]
+    id?: StringFilter<"Diagram"> | string
+    repositoryId?: StringFilter<"Diagram"> | string
+    type?: EnumDiagramTypeFilter<"Diagram"> | $Enums.DiagramType
+    status?: EnumDiagramStatusFilter<"Diagram"> | $Enums.DiagramStatus
+    definition?: StringNullableFilter<"Diagram"> | string | null
+    nodes?: JsonNullableFilter<"Diagram">
+    edges?: JsonNullableFilter<"Diagram">
+    error?: StringNullableFilter<"Diagram"> | string | null
+    generatedAt?: DateTimeNullableFilter<"Diagram"> | Date | string | null
+    createdAt?: DateTimeFilter<"Diagram"> | Date | string
+    updatedAt?: DateTimeFilter<"Diagram"> | Date | string
+  }
+
   export type RepositoryCreateWithoutReviewsInput = {
     id?: string
     githubId: number
@@ -32373,6 +32440,7 @@ export namespace Prisma {
     scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
     githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
     branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
+    diagrams?: DiagramCreateNestedManyWithoutRepositoryInput
   }
 
   export type RepositoryUncheckedCreateWithoutReviewsInput = {
@@ -32390,6 +32458,7 @@ export namespace Prisma {
     scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
     githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
     branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
+    diagrams?: DiagramUncheckedCreateNestedManyWithoutRepositoryInput
   }
 
   export type RepositoryCreateOrConnectWithoutReviewsInput = {
@@ -32476,42 +32545,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type DiagramCreateWithoutReviewInput = {
-    id?: string
-    type: $Enums.DiagramType
-    status?: $Enums.DiagramStatus
-    definition?: string | null
-    nodes?: NullableJsonNullValueInput | InputJsonValue
-    edges?: NullableJsonNullValueInput | InputJsonValue
-    error?: string | null
-    generatedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type DiagramUncheckedCreateWithoutReviewInput = {
-    id?: string
-    type: $Enums.DiagramType
-    status?: $Enums.DiagramStatus
-    definition?: string | null
-    nodes?: NullableJsonNullValueInput | InputJsonValue
-    edges?: NullableJsonNullValueInput | InputJsonValue
-    error?: string | null
-    generatedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type DiagramCreateOrConnectWithoutReviewInput = {
-    where: DiagramWhereUniqueInput
-    create: XOR<DiagramCreateWithoutReviewInput, DiagramUncheckedCreateWithoutReviewInput>
-  }
-
-  export type DiagramCreateManyReviewInputEnvelope = {
-    data: DiagramCreateManyReviewInput | DiagramCreateManyReviewInput[]
-    skipDuplicates?: boolean
-  }
-
   export type GitHubCommentCreateWithoutReviewInput = {
     id?: string
     githubReviewId: number
@@ -32584,6 +32617,7 @@ export namespace Prisma {
     scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
     githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
     branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
+    diagrams?: DiagramUpdateManyWithoutRepositoryNestedInput
   }
 
   export type RepositoryUncheckedUpdateWithoutReviewsInput = {
@@ -32601,6 +32635,7 @@ export namespace Prisma {
     scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
     githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
     branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
+    diagrams?: DiagramUncheckedUpdateManyWithoutRepositoryNestedInput
   }
 
   export type UserUpsertWithoutReviewsInput = {
@@ -32687,39 +32722,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"ReviewThread"> | Date | string
   }
 
-  export type DiagramUpsertWithWhereUniqueWithoutReviewInput = {
-    where: DiagramWhereUniqueInput
-    update: XOR<DiagramUpdateWithoutReviewInput, DiagramUncheckedUpdateWithoutReviewInput>
-    create: XOR<DiagramCreateWithoutReviewInput, DiagramUncheckedCreateWithoutReviewInput>
-  }
-
-  export type DiagramUpdateWithWhereUniqueWithoutReviewInput = {
-    where: DiagramWhereUniqueInput
-    data: XOR<DiagramUpdateWithoutReviewInput, DiagramUncheckedUpdateWithoutReviewInput>
-  }
-
-  export type DiagramUpdateManyWithWhereWithoutReviewInput = {
-    where: DiagramScalarWhereInput
-    data: XOR<DiagramUpdateManyMutationInput, DiagramUncheckedUpdateManyWithoutReviewInput>
-  }
-
-  export type DiagramScalarWhereInput = {
-    AND?: DiagramScalarWhereInput | DiagramScalarWhereInput[]
-    OR?: DiagramScalarWhereInput[]
-    NOT?: DiagramScalarWhereInput | DiagramScalarWhereInput[]
-    id?: StringFilter<"Diagram"> | string
-    reviewId?: StringFilter<"Diagram"> | string
-    type?: EnumDiagramTypeFilter<"Diagram"> | $Enums.DiagramType
-    status?: EnumDiagramStatusFilter<"Diagram"> | $Enums.DiagramStatus
-    definition?: StringNullableFilter<"Diagram"> | string | null
-    nodes?: JsonNullableFilter<"Diagram">
-    edges?: JsonNullableFilter<"Diagram">
-    error?: StringNullableFilter<"Diagram"> | string | null
-    generatedAt?: DateTimeNullableFilter<"Diagram"> | Date | string | null
-    createdAt?: DateTimeFilter<"Diagram"> | Date | string
-    updatedAt?: DateTimeFilter<"Diagram"> | Date | string
-  }
-
   export type GitHubCommentUpsertWithoutReviewInput = {
     update: XOR<GitHubCommentUpdateWithoutReviewInput, GitHubCommentUncheckedUpdateWithoutReviewInput>
     create: XOR<GitHubCommentCreateWithoutReviewInput, GitHubCommentUncheckedCreateWithoutReviewInput>
@@ -32793,7 +32795,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     repository: RepositoryCreateNestedOneWithoutReviewsInput
     user: UserCreateNestedOneWithoutReviewsInput
-    diagrams?: DiagramCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
   }
@@ -32813,7 +32814,6 @@ export namespace Prisma {
     error?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    diagrams?: DiagramUncheckedCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
   }
@@ -32875,7 +32875,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
     user?: UserUpdateOneRequiredWithoutReviewsNestedInput
-    diagrams?: DiagramUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
   }
@@ -32895,7 +32894,6 @@ export namespace Prisma {
     error?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    diagrams?: DiagramUncheckedUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
   }
@@ -33115,6 +33113,7 @@ export namespace Prisma {
     scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
     githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
     branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
+    diagrams?: DiagramCreateNestedManyWithoutRepositoryInput
   }
 
   export type RepositoryUncheckedCreateWithoutTeamInput = {
@@ -33132,6 +33131,7 @@ export namespace Prisma {
     scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
     githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
     branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
+    diagrams?: DiagramUncheckedCreateNestedManyWithoutRepositoryInput
   }
 
   export type RepositoryCreateOrConnectWithoutTeamInput = {
@@ -33591,6 +33591,7 @@ export namespace Prisma {
     scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
     githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
     branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
+    diagrams?: DiagramCreateNestedManyWithoutRepositoryInput
   }
 
   export type RepositoryUncheckedCreateWithoutWebhookConfigInput = {
@@ -33608,6 +33609,7 @@ export namespace Prisma {
     scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
     githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
     branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
+    diagrams?: DiagramUncheckedCreateNestedManyWithoutRepositoryInput
   }
 
   export type RepositoryCreateOrConnectWithoutWebhookConfigInput = {
@@ -33641,6 +33643,7 @@ export namespace Prisma {
     scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
     githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
     branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
+    diagrams?: DiagramUpdateManyWithoutRepositoryNestedInput
   }
 
   export type RepositoryUncheckedUpdateWithoutWebhookConfigInput = {
@@ -33658,6 +33661,7 @@ export namespace Prisma {
     scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
     githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
     branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
+    diagrams?: DiagramUncheckedUpdateManyWithoutRepositoryNestedInput
   }
 
   export type RepositoryCreateWithoutScheduledScanConfigInput = {
@@ -33675,6 +33679,7 @@ export namespace Prisma {
     webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
     githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
     branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
+    diagrams?: DiagramCreateNestedManyWithoutRepositoryInput
   }
 
   export type RepositoryUncheckedCreateWithoutScheduledScanConfigInput = {
@@ -33692,6 +33697,7 @@ export namespace Prisma {
     webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
     githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
     branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
+    diagrams?: DiagramUncheckedCreateNestedManyWithoutRepositoryInput
   }
 
   export type RepositoryCreateOrConnectWithoutScheduledScanConfigInput = {
@@ -33753,6 +33759,7 @@ export namespace Prisma {
     webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
     githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
     branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
+    diagrams?: DiagramUpdateManyWithoutRepositoryNestedInput
   }
 
   export type RepositoryUncheckedUpdateWithoutScheduledScanConfigInput = {
@@ -33770,6 +33777,7 @@ export namespace Prisma {
     webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
     githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
     branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
+    diagrams?: DiagramUncheckedUpdateManyWithoutRepositoryNestedInput
   }
 
   export type ScheduledScanRunUpsertWithWhereUniqueWithoutConfigInput = {
@@ -33869,7 +33877,6 @@ export namespace Prisma {
     repository: RepositoryCreateNestedOneWithoutReviewsInput
     user: UserCreateNestedOneWithoutReviewsInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
-    diagrams?: DiagramCreateNestedManyWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
   }
 
@@ -33889,7 +33896,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
-    diagrams?: DiagramUncheckedCreateNestedManyWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
   }
 
@@ -33913,6 +33919,7 @@ export namespace Prisma {
     webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
     scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
     branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
+    diagrams?: DiagramCreateNestedManyWithoutRepositoryInput
   }
 
   export type RepositoryUncheckedCreateWithoutGithubCommentsInput = {
@@ -33930,6 +33937,7 @@ export namespace Prisma {
     webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
     scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
     branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
+    diagrams?: DiagramUncheckedCreateNestedManyWithoutRepositoryInput
   }
 
   export type RepositoryCreateOrConnectWithoutGithubCommentsInput = {
@@ -33964,7 +33972,6 @@ export namespace Prisma {
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
     user?: UserUpdateOneRequiredWithoutReviewsNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
-    diagrams?: DiagramUpdateManyWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
   }
 
@@ -33984,7 +33991,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
-    diagrams?: DiagramUncheckedUpdateManyWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
   }
 
@@ -34014,6 +34020,7 @@ export namespace Prisma {
     webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
     scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
     branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
+    diagrams?: DiagramUpdateManyWithoutRepositoryNestedInput
   }
 
   export type RepositoryUncheckedUpdateWithoutGithubCommentsInput = {
@@ -34031,6 +34038,7 @@ export namespace Prisma {
     webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
     scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
     branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
+    diagrams?: DiagramUncheckedUpdateManyWithoutRepositoryNestedInput
   }
 
   export type ReviewCreateWithoutGithubStatusCheckInput = {
@@ -34049,7 +34057,6 @@ export namespace Prisma {
     repository: RepositoryCreateNestedOneWithoutReviewsInput
     user: UserCreateNestedOneWithoutReviewsInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
-    diagrams?: DiagramCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
   }
 
@@ -34069,7 +34076,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
-    diagrams?: DiagramUncheckedCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
   }
 
@@ -34105,7 +34111,6 @@ export namespace Prisma {
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
     user?: UserUpdateOneRequiredWithoutReviewsNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
-    diagrams?: DiagramUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
   }
 
@@ -34125,7 +34130,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
-    diagrams?: DiagramUncheckedUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
   }
 
@@ -34144,6 +34148,7 @@ export namespace Prisma {
     webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
     scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
     githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
+    diagrams?: DiagramCreateNestedManyWithoutRepositoryInput
   }
 
   export type RepositoryUncheckedCreateWithoutBranchProtectionRecsInput = {
@@ -34161,6 +34166,7 @@ export namespace Prisma {
     webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
     scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
     githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
+    diagrams?: DiagramUncheckedCreateNestedManyWithoutRepositoryInput
   }
 
   export type RepositoryCreateOrConnectWithoutBranchProtectionRecsInput = {
@@ -34194,6 +34200,7 @@ export namespace Prisma {
     webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
     scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
     githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
+    diagrams?: DiagramUpdateManyWithoutRepositoryNestedInput
   }
 
   export type RepositoryUncheckedUpdateWithoutBranchProtectionRecsInput = {
@@ -34211,102 +34218,95 @@ export namespace Prisma {
     webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
     scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
     githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
+    diagrams?: DiagramUncheckedUpdateManyWithoutRepositoryNestedInput
   }
 
-  export type ReviewCreateWithoutDiagramsInput = {
+  export type RepositoryCreateWithoutDiagramsInput = {
     id?: string
-    prNumber: number
-    prTitle: string
-    prUrl: string
-    status?: $Enums.ReviewStatus
-    summary?: string | null
-    riskScore?: number | null
-    comments?: NullableJsonNullValueInput | InputJsonValue
-    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
-    error?: string | null
+    githubId: number
+    name: string
+    fullName: string
+    private?: boolean
+    htmlUrl: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    repository: RepositoryCreateNestedOneWithoutReviewsInput
-    user: UserCreateNestedOneWithoutReviewsInput
-    threads?: ReviewThreadCreateNestedManyWithoutReviewInput
-    githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
-    githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
+    user: UserCreateNestedOneWithoutRepositoriesInput
+    team?: TeamCreateNestedOneWithoutRepositoriesInput
+    reviews?: ReviewCreateNestedManyWithoutRepositoryInput
+    webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
+    githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
   }
 
-  export type ReviewUncheckedCreateWithoutDiagramsInput = {
+  export type RepositoryUncheckedCreateWithoutDiagramsInput = {
     id?: string
-    repositoryId: string
     userId: string
-    prNumber: number
-    prTitle: string
-    prUrl: string
-    status?: $Enums.ReviewStatus
-    summary?: string | null
-    riskScore?: number | null
-    comments?: NullableJsonNullValueInput | InputJsonValue
-    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
-    error?: string | null
+    teamId?: string | null
+    githubId: number
+    name: string
+    fullName: string
+    private?: boolean
+    htmlUrl: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
-    githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
-    githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutRepositoryInput
+    webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
+    githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
   }
 
-  export type ReviewCreateOrConnectWithoutDiagramsInput = {
-    where: ReviewWhereUniqueInput
-    create: XOR<ReviewCreateWithoutDiagramsInput, ReviewUncheckedCreateWithoutDiagramsInput>
+  export type RepositoryCreateOrConnectWithoutDiagramsInput = {
+    where: RepositoryWhereUniqueInput
+    create: XOR<RepositoryCreateWithoutDiagramsInput, RepositoryUncheckedCreateWithoutDiagramsInput>
   }
 
-  export type ReviewUpsertWithoutDiagramsInput = {
-    update: XOR<ReviewUpdateWithoutDiagramsInput, ReviewUncheckedUpdateWithoutDiagramsInput>
-    create: XOR<ReviewCreateWithoutDiagramsInput, ReviewUncheckedCreateWithoutDiagramsInput>
-    where?: ReviewWhereInput
+  export type RepositoryUpsertWithoutDiagramsInput = {
+    update: XOR<RepositoryUpdateWithoutDiagramsInput, RepositoryUncheckedUpdateWithoutDiagramsInput>
+    create: XOR<RepositoryCreateWithoutDiagramsInput, RepositoryUncheckedCreateWithoutDiagramsInput>
+    where?: RepositoryWhereInput
   }
 
-  export type ReviewUpdateToOneWithWhereWithoutDiagramsInput = {
-    where?: ReviewWhereInput
-    data: XOR<ReviewUpdateWithoutDiagramsInput, ReviewUncheckedUpdateWithoutDiagramsInput>
+  export type RepositoryUpdateToOneWithWhereWithoutDiagramsInput = {
+    where?: RepositoryWhereInput
+    data: XOR<RepositoryUpdateWithoutDiagramsInput, RepositoryUncheckedUpdateWithoutDiagramsInput>
   }
 
-  export type ReviewUpdateWithoutDiagramsInput = {
+  export type RepositoryUpdateWithoutDiagramsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    prNumber?: IntFieldUpdateOperationsInput | number
-    prTitle?: StringFieldUpdateOperationsInput | string
-    prUrl?: StringFieldUpdateOperationsInput | string
-    status?: EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
-    summary?: NullableStringFieldUpdateOperationsInput | string | null
-    riskScore?: NullableIntFieldUpdateOperationsInput | number | null
-    comments?: NullableJsonNullValueInput | InputJsonValue
-    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
-    error?: NullableStringFieldUpdateOperationsInput | string | null
+    githubId?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    private?: BoolFieldUpdateOperationsInput | boolean
+    htmlUrl?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
-    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
-    threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
-    githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
-    githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
+    user?: UserUpdateOneRequiredWithoutRepositoriesNestedInput
+    team?: TeamUpdateOneWithoutRepositoriesNestedInput
+    reviews?: ReviewUpdateManyWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
   }
 
-  export type ReviewUncheckedUpdateWithoutDiagramsInput = {
+  export type RepositoryUncheckedUpdateWithoutDiagramsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    repositoryId?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    prNumber?: IntFieldUpdateOperationsInput | number
-    prTitle?: StringFieldUpdateOperationsInput | string
-    prUrl?: StringFieldUpdateOperationsInput | string
-    status?: EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
-    summary?: NullableStringFieldUpdateOperationsInput | string | null
-    riskScore?: NullableIntFieldUpdateOperationsInput | number | null
-    comments?: NullableJsonNullValueInput | InputJsonValue
-    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
-    error?: NullableStringFieldUpdateOperationsInput | string | null
+    teamId?: NullableStringFieldUpdateOperationsInput | string | null
+    githubId?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    private?: BoolFieldUpdateOperationsInput | boolean
+    htmlUrl?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
-    githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
-    githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
   }
 
   export type SessionCreateManyUserInput = {
@@ -34477,6 +34477,7 @@ export namespace Prisma {
     scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
     githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
     branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
+    diagrams?: DiagramUpdateManyWithoutRepositoryNestedInput
   }
 
   export type RepositoryUncheckedUpdateWithoutUserInput = {
@@ -34494,6 +34495,7 @@ export namespace Prisma {
     scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
     githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
     branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
+    diagrams?: DiagramUncheckedUpdateManyWithoutRepositoryNestedInput
   }
 
   export type RepositoryUncheckedUpdateManyWithoutUserInput = {
@@ -34523,7 +34525,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
-    diagrams?: DiagramUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
   }
@@ -34543,7 +34544,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
-    diagrams?: DiagramUncheckedUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
   }
@@ -34675,6 +34675,19 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type DiagramCreateManyRepositoryInput = {
+    id?: string
+    type: $Enums.DiagramType
+    status?: $Enums.DiagramStatus
+    definition?: string | null
+    nodes?: NullableJsonNullValueInput | InputJsonValue
+    edges?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    generatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type ReviewUpdateWithoutRepositoryInput = {
     id?: StringFieldUpdateOperationsInput | string
     prNumber?: IntFieldUpdateOperationsInput | number
@@ -34690,7 +34703,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutReviewsNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
-    diagrams?: DiagramUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
   }
@@ -34710,7 +34722,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
-    diagrams?: DiagramUncheckedUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
   }
@@ -34791,24 +34802,50 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DiagramUpdateWithoutRepositoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumDiagramTypeFieldUpdateOperationsInput | $Enums.DiagramType
+    status?: EnumDiagramStatusFieldUpdateOperationsInput | $Enums.DiagramStatus
+    definition?: NullableStringFieldUpdateOperationsInput | string | null
+    nodes?: NullableJsonNullValueInput | InputJsonValue
+    edges?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    generatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DiagramUncheckedUpdateWithoutRepositoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumDiagramTypeFieldUpdateOperationsInput | $Enums.DiagramType
+    status?: EnumDiagramStatusFieldUpdateOperationsInput | $Enums.DiagramStatus
+    definition?: NullableStringFieldUpdateOperationsInput | string | null
+    nodes?: NullableJsonNullValueInput | InputJsonValue
+    edges?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    generatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DiagramUncheckedUpdateManyWithoutRepositoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumDiagramTypeFieldUpdateOperationsInput | $Enums.DiagramType
+    status?: EnumDiagramStatusFieldUpdateOperationsInput | $Enums.DiagramStatus
+    definition?: NullableStringFieldUpdateOperationsInput | string | null
+    nodes?: NullableJsonNullValueInput | InputJsonValue
+    edges?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    generatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ReviewThreadCreateManyReviewInput = {
     id?: string
     file: string
     line: number
     resolved?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type DiagramCreateManyReviewInput = {
-    id?: string
-    type: $Enums.DiagramType
-    status?: $Enums.DiagramStatus
-    definition?: string | null
-    nodes?: NullableJsonNullValueInput | InputJsonValue
-    edges?: NullableJsonNullValueInput | InputJsonValue
-    error?: string | null
-    generatedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -34838,45 +34875,6 @@ export namespace Prisma {
     file?: StringFieldUpdateOperationsInput | string
     line?: IntFieldUpdateOperationsInput | number
     resolved?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type DiagramUpdateWithoutReviewInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    type?: EnumDiagramTypeFieldUpdateOperationsInput | $Enums.DiagramType
-    status?: EnumDiagramStatusFieldUpdateOperationsInput | $Enums.DiagramStatus
-    definition?: NullableStringFieldUpdateOperationsInput | string | null
-    nodes?: NullableJsonNullValueInput | InputJsonValue
-    edges?: NullableJsonNullValueInput | InputJsonValue
-    error?: NullableStringFieldUpdateOperationsInput | string | null
-    generatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type DiagramUncheckedUpdateWithoutReviewInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    type?: EnumDiagramTypeFieldUpdateOperationsInput | $Enums.DiagramType
-    status?: EnumDiagramStatusFieldUpdateOperationsInput | $Enums.DiagramStatus
-    definition?: NullableStringFieldUpdateOperationsInput | string | null
-    nodes?: NullableJsonNullValueInput | InputJsonValue
-    edges?: NullableJsonNullValueInput | InputJsonValue
-    error?: NullableStringFieldUpdateOperationsInput | string | null
-    generatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type DiagramUncheckedUpdateManyWithoutReviewInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    type?: EnumDiagramTypeFieldUpdateOperationsInput | $Enums.DiagramType
-    status?: EnumDiagramStatusFieldUpdateOperationsInput | $Enums.DiagramStatus
-    definition?: NullableStringFieldUpdateOperationsInput | string | null
-    nodes?: NullableJsonNullValueInput | InputJsonValue
-    edges?: NullableJsonNullValueInput | InputJsonValue
-    error?: NullableStringFieldUpdateOperationsInput | string | null
-    generatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34982,6 +34980,7 @@ export namespace Prisma {
     scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
     githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
     branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
+    diagrams?: DiagramUpdateManyWithoutRepositoryNestedInput
   }
 
   export type RepositoryUncheckedUpdateWithoutTeamInput = {
@@ -34999,6 +34998,7 @@ export namespace Prisma {
     scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
     githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
     branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
+    diagrams?: DiagramUncheckedUpdateManyWithoutRepositoryNestedInput
   }
 
   export type RepositoryUncheckedUpdateManyWithoutTeamInput = {

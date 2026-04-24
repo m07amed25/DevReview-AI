@@ -29,14 +29,12 @@ export function getPusherServer(): Pusher | null {
   return pusherServer;
 }
 
-// ─── Channel helpers ───────────────────────────────────────────────
 export function reviewChannel(reviewId: string) {
   return `presence-review-${reviewId}`;
 }
 
-export function privateDiagramChannel(reviewId: string) {
-  return `private-review-${reviewId}`;
+export function privateRepositoryChannel(repositoryId: string) {
+  return `private-repository-${repositoryId}`;
 }
 
-// ─── Event names ───────────────────────────────────────────────────
 export { PUSHER_EVENTS } from "@/lib/constants";

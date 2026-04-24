@@ -2,6 +2,7 @@ import { inngest } from "../client";
 import { db } from "@/server/db";
 import {
   fetchPullRequestFiles,
+  fetchRepositoryFiles,
   getGitHubAccessToken,
 } from "@/server/services/github";
 import { generateMermaidDefinition } from "@/server/services/diagram-generator";
@@ -13,10 +14,10 @@ export type GenerateDiagramEvent = {
   name: "diagram/generation.requested";
   data: {
     diagramId: string;
-    reviewId: string;
+    reviewId?: string; // Optional, only if triggered from a PR review
     repositoryId: string;
     userId: string;
-    prNumber: number;
+    prNumber?: number; // Optional, fallbacks to full repository scan (not fully implemented in fetch yet, but typed as optional)
     type: "ERD" | "CLASS" | "USE_CASE";
   };
 };
@@ -59,7 +60,7 @@ export const generateDiagram = inngest.createFunction(
       event: {
         data: {
           event: {
-            data: { diagramId, reviewId },
+            data: { diagramId, repositoryId },
           },
         },
       },
@@ -75,15 +76,15 @@ export const generateDiagram = inngest.createFunction(
         });
       }
 
-      if (reviewId) {
+      if (repositoryId) {
         const pusher = getPusherServer();
         if (pusher) {
           await pusher.trigger(
-            `private-review-${reviewId}`,
+            `private-repository-${repositoryId}`,
             "diagram.updated",
             {
               diagramId,
-              reviewId,
+              repositoryId,
               status: "FAILED",
             },
           );
@@ -137,9 +138,30 @@ export const generateDiagram = inngest.createFunction(
       return { success: false };
     }
 
-    // ── Step 3: Fetch changed files for the PR ────────────────────────────────
-    const changedFiles = await step.run("fetch-changed-files", async () => {
-      return fetchPullRequestFiles(accessToken, owner, repo, prNumber);
+    // ── Step 3: Fetch files to map ────────────────────────────────────────────
+    const changedFiles = await step.run("fetch-files", async () => {
+      if (prNumber) {
+        const prFiles = await fetchPullRequestFiles(accessToken, owner, repo, prNumber);
+        return prFiles.map(f => ({ filename: f.filename }));
+      }
+      
+      const repoFiles = await fetchRepositoryFiles(accessToken, owner, repo);
+      // Sort to prioritize likely architectural files over random assets
+      // e.g. prisma schemas, package.json, main TS files
+      const scoreFile = (path: string) => {
+        if (path.endsWith("schema.prisma")) return 100;
+        if (path.endsWith("package.json")) return 90;
+        if (path.includes("src/server/db/")) return 80;
+        if (path.includes("src/server/api/")) return 70;
+        if (path.endsWith(".ts") || path.endsWith(".tsx")) return 50;
+        if (path.endsWith(".js") || path.endsWith(".jsx")) return 40;
+        return 0;
+      };
+      
+      return repoFiles
+        .map(f => ({ filename: f.path, score: scoreFile(f.path) }))
+        .sort((a, b) => b.score - a.score)
+        .map(f => ({ filename: f.filename }));
     });
 
     // ── Step 4: Fetch file contents ───────────────────────────────────────────
@@ -191,12 +213,21 @@ export const generateDiagram = inngest.createFunction(
     await step.run("notify-pusher", async () => {
       const pusher = getPusherServer();
       if (!pusher) return;
-      await pusher.trigger(`private-review-${reviewId}`, "diagram.updated", {
+      await pusher.trigger(`private-repository-${repositoryId}`, "diagram.updated", {
         diagramId,
-        reviewId,
+        repositoryId,
         type,
         status: "COMPLETED",
       });
+      if (reviewId) {
+        // Also notify the review channel if requested from a PR
+        await pusher.trigger(`private-review-${reviewId}`, "diagram.updated", {
+          diagramId,
+          repositoryId,
+          type,
+          status: "COMPLETED",
+        });
+      }
     });
 
     return { success: true, diagramId };
