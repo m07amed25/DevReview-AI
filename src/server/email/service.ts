@@ -1,4 +1,3 @@
-import nodemailer from "nodemailer";
 import { getEmailTransporter, getFromAddress, getAppUrl } from "./transporter";
 import { renderTeamMemberAddedEmail } from "./templates/team-member-added";
 import { renderReviewCompletedEmail } from "./templates/review-completed";
@@ -107,9 +106,6 @@ export async function sendReviewCompletedEmail(
   }
 }
 
-/**
- * Send a test email to verify SMTP configuration
- */
 export async function sendTestEmail(to: string): Promise<EmailSendResult> {
   const appUrl = getAppUrl();
 

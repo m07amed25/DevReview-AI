@@ -247,7 +247,7 @@ export const reviewRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.reviewFeedback.upsert({
+      const feedback = await ctx.db.reviewFeedback.upsert({
         where: {
           reviewId_userId: {
             reviewId: input.reviewId,
@@ -265,6 +265,8 @@ export const reviewRouter = createTRPCRouter({
           comment: input.comment,
         },
       });
+
+      return feedback;
     }),
 
   getFeedbackStats: protectedProcedure
