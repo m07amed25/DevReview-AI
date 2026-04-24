@@ -73,10 +73,16 @@ const chartConfig = {
 };
 
 export default function AdminOverviewPage() {
-  const { data: stats, isLoading: statsLoading } =
-    trpc.admin.getStats.useQuery();
+  const { data: stats, isLoading: statsLoading } = trpc.admin.getStats.useQuery(
+    undefined,
+    {
+      staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    },
+  );
   const { data: growth, isLoading: growthLoading } =
-    trpc.admin.getGrowthData.useQuery();
+    trpc.admin.getGrowthData.useQuery(undefined, {
+      staleTime: 5 * 60 * 1000,
+    });
 
   return (
     <div className="space-y-8">
