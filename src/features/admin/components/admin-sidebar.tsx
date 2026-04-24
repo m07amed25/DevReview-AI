@@ -12,6 +12,7 @@ import {
   Menu,
   X,
   ArrowLeft,
+  MessageSquareText,
 } from "lucide-react";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -26,6 +27,7 @@ const NAV_ITEMS = [
   { href: "/admin/users", label: "Users", icon: Users },
   { href: "/admin/reviews", label: "Reviews", icon: GitPullRequest },
   { href: "/admin/teams", label: "Teams", icon: Users2 },
+  { href: "/admin/feedback", label: "Feedback", icon: MessageSquareText },
 ];
 
 interface AdminSidebarProps {

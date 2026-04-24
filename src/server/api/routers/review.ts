@@ -237,4 +237,80 @@ export const reviewRouter = createTRPCRouter({
 
       return { success: true };
     }),
+
+  submitFeedback: protectedProcedure
+    .input(
+      z.object({
+        reviewId: z.string(),
+        rating: z.union([z.literal(1), z.literal(-1)]),
+        comment: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const feedback = await ctx.db.reviewFeedback.upsert({
+        where: {
+          reviewId_userId: {
+            reviewId: input.reviewId,
+            userId: ctx.user.id,
+          },
+        },
+        update: {
+          rating: input.rating,
+          comment: input.comment,
+        },
+        create: {
+          reviewId: input.reviewId,
+          userId: ctx.user.id,
+          rating: input.rating,
+          comment: input.comment,
+        },
+      });
+
+      return feedback;
+    }),
+
+  getFeedbackStats: protectedProcedure
+    .input(z.object({ repositoryId: z.string().optional() }))
+    .query(async ({ ctx, input }) => {
+      const teamRepoIds = await ctx.db.repository.findMany({
+        where: { team: { members: { some: { userId: ctx.user.id } } } },
+        select: { id: true },
+      });
+      const repoIds = teamRepoIds.map((r: { id: string }) => r.id);
+
+      const feedbacks = await ctx.db.reviewFeedback.findMany({
+        where: {
+          review: {
+            OR: [{ userId: ctx.user.id }, { repositoryId: { in: repoIds } }],
+            ...(input.repositoryId && { repositoryId: input.repositoryId }),
+          },
+        },
+        orderBy: {
+          createdAt: "asc",
+        },
+      });
+
+      const trend = feedbacks.reduce(
+        (acc, fb) => {
+          const date = fb.createdAt.toISOString().split("T")[0];
+          const current = acc[date] ?? { date, up: 0, down: 0 };
+
+          if (fb.rating === 1) {
+            current.up += 1;
+          } else if (fb.rating === -1) {
+            current.down += 1;
+          }
+
+          acc[date] = current;
+          return acc;
+        },
+        {} as Record<string, { date: string; up: number; down: number }>,
+      );
+
+      return Object.values(trend) as {
+        date: string;
+        up: number;
+        down: number;
+      }[];
+    }),
 });

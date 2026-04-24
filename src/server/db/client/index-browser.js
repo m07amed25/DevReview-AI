@@ -203,6 +203,15 @@ exports.Prisma.ReviewScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ReviewFeedbackScalarFieldEnum = {
+  id: 'id',
+  reviewId: 'reviewId',
+  userId: 'userId',
+  rating: 'rating',
+  comment: 'comment',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.ReviewThreadScalarFieldEnum = {
   id: 'id',
   reviewId: 'reviewId',
@@ -449,6 +458,7 @@ exports.Prisma.ModelName = {
   Verification: 'Verification',
   Repository: 'Repository',
   Review: 'Review',
+  ReviewFeedback: 'ReviewFeedback',
   ReviewThread: 'ReviewThread',
   ReviewThreadComment: 'ReviewThreadComment',
   Team: 'Team',
