@@ -26,7 +26,7 @@ export default async function AdminLayout({
   });
 
   if (dbUser?.role !== "ADMIN") {
-    redirect("/");
+    redirect("/sign-in");
   }
 
   return (
