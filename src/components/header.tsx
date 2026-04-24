@@ -9,6 +9,7 @@ import {
   Users,
   BarChart3,
   Workflow,
+  Shield,
 } from "lucide-react";
 import { UserMenu } from "./user-menu";
 import { Notifications } from "./notifications";
@@ -18,6 +19,7 @@ interface User {
   name: string;
   email: string;
   image?: string | null | undefined;
+  role?: string;
 }
 
 interface HeaderProps {
@@ -50,12 +52,21 @@ const navItems = [
 export function Header({ user }: HeaderProps) {
   const pathname = usePathname();
 
+  const items = [...navItems];
+  if (user.role === "ADMIN") {
+    items.push({
+      href: "/admin",
+      label: "Admin",
+      icon: Shield,
+    });
+  }
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/80 backdrop-blur-xl supports-backdrop-filter:bg-background/60">
       <div className="container mx-auto flex h-14 items-center justify-between px-4">
         <div className="flex items-center gap-8">
           <nav className="hidden md:flex items-center gap-1">
-            {navItems.map((item) => {
+            {items.map((item) => {
               const isActive =
                 pathname === item.href || pathname.startsWith(`${item.href}/`);
               const Icon = item.icon;

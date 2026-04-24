@@ -158,3 +158,25 @@ export const protectedProcedure = t.procedure.use(
     });
   },
 );
+
+export const adminProcedure = t.procedure.use(async ({ ctx, next }) => {
+  if (!ctx.session?.user) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  const rows = await ctx.db.$queryRaw<{ role: string }[]>`
+    SELECT role FROM "user" WHERE id = ${ctx.session.user.id} LIMIT 1
+  `;
+
+  if (rows[0]?.role !== "ADMIN") {
+    throw new TRPCError({ code: "FORBIDDEN" });
+  }
+
+  return next({
+    ctx: {
+      ...ctx,
+      session: ctx.session,
+      user: ctx.session.user,
+    },
+  });
+});
