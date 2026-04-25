@@ -201,6 +201,7 @@ exports.Prisma.ReviewScalarFieldEnum = {
   comments: 'comments',
   qualityMetrics: 'qualityMetrics',
   error: 'error',
+  parentReviewId: 'parentReviewId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

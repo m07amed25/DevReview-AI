@@ -26,12 +26,16 @@ import {
   ScanSearch,
   MessageCircle,
   Network,
+  ArrowLeftRight,
+  History,
+  RefreshCw,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DiffViewer } from "@/features/diff-viewer";
 import { ReviewResult } from "@/features/review";
 import { CollaborativeReview } from "@/features/collaborative-review";
 import { DiagramPanel } from "@/features/review/components/diagram-panel";
+import { ReviewDiffPanel } from "@/features/review/components/review-diff-panel";
 import { useSession } from "@/lib/auth-client";
 import { usePrivateChannel } from "@/lib/pusher/client";
 import {
@@ -47,8 +51,12 @@ export default function PullRequestPage({ params }: PageProps) {
   const { id, prNumber } = use(params);
   const prNum = parseInt(prNumber, 10);
   const [activeTab, setActiveTab] = useState<
-    "review" | "files" | "discussion" | "diagrams"
+    "review" | "files" | "discussion" | "diagrams" | "compare"
   >("files");
+  const [compareCurrentId, setCompareCurrentId] = useState<string | null>(null);
+  const [comparePreviousId, setComparePreviousId] = useState<string | null>(
+    null,
+  );
   const { data: session } = useSession();
 
   const pr = trpc.pullRequest.get.useQuery(
@@ -105,14 +113,33 @@ export default function PullRequestPage({ params }: PageProps) {
     },
   );
 
+  const reviewHistory = trpc.review.listHistoryForPR.useQuery(
+    { repositoryId: id, prNumber: prNum },
+    { enabled: !!id && !isNaN(prNum) },
+  );
+
+  const completedReviews = (reviewHistory.data ?? []).filter(
+    (r) => r.status === "COMPLETED",
+  );
+
   const triggerReview = trpc.review.trigger.useMutation({
     onSuccess: () => {
       pollStartRef.current = Date.now();
       setPollTimedOut(false);
       latestReview.refetch();
+      reviewHistory.refetch();
       pr.refetch();
     },
   });
+
+  const triggerReReview = () => {
+    const parentId = latestReview.data?.id;
+    triggerReview.mutate({
+      repositoryId: id,
+      prNumber: prNum,
+      parentReviewId: parentId ?? undefined,
+    });
+  };
 
   const isReviewing =
     !pollTimedOut &&
@@ -372,21 +399,21 @@ export default function PullRequestPage({ params }: PageProps) {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() =>
-                  triggerReview.mutate({ repositoryId: id, prNumber: prNum })
-                }
+                onClick={triggerReReview}
                 disabled={triggerReview.isPending}
                 className="gap-1.5 h-auto py-1.5 px-3 text-xs"
               >
                 {triggerReview.isPending ? (
                   <Loader2 className="size-3.5 animate-spin" />
+                ) : latestReview.data ? (
+                  <RefreshCw className="size-3.5" />
                 ) : (
                   <Wand2 className="size-3.5" />
                 )}
                 {pollTimedOut
                   ? "Retry Review"
                   : latestReview.data
-                    ? "Re-run Review"
+                    ? "Re-review"
                     : "Run AI Review"}
               </Button>
             )}
@@ -422,6 +449,21 @@ export default function PullRequestPage({ params }: PageProps) {
             icon={MessageCircle}
             label="Discussion"
           />
+          {completedReviews.length >= 2 && (
+            <TabButton
+              active={activeTab === "compare"}
+              onClick={() => {
+                setActiveTab("compare");
+                // Auto-select the two most recent completed reviews
+                if (!compareCurrentId && completedReviews.length >= 2) {
+                  setCompareCurrentId(completedReviews[0].id);
+                  setComparePreviousId(completedReviews[1].id);
+                }
+              }}
+              icon={ArrowLeftRight}
+              label="Compare"
+            />
+          )}
           <TabButton
             active={activeTab === "diagrams"}
             onClick={() => setActiveTab("diagrams")}
@@ -465,9 +507,7 @@ export default function PullRequestPage({ params }: PageProps) {
           {latestReview.data ? (
             <ReviewResult
               review={latestReview.data}
-              onRetry={() =>
-                triggerReview.mutate({ repositoryId: id, prNumber: prNum })
-              }
+              onRetry={triggerReReview}
               isRetrying={triggerReview.isPending}
             />
           ) : (
@@ -490,9 +530,7 @@ export default function PullRequestPage({ params }: PageProps) {
                 </p>
                 <Button
                   className="mt-6 gap-2 transition-transform hover:scale-105 active:scale-95"
-                  onClick={() =>
-                    triggerReview.mutate({ repositoryId: id, prNumber: prNum })
-                  }
+                  onClick={triggerReReview}
                   disabled={triggerReview.isPending || isReviewing}
                 >
                   {triggerReview.isPending || isReviewing ? (
@@ -506,6 +544,93 @@ export default function PullRequestPage({ params }: PageProps) {
                 </Button>
                 <p className="mt-3 text-xs text-muted-foreground/60">
                   Typically completes in under a minute
+                </p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      )}
+      {activeTab === "compare" && (
+        <div className="space-y-4">
+          {/* Review History Timeline + Selector */}
+          <Card>
+            <CardContent className="p-4 sm:p-5">
+              <div className="flex items-center gap-2.5 mb-4">
+                <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <History className="size-4 text-primary" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold tracking-tight">
+                    Review History
+                  </h3>
+                  <p className="text-xs text-muted-foreground">
+                    Select two reviews to compare
+                  </p>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* Current (newer) */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                    Current (newer)
+                  </label>
+                  <select
+                    value={compareCurrentId ?? ""}
+                    onChange={(e) =>
+                      setCompareCurrentId(e.target.value || null)
+                    }
+                    className="w-full h-9 rounded-md border border-border bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                  >
+                    <option value="">Select review…</option>
+                    {completedReviews.map((r) => (
+                      <option key={r.id} value={r.id}>
+                        {new Date(r.createdAt).toLocaleString()} — Risk:{" "}
+                        {r.riskScore ?? "N/A"}
+                        {r.parentReviewId ? " (re-review)" : ""}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {/* Previous (older) */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                    Previous (older)
+                  </label>
+                  <select
+                    value={comparePreviousId ?? ""}
+                    onChange={(e) =>
+                      setComparePreviousId(e.target.value || null)
+                    }
+                    className="w-full h-9 rounded-md border border-border bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                  >
+                    <option value="">Select review…</option>
+                    {completedReviews
+                      .filter((r) => r.id !== compareCurrentId)
+                      .map((r) => (
+                        <option key={r.id} value={r.id}>
+                          {new Date(r.createdAt).toLocaleString()} — Risk:{" "}
+                          {r.riskScore ?? "N/A"}
+                          {r.parentReviewId ? " (re-review)" : ""}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Diff Panel */}
+          {compareCurrentId && comparePreviousId ? (
+            <ReviewDiffPanel
+              reviewId={compareCurrentId}
+              compareReviewId={comparePreviousId}
+            />
+          ) : (
+            <Card className="border-dashed">
+              <CardContent className="py-12 text-center">
+                <ArrowLeftRight className="size-8 text-muted-foreground/30 mx-auto mb-3" />
+                <p className="text-sm font-medium text-muted-foreground">
+                  Select two reviews above to see what changed
                 </p>
               </CardContent>
             </Card>
