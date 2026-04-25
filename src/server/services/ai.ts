@@ -20,10 +20,18 @@ export const ReviewCommentSchema = z.object({
   file: z.string(),
   line: z.number(),
   severity: z.enum(["critical", "high", "medium", "low"]),
-  category: z.enum(["bug", "security", "performance", "style", "suggestion"]),
+  category: z.enum([
+    "bug",
+    "security",
+    "performance",
+    "style",
+    "suggestion",
+    "custom-rule",
+  ]),
   message: z.string(),
   suggestion: z.string().optional(),
   confidence: z.number().min(0).max(100).optional(),
+  ruleName: z.string().optional(), // populated when a custom rule triggered the comment
 });
 
 export const QualityMetricsSchema = z.object({
@@ -77,10 +85,11 @@ Respond with valid JSON matching this schema:
       "file": "path/to/file.ts",
       "line": 42,
       "severity": "critical" | "high" | "medium" | "low",
-      "category": "bug" | "security" | "performance" | "style" | "suggestion",
+      "category": "bug" | "security" | "performance" | "style" | "suggestion" | "custom-rule",
       "message": "What the issue is",
       "suggestion": "How to fix it (optional)",
-      "confidence": 0-100
+      "confidence": 0-100,
+      "ruleName": "Exact rule name when category is custom-rule (optional)"
     }
   ]
 }
@@ -105,11 +114,19 @@ Quality Metrics guide (higher is better):
 
 Be concise but specific. Reference exact line numbers from the diff.`;
 
+export interface CustomRule {
+  name: string;
+  description: string;
+  pattern?: string | null;
+  severity: "CRITICAL" | "HIGH" | "MEDIUM" | "LOW";
+}
+
 export interface ReviewPreferences {
   reviewDepth?: string;
   defaultLanguage?: string;
   includeSecurityChecks?: boolean;
   includePerfSuggestions?: boolean;
+  customRules?: CustomRule[];
 }
 
 function buildSystemPrompt(preferences?: ReviewPreferences): string {
@@ -149,6 +166,22 @@ function buildSystemPrompt(preferences?: ReviewPreferences): string {
     } else {
       parts.push(
         "\nInclude performance analysis: identify potential bottlenecks, unnecessary computations, memory leaks, and suggest optimizations.",
+      );
+    }
+
+    // Inject custom team/repository rules
+    if (preferences.customRules && preferences.customRules.length > 0) {
+      const ruleLines = preferences.customRules.map((rule, i) => {
+        const severityLabel =
+          rule.severity.charAt(0) + rule.severity.slice(1).toLowerCase();
+        const patternNote = rule.pattern
+          ? ` [Regex trigger: /${rule.pattern}/]`
+          : "";
+        return `  ${i + 1}. [${severityLabel}] ${rule.name}${patternNote}: ${rule.description}`;
+      });
+
+      parts.push(
+        `\n\nCUSTOM TEAM RULES — you MUST check the code against each rule below and report violations as a separate comment with category "custom-rule" and the exact rule name in the "ruleName" field:\n${ruleLines.join("\n")}`,
       );
     }
   }

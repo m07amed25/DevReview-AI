@@ -40,6 +40,7 @@ model User {
   teamMembers     TeamMember[]
   notifications   Notification[]
   reviewFeedbacks ReviewFeedback[]
+  reviewRules     ReviewRule[]
 
   // Code review preferences
   reviewDepth            String  @default("standard")
@@ -120,6 +121,7 @@ model Repository {
   githubComments       GitHubComment[]
   branchProtectionRecs BranchProtectionRecommendation[]
   diagrams             Diagram[]
+  reviewRules          ReviewRule[]
 
   @@unique([userId, githubId])
   @@index([teamId])
@@ -217,6 +219,7 @@ model Team {
   members      TeamMember[]
   repositories Repository[]
   actions      TeamAction[]
+  reviewRules  ReviewRule[]
 }
 
 model TeamMember {
@@ -448,4 +451,35 @@ model Diagram {
 
   @@unique([repositoryId, type])
   @@index([repositoryId])
+}
+
+enum RuleSeverity {
+  CRITICAL
+  HIGH
+  MEDIUM
+  LOW
+}
+
+model ReviewRule {
+  id           String       @id @default(cuid())
+  name         String
+  description  String       @db.Text
+  pattern      String?
+  severity     RuleSeverity @default(MEDIUM)
+  repositoryId String?
+  teamId       String?
+  enabled      Boolean      @default(true)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  userId String
+
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  repository Repository? @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+  team       Team?       @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([repositoryId])
+  @@index([teamId])
+  @@map("review_rule")
 }

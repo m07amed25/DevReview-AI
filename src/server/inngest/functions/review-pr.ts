@@ -1,7 +1,7 @@
 import { inngest } from "../client";
 import { db } from "@/server/db";
 import { reviewCode } from "@/server/services/ai";
-import type { ReviewPreferences } from "@/server/services/ai";
+import type { ReviewPreferences, CustomRule } from "@/server/services/ai";
 import {
   fetchPullRequest,
   fetchPullRequestFiles,
@@ -117,7 +117,45 @@ export const reviewPR = inngest.createFunction(
     const commitSha = pr.head.sha;
 
     try {
+      // Fetch active custom rules for this repository
+      const activeRules = await step.run("fetch-active-rules", async () => {
+        const repo = await db.repository.findUnique({
+          where: { id: repositoryId },
+          select: { teamId: true, userId: true },
+        });
+
+        const teamFilter = repo?.teamId ? [{ teamId: repo.teamId }] : [];
+
+        const allRules = await db.reviewRule.findMany({
+          where: {
+            enabled: true,
+            OR: [
+              { repositoryId },
+              ...teamFilter,
+              { userId: repo?.userId ?? userId, repositoryId: null, teamId: null },
+            ],
+          },
+        });
+
+        // Repository rules override team/global rules with the same name
+        const ruleMap = new Map<string, typeof allRules[number]>();
+        const sorted = [...allRules].sort((a, b) => {
+          const priority = (r: typeof allRules[number]) =>
+            r.repositoryId ? 2 : r.teamId ? 1 : 0;
+          return priority(a) - priority(b);
+        });
+        for (const rule of sorted) {
+          ruleMap.set(rule.name.toLowerCase(), rule);
+        }
+
+        return Array.from(ruleMap.values()) as CustomRule[];
+      });
+
       const reviewResult = await step.run("generate-review", async () => {
+        const mergedPreferences: ReviewPreferences = {
+          ...preferences,
+          customRules: activeRules.length > 0 ? activeRules : undefined,
+        };
         return reviewCode(
           pr.title,
           files.map((f) => ({
@@ -127,7 +165,7 @@ export const reviewPR = inngest.createFunction(
             deletions: f.deletions,
             patch: f.patch,
           })),
-          preferences,
+          mergedPreferences,
         );
       });
 

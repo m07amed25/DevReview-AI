@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useCallback } from "react";
 import dynamic from "next/dynamic";
@@ -39,6 +39,7 @@ import {
 } from "lucide-react";
 import { PreferencesCardContent } from "./preferences-card";
 import { SessionsCardContent, SessionsCardHeader } from "./sessions-card";
+import { RulesManagerCard } from "@/features/settings/components/rules-manager-card";
 
 const ThemeSelector = dynamic(
   () => import("@/features/settings/components/theme-selector"),
@@ -222,6 +223,8 @@ export default function SettingsPage() {
             />
           </CardContent>
         </Card>
+
+        <RulesManagerCard />
 
         <Card>
           <CardHeader>
