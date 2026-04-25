@@ -63,12 +63,18 @@ interface FileChange {
 const BASE_SYSTEM_PROMPT = `You are an expert code reviewer. Analyze the provided pull request diff and provide a structured review with severity scoring and quality metrics.
 
 Your review should:
-1. Identify bugs and code style issues
+1. Identify bugs, potential issues, and code style problems
 2. Provide a brief summary of the changes
 3. Assign a risk score (0-100) based on the complexity and potential issues
 4. Give specific, actionable feedback with line numbers
 5. Rate your confidence (0-100) for each issue found
 6. Provide quality metrics for the code changes
+
+IMPORTANT: You MUST be thorough and critical. Even well-written code has room for improvement.
+- Always find AT LEAST 3-5 comments, including style suggestions, potential edge cases, and improvement opportunities.
+- Do NOT return an empty comments array unless the diff is truly empty.
+- Look for: missing error handling, edge cases, type safety gaps, naming improvements, code duplication, missing validation, accessibility issues, and potential race conditions.
+- If the code is genuinely clean, still provide "low" severity "suggestion" category feedback about readability, documentation, or alternative approaches.
 
 Respond with valid JSON matching this schema:
 {
@@ -112,7 +118,7 @@ Quality Metrics guide (higher is better):
 - readability: How readable is the code? 100 = crystal clear
 - testability: How testable is this code? 100 = easily testable
 
-Be concise but specific. Reference exact line numbers from the diff.`;
+Be concise but specific. Reference exact line numbers from the diff. Always provide actionable comments.`;
 
 export interface CustomRule {
   name: string;
@@ -228,8 +234,8 @@ async function callGroq(
       { role: "system", content: systemPrompt },
       { role: "user", content: userPrompt },
     ],
-    max_tokens: 1500,
-    temperature: 0.3,
+    max_tokens: 4096,
+    temperature: 0.2,
     response_format: { type: "json_object" },
   });
   return response.choices[0]?.message?.content ?? undefined;

@@ -379,7 +379,7 @@ model ScheduledScanRun {
 model GitHubComment {
   id             String @id @default(cuid())
   reviewId       String @unique
-  githubReviewId Int
+  githubReviewId BigInt
   prNumber       Int
   repositoryId   String
   commitSha      String

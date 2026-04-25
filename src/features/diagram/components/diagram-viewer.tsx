@@ -67,12 +67,13 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
     if (!naturalW || !naturalH) return;
 
     const wrapperW = wrapper.clientWidth;
-    const maxH = window.innerHeight * 0.72;
-    const newScale = +Math.min(wrapperW / naturalW, maxH / naturalH, 1).toFixed(
+    const maxH = Math.max(window.innerHeight * 0.72, 600);
+    const newScale = +Math.min(wrapperW / naturalW, maxH / naturalH, 2).toFixed(
       3,
     );
     const tx = Math.max(0, (wrapperW - naturalW * newScale) / 2);
-    const newTranslate = { x: tx, y: 0 };
+    const ty = Math.max(0, (maxH - naturalH * newScale) / 2);
+    const newTranslate = { x: tx, y: ty };
 
     setScale(newScale);
     setTranslate(newTranslate);
@@ -157,6 +158,13 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
           theme: "dark",
           securityLevel: "loose",
           fontFamily: "inherit",
+          themeVariables: {
+            fontSize: "16px",
+          },
+          flowchart: {
+            nodeSpacing: 70,
+            rankSpacing: 70,
+          },
         });
 
         const { svg } = await mermaid.render(containerId, definition);
@@ -291,7 +299,7 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
         ref={wrapperRef}
         className="relative w-full overflow-hidden rounded-md"
         style={{
-          minHeight: 200,
+          minHeight: 600,
           cursor: isPanning.current ? "grabbing" : "grab",
         }}
         onMouseDown={handleMouseDown}
