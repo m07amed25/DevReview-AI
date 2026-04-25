@@ -9,6 +9,7 @@ import {
   ShieldCheck,
   ShieldAlert,
   ShieldX,
+  BookMarked,
 } from "lucide-react";
 
 export function timeAgo(date: Date): string {
@@ -153,6 +154,8 @@ export function getCategoryIcon(category?: string) {
       return Paintbrush;
     case "suggestion":
       return Lightbulb;
+    case "custom-rule":
+      return BookMarked;
     default:
       return CircleDot;
   }

@@ -43,10 +43,9 @@ export default function RepositoryDetailPage({ params }: PageProps) {
     select: (repos) => repos.find((r) => r.id === id),
   });
 
-  const pullRequests = trpc.pullRequest.list.useQuery(
-    { repositoryId: id, state: prState },
-    { enabled: !!id },
-  );
+  // Single query fetches all PRs — we filter client-side for both
+  // the visible list and the tab counts. This avoids two concurrent
+  // GitHub API calls and the double re-render they cause.
   const allPullRequests = trpc.pullRequest.list.useQuery(
     { repositoryId: id, state: "all" },
     { enabled: !!id },
@@ -57,7 +56,7 @@ export default function RepositoryDetailPage({ params }: PageProps) {
     { repositoryId: id },
     { enabled: !!id },
   );
-  
+
   const requestDiagram = trpc.diagram.requestDiagram.useMutation({
     onSuccess: () => void diagrams.refetch(),
   });
@@ -71,17 +70,20 @@ export default function RepositoryDetailPage({ params }: PageProps) {
   );
 
   const filteredPRs = useMemo(() => {
-    if (!pullRequests.data) return [];
-    if (!searchQuery.trim()) return pullRequests.data;
+    const source = allPullRequests.data ?? [];
+    // Apply the open / closed / all tab filter
+    const byState =
+      prState === "all" ? source : source.filter((pr) => pr.state === prState);
+    if (!searchQuery.trim()) return byState;
     const q = searchQuery.toLowerCase();
-    return pullRequests.data.filter(
+    return byState.filter(
       (pr) =>
         pr.title.toLowerCase().includes(q) ||
         pr.author.login.toLowerCase().includes(q) ||
         pr.headRef.toLowerCase().includes(q) ||
         pr.baseRef.toLowerCase().includes(q),
     );
-  }, [pullRequests.data, searchQuery]);
+  }, [allPullRequests.data, prState, searchQuery]);
 
   const prCounts = {
     open: allPullRequests.data?.filter((pr) => pr.state === "open").length ?? 0,
@@ -199,11 +201,14 @@ export default function RepositoryDetailPage({ params }: PageProps) {
         <Button
           variant="ghost"
           size="icon-sm"
-          onClick={() => pullRequests.refetch()}
-          disabled={pullRequests.isFetching}
+          onClick={() => allPullRequests.refetch()}
+          disabled={allPullRequests.isFetching}
         >
           <RefreshCw
-            className={cn("size-4", pullRequests.isFetching && "animate-spin")}
+            className={cn(
+              "size-4",
+              allPullRequests.isFetching && "animate-spin",
+            )}
           />
         </Button>
       </div>
@@ -357,11 +362,11 @@ export default function RepositoryDetailPage({ params }: PageProps) {
 
       {/* PR List */}
       <div className="space-y-3">
-        {pullRequests.isLoading ? (
+        {allPullRequests.isLoading ? (
           [...Array(3)].map((_, i) => (
             <Skeleton key={i} className="h-32 w-full rounded-xl" />
           ))
-        ) : pullRequests.error ? (
+        ) : allPullRequests.error ? (
           <Card className="border-destructive/50">
             <CardContent className="py-12 text-center">
               <div className="mx-auto size-12 rounded-full bg-destructive/10 flex items-center justify-center">
@@ -371,12 +376,12 @@ export default function RepositoryDetailPage({ params }: PageProps) {
                 Failed to load pull requests.
               </p>
               <p className="text-sm text-muted-foreground mt-1">
-                {pullRequests.error.message}
+                {allPullRequests.error?.message}
               </p>
               <Button
                 variant="outline"
                 className="mt-4"
-                onClick={() => pullRequests.refetch()}
+                onClick={() => allPullRequests.refetch()}
               >
                 <RefreshCw className="size-4 mr-2" />
                 Try again
@@ -442,7 +447,6 @@ export default function RepositoryDetailPage({ params }: PageProps) {
         </h2>
         <CodeTimeline repositoryId={id} />
       </div>
-
     </div>
   );
 }

@@ -349,6 +349,20 @@ exports.Prisma.DiagramScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ReviewRuleScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  pattern: 'pattern',
+  severity: 'severity',
+  repositoryId: 'repositoryId',
+  teamId: 'teamId',
+  enabled: 'enabled',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  userId: 'userId'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -453,6 +467,13 @@ exports.DiagramStatus = exports.$Enums.DiagramStatus = {
   FAILED: 'FAILED'
 };
 
+exports.RuleSeverity = exports.$Enums.RuleSeverity = {
+  CRITICAL: 'CRITICAL',
+  HIGH: 'HIGH',
+  MEDIUM: 'MEDIUM',
+  LOW: 'LOW'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Session: 'Session',
@@ -473,7 +494,8 @@ exports.Prisma.ModelName = {
   GitHubComment: 'GitHubComment',
   GitHubStatusCheck: 'GitHubStatusCheck',
   BranchProtectionRecommendation: 'BranchProtectionRecommendation',
-  Diagram: 'Diagram'
+  Diagram: 'Diagram',
+  ReviewRule: 'ReviewRule'
 };
 
 /**

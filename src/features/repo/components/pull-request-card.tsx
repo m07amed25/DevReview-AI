@@ -27,6 +27,7 @@ import {
   AlertTriangle,
   ChevronDown,
   ChevronRight,
+  BookMarked,
 } from "lucide-react";
 import { cn, formatDate } from "@/lib/utils";
 
@@ -109,6 +110,12 @@ function getCategoryTagConfig(category: string) {
         icon: Zap,
         color: "text-blue-500",
         bg: "bg-blue-500/10 border-blue-500/20",
+      };
+    case "custom-rule":
+      return {
+        icon: BookMarked,
+        color: "text-violet-500",
+        bg: "bg-violet-500/10 border-violet-500/20",
       };
     default:
       return {
