@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import {
   ArrowRight,
@@ -8,9 +10,11 @@ import {
   FileCode,
   Check,
   Command,
+  Github,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useSession } from "@/lib/auth-client";
 
 interface HeroSectionProps {
   badgeRef: React.RefObject<HTMLDivElement | null>;
@@ -29,6 +33,8 @@ export function HeroSection({
   trustRef,
   codeRef,
 }: HeroSectionProps) {
+  const { data: session } = useSession();
+
   return (
     <section
       className="relative overflow-hidden pt-24 sm:pt-32 lg:pt-40"
@@ -78,32 +84,47 @@ export function HeroSection({
           comment, and secure your pull requests in seconds before you merge.
         </p>
 
-        {/* CTA Buttons */}
         <div
           ref={ctaRef}
           className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
         >
-          <Button
-            size="lg"
-            className="h-14 px-8 text-base w-full sm:w-auto bg-zinc-100 text-zinc-900 hover:bg-white hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 rounded-full font-semibold shadow-[0_0_40px_rgba(255,255,255,0.1)]"
-            asChild
-          >
-            <Link href="/sign-up">
-              Start Reviewing Free
-              <ArrowRight className="h-4 w-4 ml-2" aria-hidden="true" />
-            </Link>
-          </Button>
-          <Button
-            size="lg"
-            variant="outline"
-            className="h-14 px-8 text-base w-full sm:w-auto rounded-full border-white/10 bg-zinc-900/50 backdrop-blur-md hover:bg-zinc-800 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-zinc-300"
-            asChild
-          >
-            <Link href="/sign-in">
-              <Command className="h-4 w-4 mr-2 text-zinc-500" />
-              Sign In
-            </Link>
-          </Button>
+          {session ? (
+            <Button
+              size="lg"
+              className="h-14 px-10 text-base w-full sm:w-auto bg-white text-zinc-900 hover:bg-zinc-200 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 rounded-full font-bold shadow-[0_0_40px_rgba(255,255,255,0.1)] group"
+              asChild
+            >
+              <Link href="/repo">
+                <Github className="h-5 w-5 mr-2 transition-transform group-hover:scale-110" />
+                Go to Repositories
+                <ArrowRight className="h-4 w-4 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+              </Link>
+            </Button>
+          ) : (
+            <>
+              <Button
+                size="lg"
+                className="h-14 px-8 text-base w-full sm:w-auto bg-zinc-100 text-zinc-900 hover:bg-white hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 rounded-full font-semibold shadow-[0_0_40px_rgba(255,255,255,0.1)]"
+                asChild
+              >
+                <Link href="/sign-up">
+                  Start Reviewing Free
+                  <ArrowRight className="h-4 w-4 ml-2" aria-hidden="true" />
+                </Link>
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="h-14 px-8 text-base w-full sm:w-auto rounded-full border-white/10 bg-zinc-900/50 backdrop-blur-md hover:bg-zinc-800 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-zinc-300"
+                asChild
+              >
+                <Link href="/sign-in">
+                  <Command className="h-4 w-4 mr-2 text-zinc-500" />
+                  Sign In
+                </Link>
+              </Button>
+            </>
+          )}
         </div>
 
         {/* Trust indicators */}

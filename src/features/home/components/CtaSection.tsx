@@ -1,8 +1,13 @@
+"use client";
+
 import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles, Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useSession } from "@/lib/auth-client";
 
 export function CtaSection() {
+  const { data: session } = useSession();
+
   return (
     <section
       className="cta-section relative overflow-hidden bg-zinc-950 border-t border-white/5"
@@ -38,24 +43,40 @@ export function CtaSection() {
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Button
-            size="lg"
-            className="h-14 px-8 text-base w-full sm:w-auto bg-white text-zinc-900 hover:bg-zinc-200 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 rounded-full font-semibold shadow-[0_0_30px_rgba(255,255,255,0.15)]"
-            asChild
-          >
-            <Link href="/sign-up">
-              Get Started for Free
-              <ArrowRight className="h-4 w-4 ml-2" aria-hidden="true" />
-            </Link>
-          </Button>
-          <Button
-            size="lg"
-            variant="outline"
-            className="h-14 px-8 text-base w-full sm:w-auto rounded-full border-white/10 bg-zinc-900/50 backdrop-blur-md hover:bg-zinc-800 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-zinc-300"
-            asChild
-          >
-            <Link href="/pricing">View Pricing</Link>
-          </Button>
+          {session ? (
+            <Button
+              size="lg"
+              className="h-14 px-10 text-base w-full sm:w-auto bg-white text-zinc-900 hover:bg-zinc-200 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 rounded-full font-bold shadow-[0_0_30px_rgba(255,255,255,0.15)] group"
+              asChild
+            >
+              <Link href="/repo">
+                <Github className="h-5 w-5 mr-2 transition-transform group-hover:scale-110" />
+                Explore Repositories
+                <ArrowRight className="h-4 w-4 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+              </Link>
+            </Button>
+          ) : (
+            <>
+              <Button
+                size="lg"
+                className="h-14 px-8 text-base w-full sm:w-auto bg-white text-zinc-900 hover:bg-zinc-200 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 rounded-full font-semibold shadow-[0_0_30px_rgba(255,255,255,0.15)]"
+                asChild
+              >
+                <Link href="/sign-up">
+                  Get Started for Free
+                  <ArrowRight className="h-4 w-4 ml-2" aria-hidden="true" />
+                </Link>
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="h-14 px-8 text-base w-full sm:w-auto rounded-full border-white/10 bg-zinc-900/50 backdrop-blur-md hover:bg-zinc-800 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-zinc-300"
+                asChild
+              >
+                <Link href="/pricing">View Pricing</Link>
+              </Button>
+            </>
+          )}
         </div>
 
         {/* Social proof */}

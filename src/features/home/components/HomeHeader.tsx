@@ -1,8 +1,13 @@
+"use client";
+
 import Link from "next/link";
-import { ArrowRight, Code2 } from "lucide-react";
+import { ArrowRight, Code2, Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useSession } from "@/lib/auth-client";
 
 export function HomeHeader() {
+  const { data: session } = useSession();
+
   return (
     <header
       className="fixed top-0 w-full z-50 border-b border-white/5 bg-zinc-950/50 backdrop-blur-xl supports-backdrop-filter:bg-zinc-950/20"
@@ -25,24 +30,39 @@ export function HomeHeader() {
           role="navigation"
           aria-label="Main navigation"
         >
-          <Button
-            variant="ghost"
-            size="sm"
-            asChild
-            className="hidden sm:inline-flex text-zinc-300 hover:text-white hover:bg-white/5"
-          >
-            <Link href="/sign-in">Sign In</Link>
-          </Button>
-          <Button
-            size="sm"
-            asChild
-            className="bg-white text-zinc-900 hover:bg-zinc-200 rounded-full font-semibold shadow-lg shadow-white/10 px-5"
-          >
-            <Link href="/sign-up">
-              Get Started
-              <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
-            </Link>
-          </Button>
+          {session ? (
+            <Button
+              size="sm"
+              asChild
+              className="bg-white text-zinc-900 hover:bg-zinc-200 rounded-full font-semibold shadow-lg shadow-white/10 px-5 group"
+            >
+              <Link href="/repo">
+                <Github className="h-3.5 w-3.5 mr-1.5 transition-transform group-hover:scale-110" />
+                Repositories
+              </Link>
+            </Button>
+          ) : (
+            <>
+              <Button
+                variant="ghost"
+                size="sm"
+                asChild
+                className="hidden sm:inline-flex text-zinc-300 hover:text-white hover:bg-white/5"
+              >
+                <Link href="/sign-in">Sign In</Link>
+              </Button>
+              <Button
+                size="sm"
+                asChild
+                className="bg-white text-zinc-900 hover:bg-zinc-200 rounded-full font-semibold shadow-lg shadow-white/10 px-5"
+              >
+                <Link href="/sign-up">
+                  Get Started
+                  <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
+                </Link>
+              </Button>
+            </>
+          )}
         </nav>
       </div>
     </header>
