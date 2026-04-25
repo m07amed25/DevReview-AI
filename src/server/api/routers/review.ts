@@ -422,37 +422,36 @@ export const reviewRouter = createTRPCRouter({
         Array.isArray(previous.comments) ? previous.comments : []
       ) as Finding[];
 
-      // Fingerprint: (file, line, message-hash)
-      const fingerprint = (f: Finding) =>
-        `${f.file}::${f.line}::${f.message.trim().toLowerCase().slice(0, 120)}`;
-
-      const previousSet = new Map<string, Finding>();
-      for (const f of previousFindings) {
-        previousSet.set(fingerprint(f), f);
-      }
-
-      const currentSet = new Map<string, Finding>();
-      for (const f of currentFindings) {
-        currentSet.set(fingerprint(f), f);
-      }
+      const matchedCurrent = new Set<Finding>();
+      const matchedPrevious = new Set<Finding>();
 
       const fixed: Finding[] = [];
       const persisted: Finding[] = [];
       const newFindings: Finding[] = [];
 
-      // Items in previous but not in current → Fixed
-      for (const [fp, finding] of previousSet) {
-        if (!currentSet.has(fp)) {
-          fixed.push(finding);
+      for (const prev of previousFindings) {
+        // Find a matching finding in the current review
+        // Must be same file, same severity, and line number within 3 lines (to account for minor shifts or AI variance)
+        const match = currentFindings.find(
+          (curr) =>
+            !matchedCurrent.has(curr) &&
+            curr.file === prev.file &&
+            curr.severity === prev.severity &&
+            Math.abs(curr.line - prev.line) <= 3,
+        );
+
+        if (match) {
+          persisted.push(match); // Show the new wording/line number
+          matchedCurrent.add(match);
+          matchedPrevious.add(prev);
+        } else {
+          fixed.push(prev);
         }
       }
 
-      // Items in current
-      for (const [fp, finding] of currentSet) {
-        if (previousSet.has(fp)) {
-          persisted.push(finding);
-        } else {
-          newFindings.push(finding);
+      for (const curr of currentFindings) {
+        if (!matchedCurrent.has(curr)) {
+          newFindings.push(curr);
         }
       }
 

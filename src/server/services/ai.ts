@@ -17,35 +17,43 @@ function getGroqClient(): Groq {
 }
 
 export const ReviewCommentSchema = z.object({
-  file: z.string(),
-  line: z.number(),
-  severity: z.enum(["critical", "high", "medium", "low"]),
-  category: z.enum([
-    "bug",
-    "security",
-    "performance",
-    "style",
-    "suggestion",
-    "custom-rule",
-  ]),
-  message: z.string(),
-  suggestion: z.string().optional(),
-  confidence: z.number().min(0).max(100).optional(),
-  ruleName: z.string().optional(), // populated when a custom rule triggered the comment
+  file: z.string().catch("unknown"),
+  line: z.coerce.number().catch(1),
+  severity: z.string()
+    .transform((val) => val.toLowerCase())
+    .pipe(z.enum(["critical", "high", "medium", "low"]))
+    .catch("medium"),
+  category: z.string()
+    .transform((val) => val.toLowerCase())
+    .pipe(
+      z.enum([
+        "bug",
+        "security",
+        "performance",
+        "style",
+        "suggestion",
+        "custom-rule",
+      ])
+    )
+    .catch("suggestion"),
+  message: z.string().catch("Issue detected"),
+  suggestion: z.string().optional().nullable(),
+  confidence: z.coerce.number().min(0).max(100).optional().nullable(),
+  ruleName: z.string().optional().nullable(),
 });
 
 export const QualityMetricsSchema = z.object({
-  complexity: z.number().min(0).max(100),
-  maintainability: z.number().min(0).max(100),
-  readability: z.number().min(0).max(100),
-  testability: z.number().min(0).max(100),
+  complexity: z.coerce.number().min(0).max(100).catch(50),
+  maintainability: z.coerce.number().min(0).max(100).catch(50),
+  readability: z.coerce.number().min(0).max(100).catch(50),
+  testability: z.coerce.number().min(0).max(100).catch(50),
 });
 
 export const ReviewResultSchema = z.object({
-  summary: z.string(),
-  riskScore: z.number().min(0).max(100),
-  comments: z.array(ReviewCommentSchema),
-  qualityMetrics: QualityMetricsSchema.optional(),
+  summary: z.string().catch("Review completed."),
+  riskScore: z.coerce.number().min(0).max(100).catch(50),
+  comments: z.array(ReviewCommentSchema).catch([]),
+  qualityMetrics: QualityMetricsSchema.optional().nullable(),
 });
 
 export type ReviewComment = z.infer<typeof ReviewCommentSchema>;
