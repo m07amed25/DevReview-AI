@@ -125,6 +125,8 @@ export const adminRouter = createTRPCRouter({
             image: true,
             emailVerified: true,
             role: true,
+            banned: true,
+            bannedReason: true,
             createdAt: true,
             _count: {
               select: {
@@ -207,6 +209,43 @@ export const adminRouter = createTRPCRouter({
         throw new Error("Cannot delete your own admin account.");
       }
       await ctx.db.user.delete({ where: { id: input.userId } });
+      return { success: true };
+    }),
+
+  banUser: adminProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+        reason: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (input.userId === ctx.user.id) {
+        throw new Error("You cannot ban your own account.");
+      }
+      // Ban the user and immediately revoke all their active sessions
+      await ctx.db.$transaction([
+        ctx.db.user.update({
+          where: { id: input.userId },
+          data: {
+            banned: true,
+            bannedReason: input.reason ?? null,
+          },
+        }),
+        ctx.db.session.deleteMany({
+          where: { userId: input.userId },
+        }),
+      ]);
+      return { success: true };
+    }),
+
+  unbanUser: adminProcedure
+    .input(z.object({ userId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.user.update({
+        where: { id: input.userId },
+        data: { banned: false, bannedReason: null },
+      });
       return { success: true };
     }),
 

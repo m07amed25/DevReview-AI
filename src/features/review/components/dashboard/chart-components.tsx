@@ -5,8 +5,8 @@ import { BarChart3 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { getRiskLevel } from "./helpers";
-import type { ReviewComment } from "./types";
+import { getRiskLevel } from "../../utils/dashboard-helpers";
+import type { ReviewComment } from "../../types/dashboard";
 
 export function AnimatedCounter({
   value,

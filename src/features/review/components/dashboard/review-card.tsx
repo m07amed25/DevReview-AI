@@ -21,8 +21,8 @@ import {
   type ReviewStatus,
   type ViewMode,
   type ReviewComment,
-} from "./types";
-import { relativeTime, isRecentlyCompleted, getRiskLevel } from "./helpers";
+} from "../../types/dashboard";
+import { relativeTime, isRecentlyCompleted, getRiskLevel } from "../../utils/dashboard-helpers";
 import {
   MiniRiskGauge,
   SeverityDonut,

@@ -128,6 +128,8 @@ exports.Prisma.UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   image: 'image',
   role: 'role',
+  banned: 'banned',
+  bannedReason: 'bannedReason',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   reviewDepth: 'reviewDepth',

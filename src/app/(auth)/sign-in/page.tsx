@@ -2,9 +2,9 @@
 
 import { FaGithub } from "react-icons/fa";
 import { AlertCircle, Eye, EyeOff, Loader2, X } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,18 +28,32 @@ interface FieldErrors {
   password?: string;
 }
 
-export default function SignInPage() {
+function getUrlError(searchParams: Pick<URLSearchParams, "get">): string {
+  const code = searchParams.get("error");
+  if (!code) return "";
+  const desc = searchParams.get("error_description");
+  const msg =
+    desc ??
+    (code === "FORBIDDEN"
+      ? "Your account has been banned. Please contact support."
+      : "Sign-in failed. Please try again.");
+  return decodeURIComponent(msg);
+}
+
+function SignInContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  // Lazily initialise from the URL so we never call setState inside an effect
+  const [error, setError] = useState(() => getUrlError(searchParams));
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Entrance animation
+    // GSAP entrance animation — runs once on mount, touches only the DOM
     gsap.fromTo(
       cardRef.current,
       { opacity: 0, y: 30, scale: 0.95 },
@@ -113,10 +127,19 @@ export default function SignInPage() {
     setLoading(true);
 
     try {
-      await signIn.social({
+      const result = await signIn.social({
         provider: "github",
+        // Redirect back here on failure so the ?error param is visible
         callbackURL: "/repo",
+        errorCallbackURL: "/sign-in",
       });
+      if (result?.error) {
+        setError(
+          result.error.message ??
+            "Failed to connect with GitHub. Please try again.",
+        );
+        setLoading(false);
+      }
     } catch {
       setError("Failed to connect with GitHub. Please try again.");
       setLoading(false);
@@ -141,7 +164,7 @@ export default function SignInPage() {
             Enter your email and password to sign in.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 py-4">
           <Button
             variant={"outline"}
             onClick={handleGithubSignIn}
@@ -262,5 +285,19 @@ export default function SignInPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center p-4">
+          <Loader2 className="size-8 animate-spin text-muted-foreground" />
+        </div>
+      }
+    >
+      <SignInContent />
+    </Suspense>
   );
 }

@@ -39,7 +39,7 @@ import {
   StatItem,
   PRStatusBadge,
   ReviewStatusBadge,
-} from "./pr-helpers";
+} from "@/features/repo/utils/pr-helpers";
 
 type PageProps = { params: Promise<{ id: string; prNumber: string }> };
 

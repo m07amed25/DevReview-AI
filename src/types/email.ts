@@ -14,6 +14,12 @@ export interface TeamMemberAddedEmailParams {
   teamSlug: string;
   role: "OWNER" | "ADMIN" | "MEMBER";
   teamUrl: string;
+  needsGithubConnection?: boolean;
+}
+
+export interface GithubConnectionWarningEmailParams {
+  to: string;
+  userName: string;
 }
 
 import type { ReviewStatus } from "@/lib/constants";

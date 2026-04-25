@@ -1,9 +1,11 @@
 import { getEmailTransporter, getFromAddress, getAppUrl } from "./transporter";
 import { renderTeamMemberAddedEmail } from "./templates/team-member-added";
 import { renderReviewCompletedEmail } from "./templates/review-completed";
+import { renderGithubConnectionWarningEmail } from "./templates/github-connection-warning";
 import type {
   TeamMemberAddedEmailParams,
   ReviewCompletionEmailParams,
+  GithubConnectionWarningEmailParams,
   EmailSendResult,
 } from "@/types/email";
 
@@ -98,6 +100,29 @@ export async function sendReviewCompletedEmail(
     return await sendEmail(to, subject, html);
   } catch (error) {
     console.error("❌ Error generating review completed email:", error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "Failed to generate email",
+    };
+  }
+}
+
+/**
+ * Send GitHub connection warning email
+ */
+export async function sendGithubConnectionWarningEmail(
+  params: GithubConnectionWarningEmailParams,
+): Promise<EmailSendResult> {
+  const { to } = params;
+
+  try {
+    const html = await renderGithubConnectionWarningEmail(params);
+    const subject = `Action Required: Connect GitHub to DEPI Code Review`;
+
+    return await sendEmail(to, subject, html);
+  } catch (error) {
+    console.error("❌ Error generating GitHub connection warning email:", error);
     return {
       success: false,
       error:

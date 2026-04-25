@@ -10,6 +10,7 @@ export {
   sendTeamMemberAddedEmail,
   sendReviewCompletedEmail,
   sendTestEmail,
+  sendGithubConnectionWarningEmail,
 } from "./service";
 
 export { sendTeamInviteEmailNotification } from "./integrations/team";
@@ -31,6 +32,7 @@ export {
 export type {
   TeamMemberAddedEmailParams,
   ReviewCompletionEmailParams,
+  GithubConnectionWarningEmailParams,
   ReviewStatus,
   EmailSendResult,
   EmailServiceConfig,

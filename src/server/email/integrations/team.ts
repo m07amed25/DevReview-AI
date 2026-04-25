@@ -69,7 +69,14 @@ export async function sendTeamInviteEmailNotification({
   try {
     const invitedUser = await db.user.findUnique({
       where: { id: invitedUserId },
-      select: { name: true, email: true },
+      select: { 
+        name: true, 
+        email: true,
+        accounts: {
+          where: { providerId: "github" },
+          select: { id: true }
+        }
+      },
     });
 
     if (!invitedUser || !invitedUser.email) {
@@ -120,6 +127,7 @@ export async function sendTeamInviteEmailNotification({
         teamSlug: team.slug,
         role: role,
         teamUrl,
+        needsGithubConnection: invitedUser.accounts.length === 0,
       });
     });
 

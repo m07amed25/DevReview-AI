@@ -30,7 +30,7 @@ import {
 import { cn, formatDate } from "@/lib/utils";
 import { CodeTimeline } from "@/features/code-timeline";
 import { DiagramPanel } from "@/features/review/components/diagram-panel";
-import { PullRequestCard } from "./pull-request-card";
+import { PullRequestCard } from "@/features/repo/components/pull-request-card";
 
 type PageProps = { params: Promise<{ id: string }> };
 

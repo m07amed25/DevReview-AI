@@ -28,7 +28,7 @@ export interface TeamMemberAddedEmailProps {
  * Includes comprehensive information about the team and next steps
  */
 export function TeamMemberAddedEmail({ params }: TeamMemberAddedEmailProps) {
-  const { inviteeName, inviterName, teamName, role, teamUrl } = params;
+  const { inviteeName, inviterName, teamName, role, teamUrl, needsGithubConnection } = params;
 
   const roleDisplay = role.charAt(0) + role.slice(1).toLowerCase();
   const previewText = `You've been added to the "${teamName}" team - Welcome!`;
@@ -100,6 +100,24 @@ export function TeamMemberAddedEmail({ params }: TeamMemberAddedEmailProps) {
               As a {roleDisplay}, you&apos;ll be able to collaborate with team
               members on code reviews and access shared repositories.
             </Text>
+
+            {/* GitHub Connection Alert */}
+            {needsGithubConnection && (
+              <Section className="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-5">
+                <Text className="m-0 mb-2 text-base font-bold text-amber-800">
+                  ⚠️ Action Required: Connect GitHub
+                </Text>
+                <Text className="m-0 mb-4 text-sm text-amber-700">
+                  You haven&apos;t connected a GitHub account to your profile yet. DEPI Code Review requires a GitHub connection to analyze code and pull requests.
+                </Text>
+                <Button
+                  className="rounded-md bg-amber-600 px-4 py-2 text-sm font-semibold text-white no-underline"
+                  href={`${baseUrl}/profile`}
+                >
+                  Connect GitHub Account
+                </Button>
+              </Section>
+            )}
 
             {/* CTA Button */}
             <Section className="mb-6 text-center">

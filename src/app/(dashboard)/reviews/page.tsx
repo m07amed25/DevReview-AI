@@ -16,12 +16,12 @@ import {
 import { cn } from "@/lib/utils";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { type ReviewStatus, type SortKey, type SortDir, type ViewMode } from "./types";
-import { getRiskLevel } from "./helpers";
-import { ActivitySparkline, RiskDistributionBar, StatProgressRing } from "./chart-components";
-import { StatCard } from "./stat-card";
-import { StatusTabs, EmptyState } from "./controls";
-import { ReviewCard, ReviewCardSkeleton } from "./review-card";
+import { type ReviewStatus, type SortKey, type SortDir, type ViewMode } from "@/features/review/types/dashboard";
+import { getRiskLevel } from "@/features/review/utils/dashboard-helpers";
+import { ActivitySparkline, RiskDistributionBar, StatProgressRing } from "@/features/review/components/dashboard/chart-components";
+import { StatCard } from "@/features/review/components/dashboard/stat-card";
+import { StatusTabs, EmptyState } from "@/features/review/components/dashboard/controls";
+import { ReviewCard, ReviewCardSkeleton } from "@/features/review/components/dashboard/review-card";
 
 export default function ReviewsPage() {
   const headerRef = useRef<HTMLDivElement>(null);

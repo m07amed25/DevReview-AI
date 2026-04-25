@@ -3077,6 +3077,8 @@ export namespace Prisma {
     emailVerified: boolean | null
     image: string | null
     role: $Enums.UserRole | null
+    banned: boolean | null
+    bannedReason: string | null
     createdAt: Date | null
     updatedAt: Date | null
     reviewDepth: string | null
@@ -3093,6 +3095,8 @@ export namespace Prisma {
     emailVerified: boolean | null
     image: string | null
     role: $Enums.UserRole | null
+    banned: boolean | null
+    bannedReason: string | null
     createdAt: Date | null
     updatedAt: Date | null
     reviewDepth: string | null
@@ -3109,6 +3113,8 @@ export namespace Prisma {
     emailVerified: number
     image: number
     role: number
+    banned: number
+    bannedReason: number
     createdAt: number
     updatedAt: number
     reviewDepth: number
@@ -3127,6 +3133,8 @@ export namespace Prisma {
     emailVerified?: true
     image?: true
     role?: true
+    banned?: true
+    bannedReason?: true
     createdAt?: true
     updatedAt?: true
     reviewDepth?: true
@@ -3143,6 +3151,8 @@ export namespace Prisma {
     emailVerified?: true
     image?: true
     role?: true
+    banned?: true
+    bannedReason?: true
     createdAt?: true
     updatedAt?: true
     reviewDepth?: true
@@ -3159,6 +3169,8 @@ export namespace Prisma {
     emailVerified?: true
     image?: true
     role?: true
+    banned?: true
+    bannedReason?: true
     createdAt?: true
     updatedAt?: true
     reviewDepth?: true
@@ -3248,6 +3260,8 @@ export namespace Prisma {
     emailVerified: boolean
     image: string | null
     role: $Enums.UserRole
+    banned: boolean
+    bannedReason: string | null
     createdAt: Date
     updatedAt: Date
     reviewDepth: string
@@ -3281,6 +3295,8 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: boolean
     role?: boolean
+    banned?: boolean
+    bannedReason?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     reviewDepth?: boolean
@@ -3306,6 +3322,8 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: boolean
     role?: boolean
+    banned?: boolean
+    bannedReason?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     reviewDepth?: boolean
@@ -3322,6 +3340,8 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: boolean
     role?: boolean
+    banned?: boolean
+    bannedReason?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     reviewDepth?: boolean
@@ -3338,6 +3358,8 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: boolean
     role?: boolean
+    banned?: boolean
+    bannedReason?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     reviewDepth?: boolean
@@ -3347,7 +3369,7 @@ export namespace Prisma {
     includePerfSuggestions?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "createdAt" | "updatedAt" | "reviewDepth" | "defaultLanguage" | "autoReview" | "includeSecurityChecks" | "includePerfSuggestions", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "banned" | "bannedReason" | "createdAt" | "updatedAt" | "reviewDepth" | "defaultLanguage" | "autoReview" | "includeSecurityChecks" | "includePerfSuggestions", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     accounts?: boolean | User$accountsArgs<ExtArgs>
@@ -3381,6 +3403,8 @@ export namespace Prisma {
       emailVerified: boolean
       image: string | null
       role: $Enums.UserRole
+      banned: boolean
+      bannedReason: string | null
       createdAt: Date
       updatedAt: Date
       reviewDepth: string
@@ -3825,6 +3849,8 @@ export namespace Prisma {
     readonly emailVerified: FieldRef<"User", 'Boolean'>
     readonly image: FieldRef<"User", 'String'>
     readonly role: FieldRef<"User", 'UserRole'>
+    readonly banned: FieldRef<"User", 'Boolean'>
+    readonly bannedReason: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
     readonly reviewDepth: FieldRef<"User", 'String'>
@@ -25933,6 +25959,8 @@ export namespace Prisma {
     emailVerified: 'emailVerified',
     image: 'image',
     role: 'role',
+    banned: 'banned',
+    bannedReason: 'bannedReason',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     reviewDepth: 'reviewDepth',
@@ -26516,6 +26544,8 @@ export namespace Prisma {
     emailVerified?: BoolFilter<"User"> | boolean
     image?: StringNullableFilter<"User"> | string | null
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
+    banned?: BoolFilter<"User"> | boolean
+    bannedReason?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     reviewDepth?: StringFilter<"User"> | string
@@ -26540,6 +26570,8 @@ export namespace Prisma {
     emailVerified?: SortOrder
     image?: SortOrderInput | SortOrder
     role?: SortOrder
+    banned?: SortOrder
+    bannedReason?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     reviewDepth?: SortOrder
@@ -26567,6 +26599,8 @@ export namespace Prisma {
     emailVerified?: BoolFilter<"User"> | boolean
     image?: StringNullableFilter<"User"> | string | null
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
+    banned?: BoolFilter<"User"> | boolean
+    bannedReason?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     reviewDepth?: StringFilter<"User"> | string
@@ -26591,6 +26625,8 @@ export namespace Prisma {
     emailVerified?: SortOrder
     image?: SortOrderInput | SortOrder
     role?: SortOrder
+    banned?: SortOrder
+    bannedReason?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     reviewDepth?: SortOrder
@@ -26613,6 +26649,8 @@ export namespace Prisma {
     emailVerified?: BoolWithAggregatesFilter<"User"> | boolean
     image?: StringNullableWithAggregatesFilter<"User"> | string | null
     role?: EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
+    banned?: BoolWithAggregatesFilter<"User"> | boolean
+    bannedReason?: StringNullableWithAggregatesFilter<"User"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     reviewDepth?: StringWithAggregatesFilter<"User"> | string
@@ -28039,6 +28077,8 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
+    banned?: boolean
+    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -28063,6 +28103,8 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
+    banned?: boolean
+    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -28087,6 +28129,8 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -28111,6 +28155,8 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -28135,6 +28181,8 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
+    banned?: boolean
+    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -28151,6 +28199,8 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -28167,6 +28217,8 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -29828,6 +29880,8 @@ export namespace Prisma {
     emailVerified?: SortOrder
     image?: SortOrder
     role?: SortOrder
+    banned?: SortOrder
+    bannedReason?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     reviewDepth?: SortOrder
@@ -29844,6 +29898,8 @@ export namespace Prisma {
     emailVerified?: SortOrder
     image?: SortOrder
     role?: SortOrder
+    banned?: SortOrder
+    bannedReason?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     reviewDepth?: SortOrder
@@ -29860,6 +29916,8 @@ export namespace Prisma {
     emailVerified?: SortOrder
     image?: SortOrder
     role?: SortOrder
+    banned?: SortOrder
+    bannedReason?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     reviewDepth?: SortOrder
@@ -33356,6 +33414,8 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
+    banned?: boolean
+    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -33379,6 +33439,8 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
+    banned?: boolean
+    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -33418,6 +33480,8 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -33441,6 +33505,8 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -33464,6 +33530,8 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
+    banned?: boolean
+    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -33487,6 +33555,8 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
+    banned?: boolean
+    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -33526,6 +33596,8 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -33549,6 +33621,8 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -33572,6 +33646,8 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
+    banned?: boolean
+    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -33595,6 +33671,8 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
+    banned?: boolean
+    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -33851,6 +33929,8 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -33874,6 +33954,8 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -34136,6 +34218,8 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
+    banned?: boolean
+    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -34159,6 +34243,8 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
+    banned?: boolean
+    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -34347,6 +34433,8 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -34370,6 +34458,8 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -34541,6 +34631,8 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
+    banned?: boolean
+    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -34564,6 +34656,8 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
+    banned?: boolean
+    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -34654,6 +34748,8 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -34677,6 +34773,8 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -34863,6 +34961,8 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
+    banned?: boolean
+    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -34886,6 +34986,8 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
+    banned?: boolean
+    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -34956,6 +35058,8 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -34979,6 +35083,8 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -35203,6 +35309,8 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
+    banned?: boolean
+    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -35226,6 +35334,8 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
+    banned?: boolean
+    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -35298,6 +35408,8 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -35321,6 +35433,8 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -35404,6 +35518,8 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
+    banned?: boolean
+    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -35427,6 +35543,8 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
+    banned?: boolean
+    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -35466,6 +35584,8 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -35489,6 +35609,8 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string

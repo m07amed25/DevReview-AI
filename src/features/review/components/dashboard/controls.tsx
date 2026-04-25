@@ -2,7 +2,7 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
-import { STATUS_CONFIG, type ReviewStatus } from "./types";
+import { STATUS_CONFIG, type ReviewStatus } from "../../types/dashboard";
 
 export function StatusTabs({
   active,

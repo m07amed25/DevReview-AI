@@ -15,9 +15,9 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Plus, X, RefreshCw, FolderGit2, Github } from "lucide-react";
 import { trpc } from "@/lib/trpc/client";
-import { StatsCards } from "./stats-cards";
-import { ConnectedRepoCard } from "./connected-repo-card";
-import { GithubReposPanel } from "./github-repos-panel";
+import { StatsCards } from "@/features/repo/components/stats-cards";
+import { ConnectedRepoCard } from "@/features/repo/components/connected-repo-card";
+import { GithubReposPanel } from "@/features/repo/components/github-repos-panel";
 
 export default function ReposPage() {
   const [selectedRepos, setSelectedRepos] = useState<Set<number>>(new Set());

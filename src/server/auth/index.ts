@@ -1,6 +1,8 @@
 import { betterAuth } from "better-auth";
+import { APIError } from "better-auth/api";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { db } from "../db";
+import { sendGithubConnectionWarningEmail } from "../email";
 
 const getTrustedOrigins = () => {
   const origins = ["http://localhost:3000"];
@@ -70,14 +72,26 @@ export const auth = betterAuth({
       : {}),
   },
   user: {
-    // Expose the `role` column in every session response so the
-    // middleware and client can gate on it without a DB round-trip.
+    // Expose the `role` and `banned` columns in every session response so the
+    // middleware and client can gate on them without a DB round-trip.
     additionalFields: {
       role: {
         type: "string",
         required: false,
         defaultValue: "USER",
         input: false, // never let the client set this during sign-up
+      },
+      banned: {
+        type: "boolean",
+        required: false,
+        defaultValue: false,
+        input: false,
+      },
+      bannedReason: {
+        type: "string",
+        required: false,
+        defaultValue: null,
+        input: false,
       },
     },
   },
@@ -102,6 +116,77 @@ export const auth = betterAuth({
     cookieCache: {
       enabled: true,
       maxAge: 60 * 5, // 5 minutes
+    },
+  },
+  databaseHooks: {
+    session: {
+      create: {
+        before: async (session) => {
+          const user = await db.user.findUnique({
+            where: { id: session.userId },
+            select: { banned: true, bannedReason: true },
+          });
+          if (user?.banned) {
+            const reason = user.bannedReason ? `: ${user.bannedReason}` : ".";
+            throw new APIError("FORBIDDEN", {
+              message: `Your account has been banned${reason} Please contact support.`,
+            });
+          }
+          return { data: session };
+        },
+        after: async (session) => {
+          // Asynchronously check if user needs to connect GitHub
+          // We don't await this so we don't slow down the login flow
+          void (async () => {
+            try {
+              const user = await db.user.findUnique({
+                where: { id: session.userId },
+                select: {
+                  name: true,
+                  email: true,
+                  accounts: {
+                    where: { providerId: "github" },
+                    select: { id: true },
+                  },
+                  _count: {
+                    select: { teamMembers: true },
+                  },
+                },
+              });
+
+              console.log("[DEBUG auth/after hook] user fetched:", {
+                userId: session.userId,
+                hasUser: !!user,
+                accountsCount: user?.accounts?.length,
+              });
+
+              if (user && user.accounts.length === 0) {
+                console.log(
+                  "[DEBUG auth/after hook] Conditions met, sending email...",
+                );
+                // User hasn't connected GitHub
+                const emailResult = await sendGithubConnectionWarningEmail({
+                  to: user.email,
+                  userName: user.name || "User",
+                });
+                console.log(
+                  "[DEBUG auth/after hook] Email result:",
+                  emailResult,
+                );
+              } else {
+                console.log(
+                  "[DEBUG auth/after hook] Conditions NOT met for github warning email.",
+                );
+              }
+            } catch (err) {
+              console.error(
+                "Error checking github connection requirement after login:",
+                err,
+              );
+            }
+          })();
+        },
+      },
     },
   },
   trustedOrigins: getTrustedOrigins(),
