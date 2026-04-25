@@ -1,60 +1,77 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function CtaSection() {
   return (
     <section
-      className="cta-section relative overflow-hidden"
+      className="cta-section relative overflow-hidden bg-zinc-950 border-t border-white/5"
       aria-labelledby="cta-heading"
     >
-      {/* Background gradient */}
-      <div
-        className="absolute inset-0 bg-linear-to-br from-primary/8 via-transparent to-accent/8"
-        aria-hidden="true"
-      />
-      <div
-        className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,var(--primary)/5,transparent_50%)]"
-        aria-hidden="true"
-      />
+      {/* Background gradients */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_120%,rgba(120,119,198,0.3),transparent_100%)]" />
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-indigo-500/50 to-transparent" />
 
-      <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 py-20 sm:py-24 text-center relative">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-24 sm:py-32 text-center relative z-10">
+        <div className="inline-flex items-center gap-2 px-3 py-1 mb-8 rounded-full bg-white/5 border border-white/10 text-sm text-indigo-300">
+          <Sparkles className="h-4 w-4" />
+          <span>Transform your workflow today</span>
+        </div>
+
         <h2
           id="cta-heading"
-          className="text-3xl sm:text-4xl font-bold tracking-tight"
+          className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-6"
+          style={{ textWrap: "balance" }}
         >
-          Ready to improve your code reviews?
+          Ready to ship better code,{" "}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">
+            faster?
+          </span>
         </h2>
-        <p className="mt-4 text-lg text-muted-foreground">
-          Join thousands of developers who ship better code, faster. Start free,
-          upgrade when your team needs more.
+
+        <p
+          className="mx-auto mt-4 max-w-2xl text-lg sm:text-xl text-zinc-400 font-light mb-10"
+          style={{ textWrap: "balance" }}
+        >
+          Join thousands of engineering teams who have automated their code
+          reviews. Start for free, upgrade when you need more power.
         </p>
 
-        <Button
-          size="lg"
-          className="mt-8 h-12 px-8 text-base shadow-xl shadow-primary/25 hover:shadow-primary/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
-          asChild
-        >
-          <Link href="/sign-up">
-            Get started for free
-            <ArrowRight className="h-4 w-4 ml-2" aria-hidden="true" />
-          </Link>
-        </Button>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Button
+            size="lg"
+            className="h-14 px-8 text-base w-full sm:w-auto bg-white text-zinc-900 hover:bg-zinc-200 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 rounded-full font-semibold shadow-[0_0_30px_rgba(255,255,255,0.15)]"
+            asChild
+          >
+            <Link href="/sign-up">
+              Get Started for Free
+              <ArrowRight className="h-4 w-4 ml-2" aria-hidden="true" />
+            </Link>
+          </Button>
+          <Button
+            size="lg"
+            variant="outline"
+            className="h-14 px-8 text-base w-full sm:w-auto rounded-full border-white/10 bg-zinc-900/50 backdrop-blur-md hover:bg-zinc-800 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-zinc-300"
+            asChild
+          >
+            <Link href="/pricing">View Pricing</Link>
+          </Button>
+        </div>
 
         {/* Social proof */}
-        <div className="mt-8 flex items-center justify-center gap-4 text-sm text-muted-foreground">
-          <div className="flex -space-x-2">
+        <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-zinc-500 font-medium">
+          <div className="flex -space-x-3">
             {[1, 2, 3, 4, 5].map((i) => (
               <div
                 key={i}
-                className="h-8 w-8 rounded-full bg-muted border-2 border-background flex items-center justify-center text-xs font-medium"
+                className="h-10 w-10 rounded-full bg-zinc-800 border-2 border-zinc-950 flex items-center justify-center text-xs font-medium text-zinc-400 shadow-sm"
                 aria-hidden="true"
               >
                 {String.fromCharCode(64 + i)}
               </div>
             ))}
           </div>
-          <span>Join 10,000+ developers</span>
+          <span className="mt-2 sm:mt-0">Join 10,000+ developers</span>
         </div>
       </div>
     </section>

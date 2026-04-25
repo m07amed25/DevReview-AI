@@ -6,76 +6,84 @@ const steps = [
     icon: Github,
     title: "Connect GitHub",
     description:
-      "Sign up and authorize access to your repositories in one click.",
+      "Sign up and authorize access to your repositories in one click with zero configuration.",
   },
   {
     step: "02",
     icon: Terminal,
     title: "Open a PR",
     description:
-      "CodeReviewAI automatically triggers on every pull request in your repo.",
+      "DEPI AI automatically triggers on every pull request, analyzing your code in real-time.",
   },
   {
     step: "03",
     icon: GitMerge,
-    title: "Merge with confidence",
-    description: "Review AI feedback, apply suggestions, and ship better code.",
+    title: "Merge securely",
+    description:
+      "Review actionable AI feedback, apply inline suggestions, and ship better code.",
   },
 ];
 
 export function HowItWorksSection() {
   return (
     <section
-      className="border-b border-border/40 bg-muted/25"
+      className="relative border-t border-white/5 bg-zinc-950/50"
       aria-labelledby="how-it-works-heading"
     >
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
-        <div className="text-center mb-12 sm:mb-14">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
+        <div className="text-center mb-16 sm:mb-20">
           <h2
             id="how-it-works-heading"
-            className="text-3xl sm:text-4xl font-bold tracking-tight"
+            className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-zinc-100"
           >
-            Up and running in minutes
+            Up and running in{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
+              minutes
+            </span>
           </h2>
-          <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-            Three simple steps to transform your code review process.
+          <p className="mt-6 text-lg text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+            Three simple steps to completely transform your engineering
+            workflow.
           </p>
         </div>
 
         <div
-          className="grid gap-8 sm:grid-cols-3"
+          className="grid gap-8 sm:grid-cols-3 relative"
           role="list"
           aria-label="How it works steps"
         >
+          {/* Connecting Line behind steps */}
+          <div className="hidden sm:block absolute top-12 left-[16%] right-[16%] h-[2px] bg-gradient-to-r from-zinc-800 via-indigo-500/50 to-zinc-800 z-0" />
+
           {steps.map((item, index) => (
             <div
               key={item.step}
-              className="step-card relative group"
+              className="step-card relative group text-center"
               role="listitem"
             >
-              {/* Step number */}
-              <div className="text-7xl font-bold text-primary/8 absolute -top-3 -left-1 select-none group-hover:text-primary/12 transition-colors duration-300">
-                {item.step}
-              </div>
-
               {/* Content */}
-              <div className="relative pt-10">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/15 group-hover:border-primary/30 group-hover:shadow-lg group-hover:shadow-primary/10">
-                  <item.icon
-                    className="h-6 w-6 text-primary"
-                    aria-hidden="true"
-                  />
+              <div className="relative z-10">
+                <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-zinc-950 border-8 border-zinc-900 transition-all duration-500 group-hover:scale-110 group-hover:border-indigo-500/20 shadow-xl">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/5">
+                    <item.icon
+                      className="h-6 w-6 text-indigo-400"
+                      aria-hidden="true"
+                    />
+                  </div>
                 </div>
-                <h3 className="mt-6 text-lg font-semibold">{item.title}</h3>
-                <p className="mt-2 text-muted-foreground leading-relaxed text-sm">
-                  {item.description}
-                </p>
-              </div>
 
-              {/* Connector line */}
-              {index < 2 && (
-                <div className="hidden sm:block absolute top-15 left-[calc(50%+35px)] w-[calc(100%-70px)] h-px bg-linear-to-r from-primary/20 to-transparent" />
-              )}
+                <div className="mt-8">
+                  <div className="inline-block px-3 py-1 mb-4 text-xs font-mono font-medium text-indigo-300 bg-indigo-500/10 rounded-full border border-indigo-500/20">
+                    Step {item.step}
+                  </div>
+                  <h3 className="text-xl font-semibold text-zinc-200 mb-3">
+                    {item.title}
+                  </h3>
+                  <p className="text-zinc-400 leading-relaxed text-sm max-w-[280px] mx-auto">
+                    {item.description}
+                  </p>
+                </div>
+              </div>
             </div>
           ))}
         </div>
