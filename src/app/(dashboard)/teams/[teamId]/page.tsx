@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
@@ -127,12 +127,11 @@ export default function TeamDetailPage() {
   }
 
   return (
-    <div className="relative min-h-[calc(100vh-8rem)]">
-      <div className="pointer-events-none absolute inset-0 -z-10 h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#1f2937_1px,transparent_1px)] bg-size-[16px_16px] mask-[radial-gradient(ellipse_50%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-50" />
-      <div className="space-y-8 max-w-6xl mx-auto pb-12 pt-4 px-4 sm:px-6 lg:px-8">
+    <div className="flex flex-col min-h-[calc(100vh-8rem)]">
+      <div className="flex-1 space-y-6 max-w-6xl mx-auto w-full pb-12 pt-6 px-4 sm:px-6 lg:px-8">
         {/* Error dialog */}
         <AlertDialog open={!!error} onOpenChange={() => setError(null)}>
-          <AlertDialogContent className="border-destructive/20 bg-card/95 backdrop-blur-xl shadow-2xl">
+          <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle className="text-destructive flex items-center gap-2">
                 <AlertTriangle className="size-5" />
@@ -149,32 +148,35 @@ export default function TeamDetailPage() {
         </AlertDialog>
 
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-in fade-in slide-in-from-top-4 duration-700">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <Link href="/teams">
               <Button
                 variant="ghost"
                 size="icon"
-                className="group rounded-full bg-muted/30 hover:bg-muted/60 transition-colors"
+                className="shrink-0"
               >
-                <ArrowLeft className="size-5 text-muted-foreground group-hover:text-foreground transition-colors group-hover:-translate-x-0.5 duration-300" />
+                <ArrowLeft className="size-4 text-muted-foreground" />
               </Button>
             </Link>
             <div className="flex items-center gap-4">
-              <div className="size-14 rounded-2xl bg-linear-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center text-primary font-bold text-2xl shadow-inner border border-primary/10">
+              <div className="size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-semibold text-xl shrink-0">
                 {team.data.name!.charAt(0).toUpperCase()}
               </div>
               <div>
-                <h1 className="text-3xl font-extrabold tracking-tight bg-linear-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+                <h1 className="text-2xl font-semibold tracking-tight">
                   {team.data.name}
                 </h1>
                 <div className="flex items-center gap-2 mt-1">
                   <Badge
                     variant="secondary"
-                    className="text-[10px] px-1.5 py-0 items-center bg-muted/50 rounded flex gap-1 font-medium font-mono text-muted-foreground"
+                    className="text-[11px] font-normal text-muted-foreground bg-muted"
                   >
                     /{team.data.slug}
                   </Badge>
+                  <span className="text-[13px] text-muted-foreground">
+                    {team.data.members?.length ?? 0} members
+                  </span>
                 </div>
               </div>
             </div>
@@ -184,7 +186,7 @@ export default function TeamDetailPage() {
               variant="destructive"
               size="sm"
               onClick={() => setConfirmDelete(true)}
-              className="shadow-sm hover:shadow-md transition-all duration-300 self-start sm:self-auto"
+              className="shrink-0"
             >
               <Trash2 className="size-4 mr-2" />
               Delete Team

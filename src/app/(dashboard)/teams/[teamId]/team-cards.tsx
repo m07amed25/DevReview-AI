@@ -78,36 +78,34 @@ export function PendingApprovalsCard({
   rejectAction,
 }: PendingApprovalsCardProps) {
   return (
-    <Card className="border-amber-500/30 shadow-sm bg-card/60 backdrop-blur-xl animate-in fade-in slide-in-from-bottom-8 duration-700 fill-mode-both">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 border-b border-border/40">
+    <Card className="rounded-lg border-border/50 shadow-sm overflow-hidden flex flex-col h-full">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 border-b border-border/50">
         <div>
-          <CardTitle className="text-lg flex items-center gap-2 font-semibold">
-            <div className="p-1.5 rounded-md bg-amber-500/10">
-              <Clock className="size-4 text-amber-500" />
-            </div>
+          <CardTitle className="text-base font-semibold flex items-center gap-2">
+            <Clock className="size-4 text-amber-500" />
             Pending Approvals
           </CardTitle>
-          <CardDescription className="mt-1.5">
+          <CardDescription className="mt-1.5 text-sm">
             {pendingActions.data?.length ?? 0} action
             {(pendingActions.data?.length ?? 0) !== 1 ? "s" : ""} awaiting
             approval
           </CardDescription>
         </div>
       </CardHeader>
-      <CardContent className="p-3">
+      <CardContent className="p-4 relative z-10">
         {pendingActions.isLoading ? (
-          <div className="space-y-2">
-            <Skeleton className="h-16 w-full" />
-            <Skeleton className="h-16 w-full" />
+          <div className="space-y-4">
+            <Skeleton className="h-16 w-full rounded-md" />
+            <Skeleton className="h-16 w-full rounded-md" />
           </div>
         ) : !pendingActions.data?.length ? (
-          <div className="flex flex-col items-center justify-center py-8 text-center">
-            <div className="size-10 rounded-full bg-muted flex items-center justify-center mb-3">
-              <ClipboardList className="size-5 text-muted-foreground/50" />
-            </div>
-            <p className="text-sm font-medium">No pending approvals</p>
-            <p className="text-xs text-muted-foreground mt-1">
-              All action requests have been processed
+          <div className="flex flex-col items-center justify-center py-12 text-center h-full">
+            <ClipboardList className="size-8 text-muted-foreground/30 mb-3" />
+            <p className="text-sm font-medium text-foreground">
+              No pending approvals
+            </p>
+            <p className="text-sm text-muted-foreground mt-1">
+              All action requests have been processed.
             </p>
           </div>
         ) : (
@@ -115,23 +113,21 @@ export function PendingApprovalsCard({
             {pendingActions.data.map((action) => (
               <div
                 key={action.id}
-                className="flex items-center justify-between p-3 rounded-lg bg-amber-500/5 border border-amber-500/20"
+                className="flex items-center justify-between p-3 rounded-md bg-muted/30 border border-border/50"
               >
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-md bg-amber-500/10">
-                    <Clock className="size-4 text-amber-500" />
-                  </div>
+                  <Clock className="size-4 text-amber-500 shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold">
+                    <p className="text-sm font-medium text-foreground">
                       {formatActionType(action.actionType)}
                     </p>
-                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                    <p className="text-xs text-muted-foreground mt-0.5">
                       Requested by user •{" "}
                       {new Date(action.createdAt).toLocaleDateString()}
                     </p>
                     {action.metadata !== undefined &&
                       action.metadata !== null && (
-                        <p className="text-[11px] text-muted-foreground mt-0.5">
+                        <p className="text-[10px] text-muted-foreground mt-1.5 bg-background p-1.5 rounded border border-border/50 font-mono">
                           {JSON.stringify(
                             action.metadata as Record<string, unknown>,
                           )}
@@ -191,43 +187,37 @@ export function MyRequestsCard({
   onRequestAction,
 }: MyRequestsCardProps) {
   return (
-    <Card className="border-border/40 shadow-sm bg-card/60 backdrop-blur-xl animate-in fade-in slide-in-from-bottom-8 duration-700 fill-mode-both">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 border-b border-border/40">
+    <Card className="rounded-lg border-border/50 shadow-sm overflow-hidden flex flex-col h-full">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 border-b border-border/50">
         <div>
-          <CardTitle className="text-lg flex items-center gap-2 font-semibold">
-            <div className="p-1.5 rounded-md bg-blue-500/10">
-              <ClipboardList className="size-4 text-blue-500" />
-            </div>
+          <CardTitle className="text-base font-semibold flex items-center gap-2">
+            <ClipboardList className="size-4 text-blue-500" />
             My Requests
           </CardTitle>
-          <CardDescription className="mt-1.5">
+          <CardDescription className="mt-1.5 text-sm">
             {myRequests.data?.length ?? 0} of your request
             {(myRequests.data?.length ?? 0) !== 1 ? "s" : ""}
           </CardDescription>
         </div>
         {!isOwnerOrAdmin && (
-          <Button
-            size="sm"
-            onClick={onRequestAction}
-            className="shadow-sm hover:-translate-y-px transition-transform"
-          >
+          <Button size="sm" onClick={onRequestAction} variant="secondary">
             <UserPlus className="size-4 mr-2" />
             Request Action
           </Button>
         )}
       </CardHeader>
-      <CardContent className="p-3">
+      <CardContent className="p-4 relative z-10">
         {myRequests.isLoading ? (
           <div className="space-y-2">
-            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full rounded-md" />
           </div>
         ) : !myRequests.data?.length ? (
-          <div className="flex flex-col items-center justify-center py-8 text-center">
-            <div className="size-10 rounded-full bg-muted flex items-center justify-center mb-3">
-              <ClipboardList className="size-5 text-muted-foreground/50" />
-            </div>
-            <p className="text-sm font-medium">No pending requests</p>
-            <p className="text-xs text-muted-foreground mt-1">
+          <div className="flex flex-col items-center justify-center py-12 text-center h-full">
+            <ClipboardList className="size-8 text-muted-foreground/30 mb-3" />
+            <p className="text-sm font-medium text-foreground">
+              No pending requests
+            </p>
+            <p className="text-sm text-muted-foreground mt-1">
               {isOwnerOrAdmin
                 ? "You don't have any pending action requests"
                 : "Request an action that requires admin approval"}
@@ -238,24 +228,18 @@ export function MyRequestsCard({
             {myRequests.data.map((request) => (
               <div
                 key={request.id}
-                className="flex items-center justify-between p-3 rounded-lg bg-muted/40"
+                className="flex items-center justify-between p-3 rounded-md bg-muted/30 border border-border/50"
               >
                 <div className="flex items-center gap-3">
                   {request.status === "PENDING" ? (
-                    <div className="p-2 rounded-md bg-amber-500/10">
-                      <Clock className="size-4 text-amber-500" />
-                    </div>
+                    <Clock className="size-4 text-amber-500 shrink-0" />
                   ) : request.status === "APPROVED" ? (
-                    <div className="p-2 rounded-md bg-green-500/10">
-                      <Check className="size-4 text-green-500" />
-                    </div>
+                    <Check className="size-4 text-green-500 shrink-0" />
                   ) : (
-                    <div className="p-2 rounded-md bg-red-500/10">
-                      <X className="size-4 text-red-500" />
-                    </div>
+                    <X className="size-4 text-red-500 shrink-0" />
                   )}
                   <div>
-                    <p className="text-sm font-semibold">
+                    <p className="text-sm font-medium">
                       {formatActionType(request.actionType)}
                     </p>
                     <p className="text-[11px] text-muted-foreground mt-0.5">
@@ -296,7 +280,11 @@ interface MembersCardProps {
   isOwner: boolean;
   onInvite: () => void;
   updateRole: {
-    mutate: (args: { teamId: string; userId: string; role: "ADMIN" | "MEMBER" }) => void;
+    mutate: (args: {
+      teamId: string;
+      userId: string;
+      role: "ADMIN" | "MEMBER";
+    }) => void;
     isPending: boolean;
   };
   removeMember: {
@@ -316,113 +304,107 @@ export function MembersCard({
   teamId,
 }: MembersCardProps) {
   return (
-    <Card
-      className="border-border/40 shadow-sm bg-card/60 backdrop-blur-xl animate-in fade-in slide-in-from-bottom-8 duration-700 fill-mode-both"
-      style={{ animationDelay: "100ms" }}
-    >
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 border-b border-border/40">
+    <Card className="rounded-lg border-border/50 shadow-sm overflow-hidden flex flex-col h-full">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 border-b border-border/50">
         <div>
-          <CardTitle className="text-lg flex items-center gap-2 font-semibold">
-            <div className="p-1.5 rounded-md bg-primary/10">
-              <Users className="size-4 text-primary" />
-            </div>
+          <CardTitle className="text-base font-semibold flex items-center gap-2">
+            <Users className="size-4" />
             Members
           </CardTitle>
-          <CardDescription className="mt-1.5">
+          <CardDescription className="mt-1.5 text-sm">
             {members.length} member{members.length !== 1 ? "s" : ""}
           </CardDescription>
         </div>
         {isOwnerOrAdmin && (
-          <Button
-            size="sm"
-            onClick={onInvite}
-            className="shadow-sm hover:-translate-y-px transition-transform"
-          >
+          <Button size="sm" onClick={onInvite} className="shadow-none">
             <UserPlus className="size-4 mr-2" />
             Invite
           </Button>
         )}
       </CardHeader>
-      <CardContent className="space-y-1 p-3">
-        {members.map((member) => {
-          const RoleIcon =
-            roleIcon[member.role as keyof typeof roleIcon] ?? User;
-          return (
-            <div
-              key={member.id}
-              className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/40 transition-colors group"
-            >
-              <div className="flex items-center gap-3">
-                <Avatar className="size-9 ring-2 ring-background shadow-sm group-hover:ring-primary/20 transition-all">
-                  <AvatarImage
-                    src={member.user.image ?? undefined}
-                    alt={member.user.name}
-                  />
-                  <AvatarFallback className="bg-primary/5 text-primary">
-                    {member.user.name.charAt(0).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex flex-col">
-                  <p className="text-sm font-semibold leading-none text-foreground">
-                    {member.user.name}
-                  </p>
-                  <p className="text-[11px] text-muted-foreground mt-1">
-                    {member.user.email}
-                  </p>
+      <CardContent className="p-0 relative z-10">
+        <div className="divide-y divide-border/40">
+          {members.map((member) => {
+            const RoleIcon =
+              roleIcon[member.role as keyof typeof roleIcon] ?? User;
+            return (
+              <div
+                key={member.id}
+                className="flex items-center justify-between p-4"
+              >
+                <div className="flex items-center gap-3">
+                  <Avatar className="size-8">
+                    <AvatarImage
+                      src={member.user.image ?? undefined}
+                      alt={member.user.name}
+                    />
+                    <AvatarFallback className="bg-muted text-muted-foreground text-xs">
+                      {member.user.name.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col">
+                    <p className="text-sm font-medium text-foreground">
+                      {member.user.name}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {member.user.email}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Badge
+                    variant="outline"
+                    className={cn(
+                      "text-xs",
+                      roleColor[member.role as keyof typeof roleColor],
+                    )}
+                  >
+                    <RoleIcon className="size-3 mr-1" />
+                    {member.role}
+                  </Badge>
+                  {isOwner && member.role !== "OWNER" && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="size-7">
+                          <MoreVertical className="size-3.5" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem
+                          onClick={() =>
+                            updateRole.mutate({
+                              teamId,
+                              userId: member.user.id,
+                              role:
+                                member.role === "ADMIN" ? "MEMBER" : "ADMIN",
+                            })
+                          }
+                        >
+                          <Shield className="size-4 mr-2" />
+                          {member.role === "ADMIN"
+                            ? "Demote to Member"
+                            : "Promote to Admin"}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="text-destructive"
+                          onClick={() =>
+                            removeMember.mutate({
+                              teamId,
+                              userId: member.user.id,
+                            })
+                          }
+                        >
+                          <Trash2 className="size-4 mr-2" />
+                          Remove
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <Badge
-                  variant="outline"
-                  className={cn(
-                    "text-xs",
-                    roleColor[member.role as keyof typeof roleColor],
-                  )}
-                >
-                  <RoleIcon className="size-3 mr-1" />
-                  {member.role}
-                </Badge>
-                {isOwner && member.role !== "OWNER" && (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="size-7">
-                        <MoreVertical className="size-3.5" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem
-                        onClick={() =>
-                          updateRole.mutate({
-                            teamId,
-                            userId: member.user.id,
-                            role: member.role === "ADMIN" ? "MEMBER" : "ADMIN",
-                          })
-                        }
-                      >
-                        <Shield className="size-4 mr-2" />
-                        {member.role === "ADMIN"
-                          ? "Demote to Member"
-                          : "Promote to Admin"}
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className="text-destructive"
-                        onClick={() =>
-                          removeMember.mutate({
-                            teamId,
-                            userId: member.user.id,
-                          })
-                        }
-                      >
-                        <Trash2 className="size-4 mr-2" />
-                        Remove
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                )}
-              </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </CardContent>
     </Card>
   );
@@ -451,65 +433,54 @@ export function SharedReposCard({
   unshareRepo,
 }: ReposCardProps) {
   return (
-    <Card
-      className="border-border/40 shadow-sm bg-card/60 backdrop-blur-xl animate-in fade-in slide-in-from-bottom-8 duration-700 fill-mode-both"
-      style={{ animationDelay: "200ms" }}
-    >
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 border-b border-border/40">
+    <Card className="rounded-lg border-border/50 shadow-sm overflow-hidden flex flex-col h-full">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 border-b border-border/50">
         <div>
-          <CardTitle className="text-lg flex items-center gap-2 font-semibold">
-            <div className="p-1.5 rounded-md bg-emerald-500/10">
-              <FolderGit2 className="size-4 text-emerald-500" />
-            </div>
+          <CardTitle className="text-base font-semibold flex items-center gap-2">
+            <FolderGit2 className="size-4 text-emerald-500" />
             Shared Repositories
           </CardTitle>
-          <CardDescription className="mt-1.5">
+          <CardDescription className="mt-1.5 text-sm">
             Repositories visible to all team members
           </CardDescription>
         </div>
         {isOwnerOrAdmin && (
-          <Button
-            size="sm"
-            onClick={onShare}
-            className="shadow-sm hover:-translate-y-px transition-transform"
-          >
+          <Button size="sm" onClick={onShare} variant="outline">
             <Share2 className="size-4 mr-2" />
             Share Repo
           </Button>
         )}
       </CardHeader>
-      <CardContent className="p-3">
+      <CardContent className="p-0 relative z-10">
         {repos.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <div className="size-12 rounded-full bg-muted flex items-center justify-center mb-3">
-              <FolderGit2 className="size-6 text-muted-foreground/50" />
-            </div>
-            <p className="text-sm font-medium">No repositories yet</p>
-            <p className="text-xs text-muted-foreground mt-1 max-w-50">
+          <div className="flex flex-col items-center justify-center py-16 text-center h-full">
+            <FolderGit2 className="size-8 text-muted-foreground/30 mb-3" />
+            <p className="text-sm font-medium text-foreground">
+              No repositories yet
+            </p>
+            <p className="text-sm text-muted-foreground mt-1 max-w-[250px]">
               Share a repository to collaborate on code reviews.
             </p>
           </div>
         )}
-        <div className="space-y-1">
+        <div className="divide-y divide-border/40">
           {repos.map((repo) => (
             <div
               key={repo.id}
-              className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/40 transition-colors group/repo"
+              className="flex items-center justify-between p-4 hover:bg-muted/30 transition-colors group/repo"
             >
               <Link
                 href={`/repo/${repo.id}`}
-                className="flex items-center gap-4 flex-1 outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md"
+                className="flex items-center gap-3 flex-1 outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md"
               >
-                <div className="p-2 rounded-md bg-background shadow-sm border border-border/50 group-hover/repo:border-emerald-500/30 transition-colors">
-                  <FolderGit2 className="size-4 text-emerald-500/70 group-hover/repo:text-emerald-500 transition-colors" />
-                </div>
+                <FolderGit2 className="size-4 text-emerald-500 shrink-0" />
                 <div>
-                  <p className="text-sm font-semibold text-foreground group-hover/repo:text-primary transition-colors">
+                  <p className="text-sm font-medium text-foreground group-hover/repo:text-emerald-600 dark:group-hover/repo:text-emerald-400 transition-colors">
                     {repo.fullName}
                   </p>
                   <Badge
                     variant="secondary"
-                    className="mt-1 text-[9px] px-1.5 py-0 bg-muted-foreground/10 text-muted-foreground font-medium rounded-sm"
+                    className="mt-1.5 text-[10px] px-2 py-0.5 bg-muted-foreground/10 text-muted-foreground font-semibold rounded"
                   >
                     {repo.private ? "Private" : "Public"}
                   </Badge>
@@ -519,7 +490,7 @@ export function SharedReposCard({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="size-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover/repo:opacity-100 transition-all focus:opacity-100"
+                  className="size-9 text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover/repo:opacity-100 transition-all focus:opacity-100"
                   onClick={() => unshareRepo.mutate({ repositoryId: repo.id })}
                   title="Unshare repository"
                 >
