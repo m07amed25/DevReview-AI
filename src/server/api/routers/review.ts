@@ -14,6 +14,7 @@ export const reviewRouter = createTRPCRouter({
       z.object({
         repositoryId: z.string(),
         prNumber: z.number(),
+        parentReviewId: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -57,6 +58,7 @@ export const reviewRouter = createTRPCRouter({
           prTitle: pr.title,
           prUrl: pr.html_url,
           status: "PENDING",
+          parentReviewId: input.parentReviewId ?? null,
         },
       });
 
@@ -312,5 +314,165 @@ export const reviewRouter = createTRPCRouter({
         up: number;
         down: number;
       }[];
+    }),
+
+  listHistoryForPR: protectedProcedure
+    .input(
+      z.object({
+        repositoryId: z.string(),
+        prNumber: z.number(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      return ctx.db.review.findMany({
+        where: {
+          repositoryId: input.repositoryId,
+          prNumber: input.prNumber,
+          OR: [
+            { userId: ctx.user.id },
+            {
+              repository: {
+                team: { members: { some: { userId: ctx.user.id } } },
+              },
+            },
+          ],
+        },
+        select: {
+          id: true,
+          status: true,
+          riskScore: true,
+          parentReviewId: true,
+          createdAt: true,
+          comments: true,
+        },
+        orderBy: { createdAt: "desc" },
+      });
+    }),
+
+  getDiff: protectedProcedure
+    .input(
+      z.object({
+        reviewId: z.string(),
+        compareReviewId: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const [current, previous] = await Promise.all([
+        ctx.db.review.findFirst({
+          where: {
+            id: input.reviewId,
+            OR: [
+              { userId: ctx.user.id },
+              {
+                repository: {
+                  team: { members: { some: { userId: ctx.user.id } } },
+                },
+              },
+            ],
+          },
+          select: {
+            id: true,
+            comments: true,
+            riskScore: true,
+            createdAt: true,
+          },
+        }),
+        ctx.db.review.findFirst({
+          where: {
+            id: input.compareReviewId,
+            OR: [
+              { userId: ctx.user.id },
+              {
+                repository: {
+                  team: { members: { some: { userId: ctx.user.id } } },
+                },
+              },
+            ],
+          },
+          select: {
+            id: true,
+            comments: true,
+            riskScore: true,
+            createdAt: true,
+          },
+        }),
+      ]);
+
+      if (!current || !previous) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "One or both reviews not found",
+        });
+      }
+
+      type Finding = {
+        file: string;
+        line: number;
+        severity: string;
+        category?: string;
+        message: string;
+        suggestion?: string;
+        confidence?: number;
+      };
+
+      const currentFindings = (
+        Array.isArray(current.comments) ? current.comments : []
+      ) as Finding[];
+      const previousFindings = (
+        Array.isArray(previous.comments) ? previous.comments : []
+      ) as Finding[];
+
+      // Fingerprint: (file, line, message-hash)
+      const fingerprint = (f: Finding) =>
+        `${f.file}::${f.line}::${f.message.trim().toLowerCase().slice(0, 120)}`;
+
+      const previousSet = new Map<string, Finding>();
+      for (const f of previousFindings) {
+        previousSet.set(fingerprint(f), f);
+      }
+
+      const currentSet = new Map<string, Finding>();
+      for (const f of currentFindings) {
+        currentSet.set(fingerprint(f), f);
+      }
+
+      const fixed: Finding[] = [];
+      const persisted: Finding[] = [];
+      const newFindings: Finding[] = [];
+
+      // Items in previous but not in current → Fixed
+      for (const [fp, finding] of previousSet) {
+        if (!currentSet.has(fp)) {
+          fixed.push(finding);
+        }
+      }
+
+      // Items in current
+      for (const [fp, finding] of currentSet) {
+        if (previousSet.has(fp)) {
+          persisted.push(finding);
+        } else {
+          newFindings.push(finding);
+        }
+      }
+
+      return {
+        currentReviewId: current.id,
+        previousReviewId: previous.id,
+        currentRiskScore: current.riskScore,
+        previousRiskScore: previous.riskScore,
+        currentDate: current.createdAt,
+        previousDate: previous.createdAt,
+        fixed,
+        persisted,
+        new: newFindings,
+        summary: {
+          fixedCount: fixed.length,
+          persistedCount: persisted.length,
+          newCount: newFindings.length,
+          previousTotal: previousFindings.length,
+          currentTotal: currentFindings.length,
+        },
+      };
     }),
 });

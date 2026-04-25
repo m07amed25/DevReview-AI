@@ -3033,11 +3033,13 @@ export namespace Prisma {
    */
 
   export type ReviewCountOutputType = {
+    childReviews: number
     threads: number
     feedbacks: number
   }
 
   export type ReviewCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    childReviews?: boolean | ReviewCountOutputTypeCountChildReviewsArgs
     threads?: boolean | ReviewCountOutputTypeCountThreadsArgs
     feedbacks?: boolean | ReviewCountOutputTypeCountFeedbacksArgs
   }
@@ -3051,6 +3053,13 @@ export namespace Prisma {
      * Select specific fields to fetch from the ReviewCountOutputType
      */
     select?: ReviewCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ReviewCountOutputType without action
+   */
+  export type ReviewCountOutputTypeCountChildReviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReviewWhereInput
   }
 
   /**
@@ -9288,6 +9297,7 @@ export namespace Prisma {
     summary: string | null
     riskScore: number | null
     error: string | null
+    parentReviewId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -9303,6 +9313,7 @@ export namespace Prisma {
     summary: string | null
     riskScore: number | null
     error: string | null
+    parentReviewId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -9320,6 +9331,7 @@ export namespace Prisma {
     comments: number
     qualityMetrics: number
     error: number
+    parentReviewId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -9347,6 +9359,7 @@ export namespace Prisma {
     summary?: true
     riskScore?: true
     error?: true
+    parentReviewId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -9362,6 +9375,7 @@ export namespace Prisma {
     summary?: true
     riskScore?: true
     error?: true
+    parentReviewId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -9379,6 +9393,7 @@ export namespace Prisma {
     comments?: true
     qualityMetrics?: true
     error?: true
+    parentReviewId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -9483,6 +9498,7 @@ export namespace Prisma {
     comments: JsonValue | null
     qualityMetrics: JsonValue | null
     error: string | null
+    parentReviewId: string | null
     createdAt: Date
     updatedAt: Date
     _count: ReviewCountAggregateOutputType | null
@@ -9519,10 +9535,13 @@ export namespace Prisma {
     comments?: boolean
     qualityMetrics?: boolean
     error?: boolean
+    parentReviewId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
+    parentReview?: boolean | Review$parentReviewArgs<ExtArgs>
+    childReviews?: boolean | Review$childReviewsArgs<ExtArgs>
     threads?: boolean | Review$threadsArgs<ExtArgs>
     githubComment?: boolean | Review$githubCommentArgs<ExtArgs>
     githubStatusCheck?: boolean | Review$githubStatusCheckArgs<ExtArgs>
@@ -9543,10 +9562,12 @@ export namespace Prisma {
     comments?: boolean
     qualityMetrics?: boolean
     error?: boolean
+    parentReviewId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
+    parentReview?: boolean | Review$parentReviewArgs<ExtArgs>
   }, ExtArgs["result"]["review"]>
 
   export type ReviewSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -9562,10 +9583,12 @@ export namespace Prisma {
     comments?: boolean
     qualityMetrics?: boolean
     error?: boolean
+    parentReviewId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
+    parentReview?: boolean | Review$parentReviewArgs<ExtArgs>
   }, ExtArgs["result"]["review"]>
 
   export type ReviewSelectScalar = {
@@ -9581,14 +9604,17 @@ export namespace Prisma {
     comments?: boolean
     qualityMetrics?: boolean
     error?: boolean
+    parentReviewId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ReviewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "repositoryId" | "userId" | "prNumber" | "prTitle" | "prUrl" | "status" | "summary" | "riskScore" | "comments" | "qualityMetrics" | "error" | "createdAt" | "updatedAt", ExtArgs["result"]["review"]>
+  export type ReviewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "repositoryId" | "userId" | "prNumber" | "prTitle" | "prUrl" | "status" | "summary" | "riskScore" | "comments" | "qualityMetrics" | "error" | "parentReviewId" | "createdAt" | "updatedAt", ExtArgs["result"]["review"]>
   export type ReviewInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
+    parentReview?: boolean | Review$parentReviewArgs<ExtArgs>
+    childReviews?: boolean | Review$childReviewsArgs<ExtArgs>
     threads?: boolean | Review$threadsArgs<ExtArgs>
     githubComment?: boolean | Review$githubCommentArgs<ExtArgs>
     githubStatusCheck?: boolean | Review$githubStatusCheckArgs<ExtArgs>
@@ -9598,10 +9624,12 @@ export namespace Prisma {
   export type ReviewIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
+    parentReview?: boolean | Review$parentReviewArgs<ExtArgs>
   }
   export type ReviewIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
+    parentReview?: boolean | Review$parentReviewArgs<ExtArgs>
   }
 
   export type $ReviewPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9609,6 +9637,8 @@ export namespace Prisma {
     objects: {
       repository: Prisma.$RepositoryPayload<ExtArgs>
       user: Prisma.$UserPayload<ExtArgs>
+      parentReview: Prisma.$ReviewPayload<ExtArgs> | null
+      childReviews: Prisma.$ReviewPayload<ExtArgs>[]
       threads: Prisma.$ReviewThreadPayload<ExtArgs>[]
       githubComment: Prisma.$GitHubCommentPayload<ExtArgs> | null
       githubStatusCheck: Prisma.$GitHubStatusCheckPayload<ExtArgs> | null
@@ -9627,6 +9657,7 @@ export namespace Prisma {
       comments: Prisma.JsonValue | null
       qualityMetrics: Prisma.JsonValue | null
       error: string | null
+      parentReviewId: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["review"]>
@@ -10025,6 +10056,8 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     repository<T extends RepositoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RepositoryDefaultArgs<ExtArgs>>): Prisma__RepositoryClient<$Result.GetResult<Prisma.$RepositoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    parentReview<T extends Review$parentReviewArgs<ExtArgs> = {}>(args?: Subset<T, Review$parentReviewArgs<ExtArgs>>): Prisma__ReviewClient<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    childReviews<T extends Review$childReviewsArgs<ExtArgs> = {}>(args?: Subset<T, Review$childReviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     threads<T extends Review$threadsArgs<ExtArgs> = {}>(args?: Subset<T, Review$threadsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewThreadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     githubComment<T extends Review$githubCommentArgs<ExtArgs> = {}>(args?: Subset<T, Review$githubCommentArgs<ExtArgs>>): Prisma__GitHubCommentClient<$Result.GetResult<Prisma.$GitHubCommentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     githubStatusCheck<T extends Review$githubStatusCheckArgs<ExtArgs> = {}>(args?: Subset<T, Review$githubStatusCheckArgs<ExtArgs>>): Prisma__GitHubStatusCheckClient<$Result.GetResult<Prisma.$GitHubStatusCheckPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -10070,6 +10103,7 @@ export namespace Prisma {
     readonly comments: FieldRef<"Review", 'Json'>
     readonly qualityMetrics: FieldRef<"Review", 'Json'>
     readonly error: FieldRef<"Review", 'String'>
+    readonly parentReviewId: FieldRef<"Review", 'String'>
     readonly createdAt: FieldRef<"Review", 'DateTime'>
     readonly updatedAt: FieldRef<"Review", 'DateTime'>
   }
@@ -10465,6 +10499,49 @@ export namespace Prisma {
      * Limit how many Reviews to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Review.parentReview
+   */
+  export type Review$parentReviewArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Review
+     */
+    select?: ReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Review
+     */
+    omit?: ReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewInclude<ExtArgs> | null
+    where?: ReviewWhereInput
+  }
+
+  /**
+   * Review.childReviews
+   */
+  export type Review$childReviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Review
+     */
+    select?: ReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Review
+     */
+    omit?: ReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewInclude<ExtArgs> | null
+    where?: ReviewWhereInput
+    orderBy?: ReviewOrderByWithRelationInput | ReviewOrderByWithRelationInput[]
+    cursor?: ReviewWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ReviewScalarFieldEnum | ReviewScalarFieldEnum[]
   }
 
   /**
@@ -27453,6 +27530,7 @@ export namespace Prisma {
     comments: 'comments',
     qualityMetrics: 'qualityMetrics',
     error: 'error',
+    parentReviewId: 'parentReviewId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -28445,10 +28523,13 @@ export namespace Prisma {
     comments?: JsonNullableFilter<"Review">
     qualityMetrics?: JsonNullableFilter<"Review">
     error?: StringNullableFilter<"Review"> | string | null
+    parentReviewId?: StringNullableFilter<"Review"> | string | null
     createdAt?: DateTimeFilter<"Review"> | Date | string
     updatedAt?: DateTimeFilter<"Review"> | Date | string
     repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    parentReview?: XOR<ReviewNullableScalarRelationFilter, ReviewWhereInput> | null
+    childReviews?: ReviewListRelationFilter
     threads?: ReviewThreadListRelationFilter
     githubComment?: XOR<GitHubCommentNullableScalarRelationFilter, GitHubCommentWhereInput> | null
     githubStatusCheck?: XOR<GitHubStatusCheckNullableScalarRelationFilter, GitHubStatusCheckWhereInput> | null
@@ -28468,10 +28549,13 @@ export namespace Prisma {
     comments?: SortOrderInput | SortOrder
     qualityMetrics?: SortOrderInput | SortOrder
     error?: SortOrderInput | SortOrder
+    parentReviewId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     repository?: RepositoryOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
+    parentReview?: ReviewOrderByWithRelationInput
+    childReviews?: ReviewOrderByRelationAggregateInput
     threads?: ReviewThreadOrderByRelationAggregateInput
     githubComment?: GitHubCommentOrderByWithRelationInput
     githubStatusCheck?: GitHubStatusCheckOrderByWithRelationInput
@@ -28494,10 +28578,13 @@ export namespace Prisma {
     comments?: JsonNullableFilter<"Review">
     qualityMetrics?: JsonNullableFilter<"Review">
     error?: StringNullableFilter<"Review"> | string | null
+    parentReviewId?: StringNullableFilter<"Review"> | string | null
     createdAt?: DateTimeFilter<"Review"> | Date | string
     updatedAt?: DateTimeFilter<"Review"> | Date | string
     repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    parentReview?: XOR<ReviewNullableScalarRelationFilter, ReviewWhereInput> | null
+    childReviews?: ReviewListRelationFilter
     threads?: ReviewThreadListRelationFilter
     githubComment?: XOR<GitHubCommentNullableScalarRelationFilter, GitHubCommentWhereInput> | null
     githubStatusCheck?: XOR<GitHubStatusCheckNullableScalarRelationFilter, GitHubStatusCheckWhereInput> | null
@@ -28517,6 +28604,7 @@ export namespace Prisma {
     comments?: SortOrderInput | SortOrder
     qualityMetrics?: SortOrderInput | SortOrder
     error?: SortOrderInput | SortOrder
+    parentReviewId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ReviewCountOrderByAggregateInput
@@ -28542,6 +28630,7 @@ export namespace Prisma {
     comments?: JsonNullableWithAggregatesFilter<"Review">
     qualityMetrics?: JsonNullableWithAggregatesFilter<"Review">
     error?: StringNullableWithAggregatesFilter<"Review"> | string | null
+    parentReviewId?: StringNullableWithAggregatesFilter<"Review"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Review"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Review"> | Date | string
   }
@@ -30151,6 +30240,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     repository: RepositoryCreateNestedOneWithoutReviewsInput
     user: UserCreateNestedOneWithoutReviewsInput
+    parentReview?: ReviewCreateNestedOneWithoutChildReviewsInput
+    childReviews?: ReviewCreateNestedManyWithoutParentReviewInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
@@ -30170,8 +30261,10 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
+    parentReviewId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
@@ -30193,6 +30286,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
     user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    parentReview?: ReviewUpdateOneWithoutChildReviewsNestedInput
+    childReviews?: ReviewUpdateManyWithoutParentReviewNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
@@ -30212,8 +30307,10 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
@@ -30233,6 +30330,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
+    parentReviewId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -30265,6 +30363,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -31957,6 +32056,11 @@ export namespace Prisma {
     isNot?: RepositoryWhereInput
   }
 
+  export type ReviewNullableScalarRelationFilter = {
+    is?: ReviewWhereInput | null
+    isNot?: ReviewWhereInput | null
+  }
+
   export type ReviewThreadListRelationFilter = {
     every?: ReviewThreadWhereInput
     some?: ReviewThreadWhereInput
@@ -31990,6 +32094,7 @@ export namespace Prisma {
     comments?: SortOrder
     qualityMetrics?: SortOrder
     error?: SortOrder
+    parentReviewId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -32010,6 +32115,7 @@ export namespace Prisma {
     summary?: SortOrder
     riskScore?: SortOrder
     error?: SortOrder
+    parentReviewId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -32025,6 +32131,7 @@ export namespace Prisma {
     summary?: SortOrder
     riskScore?: SortOrder
     error?: SortOrder
+    parentReviewId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -33599,6 +33706,19 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type ReviewCreateNestedOneWithoutChildReviewsInput = {
+    create?: XOR<ReviewCreateWithoutChildReviewsInput, ReviewUncheckedCreateWithoutChildReviewsInput>
+    connectOrCreate?: ReviewCreateOrConnectWithoutChildReviewsInput
+    connect?: ReviewWhereUniqueInput
+  }
+
+  export type ReviewCreateNestedManyWithoutParentReviewInput = {
+    create?: XOR<ReviewCreateWithoutParentReviewInput, ReviewUncheckedCreateWithoutParentReviewInput> | ReviewCreateWithoutParentReviewInput[] | ReviewUncheckedCreateWithoutParentReviewInput[]
+    connectOrCreate?: ReviewCreateOrConnectWithoutParentReviewInput | ReviewCreateOrConnectWithoutParentReviewInput[]
+    createMany?: ReviewCreateManyParentReviewInputEnvelope
+    connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+  }
+
   export type ReviewThreadCreateNestedManyWithoutReviewInput = {
     create?: XOR<ReviewThreadCreateWithoutReviewInput, ReviewThreadUncheckedCreateWithoutReviewInput> | ReviewThreadCreateWithoutReviewInput[] | ReviewThreadUncheckedCreateWithoutReviewInput[]
     connectOrCreate?: ReviewThreadCreateOrConnectWithoutReviewInput | ReviewThreadCreateOrConnectWithoutReviewInput[]
@@ -33623,6 +33743,13 @@ export namespace Prisma {
     connectOrCreate?: ReviewFeedbackCreateOrConnectWithoutReviewInput | ReviewFeedbackCreateOrConnectWithoutReviewInput[]
     createMany?: ReviewFeedbackCreateManyReviewInputEnvelope
     connect?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
+  }
+
+  export type ReviewUncheckedCreateNestedManyWithoutParentReviewInput = {
+    create?: XOR<ReviewCreateWithoutParentReviewInput, ReviewUncheckedCreateWithoutParentReviewInput> | ReviewCreateWithoutParentReviewInput[] | ReviewUncheckedCreateWithoutParentReviewInput[]
+    connectOrCreate?: ReviewCreateOrConnectWithoutParentReviewInput | ReviewCreateOrConnectWithoutParentReviewInput[]
+    createMany?: ReviewCreateManyParentReviewInputEnvelope
+    connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
   }
 
   export type ReviewThreadUncheckedCreateNestedManyWithoutReviewInput = {
@@ -33679,6 +33806,30 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReviewsInput, UserUpdateWithoutReviewsInput>, UserUncheckedUpdateWithoutReviewsInput>
   }
 
+  export type ReviewUpdateOneWithoutChildReviewsNestedInput = {
+    create?: XOR<ReviewCreateWithoutChildReviewsInput, ReviewUncheckedCreateWithoutChildReviewsInput>
+    connectOrCreate?: ReviewCreateOrConnectWithoutChildReviewsInput
+    upsert?: ReviewUpsertWithoutChildReviewsInput
+    disconnect?: ReviewWhereInput | boolean
+    delete?: ReviewWhereInput | boolean
+    connect?: ReviewWhereUniqueInput
+    update?: XOR<XOR<ReviewUpdateToOneWithWhereWithoutChildReviewsInput, ReviewUpdateWithoutChildReviewsInput>, ReviewUncheckedUpdateWithoutChildReviewsInput>
+  }
+
+  export type ReviewUpdateManyWithoutParentReviewNestedInput = {
+    create?: XOR<ReviewCreateWithoutParentReviewInput, ReviewUncheckedCreateWithoutParentReviewInput> | ReviewCreateWithoutParentReviewInput[] | ReviewUncheckedCreateWithoutParentReviewInput[]
+    connectOrCreate?: ReviewCreateOrConnectWithoutParentReviewInput | ReviewCreateOrConnectWithoutParentReviewInput[]
+    upsert?: ReviewUpsertWithWhereUniqueWithoutParentReviewInput | ReviewUpsertWithWhereUniqueWithoutParentReviewInput[]
+    createMany?: ReviewCreateManyParentReviewInputEnvelope
+    set?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+    disconnect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+    delete?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+    connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+    update?: ReviewUpdateWithWhereUniqueWithoutParentReviewInput | ReviewUpdateWithWhereUniqueWithoutParentReviewInput[]
+    updateMany?: ReviewUpdateManyWithWhereWithoutParentReviewInput | ReviewUpdateManyWithWhereWithoutParentReviewInput[]
+    deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
+  }
+
   export type ReviewThreadUpdateManyWithoutReviewNestedInput = {
     create?: XOR<ReviewThreadCreateWithoutReviewInput, ReviewThreadUncheckedCreateWithoutReviewInput> | ReviewThreadCreateWithoutReviewInput[] | ReviewThreadUncheckedCreateWithoutReviewInput[]
     connectOrCreate?: ReviewThreadCreateOrConnectWithoutReviewInput | ReviewThreadCreateOrConnectWithoutReviewInput[]
@@ -33725,6 +33876,20 @@ export namespace Prisma {
     update?: ReviewFeedbackUpdateWithWhereUniqueWithoutReviewInput | ReviewFeedbackUpdateWithWhereUniqueWithoutReviewInput[]
     updateMany?: ReviewFeedbackUpdateManyWithWhereWithoutReviewInput | ReviewFeedbackUpdateManyWithWhereWithoutReviewInput[]
     deleteMany?: ReviewFeedbackScalarWhereInput | ReviewFeedbackScalarWhereInput[]
+  }
+
+  export type ReviewUncheckedUpdateManyWithoutParentReviewNestedInput = {
+    create?: XOR<ReviewCreateWithoutParentReviewInput, ReviewUncheckedCreateWithoutParentReviewInput> | ReviewCreateWithoutParentReviewInput[] | ReviewUncheckedCreateWithoutParentReviewInput[]
+    connectOrCreate?: ReviewCreateOrConnectWithoutParentReviewInput | ReviewCreateOrConnectWithoutParentReviewInput[]
+    upsert?: ReviewUpsertWithWhereUniqueWithoutParentReviewInput | ReviewUpsertWithWhereUniqueWithoutParentReviewInput[]
+    createMany?: ReviewCreateManyParentReviewInputEnvelope
+    set?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+    disconnect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+    delete?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+    connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+    update?: ReviewUpdateWithWhereUniqueWithoutParentReviewInput | ReviewUpdateWithWhereUniqueWithoutParentReviewInput[]
+    updateMany?: ReviewUpdateManyWithWhereWithoutParentReviewInput | ReviewUpdateManyWithWhereWithoutParentReviewInput[]
+    deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
   }
 
   export type ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput = {
@@ -34932,6 +35097,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     repository: RepositoryCreateNestedOneWithoutReviewsInput
+    parentReview?: ReviewCreateNestedOneWithoutChildReviewsInput
+    childReviews?: ReviewCreateNestedManyWithoutParentReviewInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
@@ -34950,8 +35117,10 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
+    parentReviewId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
@@ -35239,6 +35408,7 @@ export namespace Prisma {
     comments?: JsonNullableFilter<"Review">
     qualityMetrics?: JsonNullableFilter<"Review">
     error?: StringNullableFilter<"Review"> | string | null
+    parentReviewId?: StringNullableFilter<"Review"> | string | null
     createdAt?: DateTimeFilter<"Review"> | Date | string
     updatedAt?: DateTimeFilter<"Review"> | Date | string
   }
@@ -35729,6 +35899,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutReviewsInput
+    parentReview?: ReviewCreateNestedOneWithoutChildReviewsInput
+    childReviews?: ReviewCreateNestedManyWithoutParentReviewInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
@@ -35747,8 +35919,10 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
+    parentReviewId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
@@ -36320,6 +36494,109 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutReviewsInput, UserUncheckedCreateWithoutReviewsInput>
   }
 
+  export type ReviewCreateWithoutChildReviewsInput = {
+    id?: string
+    prNumber: number
+    prTitle: string
+    prUrl: string
+    status?: $Enums.ReviewStatus
+    summary?: string | null
+    riskScore?: number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    repository: RepositoryCreateNestedOneWithoutReviewsInput
+    user: UserCreateNestedOneWithoutReviewsInput
+    parentReview?: ReviewCreateNestedOneWithoutChildReviewsInput
+    threads?: ReviewThreadCreateNestedManyWithoutReviewInput
+    githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
+    githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
+    feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
+  }
+
+  export type ReviewUncheckedCreateWithoutChildReviewsInput = {
+    id?: string
+    repositoryId: string
+    userId: string
+    prNumber: number
+    prTitle: string
+    prUrl: string
+    status?: $Enums.ReviewStatus
+    summary?: string | null
+    riskScore?: number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    parentReviewId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
+    githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
+    githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
+    feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
+  }
+
+  export type ReviewCreateOrConnectWithoutChildReviewsInput = {
+    where: ReviewWhereUniqueInput
+    create: XOR<ReviewCreateWithoutChildReviewsInput, ReviewUncheckedCreateWithoutChildReviewsInput>
+  }
+
+  export type ReviewCreateWithoutParentReviewInput = {
+    id?: string
+    prNumber: number
+    prTitle: string
+    prUrl: string
+    status?: $Enums.ReviewStatus
+    summary?: string | null
+    riskScore?: number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    repository: RepositoryCreateNestedOneWithoutReviewsInput
+    user: UserCreateNestedOneWithoutReviewsInput
+    childReviews?: ReviewCreateNestedManyWithoutParentReviewInput
+    threads?: ReviewThreadCreateNestedManyWithoutReviewInput
+    githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
+    githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
+    feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
+  }
+
+  export type ReviewUncheckedCreateWithoutParentReviewInput = {
+    id?: string
+    repositoryId: string
+    userId: string
+    prNumber: number
+    prTitle: string
+    prUrl: string
+    status?: $Enums.ReviewStatus
+    summary?: string | null
+    riskScore?: number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
+    threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
+    githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
+    githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
+    feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
+  }
+
+  export type ReviewCreateOrConnectWithoutParentReviewInput = {
+    where: ReviewWhereUniqueInput
+    create: XOR<ReviewCreateWithoutParentReviewInput, ReviewUncheckedCreateWithoutParentReviewInput>
+  }
+
+  export type ReviewCreateManyParentReviewInputEnvelope = {
+    data: ReviewCreateManyParentReviewInput | ReviewCreateManyParentReviewInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ReviewThreadCreateWithoutReviewInput = {
     id?: string
     file: string
@@ -36534,6 +36811,77 @@ export namespace Prisma {
     reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
   }
 
+  export type ReviewUpsertWithoutChildReviewsInput = {
+    update: XOR<ReviewUpdateWithoutChildReviewsInput, ReviewUncheckedUpdateWithoutChildReviewsInput>
+    create: XOR<ReviewCreateWithoutChildReviewsInput, ReviewUncheckedCreateWithoutChildReviewsInput>
+    where?: ReviewWhereInput
+  }
+
+  export type ReviewUpdateToOneWithWhereWithoutChildReviewsInput = {
+    where?: ReviewWhereInput
+    data: XOR<ReviewUpdateWithoutChildReviewsInput, ReviewUncheckedUpdateWithoutChildReviewsInput>
+  }
+
+  export type ReviewUpdateWithoutChildReviewsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    prNumber?: IntFieldUpdateOperationsInput | number
+    prTitle?: StringFieldUpdateOperationsInput | string
+    prUrl?: StringFieldUpdateOperationsInput | string
+    status?: EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    riskScore?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
+    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    parentReview?: ReviewUpdateOneWithoutChildReviewsNestedInput
+    threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
+    githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
+    githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
+    feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
+  }
+
+  export type ReviewUncheckedUpdateWithoutChildReviewsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    repositoryId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    prNumber?: IntFieldUpdateOperationsInput | number
+    prTitle?: StringFieldUpdateOperationsInput | string
+    prUrl?: StringFieldUpdateOperationsInput | string
+    status?: EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    riskScore?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
+    githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
+    githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
+    feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
+  }
+
+  export type ReviewUpsertWithWhereUniqueWithoutParentReviewInput = {
+    where: ReviewWhereUniqueInput
+    update: XOR<ReviewUpdateWithoutParentReviewInput, ReviewUncheckedUpdateWithoutParentReviewInput>
+    create: XOR<ReviewCreateWithoutParentReviewInput, ReviewUncheckedCreateWithoutParentReviewInput>
+  }
+
+  export type ReviewUpdateWithWhereUniqueWithoutParentReviewInput = {
+    where: ReviewWhereUniqueInput
+    data: XOR<ReviewUpdateWithoutParentReviewInput, ReviewUncheckedUpdateWithoutParentReviewInput>
+  }
+
+  export type ReviewUpdateManyWithWhereWithoutParentReviewInput = {
+    where: ReviewScalarWhereInput
+    data: XOR<ReviewUpdateManyMutationInput, ReviewUncheckedUpdateManyWithoutParentReviewInput>
+  }
+
   export type ReviewThreadUpsertWithWhereUniqueWithoutReviewInput = {
     where: ReviewThreadWhereUniqueInput
     update: XOR<ReviewThreadUpdateWithoutReviewInput, ReviewThreadUncheckedUpdateWithoutReviewInput>
@@ -36652,6 +37000,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     repository: RepositoryCreateNestedOneWithoutReviewsInput
     user: UserCreateNestedOneWithoutReviewsInput
+    parentReview?: ReviewCreateNestedOneWithoutChildReviewsInput
+    childReviews?: ReviewCreateNestedManyWithoutParentReviewInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
@@ -36670,8 +37020,10 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
+    parentReviewId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
@@ -36765,6 +37117,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
     user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    parentReview?: ReviewUpdateOneWithoutChildReviewsNestedInput
+    childReviews?: ReviewUpdateManyWithoutParentReviewNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
@@ -36783,8 +37137,10 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
@@ -36868,6 +37224,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     repository: RepositoryCreateNestedOneWithoutReviewsInput
     user: UserCreateNestedOneWithoutReviewsInput
+    parentReview?: ReviewCreateNestedOneWithoutChildReviewsInput
+    childReviews?: ReviewCreateNestedManyWithoutParentReviewInput
     githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
     feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
@@ -36886,8 +37244,10 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
+    parentReviewId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
     githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
     feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
@@ -36950,6 +37310,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
     user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    parentReview?: ReviewUpdateOneWithoutChildReviewsNestedInput
+    childReviews?: ReviewUpdateManyWithoutParentReviewNestedInput
     githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
     feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
@@ -36968,8 +37330,10 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
     githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
     feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
@@ -38071,6 +38435,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     repository: RepositoryCreateNestedOneWithoutReviewsInput
     user: UserCreateNestedOneWithoutReviewsInput
+    parentReview?: ReviewCreateNestedOneWithoutChildReviewsInput
+    childReviews?: ReviewCreateNestedManyWithoutParentReviewInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
     feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
@@ -38089,8 +38455,10 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
+    parentReviewId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
     feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
@@ -38170,6 +38538,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
     user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    parentReview?: ReviewUpdateOneWithoutChildReviewsNestedInput
+    childReviews?: ReviewUpdateManyWithoutParentReviewNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
     feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
@@ -38188,8 +38558,10 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
     feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
@@ -38259,6 +38631,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     repository: RepositoryCreateNestedOneWithoutReviewsInput
     user: UserCreateNestedOneWithoutReviewsInput
+    parentReview?: ReviewCreateNestedOneWithoutChildReviewsInput
+    childReviews?: ReviewCreateNestedManyWithoutParentReviewInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
     feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
@@ -38277,8 +38651,10 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
+    parentReviewId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
     feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
@@ -38315,6 +38691,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
     user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    parentReview?: ReviewUpdateOneWithoutChildReviewsNestedInput
+    childReviews?: ReviewUpdateManyWithoutParentReviewNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
     feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
@@ -38333,8 +38711,10 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
     feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
@@ -38849,6 +39229,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
+    parentReviewId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -39038,6 +39419,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
+    parentReview?: ReviewUpdateOneWithoutChildReviewsNestedInput
+    childReviews?: ReviewUpdateManyWithoutParentReviewNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
@@ -39056,8 +39439,10 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
@@ -39076,6 +39461,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -39230,6 +39616,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
+    parentReviewId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -39294,6 +39681,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    parentReview?: ReviewUpdateOneWithoutChildReviewsNestedInput
+    childReviews?: ReviewUpdateManyWithoutParentReviewNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
@@ -39312,8 +39701,10 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
@@ -39332,6 +39723,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -39474,6 +39866,23 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
   }
 
+  export type ReviewCreateManyParentReviewInput = {
+    id?: string
+    repositoryId: string
+    userId: string
+    prNumber: number
+    prTitle: string
+    prUrl: string
+    status?: $Enums.ReviewStatus
+    summary?: string | null
+    riskScore?: number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type ReviewThreadCreateManyReviewInput = {
     id?: string
     file: string
@@ -39489,6 +39898,67 @@ export namespace Prisma {
     rating: number
     comment?: string | null
     createdAt?: Date | string
+  }
+
+  export type ReviewUpdateWithoutParentReviewInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    prNumber?: IntFieldUpdateOperationsInput | number
+    prTitle?: StringFieldUpdateOperationsInput | string
+    prUrl?: StringFieldUpdateOperationsInput | string
+    status?: EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    riskScore?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
+    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    childReviews?: ReviewUpdateManyWithoutParentReviewNestedInput
+    threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
+    githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
+    githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
+    feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
+  }
+
+  export type ReviewUncheckedUpdateWithoutParentReviewInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    repositoryId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    prNumber?: IntFieldUpdateOperationsInput | number
+    prTitle?: StringFieldUpdateOperationsInput | string
+    prUrl?: StringFieldUpdateOperationsInput | string
+    status?: EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    riskScore?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
+    threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
+    githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
+    githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
+    feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
+  }
+
+  export type ReviewUncheckedUpdateManyWithoutParentReviewInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    repositoryId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    prNumber?: IntFieldUpdateOperationsInput | number
+    prTitle?: StringFieldUpdateOperationsInput | string
+    prUrl?: StringFieldUpdateOperationsInput | string
+    status?: EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    riskScore?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ReviewThreadUpdateWithoutReviewInput = {
