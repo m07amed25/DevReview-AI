@@ -2,10 +2,16 @@ import { getEmailTransporter, getFromAddress, getAppUrl } from "./transporter";
 import { renderTeamMemberAddedEmail } from "./templates/team-member-added";
 import { renderReviewCompletedEmail } from "./templates/review-completed";
 import { renderGithubConnectionWarningEmail } from "./templates/github-connection-warning";
+import { renderSupportReplyEmail } from "./templates/support-reply";
+import { renderAdminPromotedEmail } from "./templates/admin-promoted";
+import { renderAdminDemotedEmail } from "./templates/admin-demoted";
 import type {
   TeamMemberAddedEmailParams,
   ReviewCompletionEmailParams,
   GithubConnectionWarningEmailParams,
+  SupportReplyEmailParams,
+  AdminPromotedEmailParams,
+  AdminDemotedEmailParams,
   EmailSendResult,
 } from "@/types/email";
 
@@ -122,7 +128,73 @@ export async function sendGithubConnectionWarningEmail(
 
     return await sendEmail(to, subject, html);
   } catch (error) {
-    console.error("❌ Error generating GitHub connection warning email:", error);
+    console.error(
+      "❌ Error generating GitHub connection warning email:",
+      error,
+    );
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "Failed to generate email",
+    };
+  }
+}
+
+/**
+ * Send support reply email
+ */
+export async function sendSupportReplyEmail(
+  params: SupportReplyEmailParams,
+): Promise<EmailSendResult> {
+  const { to } = params;
+
+  try {
+    const html = await renderSupportReplyEmail(params);
+    const subject = `Re: Support Inquiry Response - DEPI Code Review`;
+
+    return await sendEmail(to, subject, html);
+  } catch (error) {
+    console.error("❌ Error generating support reply email:", error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "Failed to generate email",
+    };
+  }
+}
+
+export async function sendAdminPromotedEmail(
+  params: AdminPromotedEmailParams,
+): Promise<EmailSendResult> {
+  const { to } = params;
+
+  try {
+    const html = await renderAdminPromotedEmail(params);
+    const subject = `Congratulations! You've been promoted to Admin - DEPI Code Review`;
+
+    return await sendEmail(to, subject, html);
+  } catch (error) {
+    console.error("❌ Error generating admin promoted email:", error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "Failed to generate email",
+    };
+  }
+}
+
+export async function sendAdminDemotedEmail(
+  params: AdminDemotedEmailParams,
+): Promise<EmailSendResult> {
+  const { to } = params;
+
+  try {
+    const html = await renderAdminDemotedEmail(params);
+    const subject = `Administrator privileges revoked - DEPI Code Review`;
+
+    return await sendEmail(to, subject, html);
+  } catch (error) {
+    console.error("❌ Error generating admin demoted email:", error);
     return {
       success: false,
       error:

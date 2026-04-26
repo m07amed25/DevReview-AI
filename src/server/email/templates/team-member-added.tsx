@@ -28,12 +28,18 @@ export interface TeamMemberAddedEmailProps {
  * Includes comprehensive information about the team and next steps
  */
 export function TeamMemberAddedEmail({ params }: TeamMemberAddedEmailProps) {
-  const { inviteeName, inviterName, teamName, role, teamUrl, needsGithubConnection } = params;
+  const {
+    inviteeName,
+    inviterName,
+    teamName,
+    role,
+    teamUrl,
+    needsGithubConnection,
+  } = params;
 
   const roleDisplay = role.charAt(0) + role.slice(1).toLowerCase();
   const previewText = `You've been added to the "${teamName}" team - Welcome!`;
 
-  // Role-specific permissions
   const rolePermissions: Record<string, string[]> = {
     OWNER: [
       "Manage team settings and members",
@@ -59,9 +65,9 @@ export function TeamMemberAddedEmail({ params }: TeamMemberAddedEmailProps) {
 
   return (
     <Html>
-      <Head />
-      <Preview>{previewText}</Preview>
       <Tailwind>
+        <Head />
+        <Preview>{previewText}</Preview>
         <Body className="bg-gray-100 font-sans">
           <Container className="mx-auto my-10 max-w-[560px] rounded-lg bg-white p-8 shadow-md">
             {/* Logo Section */}
@@ -108,7 +114,9 @@ export function TeamMemberAddedEmail({ params }: TeamMemberAddedEmailProps) {
                   ⚠️ Action Required: Connect GitHub
                 </Text>
                 <Text className="m-0 mb-4 text-sm text-amber-700">
-                  You haven&apos;t connected a GitHub account to your profile yet. DEPI Code Review requires a GitHub connection to analyze code and pull requests.
+                  You haven&apos;t connected a GitHub account to your profile
+                  yet. DEPI Code Review requires a GitHub connection to analyze
+                  code and pull requests.
                 </Text>
                 <Button
                   className="rounded-md bg-amber-600 px-4 py-2 text-sm font-semibold text-white no-underline"
@@ -194,8 +202,9 @@ export function TeamMemberAddedEmail({ params }: TeamMemberAddedEmailProps) {
 
             {/* Footer */}
             <Text className="mt-6 text-sm text-gray-500">
-              If you didn&apos;t expect this invitation, you can safely ignore this
-              email. The invitation was sent by <strong>{inviterName}</strong>.
+              If you didn&apos;t expect this invitation, you can safely ignore
+              this email. The invitation was sent by{" "}
+              <strong>{inviterName}</strong>.
             </Text>
           </Container>
 

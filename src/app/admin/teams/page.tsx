@@ -59,7 +59,7 @@ export default function AdminTeamsPage() {
             Page {page} of {data?.pages ?? 1}
           </CardDescription>
         </CardHeader>
-        <CardContent className="p-0">
+        <CardContent className="p-0 pb-4">
           {isLoading ? (
             <div className="space-y-px">
               {Array.from({ length: 6 }).map((_, i) => (

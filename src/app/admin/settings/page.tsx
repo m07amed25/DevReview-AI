@@ -49,7 +49,7 @@ export default function AdminSettingsPage() {
               Basic settings for your deployment.
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-6 pb-4">
             <div className="space-y-2 opacity-50">
               <Label htmlFor="siteName">Platform Name</Label>
               <Input id="siteName" defaultValue="DevReview AI" disabled />

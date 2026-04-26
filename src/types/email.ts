@@ -22,6 +22,24 @@ export interface GithubConnectionWarningEmailParams {
   userName: string;
 }
 
+export interface SupportReplyEmailParams {
+  to: string;
+  originalMessage: string;
+  replyMessage: string;
+}
+
+export interface AdminPromotedEmailParams {
+  to: string;
+  userName: string;
+  promotedByName: string;
+}
+
+export interface AdminDemotedEmailParams {
+  to: string;
+  userName: string;
+  demotedByName: string;
+}
+
 import type { ReviewStatus } from "@/lib/constants";
 export type { ReviewStatus } from "@/lib/constants";
 
