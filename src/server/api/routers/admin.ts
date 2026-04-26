@@ -96,7 +96,7 @@ export const adminRouter = createTRPCRouter({
       z.object({
         page: z.number().min(1).default(1),
         limit: z.number().min(1).max(100).default(20),
-        search: z.string().optional(),
+        search: z.string().max(50).trim().optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -257,7 +257,7 @@ export const adminRouter = createTRPCRouter({
         status: z
           .enum(["PENDING", "PROCESSING", "COMPLETED", "FAILED", "ALL"])
           .default("ALL"),
-        search: z.string().optional(),
+        search: z.string().max(50).trim().optional(),
         sortBy: z
           .enum(["createdAt", "riskScore", "prNumber"])
           .default("createdAt"),
@@ -477,7 +477,7 @@ export const adminRouter = createTRPCRouter({
       z.object({
         page: z.number().min(1).default(1),
         limit: z.number().min(1).max(100).default(20),
-        search: z.string().optional(),
+        search: z.string().max(50).trim().optional(),
         sortBy: z.enum(["createdAt", "name", "reviews"]).default("createdAt"),
         sortOrder: z.enum(["asc", "desc"]).default("desc"),
       }),
