@@ -48,6 +48,8 @@ import {
   Trash2,
   ShieldBan,
   ShieldCheck,
+  ArrowUp,
+  ArrowDown,
 } from "lucide-react";
 
 export default function AdminUsersPage() {
@@ -146,7 +148,7 @@ export default function AdminUsersPage() {
               Page {page} of {data?.pages ?? 1}
             </CardDescription>
           </CardHeader>
-          <CardContent className="p-0">
+          <CardContent className="p-0 pb-4">
             {isLoading ? (
               <div className="space-y-px">
                 {Array.from({ length: 8 }).map((_, i) => (
@@ -184,18 +186,27 @@ export default function AdminUsersPage() {
                         </span>
 
                         {/* Role badge */}
-                        <Badge
-                          variant={
-                            user.role === "ADMIN" ? "default" : "outline"
-                          }
-                          className={
-                            user.role === "ADMIN"
-                              ? "border-violet-500 bg-violet-500/15 text-violet-400"
-                              : "text-xs"
-                          }
-                        >
-                          {user.role === "ADMIN" ? "Admin" : "User"}
-                        </Badge>
+                        {user.isOwner ? (
+                          <Badge
+                            variant="default"
+                            className="border-amber-500 bg-amber-500/15 text-amber-500"
+                          >
+                            Owner
+                          </Badge>
+                        ) : (
+                          <Badge
+                            variant={
+                              user.role === "ADMIN" ? "default" : "outline"
+                            }
+                            className={
+                              user.role === "ADMIN"
+                                ? "border-violet-500 bg-violet-500/15 text-violet-400"
+                                : "text-xs"
+                            }
+                          >
+                            {user.role === "ADMIN" ? "Admin" : "User"}
+                          </Badge>
+                        )}
 
                         {user.banned && (
                           <Tooltip>
@@ -237,14 +248,10 @@ export default function AdminUsersPage() {
                       </div>
                       <div>
                         <p className="font-medium">{user._count.reviews}</p>
-                        <p className="text-xs text-muted-foreground">
-                          Reviews
-                        </p>
+                        <p className="text-xs text-muted-foreground">Reviews</p>
                       </div>
                       <div>
-                        <p className="font-medium">
-                          {user._count.teamMembers}
-                        </p>
+                        <p className="font-medium">{user._count.teamMembers}</p>
                         <p className="text-xs text-muted-foreground">Teams</p>
                       </div>
                     </div>
@@ -257,12 +264,28 @@ export default function AdminUsersPage() {
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
                         <Button
-                          variant="outline"
+                          variant={
+                            user.role === "ADMIN" ? "outline" : "default"
+                          }
                           size="sm"
-                          className="shrink-0 text-xs"
-                          disabled={updateRole.isPending}
+                          className={`h-8 shrink-0 gap-1.5 text-xs ${
+                            user.role === "ADMIN"
+                              ? "text-amber-600 border-amber-200 hover:bg-amber-50 hover:text-amber-700"
+                              : "bg-violet-600 text-white hover:bg-violet-700"
+                          }`}
+                          disabled={updateRole.isPending || user.isOwner}
                         >
-                          {user.role === "ADMIN" ? "Demote" : "Promote"}
+                          {user.role === "ADMIN" ? (
+                            <>
+                              <ArrowDown className="h-3 w-3" />
+                              Demote
+                            </>
+                          ) : (
+                            <>
+                              <ArrowUp className="h-3 w-3" />
+                              Promote
+                            </>
+                          )}
                         </Button>
                       </AlertDialogTrigger>
                       <AlertDialogContent>
@@ -284,8 +307,7 @@ export default function AdminUsersPage() {
                             onClick={() =>
                               updateRole.mutate({
                                 userId: user.id,
-                                role:
-                                  user.role === "ADMIN" ? "USER" : "ADMIN",
+                                role: user.role === "ADMIN" ? "USER" : "ADMIN",
                               })
                             }
                           >
@@ -304,7 +326,7 @@ export default function AdminUsersPage() {
                             variant="outline"
                             size="icon"
                             className="shrink-0 text-amber-500 border-amber-500/40 hover:bg-amber-500/10"
-                            disabled={unbanUser.isPending}
+                            disabled={unbanUser.isPending || user.isOwner}
                             title="Unban user"
                           >
                             <ShieldCheck className="h-4 w-4" />
@@ -337,10 +359,13 @@ export default function AdminUsersPage() {
                         variant="ghost"
                         size="icon"
                         className="shrink-0 text-amber-500 hover:bg-amber-500/10"
-                        disabled={banUser.isPending}
+                        disabled={banUser.isPending || user.isOwner}
                         title="Ban user"
                         onClick={() =>
-                          setBanTarget({ id: user.id, name: user.name ?? user.email })
+                          setBanTarget({
+                            id: user.id,
+                            name: user.name ?? user.email,
+                          })
                         }
                       >
                         <ShieldBan className="h-4 w-4" />
@@ -354,7 +379,7 @@ export default function AdminUsersPage() {
                           variant="ghost"
                           size="icon"
                           className="shrink-0 text-destructive hover:bg-destructive/10"
-                          disabled={deleteUser.isPending}
+                          disabled={deleteUser.isPending || user.isOwner}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>

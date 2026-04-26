@@ -444,7 +444,7 @@ export default function AdminReviewsPage() {
               </div>
             </div>
           </CardHeader>
-          <CardContent className="p-0">
+          <CardContent className="p-0 pb-4">
             {isLoading ? (
               <div className="space-y-px">
                 {Array.from({ length: 8 }).map((_, i) => (
@@ -577,6 +577,7 @@ export default function AdminReviewsPage() {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem
+                              disabled={review.repository.private}
                               onClick={(e) => {
                                 e.stopPropagation();
                                 window.open(review.prUrl, "_blank");

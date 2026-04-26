@@ -75,9 +75,9 @@ export function ReviewCompletedEmail({ params }: ReviewCompletedEmailProps) {
 
   return (
     <Html>
-      <Head />
-      <Preview>{previewText}</Preview>
       <Tailwind>
+        <Head />
+        <Preview>{previewText}</Preview>
         <Body className="bg-gray-100 font-sans">
           <Container className="mx-auto my-10 max-w-[560px] rounded-lg bg-white p-8 shadow-md">
             {/* Logo Section */}

@@ -53,7 +53,7 @@ function StatCard({
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
         <Icon className="h-4 w-4 text-muted-foreground" />
       </CardHeader>
-      <CardContent>
+      <CardContent className="pb-4">
         {loading ? (
           <Skeleton className="h-8 w-20" />
         ) : (
@@ -161,7 +161,7 @@ export default function AdminOverviewPage() {
             </div>
             <TrendingUp className="h-4 w-4 text-primary" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="pb-4">
             {growthLoading ? (
               <Skeleton className="h-64 w-full" />
             ) : (
@@ -257,7 +257,7 @@ export default function AdminOverviewPage() {
                 Real-time status of critical infra
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 pb-4">
               {[
                 {
                   label: "Database",
@@ -352,7 +352,7 @@ export default function AdminOverviewPage() {
                   <Icon className={`h-4 w-4 ${color}`} />
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pb-4">
                 <div className="text-3xl font-black">{count}</div>
               </CardContent>
             </Card>

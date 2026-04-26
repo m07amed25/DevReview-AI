@@ -166,10 +166,12 @@ export const adminProcedure = t.procedure.use(async ({ ctx, next }) => {
 
   const dbUser = await ctx.db.user.findUnique({
     where: { id: ctx.session.user.id },
-    select: { id: true, role: true },
+    select: { id: true, role: true, email: true },
   });
 
-  if (dbUser?.role !== "ADMIN") {
+  const isOwner = dbUser?.email === process.env.OWNER_MAIL;
+
+  if (!isOwner && dbUser?.role !== "ADMIN") {
     throw new TRPCError({ code: "FORBIDDEN" });
   }
 

@@ -1,6 +1,11 @@
 import { z } from "zod";
 import { UserRole } from "../../db/client";
 import { createTRPCRouter, adminProcedure, publicProcedure } from "../trpc";
+import {
+  sendSupportReplyEmail,
+  sendAdminPromotedEmail,
+  sendAdminDemotedEmail,
+} from "../../email/service";
 
 export const adminRouter = createTRPCRouter({
   getStats: adminProcedure.query(async ({ ctx }) => {
@@ -140,7 +145,14 @@ export const adminRouter = createTRPCRouter({
         ctx.db.user.count({ where }),
       ]);
 
-      return { users, total, pages: Math.ceil(total / limit) };
+      return {
+        users: users.map((u) => ({
+          ...u,
+          isOwner: u.email === process.env.OWNER_MAIL,
+        })),
+        total,
+        pages: Math.ceil(total / limit),
+      };
     }),
 
   getUser: adminProcedure
@@ -191,23 +203,70 @@ export const adminRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const targetUser = await ctx.db.user.findUnique({
+        where: { id: input.userId },
+        select: { email: true, name: true },
+      });
+
+      if (!targetUser) {
+        throw new Error("User not found.");
+      }
+
+      // 1. Protect the owner from any role changes
+      if (targetUser.email === process.env.OWNER_MAIL) {
+        throw new Error("The owner's role cannot be changed.");
+      }
+
+      // 2. Prevent users from changing their own role (except the owner, but we handled that above)
       if (input.userId === ctx.user.id) {
         throw new Error("You cannot change your own role.");
       }
+
       await ctx.db.user.update({
         where: { id: input.userId },
         data: { role: input.role },
       });
+
+      // Send email notification
+      if (input.role === "ADMIN") {
+        void sendAdminPromotedEmail({
+          to: targetUser.email,
+          userName: targetUser.name || "User",
+          promotedByName: ctx.user.name || "Administrator",
+        });
+      } else if (input.role === "USER") {
+        void sendAdminDemotedEmail({
+          to: targetUser.email,
+          userName: targetUser.name || "User",
+          demotedByName: ctx.user.name || "Administrator",
+        });
+      }
+
       return { success: true };
     }),
 
   deleteUser: adminProcedure
     .input(z.object({ userId: z.string().max(255) }))
     .mutation(async ({ ctx, input }) => {
-      // Prevent deleting the admin account itself
+      const targetUser = await ctx.db.user.findUnique({
+        where: { id: input.userId },
+        select: { email: true },
+      });
+
+      if (!targetUser) {
+        throw new Error("User not found.");
+      }
+
+      // 1. Protect the owner from deletion
+      if (targetUser.email === process.env.OWNER_MAIL) {
+        throw new Error("The owner's account cannot be deleted.");
+      }
+
+      // 2. Prevent deleting the admin account itself
       if (input.userId === ctx.user.id) {
         throw new Error("Cannot delete your own admin account.");
       }
+
       await ctx.db.user.delete({ where: { id: input.userId } });
       return { success: true };
     }),
@@ -220,9 +279,25 @@ export const adminRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const targetUser = await ctx.db.user.findUnique({
+        where: { id: input.userId },
+        select: { email: true },
+      });
+
+      if (!targetUser) {
+        throw new Error("User not found.");
+      }
+
+      // 1. Protect the owner from being banned
+      if (targetUser.email === process.env.OWNER_MAIL) {
+        throw new Error("The owner's account cannot be banned.");
+      }
+
+      // 2. Prevent banning self
       if (input.userId === ctx.user.id) {
         throw new Error("You cannot ban your own account.");
       }
+
       // Ban the user and immediately revoke all their active sessions
       await ctx.db.$transaction([
         ctx.db.user.update({
@@ -327,7 +402,12 @@ export const adminRouter = createTRPCRouter({
             createdAt: true,
             updatedAt: true,
             repository: {
-              select: { id: true, fullName: true, htmlUrl: true },
+              select: {
+                id: true,
+                fullName: true,
+                htmlUrl: true,
+                private: true,
+              },
             },
             user: {
               select: {
@@ -561,6 +641,37 @@ export const adminRouter = createTRPCRouter({
       return ctx.db.supportMessage.update({
         where: { id: input.id },
         data: { status: input.status },
+      });
+    }),
+
+  replyToSupportMessage: adminProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        email: z.string().email(),
+        replyMessage: z.string().min(1),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const message = await ctx.db.supportMessage.findUnique({
+        where: { id: input.id },
+      });
+
+      if (!message) {
+        throw new Error("Message not found");
+      }
+
+      // Send the email
+      await sendSupportReplyEmail({
+        to: input.email,
+        originalMessage: message.message,
+        replyMessage: input.replyMessage,
+      });
+
+      // Update status to RESOLVED
+      return ctx.db.supportMessage.update({
+        where: { id: input.id },
+        data: { status: "RESOLVED" },
       });
     }),
 

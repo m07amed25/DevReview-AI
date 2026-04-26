@@ -21,11 +21,30 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Mail, Reply } from "lucide-react";
 
 export default function AdminSupportPage() {
   const utils = trpc.useUtils();
   const { data: messages, isLoading } =
     trpc.admin.getSupportMessages.useQuery();
+
+  const [replyMessage, setReplyMessage] = useState<{
+    id: string;
+    email: string;
+    message: string;
+  } | null>(null);
+  const [replyText, setReplyText] = useState("");
 
   const updateMutation = trpc.admin.updateSupportStatus.useMutation({
     onSuccess: () => {
@@ -34,9 +53,30 @@ export default function AdminSupportPage() {
     },
   });
 
+  const replyMutation = trpc.admin.replyToSupportMessage.useMutation({
+    onSuccess: () => {
+      toast.success("Reply sent successfully");
+      setReplyMessage(null);
+      setReplyText("");
+      utils.admin.getSupportMessages.invalidate();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to send reply");
+    },
+  });
+
   const toggleStatus = (id: string, currentStatus: string) => {
     const nextStatus = currentStatus === "PENDING" ? "RESOLVED" : "PENDING";
     updateMutation.mutate({ id, status: nextStatus });
+  };
+
+  const handleReply = () => {
+    if (!replyMessage || !replyText.trim()) return;
+    replyMutation.mutate({
+      id: replyMessage.id,
+      email: replyMessage.email,
+      replyMessage: replyText,
+    });
   };
 
   return (
@@ -55,7 +95,7 @@ export default function AdminSupportPage() {
             Direct inquiries from users during downtime.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pb-4">
           {isLoading ? (
             <div className="space-y-4">
               <Skeleton className="h-10 w-full" />
@@ -109,15 +149,35 @@ export default function AdminSupportPage() {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => toggleStatus(msg.id, msg.status)}
-                        disabled={updateMutation.isPending}
-                      >
-                        Mark as{" "}
-                        {msg.status === "PENDING" ? "Resolved" : "Pending"}
-                      </Button>
+                      <div className="flex justify-end gap-2">
+                        {msg.email && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="h-8 gap-1"
+                            onClick={() => {
+                              setReplyMessage({
+                                id: msg.id,
+                                email: msg.email!,
+                                message: msg.message,
+                              });
+                            }}
+                          >
+                            <Reply className="h-3.5 w-3.5" />
+                            Reply
+                          </Button>
+                        )}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-8"
+                          onClick={() => toggleStatus(msg.id, msg.status)}
+                          disabled={updateMutation.isPending}
+                        >
+                          Mark as{" "}
+                          {msg.status === "PENDING" ? "Resolved" : "Pending"}
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -126,6 +186,71 @@ export default function AdminSupportPage() {
           )}
         </CardContent>
       </Card>
+
+      <Dialog
+        open={!!replyMessage}
+        onOpenChange={(open) => !open && setReplyMessage(null)}
+      >
+        <DialogContent className="sm:max-w-[550px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Mail className="h-5 w-5 text-primary" />
+              Reply to Support Inquiry
+            </DialogTitle>
+            <DialogDescription>
+              Sending an email to <strong>{replyMessage?.email}</strong>
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label className="text-xs uppercase tracking-wider text-muted-foreground">
+                Original Message
+              </Label>
+              <div className="rounded-lg bg-muted p-3 text-sm text-muted-foreground max-h-32 overflow-y-auto italic">
+                &quot;{replyMessage?.message}&quot;
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="reply" className="text-sm font-medium">
+                Your Response
+              </Label>
+              <Textarea
+                id="reply"
+                placeholder="Type your reply here..."
+                className="min-h-[150px] resize-none"
+                value={replyText}
+                onChange={(e) => setReplyText(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="ghost"
+              onClick={() => setReplyMessage(null)}
+              disabled={replyMutation.isPending}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleReply}
+              disabled={replyMutation.isPending || !replyText.trim()}
+              className="gap-2"
+            >
+              {replyMutation.isPending ? (
+                "Sending..."
+              ) : (
+                <>
+                  <Mail className="h-4 w-4" />
+                  Send Reply
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
