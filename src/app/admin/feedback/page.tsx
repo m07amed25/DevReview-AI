@@ -1,5 +1,7 @@
 "use client";
 
+import { useCallback, useTransition } from "react";
+
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { trpc } from "@/lib/trpc/client";
 import {
@@ -39,20 +41,30 @@ export default function AdminFeedbackPage() {
     rating,
   });
 
-  const updateFilters = (newPage: number, newRating: RatingFilter) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (newPage > 1) params.set("page", newPage.toString());
-    else params.delete("page");
+  const [isPending, startTransition] = useTransition();
 
-    if (newRating !== 0) params.set("rating", newRating.toString());
-    else params.delete("rating");
+  const updateFilters = useCallback(
+    (newPage: number, newRating: RatingFilter) => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (newPage > 1) params.set("page", newPage.toString());
+      else params.delete("page");
 
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
-  };
+      if (newRating !== 0) params.set("rating", newRating.toString());
+      else params.delete("rating");
 
-  const handleRatingChange = (val: string) => {
-    updateFilters(1, Number(val) as RatingFilter);
-  };
+      startTransition(() => {
+        router.push(`${pathname}?${params.toString()}`, { scroll: false });
+      });
+    },
+    [searchParams, pathname, router],
+  );
+
+  const handleRatingChange = useCallback(
+    (val: string) => {
+      updateFilters(1, Number(val) as RatingFilter);
+    },
+    [updateFilters],
+  );
 
   return (
     <div className="space-y-6">
