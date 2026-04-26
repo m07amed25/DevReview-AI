@@ -13,6 +13,7 @@ import {
   X,
   ArrowLeft,
   MessageSquareText,
+  Database,
 } from "lucide-react";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -25,6 +26,7 @@ import { useRouter } from "next/navigation";
 const NAV_ITEMS = [
   { href: "/admin", label: "Overview", icon: LayoutDashboard, exact: true },
   { href: "/admin/users", label: "Users", icon: Users },
+  { href: "/admin/repos", label: "Repositories", icon: Database },
   { href: "/admin/reviews", label: "Reviews", icon: GitPullRequest },
   { href: "/admin/teams", label: "Teams", icon: Users2 },
   { href: "/admin/feedback", label: "Feedback", icon: MessageSquareText },
@@ -123,7 +125,7 @@ export function AdminSidebar({ admin }: AdminSidebarProps) {
 
   return (
     <>
-      <aside className="hidden w-56 shrink-0 border-r lg:flex lg:flex-col">
+      <aside className="hidden w-56 shrink-0 border-r lg:flex lg:flex-col sticky top-0 h-screen overflow-y-auto">
         {sidebarContent}
       </aside>
 
