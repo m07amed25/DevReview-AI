@@ -19,6 +19,7 @@ export function HomeFooter() {
                 <Link
                   href="/sign-in"
                   className="hover:text-white transition-colors duration-200"
+                  title="Sign in to your account"
                 >
                   Sign In
                 </Link>
@@ -27,6 +28,7 @@ export function HomeFooter() {
                 <Link
                   href="/sign-up"
                   className="hover:text-white transition-colors duration-200"
+                  title="Create a new account"
                 >
                   Get Started
                 </Link>
@@ -35,6 +37,7 @@ export function HomeFooter() {
                 <Link
                   href="/pricing"
                   className="hover:text-white transition-colors duration-200"
+                  title="View pricing and plans"
                 >
                   Pricing
                 </Link>

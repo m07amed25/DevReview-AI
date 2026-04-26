@@ -187,8 +187,28 @@ export default function HomePage() {
     return () => ctx.revert();
   }, []);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "DevReview AI",
+    operatingSystem: "Any",
+    applicationCategory: "DeveloperApplication",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+    },
+    description:
+      "Automated code reviews powered by AI. Catch bugs, security issues, and code quality problems instantly directly in your GitHub pull requests.",
+    url: "https://dev-review-ai-chi.vercel.app",
+  };
+
   return (
     <div className="dark min-h-screen bg-zinc-950 text-zinc-50 selection:bg-indigo-500/30">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <PageBackground />
 
       <a
