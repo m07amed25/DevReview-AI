@@ -19,7 +19,17 @@ export async function middleware(request: NextRequest) {
   const isApiRoute = pathname.startsWith("/api");
   const isStaticFile = pathname.startsWith("/_next") || pathname.includes(".");
 
-  if (!isMaintenancePage && !isApiRoute && !isStaticFile) {
+  const isAppRoute = [
+    "/repo",
+    "/reviews",
+    "/settings",
+    "/teams",
+    "/profile",
+    "/analytics",
+    "/admin",
+  ].some((route) => pathname === route || pathname.startsWith(`${route}/`));
+
+  if (isAppRoute && !isMaintenancePage && !isApiRoute && !isStaticFile) {
     try {
       const maintenanceUrl = new URL(
         "/api/system/maintenance",
@@ -29,7 +39,6 @@ export async function middleware(request: NextRequest) {
       const { maintenanceMode } = await maintenanceRes.json();
 
       if (maintenanceMode) {
-        // Check if user is an admin to bypass maintenance
         const sessionUrl = new URL(
           "/api/auth/get-session",
           request.nextUrl.origin,
@@ -57,7 +66,6 @@ export async function middleware(request: NextRequest) {
       request.cookies.get("better-auth.session_token")?.value ??
       request.cookies.get("__Secure-better-auth.session_token")?.value;
 
-    // Validate session cookie strictly (Allowing alphanumeric, safe symbols, and Base64 characters + /)
     const isValidSession =
       typeof sessionCookie === "string" &&
       sessionCookie.length >= 10 &&
