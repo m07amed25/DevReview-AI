@@ -36,8 +36,15 @@ export function HomeHeader() {
               asChild
               className="bg-white text-zinc-900 hover:bg-zinc-200 rounded-full font-semibold shadow-lg shadow-white/10 px-5 group"
             >
-              <Link href="/repo">
-                <Github className="h-3.5 w-3.5 mr-1.5 transition-transform group-hover:scale-110" />
+              <Link
+                href="/repo"
+                title="View your repositories"
+                aria-label="Repositories"
+              >
+                <Github
+                  className="h-3.5 w-3.5 mr-1.5 transition-transform group-hover:scale-110"
+                  aria-hidden="true"
+                />
                 Repositories
               </Link>
             </Button>
@@ -49,16 +56,29 @@ export function HomeHeader() {
                 asChild
                 className="hidden sm:inline-flex text-zinc-300 hover:text-white hover:bg-white/5"
               >
-                <Link href="/sign-in">Sign In</Link>
+                <Link
+                  href="/sign-in"
+                  title="Sign in to your account"
+                  aria-label="Sign In"
+                >
+                  Sign In
+                </Link>
               </Button>
               <Button
                 size="sm"
                 asChild
                 className="bg-white text-zinc-900 hover:bg-zinc-200 rounded-full font-semibold shadow-lg shadow-white/10 px-5"
               >
-                <Link href="/sign-up">
+                <Link
+                  href="/sign-up"
+                  title="Create a new account"
+                  aria-label="Get Started"
+                >
                   Get Started
-                  <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
+                  <ArrowRight
+                    className="h-3.5 w-3.5 ml-1.5"
+                    aria-hidden="true"
+                  />
                 </Link>
               </Button>
             </>

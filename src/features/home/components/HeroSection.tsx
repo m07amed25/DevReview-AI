@@ -94,10 +94,20 @@ export function HeroSection({
               className="h-14 px-10 text-base w-full sm:w-auto bg-white text-zinc-900 hover:bg-zinc-200 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 rounded-full font-bold shadow-[0_0_40px_rgba(255,255,255,0.1)] group"
               asChild
             >
-              <Link href="/repo">
-                <Github className="h-5 w-5 mr-2 transition-transform group-hover:scale-110" />
+              <Link
+                href="/repo"
+                title="Go to your repositories dashboard"
+                aria-label="Go to Repositories"
+              >
+                <Github
+                  className="h-5 w-5 mr-2 transition-transform group-hover:scale-110"
+                  aria-hidden="true"
+                />
                 Go to Repositories
-                <ArrowRight className="h-4 w-4 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                <ArrowRight
+                  className="h-4 w-4 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all"
+                  aria-hidden="true"
+                />
               </Link>
             </Button>
           ) : (
@@ -107,7 +117,11 @@ export function HeroSection({
                 className="h-14 px-8 text-base w-full sm:w-auto bg-zinc-100 text-zinc-900 hover:bg-white hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 rounded-full font-semibold shadow-[0_0_40px_rgba(255,255,255,0.1)]"
                 asChild
               >
-                <Link href="/sign-up">
+                <Link
+                  href="/sign-up"
+                  title="Create a free account and start reviewing code"
+                  aria-label="Start Reviewing Free"
+                >
                   Start Reviewing Free
                   <ArrowRight className="h-4 w-4 ml-2" aria-hidden="true" />
                 </Link>
@@ -118,8 +132,15 @@ export function HeroSection({
                 className="h-14 px-8 text-base w-full sm:w-auto rounded-full border-white/10 bg-zinc-900/50 backdrop-blur-md hover:bg-zinc-800 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-zinc-300"
                 asChild
               >
-                <Link href="/sign-in">
-                  <Command className="h-4 w-4 mr-2 text-zinc-500" />
+                <Link
+                  href="/sign-in"
+                  title="Sign in to your DevReview AI account"
+                  aria-label="Sign In"
+                >
+                  <Command
+                    className="h-4 w-4 mr-2 text-zinc-500"
+                    aria-hidden="true"
+                  />
                   Sign In
                 </Link>
               </Button>

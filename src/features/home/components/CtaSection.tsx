@@ -49,10 +49,20 @@ export function CtaSection() {
               className="h-14 px-10 text-base w-full sm:w-auto bg-white text-zinc-900 hover:bg-zinc-200 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 rounded-full font-bold shadow-[0_0_30px_rgba(255,255,255,0.15)] group"
               asChild
             >
-              <Link href="/repo">
-                <Github className="h-5 w-5 mr-2 transition-transform group-hover:scale-110" />
+              <Link
+                href="/repo"
+                title="Explore your repositories"
+                aria-label="Explore Repositories"
+              >
+                <Github
+                  className="h-5 w-5 mr-2 transition-transform group-hover:scale-110"
+                  aria-hidden="true"
+                />
                 Explore Repositories
-                <ArrowRight className="h-4 w-4 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                <ArrowRight
+                  className="h-4 w-4 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all"
+                  aria-hidden="true"
+                />
               </Link>
             </Button>
           ) : (
@@ -62,7 +72,11 @@ export function CtaSection() {
                 className="h-14 px-8 text-base w-full sm:w-auto bg-white text-zinc-900 hover:bg-zinc-200 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 rounded-full font-semibold shadow-[0_0_30px_rgba(255,255,255,0.15)]"
                 asChild
               >
-                <Link href="/sign-up">
+                <Link
+                  href="/sign-up"
+                  title="Create a free account and get started"
+                  aria-label="Get Started for Free"
+                >
                   Get Started for Free
                   <ArrowRight className="h-4 w-4 ml-2" aria-hidden="true" />
                 </Link>
@@ -73,7 +87,13 @@ export function CtaSection() {
                 className="h-14 px-8 text-base w-full sm:w-auto rounded-full border-white/10 bg-zinc-900/50 backdrop-blur-md hover:bg-zinc-800 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-zinc-300"
                 asChild
               >
-                <Link href="/pricing">View Pricing</Link>
+                <Link
+                  href="/pricing"
+                  title="View pricing and plans"
+                  aria-label="View Pricing"
+                >
+                  View Pricing
+                </Link>
               </Button>
             </>
           )}

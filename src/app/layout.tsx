@@ -8,6 +8,7 @@ import { PageTransitionProvider } from "@/components/animations/page-transition"
 import { ErrorBoundary } from "@/components/error-boundary";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
   title: {
     default: "DevReview AI",
     template: "%s | DevReview AI",
@@ -21,17 +22,60 @@ export const metadata: Metadata = {
     "pull request",
     "security",
     "developer tools",
+    "automated code review",
+    "AI code review",
+    "SaaS",
+    "continuous integration",
   ],
   authors: [{ name: "Mohamed Reda" }],
+  creator: "Mohamed Reda",
+  publisher: "DevReview AI",
+  applicationName: "DevReview AI",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  alternates: {
+    canonical: "/",
+  },
   icons: {
     icon: "/favicon.svg",
     apple: "/favicon.svg",
   },
-  openGraph: {
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
     title: "DevReview AI",
+  },
+  openGraph: {
+    title: "DevReview AI | Smart Automated Code Reviews",
+    description:
+      "Automated code reviews powered by AI. Catch bugs, security issues, and code quality problems instantly directly in your GitHub pull requests.",
+    type: "website",
+    siteName: "DevReview AI",
+    locale: "en_US",
+    url: "/",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "DevReview AI | Smart Automated Code Reviews",
     description:
       "Automated code reviews powered by AI. Catch bugs, security issues, and code quality problems instantly.",
-    type: "website",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  verification: {
+    google: "google-site-verification-token", // User will need to replace this
   },
 };
 
