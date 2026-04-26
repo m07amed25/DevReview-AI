@@ -491,3 +491,21 @@ model ReviewRule {
   @@index([teamId])
   @@map("review_rule")
 }
+
+model SystemSettings {
+  id              String   @id @default("global")
+  maintenanceMode Boolean  @default(false)
+  updatedAt       DateTime @updatedAt
+
+  @@map("system_settings")
+}
+
+model SupportMessage {
+  id        String   @id @default(cuid())
+  email     String?
+  message   String   @db.Text
+  status    String   @default("PENDING")
+  createdAt DateTime @default(now())
+
+  @@map("support_message")
+}

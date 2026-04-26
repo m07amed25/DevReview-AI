@@ -14,6 +14,49 @@ const protectedRoutes = [
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // 1. Check Maintenance Mode
+  const isMaintenancePage = pathname === "/maintenance";
+  const isApiRoute = pathname.startsWith("/api");
+  const isStaticFile = pathname.startsWith("/_next") || pathname.includes(".");
+
+  const isAppRoute = [
+    "/repo",
+    "/reviews",
+    "/settings",
+    "/teams",
+    "/profile",
+    "/analytics",
+    "/admin",
+  ].some((route) => pathname === route || pathname.startsWith(`${route}/`));
+
+  if (isAppRoute && !isMaintenancePage && !isApiRoute && !isStaticFile) {
+    try {
+      const maintenanceUrl = new URL(
+        "/api/system/maintenance",
+        request.nextUrl.origin,
+      );
+      const maintenanceRes = await fetch(maintenanceUrl.toString());
+      const { maintenanceMode } = await maintenanceRes.json();
+
+      if (maintenanceMode) {
+        const sessionUrl = new URL(
+          "/api/auth/get-session",
+          request.nextUrl.origin,
+        );
+        const sessionRes = await fetch(sessionUrl.toString(), {
+          headers: { cookie: request.headers.get("cookie") ?? "" },
+        });
+        const data = await sessionRes.json();
+
+        if (data?.user?.role !== "ADMIN") {
+          return NextResponse.redirect(new URL("/maintenance", request.url));
+        }
+      }
+    } catch (e) {
+      console.error("Maintenance check failed:", e);
+    }
+  }
+
   const isProtectedRoute = protectedRoutes.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`),
   );
@@ -26,8 +69,8 @@ export async function middleware(request: NextRequest) {
     const isValidSession =
       typeof sessionCookie === "string" &&
       sessionCookie.length >= 10 &&
-      sessionCookie.length <= 1024 &&
-      /^[a-zA-Z0-9\-_.]+$/.test(sessionCookie);
+      sessionCookie.length <= 4096 &&
+      /^[a-zA-Z0-9\-_.~%+=/]+$/.test(sessionCookie);
 
     if (!isValidSession) {
       return NextResponse.redirect(new URL("/sign-in", request.url));

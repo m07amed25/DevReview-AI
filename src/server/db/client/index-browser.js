@@ -364,6 +364,20 @@ exports.Prisma.ReviewRuleScalarFieldEnum = {
   userId: 'userId'
 };
 
+exports.Prisma.SystemSettingsScalarFieldEnum = {
+  id: 'id',
+  maintenanceMode: 'maintenanceMode',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SupportMessageScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  message: 'message',
+  status: 'status',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -496,7 +510,9 @@ exports.Prisma.ModelName = {
   GitHubStatusCheck: 'GitHubStatusCheck',
   BranchProtectionRecommendation: 'BranchProtectionRecommendation',
   Diagram: 'Diagram',
-  ReviewRule: 'ReviewRule'
+  ReviewRule: 'ReviewRule',
+  SystemSettings: 'SystemSettings',
+  SupportMessage: 'SupportMessage'
 };
 
 /**

@@ -14,7 +14,41 @@ import {
   ArrowLeft,
   MessageSquareText,
   Database,
+  BarChart3,
+  Activity,
+  Settings,
+  ShieldCheck,
 } from "lucide-react";
+
+const NAV_GROUPS = [
+  {
+    title: "Main",
+    items: [
+      { href: "/admin", label: "Overview", icon: LayoutDashboard, exact: true },
+      { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
+    ],
+  },
+  {
+    title: "Management",
+    items: [
+      { href: "/admin/users", label: "Users", icon: Users },
+      { href: "/admin/repos", label: "Repositories", icon: Database },
+      { href: "/admin/reviews", label: "Reviews", icon: GitPullRequest },
+      { href: "/admin/teams", label: "Teams", icon: Users2 },
+      { href: "/admin/support", label: "Support Messages", icon: MessageSquareText },
+    ],
+  },
+  {
+    title: "System",
+    items: [
+      { href: "/admin/audit", label: "Audit Logs", icon: Activity },
+      { href: "/admin/security", label: "Security", icon: ShieldCheck },
+      { href: "/admin/feedback", label: "Feedback", icon: MessageSquareText },
+      { href: "/admin/settings", label: "Settings", icon: Settings },
+    ],
+  },
+];
+
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -22,15 +56,6 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
-
-const NAV_ITEMS = [
-  { href: "/admin", label: "Overview", icon: LayoutDashboard, exact: true },
-  { href: "/admin/users", label: "Users", icon: Users },
-  { href: "/admin/repos", label: "Repositories", icon: Database },
-  { href: "/admin/reviews", label: "Reviews", icon: GitPullRequest },
-  { href: "/admin/teams", label: "Teams", icon: Users2 },
-  { href: "/admin/feedback", label: "Feedback", icon: MessageSquareText },
-];
 
 interface AdminSidebarProps {
   admin: {
@@ -58,28 +83,37 @@ export function AdminSidebar({ admin }: AdminSidebarProps) {
       <div className="flex items-center gap-2 px-4 py-5">
         <ShieldAlert className="h-5 w-5 text-destructive" />
         <span className="text-sm font-bold uppercase tracking-widest text-destructive">
-          Admin Panel
+          Command Center
         </span>
       </div>
 
       <Separator />
 
-      <nav className="flex-1 space-y-1 px-3 py-4">
-        {NAV_ITEMS.map(({ href, label, icon: Icon, exact }) => (
-          <Link
-            key={href}
-            href={href}
-            onClick={() => setMobileOpen(false)}
-            className={cn(
-              "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
-              isActive(href, exact)
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground",
-            )}
-          >
-            <Icon className="h-4 w-4 shrink-0" />
-            {label}
-          </Link>
+      <nav className="flex-1 space-y-6 px-3 py-4">
+        {NAV_GROUPS.map((group) => (
+          <div key={group.title} className="space-y-1">
+            <h4 className="px-3 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70">
+              {group.title}
+            </h4>
+            <div className="space-y-1">
+              {group.items.map(({ href, label, icon: Icon, exact }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={() => setMobileOpen(false)}
+                  className={cn(
+                    "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200",
+                    isActive(href, exact)
+                      ? "bg-primary/10 text-primary"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                  )}
+                >
+                  <Icon className="h-4 w-4 shrink-0" />
+                  {label}
+                </Link>
+              ))}
+            </div>
+          </div>
         ))}
       </nav>
 

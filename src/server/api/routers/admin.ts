@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { UserRole } from "../../db/client";
-import { createTRPCRouter, adminProcedure } from "../trpc";
+import { createTRPCRouter, adminProcedure, publicProcedure } from "../trpc";
 
 export const adminRouter = createTRPCRouter({
   getStats: adminProcedure.query(async ({ ctx }) => {
@@ -530,5 +530,53 @@ export const adminRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await ctx.db.repository.delete({ where: { id: input.repositoryId } });
       return { success: true };
+    }),
+
+  getSystemSettings: adminProcedure.query(async ({ ctx }) => {
+    return ctx.db.systemSettings.upsert({
+      where: { id: "global" },
+      update: {},
+      create: { id: "global", maintenanceMode: false },
+    });
+  }),
+
+  updateSystemSettings: adminProcedure
+    .input(z.object({ maintenanceMode: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.systemSettings.update({
+        where: { id: "global" },
+        data: { maintenanceMode: input.maintenanceMode },
+      });
+    }),
+
+  getSupportMessages: adminProcedure.query(async ({ ctx }) => {
+    return ctx.db.supportMessage.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+  }),
+
+  updateSupportStatus: adminProcedure
+    .input(z.object({ id: z.string(), status: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.supportMessage.update({
+        where: { id: input.id },
+        data: { status: input.status },
+      });
+    }),
+
+  submitSupportMessage: publicProcedure
+    .input(
+      z.object({
+        email: z.string().email().optional(),
+        message: z.string().min(1).max(5000),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.supportMessage.create({
+        data: {
+          email: input.email,
+          message: input.message,
+        },
+      });
     }),
 });

@@ -49,6 +49,7 @@ interface UserProps {
   name: string;
   email: string;
   image?: string | null | undefined;
+  role?: string;
 }
 
 export function UserMenu({ user }: { user: UserProps }) {
@@ -313,20 +314,22 @@ export function UserMenu({ user }: { user: UserProps }) {
               </div>
             </DropdownMenuItem>
 
-            {/* <DropdownMenuItem
-              className="gap-3 px-2 py-2 cursor-pointer rounded-md"
-              onClick={() => router.push("/security")}
-            >
-              <div className="flex items-center justify-center size-8 rounded-md bg-amber-500/10">
-                <Shield className="size-4 text-amber-500" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-sm font-medium">Security</span>
-                <span className="text-[11px] text-muted-foreground">
-                  Access & permissions
-                </span>
-              </div>
-            </DropdownMenuItem> */}
+            {user.role === "ADMIN" && (
+              <DropdownMenuItem
+                className="gap-3 px-2 py-2 cursor-pointer rounded-md"
+                onClick={() => router.push("/admin")}
+              >
+                <div className="flex items-center justify-center size-8 rounded-md bg-amber-500/10">
+                  <Shield className="size-4 text-amber-500" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium">Admin Panel</span>
+                  <span className="text-[11px] text-muted-foreground">
+                    System management
+                  </span>
+                </div>
+              </DropdownMenuItem>
+            )}
           </DropdownMenuGroup>
         </div>
 
