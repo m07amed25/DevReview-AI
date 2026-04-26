@@ -34,7 +34,7 @@ const nextConfig: NextConfig = {
       "./node_modules/react-zoom-pan-pinch/**",
     ],
   },
-  compress: true,
+  compress: process.env.NODE_ENV === "production",
   async headers() {
     return [
       {
