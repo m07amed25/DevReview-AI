@@ -23,11 +23,17 @@ export async function middleware(request: NextRequest) {
       request.cookies.get("better-auth.session_token")?.value ??
       request.cookies.get("__Secure-better-auth.session_token")?.value;
 
-    if (!sessionCookie) {
+    const isValidSession =
+      typeof sessionCookie === "string" &&
+      sessionCookie.length >= 10 &&
+      sessionCookie.length <= 1024 &&
+      /^[a-zA-Z0-9\-_.]+$/.test(sessionCookie);
+
+    if (!isValidSession) {
       return NextResponse.redirect(new URL("/sign-in", request.url));
     }
 
-    const sessionUrl = new URL("/api/auth/get-session", request.url);
+    const sessionUrl = new URL("/api/auth/get-session", request.nextUrl.origin);
     const sessionRes = await fetch(sessionUrl.toString(), {
       headers: { cookie: request.headers.get("cookie") ?? "" },
     });
