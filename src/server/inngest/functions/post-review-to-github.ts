@@ -55,10 +55,14 @@ function buildProgressBar(value: number, max = 100, length = 20): string {
 
 function severityEmoji(severity: string): string {
   switch (severity.toLowerCase()) {
-    case "critical": return "🔴";
-    case "high":     return "🟠";
-    case "medium":   return "🟡";
-    default:         return "🔵";
+    case "critical":
+      return "🔴";
+    case "high":
+      return "🟠";
+    case "medium":
+      return "🟡";
+    default:
+      return "🔵";
   }
 }
 
@@ -112,7 +116,7 @@ function badgeUrl(
   color: string,
   opts: { style?: string; labelColor?: string } = {},
 ): string {
-  const base  = process.env.APP_BASE_URL ?? process.env.BETTER_AUTH_URL ?? "";
+  const base = process.env.APP_BASE_URL ?? process.env.BETTER_AUTH_URL ?? "";
   const style = opts.style ?? "flat-square";
   const params = new URLSearchParams({
     label,
@@ -134,27 +138,31 @@ function badge(
   color: string,
   opts: { style?: string; labelColor?: string; link?: string } = {},
 ): string {
-  const url  = badgeUrl(label, message, color, opts);
-  const alt  = [label, message].filter(Boolean).join(": ");
-  const img  = `![${alt}](${url})`;
+  const url = badgeUrl(label, message, color, opts);
+  const alt = [label, message].filter(Boolean).join(": ");
+  const img = `![${alt}](${url})`;
   return opts.link ? `[${img}](${opts.link})` : img;
 }
 
 /** badge-maker color for a 0-100 risk score */
 function riskBadgeColor(score: number): string {
-  if (score < 25) return "#2ea44f";   // GitHub green
-  if (score < 50) return "#dbab09";   // GitHub yellow
-  if (score < 75) return "#e36209";   // GitHub orange
-  return "#cb2431";                    // GitHub red
+  if (score < 25) return "#2ea44f"; // GitHub green
+  if (score < 50) return "#dbab09"; // GitHub yellow
+  if (score < 75) return "#e36209"; // GitHub orange
+  return "#cb2431"; // GitHub red
 }
 
 /** badge-maker color for a severity string */
 function severityBadgeColor(severity: string): string {
   switch (severity.toLowerCase()) {
-    case "critical": return "critical";    // alias → #e05d44
-    case "high":     return "important";   // alias → #fe7d37
-    case "medium":   return "#dbab09";
-    default:         return "informational"; // alias → #007ec6
+    case "critical":
+      return "critical"; // alias → #e05d44
+    case "high":
+      return "important"; // alias → #fe7d37
+    case "medium":
+      return "#dbab09";
+    default:
+      return "informational"; // alias → #007ec6
   }
 }
 
@@ -168,13 +176,13 @@ function qualityBadgeColor(score: number): string {
 
 /** badge-maker color for pass/fail overall status */
 function statusBadgeColor(hasCritical: boolean, hasFailed: boolean): string {
-  if (hasFailed)   return "critical";
+  if (hasFailed) return "critical";
   if (hasCritical) return "important";
   return "#2ea44f";
 }
 
 function statusBadgeLabel(hasCritical: boolean, hasFailed: boolean): string {
-  if (hasFailed)   return "Error";
+  if (hasFailed) return "Error";
   if (hasCritical) return "Failed";
   return "Passed";
 }
@@ -202,17 +210,20 @@ export function mapFindingsToReviewPayload(
 ): { body: string; inlineComments: ReviewComment[] } {
   const values = Array.isArray(findings) ? (findings as StoredFinding[]) : [];
 
-  const appBaseUrl    = process.env.APP_BASE_URL ?? process.env.BETTER_AUTH_URL ?? "";
-  const reviewUrl     = `${appBaseUrl}/repo/${repositoryId}/reviews/${reviewId}`;
+  const appBaseUrl =
+    process.env.APP_BASE_URL ?? process.env.BETTER_AUTH_URL ?? "";
+  const reviewUrl = `${appBaseUrl}/repo/${repositoryId}/reviews/${reviewId}`;
 
-  const prTitle       = options?.prTitle       ?? null;
-  const commitSha     = options?.commitSha     ?? null;
-  const aiSummary     = options?.summary       ?? null;
-  const riskScore     = options?.riskScore     ?? null;
+  const prTitle = options?.prTitle ?? null;
+  const commitSha = options?.commitSha ?? null;
+  const aiSummary = options?.summary ?? null;
+  const riskScore = options?.riskScore ?? null;
   const overallStatus = options?.overallStatus ?? "COMPLETED";
-  const qmRaw         = options?.qualityMetrics;
+  const qmRaw = options?.qualityMetrics;
   const qualityMetrics: QualityMetricsData | null =
-    qmRaw && typeof qmRaw === "object" && !Array.isArray(qmRaw) &&
+    qmRaw &&
+    typeof qmRaw === "object" &&
+    !Array.isArray(qmRaw) &&
     "complexity" in (qmRaw as Record<string, unknown>)
       ? (qmRaw as QualityMetricsData)
       : null;
@@ -222,19 +233,30 @@ export function mapFindingsToReviewPayload(
   const summaryFindings: StoredFinding[] = [];
 
   for (const finding of values) {
-    const path = finding.filePath ?? finding.filename ?? finding.file ?? finding.path;
+    const path =
+      finding.filePath ?? finding.filename ?? finding.file ?? finding.path;
     if (path && typeof finding.line === "number" && finding.line > 0) {
-      const severity    = (finding.severity ?? finding.severityLevel ?? "low").toUpperCase();
-      const text        = finding.message ?? finding.text ?? "Issue detected";
-      const emoji       = severityEmoji(severity);
+      const severity = (
+        finding.severity ??
+        finding.severityLevel ??
+        "low"
+      ).toUpperCase();
+      const text = finding.message ?? finding.text ?? "Issue detected";
+      const emoji = severityEmoji(severity);
       // Shields.io badges for inline comments
-      const sevBadge    = badge(severity, "DevReview AI", severityBadgeColor(severity), { style: "flat-square" });
-      const catBadge    = finding.category
+      const sevBadge = badge(
+        severity,
+        "DevReview AI",
+        severityBadgeColor(severity),
+        { style: "flat-square" },
+      );
+      const catBadge = finding.category
         ? ` ${badge("category", finding.category, "blueviolet", { style: "flat-square" })}`
         : "";
-      const confBadge   = typeof finding.confidence === "number"
-        ? ` ${badge("confidence", `${finding.confidence}%`, qualityBadgeColor(finding.confidence), { style: "flat-square" })}`
-        : "";
+      const confBadge =
+        typeof finding.confidence === "number"
+          ? ` ${badge("confidence", `${finding.confidence}%`, qualityBadgeColor(finding.confidence), { style: "flat-square" })}`
+          : "";
       const suggestionLine = finding.suggestion
         ? `\n\n> 💡 **Suggestion**\n> ${finding.suggestion}`
         : "";
@@ -257,23 +279,34 @@ export function mapFindingsToReviewPayload(
 
   // ── Severity counts ──────────────────────────────────────────────────────
   const counts = {
-    critical: values.filter(f => (f.severity ?? f.severityLevel ?? "").toLowerCase() === "critical").length,
-    high:     values.filter(f => (f.severity ?? f.severityLevel ?? "").toLowerCase() === "high").length,
-    medium:   values.filter(f => (f.severity ?? f.severityLevel ?? "").toLowerCase() === "medium").length,
-    low:      values.filter(f => {
+    critical: values.filter(
+      (f) => (f.severity ?? f.severityLevel ?? "").toLowerCase() === "critical",
+    ).length,
+    high: values.filter(
+      (f) => (f.severity ?? f.severityLevel ?? "").toLowerCase() === "high",
+    ).length,
+    medium: values.filter(
+      (f) => (f.severity ?? f.severityLevel ?? "").toLowerCase() === "medium",
+    ).length,
+    low: values.filter((f) => {
       const s = (f.severity ?? f.severityLevel ?? "").toLowerCase();
-      return s === "low" || (s !== "critical" && s !== "high" && s !== "medium");
+      return (
+        s === "low" || (s !== "critical" && s !== "high" && s !== "medium")
+      );
     }).length,
   };
   const totalIssues = values.length;
   const hasCritical = counts.critical > 0;
-  const hasFailed   = overallStatus === "FAILED";
+  const hasFailed = overallStatus === "FAILED";
 
   // ── Quality overall ──────────────────────────────────────────────────────
   const qualityOverall = qualityMetrics
     ? Math.round(
-        (qualityMetrics.complexity + qualityMetrics.maintainability +
-         qualityMetrics.readability + qualityMetrics.testability) / 4,
+        (qualityMetrics.complexity +
+          qualityMetrics.maintainability +
+          qualityMetrics.readability +
+          qualityMetrics.testability) /
+          4,
       )
     : null;
 
@@ -288,7 +321,7 @@ export function mapFindingsToReviewPayload(
 
   // ── Meta quote (PR title + commit) ───────────────────────────────────────
   const metaParts: string[] = [];
-  if (prTitle)   metaParts.push(`**PR:** ${prTitle}`);
+  if (prTitle) metaParts.push(`**PR:** ${prTitle}`);
   if (commitSha) metaParts.push(`**Commit:** \`${shortSha(commitSha)}\``);
   if (metaParts.length > 0) {
     lines.push(`> ${metaParts.join(" &nbsp;·&nbsp; ")}`);
@@ -308,12 +341,10 @@ export function mapFindingsToReviewPayload(
   );
   if (riskScore !== null) {
     heroBadges.push(
-      badge(
-        "Risk Score",
-        `${riskScore} of 100`,
-        riskBadgeColor(riskScore),
-        { style: "for-the-badge", link: reviewUrl },
-      ),
+      badge("Risk Score", `${riskScore} of 100`, riskBadgeColor(riskScore), {
+        style: "for-the-badge",
+        link: reviewUrl,
+      }),
     );
   }
   heroBadges.push(
@@ -346,8 +377,12 @@ export function mapFindingsToReviewPayload(
     lines.push("");
     lines.push("| | |");
     lines.push("|:---|:---|");
-    lines.push(`| **Risk Score** | ${badge(riskLabel(riskScore), `${riskScore}/100`, riskBadgeColor(riskScore))} |`);
-    lines.push(`| **Total Issues** | **${totalIssues}**${inlineComments.length > 0 ? ` _(${inlineComments.length} inline comment${inlineComments.length !== 1 ? "s" : ""})_` : ""} |`);
+    lines.push(
+      `| **Risk Score** | ${badge(riskLabel(riskScore), `${riskScore}/100`, riskBadgeColor(riskScore))} |`,
+    );
+    lines.push(
+      `| **Total Issues** | **${totalIssues}**${inlineComments.length > 0 ? ` _(${inlineComments.length} inline comment${inlineComments.length !== 1 ? "s" : ""})_` : ""} |`,
+    );
     lines.push("");
     lines.push(`\`Safe ${buildProgressBar(riskScore, 100, 24)} Critical\``);
     lines.push("");
@@ -372,10 +407,30 @@ export function mapFindingsToReviewPayload(
 
     // Colored severity pill badges
     const sevBadges: string[] = [];
-    if (counts.critical > 0) sevBadges.push(badge("Critical", String(counts.critical), "critical",      { style: "flat-square" }));
-    if (counts.high > 0)     sevBadges.push(badge("High",     String(counts.high),     "important",     { style: "flat-square" }));
-    if (counts.medium > 0)   sevBadges.push(badge("Medium",   String(counts.medium),   "yellow",        { style: "flat-square" }));
-    if (counts.low > 0)      sevBadges.push(badge("Low",      String(counts.low),      "informational", { style: "flat-square" }));
+    if (counts.critical > 0)
+      sevBadges.push(
+        badge("Critical", String(counts.critical), "critical", {
+          style: "flat-square",
+        }),
+      );
+    if (counts.high > 0)
+      sevBadges.push(
+        badge("High", String(counts.high), "important", {
+          style: "flat-square",
+        }),
+      );
+    if (counts.medium > 0)
+      sevBadges.push(
+        badge("Medium", String(counts.medium), "yellow", {
+          style: "flat-square",
+        }),
+      );
+    if (counts.low > 0)
+      sevBadges.push(
+        badge("Low", String(counts.low), "informational", {
+          style: "flat-square",
+        }),
+      );
     lines.push(sevBadges.join(" "));
     lines.push("");
 
@@ -386,9 +441,9 @@ export function mapFindingsToReviewPayload(
       return `| ${emoji} **${lbl}** | ${count} | \`${buildProgressBar(count, totalIssues, 14)}\` | ${pct}% |`;
     };
     if (counts.critical > 0) lines.push(row("🔴", "Critical", counts.critical));
-    if (counts.high > 0)     lines.push(row("🟠", "High",     counts.high));
-    if (counts.medium > 0)   lines.push(row("🟡", "Medium",   counts.medium));
-    if (counts.low > 0)      lines.push(row("🔵", "Low",      counts.low));
+    if (counts.high > 0) lines.push(row("🟠", "High", counts.high));
+    if (counts.medium > 0) lines.push(row("🟡", "Medium", counts.medium));
+    if (counts.low > 0) lines.push(row("🔵", "Low", counts.low));
     lines.push(`| — | **${totalIssues}** | | 100% |`);
     lines.push("");
     lines.push("---");
@@ -402,11 +457,36 @@ export function mapFindingsToReviewPayload(
 
     // Grade badges row
     const qBadges = [
-      badge("Complexity",      qualityLetter(qualityMetrics.complexity),      qualityBadgeColor(qualityMetrics.complexity),      { style: "flat-square" }),
-      badge("Maintainability", qualityLetter(qualityMetrics.maintainability), qualityBadgeColor(qualityMetrics.maintainability), { style: "flat-square" }),
-      badge("Readability",     qualityLetter(qualityMetrics.readability),     qualityBadgeColor(qualityMetrics.readability),     { style: "flat-square" }),
-      badge("Testability",     qualityLetter(qualityMetrics.testability),     qualityBadgeColor(qualityMetrics.testability),     { style: "flat-square" }),
-      badge("Overall",         qualityLetter(qualityOverall),                 qualityBadgeColor(qualityOverall),                 { style: "flat-square" }),
+      badge(
+        "Complexity",
+        qualityLetter(qualityMetrics.complexity),
+        qualityBadgeColor(qualityMetrics.complexity),
+        { style: "flat-square" },
+      ),
+      badge(
+        "Maintainability",
+        qualityLetter(qualityMetrics.maintainability),
+        qualityBadgeColor(qualityMetrics.maintainability),
+        { style: "flat-square" },
+      ),
+      badge(
+        "Readability",
+        qualityLetter(qualityMetrics.readability),
+        qualityBadgeColor(qualityMetrics.readability),
+        { style: "flat-square" },
+      ),
+      badge(
+        "Testability",
+        qualityLetter(qualityMetrics.testability),
+        qualityBadgeColor(qualityMetrics.testability),
+        { style: "flat-square" },
+      ),
+      badge(
+        "Overall",
+        qualityLetter(qualityOverall),
+        qualityBadgeColor(qualityOverall),
+        { style: "flat-square" },
+      ),
     ];
     lines.push(qBadges.join(" "));
     lines.push("");
@@ -415,11 +495,13 @@ export function mapFindingsToReviewPayload(
     lines.push("|:-------|------:|:----|:------|");
     const qRow = (label: string, score: number) =>
       `| ${label} | ${score}/100 | \`${buildProgressBar(score, 100, 12)}\` | ${qualityGrade(score)} |`;
-    lines.push(qRow("Complexity",      qualityMetrics.complexity));
+    lines.push(qRow("Complexity", qualityMetrics.complexity));
     lines.push(qRow("Maintainability", qualityMetrics.maintainability));
-    lines.push(qRow("Readability",     qualityMetrics.readability));
-    lines.push(qRow("Testability",     qualityMetrics.testability));
-    lines.push(`| **Overall** | **${qualityOverall}/100** | \`${buildProgressBar(qualityOverall, 100, 12)}\` | **${qualityGrade(qualityOverall)}** |`);
+    lines.push(qRow("Readability", qualityMetrics.readability));
+    lines.push(qRow("Testability", qualityMetrics.testability));
+    lines.push(
+      `| **Overall** | **${qualityOverall}/100** | \`${buildProgressBar(qualityOverall, 100, 12)}\` | **${qualityGrade(qualityOverall)}** |`,
+    );
     lines.push("");
     lines.push("---");
     lines.push("");
@@ -430,14 +512,22 @@ export function mapFindingsToReviewPayload(
     lines.push("### ⚠️ General Findings");
     lines.push("");
     lines.push(`<details>`);
-    lines.push(`<summary>📋 View ${summaryFindings.length} general finding${summaryFindings.length !== 1 ? "s" : ""}</summary>`);
+    lines.push(
+      `<summary>📋 View ${summaryFindings.length} general finding${summaryFindings.length !== 1 ? "s" : ""}</summary>`,
+    );
     lines.push("");
     for (const finding of summaryFindings) {
-      const severity  = (finding.severity ?? finding.severityLevel ?? "low").toUpperCase();
-      const text      = finding.message ?? finding.text ?? "Issue detected";
-      const emoji     = severityEmoji(severity);
-      const sevBadge  = badge(severity, "", severityBadgeColor(severity), { style: "flat-square" });
-      const catBadge  = finding.category
+      const severity = (
+        finding.severity ??
+        finding.severityLevel ??
+        "low"
+      ).toUpperCase();
+      const text = finding.message ?? finding.text ?? "Issue detected";
+      const emoji = severityEmoji(severity);
+      const sevBadge = badge(severity, "", severityBadgeColor(severity), {
+        style: "flat-square",
+      });
+      const catBadge = finding.category
         ? ` ${badge("", finding.category, "blueviolet", { style: "flat-square" })}`
         : "";
       lines.push(`- ${emoji} ${sevBadge}${catBadge} ${text}`);
@@ -459,19 +549,20 @@ export function mapFindingsToReviewPayload(
       }),
     );
     lines.push("");
-    lines.push("> 🎉 Excellent! No issues were detected. The code appears clean, secure, and well-structured.");
+    lines.push(
+      "> 🎉 Excellent! No issues were detected. The code appears clean, secure, and well-structured.",
+    );
     lines.push("");
     lines.push("---");
     lines.push("");
   }
 
   // ── Footer ────────────────────────────────────────────────────────────────
-  const footerBadge = badge(
-    "DevReview AI",
-    "Automated Review",
-    "#24292e",
-    { style: "flat-square", labelColor: "#586069", link: reviewUrl },
-  );
+  const footerBadge = badge("DevReview AI", "Automated Review", "#24292e", {
+    style: "flat-square",
+    labelColor: "#586069",
+    link: reviewUrl,
+  });
   const footerParts = [footerBadge, `[📋 View Full Report](${reviewUrl})`];
   if (commitSha) footerParts.push(`Commit: \`${shortSha(commitSha)}\``);
   lines.push(`<sub>${footerParts.join(" · ")}</sub>`);
@@ -562,13 +653,21 @@ export async function runPostReviewToGitHub(
 
     if (!previous) return;
 
-    await dismissGitHubReviewFn(
-      accessToken,
-      review.repository.fullName,
-      review.prNumber,
-      previous.githubReviewId,
-      `Superseded by a new DevReview AI review after commit ${completedEvent.data.commitSha}`,
-    );
+    try {
+      await dismissGitHubReviewFn(
+        accessToken,
+        review.repository.fullName,
+        review.prNumber,
+        Number(previous.githubReviewId),
+        `Superseded by a new DevReview AI review after commit ${completedEvent.data.commitSha}`,
+      );
+    } catch (err) {
+      // GitHub returns 422 for COMMENT-type reviews which cannot be dismissed.
+      // This is non-fatal — the new review will still be posted.
+      console.warn(
+        `[dismiss-previous-review] Could not dismiss review ${previous.githubReviewId}: ${err instanceof Error ? err.message : err}`,
+      );
+    }
   });
 
   await step.run("post-pr-review", async () => {
@@ -577,12 +676,12 @@ export async function runPostReviewToGitHub(
       review.repositoryId,
       review.id,
       {
-        prTitle:         review.prTitle,
-        commitSha:       completedEvent.data.commitSha,
-        summary:         review.summary,
-        riskScore:       review.riskScore,
-        qualityMetrics:  review.qualityMetrics,
-        overallStatus:   completedEvent.data.status,
+        prTitle: review.prTitle,
+        commitSha: completedEvent.data.commitSha,
+        summary: review.summary,
+        riskScore: review.riskScore,
+        qualityMetrics: review.qualityMetrics,
+        overallStatus: completedEvent.data.status,
         hasHighSeverity: completedEvent.data.hasHighSeverity,
       },
     );
@@ -600,14 +699,14 @@ export async function runPostReviewToGitHub(
       where: { reviewId: review.id },
       create: {
         reviewId: review.id,
-        githubReviewId,
+        githubReviewId: BigInt(githubReviewId),
         prNumber: completedEvent.data.prNumber,
         repositoryId: review.repositoryId,
         commitSha: completedEvent.data.commitSha,
         findingCount: payload.inlineComments.length,
       },
       update: {
-        githubReviewId,
+        githubReviewId: BigInt(githubReviewId),
         commitSha: completedEvent.data.commitSha,
         findingCount: payload.inlineComments.length,
       },
@@ -681,6 +780,3 @@ export const postReviewToGitHub = inngest.createFunction(
   async ({ event, step }) =>
     runPostReviewToGitHub(event as ReviewCompletedEvent, step, defaultDeps),
 );
-
-
-

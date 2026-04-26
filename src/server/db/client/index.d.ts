@@ -21807,7 +21807,7 @@ export namespace Prisma {
   }
 
   export type GitHubCommentSumAggregateOutputType = {
-    githubReviewId: number | null
+    githubReviewId: bigint | null
     prNumber: number | null
     findingCount: number | null
   }
@@ -21815,7 +21815,7 @@ export namespace Prisma {
   export type GitHubCommentMinAggregateOutputType = {
     id: string | null
     reviewId: string | null
-    githubReviewId: number | null
+    githubReviewId: bigint | null
     prNumber: number | null
     repositoryId: string | null
     commitSha: string | null
@@ -21826,7 +21826,7 @@ export namespace Prisma {
   export type GitHubCommentMaxAggregateOutputType = {
     id: string | null
     reviewId: string | null
-    githubReviewId: number | null
+    githubReviewId: bigint | null
     prNumber: number | null
     repositoryId: string | null
     commitSha: string | null
@@ -21982,7 +21982,7 @@ export namespace Prisma {
   export type GitHubCommentGroupByOutputType = {
     id: string
     reviewId: string
-    githubReviewId: number
+    githubReviewId: bigint
     prNumber: number
     repositoryId: string
     commitSha: string
@@ -22082,7 +22082,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       reviewId: string
-      githubReviewId: number
+      githubReviewId: bigint
       prNumber: number
       repositoryId: string
       commitSha: string
@@ -22515,7 +22515,7 @@ export namespace Prisma {
   interface GitHubCommentFieldRefs {
     readonly id: FieldRef<"GitHubComment", 'String'>
     readonly reviewId: FieldRef<"GitHubComment", 'String'>
-    readonly githubReviewId: FieldRef<"GitHubComment", 'Int'>
+    readonly githubReviewId: FieldRef<"GitHubComment", 'BigInt'>
     readonly prNumber: FieldRef<"GitHubComment", 'Int'>
     readonly repositoryId: FieldRef<"GitHubComment", 'String'>
     readonly commitSha: FieldRef<"GitHubComment", 'String'>
@@ -27963,6 +27963,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'BigInt'
+   */
+  export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
+    
+
+
+  /**
+   * Reference to a field of type 'BigInt[]'
+   */
+  export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
+    
+
+
+  /**
    * Reference to a field of type 'GitHubCheckState'
    */
   export type EnumGitHubCheckStateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GitHubCheckState'>
@@ -29320,7 +29334,7 @@ export namespace Prisma {
     NOT?: GitHubCommentWhereInput | GitHubCommentWhereInput[]
     id?: StringFilter<"GitHubComment"> | string
     reviewId?: StringFilter<"GitHubComment"> | string
-    githubReviewId?: IntFilter<"GitHubComment"> | number
+    githubReviewId?: BigIntFilter<"GitHubComment"> | bigint | number
     prNumber?: IntFilter<"GitHubComment"> | number
     repositoryId?: StringFilter<"GitHubComment"> | string
     commitSha?: StringFilter<"GitHubComment"> | string
@@ -29349,7 +29363,7 @@ export namespace Prisma {
     AND?: GitHubCommentWhereInput | GitHubCommentWhereInput[]
     OR?: GitHubCommentWhereInput[]
     NOT?: GitHubCommentWhereInput | GitHubCommentWhereInput[]
-    githubReviewId?: IntFilter<"GitHubComment"> | number
+    githubReviewId?: BigIntFilter<"GitHubComment"> | bigint | number
     prNumber?: IntFilter<"GitHubComment"> | number
     repositoryId?: StringFilter<"GitHubComment"> | string
     commitSha?: StringFilter<"GitHubComment"> | string
@@ -29381,7 +29395,7 @@ export namespace Prisma {
     NOT?: GitHubCommentScalarWhereWithAggregatesInput | GitHubCommentScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"GitHubComment"> | string
     reviewId?: StringWithAggregatesFilter<"GitHubComment"> | string
-    githubReviewId?: IntWithAggregatesFilter<"GitHubComment"> | number
+    githubReviewId?: BigIntWithAggregatesFilter<"GitHubComment"> | bigint | number
     prNumber?: IntWithAggregatesFilter<"GitHubComment"> | number
     repositoryId?: StringWithAggregatesFilter<"GitHubComment"> | string
     commitSha?: StringWithAggregatesFilter<"GitHubComment"> | string
@@ -31075,7 +31089,7 @@ export namespace Prisma {
 
   export type GitHubCommentCreateInput = {
     id?: string
-    githubReviewId: number
+    githubReviewId: bigint | number
     prNumber: number
     commitSha: string
     findingCount?: number
@@ -31087,7 +31101,7 @@ export namespace Prisma {
   export type GitHubCommentUncheckedCreateInput = {
     id?: string
     reviewId: string
-    githubReviewId: number
+    githubReviewId: bigint | number
     prNumber: number
     repositoryId: string
     commitSha: string
@@ -31097,7 +31111,7 @@ export namespace Prisma {
 
   export type GitHubCommentUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    githubReviewId?: IntFieldUpdateOperationsInput | number
+    githubReviewId?: BigIntFieldUpdateOperationsInput | bigint | number
     prNumber?: IntFieldUpdateOperationsInput | number
     commitSha?: StringFieldUpdateOperationsInput | string
     findingCount?: IntFieldUpdateOperationsInput | number
@@ -31109,7 +31123,7 @@ export namespace Prisma {
   export type GitHubCommentUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     reviewId?: StringFieldUpdateOperationsInput | string
-    githubReviewId?: IntFieldUpdateOperationsInput | number
+    githubReviewId?: BigIntFieldUpdateOperationsInput | bigint | number
     prNumber?: IntFieldUpdateOperationsInput | number
     repositoryId?: StringFieldUpdateOperationsInput | string
     commitSha?: StringFieldUpdateOperationsInput | string
@@ -31120,7 +31134,7 @@ export namespace Prisma {
   export type GitHubCommentCreateManyInput = {
     id?: string
     reviewId: string
-    githubReviewId: number
+    githubReviewId: bigint | number
     prNumber: number
     repositoryId: string
     commitSha: string
@@ -31130,7 +31144,7 @@ export namespace Prisma {
 
   export type GitHubCommentUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    githubReviewId?: IntFieldUpdateOperationsInput | number
+    githubReviewId?: BigIntFieldUpdateOperationsInput | bigint | number
     prNumber?: IntFieldUpdateOperationsInput | number
     commitSha?: StringFieldUpdateOperationsInput | string
     findingCount?: IntFieldUpdateOperationsInput | number
@@ -31140,7 +31154,7 @@ export namespace Prisma {
   export type GitHubCommentUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     reviewId?: StringFieldUpdateOperationsInput | string
-    githubReviewId?: IntFieldUpdateOperationsInput | number
+    githubReviewId?: BigIntFieldUpdateOperationsInput | bigint | number
     prNumber?: IntFieldUpdateOperationsInput | number
     repositoryId?: StringFieldUpdateOperationsInput | string
     commitSha?: StringFieldUpdateOperationsInput | string
@@ -32672,6 +32686,17 @@ export namespace Prisma {
     _max?: NestedEnumScanRunStatusFilter<$PrismaModel>
   }
 
+  export type BigIntFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntFilter<$PrismaModel> | bigint | number
+  }
+
   export type GitHubCommentCountOrderByAggregateInput = {
     id?: SortOrder
     reviewId?: SortOrder
@@ -32715,6 +32740,22 @@ export namespace Prisma {
     githubReviewId?: SortOrder
     prNumber?: SortOrder
     findingCount?: SortOrder
+  }
+
+  export type BigIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedBigIntFilter<$PrismaModel>
+    _min?: NestedBigIntFilter<$PrismaModel>
+    _max?: NestedBigIntFilter<$PrismaModel>
   }
 
   export type EnumGitHubCheckStateFilter<$PrismaModel = never> = {
@@ -34396,6 +34437,14 @@ export namespace Prisma {
     connect?: RepositoryWhereUniqueInput
   }
 
+  export type BigIntFieldUpdateOperationsInput = {
+    set?: bigint | number
+    increment?: bigint | number
+    decrement?: bigint | number
+    multiply?: bigint | number
+    divide?: bigint | number
+  }
+
   export type ReviewUpdateOneRequiredWithoutGithubCommentNestedInput = {
     create?: XOR<ReviewCreateWithoutGithubCommentInput, ReviewUncheckedCreateWithoutGithubCommentInput>
     connectOrCreate?: ReviewCreateOrConnectWithoutGithubCommentInput
@@ -34878,6 +34927,33 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumScanRunStatusFilter<$PrismaModel>
     _max?: NestedEnumScanRunStatusFilter<$PrismaModel>
+  }
+
+  export type NestedBigIntFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntFilter<$PrismaModel> | bigint | number
+  }
+
+  export type NestedBigIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedBigIntFilter<$PrismaModel>
+    _min?: NestedBigIntFilter<$PrismaModel>
+    _max?: NestedBigIntFilter<$PrismaModel>
   }
 
   export type NestedEnumGitHubCheckStateFilter<$PrismaModel = never> = {
@@ -35985,7 +36061,7 @@ export namespace Prisma {
 
   export type GitHubCommentCreateWithoutRepositoryInput = {
     id?: string
-    githubReviewId: number
+    githubReviewId: bigint | number
     prNumber: number
     commitSha: string
     findingCount?: number
@@ -35996,7 +36072,7 @@ export namespace Prisma {
   export type GitHubCommentUncheckedCreateWithoutRepositoryInput = {
     id?: string
     reviewId: string
-    githubReviewId: number
+    githubReviewId: bigint | number
     prNumber: number
     commitSha: string
     findingCount?: number
@@ -36307,7 +36383,7 @@ export namespace Prisma {
     NOT?: GitHubCommentScalarWhereInput | GitHubCommentScalarWhereInput[]
     id?: StringFilter<"GitHubComment"> | string
     reviewId?: StringFilter<"GitHubComment"> | string
-    githubReviewId?: IntFilter<"GitHubComment"> | number
+    githubReviewId?: BigIntFilter<"GitHubComment"> | bigint | number
     prNumber?: IntFilter<"GitHubComment"> | number
     repositoryId?: StringFilter<"GitHubComment"> | string
     commitSha?: StringFilter<"GitHubComment"> | string
@@ -36629,7 +36705,7 @@ export namespace Prisma {
 
   export type GitHubCommentCreateWithoutReviewInput = {
     id?: string
-    githubReviewId: number
+    githubReviewId: bigint | number
     prNumber: number
     commitSha: string
     findingCount?: number
@@ -36639,7 +36715,7 @@ export namespace Prisma {
 
   export type GitHubCommentUncheckedCreateWithoutReviewInput = {
     id?: string
-    githubReviewId: number
+    githubReviewId: bigint | number
     prNumber: number
     repositoryId: string
     commitSha: string
@@ -36924,7 +37000,7 @@ export namespace Prisma {
 
   export type GitHubCommentUpdateWithoutReviewInput = {
     id?: StringFieldUpdateOperationsInput | string
-    githubReviewId?: IntFieldUpdateOperationsInput | number
+    githubReviewId?: BigIntFieldUpdateOperationsInput | bigint | number
     prNumber?: IntFieldUpdateOperationsInput | number
     commitSha?: StringFieldUpdateOperationsInput | string
     findingCount?: IntFieldUpdateOperationsInput | number
@@ -36934,7 +37010,7 @@ export namespace Prisma {
 
   export type GitHubCommentUncheckedUpdateWithoutReviewInput = {
     id?: StringFieldUpdateOperationsInput | string
-    githubReviewId?: IntFieldUpdateOperationsInput | number
+    githubReviewId?: BigIntFieldUpdateOperationsInput | bigint | number
     prNumber?: IntFieldUpdateOperationsInput | number
     repositoryId?: StringFieldUpdateOperationsInput | string
     commitSha?: StringFieldUpdateOperationsInput | string
@@ -39624,7 +39700,7 @@ export namespace Prisma {
   export type GitHubCommentCreateManyRepositoryInput = {
     id?: string
     reviewId: string
-    githubReviewId: number
+    githubReviewId: bigint | number
     prNumber: number
     commitSha: string
     findingCount?: number
@@ -39730,7 +39806,7 @@ export namespace Prisma {
 
   export type GitHubCommentUpdateWithoutRepositoryInput = {
     id?: StringFieldUpdateOperationsInput | string
-    githubReviewId?: IntFieldUpdateOperationsInput | number
+    githubReviewId?: BigIntFieldUpdateOperationsInput | bigint | number
     prNumber?: IntFieldUpdateOperationsInput | number
     commitSha?: StringFieldUpdateOperationsInput | string
     findingCount?: IntFieldUpdateOperationsInput | number
@@ -39741,7 +39817,7 @@ export namespace Prisma {
   export type GitHubCommentUncheckedUpdateWithoutRepositoryInput = {
     id?: StringFieldUpdateOperationsInput | string
     reviewId?: StringFieldUpdateOperationsInput | string
-    githubReviewId?: IntFieldUpdateOperationsInput | number
+    githubReviewId?: BigIntFieldUpdateOperationsInput | bigint | number
     prNumber?: IntFieldUpdateOperationsInput | number
     commitSha?: StringFieldUpdateOperationsInput | string
     findingCount?: IntFieldUpdateOperationsInput | number
@@ -39751,7 +39827,7 @@ export namespace Prisma {
   export type GitHubCommentUncheckedUpdateManyWithoutRepositoryInput = {
     id?: StringFieldUpdateOperationsInput | string
     reviewId?: StringFieldUpdateOperationsInput | string
-    githubReviewId?: IntFieldUpdateOperationsInput | number
+    githubReviewId?: BigIntFieldUpdateOperationsInput | bigint | number
     prNumber?: IntFieldUpdateOperationsInput | number
     commitSha?: StringFieldUpdateOperationsInput | string
     findingCount?: IntFieldUpdateOperationsInput | number

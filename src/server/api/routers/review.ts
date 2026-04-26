@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { computeReviewDiff, Finding } from "@/lib/review-diff";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { getAccessibleRepository } from "@/lib/repository";
 import { inngest } from "@/server/inngest";
@@ -405,16 +406,6 @@ export const reviewRouter = createTRPCRouter({
         });
       }
 
-      type Finding = {
-        file: string;
-        line: number;
-        severity: string;
-        category?: string;
-        message: string;
-        suggestion?: string;
-        confidence?: number;
-      };
-
       const currentFindings = (
         Array.isArray(current.comments) ? current.comments : []
       ) as Finding[];
@@ -422,39 +413,10 @@ export const reviewRouter = createTRPCRouter({
         Array.isArray(previous.comments) ? previous.comments : []
       ) as Finding[];
 
-      // Fingerprint: (file, line, message-hash)
-      const fingerprint = (f: Finding) =>
-        `${f.file}::${f.line}::${f.message.trim().toLowerCase().slice(0, 120)}`;
-
-      const previousSet = new Map<string, Finding>();
-      for (const f of previousFindings) {
-        previousSet.set(fingerprint(f), f);
-      }
-
-      const currentSet = new Map<string, Finding>();
-      for (const f of currentFindings) {
-        currentSet.set(fingerprint(f), f);
-      }
-
-      const fixed: Finding[] = [];
-      const persisted: Finding[] = [];
-      const newFindings: Finding[] = [];
-
-      // Items in previous but not in current → Fixed
-      for (const [fp, finding] of previousSet) {
-        if (!currentSet.has(fp)) {
-          fixed.push(finding);
-        }
-      }
-
-      // Items in current
-      for (const [fp, finding] of currentSet) {
-        if (previousSet.has(fp)) {
-          persisted.push(finding);
-        } else {
-          newFindings.push(finding);
-        }
-      }
+      const { fixed, persisted, newFindings } = computeReviewDiff(
+        previousFindings,
+        currentFindings,
+      );
 
       return {
         currentReviewId: current.id,
