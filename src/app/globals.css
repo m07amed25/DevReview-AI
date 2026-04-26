@@ -421,10 +421,11 @@
     transform 0.4s ease-out;
 }
 
-/* Smooth scrolling */
+/* Smooth scrolling - disabled for Lenis
 html {
   scroll-behavior: smooth;
 }
+*/
 
 /* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {

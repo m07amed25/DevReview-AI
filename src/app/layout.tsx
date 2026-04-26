@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import "./globals.css";
+import "lenis/dist/lenis.css";
 import { TRPCProvider } from "@/lib/trpc/provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { PageTransitionProvider } from "@/components/animations/page-transition";
 import { ErrorBoundary } from "@/components/error-boundary";
+import { LenisProvider } from "@/components/lenis-provider";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
@@ -90,11 +92,13 @@ export default function RootLayout({
         className={`${GeistSans.variable} ${GeistMono.variable} antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="dark">
-          <TRPCProvider>
-            <PageTransitionProvider>
-              <ErrorBoundary>{children}</ErrorBoundary>
-            </PageTransitionProvider>
-          </TRPCProvider>
+          <LenisProvider>
+            <TRPCProvider>
+              <PageTransitionProvider>
+                <ErrorBoundary>{children}</ErrorBoundary>
+              </PageTransitionProvider>
+            </TRPCProvider>
+          </LenisProvider>
         </ThemeProvider>
       </body>
     </html>
