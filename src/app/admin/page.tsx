@@ -290,28 +290,22 @@ export default function AdminOverviewPage() {
           </Card>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <Card
-              className="group cursor-pointer transition-colors hover:bg-muted/50"
-              asChild
-            >
-              <Link href="/admin/security">
+            <Link href="/admin/security">
+              <Card className="group cursor-pointer transition-colors hover:bg-muted/50">
                 <CardHeader className="p-4 flex flex-row items-center justify-between space-y-0">
                   <CardTitle className="text-sm font-bold">Security</CardTitle>
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </CardHeader>
-              </Link>
-            </Card>
-            <Card
-              className="group cursor-pointer transition-colors hover:bg-muted/50"
-              asChild
-            >
-              <Link href="/admin/analytics">
+              </Card>
+            </Link>
+            <Link href="/admin/analytics">
+              <Card className="group cursor-pointer transition-colors hover:bg-muted/50">
                 <CardHeader className="p-4 flex flex-row items-center justify-between space-y-0">
                   <CardTitle className="text-sm font-bold">Analytics</CardTitle>
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </CardHeader>
-              </Link>
-            </Card>
+              </Card>
+            </Link>
           </div>
         </div>
       </div>
