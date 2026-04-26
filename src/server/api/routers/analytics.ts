@@ -13,8 +13,8 @@ export const analyticsRouter = createTRPCRouter({
     .input(
       z.object({
         timePeriod: TimePeriodSchema.default("30d"),
-        repositoryId: z.string().optional(),
-        teamId: z.string().optional(),
+        repositoryId: z.string().max(255).optional(),
+        teamId: z.string().max(255).optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -154,8 +154,8 @@ export const analyticsRouter = createTRPCRouter({
     .input(
       z.object({
         timePeriod: TimePeriodSchema.default("30d"),
-        repositoryId: z.string().optional(),
-        teamId: z.string().optional(),
+        repositoryId: z.string().max(255).optional(),
+        teamId: z.string().max(255).optional(),
         granularity: z.enum(["daily", "weekly", "monthly"]).default("daily"),
       }),
     )
@@ -199,8 +199,8 @@ export const analyticsRouter = createTRPCRouter({
     .input(
       z.object({
         timePeriod: TimePeriodSchema.default("30d"),
-        repositoryId: z.string().optional(),
-        teamId: z.string().optional(),
+        repositoryId: z.string().max(255).optional(),
+        teamId: z.string().max(255).optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -290,8 +290,8 @@ export const analyticsRouter = createTRPCRouter({
     .input(
       z.object({
         timePeriod: TimePeriodSchema.default("30d"),
-        repositoryId: z.string().optional(),
-        teamId: z.string().optional(),
+        repositoryId: z.string().max(255).optional(),
+        teamId: z.string().max(255).optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -396,8 +396,8 @@ export const analyticsRouter = createTRPCRouter({
     .input(
       z.object({
         timePeriod: TimePeriodSchema.default("30d"),
-        repositoryId: z.string().optional(),
-        teamId: z.string().optional(),
+        repositoryId: z.string().max(255).optional(),
+        teamId: z.string().max(255).optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -503,8 +503,8 @@ export const analyticsRouter = createTRPCRouter({
     .input(
       z.object({
         timePeriod: TimePeriodSchema.default("30d"),
-        repositoryId: z.string().optional(),
-        teamId: z.string().optional(),
+        repositoryId: z.string().max(255).optional(),
+        teamId: z.string().max(255).optional(),
         limit: z.number().min(1).max(50).default(10),
       }),
     )
@@ -628,9 +628,9 @@ export const analyticsRouter = createTRPCRouter({
   getReviewerPerformance: protectedProcedure
     .input(
       z.object({
-        reviewerId: z.string(),
+        reviewerId: z.string().max(255),
         timePeriod: TimePeriodSchema.default("30d"),
-        repositoryId: z.string().optional(),
+        repositoryId: z.string().max(255).optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -728,8 +728,8 @@ export const analyticsRouter = createTRPCRouter({
     .input(
       z.object({
         timePeriod: TimePeriodSchema.default("30d"),
-        repositoryId: z.string().optional(),
-        teamId: z.string().optional(),
+        repositoryId: z.string().max(255).optional(),
+        teamId: z.string().max(255).optional(),
       }),
     )
     .query(async ({ ctx, input }) => {

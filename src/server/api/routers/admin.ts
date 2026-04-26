@@ -144,7 +144,7 @@ export const adminRouter = createTRPCRouter({
     }),
 
   getUser: adminProcedure
-    .input(z.object({ userId: z.string() }))
+    .input(z.object({ userId: z.string().max(255) }))
     .query(async ({ ctx, input }) => {
       return ctx.db.user.findUnique({
         where: { id: input.userId },
@@ -186,7 +186,7 @@ export const adminRouter = createTRPCRouter({
   updateUserRole: adminProcedure
     .input(
       z.object({
-        userId: z.string(),
+        userId: z.string().max(255),
         role: z.nativeEnum(UserRole),
       }),
     )
@@ -202,7 +202,7 @@ export const adminRouter = createTRPCRouter({
     }),
 
   deleteUser: adminProcedure
-    .input(z.object({ userId: z.string() }))
+    .input(z.object({ userId: z.string().max(255) }))
     .mutation(async ({ ctx, input }) => {
       // Prevent deleting the admin account itself
       if (input.userId === ctx.user.id) {
@@ -215,8 +215,8 @@ export const adminRouter = createTRPCRouter({
   banUser: adminProcedure
     .input(
       z.object({
-        userId: z.string(),
-        reason: z.string().optional(),
+        userId: z.string().max(255),
+        reason: z.string().max(2000).optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -240,7 +240,7 @@ export const adminRouter = createTRPCRouter({
     }),
 
   unbanUser: adminProcedure
-    .input(z.object({ userId: z.string() }))
+    .input(z.object({ userId: z.string().max(255) }))
     .mutation(async ({ ctx, input }) => {
       await ctx.db.user.update({
         where: { id: input.userId },
@@ -396,7 +396,7 @@ export const adminRouter = createTRPCRouter({
     }),
 
   deleteReview: adminProcedure
-    .input(z.object({ reviewId: z.string() }))
+    .input(z.object({ reviewId: z.string().max(255) }))
     .mutation(async ({ ctx, input }) => {
       await ctx.db.review.delete({ where: { id: input.reviewId } });
       return { success: true };
@@ -429,7 +429,7 @@ export const adminRouter = createTRPCRouter({
     }),
 
   deleteTeam: adminProcedure
-    .input(z.object({ teamId: z.string() }))
+    .input(z.object({ teamId: z.string().max(255) }))
     .mutation(async ({ ctx, input }) => {
       await ctx.db.team.delete({ where: { id: input.teamId } });
       return { success: true };
@@ -526,7 +526,7 @@ export const adminRouter = createTRPCRouter({
     }),
 
   deleteRepository: adminProcedure
-    .input(z.object({ repositoryId: z.string() }))
+    .input(z.object({ repositoryId: z.string().max(255) }))
     .mutation(async ({ ctx, input }) => {
       await ctx.db.repository.delete({ where: { id: input.repositoryId } });
       return { success: true };

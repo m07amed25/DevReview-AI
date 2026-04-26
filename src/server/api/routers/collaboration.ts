@@ -6,7 +6,7 @@ import { getPusherServer, reviewChannel, PUSHER_EVENTS } from "@/server/pusher";
 export const collaborationRouter = createTRPCRouter({
   // ─── Get all threads for a review ────────────────────────────────
   getThreads: protectedProcedure
-    .input(z.object({ reviewId: z.string() }))
+    .input(z.object({ reviewId: z.string().max(255) }))
     .query(async ({ ctx, input }) => {
       // Verify the user owns this review or is a team member
       const review = await ctx.db.review.findFirst({
@@ -47,8 +47,8 @@ export const collaborationRouter = createTRPCRouter({
   createThread: protectedProcedure
     .input(
       z.object({
-        reviewId: z.string(),
-        file: z.string(),
+        reviewId: z.string().max(255),
+        file: z.string().max(500),
         line: z.number(),
         content: z.string().min(1).max(5000),
       }),
@@ -112,7 +112,7 @@ export const collaborationRouter = createTRPCRouter({
   addComment: protectedProcedure
     .input(
       z.object({
-        threadId: z.string(),
+        threadId: z.string().max(255),
         content: z.string().min(1).max(5000),
       }),
     )
@@ -168,7 +168,7 @@ export const collaborationRouter = createTRPCRouter({
 
   // ─── Resolve / reopen a thread ───────────────────────────────────
   toggleResolve: protectedProcedure
-    .input(z.object({ threadId: z.string() }))
+    .input(z.object({ threadId: z.string().max(255) }))
     .mutation(async ({ ctx, input }) => {
       const thread = await ctx.db.reviewThread.findUnique({
         where: { id: input.threadId },
@@ -215,7 +215,7 @@ export const collaborationRouter = createTRPCRouter({
 
   // ─── Delete a comment ────────────────────────────────────────────
   deleteComment: protectedProcedure
-    .input(z.object({ commentId: z.string() }))
+    .input(z.object({ commentId: z.string().max(255) }))
     .mutation(async ({ ctx, input }) => {
       const comment = await ctx.db.reviewThreadComment.findUnique({
         where: { id: input.commentId },

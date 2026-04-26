@@ -48,7 +48,7 @@ export const teamRouter = createTRPCRouter({
   }),
 
   get: protectedProcedure
-    .input(z.object({ teamId: z.string() }))
+    .input(z.object({ teamId: z.string().max(255) }))
     .query(async ({ ctx, input }) => {
       const membership = await ctx.db.teamMember.findUnique({
         where: {
@@ -85,7 +85,7 @@ export const teamRouter = createTRPCRouter({
   create: protectedProcedure
     .input(
       z.object({
-        name: z.string().min(2).max(50),
+        name: z.string().max(255).min(2).max(50),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -118,8 +118,8 @@ export const teamRouter = createTRPCRouter({
   update: protectedProcedure
     .input(
       z.object({
-        teamId: z.string(),
-        name: z.string().min(2).max(50),
+        teamId: z.string().max(255),
+        name: z.string().max(255).min(2).max(50),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -132,7 +132,7 @@ export const teamRouter = createTRPCRouter({
     }),
 
   delete: protectedProcedure
-    .input(z.object({ teamId: z.string() }))
+    .input(z.object({ teamId: z.string().max(255) }))
     .mutation(async ({ ctx, input }) => {
       await assertRole(ctx, input.teamId, ["OWNER"]);
 
@@ -149,8 +149,8 @@ export const teamRouter = createTRPCRouter({
   inviteMember: protectedProcedure
     .input(
       z.object({
-        teamId: z.string(),
-        email: z.string().email(),
+        teamId: z.string().max(255),
+        email: z.string().email().max(255).email(),
         role: z.enum(["ADMIN", "MEMBER"]).default("MEMBER"),
       }),
     )
@@ -224,8 +224,8 @@ export const teamRouter = createTRPCRouter({
   updateMemberRole: protectedProcedure
     .input(
       z.object({
-        teamId: z.string(),
-        userId: z.string(),
+        teamId: z.string().max(255),
+        userId: z.string().max(255),
         role: z.enum(["ADMIN", "MEMBER"]),
       }),
     )
@@ -251,8 +251,8 @@ export const teamRouter = createTRPCRouter({
   removeMember: protectedProcedure
     .input(
       z.object({
-        teamId: z.string(),
-        userId: z.string(),
+        teamId: z.string().max(255),
+        userId: z.string().max(255),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -289,8 +289,8 @@ export const teamRouter = createTRPCRouter({
   shareRepository: protectedProcedure
     .input(
       z.object({
-        teamId: z.string(),
-        repositoryId: z.string(),
+        teamId: z.string().max(255),
+        repositoryId: z.string().max(255),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -316,7 +316,7 @@ export const teamRouter = createTRPCRouter({
   unshareRepository: protectedProcedure
     .input(
       z.object({
-        repositoryId: z.string(),
+        repositoryId: z.string().max(255),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -338,7 +338,7 @@ export const teamRouter = createTRPCRouter({
 
   // ─── Get pending action requests for a team (for admins/owners) ──────
   getPendingActions: protectedProcedure
-    .input(z.object({ teamId: z.string() }))
+    .input(z.object({ teamId: z.string().max(255) }))
     .query(async ({ ctx, input }) => {
       // Must be a member to view pending actions
       await assertRole(ctx, input.teamId, ["OWNER", "ADMIN", "MEMBER"]);
@@ -359,7 +359,7 @@ export const teamRouter = createTRPCRouter({
 
   // ─── Get my requested actions (for all members) ───────────────────────
   getMyRequestedActions: protectedProcedure
-    .input(z.object({ teamId: z.string() }))
+    .input(z.object({ teamId: z.string().max(255) }))
     .query(async ({ ctx, input }) => {
       // Must be a member to view their own requested actions
       await assertRole(ctx, input.teamId, ["OWNER", "ADMIN", "MEMBER"]);
@@ -377,7 +377,7 @@ export const teamRouter = createTRPCRouter({
   requestAction: protectedProcedure
     .input(
       z.object({
-        teamId: z.string(),
+        teamId: z.string().max(255),
         actionType: z.enum([
           "INVITE_MEMBER",
           "REMOVE_MEMBER",
@@ -388,14 +388,14 @@ export const teamRouter = createTRPCRouter({
           "REVIEW_PR",
           "APPROVE_DISCUSSION",
         ]),
-        targetUserId: z.string().optional(),
-        targetRepoId: z.string().optional(),
+        targetUserId: z.string().max(255).optional(),
+        targetRepoId: z.string().max(255).optional(),
         metadata: z
           .object({
-            email: z.string().optional(),
-            role: z.string().optional(),
+            email: z.string().email().max(255).optional(),
+            role: z.string().max(50).optional(),
             prNumber: z.number().optional(),
-            discussionId: z.string().optional(),
+            discussionId: z.string().max(255).optional(),
           })
           .optional(),
       }),
@@ -457,7 +457,7 @@ export const teamRouter = createTRPCRouter({
   approveAction: protectedProcedure
     .input(
       z.object({
-        actionId: z.string(),
+        actionId: z.string().max(255),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -502,7 +502,7 @@ export const teamRouter = createTRPCRouter({
   rejectAction: protectedProcedure
     .input(
       z.object({
-        actionId: z.string(),
+        actionId: z.string().max(255),
       }),
     )
     .mutation(async ({ ctx, input }) => {

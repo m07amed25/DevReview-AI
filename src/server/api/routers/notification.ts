@@ -8,7 +8,7 @@ export const notificationRouter = createTRPCRouter({
       z
         .object({
           limit: z.number().min(1).max(50).default(20),
-          cursor: z.string().optional(),
+          cursor: z.string().max(255).optional(),
           unreadOnly: z.boolean().default(false),
         })
         .optional(),
@@ -55,7 +55,7 @@ export const notificationRouter = createTRPCRouter({
 
   // Mark a notification as read
   markAsRead: protectedProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.string().max(255).max(255) }))
     .mutation(async ({ ctx, input }) => {
       const notification = await ctx.db.notification.update({
         where: {
@@ -81,7 +81,7 @@ export const notificationRouter = createTRPCRouter({
 
   // Delete a notification
   delete: protectedProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.string().max(255).max(255) }))
     .mutation(async ({ ctx, input }) => {
       await ctx.db.notification.delete({
         where: {

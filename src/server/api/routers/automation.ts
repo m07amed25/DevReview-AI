@@ -117,7 +117,7 @@ export async function generateRepositoryRecommendations(
 
 export const automationRouter = createTRPCRouter({
   getBranchProtectionRecommendations: protectedProcedure
-    .input(z.object({ repositoryId: z.string().cuid() }))
+    .input(z.object({ repositoryId: z.string().max(255).cuid() }))
     .query(async ({ ctx, input }) => {
       await getAccessibleRepository(ctx.db, ctx.user.id, input.repositoryId);
 
@@ -131,7 +131,7 @@ export const automationRouter = createTRPCRouter({
     }),
 
   generateRecommendations: protectedProcedure
-    .input(z.object({ repositoryId: z.string().cuid() }))
+    .input(z.object({ repositoryId: z.string().max(255).cuid() }))
     .mutation(async ({ ctx, input }) => {
       const repository = await ctx.db.repository.findUnique({
         where: { id: input.repositoryId },
@@ -158,7 +158,7 @@ export const automationRouter = createTRPCRouter({
     }),
 
   dismissRecommendation: protectedProcedure
-    .input(z.object({ recommendationId: z.string().cuid() }))
+    .input(z.object({ recommendationId: z.string().max(255).cuid() }))
     .mutation(async ({ ctx, input }) => {
       const recommendation = await ctx.db.branchProtectionRecommendation.findUnique({
         where: { id: input.recommendationId },
@@ -206,7 +206,7 @@ export const automationRouter = createTRPCRouter({
   getScheduledScanRuns: protectedProcedure
     .input(
       z.object({
-        repositoryId: z.string().cuid(),
+        repositoryId: z.string().max(255).cuid(),
         limit: z.number().int().min(1).max(50).optional().default(10),
       }),
     )
