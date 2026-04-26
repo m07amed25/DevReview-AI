@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowRight, Sparkles, Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,6 +8,12 @@ import { useSession } from "@/lib/auth-client";
 
 export function CtaSection() {
   const { data: session } = useSession();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <section
@@ -42,8 +49,8 @@ export function CtaSection() {
           reviews. Start for free, upgrade when you need more power.
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          {session ? (
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 min-h-[56px]">
+          {mounted && session ? (
             <Button
               size="lg"
               className="h-14 px-10 text-base w-full sm:w-auto bg-white text-zinc-900 hover:bg-zinc-200 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 rounded-full font-bold shadow-[0_0_30px_rgba(255,255,255,0.15)] group"

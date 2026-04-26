@@ -48,14 +48,16 @@ export function HowItWorksSection() {
         </div>
 
         <div
-          className="grid gap-8 sm:grid-cols-3 relative"
+          className="steps-container grid gap-8 sm:grid-cols-3 relative"
           role="list"
           aria-label="How it works steps"
         >
           {/* Connecting Line behind steps */}
-          <div className="hidden sm:block absolute top-12 left-[16%] right-[16%] h-[2px] bg-gradient-to-r from-zinc-800 via-indigo-500/50 to-zinc-800 z-0" />
+          <div className="hidden sm:block absolute top-12 left-[16%] right-[16%] h-[2px] bg-zinc-800 z-0" />
+          {/* Scrubbing progress line */}
+          <div className="step-line-progress hidden sm:block absolute top-12 left-[16%] right-[16%] h-[2px] bg-gradient-to-r from-indigo-500 to-purple-500 shadow-[0_0_10px_rgba(99,102,241,0.8)] z-0 origin-left scale-x-0" />
 
-          {steps.map((item, index) => (
+          {steps.map((item) => (
             <div
               key={item.step}
               className="step-card relative group text-center"
