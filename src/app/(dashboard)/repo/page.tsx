@@ -134,7 +134,7 @@ export default function ReposPage() {
 
       {/* Connected Repositories */}
       <Card className="overflow-hidden">
-        <div className="border-b border-border/60 bg-muted/30 px-6 py-4 flex items-center justify-between">
+        <div className="border-b border-border bg-muted/30 px-6 py-4 flex items-center justify-between">
           <div>
             <h2 className="font-semibold">Your Connected Repositories</h2>
             <p className="text-sm text-muted-foreground mt-0.5">
@@ -159,7 +159,7 @@ export default function ReposPage() {
           </CardContent>
         ) : connectedRepos.data && connectedRepos.data.length > 0 ? (
           <CardContent className="p-4 sm:p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {connectedRepos.data.map((repo) => (
                 <ConnectedRepoCard
                   key={repo.id}
@@ -174,11 +174,11 @@ export default function ReposPage() {
           <CardContent className="py-16 text-center">
             <div className="flex flex-col items-center max-w-sm mx-auto">
               <div className="relative mb-6">
-                <div className="w-20 h-20 rounded-full bg-linear-to-br from-violet-500/20 to-purple-500/20 flex items-center justify-center">
-                  <FolderGit2 className="w-10 h-10 text-violet-500" />
+                <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
+                  <FolderGit2 className="w-8 h-8 text-muted-foreground" />
                 </div>
-                <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-background border-2 border-border flex items-center justify-center">
-                  <Plus className="w-4 h-4 text-muted-foreground" />
+                <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-background border-2 border-border flex items-center justify-center">
+                  <Plus className="w-3 h-3 text-muted-foreground" />
                 </div>
               </div>
               <h3 className="text-lg font-semibold mb-2">

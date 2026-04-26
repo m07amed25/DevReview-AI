@@ -69,8 +69,8 @@ export function GithubReposPanel({
   };
 
   return (
-    <Card className="overflow-hidden rounded-none">
-      <div className="border-b border-border/60 bg-muted/30 px-6 py-4">
+    <Card className="overflow-hidden">
+      <div className="border-b border-border bg-muted/30 px-6 py-4">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="font-semibold">Import Github Repositories</h2>
@@ -127,7 +127,7 @@ export function GithubReposPanel({
         ) : (
           <>
             {/* Search bar */}
-            <div className="px-6 py-4 flex items-center gap-3 border-b border-border/60">
+            <div className="px-6 py-4 flex items-center gap-3 border-b border-border">
               <Search className="size-4 text-muted-foreground shrink-0" />
               <Input
                 placeholder="Search Repos..."
@@ -152,22 +152,21 @@ export function GithubReposPanel({
                   <p>No repositories found matching your search.</p>
                 </div>
               ) : (
-                <div className="divide-y divide-border/60">
+                <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 bg-muted/5">
                   {filteredRepos.map((repo) => (
-                    <div key={repo.githubId}>
-                      <RepoSelectItem
-                        repo={repo}
-                        selected={selectedRepos.has(repo.githubId)}
-                        onToggle={() => onToggle(repo.githubId)}
-                      />
-                    </div>
+                    <RepoSelectItem
+                      key={repo.githubId}
+                      repo={repo}
+                      selected={selectedRepos.has(repo.githubId)}
+                      onToggle={() => onToggle(repo.githubId)}
+                    />
                   ))}
                 </div>
               )}
             </div>
 
             {/* Sticky footer */}
-            <div className="sticky bottom-0 flex items-center justify-between px-6 py-4 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 border-t border-border/40 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] dark:shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.2)]">
+            <div className="sticky bottom-0 flex items-center justify-between px-6 py-4 bg-background border-t border-border">
               <div className="flex items-center gap-3">
                 <div
                   className={cn(

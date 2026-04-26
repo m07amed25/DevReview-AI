@@ -50,108 +50,97 @@ export function ConnectedRepoCard({
 }: ConnectedRepoCardProps) {
   return (
     <article
-      className="group relative flex flex-col p-4 sm:p-5 rounded-xl border border-border/60 bg-card hover:bg-muted/50 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300"
+      className="group relative flex flex-col h-full p-4 sm:p-5 rounded-xl border border-border bg-card hover:border-primary/40 hover:bg-muted/10 hover:shadow-md transition-all shadow-sm"
       aria-labelledby={`repo-name-${repo.id}`}
     >
-      {/* Status indicator */}
-      <div className="absolute top-4 right-4 flex items-center gap-1.5">
-        <span className="relative flex h-3 w-3">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-80" />
-          <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6),0_0_16px_rgba(52,211,153,0.3)]" />
-        </span>
-        <span className="text-xs font-semibold text-emerald-400 drop-shadow-[0_0_6px_rgba(52,211,153,0.5)]">
-          Connected
-        </span>
-      </div>
-
-      {/* Header */}
-      <div className="flex items-start gap-3 mb-3 pr-20">
-        <div className="flex shrink-0 items-center justify-center rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-400 group-hover:bg-violet-500/20 group-hover:scale-105 transition-all duration-300 size-11">
-          <FolderGit2 className="size-5" />
+      {/* Top Header */}
+      <div className="flex w-full gap-3.5 mb-2">
+        <div className="pt-0.5 shrink-0">
+          <div className="flex shrink-0 items-center justify-center rounded-md border border-border bg-muted text-muted-foreground size-10">
+            <FolderGit2 className="size-4" />
+          </div>
         </div>
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2 flex-wrap">
+
+        <div className="flex items-start justify-between w-full min-w-0">
+          <div className="flex items-center gap-2.5 min-w-0">
             <h3
               id={`repo-name-${repo.id}`}
-              className="font-semibold text-foreground truncate text-sm sm:text-base"
+              className="font-semibold text-sm sm:text-base text-foreground truncate"
             >
               {repo.name}
             </h3>
-            {repo.private ? (
-              <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400">
-                <Lock className="size-3" />
-                Private
-              </span>
-            ) : (
-              <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
-                <Globe className="size-3" />
-                Public
-              </span>
-            )}
           </div>
-          {repo.fullName && (
-            <p className="text-xs sm:text-sm text-muted-foreground truncate mt-0.5 font-mono">
-              {repo.fullName}
-            </p>
-          )}
+          
+          <div className="flex items-center gap-1 shrink-0 ml-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7 sm:h-8 sm:w-8 shrink-0 text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100"
+              asChild
+            >
+              <a href={repo.htmlUrl} target="_blank" rel="noopener noreferrer">
+                <ExternalLink className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              </a>
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7 sm:h-8 sm:w-8 shrink-0 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100"
+              onClick={() => onDelete({ id: repo.id, name: repo.name })}
+              disabled={isDeleting}
+              aria-label={`Disconnect ${repo.name}`}
+            >
+              <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* Team badge */}
-      {repo.team && (
-        <div className="flex items-center gap-2 flex-wrap mb-3">
-          <Badge variant="outline" className="text-xs gap-1">
-            <Users className="size-3" />
-            {repo.team.name}
-          </Badge>
-        </div>
-      )}
+      {/* Body Content */}
+      <div className="flex flex-col flex-1 w-full pl-[54px]">
+        {repo.fullName && (
+          <p className="text-xs text-muted-foreground truncate mb-2.5 -mt-2 sm:-mt-1.5">
+            {repo.fullName}
+          </p>
+        )}
 
-      {/* Footer */}
-      <div className="flex items-center justify-between gap-3 mt-auto pt-3 border-t border-border/50">
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-          <Calendar className="size-3.5" />
-          <time dateTime={repo.createdAt.toString()}>
-            {formatConnectedDate(repo.createdAt.toString())}
-          </time>
+        <div className="mb-4 flex items-center gap-2 flex-wrap">
+          <span
+            className={
+              repo.private
+                ? "inline-flex items-center justify-center px-2 py-0.5 rounded-full border text-[10px] font-medium leading-none whitespace-nowrap border-amber-500/30 text-amber-600 bg-amber-500/10 dark:text-amber-400"
+                : "inline-flex items-center justify-center px-2 py-0.5 rounded-full border text-[10px] font-medium leading-none whitespace-nowrap border-emerald-500/30 text-emerald-600 bg-emerald-500/10 dark:text-emerald-400"
+            }
+          >
+            {repo.private ? "Private" : "Public"}
+          </span>
+          {repo.team && (
+            <span className="inline-flex items-center justify-center px-2 py-0.5 rounded-full border border-border text-[10px] font-medium leading-none whitespace-nowrap bg-muted/50 text-muted-foreground">
+              <Users className="size-3 mr-1" />
+              {repo.team.name}
+            </span>
+          )}
         </div>
-        <div className="flex items-center gap-1">
+
+        {/* Footer */}
+        <div className="mt-auto pt-4 flex flex-wrap justify-between items-center gap-3 text-[11px] sm:text-xs text-muted-foreground font-medium border-t border-border/40">
+          <div className="flex items-center gap-1.5">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
+            </span>
+            <span>{formatConnectedDate(repo.createdAt.toString())}</span>
+          </div>
+
           <Button
-            variant="outline"
+            variant="secondary"
             size="sm"
-            className="gap-1.5 text-muted-foreground hover:text-foreground hover:border-primary/50 transition-colors text-xs h-8"
+            className="h-7 text-[11px] sm:text-xs px-3 font-medium bg-primary/10 hover:bg-primary/20 text-primary border-0"
             asChild
           >
-            <Link href={`/repo/${repo.id}`} className="flex items-center">
-              <GitPullRequest className="size-4" />
-              <span>PRs</span>
-              <ArrowRight className="size-3" />
+            <Link href={`/repo/${repo.id}`} className="flex items-center gap-1.5">
+              <GitPullRequest className="size-3.5" />
+              View PRs
             </Link>
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-muted-foreground hover:text-foreground h-8 w-8 sm:h-9 sm:w-9"
-            asChild
-          >
-            <a
-              href={repo.htmlUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Open ${repo.name} on GitHub`}
-            >
-              <ExternalLink className="size-4" />
-            </a>
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-destructive hover:text-destructive h-8 w-8 sm:h-9 sm:w-9"
-            onClick={() => onDelete({ id: repo.id, name: repo.name })}
-            disabled={isDeleting}
-            aria-label={`Disconnect ${repo.name}`}
-          >
-            <Trash2 className="size-4" />
           </Button>
         </div>
       </div>
