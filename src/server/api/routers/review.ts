@@ -13,9 +13,9 @@ export const reviewRouter = createTRPCRouter({
   trigger: protectedProcedure
     .input(
       z.object({
-        repositoryId: z.string(),
+        repositoryId: z.string().max(255),
         prNumber: z.number(),
-        parentReviewId: z.string().optional(),
+        parentReviewId: z.string().max(255).optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -101,7 +101,7 @@ export const reviewRouter = createTRPCRouter({
       return { reviewId: review.id };
     }),
   get: protectedProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.string().max(255).max(255) }))
     .query(async ({ ctx, input }) => {
       // Try direct ownership first, then team access
       let review = await ctx.db.review.findUnique({
@@ -134,7 +134,7 @@ export const reviewRouter = createTRPCRouter({
   list: protectedProcedure
     .input(
       z.object({
-        repositoryId: z.string().optional(),
+        repositoryId: z.string().max(255).optional(),
         limit: z.number().min(1).max(50).default(20),
       }),
     )
@@ -167,7 +167,7 @@ export const reviewRouter = createTRPCRouter({
   getLatestForPR: protectedProcedure
     .input(
       z.object({
-        repositoryId: z.string(),
+        repositoryId: z.string().max(255),
         prNumber: z.number(),
       }),
     )
@@ -197,8 +197,8 @@ export const reviewRouter = createTRPCRouter({
   toggleResolvedComment: protectedProcedure
     .input(
       z.object({
-        reviewId: z.string(),
-        commentKey: z.string(),
+        reviewId: z.string().max(255),
+        commentKey: z.string().max(255),
         resolved: z.boolean(),
       }),
     )
@@ -244,9 +244,9 @@ export const reviewRouter = createTRPCRouter({
   submitFeedback: protectedProcedure
     .input(
       z.object({
-        reviewId: z.string(),
+        reviewId: z.string().max(255),
         rating: z.union([z.literal(1), z.literal(-1)]),
-        comment: z.string().optional(),
+        comment: z.string().max(2000).optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -273,7 +273,7 @@ export const reviewRouter = createTRPCRouter({
     }),
 
   getFeedbackStats: protectedProcedure
-    .input(z.object({ repositoryId: z.string().optional() }))
+    .input(z.object({ repositoryId: z.string().max(255).optional() }))
     .query(async ({ ctx, input }) => {
       const teamRepoIds = await ctx.db.repository.findMany({
         where: { team: { members: { some: { userId: ctx.user.id } } } },
@@ -320,7 +320,7 @@ export const reviewRouter = createTRPCRouter({
   listHistoryForPR: protectedProcedure
     .input(
       z.object({
-        repositoryId: z.string(),
+        repositoryId: z.string().max(255),
         prNumber: z.number(),
       }),
     )
@@ -353,8 +353,8 @@ export const reviewRouter = createTRPCRouter({
   getDiff: protectedProcedure
     .input(
       z.object({
-        reviewId: z.string(),
-        compareReviewId: z.string(),
+        reviewId: z.string().max(255),
+        compareReviewId: z.string().max(255),
       }),
     )
     .query(async ({ ctx, input }) => {

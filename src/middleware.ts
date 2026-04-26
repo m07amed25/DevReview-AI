@@ -1,19 +1,39 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+const protectedRoutes = [
+  "/admin",
+  "/analytics",
+  "/profile",
+  "/repo",
+  "/reviews",
+  "/settings",
+  "/teams",
+];
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith("/admin")) {
+  const isProtectedRoute = protectedRoutes.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`),
+  );
+
+  if (isProtectedRoute) {
     const sessionCookie =
       request.cookies.get("better-auth.session_token")?.value ??
       request.cookies.get("__Secure-better-auth.session_token")?.value;
 
-    if (!sessionCookie) {
+    const isValidSession =
+      typeof sessionCookie === "string" &&
+      sessionCookie.length >= 10 &&
+      sessionCookie.length <= 1024 &&
+      /^[a-zA-Z0-9\-_.]+$/.test(sessionCookie);
+
+    if (!isValidSession) {
       return NextResponse.redirect(new URL("/sign-in", request.url));
     }
 
-    const sessionUrl = new URL("/api/auth/get-session", request.url);
+    const sessionUrl = new URL("/api/auth/get-session", request.nextUrl.origin);
     const sessionRes = await fetch(sessionUrl.toString(), {
       headers: { cookie: request.headers.get("cookie") ?? "" },
     });
@@ -26,7 +46,11 @@ export async function middleware(request: NextRequest) {
       user?: { id?: string; role?: string };
     } | null;
 
-    if (data?.user?.role !== "ADMIN") {
+    if (!data?.user) {
+      return NextResponse.redirect(new URL("/sign-in", request.url));
+    }
+
+    if (pathname.startsWith("/admin") && data.user.role !== "ADMIN") {
       return NextResponse.redirect(new URL("/", request.url));
     }
 
@@ -57,5 +81,7 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/api/auth/error", "/admin/:path*"],
+  matcher: [
+    "/((?!api/webhooks|api/inngest|_next/static|_next/image|favicon.ico|images|.*\\\\.svg$).*)",
+  ],
 };

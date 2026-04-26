@@ -13,7 +13,7 @@ export const pullRequestRouter = createTRPCRouter({
   list: protectedProcedure
     .input(
       z.object({
-        repositoryId: z.string(),
+        repositoryId: z.string().max(255),
         state: z.enum(["open", "closed", "all"]).default("open"),
       }),
     )
@@ -123,7 +123,7 @@ export const pullRequestRouter = createTRPCRouter({
   get: protectedProcedure
     .input(
       z.object({
-        repositoryId: z.string(),
+        repositoryId: z.string().max(255),
         prNumber: z.number(),
       }),
     )
@@ -210,7 +210,7 @@ export const pullRequestRouter = createTRPCRouter({
   files: protectedProcedure
     .input(
       z.object({
-        repositoryId: z.string(),
+        repositoryId: z.string().max(255),
         prNumber: z.number(),
       }),
     )

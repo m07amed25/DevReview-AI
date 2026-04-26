@@ -30,7 +30,7 @@ export function StatsCards({
 }: StatsCardsProps) {
   if (isLoading) {
     return (
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-3 mb-4">
         {[...Array(3)].map((_, i) => (
           <Card key={i} className="bg-card">
             <CardHeader className="pb-2">
@@ -49,7 +49,7 @@ export function StatsCards({
   return (
     <div className="grid gap-4 md:grid-cols-3">
       {/* Connected */}
-      <Card className="bg-card transition-shadow hover:shadow-sm">
+      <Card className="bg-card transition-shadow hover:shadow-sm pb-4">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
             <FolderGit2 className="size-4" />
@@ -75,7 +75,7 @@ export function StatsCards({
       </Card>
 
       {/* Available */}
-      <Card className="bg-card transition-shadow hover:shadow-sm">
+      <Card className="bg-card transition-shadow hover:shadow-sm pb-4">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
             <GitPullRequest className="size-4" />
@@ -93,7 +93,8 @@ export function StatsCards({
           {totalGithubCount > 0 && (
             <div className="mt-2 pt-2 border-t border-border/50">
               <span className="text-xs text-muted-foreground">
-                {Math.round((availableCount / totalGithubCount) * 100)}% not connected
+                {Math.round((availableCount / totalGithubCount) * 100)}% not
+                connected
               </span>
             </div>
           )}
@@ -101,7 +102,7 @@ export function StatsCards({
       </Card>
 
       {/* Selection */}
-      <Card className="bg-card transition-shadow hover:shadow-sm">
+      <Card className="bg-card transition-shadow hover:shadow-sm pb-4">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
             <Star className="size-4" />
@@ -127,7 +128,8 @@ export function StatsCards({
                 />
               </div>
               <span className="text-xs text-muted-foreground">
-                {Math.round((selectedCount / availableCount) * 100)}% of available
+                {Math.round((selectedCount / availableCount) * 100)}% of
+                available
               </span>
             </div>
           )}
@@ -136,4 +138,3 @@ export function StatsCards({
     </div>
   );
 }
-

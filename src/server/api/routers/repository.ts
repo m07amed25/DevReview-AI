@@ -80,10 +80,10 @@ export const repositoryRouter = createTRPCRouter({
         repos: z.array(
           z.object({
             githubId: z.number(),
-            name: z.string(),
-            fullName: z.string(),
+            name: z.string().max(255),
+            fullName: z.string().max(255),
             private: z.boolean(),
-            htmlUrl: z.string(),
+            htmlUrl: z.string().url().max(1000),
           }),
         ),
       }),
@@ -123,7 +123,7 @@ export const repositoryRouter = createTRPCRouter({
     }),
 
   disconnect: protectedProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.string().max(255).max(255) }))
     .mutation(async ({ ctx, input }) => {
       await ctx.db.repository.delete({
         where: {
@@ -139,7 +139,7 @@ export const repositoryRouter = createTRPCRouter({
   getWebhookConfig: protectedProcedure
     .input(
       z.object({
-        repositoryId: z.string().cuid(),
+        repositoryId: z.string().max(255).cuid(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -153,7 +153,7 @@ export const repositoryRouter = createTRPCRouter({
   updateWebhookConfig: protectedProcedure
     .input(
       z.object({
-        repositoryId: z.string().cuid(),
+        repositoryId: z.string().max(255).cuid(),
         enabled: z.boolean(),
       }),
     )
@@ -275,7 +275,7 @@ export const repositoryRouter = createTRPCRouter({
   getScheduledScanConfig: protectedProcedure
     .input(
       z.object({
-        repositoryId: z.string().cuid(),
+        repositoryId: z.string().max(255).cuid(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -289,7 +289,7 @@ export const repositoryRouter = createTRPCRouter({
   updateScheduledScanConfig: protectedProcedure
     .input(
       z.object({
-        repositoryId: z.string().cuid(),
+        repositoryId: z.string().max(255).cuid(),
         enabled: z.boolean(),
         cadence: z.enum(["DAILY", "WEEKLY"]).optional(),
       }),
@@ -342,8 +342,8 @@ export const repositoryRouter = createTRPCRouter({
   getCommits: protectedProcedure
     .input(
       z.object({
-        id: z.string(),
-        branch: z.string().optional(),
+        id: z.string().max(255).max(255),
+        branch: z.string().max(255).optional(),
         page: z.number().optional().default(1),
         perPage: z.number().optional().default(30),
       }),
@@ -403,7 +403,7 @@ export const repositoryRouter = createTRPCRouter({
   getBranches: protectedProcedure
     .input(
       z.object({
-        id: z.string(),
+        id: z.string().max(255).max(255),
       }),
     )
     .query(async ({ ctx, input }) => {

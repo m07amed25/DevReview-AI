@@ -37,7 +37,7 @@ export const settingsRouter = createTRPCRouter({
    * Revoke a specific session (sign out from that device)
    */
   revokeSession: protectedProcedure
-    .input(z.object({ sessionId: z.string().min(1) }))
+    .input(z.object({ sessionId: z.string().max(255).min(1) }))
     .mutation(async ({ ctx, input }) => {
       // Don't allow revoking the current session via this endpoint
       if (input.sessionId === ctx.session.session.id) {

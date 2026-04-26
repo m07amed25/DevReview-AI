@@ -66,8 +66,8 @@ export const profileRouter = createTRPCRouter({
   update: protectedProcedure
     .input(
       z.object({
-        name: z.string().min(1, "Name is required").max(100).optional(),
-        email: z.string().email("Invalid email address").optional(),
+        name: z.string().max(255).min(1, "Name is required").max(100).optional(),
+        email: z.string().email().max(255).email("Invalid email address").optional(),
         image: z.string().min(1).or(z.literal("")).optional(),
       }),
     )
@@ -107,7 +107,7 @@ export const profileRouter = createTRPCRouter({
   disconnectAccount: protectedProcedure
     .input(
       z.object({
-        accountId: z.string().min(1),
+        accountId: z.string().max(255).min(1),
       }),
     )
     .mutation(async ({ ctx, input }) => {

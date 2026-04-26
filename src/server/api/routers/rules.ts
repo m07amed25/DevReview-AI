@@ -6,12 +6,12 @@ import { getAccessibleRepository } from "@/lib/repository";
 const severityEnum = z.enum(["CRITICAL", "HIGH", "MEDIUM", "LOW"]);
 
 const ruleInput = z.object({
-  name: z.string().min(1, "Name is required").max(100),
+  name: z.string().max(255).min(1, "Name is required").max(100),
   description: z.string().min(1, "Description is required").max(2000),
-  pattern: z.string().optional(),
+  pattern: z.string().max(500).optional(),
   severity: severityEnum.default("MEDIUM"),
-  repositoryId: z.string().optional(),
-  teamId: z.string().optional(),
+  repositoryId: z.string().max(255).optional(),
+  teamId: z.string().max(255).optional(),
   enabled: z.boolean().default(true),
 });
 
@@ -59,8 +59,8 @@ export const rulesRouter = createTRPCRouter({
   list: protectedProcedure
     .input(
       z.object({
-        repositoryId: z.string().optional(),
-        teamId: z.string().optional(),
+        repositoryId: z.string().max(255).optional(),
+        teamId: z.string().max(255).optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -104,7 +104,7 @@ export const rulesRouter = createTRPCRouter({
   getActiveForReview: protectedProcedure
     .input(
       z.object({
-        repositoryId: z.string(),
+        repositoryId: z.string().max(255),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -152,10 +152,10 @@ export const rulesRouter = createTRPCRouter({
   update: protectedProcedure
     .input(
       z.object({
-        id: z.string(),
-        name: z.string().min(1).max(100).optional(),
+        id: z.string().max(255).max(255),
+        name: z.string().max(255).min(1).max(100).optional(),
         description: z.string().min(1).max(2000).optional(),
-        pattern: z.string().nullable().optional(),
+        pattern: z.string().max(500).nullable().optional(),
         severity: severityEnum.optional(),
         enabled: z.boolean().optional(),
       }),
@@ -189,7 +189,7 @@ export const rulesRouter = createTRPCRouter({
     }),
 
   toggle: protectedProcedure
-    .input(z.object({ id: z.string(), enabled: z.boolean() }))
+    .input(z.object({ id: z.string().max(255).max(255), enabled: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       const existing = await ctx.db.reviewRule.findUnique({
         where: { id: input.id },
@@ -207,7 +207,7 @@ export const rulesRouter = createTRPCRouter({
     }),
 
   delete: protectedProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.string().max(255).max(255) }))
     .mutation(async ({ ctx, input }) => {
       const existing = await ctx.db.reviewRule.findUnique({
         where: { id: input.id },

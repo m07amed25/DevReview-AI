@@ -6,7 +6,7 @@ import { inngest } from "@/server/inngest";
 export const diagramRouter = createTRPCRouter({
   /** List all diagrams for a repository (accessible to the repository's owner). */
   listForRepository: protectedProcedure
-    .input(z.object({ repositoryId: z.string().cuid() }))
+    .input(z.object({ repositoryId: z.string().max(255).cuid() }))
     .query(async ({ ctx, input }) => {
       const repository = await ctx.db.repository.findUnique({
         where: { id: input.repositoryId },
@@ -26,7 +26,7 @@ export const diagramRouter = createTRPCRouter({
 
   /** Get a single diagram by id (owner-only). */
   getById: protectedProcedure
-    .input(z.object({ id: z.string().cuid() }))
+    .input(z.object({ id: z.string().max(255).max(255).cuid() }))
     .query(async ({ ctx, input }) => {
       const diagram = await ctx.db.diagram.findUnique({
         where: { id: input.id },
@@ -51,7 +51,7 @@ export const diagramRouter = createTRPCRouter({
   requestDiagram: protectedProcedure
     .input(
       z.object({
-        repositoryId: z.string().cuid(),
+        repositoryId: z.string().max(255).cuid(),
         prNumber: z.number().int().optional(), // optional since we might trigger manually without a PR
         type: z.enum(["ERD", "CLASS", "USE_CASE"]),
       }),
