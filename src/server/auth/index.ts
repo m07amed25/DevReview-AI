@@ -34,7 +34,9 @@ export const auth = betterAuth({
         "user:email",
         "repo",
         "read:org",
-        "admin:repo_hook",
+        // write:repo_hook is sufficient — admin:repo_hook grants management of
+        // ALL repos the user admins and is broader than needed.
+        "write:repo_hook",
         "repo:status",
       ],
     },
@@ -98,7 +100,10 @@ export const auth = betterAuth({
   account: {
     accountLinking: {
       enabled: true,
-      allowDifferentEmails: true,
+      // Disallow linking accounts with different emails to prevent account
+      // takeover: an attacker with a GitHub account cannot silently link it
+      // to a victim's email/password account without email verification.
+      allowDifferentEmails: false,
       trustedProviders: [
         "credential",
         "github",
@@ -107,7 +112,7 @@ export const auth = betterAuth({
         "twitch",
         "apple",
       ],
-      requireEmailVerification: false,
+      requireEmailVerification: true,
     },
   },
   session: {
@@ -154,29 +159,12 @@ export const auth = betterAuth({
                 },
               });
 
-              console.log("[DEBUG auth/after hook] user fetched:", {
-                userId: session.userId,
-                hasUser: !!user,
-                accountsCount: user?.accounts?.length,
-              });
-
               if (user && user.accounts.length === 0) {
-                console.log(
-                  "[DEBUG auth/after hook] Conditions met, sending email...",
-                );
                 // User hasn't connected GitHub
-                const emailResult = await sendGithubConnectionWarningEmail({
+                await sendGithubConnectionWarningEmail({
                   to: user.email,
                   userName: user.name || "User",
                 });
-                console.log(
-                  "[DEBUG auth/after hook] Email result:",
-                  emailResult,
-                );
-              } else {
-                console.log(
-                  "[DEBUG auth/after hook] Conditions NOT met for github warning email.",
-                );
               }
             } catch (err) {
               console.error(

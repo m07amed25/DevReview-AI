@@ -9514,6 +9514,7 @@ export namespace Prisma {
     qualityMetrics: number
     error: number
     parentReviewId: number
+    resolvedComments: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -9576,6 +9577,7 @@ export namespace Prisma {
     qualityMetrics?: true
     error?: true
     parentReviewId?: true
+    resolvedComments?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -9681,6 +9683,7 @@ export namespace Prisma {
     qualityMetrics: JsonValue | null
     error: string | null
     parentReviewId: string | null
+    resolvedComments: string[]
     createdAt: Date
     updatedAt: Date
     _count: ReviewCountAggregateOutputType | null
@@ -9718,6 +9721,7 @@ export namespace Prisma {
     qualityMetrics?: boolean
     error?: boolean
     parentReviewId?: boolean
+    resolvedComments?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
@@ -9745,6 +9749,7 @@ export namespace Prisma {
     qualityMetrics?: boolean
     error?: boolean
     parentReviewId?: boolean
+    resolvedComments?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
@@ -9766,6 +9771,7 @@ export namespace Prisma {
     qualityMetrics?: boolean
     error?: boolean
     parentReviewId?: boolean
+    resolvedComments?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
@@ -9787,11 +9793,12 @@ export namespace Prisma {
     qualityMetrics?: boolean
     error?: boolean
     parentReviewId?: boolean
+    resolvedComments?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ReviewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "repositoryId" | "userId" | "prNumber" | "prTitle" | "prUrl" | "status" | "summary" | "riskScore" | "comments" | "qualityMetrics" | "error" | "parentReviewId" | "createdAt" | "updatedAt", ExtArgs["result"]["review"]>
+  export type ReviewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "repositoryId" | "userId" | "prNumber" | "prTitle" | "prUrl" | "status" | "summary" | "riskScore" | "comments" | "qualityMetrics" | "error" | "parentReviewId" | "resolvedComments" | "createdAt" | "updatedAt", ExtArgs["result"]["review"]>
   export type ReviewInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -9840,6 +9847,7 @@ export namespace Prisma {
       qualityMetrics: Prisma.JsonValue | null
       error: string | null
       parentReviewId: string | null
+      resolvedComments: string[]
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["review"]>
@@ -10286,6 +10294,7 @@ export namespace Prisma {
     readonly qualityMetrics: FieldRef<"Review", 'Json'>
     readonly error: FieldRef<"Review", 'String'>
     readonly parentReviewId: FieldRef<"Review", 'String'>
+    readonly resolvedComments: FieldRef<"Review", 'String[]'>
     readonly createdAt: FieldRef<"Review", 'DateTime'>
     readonly updatedAt: FieldRef<"Review", 'DateTime'>
   }
@@ -29677,6 +29686,7 @@ export namespace Prisma {
     qualityMetrics: 'qualityMetrics',
     error: 'error',
     parentReviewId: 'parentReviewId',
+    resolvedComments: 'resolvedComments',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -30704,6 +30714,7 @@ export namespace Prisma {
     qualityMetrics?: JsonNullableFilter<"Review">
     error?: StringNullableFilter<"Review"> | string | null
     parentReviewId?: StringNullableFilter<"Review"> | string | null
+    resolvedComments?: StringNullableListFilter<"Review">
     createdAt?: DateTimeFilter<"Review"> | Date | string
     updatedAt?: DateTimeFilter<"Review"> | Date | string
     repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
@@ -30730,6 +30741,7 @@ export namespace Prisma {
     qualityMetrics?: SortOrderInput | SortOrder
     error?: SortOrderInput | SortOrder
     parentReviewId?: SortOrderInput | SortOrder
+    resolvedComments?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     repository?: RepositoryOrderByWithRelationInput
@@ -30759,6 +30771,7 @@ export namespace Prisma {
     qualityMetrics?: JsonNullableFilter<"Review">
     error?: StringNullableFilter<"Review"> | string | null
     parentReviewId?: StringNullableFilter<"Review"> | string | null
+    resolvedComments?: StringNullableListFilter<"Review">
     createdAt?: DateTimeFilter<"Review"> | Date | string
     updatedAt?: DateTimeFilter<"Review"> | Date | string
     repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
@@ -30785,6 +30798,7 @@ export namespace Prisma {
     qualityMetrics?: SortOrderInput | SortOrder
     error?: SortOrderInput | SortOrder
     parentReviewId?: SortOrderInput | SortOrder
+    resolvedComments?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ReviewCountOrderByAggregateInput
@@ -30811,6 +30825,7 @@ export namespace Prisma {
     qualityMetrics?: JsonNullableWithAggregatesFilter<"Review">
     error?: StringNullableWithAggregatesFilter<"Review"> | string | null
     parentReviewId?: StringNullableWithAggregatesFilter<"Review"> | string | null
+    resolvedComments?: StringNullableListFilter<"Review">
     createdAt?: DateTimeWithAggregatesFilter<"Review"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Review"> | Date | string
   }
@@ -32510,6 +32525,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     repository: RepositoryCreateNestedOneWithoutReviewsInput
@@ -32536,6 +32552,7 @@ export namespace Prisma {
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
     parentReviewId?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
@@ -32556,6 +32573,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
@@ -32582,6 +32600,7 @@ export namespace Prisma {
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
     parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
@@ -32605,6 +32624,7 @@ export namespace Prisma {
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
     parentReviewId?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -32620,6 +32640,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -32638,6 +32659,7 @@ export namespace Prisma {
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
     parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34423,6 +34445,14 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type RepositoryScalarRelationFilter = {
     is?: RepositoryWhereInput
     isNot?: RepositoryWhereInput
@@ -34467,6 +34497,7 @@ export namespace Prisma {
     qualityMetrics?: SortOrder
     error?: SortOrder
     parentReviewId?: SortOrder
+    resolvedComments?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -36135,6 +36166,10 @@ export namespace Prisma {
     deleteMany?: ReviewRuleScalarWhereInput | ReviewRuleScalarWhereInput[]
   }
 
+  export type ReviewCreateresolvedCommentsInput = {
+    set: string[]
+  }
+
   export type RepositoryCreateNestedOneWithoutReviewsInput = {
     create?: XOR<RepositoryCreateWithoutReviewsInput, RepositoryUncheckedCreateWithoutReviewsInput>
     connectOrCreate?: RepositoryCreateOrConnectWithoutReviewsInput
@@ -36229,6 +36264,11 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type ReviewUpdateresolvedCommentsInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type RepositoryUpdateOneRequiredWithoutReviewsNestedInput = {
@@ -37570,6 +37610,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     repository: RepositoryCreateNestedOneWithoutReviewsInput
@@ -37594,6 +37635,7 @@ export namespace Prisma {
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
     parentReviewId?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
@@ -37885,6 +37927,7 @@ export namespace Prisma {
     qualityMetrics?: JsonNullableFilter<"Review">
     error?: StringNullableFilter<"Review"> | string | null
     parentReviewId?: StringNullableFilter<"Review"> | string | null
+    resolvedComments?: StringNullableListFilter<"Review">
     createdAt?: DateTimeFilter<"Review"> | Date | string
     updatedAt?: DateTimeFilter<"Review"> | Date | string
   }
@@ -38372,6 +38415,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutReviewsInput
@@ -38396,6 +38440,7 @@ export namespace Prisma {
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
     parentReviewId?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
@@ -38981,6 +39026,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     repository: RepositoryCreateNestedOneWithoutReviewsInput
@@ -39006,6 +39052,7 @@ export namespace Prisma {
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
     parentReviewId?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
@@ -39030,6 +39077,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     repository: RepositoryCreateNestedOneWithoutReviewsInput
@@ -39054,6 +39102,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
@@ -39309,6 +39358,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
@@ -39334,6 +39384,7 @@ export namespace Prisma {
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
     parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
@@ -39472,6 +39523,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     repository: RepositoryCreateNestedOneWithoutReviewsInput
@@ -39497,6 +39549,7 @@ export namespace Prisma {
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
     parentReviewId?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
@@ -39589,6 +39642,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
@@ -39614,6 +39668,7 @@ export namespace Prisma {
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
     parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
@@ -39696,6 +39751,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     repository: RepositoryCreateNestedOneWithoutReviewsInput
@@ -39721,6 +39777,7 @@ export namespace Prisma {
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
     parentReviewId?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
@@ -39782,6 +39839,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
@@ -39807,6 +39865,7 @@ export namespace Prisma {
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
     parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
@@ -40907,6 +40966,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     repository: RepositoryCreateNestedOneWithoutReviewsInput
@@ -40932,6 +40992,7 @@ export namespace Prisma {
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
     parentReviewId?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
@@ -41010,6 +41071,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
@@ -41035,6 +41097,7 @@ export namespace Prisma {
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
     parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
@@ -41103,6 +41166,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     repository: RepositoryCreateNestedOneWithoutReviewsInput
@@ -41128,6 +41192,7 @@ export namespace Prisma {
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
     parentReviewId?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
@@ -41163,6 +41228,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
@@ -41188,6 +41254,7 @@ export namespace Prisma {
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
     parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
@@ -41706,6 +41773,7 @@ export namespace Prisma {
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
     parentReviewId?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -41892,6 +41960,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
@@ -41916,6 +41985,7 @@ export namespace Prisma {
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
     parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
@@ -41938,6 +42008,7 @@ export namespace Prisma {
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
     parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -42093,6 +42164,7 @@ export namespace Prisma {
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
     parentReviewId?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -42154,6 +42226,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutReviewsNestedInput
@@ -42178,6 +42251,7 @@ export namespace Prisma {
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
     parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
@@ -42200,6 +42274,7 @@ export namespace Prisma {
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
     parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -42355,6 +42430,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -42387,6 +42463,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
@@ -42411,6 +42488,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
@@ -42433,6 +42511,7 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

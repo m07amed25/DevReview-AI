@@ -140,9 +140,10 @@ model Review {
   comments        Json?
   qualityMetrics  Json?
   error           String?
-  parentReviewId  String?
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
+  parentReviewId   String?
+  resolvedComments String[]     @default([])
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
 
   repository   Repository   @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
   user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)

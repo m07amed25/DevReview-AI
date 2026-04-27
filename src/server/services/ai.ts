@@ -19,11 +19,13 @@ function getGroqClient(): Groq {
 export const ReviewCommentSchema = z.object({
   file: z.string().catch("unknown"),
   line: z.coerce.number().catch(1),
-  severity: z.string()
+  severity: z
+    .string()
     .transform((val) => val.toLowerCase())
     .pipe(z.enum(["critical", "high", "medium", "low"]))
     .catch("medium"),
-  category: z.string()
+  category: z
+    .string()
     .transform((val) => val.toLowerCase())
     .pipe(
       z.enum([
@@ -33,7 +35,7 @@ export const ReviewCommentSchema = z.object({
         "style",
         "suggestion",
         "custom-rule",
-      ])
+      ]),
     )
     .catch("suggestion"),
   message: z.string().catch("Issue detected"),
@@ -143,6 +145,20 @@ export interface ReviewPreferences {
   customRules?: CustomRule[];
 }
 
+/**
+ * Strip characters that could be used to inject new instructions into an AI
+ * system prompt (angle brackets, backticks, null bytes, and common Unicode
+ * control characters).  This is applied to every user-controlled string
+ * before it is interpolated into the prompt.
+ */
+function sanitizePromptField(value: string): string {
+  return value
+    .replace(/[<>`\x00-\x1F\x7F]/g, " ")
+    .replace(/\s{2,}/g, " ")
+    .trim()
+    .slice(0, 500); // hard cap so no single field can dominate the prompt
+}
+
 function buildSystemPrompt(preferences?: ReviewPreferences): string {
   const parts: string[] = [BASE_SYSTEM_PROMPT];
 
@@ -158,8 +174,10 @@ function buildSystemPrompt(preferences?: ReviewPreferences): string {
     }
 
     if (preferences.defaultLanguage && preferences.defaultLanguage !== "auto") {
+      // Sanitize before interpolating into the prompt to prevent injection.
+      const safeLanguage = sanitizePromptField(preferences.defaultLanguage);
       parts.push(
-        `\nNote: The primary language context for this project is ${preferences.defaultLanguage}. Use this context for language-specific best practices.`,
+        `\nNote: The primary language context for this project is ${safeLanguage}. Use this context for language-specific best practices.`,
       );
     }
 
@@ -188,10 +206,18 @@ function buildSystemPrompt(preferences?: ReviewPreferences): string {
       const ruleLines = preferences.customRules.map((rule, i) => {
         const severityLabel =
           rule.severity.charAt(0) + rule.severity.slice(1).toLowerCase();
-        const patternNote = rule.pattern
-          ? ` [Regex trigger: /${rule.pattern}/]`
+        // Sanitize all user-controlled fields to prevent prompt injection.
+        // Strip angle brackets, backticks, and control characters that could
+        // be used to inject new instructions into the system prompt.
+        const safeName = sanitizePromptField(rule.name);
+        const safeDescription = sanitizePromptField(rule.description);
+        const safePattern = rule.pattern
+          ? sanitizePromptField(rule.pattern)
+          : null;
+        const patternNote = safePattern
+          ? ` [Regex trigger: /${safePattern}/]`
           : "";
-        return `  ${i + 1}. [${severityLabel}] ${rule.name}${patternNote}: ${rule.description}`;
+        return `  ${i + 1}. [${severityLabel}] ${safeName}${patternNote}: ${safeDescription}`;
       });
 
       parts.push(

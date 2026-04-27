@@ -641,6 +641,36 @@ export async function runPostReviewToGitHub(
 
   const { review, accessToken } = reviewData;
 
+  // For FAILED reviews, skip posting the PR review comment entirely —
+  // incomplete/misleading review content should not appear on GitHub.
+  // Only update the commit status so the CI check reflects the failure.
+  if (completedEvent.data.status === "FAILED") {
+    await step.run("update-status-check-failed", async () => {
+      await postCommitStatusFn(
+        accessToken,
+        review.repository.fullName,
+        completedEvent.data.commitSha,
+        "error",
+        review.id,
+        "DevReview AI — review processing failed",
+      );
+
+      await dbClient.gitHubStatusCheck.upsert({
+        where: { reviewId: review.id },
+        create: {
+          reviewId: review.id,
+          commitSha: completedEvent.data.commitSha,
+          state: "ERROR",
+        },
+        update: {
+          commitSha: completedEvent.data.commitSha,
+          state: "ERROR",
+        },
+      });
+    });
+    return { success: true, skippedDueToFailure: true };
+  }
+
   await step.run("dismiss-previous-review", async () => {
     const previous = await dbClient.gitHubComment.findFirst({
       where: {

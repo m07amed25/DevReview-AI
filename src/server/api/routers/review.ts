@@ -40,9 +40,9 @@ export const reviewRouter = createTRPCRouter({
         input.prNumber,
       );
 
-      // Read user preferences for the AI review
+      // Read user preferences for the AI review (triggering user's preferences)
       const user = await ctx.db.user.findUnique({
-        where: { id: repository.userId },
+        where: { id: ctx.user.id },
         select: {
           reviewDepth: true,
           defaultLanguage: true,
@@ -54,7 +54,7 @@ export const reviewRouter = createTRPCRouter({
       const review = await ctx.db.review.create({
         data: {
           repositoryId: repository.id,
-          userId: repository.userId,
+          userId: ctx.user.id, // Review is attributed to the triggering user, not the repo owner
           prNumber: pr.number,
           prTitle: pr.title,
           prUrl: pr.html_url,
@@ -373,6 +373,7 @@ export const reviewRouter = createTRPCRouter({
           },
           select: {
             id: true,
+            repositoryId: true,
             comments: true,
             riskScore: true,
             createdAt: true,
@@ -392,6 +393,7 @@ export const reviewRouter = createTRPCRouter({
           },
           select: {
             id: true,
+            repositoryId: true,
             comments: true,
             riskScore: true,
             createdAt: true,
@@ -403,6 +405,14 @@ export const reviewRouter = createTRPCRouter({
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "One or both reviews not found",
+        });
+      }
+
+      // Prevent cross-repository diffing: both reviews must belong to the same repository
+      if (current.repositoryId !== previous.repositoryId) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Cannot diff reviews from different repositories",
         });
       }
 

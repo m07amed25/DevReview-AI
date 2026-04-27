@@ -1,6 +1,9 @@
 import { db } from "@/server/db";
 import { inngest } from "../client";
-import { getGitHubAccessToken, listOpenPullRequests } from "@/server/services/github";
+import {
+  getGitHubAccessToken,
+  listOpenPullRequests,
+} from "@/server/services/github";
 import type { Prisma } from "@/server/db/client";
 
 type ScanCadence = "DAILY" | "WEEKLY";
@@ -55,7 +58,9 @@ async function runScheduledScan(
       });
 
       try {
-        const accessToken = await getGitHubAccessToken(config.repository.userId);
+        const accessToken = await getGitHubAccessToken(
+          config.repository.userId,
+        );
         if (!accessToken) {
           await db.scheduledScanRun.update({
             where: { id: scanRun.id },
@@ -76,6 +81,22 @@ async function runScheduledScan(
         let reviewsQueued = 0;
 
         for (const pr of openPrs) {
+          // Skip PRs that already have a recent COMPLETED review to avoid duplicates.
+          // Use the scan cadence to define "recent": 24 h for DAILY, 7 days for WEEKLY.
+          const recentWindowMs =
+            cadence === "DAILY" ? 24 * 60 * 60 * 1000 : 7 * 24 * 60 * 60 * 1000;
+
+          const latestReview = await db.review.findFirst({
+            where: {
+              repositoryId: config.repositoryId,
+              prNumber: pr.number,
+              status: "COMPLETED",
+              createdAt: { gte: new Date(Date.now() - recentWindowMs) },
+            },
+            select: { id: true },
+          });
+
+          if (latestReview) continue;
           const review = await db.review.create({
             data: {
               repositoryId: config.repositoryId,
@@ -123,21 +144,20 @@ async function runScheduledScan(
           data: {
             status: "FAILED",
             completedAt: new Date(),
-            summary: error instanceof Error ? error.message : "Scheduled scan failed",
+            summary:
+              error instanceof Error ? error.message : "Scheduled scan failed",
           },
         });
       }
     });
   }
 
-  await step.run("notify-owner", async () => {
-    for (const completed of completedRuns) {
-      await step.sendEvent(`scan-completed-${completed.scanRunId}`, {
-        name: "scan/completed",
-        data: completed,
-      });
-    }
-  });
+  for (const completed of completedRuns) {
+    await step.sendEvent(`scan-completed-${completed.scanRunId}`, {
+      name: "scan/completed",
+      data: completed,
+    });
+  }
 
   return {
     scannedRepositories: activeConfigs.length,
@@ -186,6 +206,3 @@ export const handleScanCompleted = inngest.createFunction(
     return { success: true };
   },
 );
-
-
-

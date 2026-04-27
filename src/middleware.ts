@@ -17,7 +17,14 @@ export async function middleware(request: NextRequest) {
   // 1. Check Maintenance Mode
   const isMaintenancePage = pathname === "/maintenance";
   const isApiRoute = pathname.startsWith("/api");
-  const isStaticFile = pathname.startsWith("/_next") || pathname.includes(".");
+
+  // Use an explicit extension allowlist instead of `pathname.includes('.')`
+  // to avoid false-positives on routes such as `/user.settings` or
+  // `/repo/my.project` that contain a dot but are not static assets.
+  const STATIC_EXTENSIONS =
+    /\.(ico|png|jpg|jpeg|gif|webp|svg|js|mjs|css|woff|woff2|ttf|eot|map|json|txt|xml|csv)$/i;
+  const isStaticFile =
+    pathname.startsWith("/_next") || STATIC_EXTENSIONS.test(pathname);
 
   const isAppRoute = [
     "/repo",
@@ -29,39 +36,20 @@ export async function middleware(request: NextRequest) {
     "/admin",
   ].some((route) => pathname === route || pathname.startsWith(`${route}/`));
 
-  if (isAppRoute && !isMaintenancePage && !isApiRoute && !isStaticFile) {
-    try {
-      const maintenanceUrl = new URL(
-        "/api/system/maintenance",
-        request.nextUrl.origin,
-      );
-      const maintenanceRes = await fetch(maintenanceUrl.toString());
-      const { maintenanceMode } = await maintenanceRes.json();
-
-      if (maintenanceMode) {
-        const sessionUrl = new URL(
-          "/api/auth/get-session",
-          request.nextUrl.origin,
-        );
-        const sessionRes = await fetch(sessionUrl.toString(), {
-          headers: { cookie: request.headers.get("cookie") ?? "" },
-        });
-        const data = await sessionRes.json();
-
-        if (data?.user?.role !== "ADMIN") {
-          return NextResponse.redirect(new URL("/maintenance", request.url));
-        }
-      }
-    } catch (e) {
-      console.error("Maintenance check failed:", e);
-    }
-  }
-
   const isProtectedRoute = protectedRoutes.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`),
   );
 
-  if (isProtectedRoute) {
+  // For app routes, fetch maintenance status and (when protected) the session in
+  // parallel to avoid two sequential round-trips on every protected page load.
+  if (isAppRoute && !isMaintenancePage && !isApiRoute && !isStaticFile) {
+    const maintenanceUrl = new URL(
+      "/api/system/maintenance",
+      request.nextUrl.origin,
+    );
+    const sessionUrl = new URL("/api/auth/get-session", request.nextUrl.origin);
+    const cookieHeader = request.headers.get("cookie") ?? "";
+
     const sessionCookie =
       request.cookies.get("better-auth.session_token")?.value ??
       request.cookies.get("__Secure-better-auth.session_token")?.value;
@@ -72,29 +60,51 @@ export async function middleware(request: NextRequest) {
       sessionCookie.length <= 4096 &&
       /^[a-zA-Z0-9\-_.~%+=/]+$/.test(sessionCookie);
 
-    if (!isValidSession) {
-      return NextResponse.redirect(new URL("/sign-in", request.url));
-    }
+    try {
+      // Run maintenance check and session fetch in parallel.
+      const [maintenanceData, sessionData] = await Promise.all([
+        fetch(maintenanceUrl.toString()).then(
+          (r) => r.json() as Promise<{ maintenanceMode?: boolean }>,
+        ),
+        isProtectedRoute && isValidSession
+          ? fetch(sessionUrl.toString(), {
+              headers: { cookie: cookieHeader },
+            }).then((r) =>
+              r.ok
+                ? (r.json() as Promise<{
+                    user?: { id?: string; role?: string };
+                  } | null>)
+                : null,
+            )
+          : Promise.resolve(null),
+      ]);
 
-    const sessionUrl = new URL("/api/auth/get-session", request.nextUrl.origin);
-    const sessionRes = await fetch(sessionUrl.toString(), {
-      headers: { cookie: request.headers.get("cookie") ?? "" },
-    });
+      if (maintenanceData?.maintenanceMode) {
+        if (sessionData?.user?.role !== "ADMIN") {
+          return NextResponse.redirect(new URL("/maintenance", request.url));
+        }
+      }
 
-    if (!sessionRes.ok) {
-      return NextResponse.redirect(new URL("/sign-in", request.url));
-    }
-
-    const data = (await sessionRes.json()) as {
-      user?: { id?: string; role?: string };
-    } | null;
-
-    if (!data?.user) {
-      return NextResponse.redirect(new URL("/sign-in", request.url));
-    }
-
-    if (pathname.startsWith("/admin") && data.user.role !== "ADMIN") {
-      return NextResponse.redirect(new URL("/", request.url));
+      if (isProtectedRoute) {
+        if (!isValidSession) {
+          return NextResponse.redirect(new URL("/sign-in", request.url));
+        }
+        if (!sessionData?.user) {
+          return NextResponse.redirect(new URL("/sign-in", request.url));
+        }
+        if (
+          pathname.startsWith("/admin") &&
+          sessionData.user.role !== "ADMIN"
+        ) {
+          return NextResponse.redirect(new URL("/", request.url));
+        }
+        return NextResponse.next();
+      }
+    } catch (e) {
+      console.error("Middleware check failed:", e);
+      if (isProtectedRoute) {
+        return NextResponse.redirect(new URL("/sign-in", request.url));
+      }
     }
 
     return NextResponse.next();
@@ -102,7 +112,6 @@ export async function middleware(request: NextRequest) {
 
   if (pathname === "/api/auth/error") {
     const error = request.nextUrl.searchParams.get("error") ?? "unknown";
-
     const linkErrors = new Set([
       "account_already_linked_to_different_user",
       "email_doesn't_match",

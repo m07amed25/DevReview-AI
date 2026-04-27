@@ -1,247 +1,145 @@
-# DevReview AI — Feature Roadmap
+# DevReview-AI — Logic Drops & Fix Plan
+
+> Generated: 2026-04-27  
+> Branch: `security`  
+> Total issues found: 62
 
 ---
 
-## Phase 1 — Diagram Drawer ✦ `diagram-drawer`
+## Phase 1 — Critical Runtime Crashes (fix first, app is broken without these)
 
-**Goal:** AI-generated interactive architecture diagrams (use-case, class, database ERD) surfaced per repository, not per PR.
+These issues cause hard failures every time the affected code path is hit.
 
-### What it does
-
-- Analyze the codebase structure and generate diagrams using Mermaid or a React-based renderer (e.g. ReactFlow).
-- Diagrams are interactive: clicking a node/edge shows a panel with details (description, file path, relationships).
-- Smart trigger logic: diagrams are NOT regenerated on every PR — only when structural changes are detected (new models, new routes, schema changes, etc.).
-
-### Implementation areas
-
-- **`src/server/inngest/functions/generate-diagram.ts`** — already scaffolded; extend with diff-based trigger logic using `matchTriggerRules`.
-- **`src/server/api/routers/diagram.ts`** — already exists; add procedures for fetching/storing diagram data.
-- **`src/features/diagram/`** — UI components for rendering interactive diagrams with `ReactFlow` or `Mermaid`.
-- **`prisma/schema.prisma`** — add `Diagram` model to store generated diagram JSON per repository.
-
-### Key decisions
-
-- Use Mermaid for simple ERD/class diagrams (zero dependency); use ReactFlow for interactive use-case / architecture diagrams.
-- Trigger condition: rerun only when `prisma/schema.prisma`, model files, or route files have changed in a PR diff.
-- Store rendered diagram as JSON in DB; cache until next trigger.
+| #   | File                                                        | Issue                                                                                                                                                                                                                                                                                                                                                                      | Severity |
+| --- | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| 1   | `prisma/schema.prisma` + `src/server/api/routers/review.ts` | **Schema/code mismatch — `resolvedComments` column does not exist.** `toggleResolvedComment` runs `$executeRaw` against a non-existent column; `getLatestForPR` casts the return to include the field; the front-end reads it. Crashes on every call. Add `resolvedComments String[] @default([])` to the `Review` model and generate + apply a migration.                 | Critical |
+| 2   | `src/server/inngest/functions/scheduled-scan.ts`            | **`step.sendEvent` called inside `step.run` callback (`notify-owner` step).** Inngest requires `step.sendEvent` to be called at the top-level step scope. Calling it inside `step.run` violates the execution model and the event is either not sent or causes a serialization error, breaking all scheduled scans. Move `step.sendEvent` outside the wrapping `step.run`. | Critical |
 
 ---
 
-## Phase 2 — PR Review Quality Feedback Loop ✦ `review-feedback`
+## Phase 2 — Critical Security Vulnerabilities
 
-**Goal:** Let PR authors rate the usefulness of each AI review to improve prompt quality over time.
+These are exploitable by real attackers and must be fixed before any public deployment.
 
-### What it does
-
-- After a review completes, the author sees a thumbs-up / thumbs-down + optional comment widget.
-- Ratings are stored and surfaced in the analytics dashboard as a "Review Quality" trend.
-- Low-rated reviews are flagged for prompt tuning analysis.
-
-### Implementation areas
-
-- **`prisma/schema.prisma`** — add `ReviewFeedback` model: `reviewId`, `userId`, `rating (1|-1)`, `comment?`, `createdAt`.
-- **`src/server/api/routers/review.ts`** — add `submitFeedback` and `getFeedbackStats` procedures.
-- **`src/features/review/components/`** — add `FeedbackWidget` component rendered after review result.
-- **`src/features/analytics/components/`** — add feedback trend chart to the analytics dashboard.
-
-### Key decisions
-
-- One feedback entry per user per review (upsert).
-- Feedback is anonymous to teammates but visible to repo owners in analytics.
+| #   | File                                   | Issue                                                                                                                                                                                                                                                                                                                                                                                            | Severity |
+| --- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------- |
+| 3   | `src/app/api/upload/route.ts`          | **Stored XSS via SVG avatar upload.** SVG is in `ALLOWED_TYPES`. An SVG can contain `<script>` tags and inline event handlers. When served from `/uploads/avatars/` as a static file it executes in any visitor's browser. Remove SVG from allowed types.                                                                                                                                        | Critical |
+| 4   | `src/app/api/upload/route.ts`          | **File type spoofing.** Validation relies solely on the browser-supplied `file.type` MIME type, not on magic-byte inspection. An attacker can label any file as `image/png`. Use a library like `file-type` to read actual file headers.                                                                                                                                                         | High     |
+| 5   | `src/server/auth/index.ts`             | **Over-permissive OAuth scope `admin:repo_hook`.** This grants broad webhook management over ALL repos the user admins, not just connected ones. Downgrade to `write:repo_hook`.                                                                                                                                                                                                                 | High     |
+| 6   | `src/server/auth/index.ts`             | **Account linking + `allowDifferentEmails: true` + no email verification = account takeover.** An attacker who controls a GitHub account can link it to a victim's email/password account without email confirmation. Set `allowDifferentEmails: false` or require email re-verification before linking.                                                                                         | High     |
+| 7   | `src/server/services/ai.ts`            | **Prompt injection via custom rule names/descriptions.** DB-sourced rule names and descriptions are interpolated directly into the AI system prompt without sanitization. A malicious team member can inject instructions to manipulate AI review output for everyone. Sanitize/escape all user-controlled strings before adding them to the prompt, or pass them as separate user-turn context. | High     |
+| 8   | `src/server/api/routers/settings.ts`   | **`deleteAccount` does not invalidate the session cookie.** The user record is deleted but the cookie-cached session (maxAge: 5 min in Better-Auth) remains valid. The deleted account can continue making API calls for up to 5 minutes. Call `auth.api.signOut` / revoke the session before deleting.                                                                                          | High     |
+| 9   | `src/server/api/routers/profile.ts`    | **Email change without resetting `emailVerified`.** `update` allows changing to an arbitrary email without setting `emailVerified: false`. The account stays marked as verified with an unowned email address. Reset `emailVerified` and send a new verification email on email change.                                                                                                          | High     |
+| 10  | `src/middleware.ts`                    | **`isStaticFile` heuristic matches any route with a dot (`.`).** Paths like `/user.settings` or `/repo/my.project` bypass both maintenance-mode checks and session validation. Use a proper extension allowlist (`.ico`, `.png`, `.js`, `.css`, etc.) instead of `pathname.includes('.')`.                                                                                                       | High     |
+| 11  | `src/app/api/webhooks/github/route.ts` | **Non-atomic duplicate-review check.** The `existingReview` lookup and subsequent `review.create` are not inside a transaction. Two simultaneous webhook deliveries (GitHub retry) both pass the check and create duplicate review records with duplicate AI jobs. Wrap in a `db.$transaction` with a unique constraint or use `createIfNotExists` logic.                                        | High     |
+| 12  | `src/server/api/routers/analytics.ts`  | **No team membership check on analytics queries.** When `teamId` is provided, any authenticated user can query analytics for any team. Add a membership guard matching the pattern in all other team-scoped routers.                                                                                                                                                                             | High     |
+| 13  | `src/server/api/routers/team.ts`       | **`executeApprovedAction` — `SHARE_REPOSITORY`/`UNSHARE_REPOSITORY` skips ownership check.** Any team OWNER/ADMIN can share any repository into the team using a known ID. Add the same `repository.userId === ctx.user.id` check present in `shareRepository`.                                                                                                                                  | High     |
+| 14  | `src/server/api/trpc.ts`               | **In-memory rate limiter is per-process, not global.** In serverless/horizontally-scaled deployments each instance has its own counter. Move rate limiting to a shared store (Redis via Upstash or similar).                                                                                                                                                                                     | High     |
 
 ---
 
-## Phase 3 — Custom Review Rules / Rulesets ✦ `custom-rules`
+## Phase 3 — High-Severity Logic Errors (incorrect behavior, data corruption)
 
-**Goal:** Allow teams to define their own code rules that the AI checks in addition to its default analysis.
-
-### What it does
-
-- Teams create named rules (e.g. "No hardcoded secrets", "Require JSDoc on exports", "No `console.log` in production code").
-- Rules are stored per repository or per team.
-- When a review runs, active rules are injected into the AI prompt as additional constraints.
-- Violations are surfaced as a distinct "Custom Rule" category in the review result.
-
-### Implementation areas
-
-- **`prisma/schema.prisma`** — add `ReviewRule` model: `id`, `name`, `description`, `pattern?`, `severity`, `repositoryId?`, `teamId?`, `enabled`.
-- **`src/server/api/routers/`** — add `rules.ts` router with CRUD procedures.
-- **`src/server/services/ai.ts`** — extend `ReviewPreferences` to accept active rules and inject them into the system prompt.
-- **`src/features/settings/components/`** — add rules management UI (create, edit, enable/disable, delete).
-
-### Key decisions
-
-- Rules can be text-based (description only, AI interprets) or regex-based (exact pattern match pre-AI).
-- Repository-level rules override team-level rules for the same `name`.
-
----
-
-## Phase 4 — Review History Diff & Re-run ✦ `review-diff`
-
-**Goal:** Compare two review runs on the same PR to show what was fixed and what's new.
-
-### What it does
-
-- Each review result stores a snapshot of findings.
-- A "Compare" view shows a three-state diff: Fixed ✅ / Persisted ⚠️ / New 🆕.
-- A "Re-review" button triggers a new review and automatically opens the diff view when complete.
-
-### Implementation areas
-
-- **`prisma/schema.prisma`** — findings are already stored as JSON; add `parentReviewId` FK on `Review` to chain runs.
-- **`src/server/api/routers/review.ts`** — add `getDiff(reviewId, compareReviewId)` procedure that diffs findings arrays.
-- **`src/features/review/components/`** — add `ReviewDiffPanel` component with color-coded three-state list.
-- **`src/app/(dashboard)/repo/[id]/pr/[prNumber]/`** — add "Re-review" button and diff view toggle.
-
-### Key decisions
-
-- Diff is computed server-side by matching findings on `(file, line, message)` fingerprint.
-- A review with a `parentReviewId` automatically links in the UI timeline.
+| #   | File                                             | Issue                                                                                                                                                                                                                                                                                                | Severity                    |
+| --- | ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | ---- |
+| 15  | `src/server/api/routers/review.ts`               | **Reviews attributed to repository owner, not triggering user.** `trigger` creates the review with `userId: repository.userId` instead of `ctx.user.id`. Per-user analytics and access-control queries are wrong for team members.                                                                   | High                        |
+| 16  | `src/server/api/routers/pull-request.ts`         | **PR list shows OLDEST review, not latest.** `existingReviews` is ordered `asc` and converted to a `Map` — each `set` overwrites earlier entries, so the map ends up with the oldest review per PR. Change the order to `desc`.                                                                      | High                        |
+| 17  | `src/server/api/routers/review.ts`               | **`getDiff` allows cross-repository diffing.** `getDiff` does not verify both `reviewId` and `compareReviewId` belong to the same repository. A user who owns one repo can diff it against a private repo review if they know the ID. Add an explicit repository ownership + same-repo check.        | High                        |
+| 18  | `src/server/api/routers/team.ts`                 | **`executeApprovedAction(REVIEW_PR)` is a `console.log`.** Approving a REVIEW_PR action does nothing — no Inngest job is triggered, no review record is created. Implement the actual `inngest.send` call.                                                                                           | High                        |
+| 19  | `src/server/api/routers/team.ts`                 | **`APPROVE_DISCUSSION` case missing from `executeApprovedAction`.** The switch has no `case 'APPROVE_DISCUSSION'`, so approving this action type is a permanent no-op.                                                                                                                               | High                        |
+| 20  | `src/server/api/routers/team.ts`                 | **`executeApprovedAction(INVITE_MEMBER)` silently skips when `meta.email` is null.** The action is marked APPROVED but no user is added. Throw a `TRPCError` instead of silently succeeding.                                                                                                         | High                        |
+| 21  | `src/server/api/routers/collaboration.ts`        | **`toggleResolve` does not emit Pusher events.** The `CollaborativeReview` component registers `THREAD_RESOLVED` / `THREAD_REOPENED` handlers but they are never emitted; other users' views never update. Add `pusher.trigger(channelName, THREAD_RESOLVED \| THREAD_REOPENED, payload)`. | High |
+| 22  | `src/server/api/routers/team.ts`                 | **Slug uniqueness check has a TOCTOU race condition.** The `while(findUnique)` loop + `create` is not atomic. Wrap in a `db.$transaction` or catch the Prisma unique-constraint error (`P2002`) and retry.                                                                                           | High                        |
+| 23  | `src/server/inngest/functions/scheduled-scan.ts` | **Scheduled scan queues duplicate reviews.** Every scan queues a new review for every open PR without checking if a recent COMPLETED review already exists. Add a `skip: latestReview?.status === 'COMPLETED' && reviewIsRecent` guard before queuing.                                               | High                        |
+| 24  | `src/server/inngest/functions/review-pr.ts`      | **`onFailure` posts a GitHub review even for AI-errored reviews.** The `review/pr.completed` event with `status: 'FAILED'` triggers `postReviewToGitHub`, which posts incomplete/misleading review comments to GitHub. Add a status guard in `post-review-to-github.ts` to skip posting on `FAILED`. | High                        |
+| 25  | `src/server/services/github.ts`                  | **`getGitHubAccessToken` does not check `accessTokenExpiresAt`.** An expired token is returned, causing all GitHub API calls to fail with 401 until the user re-authenticates. Check expiry and throw a clear `PRECONDITION_FAILED` prompting re-auth, or implement token refresh.                   | High                        |
+| 26  | `src/server/api/routers/diagram.ts`              | **`requestDiagram` falls back to PR #1 when `prNumber` is absent.** For repos with no PR #1 (or no PRs at all), the fetch fails. When no PR is specified, the intent is to diagram the default branch — fetch the branch file tree instead.                                                          | High                        |
+| 27  | `src/server/api/routers/analytics.ts`            | **All analytics aggregations run in application memory.** Every `getOverview`, `getTrends`, `getApprovalRejectionRates`, etc. loads all matching rows into JS. For large accounts this exhausts server memory. Push all aggregations to the DB using Prisma `aggregate` / `groupBy`.                 | High                        |
+| 28  | `src/server/api/routers/analytics.ts`            | **Approval/rejection detection is unreliable substring matching.** `'approved'` / `'lgtm'` / `'rejected'` are searched in AI summaries (code-quality text), not in the human PR decision. Add a dedicated `humanDecision` enum field to `Review` or derive it from PR merge status via GitHub API.   | High                        |
+| 29  | `src/server/api/routers/analytics.ts`            | **`getQualityScores` reads `metrics.coverage`, `metrics.performance`, `metrics.security` but the AI service never sets them.** The dashboard always shows 0 for these three metrics. Align the AI output schema with the analytics schema.                                                           | High                        |
+| 30  | `src/middleware.ts`                              | **Two sequential HTTP round-trips on every page load** (`/api/system/maintenance` + `/api/auth/get-session`). Cache the maintenance flag in an edge KV store or check it only at the DB level via session middleware.                                                                                | High                        |
+| 31  | `src/server/api/routers/pull-request.ts`         | **N/5 sequential batched GitHub API calls per PR list.** Fetching full PR details one-by-one in batches of 5 serial round-trips should be replaced with parallel fetching or using a GraphQL batch query.                                                                                            | High                        |
+| 32  | `src/server/api/routers/repository.ts`           | **`disconnect` does not delete the GitHub webhook.** After removal, the webhook remains active on GitHub and can trigger phantom reviews. Call `github.deleteWebhook` during disconnect.                                                                                                             | High                        |
 
 ---
 
-## Phase 5 — Slack / Discord Webhook Notifications ✦ `external-notifications`
+## Phase 4 — Missing Implementations (features that silently don't work)
 
-**Goal:** Post review summaries to a team Slack or Discord channel when a review completes.
-
-### What it does
-
-- Teams configure a webhook URL (Slack incoming webhook or Discord webhook) per repository or per team.
-- When `review/pr.completed` fires, a formatted summary is posted: PR title, risk score, severity breakdown, deep link.
-- Optionally restrict to only notify on high-severity reviews.
-
-### Implementation areas
-
-- **`prisma/schema.prisma`** — add `WebhookConfig` model: `id`, `type (SLACK|DISCORD)`, `url`, `teamId?`, `repositoryId?`, `onlyHighSeverity`, `enabled`.
-- **`src/server/inngest/functions/post-review-to-github.ts`** — add a sibling `post-review-to-webhook.ts` Inngest function triggered by `review/pr.completed`.
-- **`src/server/api/routers/`** — add `webhooks.ts` router for CRUD on webhook configs.
-- **`src/features/settings/components/`** — add Webhook settings card (add/test/delete webhooks).
-
-### Key decisions
-
-- Webhook URLs are encrypted at rest using the existing Prisma setup.
-- A "Test" button fires a sample payload so users can verify before enabling.
-- Rate-limit webhook delivery per repository to avoid flooding on bulk re-scans.
+| #   | File                                       | Issue                                                                                                                                                                                                                                                | Severity |
+| --- | ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| 33  | `src/server/api/routers/admin.ts`          | **`getSupportTickets`, `getAuditLogs`, `getSecuritySettings` not implemented.** Admin sidebar links to these pages but the tRPC procedures are stubs/missing. Implement or block navigation until ready.                                             | Medium   |
+| 34  | `src/server/api/routers/team.ts`           | **`ACTIONS_REQUIRING_APPROVAL` constant is defined but never used.** The approval gate uses an inline role check instead, meaning the constant's intent is ignored. Refactor the approval check to use this constant.                                | Medium   |
+| 35  | `src/server/api/routers/team.ts`           | **`inviteMember` has no acceptance flow.** Users are silently added without consent. Implement an invite token / email acceptance flow.                                                                                                              | Medium   |
+| 36  | `src/server/api/routers/team.ts`           | **`executeApprovedAction(UPDATE_ROLE)` does not validate the role value.** The cast `(meta?.role as 'ADMIN' \| 'MEMBER')` silently falls back to `'MEMBER'` for any invalid string. Add Zod validation before applying the role update.              | Medium   |
+| 37  | `src/server/api/routers/diagram.ts`        | **Team members can't view or request diagrams for shared repos.** Diagram access only checks `repository.userId === ctx.user.id`; the team membership check present in all other routers is missing. Add the team-access OR condition.               | Medium   |
+| 38  | `src/server/services/diagram-generator.ts` | **`generateERD` regex `[^}]+` truncates model bodies** containing `}` in quoted defaults or attribute expressions. Replace with a proper brace-balanced parser or multi-line regex.                                                                  | Medium   |
+| 39  | `src/server/services/diagram-generator.ts` | **`generateUseCaseDiagram` fallback logic is broken.** The stateful `routeRegex` advances `lastIndex` on each `exec` call, making the fallback condition unreliable. Reset `lastIndex` between uses or use `String.match` with the `g` flag instead. | Medium   |
 
 ---
 
-## Phase 6 — PR Review Templates ✦ `review-templates`
+## Phase 5 — Security Hardening & Policy Gaps
 
-**Goal:** Let teams focus AI reviews on specific concerns by selecting a template when triggering a review.
-
-### What it does
-
-- Built-in templates: Security Review, Performance Review, API Contract Review, Accessibility Review.
-- Teams can create custom templates with a name, focus areas, and tone.
-- Template is selected in the "Trigger Review" dialog on the PR page.
-- Selected template is injected as a system-prompt modifier alongside custom rules (Phase 3).
-
-### Implementation areas
-
-- **`prisma/schema.prisma`** — add `ReviewTemplate` model: `id`, `name`, `focusAreas (String[])`, `systemPromptAddition`, `isBuiltIn`, `teamId?`.
-- **`src/server/services/ai.ts`** — extend `ReviewPreferences` with `templateId?`; load and apply template prompt additions.
-- **`src/server/api/routers/review.ts`** — accept `templateId` in `trigger` input.
-- **`src/features/repo/`** — update the trigger review dialog to show template selector.
-
-### Key decisions
-
-- Built-in templates are seeded at app start (not stored in DB).
-- Custom templates are scoped to a team; personal templates scoped to a user.
+| #   | File                                                    | Issue                                                                                                                                                                                                                                        | Severity |
+| --- | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| 40  | `src/server/api/trpc.ts`                                | **`adminProcedure` has no rate limiting.** All other procedures have rate limiting applied; admin endpoints are unprotected from DoS / brute-force. Apply the same `rateLimitMiddleware` used by `protectedProcedure`.                       | Medium   |
+| 41  | `src/server/api/routers/settings.ts`                    | **`updatePreferences.defaultLanguage` accepts arbitrary strings.** The value is interpolated into the AI system prompt without sanitization. Add a Zod `z.enum([...supportedLanguages])` validator.                                          | Medium   |
+| 42  | `src/server/api/routers/review.ts`                      | **`submitFeedback` has no access check.** Any authenticated user who knows a `reviewId` can post feedback on a private review. Add an ownership/team-membership check before allowing feedback.                                              | High     |
+| 43  | `src/server/auth/index.ts`                              | **Production debug logs expose user data.** `console.log('[DEBUG auth/after hook]', ...)` logs `userId` and account details on every login. Remove before production.                                                                        | Medium   |
+| 44  | `src/server/api/routers/rules.ts`                       | **Global rules are visible to co-team-members.** A team member can list another user's global rules if they share a team. Scope the `OR` condition so global rules only return when `userId === ctx.user.id`.                                | Medium   |
+| 45  | `src/server/inngest/functions/post-review-to-github.ts` | **AI suggestions inlined into GitHub PR comments without sanitization.** Markdown links/images from AI output render in GitHub comments, potentially creating misleading content. Strip or escape unsafe Markdown constructs before posting. | Medium   |
+| 46  | `src/app/api/badge/route.ts`                            | **Unauthenticated badge endpoint with no rate limiting.** Can be abused for DoS. Add IP-level rate limiting (e.g., Upstash Redis) even for public endpoints.                                                                                 | Medium   |
 
 ---
 
-## Phase 7 — Stale PR Detection & Nudges ✦ `stale-pr-nudge`
+## Phase 6 — Error Handling & Observability Gaps
 
-**Goal:** Automatically detect PRs with no activity for N days and send nudge notifications.
-
-### What it does
-
-- Extend the existing scheduled Inngest scan (`scheduled-scan.ts`) to check PR age and last-activity date.
-- If a PR has been open > configured threshold (default: 7 days) with no new commits or comments, send a notification.
-- Notification targets: PR author + assigned reviewers. Delivered via in-app notifications and email.
-
-### Implementation areas
-
-- **`src/server/inngest/functions/scheduled-scan.ts`** — add stale-PR detection step after the existing scan logic.
-- **`src/server/api/routers/automation.ts`** — add `getStalePRs` procedure and configurable threshold per repository.
-- **`src/server/email/`** — add stale-PR email template.
-- **`prisma/schema.prisma`** — add `stalePrThresholdDays` field to `ScheduledScanConfig`.
-
-### Key decisions
-
-- A PR is only nudged once per stale window — track `lastNudgedAt` on the PR record to avoid spam.
-- Nudge threshold is configurable per repository in the settings page.
+| #   | File                                               | Issue                                                                                                                                                                                                                                                               | Severity |
+| --- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| 47  | `src/server/api/routers/review.ts`                 | **Failed Inngest send leaves orphaned `FAILED` review records.** The review is never cleaned up after a failed `inngest.send`. Either delete the record on failure or keep it but guarantee idempotent retry.                                                       | Medium   |
+| 48  | `src/server/api/routers/admin.ts`                  | **`throw new Error()` instead of `TRPCError` in admin mutations.** Raw errors are serialized as `INTERNAL_SERVER_ERROR`, leaking internal messages. Replace with `new TRPCError({ code: 'FORBIDDEN', ... })`.                                                       | Medium   |
+| 49  | `src/server/api/routers/admin.ts`                  | **`getReviews` status breakdown ignores the active status filter.** The `groupBy` for `statusBreakdown` runs without the status filter, making the breakdown numbers inconsistent with the displayed result set. Pass the same `where` clause to both queries.      | Medium   |
+| 50  | `src/server/api/routers/diagram.ts`                | **`requestDiagram` has no error handling around `inngest.send`.** A send failure leaves the diagram in `PENDING` indefinitely. Wrap in try/catch and update the diagram to `FAILED` on error.                                                                       | Medium   |
+| 51  | `src/server/inngest/functions/review-pr.ts`        | **`onFailure` handler crashes on unexpected event shape.** Deeply nested `event.data.event.data.reviewId` destructuring has no null checks. The failure handler itself throws, preventing `FAILED` status from being recorded. Add optional chaining / null checks. | Medium   |
+| 52  | `src/server/inngest/functions/generate-diagram.ts` | **`fetchFileContent` uses bare `fetch()` — HTTP errors silently return `null`.** 403/404 per-file errors are swallowed; an all-null file map produces a confusing `FAILED` diagram with no useful message. Use the `githubFetch()` helper and propagate errors.     | Medium   |
+| 53  | `src/app/api/webhooks/github/route.ts`             | **`postCommitStatus` is fire-and-forget with no error handling.** Failure to set the pending commit status is silently lost. Await it and log/handle errors.                                                                                                        | Medium   |
+| 54  | `src/server/services/github.ts`                    | **`registerWebhook` / `deleteWebhook` use bare `fetch()` instead of `githubFetch()`.** Rate-limit headers are silently dropped, errors are unstructured. Migrate to the `githubFetch()` helper.                                                                     | Low      |
+| 55  | `src/server/api/routers/notification.ts`           | **`markAsRead` throws `P2025` as `INTERNAL_SERVER_ERROR`** when the notification ID doesn't belong to the user. Catch `P2025` and convert to `TRPCError { code: 'NOT_FOUND' }`.                                                                                     | Low      |
+| 56  | `src/server/services/ai.ts`                        | **AI fallback only triggers for HTTP 413/429.** Network timeouts, 5xx errors, and model-unavailable errors immediately re-throw. Extend the fallback condition to cover all retriable errors.                                                                       | Medium   |
 
 ---
 
-## Phase 8 — Code Smell Trending ✦ `smell-trending`
+## Phase 7 — Performance & Architecture
 
-**Goal:** Track and visualize which issue categories recur most across reviews over time.
-
-### What it does
-
-- After each completed review, aggregate findings by category (security, performance, style, maintainability, etc.).
-- Surface a "Top Recurring Issues" widget in the analytics dashboard.
-- Show trend lines: is a category improving or worsening over time?
-
-### Implementation areas
-
-- **`prisma/schema.prisma`** — add `ReviewFindingSummary` model: `reviewId`, `category`, `severity`, `count`, `date` — populated as a denormalized aggregate after each review.
-- **`src/server/inngest/functions/review-pr.ts`** — after review completion, emit an Inngest step to write finding summaries.
-- **`src/server/api/routers/analytics.ts`** — add `getSmellTrends` procedure (group by category + time bucket).
-- **`src/features/analytics/components/`** — add `SmellTrendChart` and `TopRecurringIssues` components.
-
-### Key decisions
-
-- Categories are normalized server-side from the AI's free-text output using a category map.
-- Trends are computed over the existing `timePeriod` filter already on the analytics page.
+| #   | File                                               | Issue                                                                                                                                                                                                                                                          | Severity |
+| --- | -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| 57  | `src/server/api/routers/collaboration.ts`          | **`getThreads` has no pagination.** For reviews with many threads, all threads + nested comments are loaded at once. Add cursor-based pagination.                                                                                                              | Medium   |
+| 58  | `src/server/api/routers/review.ts`                 | **`list` fetches team repo IDs in a separate query and uses a large `IN` clause.** Replace with a nested Prisma relation filter for efficiency.                                                                                                                | Medium   |
+| 59  | `src/server/services/github.ts`                    | **`fetchGitHubRepos` fetches ALL repos from ALL orgs with unbounded pagination.** For users in many large orgs this causes dozens of sequential API calls and risks GitHub rate limits. Add pagination controls and consider lazy-loading org repos on demand. | Medium   |
+| 60  | `src/server/inngest/functions/generate-diagram.ts` | **`Promise.all` for 20 simultaneous file fetches triggers GitHub secondary rate limits.** Throttle to 3–5 concurrent requests using a semaphore (e.g., `p-limit`).                                                                                             | Medium   |
+| 61  | `src/lib/repository.ts`                            | **`getAccessibleRepository` makes 2 DB queries on every protected call.** Consolidate into a single query that returns the record (or null) and derive the error type from the result.                                                                         | Low      |
+| 62  | `prisma/schema.prisma`                             | **`ReviewFeedback` lacks a compound index on `(reviewId, createdAt)`.** `getFeedbackStats` orders by `createdAt` filtered by review. Add `@@index([reviewId, createdAt])`.                                                                                     | Low      |
 
 ---
 
-## Phase 9 — GitHub Status Check Gate ✦ `status-check-gate`
+## Summary by Phase
 
-**Goal:** Block PR merges in GitHub when the AI risk score exceeds a team-configured threshold.
-
-### What it does
-
-- After a review completes, write a GitHub Checks API status (`success` / `failure`) back to the PR commit.
-- Teams configure the maximum allowed risk score per repository (e.g. fail if score > 7).
-- The status check name is `DevReview AI` and links back to the review detail page.
-
-### Implementation areas
-
-- **`src/server/services/github.ts`** — `postCommitStatus` already exists; extend to also call the Checks API with a detailed summary.
-- **`src/server/inngest/functions/post-review-to-github.ts`** — already has `postCommitStatus` call; update to use threshold from `AutoReviewConfig`.
-- **`prisma/schema.prisma`** — add `maxRiskScoreThreshold Int?` to `AutoReviewConfig` (or `ScheduledScanConfig`).
-- **`src/features/settings/components/auto-review-toggle.tsx`** — add threshold slider UI.
-
-### Key decisions
-
-- Default threshold: disabled (no blocking) — opt-in per repository.
-- When threshold is not set, always post a neutral informational status check.
-- Failing status check includes a one-line summary: "Risk score 8.2 exceeds the 7.0 threshold. See review →".
+| Phase     | Focus                          | Issues | Estimated effort |
+| --------- | ------------------------------ | ------ | ---------------- |
+| 1         | Critical runtime crashes       | 2      | ~2 h             |
+| 2         | Critical security              | 12     | ~1 day           |
+| 3         | High-severity logic errors     | 18     | ~3 days          |
+| 4         | Missing implementations        | 7      | ~2 days          |
+| 5         | Security hardening             | 7      | ~1 day           |
+| 6         | Error handling & observability | 10     | ~1 day           |
+| 7         | Performance & architecture     | 6      | ~1 day           |
+| **Total** |                                | **62** | **~10 days**     |
 
 ---
 
-## Phase 10 — Team Leaderboard ✦ `team-leaderboard`
+## Recommended Order of Execution
 
-**Goal:** Surface a lightweight leaderboard inside team pages to recognize code quality contributions.
+```
+Phase 1 → Phase 2 → Phase 3 (items 15–21 first) → Phase 4 → Phase 5 → Phase 6 → Phase 7
+```
 
-### What it does
-
-- Track per-member metrics: average risk score on their PRs, number of reviews completed, issues resolved rate.
-- Show a ranked leaderboard card on the team detail page.
-- Opt-out: team admins can disable the leaderboard for their team.
-
-### Implementation areas
-
-- **`src/server/api/routers/team.ts`** — add `getLeaderboard(teamId, timePeriod)` procedure that aggregates review stats per team member.
-- **`src/features/teams/components/`** — add `LeaderboardCard` component with rank badges and animated counters.
-- **`prisma/schema.prisma`** — no new models needed; query from existing `Review`, `Repository`, `TeamMember` relations.
-- **`src/features/teams/types.ts`** — add `LeaderboardEntry` type.
-
-### Key decisions
-
-- Leaderboard uses the same `timePeriod` filter as analytics (7d / 30d / 90d).
-- Metrics are read-only aggregates, never editable.
-- Disabled by default; team admin toggles it on in team settings.
+Phase 1 must ship first — the app has runtime crashes. Phase 2 must ship before any public users are added. Phases 3–7 can be tackled in parallel across team members once the critical path is clear.

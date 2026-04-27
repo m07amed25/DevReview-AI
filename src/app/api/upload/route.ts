@@ -4,24 +4,28 @@ import { put } from "@vercel/blob";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import crypto from "crypto";
+import { fileTypeFromBuffer } from "file-type";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-const ALLOWED_TYPES = [
+
+// SVG is intentionally excluded — SVG files can contain <script> tags and
+// inline event handlers that execute in the browser when served as a static
+// file, enabling stored-XSS attacks.
+const ALLOWED_TYPES = new Set([
   "image/jpeg",
   "image/png",
   "image/gif",
   "image/webp",
-  "image/svg+xml",
-];
-
-const ALLOWED_EXTENSIONS = new Set([
-  "jpg",
-  "jpeg",
-  "png",
-  "gif",
-  "webp",
-  "svg",
 ]);
+
+// Map of MIME types allowed by magic-byte inspection to canonical extensions.
+// Only raster image formats that cannot carry executable content are permitted.
+const MAGIC_BYTE_ALLOWED: Record<string, string> = {
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/gif": "gif",
+  "image/webp": "webp",
+};
 
 const useBlob = !!process.env.BLOB_READ_WRITE_TOKEN;
 
@@ -39,9 +43,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
-    if (!ALLOWED_TYPES.includes(file.type)) {
+    // Reject based on browser-supplied MIME type first (fast path).
+    if (!ALLOWED_TYPES.has(file.type)) {
       return NextResponse.json(
-        { error: "Invalid file type. Allowed: JPEG, PNG, GIF, WebP, SVG" },
+        { error: "Invalid file type. Allowed: JPEG, PNG, GIF, WebP" },
         { status: 400 },
       );
     }
@@ -53,22 +58,30 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const rawExt =
-      file.name
-        .split(".")
-        .pop()
-        ?.toLowerCase()
-        .replace(/[^a-z0-9]/g, "") || "png";
-    const ext = ALLOWED_EXTENSIONS.has(rawExt) ? rawExt : "png";
+    // Magic-byte validation: read the actual file headers and confirm the
+    // real MIME type matches an allowed type.  This prevents an attacker
+    // from renaming a PHP/HTML/SVG file as "image.png" and uploading it.
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+    const detected = await fileTypeFromBuffer(buffer);
+    if (!detected || !MAGIC_BYTE_ALLOWED[detected.mime]) {
+      return NextResponse.json(
+        { error: "File content does not match an allowed image type." },
+        { status: 400 },
+      );
+    }
+
+    const ext = MAGIC_BYTE_ALLOWED[detected.mime]!;
     const hash = crypto.randomBytes(8).toString("hex");
     const filename = `avatars/${session.user.id}-${hash}.${ext}`;
 
     let url: string;
 
     if (useBlob) {
-      const blob = await put(filename, file, {
+      const blob = await put(filename, buffer, {
         access: "public",
         addRandomSuffix: false,
+        contentType: detected.mime,
       });
       url = blob.url;
     } else {
@@ -80,8 +93,6 @@ export async function POST(request: NextRequest) {
       );
       await mkdir(uploadDir, { recursive: true });
 
-      const bytes = await file.arrayBuffer();
-      const buffer = Buffer.from(bytes);
       const localFilename = `${session.user.id}-${hash}.${ext}`;
       await writeFile(path.join(uploadDir, localFilename), buffer);
       url = `/uploads/avatars/${localFilename}`;

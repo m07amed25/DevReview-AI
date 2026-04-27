@@ -92,7 +92,12 @@ export const settingsRouter = createTRPCRouter({
         });
       }
 
-      // Delete user — cascades to sessions, accounts, repositories, reviews
+      // Revoke all sessions for this user so the cookie-cached session
+      // (Better-Auth cookieCache maxAge: 5 min) cannot be replayed after
+      // the account is deleted.
+      await ctx.db.session.deleteMany({ where: { userId: ctx.user.id } });
+
+      // Delete user — cascades to accounts, repositories, reviews
       await ctx.db.user.delete({
         where: { id: ctx.user.id },
       });
@@ -131,10 +136,35 @@ export const settingsRouter = createTRPCRouter({
   updatePreferences: protectedProcedure
     .input(
       z.object({
-        reviewDepth: z
-          .enum(["quick", "standard", "thorough"])
+        reviewDepth: z.enum(["quick", "standard", "thorough"]).optional(),
+        // Restrict to known language identifiers to prevent the value from
+        // being used as a prompt-injection vector in the AI service.
+        defaultLanguage: z
+          .enum([
+            "auto",
+            "typescript",
+            "javascript",
+            "python",
+            "java",
+            "csharp",
+            "go",
+            "rust",
+            "cpp",
+            "c",
+            "php",
+            "ruby",
+            "swift",
+            "kotlin",
+            "scala",
+            "r",
+            "dart",
+            "elixir",
+            "haskell",
+            "lua",
+            "shell",
+            "sql",
+          ])
           .optional(),
-        defaultLanguage: z.string().min(1).optional(),
         autoReview: z.boolean().optional(),
         includeSecurityChecks: z.boolean().optional(),
         includePerfSuggestions: z.boolean().optional(),

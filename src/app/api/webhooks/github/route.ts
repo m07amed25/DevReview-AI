@@ -137,15 +137,44 @@ export async function POST(request: NextRequest) {
     };
   }
 
-  const existingReview = await db.review.findFirst({
-    where: {
-      repositoryId: repository.id,
-      prNumber: livePr.number,
-      status: { in: ["PENDING", "PROCESSING"] },
-    },
-  });
+  // Wrap the duplicate-check + create in a serializable transaction so that
+  // two simultaneous webhook deliveries (GitHub retry) cannot both pass the
+  // check and create duplicate review records.
+  let review: { id: string } | null = null;
+  try {
+    review = await db.$transaction(async (tx) => {
+      const existing = await tx.review.findFirst({
+        where: {
+          repositoryId: repository.id,
+          prNumber: livePr.number,
+          status: { in: ["PENDING", "PROCESSING"] },
+        },
+        select: { id: true },
+      });
 
-  if (existingReview) {
+      if (existing) return null; // signal duplicate to caller
+
+      return tx.review.create({
+        data: {
+          repositoryId: repository.id,
+          userId: repository.userId,
+          prNumber: livePr.number,
+          prTitle: livePr.title,
+          prUrl: livePr.html_url,
+          status: "PENDING",
+        },
+        select: { id: true },
+      });
+    });
+  } catch (err) {
+    console.error("Failed to create review record", err);
+    return NextResponse.json(
+      { message: "Internal error creating review" },
+      { status: 500 },
+    );
+  }
+
+  if (!review) {
     return NextResponse.json(
       { message: "Review already in progress" },
       { status: 200 },
@@ -159,17 +188,6 @@ export async function POST(request: NextRequest) {
       defaultLanguage: true,
       includeSecurityChecks: true,
       includePerfSuggestions: true,
-    },
-  });
-
-  const review = await db.review.create({
-    data: {
-      repositoryId: repository.id,
-      userId: repository.userId,
-      prNumber: livePr.number,
-      prTitle: livePr.title,
-      prUrl: livePr.html_url,
-      status: "PENDING",
     },
   });
 
