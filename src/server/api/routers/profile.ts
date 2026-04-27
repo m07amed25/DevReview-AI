@@ -87,7 +87,14 @@ export const profileRouter = createTRPCRouter({
 
       const data: Record<string, unknown> = {};
       if (input.name !== undefined) data.name = input.name;
-      if (input.email !== undefined) data.email = input.email;
+      if (input.email !== undefined) {
+        data.email = input.email;
+        // When the email address changes, mark it as unverified so the
+        // account doesn't stay verified with an email the user doesn't own.
+        if (input.email !== ctx.user.email) {
+          data.emailVerified = false;
+        }
+      }
       if (input.image !== undefined)
         data.image = input.image === "" ? null : input.image;
 

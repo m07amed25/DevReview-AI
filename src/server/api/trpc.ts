@@ -39,9 +39,13 @@ export const createCallerFactory = t.createCallerFactory;
 
 export const createTRPCRouter = t.router;
 
-// Initialize rate limiter with default config
+// Initialize rate limiter with default config, wiring Redis credentials from
+// environment variables so that production deployments use a shared Upstash
+// store instead of per-process in-memory counters.
 const rateLimiter = RateLimiterFactory.initialize({
   ...getDefaultConfig(),
+  redisUrl: process.env.UPSTASH_REDIS_REST_URL,
+  redisToken: process.env.UPSTASH_REDIS_REST_TOKEN,
   onViolation: (data) => {
     console.warn("[RateLimit] Violation:", {
       identifier: data.identifier,
@@ -159,7 +163,35 @@ export const protectedProcedure = t.procedure.use(
   },
 );
 
-export const adminProcedure = t.procedure.use(async ({ ctx, next }) => {
+export const adminProcedure = t.procedure.use(async ({ ctx, next, path }) => {
+  // Apply the same rate limiting as protectedProcedure so admin endpoints are
+  // not exempt from DoS / brute-force protection.
+  const clientIP = getClientIP(ctx.headers) || "unknown";
+
+  if (!whitelistIPs.has(clientIP)) {
+    const apiKey = getAPIKey(ctx.headers);
+    const identifier = buildIdentifier(clientIP, apiKey, "ip+apiKey");
+    const adminRule: RateLimitRule = {
+      ...defaultRule,
+      name: "admin",
+      limit: 200,
+      burst: 20,
+    };
+    const result = await rateLimiter.check(identifier, path, adminRule);
+    if (!result.success) {
+      throw new TRPCError({
+        code: "TOO_MANY_REQUESTS",
+        message: result.error || "Too many requests",
+        cause: {
+          retryAfter: result.retryAfter,
+          limit: result.limit,
+          remaining: result.remaining,
+          reset: result.reset,
+        },
+      });
+    }
+  }
+
   if (!ctx.session?.user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }

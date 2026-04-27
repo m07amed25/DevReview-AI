@@ -60,7 +60,7 @@ export const pullRequestRouter = createTRPCRouter({
           comments: true,
           createdAt: true,
         },
-        orderBy: { createdAt: "asc" },
+        orderBy: { createdAt: "desc" }, // desc so map overwrites with the latest review per PR
       });
 
       const reviewMap = new Map(

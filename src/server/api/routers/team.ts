@@ -3,6 +3,11 @@ import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import type { PrismaClient } from "@/server/db/client";
 import { sendTeamInviteEmailNotification } from "@/server/email/integrations/team";
+import { inngest } from "@/server/inngest";
+import {
+  getGitHubAccessToken,
+  fetchPullRequestByFullName,
+} from "@/server/services/github";
 
 // Type for JSON metadata
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -90,29 +95,40 @@ export const teamRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const baseSlug = slugify(input.name);
-      let slug = baseSlug;
-      let attempt = 0;
 
-      // Ensure slug uniqueness
-      while (await ctx.db.team.findUnique({ where: { slug } })) {
-        attempt++;
-        slug = `${baseSlug}-${attempt}`;
+      // Use optimistic creation with P2002 retry to eliminate the TOCTOU race
+      // condition of the previous check-then-create loop.
+      for (let attempt = 0; attempt <= 10; attempt++) {
+        const slug = attempt === 0 ? baseSlug : `${baseSlug}-${attempt}`;
+        try {
+          const team = await ctx.db.team.create({
+            data: {
+              name: input.name,
+              slug,
+              members: {
+                create: {
+                  userId: ctx.user.id,
+                  role: "OWNER",
+                },
+              },
+            },
+          });
+          return team;
+        } catch (e) {
+          // P2002 = Unique constraint violation; retry with a suffixed slug
+          const isUniqueViolation =
+            typeof e === "object" &&
+            e !== null &&
+            (e as { code?: string }).code === "P2002";
+          if (isUniqueViolation && attempt < 10) continue;
+          throw e;
+        }
       }
 
-      const team = await ctx.db.team.create({
-        data: {
-          name: input.name,
-          slug,
-          members: {
-            create: {
-              userId: ctx.user.id,
-              role: "OWNER",
-            },
-          },
-        },
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Could not generate a unique team slug",
       });
-
-      return team;
     }),
 
   update: protectedProcedure
@@ -594,41 +610,45 @@ async function executeApprovedAction(
   switch (action.actionType) {
     case "INVITE_MEMBER": {
       const meta = action.metadata as { email?: string; role?: string } | null;
-      if (meta?.email) {
-        const user = await ctx.db.user.findUnique({
-          where: { email: meta.email },
+      if (!meta?.email) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "INVITE_MEMBER action requires an email address in metadata",
         });
-        if (user) {
-          await ctx.db.teamMember.upsert({
-            where: {
-              teamId_userId: { teamId: action.teamId, userId: user.id },
-            },
-            create: {
-              teamId: action.teamId,
-              userId: user.id,
-              role: (meta.role as "ADMIN" | "MEMBER") || "MEMBER",
-            },
-            update: {
-              role: (meta.role as "ADMIN" | "MEMBER") || "MEMBER",
-            },
-          });
+      }
+      const user = await ctx.db.user.findUnique({
+        where: { email: meta.email },
+      });
+      if (user) {
+        await ctx.db.teamMember.upsert({
+          where: {
+            teamId_userId: { teamId: action.teamId, userId: user.id },
+          },
+          create: {
+            teamId: action.teamId,
+            userId: user.id,
+            role: (meta.role as "ADMIN" | "MEMBER") || "MEMBER",
+          },
+          update: {
+            role: (meta.role as "ADMIN" | "MEMBER") || "MEMBER",
+          },
+        });
 
-          // Create notification for the invited user
-          const team = await ctx.db.team.findUnique({
-            where: { id: action.teamId },
-            select: { name: true },
-          });
+        // Create notification for the invited user
+        const team = await ctx.db.team.findUnique({
+          where: { id: action.teamId },
+          select: { name: true },
+        });
 
-          await ctx.db.notification.create({
-            data: {
-              userId: user.id,
-              type: "TEAM_INVITE",
-              title: `You've been added to "${team?.name ?? "a team"}"`,
-              message: `You have been added to the team as a ${meta.role?.toLowerCase() ?? "member"}.`,
-              link: `/teams/${action.teamId}`,
-            },
-          });
-        }
+        await ctx.db.notification.create({
+          data: {
+            userId: user.id,
+            type: "TEAM_INVITE",
+            title: `You've been added to "${team?.name ?? "a team"}"`,
+            message: `You have been added to the team as a ${meta.role?.toLowerCase() ?? "member"}.`,
+            link: `/teams/${action.teamId}`,
+          },
+        });
       }
       break;
     }
@@ -665,6 +685,18 @@ async function executeApprovedAction(
 
     case "SHARE_REPOSITORY":
       if (action.targetRepoId) {
+        // Verify the repository belongs to the user who requested the action
+        // so that a team OWNER/ADMIN cannot share any arbitrary repository.
+        const repo = await ctx.db.repository.findUnique({
+          where: { id: action.targetRepoId },
+          select: { userId: true },
+        });
+        if (!repo || repo.userId !== action.requestedBy) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Repository does not belong to the requesting user.",
+          });
+        }
         await ctx.db.repository.update({
           where: { id: action.targetRepoId },
           data: { teamId: action.teamId },
@@ -674,6 +706,17 @@ async function executeApprovedAction(
 
     case "UNSHARE_REPOSITORY":
       if (action.targetRepoId) {
+        // Same ownership check as SHARE_REPOSITORY.
+        const repo = await ctx.db.repository.findUnique({
+          where: { id: action.targetRepoId },
+          select: { userId: true },
+        });
+        if (!repo || repo.userId !== action.requestedBy) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Repository does not belong to the requesting user.",
+          });
+        }
         await ctx.db.repository.update({
           where: { id: action.targetRepoId },
           data: { teamId: null },
@@ -692,22 +735,64 @@ async function executeApprovedAction(
       break;
 
     case "REVIEW_PR": {
-      // This action is handled by the review system
-      // The approval means the user can now proceed with reviewing the PR
       const meta = action.metadata as { prNumber?: number } | null;
-      console.log(
-        `PR review approved for PR #${meta?.prNumber} in team ${action.teamId}`,
-      );
+      if (!meta?.prNumber || !action.targetRepoId) break;
+
+      const repository = await ctx.db.repository.findUnique({
+        where: { id: action.targetRepoId },
+        select: { userId: true, fullName: true },
+      });
+      if (!repository) break;
+
+      // Try to fetch the real PR title/URL for a complete review record
+      let prTitle = `PR #${meta.prNumber}`;
+      let prUrl = "";
+      const accessToken = await getGitHubAccessToken(repository.userId);
+      if (accessToken) {
+        try {
+          const pr = await fetchPullRequestByFullName(
+            accessToken,
+            repository.fullName,
+            meta.prNumber,
+          );
+          prTitle = pr.title;
+          prUrl = pr.html_url;
+        } catch {
+          // Non-fatal: proceed with placeholder values
+        }
+      }
+
+      const review = await ctx.db.review.create({
+        data: {
+          repositoryId: action.targetRepoId,
+          userId: action.requestedBy,
+          prNumber: meta.prNumber,
+          prTitle,
+          prUrl,
+          status: "PENDING",
+        },
+      });
+
+      await inngest.send({
+        name: "review/pr.requested",
+        data: {
+          reviewId: review.id,
+          repositoryId: action.targetRepoId,
+          prNumber: meta.prNumber,
+          userId: repository.userId, // repo owner's token for GitHub API calls
+        },
+      });
       break;
     }
 
     case "APPROVE_DISCUSSION": {
-      // This action is handled by the collaboration system
-      // The approval means the user can now approve a discussion
       const meta = action.metadata as { discussionId?: string } | null;
-      console.log(
-        `Discussion approval approved for discussion ${meta?.discussionId} in team ${action.teamId}`,
-      );
+      if (meta?.discussionId) {
+        await ctx.db.reviewThread.update({
+          where: { id: meta.discussionId },
+          data: { resolved: true },
+        });
+      }
       break;
     }
   }

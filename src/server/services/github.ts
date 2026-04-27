@@ -105,10 +105,23 @@ export async function getGitHubAccessToken(
     },
     select: {
       accessToken: true,
+      accessTokenExpiresAt: true,
     },
   });
 
-  return account?.accessToken ?? null;
+  if (!account?.accessToken) return null;
+
+  // Return null for expired tokens so callers surface a clear re-auth error
+  // rather than failing silently with a GitHub 401 later in the request.
+  if (
+    account.accessTokenExpiresAt &&
+    account.accessTokenExpiresAt < new Date()
+  ) {
+    console.warn(`[getGitHubAccessToken] Token for user ${userId} has expired`);
+    return null;
+  }
+
+  return account.accessToken;
 }
 
 interface GitHubOrg {
@@ -190,18 +203,10 @@ export async function fetchPullRequests(
 
   const pulls = (await response.json()) as GitHubPullRequest[];
 
-  const batchSize = 5;
-  const results: GitHubPullRequest[] = [];
-
-  for (let i = 0; i < pulls.length; i += batchSize) {
-    const batch = pulls.slice(i, i + batchSize);
-    const batchResults = await Promise.all(
-      batch.map((pr) => fetchPullRequest(accessToken, owner, repo, pr.number)),
-    );
-    results.push(...batchResults);
-  }
-
-  return results;
+  // Fetch all PR details in parallel instead of sequential batches of 5
+  return Promise.all(
+    pulls.map((pr) => fetchPullRequest(accessToken, owner, repo, pr.number)),
+  );
 }
 
 export async function fetchPullRequest(
@@ -272,13 +277,17 @@ export async function fetchRepositoryFiles(
   repo: string,
   branch?: string,
 ): Promise<GitHubTreeFile[]> {
-  const branchName = branch ?? (await fetchDefaultBranch(accessToken, owner, repo));
+  const branchName =
+    branch ?? (await fetchDefaultBranch(accessToken, owner, repo));
   const response = await githubFetch(
     `https://api.github.com/repos/${owner}/${repo}/git/trees/${branchName}?recursive=1`,
     accessToken,
   );
-  
-  const data = (await response.json()) as { tree: GitHubTreeFile[], truncated: boolean };
+
+  const data = (await response.json()) as {
+    tree: GitHubTreeFile[];
+    truncated: boolean;
+  };
   return data.tree.filter((t) => t.type === "blob");
 }
 

@@ -1,5 +1,7 @@
 import { z } from "zod";
+import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
+import type { PrismaClient } from "@/server/db/client";
 
 const DateRangeSchema = z.object({
   startDate: z.date().optional(),
@@ -7,6 +9,28 @@ const DateRangeSchema = z.object({
 });
 
 const TimePeriodSchema = z.enum(["7d", "30d", "90d", "6m", "1y"]);
+
+/**
+ * Guard: verify the requesting user is a member of the specified team.
+ * Called before every analytics query that accepts a teamId so that an
+ * authenticated user cannot read another team's analytics by knowing the ID.
+ */
+async function assertTeamMembership(
+  db: PrismaClient,
+  userId: string,
+  teamId: string,
+) {
+  const membership = await db.teamMember.findUnique({
+    where: { teamId_userId: { teamId, userId } },
+    select: { role: true },
+  });
+  if (!membership) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "You are not a member of this team.",
+    });
+  }
+}
 
 export const analyticsRouter = createTRPCRouter({
   getOverview: protectedProcedure
@@ -20,6 +44,10 @@ export const analyticsRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const { timePeriod, repositoryId, teamId } = input;
 
+      if (teamId) {
+        await assertTeamMembership(ctx.db, ctx.user.id, teamId);
+      }
+
       const now = new Date();
       const startDate = getStartDate(timePeriod, now);
 
@@ -32,7 +60,6 @@ export const analyticsRouter = createTRPCRouter({
         ...(repositoryId && { repositoryId }),
       };
 
-      // Get all accessible reviews (user's own + team accessible)
       const teamRepoIds = await ctx.db.repository.findMany({
         where: teamId
           ? { teamId }
@@ -41,66 +68,63 @@ export const analyticsRouter = createTRPCRouter({
       });
       const teamRepoIdSet = teamRepoIds.map((r) => r.id);
 
-      const reviews = await ctx.db.review.findMany({
-        where: {
-          OR: [
-            { userId: ctx.user.id },
-            { repositoryId: { in: teamRepoIdSet } },
-          ],
-          ...baseWhere,
-        },
-      });
+      const accessFilter = {
+        OR: [{ userId: ctx.user.id }, { repositoryId: { in: teamRepoIdSet } }],
+        ...baseWhere,
+      };
 
-      // Calculate metrics
-      const totalReviews = reviews.length;
-      const completedReviews = reviews.filter(
-        (r) => r.status === "COMPLETED",
-      ).length;
-      const pendingReviews = reviews.filter(
-        (r) => r.status === "PENDING",
-      ).length;
-      const processingReviews = reviews.filter(
-        (r) => r.status === "PROCESSING",
-      ).length;
-      const failedReviews = reviews.filter((r) => r.status === "FAILED").length;
+      // Use DB-level aggregations to avoid loading all rows into application memory
+      const [statusGroups, riskAgg] = await Promise.all([
+        ctx.db.review.groupBy({
+          by: ["status"],
+          where: accessFilter,
+          _count: { status: true },
+        }),
+        ctx.db.review.aggregate({
+          where: { ...accessFilter, riskScore: { not: null } },
+          _avg: { riskScore: true },
+          _count: { id: true },
+        }),
+      ]);
 
-      // Calculate completion rate
+      const statusMap = Object.fromEntries(
+        statusGroups.map((g) => [g.status, g._count.status]),
+      ) as Record<string, number>;
+
+      const totalReviews = statusGroups.reduce(
+        (sum, g) => sum + g._count.status,
+        0,
+      );
+      const completedReviews = statusMap["COMPLETED"] ?? 0;
+      const pendingReviews = statusMap["PENDING"] ?? 0;
+      const processingReviews = statusMap["PROCESSING"] ?? 0;
+      const failedReviews = statusMap["FAILED"] ?? 0;
       const completionRate =
         totalReviews > 0
           ? Math.round((completedReviews / totalReviews) * 100)
           : 0;
+      const avgRiskScore = Math.round(riskAgg._avg.riskScore ?? 0);
 
-      // Calculate average review time (from creation to last update)
-      const completedWithTimes = reviews
-        .filter((r) => r.status === "COMPLETED" && r.updatedAt)
-        .map((r) => ({
-          createdAt: r.createdAt,
-          updatedAt: r.updatedAt,
-        }));
+      // For quality metrics we still need to read the JSON field;
+      // limit to the most recent 200 completed reviews to cap memory usage.
+      const reviews = await ctx.db.review.findMany({
+        where: { ...accessFilter, status: "COMPLETED" },
+        select: { qualityMetrics: true, createdAt: true, updatedAt: true },
+        orderBy: { createdAt: "desc" },
+        take: 200,
+      });
 
+      const completedWithTimes = reviews.filter((r) => r.updatedAt);
       const avgCompletionTimeMs =
         completedWithTimes.length > 0
-          ? completedWithTimes.reduce((sum, r) => {
-              return sum + (r.updatedAt.getTime() - r.createdAt.getTime());
-            }, 0) / completedWithTimes.length
+          ? completedWithTimes.reduce(
+              (sum, r) => sum + (r.updatedAt.getTime() - r.createdAt.getTime()),
+              0,
+            ) / completedWithTimes.length
           : 0;
-
-      // Convert to hours
       const avgCompletionTimeHours = Math.round(
         avgCompletionTimeMs / (1000 * 60 * 60),
       );
-
-      // Calculate risk score averages
-      const reviewsWithRiskScore = reviews.filter((r) => r.riskScore !== null);
-      const avgRiskScore =
-        reviewsWithRiskScore.length > 0
-          ? Math.round(
-              reviewsWithRiskScore.reduce(
-                (sum, r) => sum + (r.riskScore || 0),
-                0,
-              ) / reviewsWithRiskScore.length,
-            )
-          : 0;
 
       // Calculate quality metrics averages from qualityMetrics JSON
       let totalQualityScore = 0;
@@ -108,7 +132,6 @@ export const analyticsRouter = createTRPCRouter({
       let totalBugDetection = 0;
       let totalBugDetectionCount = 0;
       let totalSecurityIssues = 0;
-      let totalSecurityIssuesCount = 0;
 
       reviews.forEach((r) => {
         if (r.qualityMetrics) {
@@ -123,7 +146,6 @@ export const analyticsRouter = createTRPCRouter({
           }
           if (metrics.securityIssues) {
             totalSecurityIssues += Number(metrics.securityIssues);
-            totalSecurityIssuesCount++;
           }
         }
       });
@@ -161,6 +183,10 @@ export const analyticsRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const { timePeriod, repositoryId, teamId, granularity } = input;
+
+      if (teamId) {
+        await assertTeamMembership(ctx.db, ctx.user.id, teamId);
+      }
 
       const now = new Date();
       const startDate = getStartDate(timePeriod, now);
@@ -205,6 +231,10 @@ export const analyticsRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const { timePeriod, repositoryId, teamId } = input;
+
+      if (teamId) {
+        await assertTeamMembership(ctx.db, ctx.user.id, teamId);
+      }
 
       const now = new Date();
       const startDate = getStartDate(timePeriod, now);
@@ -296,6 +326,10 @@ export const analyticsRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const { timePeriod, repositoryId, teamId } = input;
+
+      if (teamId) {
+        await assertTeamMembership(ctx.db, ctx.user.id, teamId);
+      }
 
       const now = new Date();
       const startDate = getStartDate(timePeriod, now);
@@ -403,6 +437,10 @@ export const analyticsRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const { timePeriod, repositoryId, teamId } = input;
 
+      if (teamId) {
+        await assertTeamMembership(ctx.db, ctx.user.id, teamId);
+      }
+
       const now = new Date();
       const startDate = getStartDate(timePeriod, now);
 
@@ -435,35 +473,37 @@ export const analyticsRouter = createTRPCRouter({
       });
 
       // Extract quality metrics
-      let totalCoverage = 0;
-      let coverageCount = 0;
+      // The AI service outputs: complexity, maintainability, readability, testability
+      // (defined in QualityMetricsSchema in src/server/services/ai.ts)
+      let totalComplexity = 0;
+      let complexityCount = 0;
       let totalMaintainability = 0;
       let maintainabilityCount = 0;
-      let totalPerformance = 0;
-      let performanceCount = 0;
-      let totalSecurity = 0;
-      let securityCount = 0;
+      let totalReadability = 0;
+      let readabilityCount = 0;
+      let totalTestability = 0;
+      let testabilityCount = 0;
       const riskScores: number[] = [];
 
       reviews.forEach((review) => {
         if (review.qualityMetrics) {
           const metrics = review.qualityMetrics as Record<string, unknown>;
 
-          if (metrics.coverage !== undefined) {
-            totalCoverage += Number(metrics.coverage);
-            coverageCount++;
+          if (metrics.complexity !== undefined) {
+            totalComplexity += Number(metrics.complexity);
+            complexityCount++;
           }
           if (metrics.maintainability !== undefined) {
             totalMaintainability += Number(metrics.maintainability);
             maintainabilityCount++;
           }
-          if (metrics.performance !== undefined) {
-            totalPerformance += Number(metrics.performance);
-            performanceCount++;
+          if (metrics.readability !== undefined) {
+            totalReadability += Number(metrics.readability);
+            readabilityCount++;
           }
-          if (metrics.security !== undefined) {
-            totalSecurity += Number(metrics.security);
-            securityCount++;
+          if (metrics.testability !== undefined) {
+            totalTestability += Number(metrics.testability);
+            testabilityCount++;
           }
         }
 
@@ -482,17 +522,21 @@ export const analyticsRouter = createTRPCRouter({
 
       return {
         avgCoverage:
-          coverageCount > 0 ? Math.round(totalCoverage / coverageCount) : 0,
+          complexityCount > 0
+            ? Math.round(totalComplexity / complexityCount)
+            : 0,
         avgMaintainability:
           maintainabilityCount > 0
             ? Math.round(totalMaintainability / maintainabilityCount)
             : 0,
         avgPerformance:
-          performanceCount > 0
-            ? Math.round(totalPerformance / performanceCount)
+          readabilityCount > 0
+            ? Math.round(totalReadability / readabilityCount)
             : 0,
         avgSecurity:
-          securityCount > 0 ? Math.round(totalSecurity / securityCount) : 0,
+          testabilityCount > 0
+            ? Math.round(totalTestability / testabilityCount)
+            : 0,
         riskDistribution,
         totalReviewed: reviews.length,
         period: timePeriod,
@@ -510,6 +554,10 @@ export const analyticsRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const { timePeriod, repositoryId, teamId, limit } = input;
+
+      if (teamId) {
+        await assertTeamMembership(ctx.db, ctx.user.id, teamId);
+      }
 
       const now = new Date();
       const startDate = getStartDate(timePeriod, now);
@@ -734,6 +782,10 @@ export const analyticsRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const { timePeriod, repositoryId, teamId } = input;
+
+      if (teamId) {
+        await assertTeamMembership(ctx.db, ctx.user.id, teamId);
+      }
 
       const now = new Date();
       const startDate = getStartDate(timePeriod, now);

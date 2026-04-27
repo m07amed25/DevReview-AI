@@ -13,7 +13,10 @@ export const diagramRouter = createTRPCRouter({
         select: { userId: true },
       });
       if (!repository) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Repository not found" });
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Repository not found",
+        });
       }
       if (repository.userId !== ctx.user.id) {
         throw new TRPCError({ code: "FORBIDDEN" });
@@ -62,7 +65,10 @@ export const diagramRouter = createTRPCRouter({
         select: { userId: true },
       });
       if (!repository) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Repository not found" });
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Repository not found",
+        });
       }
       if (repository.userId !== ctx.user.id) {
         throw new TRPCError({ code: "FORBIDDEN" });
@@ -70,7 +76,10 @@ export const diagramRouter = createTRPCRouter({
 
       const diagram = await ctx.db.diagram.upsert({
         where: {
-          repositoryId_type: { repositoryId: input.repositoryId, type: input.type },
+          repositoryId_type: {
+            repositoryId: input.repositoryId,
+            type: input.type,
+          },
         },
         create: {
           repositoryId: input.repositoryId,
@@ -93,9 +102,8 @@ export const diagramRouter = createTRPCRouter({
           diagramId: diagram.id,
           repositoryId: input.repositoryId,
           userId: ctx.user.id,
-          prNumber: input.prNumber || 1, // Fallback if needed, though generateDiagram currently requires it to fetch PR files.
-          // Note: If we really want full repository diagrams, the inngest function should be refactored to fetch the default branch tree instead of PR files when prNumber is not provided.
-          reviewId: "", // Just providing an empty string to satisfy type if needed, though we should update the event type
+          prNumber: input.prNumber, // undefined when not provided; generate-diagram fetches the default branch tree instead
+          reviewId: "",
           type: input.type,
         },
       });

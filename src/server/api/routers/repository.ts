@@ -123,8 +123,43 @@ export const repositoryRouter = createTRPCRouter({
     }),
 
   disconnect: protectedProcedure
-    .input(z.object({ id: z.string().max(255).max(255) }))
+    .input(z.object({ id: z.string().max(255) }))
     .mutation(async ({ ctx, input }) => {
+      const repository = await ctx.db.repository.findUnique({
+        where: { id: input.id, userId: ctx.user.id },
+        include: { webhookConfig: true },
+      });
+
+      if (!repository) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Repository not found",
+        });
+      }
+
+      // Delete the GitHub webhook before removing the local record to prevent
+      // phantom reviews from a still-active webhook.
+      if (
+        repository.webhookConfig?.githubWebhookId &&
+        repository.webhookConfig.enabled
+      ) {
+        const accessToken = await getGitHubAccessToken(ctx.user.id);
+        if (accessToken) {
+          try {
+            await deleteWebhook(
+              accessToken,
+              repository.fullName,
+              repository.webhookConfig.githubWebhookId,
+            );
+          } catch (err) {
+            console.warn(
+              `[disconnect] Failed to delete GitHub webhook for ${repository.fullName}:`,
+              err,
+            );
+          }
+        }
+      }
+
       await ctx.db.repository.delete({
         where: {
           id: input.id,
@@ -180,7 +215,8 @@ export const repositoryRouter = createTRPCRouter({
       if (!repository) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "Only repository owners or team admins can update webhook config",
+          message:
+            "Only repository owners or team admins can update webhook config",
         });
       }
 
@@ -192,7 +228,8 @@ export const repositoryRouter = createTRPCRouter({
         });
       }
 
-      const appBaseUrl = process.env.APP_BASE_URL ?? process.env.BETTER_AUTH_URL;
+      const appBaseUrl =
+        process.env.APP_BASE_URL ?? process.env.BETTER_AUTH_URL;
       const webhookSecret = process.env.GITHUB_WEBHOOK_SECRET;
 
       if (!appBaseUrl || !webhookSecret) {
@@ -300,7 +337,10 @@ export const repositoryRouter = createTRPCRouter({
       });
 
       if (!repository) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Repository not found" });
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Repository not found",
+        });
       }
 
       if (repository.userId !== ctx.user.id) {
