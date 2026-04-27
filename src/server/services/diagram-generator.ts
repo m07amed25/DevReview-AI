@@ -48,9 +48,32 @@ function generateERD(fileContents: Record<string, string>): {
 
   const schemaContent = Object.values(fileContents).join("\n");
 
-  // Extract model blocks
-  const modelRegex = /model\s+(\w+)\s*\{([^}]+)\}/g;
-  let modelMatch: RegExpExecArray | null;
+  // Brace-balanced model block extractor — handles `}` inside quoted defaults
+  // or attribute expressions that would prematurely terminate a [^}]+ regex.
+  function extractModelBlocks(
+    schema: string,
+  ): Array<{ name: string; body: string }> {
+    const results: Array<{ name: string; body: string }> = [];
+    const headerRegex = /model\s+(\w+)\s*\{/g;
+    let header: RegExpExecArray | null;
+    while ((header = headerRegex.exec(schema)) !== null) {
+      const modelName = header[1]!;
+      // headerRegex matched up to and including the opening '{'
+      const openBrace = header.index + header[0].length - 1;
+      let depth = 1;
+      let i = openBrace + 1;
+      while (i < schema.length && depth > 0) {
+        if (schema[i] === "{") depth++;
+        else if (schema[i] === "}") depth--;
+        i++;
+      }
+      const body = schema.slice(openBrace + 1, i - 1);
+      results.push({ name: modelName, body });
+    }
+    return results;
+  }
+
+  const modelBlocks = extractModelBlocks(schemaContent);
 
   const models = new Map<
     string,
@@ -62,9 +85,7 @@ function generateERD(fileContents: Record<string, string>): {
     }>
   >();
 
-  while ((modelMatch = modelRegex.exec(schemaContent)) !== null) {
-    const modelName = modelMatch[1]!;
-    const modelBody = modelMatch[2]!;
+  for (const { name: modelName, body: modelBody } of modelBlocks) {
     const columns: Array<{
       name: string;
       type: string;
@@ -111,13 +132,8 @@ function generateERD(fileContents: Record<string, string>): {
     });
   }
 
-  // Extract relations for edges
-  const relationRegex = /model\s+(\w+)\s*\{([^}]+)\}/g;
-  let relationMatch: RegExpExecArray | null;
-  while ((relationMatch = relationRegex.exec(schemaContent)) !== null) {
-    const modelName = relationMatch[1]!;
-    const modelBody = relationMatch[2]!;
-
+  // Extract relations for edges — reuse the already-parsed brace-balanced blocks
+  for (const { name: modelName, body: modelBody } of modelBlocks) {
     const lines = modelBody.split("\n");
     for (const line of lines) {
       const trimmed = line.trim();
@@ -339,7 +355,7 @@ function generateUseCaseDiagram(fileContents: Record<string, string>): {
       });
     }
 
-    if (!routeRegex.exec(content)) {
+    if (!content.match(routeRegex)) {
       // Fallback: look for named exports from router/controller files
       let namedMatch: RegExpExecArray | null;
       while ((namedMatch = namedExportRegex.exec(content)) !== null) {

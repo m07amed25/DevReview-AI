@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   ShieldCheck,
   Lock,
@@ -14,7 +15,12 @@ import {
   Globe,
   Zap,
   AlertTriangle,
+  Users,
+  MonitorCheck,
+  Wrench,
+  XCircle,
 } from "lucide-react";
+import { trpc } from "@/lib/trpc";
 
 const PROTECTIONS = [
   {
@@ -52,6 +58,9 @@ const PROTECTIONS = [
 ];
 
 export default function AdminSecurityPage() {
+  const { data: settings, isLoading } =
+    trpc.admin.getSecuritySettings.useQuery();
+
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
@@ -65,6 +74,64 @@ export default function AdminSecurityPage() {
           <ShieldCheck className="h-4 w-4" />
           All Systems Secure
         </div>
+      </div>
+
+      {/* Live security stats */}
+      <div className="grid gap-4 md:grid-cols-4">
+        {[
+          {
+            label: "Banned Users",
+            value: settings?.bannedUsersCount,
+            icon: Users,
+            color: settings?.bannedUsersCount
+              ? "text-red-500"
+              : "text-muted-foreground",
+          },
+          {
+            label: "Active Sessions",
+            value: settings?.activeSessionsCount,
+            icon: MonitorCheck,
+            color: "text-green-500",
+          },
+          {
+            label: "Failed Reviews (24h)",
+            value: settings?.failedReviewsLast24h,
+            icon: XCircle,
+            color: settings?.failedReviewsLast24h
+              ? "text-amber-500"
+              : "text-muted-foreground",
+          },
+          {
+            label: "Maintenance Mode",
+            value: settings
+              ? settings.maintenanceMode
+                ? "ON"
+                : "OFF"
+              : undefined,
+            icon: Wrench,
+            color: settings?.maintenanceMode
+              ? "text-red-500"
+              : "text-muted-foreground",
+          },
+        ].map((stat) => (
+          <Card key={stat.label}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                {stat.label}
+              </CardTitle>
+              <stat.icon className={`h-4 w-4 ${stat.color}`} />
+            </CardHeader>
+            <CardContent>
+              {isLoading ? (
+                <Skeleton className="h-7 w-16" />
+              ) : (
+                <p className={`text-2xl font-bold ${stat.color}`}>
+                  {stat.value ?? "—"}
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -92,47 +159,50 @@ export default function AdminSecurityPage() {
       <div className="grid gap-6 md:grid-cols-3">
         <Card className="md:col-span-2">
           <CardHeader>
-            <CardTitle>Recent Security Events</CardTitle>
+            <CardTitle>Security Configuration</CardTitle>
             <CardDescription>
-              Real-time log of security-related activity.
+              Current security settings derived from live platform data.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {[
                 {
-                  event: "Admin session validated",
-                  time: "2 minutes ago",
-                  status: "Success",
+                  label: "Maintenance mode",
+                  value: settings
+                    ? settings.maintenanceMode
+                      ? "Enabled"
+                      : "Disabled"
+                    : "—",
+                  status: settings?.maintenanceMode ? "warn" : "ok",
                 },
                 {
-                  event: "Rate limit threshold reached (IP: 192.168.1.x)",
-                  time: "1 hour ago",
-                  status: "Blocked",
+                  label: "Banned users",
+                  value: isLoading
+                    ? "—"
+                    : `${settings?.bannedUsersCount ?? 0} account(s) restricted`,
+                  status: settings?.bannedUsersCount ? "warn" : "ok",
                 },
                 {
-                  event: "New GitHub Webhook signature verified",
-                  time: "3 hours ago",
-                  status: "Success",
+                  label: "Failed reviews (last 24 h)",
+                  value: isLoading
+                    ? "—"
+                    : `${settings?.failedReviewsLast24h ?? 0} review(s) failed`,
+                  status: settings?.failedReviewsLast24h ? "warn" : "ok",
                 },
-              ].map((e, i) => (
+              ].map((e) => (
                 <div
-                  key={i}
+                  key={e.label}
                   className="flex items-center justify-between border-b pb-4 last:border-0 last:pb-0"
                 >
                   <div className="flex items-center gap-3">
                     <div
-                      className={`h-2 w-2 rounded-full ${e.status === "Success" ? "bg-green-500" : "bg-red-500"}`}
+                      className={`h-2 w-2 rounded-full ${e.status === "ok" ? "bg-green-500" : "bg-amber-500"}`}
                     />
-                    <div>
-                      <p className="text-sm font-medium">{e.event}</p>
-                      <p className="text-xs text-muted-foreground">{e.time}</p>
-                    </div>
+                    <p className="text-sm font-medium">{e.label}</p>
                   </div>
-                  <span
-                    className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded ${e.status === "Success" ? "bg-green-500/10 text-green-500" : "bg-red-500/10 text-red-500"}`}
-                  >
-                    {e.status}
+                  <span className="text-xs text-muted-foreground">
+                    {e.value}
                   </span>
                 </div>
               ))}

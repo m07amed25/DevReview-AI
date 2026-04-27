@@ -27,6 +27,7 @@ import {
   MyRequestsCard,
   MembersCard,
   SharedReposCard,
+  PendingInvitesCard,
 } from "./team-cards";
 
 export default function TeamDetailPage() {
@@ -43,6 +44,7 @@ export default function TeamDetailPage() {
   const myRepos = trpc.repository.list.useQuery();
   const pendingActions = trpc.team.getPendingActions.useQuery({ teamId });
   const myRequests = trpc.team.getMyRequestedActions.useQuery({ teamId });
+  const pendingInvites = trpc.team.getPendingInvites.useQuery({ teamId });
   const utils = trpc.useUtils();
 
   const inviteMember = trpc.team.inviteMember.useMutation({
@@ -94,6 +96,10 @@ export default function TeamDetailPage() {
   });
   const deleteTeam = trpc.team.delete.useMutation({
     onSuccess: () => router.push("/teams"),
+    onError: (err) => setError(err.message),
+  });
+  const cancelInvite = trpc.team.cancelInvite.useMutation({
+    onSuccess: () => utils.team.getPendingInvites.invalidate({ teamId }),
     onError: (err) => setError(err.message),
   });
 
@@ -151,11 +157,7 @@ export default function TeamDetailPage() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <Link href="/teams">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="shrink-0"
-              >
+              <Button variant="ghost" size="icon" className="shrink-0">
                 <ArrowLeft className="size-4 text-muted-foreground" />
               </Button>
             </Link>
@@ -257,6 +259,12 @@ export default function TeamDetailPage() {
             unshareRepo={unshareRepo}
           />
         </div>
+
+        <PendingInvitesCard
+          invites={pendingInvites}
+          isOwnerOrAdmin={!!isOwnerOrAdmin}
+          cancelInvite={cancelInvite}
+        />
 
         <InviteMemberDialog
           open={inviting}
