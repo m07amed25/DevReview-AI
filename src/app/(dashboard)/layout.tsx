@@ -1,4 +1,5 @@
 import { Header } from "@/components/header";
+import { FeedbackButton } from "@/components/feedback-button";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Github, AlertCircle } from "lucide-react";
@@ -66,6 +67,7 @@ function DashboardContent({
           </div>
         )}
         <main className="container mx-auto px-4 py-8">{children}</main>
+        <FeedbackButton />
       </div>
     </ErrorBoundary>
   );

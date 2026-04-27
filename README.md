@@ -51,65 +51,73 @@ DevReview AI is a full-stack platform that integrates directly with your GitHub 
 ## ✨ Features
 
 ### 🤖 Multi-Provider AI Reviews
+
 Connect one or more AI providers and let DevReview AI pick the best available model for each review. Supports **OpenAI**, **Google Gemini**, **Groq**, and **Hugging Face** with automatic fallback between providers.
 
 ### 🔗 Deep GitHub Integration
+
 - Automatically registers webhooks on connected repositories
 - Triggers reviews on every new pull request or push
 - Posts inline comments, review summaries, and commit statuses back to GitHub
 - Generates architecture and ER diagrams from your codebase on demand
 
 ### 👥 Team Collaboration
+
 - Create teams, invite members, and share repositories
 - Approval workflows for sensitive team actions (role changes, repo sharing, PR reviews)
 - Real-time collaborative review threads with resolve/reopen support via **Pusher**
 - Role-based access control: `OWNER`, `ADMIN`, `MEMBER`
 
 ### 📊 Analytics Dashboard
+
 - Review volume, approval/rejection rates, and quality score trends over time
 - Per-repository and per-team breakdowns
 - Exportable metrics for engineering reporting
 
 ### ⚡ Background Job Processing
+
 All AI review work runs asynchronously via **Inngest** — no request timeouts, retries on failure, scheduled scans for open PRs, and full event-driven observability.
 
 ### 🔒 Security & Rate Limiting
+
 - Per-user rate limiting backed by **Upstash Redis** (survives serverless restarts)
 - GitHub webhook signature verification
 - Magic-byte file type validation on uploads (not just MIME headers)
 - Session invalidation on account deletion
 
 ### 🎨 Polished UI/UX
+
 - Fluid page transitions and entrance animations powered by **GSAP** + **Lenis**
 - Full dark/light mode support via `next-themes`
 - Component library built on **shadcn/ui** + **Radix UI**
 - Diff viewer, interactive diagram explorer, and real-time notification center
 
 ### 📧 Email Notifications
+
 Transactional emails for review completions, team invitations, and account events — sent via **Nodemailer** with React Email templates.
 
 ---
 
 ## 🛠 Tech Stack
 
-| Layer                | Technology                                              |
-| -------------------- | ------------------------------------------------------- |
-| **Framework**        | [Next.js 16](https://nextjs.org) (App Router)           |
-| **Language**         | TypeScript 5                                            |
-| **Database**         | PostgreSQL + [Prisma ORM 6](https://www.prisma.io)      |
-| **API Layer**        | [tRPC v11](https://trpc.io) + React Query               |
-| **Authentication**   | [Better Auth](https://better-auth.com) + GitHub OAuth   |
-| **AI Providers**     | OpenAI · Google Gemini · Groq · Hugging Face            |
-| **Real-time**        | [Pusher](https://pusher.com)                            |
-| **Background Jobs**  | [Inngest](https://inngest.com)                          |
-| **Rate Limiting**    | [Upstash Redis](https://upstash.com)                    |
-| **File Storage**     | [Vercel Blob](https://vercel.com/storage/blob)          |
-| **Email**            | Nodemailer + [React Email](https://react.email)         |
-| **Styling**          | Tailwind CSS v4 + shadcn/ui + Radix UI                  |
-| **Animations**       | GSAP + Lenis smooth scroll                              |
-| **Diagrams**         | Mermaid + React Flow (XY Flow)                          |
-| **Charts**           | Recharts                                                |
-| **Package Manager**  | pnpm                                                    |
+| Layer               | Technology                                            |
+| ------------------- | ----------------------------------------------------- |
+| **Framework**       | [Next.js 16](https://nextjs.org) (App Router)         |
+| **Language**        | TypeScript 5                                          |
+| **Database**        | PostgreSQL + [Prisma ORM 6](https://www.prisma.io)    |
+| **API Layer**       | [tRPC v11](https://trpc.io) + React Query             |
+| **Authentication**  | [Better Auth](https://better-auth.com) + GitHub OAuth |
+| **AI Providers**    | OpenAI · Google Gemini · Groq · Hugging Face          |
+| **Real-time**       | [Pusher](https://pusher.com)                          |
+| **Background Jobs** | [Inngest](https://inngest.com)                        |
+| **Rate Limiting**   | [Upstash Redis](https://upstash.com)                  |
+| **File Storage**    | [Vercel Blob](https://vercel.com/storage/blob)        |
+| **Email**           | Nodemailer + [React Email](https://react.email)       |
+| **Styling**         | Tailwind CSS v4 + shadcn/ui + Radix UI                |
+| **Animations**      | GSAP + Lenis smooth scroll                            |
+| **Diagrams**        | Mermaid + React Flow (XY Flow)                        |
+| **Charts**          | Recharts                                              |
+| **Package Manager** | pnpm                                                  |
 
 ---
 
@@ -143,6 +151,7 @@ Transactional emails for review completions, team invitations, and account event
 ```
 
 **Request flow for a PR review:**
+
 1. GitHub fires a `pull_request` webhook → `/api/webhooks/github`
 2. Webhook handler validates signature, creates a `Review` record, sets a pending commit status
 3. An Inngest event `review/pr.requested` is dispatched
@@ -157,14 +166,14 @@ Transactional emails for review completions, team invitations, and account event
 
 ### Prerequisites
 
-| Requirement | Version |
-|---|---|
-| Node.js | ≥ 18 |
-| pnpm | ≥ 9 |
-| PostgreSQL | ≥ 14 |
-| GitHub OAuth App | — |
-| Pusher App | — |
-| AI API key (at least one) | — |
+| Requirement               | Version |
+| ------------------------- | ------- |
+| Node.js                   | ≥ 18    |
+| pnpm                      | ≥ 9     |
+| PostgreSQL                | ≥ 14    |
+| GitHub OAuth App          | —       |
+| Pusher App                | —       |
+| AI API key (at least one) | —       |
 
 ### 1 — Clone & install
 
@@ -274,27 +283,27 @@ depi-code-review/
 
 ### tRPC Routers
 
-| Router | Key Procedures |
-|---|---|
-| `repository` | `list`, `connect`, `disconnect`, `sync` |
-| `review` | `trigger`, `list`, `getById`, `getDiff`, `submitFeedback` |
-| `pullRequest` | `list`, `getById` |
-| `collaboration` | `getThreads`, `createThread`, `addComment`, `toggleResolve` |
-| `team` | `create`, `list`, `inviteMember`, `updateRole`, `requestAction`, `executeApprovedAction` |
-| `analytics` | `getOverview`, `getTrends`, `getApprovalRejectionRates`, `getQualityScores` |
-| `diagram` | `requestDiagram`, `getLatest`, `list` |
-| `rules` | `list`, `create`, `update`, `delete` |
-| `notification` | `list`, `markAsRead`, `markAllAsRead` |
-| `profile` | `get`, `update` |
-| `settings` | `getPreferences`, `updatePreferences`, `deleteAccount` |
-| `admin` | `getUsers`, `getReviews`, `getStats`, `updateUserRole` |
+| Router          | Key Procedures                                                                           |
+| --------------- | ---------------------------------------------------------------------------------------- |
+| `repository`    | `list`, `connect`, `disconnect`, `sync`                                                  |
+| `review`        | `trigger`, `list`, `getById`, `getDiff`, `submitFeedback`                                |
+| `pullRequest`   | `list`, `getById`                                                                        |
+| `collaboration` | `getThreads`, `createThread`, `addComment`, `toggleResolve`                              |
+| `team`          | `create`, `list`, `inviteMember`, `updateRole`, `requestAction`, `executeApprovedAction` |
+| `analytics`     | `getOverview`, `getTrends`, `getApprovalRejectionRates`, `getQualityScores`              |
+| `diagram`       | `requestDiagram`, `getLatest`, `list`                                                    |
+| `rules`         | `list`, `create`, `update`, `delete`                                                     |
+| `notification`  | `list`, `markAsRead`, `markAllAsRead`                                                    |
+| `profile`       | `get`, `update`                                                                          |
+| `settings`      | `getPreferences`, `updatePreferences`, `deleteAccount`                                   |
+| `admin`         | `getUsers`, `getReviews`, `getStats`, `updateUserRole`                                   |
 
 ### Webhook Events
 
-| Event | Endpoint | Description |
-|---|---|---|
-| `pull_request` (opened/synchronize) | `POST /api/webhooks/github` | Triggers an AI review |
-| `push` | `POST /api/webhooks/github` | Updates repository metadata |
+| Event                               | Endpoint                    | Description                 |
+| ----------------------------------- | --------------------------- | --------------------------- |
+| `pull_request` (opened/synchronize) | `POST /api/webhooks/github` | Triggers an AI review       |
+| `push`                              | `POST /api/webhooks/github` | Updates repository metadata |
 
 ---
 
