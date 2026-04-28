@@ -691,4 +691,100 @@ export const adminRouter = createTRPCRouter({
         },
       });
     }),
+
+  getAuditLogs: adminProcedure
+    .input(
+      z.object({
+        page: z.number().min(1).default(1),
+        limit: z.number().min(1).max(100).default(20),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { page, limit } = input;
+      const skip = (page - 1) * limit;
+
+      const [actions, total] = await Promise.all([
+        ctx.db.teamAction.findMany({
+          skip,
+          take: limit,
+          orderBy: { createdAt: "desc" },
+          include: {
+            team: { select: { id: true, name: true } },
+          },
+        }),
+        ctx.db.teamAction.count(),
+      ]);
+
+      // Batch-load user info for all actor IDs
+      const userIds = [
+        ...new Set([
+          ...actions.map((a) => a.requestedBy),
+          ...actions.map((a) => a.resolvedBy).filter(Boolean),
+        ]),
+      ] as string[];
+
+      const users = await ctx.db.user.findMany({
+        where: { id: { in: userIds } },
+        select: { id: true, name: true, email: true },
+      });
+      const userMap = new Map(users.map((u) => [u.id, u]));
+
+      const logs = actions.map((a) => ({
+        id: a.id,
+        actionType: a.actionType,
+        status: a.status,
+        teamId: a.teamId,
+        teamName: a.team.name,
+        requestedBy: userMap.get(a.requestedBy) ?? {
+          id: a.requestedBy,
+          name: "Unknown",
+          email: "",
+        },
+        resolvedBy: a.resolvedBy
+          ? (userMap.get(a.resolvedBy) ?? {
+              id: a.resolvedBy,
+              name: "Unknown",
+              email: "",
+            })
+          : null,
+        targetUserId: a.targetUserId,
+        targetRepoId: a.targetRepoId,
+        createdAt: a.createdAt,
+        resolvedAt: a.resolvedAt,
+      }));
+
+      return { logs, total, pages: Math.ceil(total / limit) };
+    }),
+
+  getSecuritySettings: adminProcedure.query(async ({ ctx }) => {
+    const [
+      systemSettings,
+      bannedUsersCount,
+      activeSessionsCount,
+      failedReviewsCount,
+    ] = await Promise.all([
+      ctx.db.systemSettings.upsert({
+        where: { id: "global" },
+        update: {},
+        create: { id: "global", maintenanceMode: false },
+      }),
+      ctx.db.user.count({ where: { banned: true } }),
+      ctx.db.session.count({
+        where: { expiresAt: { gt: new Date() } },
+      }),
+      ctx.db.review.count({
+        where: {
+          status: "FAILED",
+          createdAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+        },
+      }),
+    ]);
+
+    return {
+      maintenanceMode: systemSettings.maintenanceMode,
+      bannedUsersCount,
+      activeSessionsCount,
+      failedReviewsLast24h: failedReviewsCount,
+    };
+  }),
 });

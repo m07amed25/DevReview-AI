@@ -458,7 +458,7 @@ export function SharedReposCard({
             <p className="text-sm font-medium text-foreground">
               No repositories yet
             </p>
-            <p className="text-sm text-muted-foreground mt-1 max-w-[250px]">
+            <p className="text-sm text-muted-foreground mt-1 max-w-62.5">
               Share a repository to collaborate on code reviews.
             </p>
           </div>
@@ -500,6 +500,138 @@ export function SharedReposCard({
             </div>
           ))}
         </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+interface PendingInvite {
+  token: string;
+  role: string;
+  expiresAt: Date | string;
+  invitee: {
+    id: string;
+    name: string | null;
+    email: string | null;
+    image: string | null;
+  } | null;
+  inviter: { id: string; name: string | null } | null;
+}
+
+interface PendingInvitesCardProps {
+  invites: { data?: PendingInvite[]; isLoading: boolean };
+  isOwnerOrAdmin: boolean;
+  cancelInvite: {
+    mutate: (args: { token: string }) => void;
+    isPending: boolean;
+  };
+}
+
+export function PendingInvitesCard({
+  invites,
+  isOwnerOrAdmin,
+  cancelInvite,
+}: PendingInvitesCardProps) {
+  const count = invites.data?.length ?? 0;
+
+  return (
+    <Card className="rounded-lg border-border/50 shadow-sm overflow-hidden flex flex-col h-full">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 border-b border-border/50">
+        <div>
+          <CardTitle className="text-base font-semibold flex items-center gap-2">
+            <UserPlus className="size-4 text-blue-500" />
+            Pending Invites
+          </CardTitle>
+          <CardDescription className="mt-1.5 text-sm">
+            {count} invite{count !== 1 ? "s" : ""} awaiting acceptance
+          </CardDescription>
+        </div>
+      </CardHeader>
+      <CardContent className="p-4 relative z-10">
+        {invites.isLoading ? (
+          <div className="space-y-3">
+            <Skeleton className="h-14 w-full rounded-md" />
+            <Skeleton className="h-14 w-full rounded-md" />
+          </div>
+        ) : count === 0 ? (
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <UserPlus className="size-8 text-muted-foreground/30 mb-3" />
+            <p className="text-sm font-medium text-foreground">
+              No pending invites
+            </p>
+            <p className="text-sm text-muted-foreground mt-1">
+              All invitations have been accepted or have expired.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {invites.data!.map((invite) => {
+              const initials =
+                invite.invitee?.name?.charAt(0).toUpperCase() ?? "?";
+              const expiresMs = new Date(invite.expiresAt).getTime();
+              const nowMs = new Date().getTime();
+              const daysLeft = Math.ceil((expiresMs - nowMs) / 86_400_000);
+              return (
+                <div
+                  key={invite.token}
+                  className="flex items-center justify-between p-3 rounded-md bg-muted/30 border border-border/50"
+                >
+                  <div className="flex items-center gap-3">
+                    <Avatar className="size-8">
+                      {invite.invitee?.image && (
+                        <AvatarImage src={invite.invitee.image} />
+                      )}
+                      <AvatarFallback className="bg-blue-500/10 text-blue-600 text-xs font-semibold">
+                        {initials}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="text-sm font-medium text-foreground leading-tight">
+                        {invite.invitee?.name ??
+                          invite.invitee?.email ??
+                          "Unknown"}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {invite.invitee?.email}
+                      </p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <Badge
+                          variant="outline"
+                          className={cn(
+                            "text-[10px] px-1.5 py-0",
+                            invite.role === "ADMIN"
+                              ? "text-blue-500 border-blue-500/30"
+                              : "text-muted-foreground",
+                          )}
+                        >
+                          {invite.role}
+                        </Badge>
+                        <span className="text-[10px] text-muted-foreground">
+                          by {invite.inviter?.name ?? "admin"} · expires in{" "}
+                          {daysLeft}d
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  {isOwnerOrAdmin && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="size-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 shrink-0"
+                      title="Cancel invite"
+                      disabled={cancelInvite.isPending}
+                      onClick={() =>
+                        cancelInvite.mutate({ token: invite.token })
+                      }
+                    >
+                      <X className="size-4" />
+                    </Button>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
       </CardContent>
     </Card>
   );

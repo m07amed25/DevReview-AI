@@ -2,16 +2,14 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import type { PrismaClient } from "@/server/db/client";
-import { sendTeamInviteEmailNotification } from "@/server/email/integrations/team";
+import { sendTeamMemberAddedEmail } from "@/server/email/service";
+import { getAppUrl } from "@/server/email/transporter";
 import { inngest } from "@/server/inngest";
 import {
   getGitHubAccessToken,
   fetchPullRequestByFullName,
 } from "@/server/services/github";
-
-// Type for JSON metadata
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type JsonValue = any;
+import { randomUUID } from "crypto";
 
 // Action types that require approval when requested by MEMBER role
 const ACTIONS_REQUIRING_APPROVAL = [
@@ -101,7 +99,7 @@ export const teamRouter = createTRPCRouter({
       for (let attempt = 0; attempt <= 10; attempt++) {
         const slug = attempt === 0 ? baseSlug : `${baseSlug}-${attempt}`;
         try {
-          const team = await ctx.db.team.create({
+          return await ctx.db.team.create({
             data: {
               name: input.name,
               slug,
@@ -113,7 +111,6 @@ export const teamRouter = createTRPCRouter({
               },
             },
           });
-          return team;
         } catch (e) {
           // P2002 = Unique constraint violation; retry with a suffixed slug
           const isUniqueViolation =
@@ -195,45 +192,262 @@ export const teamRouter = createTRPCRouter({
         });
       }
 
-      const membership = await ctx.db.teamMember.create({
-        data: {
-          teamId: input.teamId,
-          userId: user.id,
-          role: input.role,
+      // Check for an existing pending invite to avoid duplicate tokens
+      const existingInvite = await ctx.db.verification.findFirst({
+        where: {
+          identifier: `team-invite:${input.teamId}:${user.id}`,
+          expiresAt: { gt: new Date() },
         },
-        include: {
-          user: {
-            select: { id: true, name: true, email: true, image: true },
-          },
+      });
+      if (existingInvite) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "A pending invite already exists for this user",
+        });
+      }
+
+      // Create an invite token in the Verification table (expires in 7 days)
+      const token = randomUUID();
+      await ctx.db.verification.create({
+        data: {
+          id: token,
+          identifier: `team-invite:${input.teamId}:${user.id}`,
+          value: JSON.stringify({
+            teamId: input.teamId,
+            inviterId: ctx.user.id,
+            role: input.role,
+          }),
+          expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
         },
       });
 
-      // Create in-app notification for the invited user
+      // Fetch team info for notifications and email
       const team = await ctx.db.team.findUnique({
         where: { id: input.teamId },
-        select: { name: true },
+        select: { name: true, slug: true },
       });
 
+      const appUrl = getAppUrl();
+      const acceptUrl = `${appUrl}/teams/accept-invite?token=${token}`;
+
+      // In-app notification with accept link
       await ctx.db.notification.create({
         data: {
           userId: user.id,
           type: "TEAM_INVITE",
-          title: `You've been added to "${team?.name ?? "a team"}"`,
-          message: `${ctx.user.name ?? "A team admin"} has added you as a ${input.role.toLowerCase()} to the team.`,
-          link: `/teams/${input.teamId}`,
+          title: `You've been invited to "${team?.name ?? "a team"}"`,
+          message: `${ctx.user.name ?? "A team admin"} has invited you as a ${input.role.toLowerCase()}. Accept or decline via the link below.`,
+          link: `/teams/accept-invite?token=${token}`,
         },
       });
 
-      // Send email notification with proper error handling
-      await sendTeamInviteEmailNotification({
-        db: ctx.db,
-        teamId: input.teamId,
-        invitedUserId: user.id,
-        role: input.role,
-        inviterId: ctx.user.id,
+      // Send email with acceptance link
+      const inviter = await ctx.db.user.findUnique({
+        where: { id: ctx.user.id },
+        select: { name: true, email: true },
+      });
+      if (user.email && team) {
+        await sendTeamMemberAddedEmail({
+          to: user.email,
+          inviteeName: user.name || "Team Member",
+          inviteeEmail: user.email,
+          inviterName: inviter?.name || "Team Admin",
+          inviterEmail: inviter?.email || "",
+          teamName: team.name,
+          teamId: input.teamId,
+          teamSlug: team.slug,
+          role: input.role,
+          teamUrl: acceptUrl,
+          needsGithubConnection: false,
+        }).catch((err) =>
+          console.error("Failed to send team invite email:", err),
+        );
+      }
+
+      return { invited: true };
+    }),
+
+  /** Accept a pending team invite via the token sent in the invitation email. */
+  acceptTeamInvite: protectedProcedure
+    .input(z.object({ token: z.string().uuid() }))
+    .mutation(async ({ ctx, input }) => {
+      const verification = await ctx.db.verification.findUnique({
+        where: { id: input.token },
+      });
+
+      if (
+        !verification ||
+        !verification.identifier.startsWith("team-invite:")
+      ) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Invite not found or already used",
+        });
+      }
+
+      if (verification.expiresAt < new Date()) {
+        await ctx.db.verification.delete({ where: { id: input.token } });
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invite has expired",
+        });
+      }
+
+      // Verify this token belongs to the current user
+      const expectedIdentifier = `team-invite:${verification.identifier.split(":")[1]}:${ctx.user.id}`;
+      if (verification.identifier !== expectedIdentifier) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "This invite was not sent to your account",
+        });
+      }
+
+      const meta = JSON.parse(verification.value) as {
+        teamId: string;
+        inviterId: string;
+        role: string;
+      };
+
+      // Validate role from the stored token
+      const validRoles = ["ADMIN", "MEMBER"] as const;
+      const role: "ADMIN" | "MEMBER" = validRoles.includes(
+        meta.role as "ADMIN" | "MEMBER",
+      )
+        ? (meta.role as "ADMIN" | "MEMBER")
+        : "MEMBER";
+
+      // Check they're not already a member
+      const existing = await ctx.db.teamMember.findUnique({
+        where: {
+          teamId_userId: { teamId: meta.teamId, userId: ctx.user.id },
+        },
+      });
+      if (existing) {
+        await ctx.db.verification.delete({ where: { id: input.token } });
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "You are already a member of this team",
+        });
+      }
+
+      // Create membership and clean up token atomically
+      const [membership] = await ctx.db.$transaction([
+        ctx.db.teamMember.create({
+          data: { teamId: meta.teamId, userId: ctx.user.id, role },
+          include: {
+            user: {
+              select: { id: true, name: true, email: true, image: true },
+            },
+          },
+        }),
+        ctx.db.verification.delete({ where: { id: input.token } }),
+      ]);
+
+      // Notify the inviter
+      const team = await ctx.db.team.findUnique({
+        where: { id: meta.teamId },
+        select: { name: true },
+      });
+      await ctx.db.notification.create({
+        data: {
+          userId: meta.inviterId,
+          type: "TEAM_MEMBER_ADDED",
+          title: `${ctx.user.name ?? "A user"} accepted your invite`,
+          message: `They have joined "${team?.name ?? "your team"}" as a ${role.toLowerCase()}.`,
+          link: `/teams/${meta.teamId}`,
+        },
       });
 
       return membership;
+    }),
+
+  /** Decline a pending team invite. */
+  declineTeamInvite: protectedProcedure
+    .input(z.object({ token: z.string().uuid() }))
+    .mutation(async ({ ctx, input }) => {
+      const verification = await ctx.db.verification.findUnique({
+        where: { id: input.token },
+      });
+
+      if (
+        !verification ||
+        !verification.identifier.startsWith("team-invite:")
+      ) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Invite not found or already used",
+        });
+      }
+
+      const expectedIdentifier = `team-invite:${verification.identifier.split(":")[1]}:${ctx.user.id}`;
+      if (verification.identifier !== expectedIdentifier) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "This invite was not sent to your account",
+        });
+      }
+
+      await ctx.db.verification.delete({ where: { id: input.token } });
+      return { declined: true };
+    }),
+
+  getPendingInvites: protectedProcedure
+    .input(z.object({ teamId: z.string().max(255) }))
+    .query(async ({ ctx, input }) => {
+      // Any team member can view pending invites
+      await assertRole(ctx, input.teamId, ["OWNER", "ADMIN", "MEMBER"]);
+
+      const records = await ctx.db.verification.findMany({
+        where: {
+          identifier: { startsWith: `team-invite:${input.teamId}:` },
+          expiresAt: { gt: new Date() },
+        },
+        orderBy: { expiresAt: "asc" },
+      });
+
+      // Resolve user info for each invite
+      return Promise.all(
+        records.map(async (record) => {
+          const userId = record.identifier.split(":")[2] ?? "";
+          const parsed = JSON.parse(record.value) as {
+            teamId: string;
+            inviterId: string;
+            role: string;
+          };
+          const [invitee, inviter] = await Promise.all([
+            ctx.db.user.findUnique({
+              where: { id: userId },
+              select: { id: true, name: true, email: true, image: true },
+            }),
+            ctx.db.user.findUnique({
+              where: { id: parsed.inviterId },
+              select: { id: true, name: true },
+            }),
+          ]);
+          return {
+            token: record.id,
+            role: parsed.role,
+            expiresAt: record.expiresAt,
+            invitee,
+            inviter,
+          };
+        }),
+      );
+    }),
+
+  cancelInvite: protectedProcedure
+    .input(z.object({ token: z.string().uuid() }))
+    .mutation(async ({ ctx, input }) => {
+      const verification = await ctx.db.verification.findUnique({
+        where: { id: input.token },
+      });
+      if (!verification?.identifier.startsWith("team-invite:")) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Invite not found" });
+      }
+      const teamId = verification.identifier.split(":")[1]!;
+      await assertRole(ctx, teamId, ["OWNER", "ADMIN"]);
+      await ctx.db.verification.delete({ where: { id: input.token } });
+      return { cancelled: true };
     }),
 
   // ─── Change a member's role ──────────────────────────────────────
@@ -424,8 +638,15 @@ export const teamRouter = createTRPCRouter({
           "MEMBER",
         ]);
 
-        // Check if approval is required (MEMBER role needs approval for certain actions)
-        const requiresApproval = membership.role === "MEMBER";
+        // Check if approval is required:
+        // Only MEMBER role needs approval, and only for the action types
+        // listed in ACTIONS_REQUIRING_APPROVAL (e.g. REVIEW_PR and
+        // APPROVE_DISCUSSION are self-service actions that skip the gate).
+        const requiresApproval =
+          membership.role === "MEMBER" &&
+          (ACTIONS_REQUIRING_APPROVAL as readonly string[]).includes(
+            input.actionType,
+          );
 
         // Create the action request
         const action = await ctx.db.teamAction.create({
@@ -669,6 +890,15 @@ async function executeApprovedAction(
     case "UPDATE_ROLE":
       if (action.targetUserId) {
         const meta = action.metadata as { role?: string } | null;
+        const validRoles = z.enum(["ADMIN", "MEMBER"]);
+        const parsedRole = validRoles.safeParse(meta?.role);
+        if (!parsedRole.success) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message:
+              'Invalid role value in UPDATE_ROLE action metadata. Expected "ADMIN" or "MEMBER".',
+          });
+        }
         await ctx.db.teamMember.update({
           where: {
             teamId_userId: {
@@ -676,9 +906,7 @@ async function executeApprovedAction(
               userId: action.targetUserId,
             },
           },
-          data: {
-            role: (meta?.role as "ADMIN" | "MEMBER") || "MEMBER",
-          },
+          data: { role: parsedRole.data },
         });
       }
       break;

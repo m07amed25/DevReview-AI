@@ -2,38 +2,27 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { inngest } from "@/server/inngest";
+import { getAccessibleRepository } from "@/lib/repository";
 
 export const diagramRouter = createTRPCRouter({
-  /** List all diagrams for a repository (accessible to the repository's owner). */
+  /** List all diagrams for a repository (owner or team member). */
   listForRepository: protectedProcedure
     .input(z.object({ repositoryId: z.string().max(255).cuid() }))
     .query(async ({ ctx, input }) => {
-      const repository = await ctx.db.repository.findUnique({
-        where: { id: input.repositoryId },
-        select: { userId: true },
-      });
-      if (!repository) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Repository not found",
-        });
-      }
-      if (repository.userId !== ctx.user.id) {
-        throw new TRPCError({ code: "FORBIDDEN" });
-      }
+      await getAccessibleRepository(ctx.db, ctx.user.id, input.repositoryId);
       return ctx.db.diagram.findMany({
         where: { repositoryId: input.repositoryId },
         orderBy: { createdAt: "asc" },
       });
     }),
 
-  /** Get a single diagram by id (owner-only). */
+  /** Get a single diagram by id (owner or team member). */
   getById: protectedProcedure
     .input(z.object({ id: z.string().max(255).max(255).cuid() }))
     .query(async ({ ctx, input }) => {
       const diagram = await ctx.db.diagram.findUnique({
         where: { id: input.id },
-        include: { repository: { select: { userId: true } } },
+        include: { repository: { select: { id: true, userId: true } } },
       });
       if (!diagram) {
         throw new TRPCError({
@@ -41,15 +30,14 @@ export const diagramRouter = createTRPCRouter({
           message: "Diagram not found",
         });
       }
-      if (diagram.repository.userId !== ctx.user.id) {
-        throw new TRPCError({ code: "FORBIDDEN" });
-      }
+      await getAccessibleRepository(ctx.db, ctx.user.id, diagram.repository.id);
       return diagram;
     }),
 
   /**
    * Request (or re-request) generation of a diagram type for a repository.
    * Creates/resets the Diagram record and dispatches the Inngest job.
+   * Accessible to the repository owner and team members.
    */
   requestDiagram: protectedProcedure
     .input(
@@ -60,19 +48,7 @@ export const diagramRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const repository = await ctx.db.repository.findUnique({
-        where: { id: input.repositoryId },
-        select: { userId: true },
-      });
-      if (!repository) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Repository not found",
-        });
-      }
-      if (repository.userId !== ctx.user.id) {
-        throw new TRPCError({ code: "FORBIDDEN" });
-      }
+      await getAccessibleRepository(ctx.db, ctx.user.id, input.repositoryId);
 
       const diagram = await ctx.db.diagram.upsert({
         where: {

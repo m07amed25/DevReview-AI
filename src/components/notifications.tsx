@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Bell,
   Check,
@@ -9,9 +11,104 @@ import {
   UserCog,
   FileCheck,
   FileX,
+  Loader2,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc/client";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+
+/** Extracts the token query param from an invite link like /teams/accept-invite?token=<uuid> */
+function extractInviteToken(link: string): string | null {
+  try {
+    const url = new URL(link, "http://localhost");
+    return url.searchParams.get("token");
+  } catch {
+    return null;
+  }
+}
+
+/** Inline Accept / Decline buttons rendered inside a TEAM_INVITE notification. */
+function TeamInviteActions({
+  link,
+  onDone,
+}: {
+  link: string;
+  notificationId: string;
+  onDone: () => void;
+}) {
+  const token = extractInviteToken(link);
+  const utils = trpc.useUtils();
+  const router = useRouter();
+
+  const invalidate = () => {
+    utils.notification.unreadCount.invalidate();
+    utils.notification.list.invalidate();
+  };
+
+  const accept = trpc.team.acceptTeamInvite.useMutation({
+    onSuccess: () => {
+      toast.success("You've joined the team!");
+      invalidate();
+      onDone();
+      router.push("/teams");
+    },
+    onError: (err) => toast.error(err.message || "Failed to accept invite"),
+  });
+
+  const decline = trpc.team.declineTeamInvite.useMutation({
+    onSuccess: () => {
+      toast.info("Invite declined");
+      invalidate();
+      onDone();
+    },
+    onError: (err) => toast.error(err.message || "Failed to decline invite"),
+  });
+
+  if (!token) {
+    return (
+      <Link
+        href={link}
+        className="mt-2 inline-block text-xs font-medium text-blue-500 hover:underline"
+        onClick={onDone}
+      >
+        View invite &rarr;
+      </Link>
+    );
+  }
+
+  const isPending = accept.isPending || decline.isPending;
+
+  return (
+    <div className="mt-2 flex items-center gap-2">
+      <button
+        disabled={isPending}
+        onClick={(e) => {
+          e.stopPropagation();
+          accept.mutate({ token });
+        }}
+        className="flex items-center gap-1 rounded-md bg-blue-500 px-2.5 py-1 text-xs font-medium text-white hover:bg-blue-600 disabled:opacity-50"
+      >
+        {accept.isPending ? (
+          <Loader2 className="size-3 animate-spin" />
+        ) : (
+          <UserPlus className="size-3" />
+        )}
+        Accept
+      </button>
+      <button
+        disabled={isPending}
+        onClick={(e) => {
+          e.stopPropagation();
+          decline.mutate({ token });
+        }}
+        className="flex items-center gap-1 rounded-md border px-2.5 py-1 text-xs font-medium hover:bg-muted disabled:opacity-50"
+      >
+        {decline.isPending && <Loader2 className="size-3 animate-spin" />}
+        Decline
+      </button>
+    </div>
+  );
+}
 
 interface Notification {
   id: string;
@@ -130,16 +227,13 @@ export function Notifications() {
                   No notifications yet
                 </div>
               ) : (
-                notifications.map((notification) => (
-                  <div
-                    key={notification.id}
-                    className={cn(
-                      "group border-b px-4 py-3 transition-colors hover:bg-muted/50",
-                      !notification.read && "bg-muted/30",
-                    )}
-                  >
+                notifications.map((notification) => {
+                  const isInvite = notification.type === "TEAM_INVITE";
+                  const hasLink = !!notification.link;
+
+                  const inner = (
                     <div className="flex items-start gap-3">
-                      <div className="flex-shrink-0 mt-0.5">
+                      <div className="shrink-0 mt-0.5">
                         {getNotificationIcon(notification.type)}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -154,6 +248,18 @@ export function Notifications() {
                         <p className="text-xs text-muted-foreground line-clamp-2">
                           {notification.message}
                         </p>
+
+                        {isInvite && notification.link && (
+                          <TeamInviteActions
+                            link={notification.link}
+                            notificationId={notification.id}
+                            onDone={() => {
+                              markAsRead.mutate({ id: notification.id });
+                              setIsOpen(false);
+                            }}
+                          />
+                        )}
+
                         <div className="mt-1 flex items-center justify-between">
                           <span className="text-xs text-muted-foreground">
                             {formatTime(notification.createdAt)}
@@ -161,9 +267,10 @@ export function Notifications() {
                           <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                             {!notification.read && (
                               <button
-                                onClick={() =>
-                                  markAsRead.mutate({ id: notification.id })
-                                }
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  markAsRead.mutate({ id: notification.id });
+                                }}
                                 className="p-1 hover:bg-muted rounded"
                                 title="Mark as read"
                               >
@@ -171,11 +278,12 @@ export function Notifications() {
                               </button>
                             )}
                             <button
-                              onClick={() =>
+                              onClick={(e) => {
+                                e.stopPropagation();
                                 deleteNotification.mutate({
                                   id: notification.id,
-                                })
-                              }
+                                });
+                              }}
                               className="p-1 hover:bg-muted rounded"
                               title="Delete"
                             >
@@ -185,8 +293,38 @@ export function Notifications() {
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))
+                  );
+
+                  const itemClass = cn(
+                    "group border-b px-4 py-3 transition-colors hover:bg-muted/50",
+                    !notification.read && "bg-muted/30",
+                    !isInvite && hasLink && "cursor-pointer",
+                  );
+
+                  // Non-invite with a link: make entire row clickable
+                  if (!isInvite && hasLink && notification.link) {
+                    return (
+                      <Link
+                        key={notification.id}
+                        href={notification.link}
+                        className={itemClass}
+                        onClick={() => {
+                          setIsOpen(false);
+                          if (!notification.read)
+                            markAsRead.mutate({ id: notification.id });
+                        }}
+                      >
+                        {inner}
+                      </Link>
+                    );
+                  }
+
+                  return (
+                    <div key={notification.id} className={itemClass}>
+                      {inner}
+                    </div>
+                  );
+                })
               )}
             </div>
 
