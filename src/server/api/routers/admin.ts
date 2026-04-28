@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { TRPCError } from "@trpc/server";
 import { UserRole } from "../../db/client";
 import { createTRPCRouter, adminProcedure, publicProcedure } from "../trpc";
 import {
@@ -209,17 +210,23 @@ export const adminRouter = createTRPCRouter({
       });
 
       if (!targetUser) {
-        throw new Error("User not found.");
+        throw new TRPCError({ code: "NOT_FOUND", message: "User not found." });
       }
 
       // 1. Protect the owner from any role changes
       if (targetUser.email === process.env.OWNER_MAIL) {
-        throw new Error("The owner's role cannot be changed.");
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "The owner's role cannot be changed.",
+        });
       }
 
       // 2. Prevent users from changing their own role (except the owner, but we handled that above)
       if (input.userId === ctx.user.id) {
-        throw new Error("You cannot change your own role.");
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You cannot change your own role.",
+        });
       }
 
       await ctx.db.user.update({
@@ -254,17 +261,23 @@ export const adminRouter = createTRPCRouter({
       });
 
       if (!targetUser) {
-        throw new Error("User not found.");
+        throw new TRPCError({ code: "NOT_FOUND", message: "User not found." });
       }
 
       // 1. Protect the owner from deletion
       if (targetUser.email === process.env.OWNER_MAIL) {
-        throw new Error("The owner's account cannot be deleted.");
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "The owner's account cannot be deleted.",
+        });
       }
 
       // 2. Prevent deleting the admin account itself
       if (input.userId === ctx.user.id) {
-        throw new Error("Cannot delete your own admin account.");
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Cannot delete your own admin account.",
+        });
       }
 
       await ctx.db.user.delete({ where: { id: input.userId } });
@@ -285,17 +298,23 @@ export const adminRouter = createTRPCRouter({
       });
 
       if (!targetUser) {
-        throw new Error("User not found.");
+        throw new TRPCError({ code: "NOT_FOUND", message: "User not found." });
       }
 
       // 1. Protect the owner from being banned
       if (targetUser.email === process.env.OWNER_MAIL) {
-        throw new Error("The owner's account cannot be banned.");
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "The owner's account cannot be banned.",
+        });
       }
 
       // 2. Prevent banning self
       if (input.userId === ctx.user.id) {
-        throw new Error("You cannot ban your own account.");
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You cannot ban your own account.",
+        });
       }
 
       // Ban the user and immediately revoke all their active sessions
@@ -433,28 +452,7 @@ export const adminRouter = createTRPCRouter({
         ctx.db.review.groupBy({
           by: ["status"],
           _count: { status: true },
-          ...(search
-            ? {
-                where: {
-                  OR: [
-                    {
-                      prTitle: {
-                        contains: search,
-                        mode: "insensitive" as const,
-                      },
-                    },
-                    {
-                      repository: {
-                        fullName: {
-                          contains: search,
-                          mode: "insensitive" as const,
-                        },
-                      },
-                    },
-                  ],
-                },
-              }
-            : {}),
+          where,
         }),
       ]);
 
@@ -658,7 +656,10 @@ export const adminRouter = createTRPCRouter({
       });
 
       if (!message) {
-        throw new Error("Message not found");
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Message not found",
+        });
       }
 
       // Send the email

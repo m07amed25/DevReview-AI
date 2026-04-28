@@ -12,14 +12,18 @@ export class GitHubAPIError extends Error {
   }
 }
 
-async function githubFetch(
+export async function githubFetch(
   url: string,
   accessToken: string,
+  init?: Omit<RequestInit, "headers"> & { headers?: Record<string, string> },
 ): Promise<Response> {
+  const { headers: extraHeaders, ...restInit } = init ?? {};
   const response = await fetch(url, {
+    ...restInit,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       Accept: "application/vnd.github.v3+json",
+      ...extraHeaders,
     },
   });
 
@@ -395,15 +399,12 @@ export async function registerWebhook(
   secret: string,
 ): Promise<number> {
   const [owner, repo] = repoFullName.split("/");
-  const response = await fetch(
+  const response = await githubFetch(
     `https://api.github.com/repos/${owner}/${repo}/hooks`,
+    accessToken,
     {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        Accept: "application/vnd.github.v3+json",
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         name: "web",
         active: true,
@@ -418,12 +419,6 @@ export async function registerWebhook(
     },
   );
 
-  if (!response.ok) {
-    throw new Error(
-      `GitHub API error ${response.status} registering webhook for ${repoFullName}`,
-    );
-  }
-
   const data = (await response.json()) as { id: number };
   return data.id;
 }
@@ -434,21 +429,17 @@ export async function deleteWebhook(
   webhookId: number,
 ): Promise<void> {
   const [owner, repo] = repoFullName.split("/");
-  const response = await fetch(
-    `https://api.github.com/repos/${owner}/${repo}/hooks/${webhookId}`,
-    {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        Accept: "application/vnd.github.v3+json",
-      },
-    },
-  );
-
-  if (!response.ok && response.status !== 404) {
-    throw new Error(
-      `GitHub API error ${response.status} deleting webhook ${webhookId} for ${repoFullName}`,
+  try {
+    await githubFetch(
+      `https://api.github.com/repos/${owner}/${repo}/hooks/${webhookId}`,
+      accessToken,
+      { method: "DELETE" },
     );
+  } catch (err) {
+    if (err instanceof GitHubAPIError && err.status === 404) {
+      return; // Already deleted — treat as success
+    }
+    throw err;
   }
 }
 
@@ -469,15 +460,12 @@ export async function postCommitStatus(
   }
   const targetUrl = `${appBaseUrl}/reviews/${reviewId}`;
 
-  const response = await fetch(
+  await githubFetch(
     `https://api.github.com/repos/${owner}/${repo}/statuses/${commitSha}`,
+    accessToken,
     {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        Accept: "application/vnd.github.v3+json",
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         state,
         target_url: targetUrl,
@@ -486,12 +474,6 @@ export async function postCommitStatus(
       }),
     },
   );
-
-  if (!response.ok) {
-    throw new Error(
-      `GitHub API error ${response.status} posting commit status for ${repoFullName}@${commitSha}`,
-    );
-  }
 }
 
 export type ReviewComment = {

@@ -209,33 +209,31 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  void (async () => {
-    try {
-      await postCommitStatus(
-        accessToken,
-        data.repository.full_name,
-        livePr.head.sha,
-        "pending",
-        review.id,
-        "DevReview AI — review in progress",
-      );
+  try {
+    await postCommitStatus(
+      accessToken,
+      data.repository.full_name,
+      livePr.head.sha,
+      "pending",
+      review.id,
+      "DevReview AI — review in progress",
+    );
 
-      await db.gitHubStatusCheck.upsert({
-        where: { reviewId: review.id },
-        create: {
-          reviewId: review.id,
-          commitSha: livePr.head.sha,
-          state: "PENDING",
-        },
-        update: {
-          commitSha: livePr.head.sha,
-          state: "PENDING",
-        },
-      });
-    } catch (error) {
-      console.error("Failed to post pending status check", error);
-    }
-  })();
+    await db.gitHubStatusCheck.upsert({
+      where: { reviewId: review.id },
+      create: {
+        reviewId: review.id,
+        commitSha: livePr.head.sha,
+        state: "PENDING",
+      },
+      update: {
+        commitSha: livePr.head.sha,
+        state: "PENDING",
+      },
+    });
+  } catch (error) {
+    console.error("Failed to post pending status check", error);
+  }
 
   return NextResponse.json(
     { message: "Review triggered", reviewId: review.id },

@@ -96,17 +96,34 @@ export const diagramRouter = createTRPCRouter({
         },
       });
 
-      await inngest.send({
-        name: "diagram/generation.requested",
-        data: {
-          diagramId: diagram.id,
-          repositoryId: input.repositoryId,
-          userId: ctx.user.id,
-          prNumber: input.prNumber, // undefined when not provided; generate-diagram fetches the default branch tree instead
-          reviewId: "",
-          type: input.type,
-        },
-      });
+      try {
+        await inngest.send({
+          name: "diagram/generation.requested",
+          data: {
+            diagramId: diagram.id,
+            repositoryId: input.repositoryId,
+            userId: ctx.user.id,
+            prNumber: input.prNumber, // undefined when not provided; generate-diagram fetches the default branch tree instead
+            reviewId: "",
+            type: input.type,
+          },
+        });
+      } catch (err) {
+        console.error("Failed to dispatch diagram generation event:", err);
+        await ctx.db.diagram.update({
+          where: { id: diagram.id },
+          data: {
+            status: "FAILED",
+            error:
+              "Failed to queue diagram generation job. Please check Inngest configuration.",
+          },
+        });
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message:
+            "Failed to queue diagram generation. Ensure INNGEST_EVENT_KEY is configured.",
+        });
+      }
 
       return diagram;
     }),

@@ -250,7 +250,31 @@ export const reviewRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const feedback = await ctx.db.reviewFeedback.upsert({
+      // Verify the user actually has access to this review (direct ownership
+      // or via team membership) before allowing feedback to be posted.
+      const accessible = await ctx.db.review.findFirst({
+        where: {
+          id: input.reviewId,
+          OR: [
+            { userId: ctx.user.id },
+            {
+              repository: {
+                team: { members: { some: { userId: ctx.user.id } } },
+              },
+            },
+          ],
+        },
+        select: { id: true },
+      });
+
+      if (!accessible) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Review not found",
+        });
+      }
+
+      return ctx.db.reviewFeedback.upsert({
         where: {
           reviewId_userId: {
             reviewId: input.reviewId,
@@ -268,8 +292,6 @@ export const reviewRouter = createTRPCRouter({
           comment: input.comment,
         },
       });
-
-      return feedback;
     }),
 
   getFeedbackStats: protectedProcedure

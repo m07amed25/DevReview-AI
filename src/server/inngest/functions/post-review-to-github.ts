@@ -100,16 +100,15 @@ function shortSha(sha: string): string {
   return sha.slice(0, 7);
 }
 
-// ─── Self-hosted badge-maker helpers ─────────────────────────────────────────
-// Badges are rendered server-side via our own /api/badge endpoint (badge-maker
-// v5).  GitHub PR comments load Markdown images, so these appear as richly
-// coloured inline SVG pills — no external shields.io dependency.
+function sanitizeMd(text: string): string {
+  // Remove image links: ![alt text](url) → alt text
+  let sanitized = text.replace(/!\[([^\]]*)\]\([^)]*\)/g, "$1");
+  // Remove hyperlinks: [label](url) → label
+  sanitized = sanitized.replace(/\[([^\]]*)\]\([^)]*\)/g, "$1");
+  return sanitized;
+}
 
-/**
- * Builds a URL to our self-hosted /api/badge endpoint.
- * Falls back to the BETTER_AUTH_URL env var when APP_BASE_URL is not set
- * (mirrors the review-URL logic elsewhere in this file).
- */
+
 function badgeUrl(
   label: string,
   message: string,
@@ -241,7 +240,9 @@ export function mapFindingsToReviewPayload(
         finding.severityLevel ??
         "low"
       ).toUpperCase();
-      const text = finding.message ?? finding.text ?? "Issue detected";
+      const text = sanitizeMd(
+        finding.message ?? finding.text ?? "Issue detected",
+      );
       const emoji = severityEmoji(severity);
       // Shields.io badges for inline comments
       const sevBadge = badge(
@@ -258,7 +259,7 @@ export function mapFindingsToReviewPayload(
           ? ` ${badge("confidence", `${finding.confidence}%`, qualityBadgeColor(finding.confidence), { style: "flat-square" })}`
           : "";
       const suggestionLine = finding.suggestion
-        ? `\n\n> 💡 **Suggestion**\n> ${finding.suggestion}`
+        ? `\n\n> 💡 **Suggestion**\n> ${sanitizeMd(finding.suggestion)}`
         : "";
 
       const body = [
@@ -394,7 +395,7 @@ export function mapFindingsToReviewPayload(
   if (aiSummary) {
     lines.push(`### 📝 AI Summary`);
     lines.push("");
-    lines.push(`> ${aiSummary.replace(/\n/g, "\n> ")}`);
+    lines.push(`> ${sanitizeMd(aiSummary).replace(/\n/g, "\n> ")}`);
     lines.push("");
     lines.push("---");
     lines.push("");
@@ -522,7 +523,9 @@ export function mapFindingsToReviewPayload(
         finding.severityLevel ??
         "low"
       ).toUpperCase();
-      const text = finding.message ?? finding.text ?? "Issue detected";
+      const text = sanitizeMd(
+        finding.message ?? finding.text ?? "Issue detected",
+      );
       const emoji = severityEmoji(severity);
       const sevBadge = badge(severity, "", severityBadgeColor(severity), {
         style: "flat-square",
@@ -532,7 +535,7 @@ export function mapFindingsToReviewPayload(
         : "";
       lines.push(`- ${emoji} ${sevBadge}${catBadge} ${text}`);
       if (finding.suggestion) {
-        lines.push(`  > 💡 **Suggestion:** ${finding.suggestion}`);
+        lines.push(`  > 💡 **Suggestion:** ${sanitizeMd(finding.suggestion)}`);
       }
     }
     lines.push("");

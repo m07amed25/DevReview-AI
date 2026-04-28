@@ -4,11 +4,11 @@ import {
   fetchPullRequestFiles,
   fetchRepositoryFiles,
   getGitHubAccessToken,
+  githubFetch,
+  GitHubAPIError,
 } from "@/server/services/github";
 import { generateMermaidDefinition } from "@/server/services/diagram-generator";
 import { getPusherServer } from "@/server/pusher";
-
-// ─── Event types ──────────────────────────────────────────────────────────────
 
 export type GenerateDiagramEvent = {
   name: "diagram/generation.requested";
@@ -22,8 +22,6 @@ export type GenerateDiagramEvent = {
   };
 };
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
 async function fetchFileContent(
   accessToken: string,
   owner: string,
@@ -31,64 +29,78 @@ async function fetchFileContent(
   path: string,
   ref?: string,
 ): Promise<string | null> {
-  const refParam = ref ? `?ref=${ref}` : "";
+  const refParam = ref ? `?ref=${encodeURIComponent(ref)}` : "";
   const url = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(path)}${refParam}`;
-  const res = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      Accept: "application/vnd.github.v3+json",
-    },
-  });
-  if (!res.ok) return null;
-  const json = (await res.json()) as { content?: string; encoding?: string };
-  if (json.encoding === "base64" && json.content) {
-    return Buffer.from(json.content.replace(/\s/g, ""), "base64").toString(
-      "utf-8",
-    );
+  try {
+    const res = await githubFetch(url, accessToken);
+    const json = (await res.json()) as { content?: string; encoding?: string };
+    if (json.encoding === "base64" && json.content) {
+      return Buffer.from(json.content.replace(/\s/g, ""), "base64").toString(
+        "utf-8",
+      );
+    }
+    return null;
+  } catch (err) {
+    if (
+      err instanceof GitHubAPIError &&
+      (err.status === 404 || err.status === 403)
+    ) {
+      // File not found or access restricted — skip this file silently
+      return null;
+    }
+    // For 5xx, network errors, etc. propagate so the diagram fails with a useful message
+    throw err;
   }
-  return null;
 }
-
-// ─── Function ─────────────────────────────────────────────────────────────────
 
 export const generateDiagram = inngest.createFunction(
   {
     id: "generate-diagram",
     retries: 1,
     timeouts: { finish: "1m" },
-    onFailure: async ({
-      event: {
-        data: {
-          event: {
-            data: { diagramId, repositoryId },
-          },
-        },
-      },
-      error,
-    }) => {
-      if (diagramId) {
-        await db.diagram.update({
-          where: { id: diagramId },
-          data: {
-            status: "FAILED",
-            error: error?.message ?? "Diagram generation failed",
-          },
-        });
-      }
+    onFailure: async ({ event, error }) => {
+      try {
+        const data = (
+          event?.data as
+            | {
+                event?: {
+                  data?: { diagramId?: string; repositoryId?: string };
+                };
+              }
+            | undefined
+        )?.event?.data;
+        const diagramId = data?.diagramId;
+        const repositoryId = data?.repositoryId;
 
-      if (repositoryId) {
-        const pusher = getPusherServer();
-        if (pusher) {
-          await pusher.trigger(
-            `private-repository-${repositoryId}`,
-            "diagram.updated",
-            {
-              diagramId,
-              repositoryId,
+        if (diagramId) {
+          await db.diagram.update({
+            where: { id: diagramId },
+            data: {
               status: "FAILED",
+              error: error?.message ?? "Diagram generation failed",
             },
-          );
+          });
         }
+
+        if (repositoryId) {
+          const pusher = getPusherServer();
+          if (pusher) {
+            await pusher.trigger(
+              `private-repository-${repositoryId}`,
+              "diagram.updated",
+              {
+                diagramId,
+                repositoryId,
+                status: "FAILED",
+              },
+            );
+          }
+        }
+      } catch (handlerErr) {
+        console.error(
+          "[generate-diagram] onFailure handler error:",
+          handlerErr,
+        );
       }
     },
   },
@@ -141,10 +153,15 @@ export const generateDiagram = inngest.createFunction(
     // ── Step 3: Fetch files to map ────────────────────────────────────────────
     const changedFiles = await step.run("fetch-files", async () => {
       if (prNumber) {
-        const prFiles = await fetchPullRequestFiles(accessToken, owner, repo, prNumber);
-        return prFiles.map(f => ({ filename: f.filename }));
+        const prFiles = await fetchPullRequestFiles(
+          accessToken,
+          owner,
+          repo,
+          prNumber,
+        );
+        return prFiles.map((f) => ({ filename: f.filename }));
       }
-      
+
       const repoFiles = await fetchRepositoryFiles(accessToken, owner, repo);
       // Sort to prioritize likely architectural files over random assets
       // e.g. prisma schemas, package.json, main TS files
@@ -157,11 +174,11 @@ export const generateDiagram = inngest.createFunction(
         if (path.endsWith(".js") || path.endsWith(".jsx")) return 40;
         return 0;
       };
-      
+
       return repoFiles
-        .map(f => ({ filename: f.path, score: scoreFile(f.path) }))
+        .map((f) => ({ filename: f.path, score: scoreFile(f.path) }))
         .sort((a, b) => b.score - a.score)
-        .map(f => ({ filename: f.filename }));
+        .map((f) => ({ filename: f.filename }));
     });
 
     // ── Step 4: Fetch file contents ───────────────────────────────────────────
@@ -213,12 +230,16 @@ export const generateDiagram = inngest.createFunction(
     await step.run("notify-pusher", async () => {
       const pusher = getPusherServer();
       if (!pusher) return;
-      await pusher.trigger(`private-repository-${repositoryId}`, "diagram.updated", {
-        diagramId,
-        repositoryId,
-        type,
-        status: "COMPLETED",
-      });
+      await pusher.trigger(
+        `private-repository-${repositoryId}`,
+        "diagram.updated",
+        {
+          diagramId,
+          repositoryId,
+          type,
+          status: "COMPLETED",
+        },
+      );
       if (reviewId) {
         // Also notify the review channel if requested from a PR
         await pusher.trigger(`private-review-${reviewId}`, "diagram.updated", {

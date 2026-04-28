@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { TRPCError } from "@trpc/server";
+import { Prisma } from "@/server/db/client";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const notificationRouter = createTRPCRouter({
@@ -57,14 +59,26 @@ export const notificationRouter = createTRPCRouter({
   markAsRead: protectedProcedure
     .input(z.object({ id: z.string().max(255).max(255) }))
     .mutation(async ({ ctx, input }) => {
-      const notification = await ctx.db.notification.update({
-        where: {
-          id: input.id,
-          userId: ctx.user.id,
-        },
-        data: { read: true },
-      });
-      return notification;
+      try {
+        return await ctx.db.notification.update({
+          where: {
+            id: input.id,
+            userId: ctx.user.id,
+          },
+          data: { read: true },
+        });
+      } catch (err) {
+        if (
+          err instanceof Prisma.PrismaClientKnownRequestError &&
+          err.code === "P2025"
+        ) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Notification not found",
+          });
+        }
+        throw err;
+      }
     }),
 
   // Mark all notifications as read

@@ -323,29 +323,21 @@ ${diffContent}`;
     );
   } catch (err) {
     const errMsg = err instanceof Error ? err.message : String(err);
-    if (
-      errMsg.includes("413") ||
-      errMsg.includes("429") ||
-      errMsg.includes("rate_limit")
-    ) {
-      try {
-        content = await callGroq(
-          groq,
-          systemPrompt,
-          userPrompt,
-          "llama-3.1-8b-instant",
-        );
-      } catch (fallbackErr) {
-        const fallbackMsg =
-          fallbackErr instanceof Error
-            ? fallbackErr.message
-            : "Unknown AI provider error";
-        throw new Error(
-          `AI service request failed (fallback model): ${fallbackMsg}`,
-        );
-      }
-    } else {
-      throw new Error(`AI service request failed: ${errMsg}`);
+    try {
+      content = await callGroq(
+        groq,
+        systemPrompt,
+        userPrompt,
+        "llama-3.1-8b-instant",
+      );
+    } catch (fallbackErr) {
+      const fallbackMsg =
+        fallbackErr instanceof Error
+          ? fallbackErr.message
+          : "Unknown AI provider error";
+      throw new Error(
+        `AI service request failed (primary: ${errMsg}, fallback: ${fallbackMsg})`,
+      );
     }
   }
 
