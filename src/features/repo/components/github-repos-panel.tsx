@@ -69,21 +69,25 @@ export function GithubReposPanel({
   };
 
   return (
-    <Card className="overflow-hidden">
-      <div className="border-b border-border bg-muted/30 px-6 py-4">
+    <Card className="overflow-hidden shadow-sm border-border">
+      <div className="border-b border-border bg-card px-6 py-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="font-semibold">Import Github Repositories</h2>
-            <p className="text-sm text-muted-foreground mt-0.5">
+            <h2 className="font-semibold text-lg flex items-center gap-2">
+              <Github className="size-5 text-foreground" />
+              Import Github Repositories
+            </h2>
+            <p className="text-sm text-muted-foreground mt-1">
               Select repositories to import from your GitHub account.
             </p>
           </div>
           <Button
             variant="ghost"
-            size="icon-sm"
+            size="icon"
             onClick={onRefresh}
             className="text-muted-foreground hover:text-foreground"
             disabled={isFetching}
+            title="Refresh Repositories"
           >
             <RefreshCw className={cn("size-4", isFetching && "animate-spin")} />
           </Button>
@@ -114,31 +118,30 @@ export function GithubReposPanel({
             )}
           </div>
         ) : availableRepos.length === 0 ? (
-          <div className="py-16 text-center">
-            <div className="mx-auto size-12 rounded-full bg-emerald-500/10 flex items-center justify-center mb-4">
-              <CheckCircle className="size-6 text-emerald-500" />
+          <div className="py-20 text-center">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/10 mb-6">
+              <CheckCircle className="size-8 text-emerald-500" />
             </div>
-            <p className="mt-4 font-medium">All caught up!</p>
-            <p className="text-sm text-muted-foreground mt-2">
-              You have connected all available repositories from your GitHub
-              account.
+            <h3 className="text-lg font-medium text-foreground mb-2">All caught up!</h3>
+            <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+              You have connected all available repositories from your GitHub account.
             </p>
           </div>
         ) : (
           <>
             {/* Search bar */}
-            <div className="px-6 py-4 flex items-center gap-3 border-b border-border">
+            <div className="px-6 py-4 flex items-center gap-3 border-b border-border/50 bg-muted/5">
               <Search className="size-4 text-muted-foreground shrink-0" />
               <Input
                 placeholder="Search Repos..."
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
-                className="flex-1 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-muted-foreground"
+                className="flex-1 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-muted-foreground px-0 h-9"
               />
               {searchQuery && (
                 <button
                   onClick={() => onSearchChange("")}
-                  className="text-muted-foreground hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground transition-colors p-1 rounded-full hover:bg-muted"
                 >
                   <X className="size-4" />
                 </button>
@@ -166,7 +169,7 @@ export function GithubReposPanel({
             </div>
 
             {/* Sticky footer */}
-            <div className="sticky bottom-0 flex items-center justify-between px-6 py-4 bg-background border-t border-border">
+            <div className="sticky bottom-0 flex items-center justify-between px-6 py-4 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/75 border-t border-border shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.05)] z-20">
               <div className="flex items-center gap-3">
                 <div
                   className={cn(
@@ -213,7 +216,7 @@ export function GithubReposPanel({
                 <Button
                   disabled={selectedRepos.size === 0 || isConnecting}
                   onClick={onConnect}
-                  className="min-w-35"
+                  className="min-w-32"
                 >
                   {isConnecting ? (
                     <>

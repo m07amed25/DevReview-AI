@@ -11,6 +11,7 @@ import {
   Zap,
   GitPullRequest,
 } from "lucide-react";
+import { Fade } from "@/components/animate-ui/primitives/effects/fade";
 
 type ColorKey = "amber" | "red" | "blue" | "purple" | "emerald" | "pink";
 
@@ -112,7 +113,7 @@ export function FeaturesSection() {
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.02)_0%,transparent_100%)]" />
 
       <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
-        <div className="text-center mb-16 sm:mb-20">
+        <Fade className="text-center mb-16 sm:mb-20">
           <h2
             id="features-heading"
             className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-zinc-100"
@@ -127,7 +128,7 @@ export function FeaturesSection() {
             repetitive review work while you concentrate on shipping features
             that matter.
           </p>
-        </div>
+        </Fade>
 
         <div
           className="features-grid grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
@@ -137,47 +138,52 @@ export function FeaturesSection() {
           {features.map((feature, index) => {
             const styles = colorStyles[feature.color];
             return (
-              <div
+              <Fade
                 key={feature.title}
-                className={`feature-card group relative overflow-hidden rounded-2xl border border-white/5 bg-white/[0.02] p-8 transition-all duration-500 hover:bg-white/[0.04] ${styles.border}`}
-                role="listitem"
-                onMouseEnter={() => setActiveFeature(index)}
-                onMouseLeave={() => setActiveFeature(null)}
+                delay={index * 100}
+                className="h-full"
               >
-                {/* Glow effect */}
                 <div
-                  className={`absolute -inset-px opacity-0 transition-opacity duration-500 group-hover:opacity-100`}
-                  style={{
-                    background: `radial-gradient(600px circle at ${activeFeature === index ? "50% 100%" : "50% 50%"}, rgba(255,255,255,0.06), transparent 40%)`,
-                  }}
-                />
-
-                <div className="relative z-10">
+                  className={`feature-card group relative h-full overflow-hidden rounded-2xl border border-white/5 bg-white/[0.02] p-8 transition-all duration-500 hover:bg-white/[0.04] ${styles.border}`}
+                  role="listitem"
+                  onMouseEnter={() => setActiveFeature(index)}
+                  onMouseLeave={() => setActiveFeature(null)}
+                >
+                  {/* Glow effect */}
                   <div
-                    className={`mb-6 flex h-12 w-12 items-center justify-center rounded-xl ${styles.bg} transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg ${styles.shadow}`}
-                  >
-                    <feature.icon
-                      className={`h-6 w-6 ${styles.text}`}
-                      aria-hidden="true"
-                    />
-                  </div>
-                  <h3 className="text-xl font-semibold text-zinc-200 mb-3">
-                    {feature.title}
-                  </h3>
-                  <p className="text-zinc-400 leading-relaxed text-sm">
-                    {feature.description}
-                  </p>
+                    className={`absolute -inset-px opacity-0 transition-opacity duration-500 group-hover:opacity-100`}
+                    style={{
+                      background: `radial-gradient(600px circle at ${activeFeature === index ? "50% 100%" : "50% 50%"}, rgba(255,255,255,0.06), transparent 40%)`,
+                    }}
+                  />
 
-                  {/* Learn more link */}
-                  <Link
-                    href="/sign-up"
-                    className={`inline-flex items-center gap-1 mt-6 text-sm font-medium ${styles.text} opacity-0 transition-all duration-300 transform translate-y-2 group-hover:opacity-100 group-hover:translate-y-0`}
-                  >
-                    Learn more
-                    <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-                  </Link>
+                  <div className="relative z-10 flex flex-col h-full">
+                    <div
+                      className={`mb-6 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${styles.bg} transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg ${styles.shadow}`}
+                    >
+                      <feature.icon
+                        className={`h-6 w-6 ${styles.text}`}
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <h3 className="text-xl font-semibold text-zinc-200 mb-3">
+                      {feature.title}
+                    </h3>
+                    <p className="text-zinc-400 leading-relaxed text-sm grow">
+                      {feature.description}
+                    </p>
+
+                    {/* Learn more link */}
+                    <Link
+                      href="/sign-up"
+                      className={`inline-flex items-center gap-1 mt-6 text-sm font-medium ${styles.text} opacity-0 transition-all duration-300 transform translate-y-2 group-hover:opacity-100 group-hover:translate-y-0`}
+                    >
+                      Learn more
+                      <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                    </Link>
+                  </div>
                 </div>
-              </div>
+              </Fade>
             );
           })}
         </div>

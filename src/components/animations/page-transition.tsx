@@ -1,8 +1,8 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, ReactNode } from "react";
-import gsap from "gsap";
+import { useEffect, ReactNode } from "react";
+import { motion, AnimatePresence } from "motion/react";
 
 interface PageTransitionProviderProps {
   children: ReactNode;
@@ -12,45 +12,13 @@ export function PageTransitionProvider({
   children,
 }: PageTransitionProviderProps) {
   const pathname = usePathname();
-  const contentRef = useRef<HTMLDivElement>(null);
-  const prevPathRef = useRef<string>("");
 
   useEffect(() => {
-    const content = contentRef.current;
-    if (!content) return;
-
-    // Smooth subtle entrance animation
-    if (prevPathRef.current && prevPathRef.current !== pathname) {
-      // Skip exit animation for smoother transition, just subtle entrance
-      gsap.fromTo(
-        content,
-        { opacity: 0.8 },
-        {
-          opacity: 1,
-          duration: 0.2,
-          ease: "power1.out",
-        },
-      );
-    } else {
-      // Initial load animation - subtle
-      gsap.fromTo(
-        content,
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 0.3,
-          ease: "power1.out",
-        },
-      );
-    }
-
-    prevPathRef.current = pathname;
-
-    // Smooth scroll to top on route change
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    // Scroll to top on route change
+    window.scrollTo({ top: 0, behavior: "instant" });
   }, [pathname]);
 
-  return <div ref={contentRef}>{children}</div>;
+  return <>{children}</>;
 }
 
 // Fade page transition
@@ -64,27 +32,24 @@ export function FadePageTransition({
   className = "",
 }: FadePageTransitionProps) {
   const pathname = usePathname();
-  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const content = contentRef.current;
-    if (!content) return;
-
-    // Reset and animate
-    gsap.set(content, { opacity: 0 });
-    gsap.to(content, {
-      opacity: 1,
-      duration: 0.4,
-      ease: "power2.out",
-    });
-
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [pathname]);
 
   return (
-    <div ref={contentRef} className={className}>
-      {children}
-    </div>
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={pathname}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className={className}
+      >
+        {children}
+      </motion.div>
+    </AnimatePresence>
   );
 }
 
@@ -101,9 +66,8 @@ export function SlidePageTransition({
   direction = "left",
 }: SlidePageTransitionProps) {
   const pathname = usePathname();
-  const contentRef = useRef<HTMLDivElement>(null);
 
-  const getFromValues = () => {
+  const getInitialValues = () => {
     switch (direction) {
       case "left":
         return { x: -50, opacity: 0 };
@@ -117,26 +81,22 @@ export function SlidePageTransition({
   };
 
   useEffect(() => {
-    const content = contentRef.current;
-    if (!content) return;
-
-    const fromValues = getFromValues();
-
-    gsap.fromTo(content, fromValues, {
-      x: 0,
-      y: 0,
-      opacity: 1,
-      duration: 0.4,
-      ease: "power2.out",
-    });
-
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [pathname, direction]);
 
   return (
-    <div ref={contentRef} className={className}>
-      {children}
-    </div>
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={pathname}
+        initial={getInitialValues()}
+        animate={{ x: 0, y: 0, opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className={className}
+      >
+        {children}
+      </motion.div>
+    </AnimatePresence>
   );
 }
 
@@ -151,29 +111,23 @@ export function ScalePageTransition({
   className = "",
 }: ScalePageTransitionProps) {
   const pathname = usePathname();
-  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const content = contentRef.current;
-    if (!content) return;
-
-    gsap.fromTo(
-      content,
-      { scale: 0.95, opacity: 0 },
-      {
-        scale: 1,
-        opacity: 1,
-        duration: 0.4,
-        ease: "back.out(1.2)",
-      },
-    );
-
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [pathname]);
 
   return (
-    <div ref={contentRef} className={className}>
-      {children}
-    </div>
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={pathname}
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.4, ease: [0.175, 0.885, 0.32, 1.275] }}
+        className={className}
+      >
+        {children}
+      </motion.div>
+    </AnimatePresence>
   );
 }

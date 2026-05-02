@@ -60,13 +60,9 @@ import {
   Copy,
 } from "lucide-react";
 
-/* ─── Types ─────────────────────────────────────────────────── */
-
 type StatusFilter = "ALL" | "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED";
 type SortBy = "createdAt" | "riskScore" | "prNumber";
 type SortOrder = "asc" | "desc";
-
-/* ─── Constants ─────────────────────────────────────────────── */
 
 const STATUS_CONFIG: Record<
   string,
@@ -89,8 +85,6 @@ const STATUS_TABS: { value: StatusFilter; label: string }[] = [
   { value: "PROCESSING", label: "Processing" },
   { value: "FAILED", label: "Failed" },
 ];
-
-/* ─── Sub-components ────────────────────────────────────────── */
 
 function RiskScoreBar({ score }: { score: number | null }) {
   if (score === null)
@@ -269,8 +263,6 @@ function ReviewExpandedRow({
     </div>
   );
 }
-
-/* ─── Main Page ─────────────────────────────────────────────── */
 
 export default function AdminReviewsPage() {
   const [page, setPage] = useState(1);

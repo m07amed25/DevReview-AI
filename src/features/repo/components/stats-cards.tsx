@@ -49,25 +49,27 @@ export function StatsCards({
   return (
     <div className="grid gap-4 md:grid-cols-3">
       {/* Connected */}
-      <Card className="bg-card transition-shadow hover:shadow-sm pb-4">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-            <FolderGit2 className="size-4" />
+      <Card className="bg-card shadow-sm border-border">
+        <CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
+          <CardTitle className="text-sm font-medium text-muted-foreground">
             Connected
           </CardTitle>
+          <FolderGit2 className="size-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-3xl font-bold tracking-tight">
-            {connectedCount}
-          </div>
-          <p className="text-xs text-muted-foreground my-2 flex items-center gap-1.5">
-            <CheckCircle className="size-3 text-emerald-500" />
-            Repositories linked
+          <div className="text-2xl font-bold">{connectedCount}</div>
+          <p className="text-xs text-muted-foreground mt-1">
+            Repositories linked to your account
           </p>
           {connectedCount > 0 && (
-            <div className="mt-2 pt-2 border-t border-border/50">
-              <span className="text-xs text-muted-foreground">
-                {connectedPrivate} private, {connectedPublic} public
+            <div className="mt-4 flex items-center gap-3 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1.5">
+                <span className="size-1.5 rounded-full bg-muted-foreground/50" />
+                {connectedPrivate} private
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="size-1.5 rounded-full bg-emerald-500" />
+                {connectedPublic} public
               </span>
             </div>
           )}
@@ -75,26 +77,23 @@ export function StatsCards({
       </Card>
 
       {/* Available */}
-      <Card className="bg-card transition-shadow hover:shadow-sm pb-4">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-            <GitPullRequest className="size-4" />
+      <Card className="bg-card shadow-sm border-border">
+        <CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
+          <CardTitle className="text-sm font-medium text-muted-foreground">
             Available
           </CardTitle>
+          <Globe className="size-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-3xl font-bold tracking-tight">
-            {availableCount}
-          </div>
-          <p className="text-xs text-muted-foreground my-2 flex items-center gap-1.5">
-            <Globe className="size-3 text-blue-500" />
-            GitHub repositories
+          <div className="text-2xl font-bold">{availableCount}</div>
+          <p className="text-xs text-muted-foreground mt-1">
+            GitHub repositories not yet connected
           </p>
           {totalGithubCount > 0 && (
-            <div className="mt-2 pt-2 border-t border-border/50">
-              <span className="text-xs text-muted-foreground">
-                {Math.round((availableCount / totalGithubCount) * 100)}% not
-                connected
+            <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
+              <span>Not connected</span>
+              <span className="font-medium">
+                {Math.round((availableCount / totalGithubCount) * 100)}%
               </span>
             </div>
           )}
@@ -102,35 +101,34 @@ export function StatsCards({
       </Card>
 
       {/* Selection */}
-      <Card className="bg-card transition-shadow hover:shadow-sm pb-4">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-            <Star className="size-4" />
+      <Card className="bg-card shadow-sm border-border">
+        <CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
+          <CardTitle className="text-sm font-medium text-muted-foreground">
             Selection
           </CardTitle>
+          <Star className="size-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-3xl font-bold tracking-tight">
-            {selectedCount}
-          </div>
-          <p className="text-xs text-muted-foreground my-2 flex items-center gap-1.5">
-            <Check className="size-3 text-primary" />
-            Selected to connect
+          <div className="text-2xl font-bold">{selectedCount}</div>
+          <p className="text-xs text-muted-foreground mt-1">
+            Selected for connection
           </p>
           {availableCount > 0 && (
-            <div className="mt-2 pt-2 border-t border-border/50">
-              <div className="w-full bg-secondary rounded-full h-1.5 mb-1">
+            <div className="mt-4 space-y-1.5">
+              <div className="flex justify-between items-center text-xs text-muted-foreground">
+                <span>Capacity</span>
+                <span className="font-medium text-foreground">
+                  {Math.round((selectedCount / availableCount) * 100)}%
+                </span>
+              </div>
+              <div className="w-full bg-muted rounded-full h-1 overflow-hidden">
                 <div
-                  className="bg-primary h-1.5 rounded-full transition-all duration-500 ease-out"
+                  className="bg-foreground h-full rounded-full transition-all duration-500 ease-out"
                   style={{
                     width: `${Math.round((selectedCount / availableCount) * 100)}%`,
                   }}
                 />
               </div>
-              <span className="text-xs text-muted-foreground">
-                {Math.round((selectedCount / availableCount) * 100)}% of
-                available
-              </span>
             </div>
           )}
         </CardContent>

@@ -16,12 +16,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import gsap from "gsap";
-import {
+import { Separator } from "@/components/ui/separator";import {
   AuroraBackground,
   GridBackground,
-} from "@/components/animations/backgrounds";
+} from
+ "@/components/animations/backgrounds";
 
 interface FieldErrors {
   name?: string;
@@ -61,19 +60,6 @@ export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    gsap.fromTo(
-      cardRef.current,
-      { opacity: 0, y: 30, scale: 0.95 },
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.6,
-        ease: "power3.out",
-      },
-    );
-  }, []);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const validateFields = (): boolean => {

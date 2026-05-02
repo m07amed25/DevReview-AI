@@ -11,8 +11,8 @@ import {
   TrendingUp,
   XCircle,
 } from "lucide-react";
-import gsap from "gsap";
 import { trpc } from "@/lib/trpc/client";
+import { Fades } from "@/components/animate-ui/primitives/effects/fade";
 
 import { RiskScoreCard } from "./components/risk-score-card";
 import {
@@ -47,8 +47,6 @@ export function ReviewResult({
   onRetry,
   isRetrying,
 }: ReviewResultProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-
   const [activeSeverities, setActiveSeverities] = useState<Set<string>>(
     new Set(),
   );
@@ -74,23 +72,6 @@ export function ReviewResult({
   const [showResolved, setShowResolved] = useState(true);
   const toggleResolvedMutation =
     trpc.review.toggleResolvedComment.useMutation();
-
-  useEffect(() => {
-    if (!containerRef.current) return;
-    const cards = containerRef.current.querySelectorAll("[data-animate-in]");
-    gsap.fromTo(
-      cards,
-      { opacity: 0, y: 24, scale: 0.98 },
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.5,
-        stagger: 0.08,
-        ease: "power3.out",
-      },
-    );
-  }, [review.status]);
 
   if (review.status === "PENDING") {
     return <PendingCard />;
@@ -340,158 +321,163 @@ export function ReviewResult({
   };
 
   return (
-    <div ref={containerRef} className="space-y-5">
-      <div data-animate-in>
-        <RiskScoreCard
-          score={review.riskScore ?? 0}
-          totalIssues={totalIssues}
-          createdAt={review.createdAt}
-        />
-      </div>
-
-      <div data-animate-in className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <SeverityStatCard
-          label="Critical"
-          count={severityCounts.critical}
-          icon={XCircle}
-          color="red"
-          active={activeSeverities.has("critical")}
-          onClick={() => toggleSeverity("critical")}
-        />
-        <SeverityStatCard
-          label="High"
-          count={severityCounts.high}
-          icon={AlertTriangle}
-          color="orange"
-          active={activeSeverities.has("high")}
-          onClick={() => toggleSeverity("high")}
-        />
-        <SeverityStatCard
-          label="Medium"
-          count={severityCounts.medium}
-          icon={Info}
-          color="amber"
-          active={activeSeverities.has("medium")}
-          onClick={() => toggleSeverity("medium")}
-        />
-        <SeverityStatCard
-          label="Low"
-          count={severityCounts.low}
-          icon={TrendingUp}
-          color="slate"
-          active={activeSeverities.has("low")}
-          onClick={() => toggleSeverity("low")}
-        />
-      </div>
-
-      <div data-animate-in>
-        <SeverityDistributionBar counts={severityCounts} total={totalIssues} />
-      </div>
-
-      {qualityMetrics && (
-        <div data-animate-in>
-          <QualityMetricsCard
-            metrics={qualityMetrics}
-            avgConfidence={avgConfidence}
+    <div className="space-y-5">
+      <Fades holdDelay={80}>
+        <div>
+          <RiskScoreCard
+            score={review.riskScore ?? 0}
+            totalIssues={totalIssues}
+            createdAt={review.createdAt}
           />
         </div>
-      )}
 
-      {review.summary && (
-        <div data-animate-in>
-          <AISummaryCard summary={review.summary} />
-        </div>
-      )}
-
-      {comments.length > 0 ? (
-        <div data-animate-in className="space-y-3">
-          <CommentsToolbar
-            totalComments={comments.length}
-            filteredCount={visibleComments.length}
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            allCategories={allCategories}
-            activeCategories={activeCategories}
-            onToggleCategory={toggleCategory}
-            sortKey={sortKey}
-            sortDir={sortDir}
-            onToggleSort={toggleSort}
-            viewMode={viewMode}
-            onToggleViewMode={() =>
-              setViewMode((m) => (m === "list" ? "grouped" : "list"))
-            }
-            allExpanded={allExpanded}
-            onToggleExpandAll={toggleExpandAll}
-            hasActiveFilters={hasActiveFilters}
-            onClearFilters={clearFilters}
-            onExport={exportMarkdown}
-            resolvedCount={resolvedKeys.size}
-            showResolved={showResolved}
-            onToggleShowResolved={() => setShowResolved((v) => !v)}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <SeverityStatCard
+            label="Critical"
+            count={severityCounts.critical}
+            icon={XCircle}
+            color="red"
+            active={activeSeverities.has("critical")}
+            onClick={() => toggleSeverity("critical")}
           />
-          {sortedComments.length === 0 ? (
-            <Card>
-              <CardContent className="py-12 text-center">
-                <Search className="size-8 text-muted-foreground/40 mx-auto mb-3" />
-                <p className="text-sm font-medium text-muted-foreground">
-                  No comments match your filters
-                </p>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="mt-3 text-xs gap-1.5"
-                  onClick={clearFilters}
-                >
-                  <X className="size-3" />
-                  Clear Filters
-                </Button>
-              </CardContent>
-            </Card>
-          ) : viewMode === "list" ? (
-            <div className="space-y-2.5">
-              {visibleComments.map((comment, index) => (
-                <CommentCard
-                  key={`${comment.file}:${comment.line}:${index}`}
-                  comment={comment}
-                  index={index}
-                  forceExpanded={allExpanded}
-                  expandKey={expandKey}
-                  resolved={resolvedKeys.has(getCommentKey(comment))}
-                  onToggleResolved={() =>
-                    toggleResolved(getCommentKey(comment))
-                  }
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {Object.entries(groupedByFile).map(([file, fileComments]) => (
-                <FileGroup
-                  key={file}
-                  file={file}
-                  comments={fileComments}
-                  allExpanded={allExpanded}
-                  expandKey={expandKey}
-                  resolvedKeys={resolvedKeys}
-                  onToggleResolved={toggleResolved}
-                />
-              ))}
-            </div>
-          )}
+          <SeverityStatCard
+            label="High"
+            count={severityCounts.high}
+            icon={AlertTriangle}
+            color="orange"
+            active={activeSeverities.has("high")}
+            onClick={() => toggleSeverity("high")}
+          />
+          <SeverityStatCard
+            label="Medium"
+            count={severityCounts.medium}
+            icon={Info}
+            color="amber"
+            active={activeSeverities.has("medium")}
+            onClick={() => toggleSeverity("medium")}
+          />
+          <SeverityStatCard
+            label="Low"
+            count={severityCounts.low}
+            icon={TrendingUp}
+            color="slate"
+            active={activeSeverities.has("low")}
+            onClick={() => toggleSeverity("low")}
+          />
         </div>
-      ) : (
-        review.status === "COMPLETED" && (
-          <div data-animate-in>
-            <NoIssuesCard />
+
+        <div>
+          <SeverityDistributionBar
+            counts={severityCounts}
+            total={totalIssues}
+          />
+        </div>
+
+        {qualityMetrics && (
+          <div>
+            <QualityMetricsCard
+              metrics={qualityMetrics}
+              avgConfidence={avgConfidence}
+            />
           </div>
-        )
-      )}
+        )}
 
-      {review.status === "COMPLETED" && (
-        <div data-animate-in>
-          <FeedbackWidget reviewId={review.id} />
-        </div>
-      )}
+        {review.summary && (
+          <div>
+            <AISummaryCard summary={review.summary} />
+          </div>
+        )}
+
+        {comments.length > 0 ? (
+          <div className="space-y-3">
+            <CommentsToolbar
+              totalComments={comments.length}
+              filteredCount={visibleComments.length}
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              allCategories={allCategories}
+              activeCategories={activeCategories}
+              onToggleCategory={toggleCategory}
+              sortKey={sortKey}
+              sortDir={sortDir}
+              onToggleSort={toggleSort}
+              viewMode={viewMode}
+              onToggleViewMode={() =>
+                setViewMode((m) => (m === "list" ? "grouped" : "list"))
+              }
+              allExpanded={allExpanded}
+              onToggleExpandAll={toggleExpandAll}
+              hasActiveFilters={hasActiveFilters}
+              onClearFilters={clearFilters}
+              onExport={exportMarkdown}
+              resolvedCount={resolvedKeys.size}
+              showResolved={showResolved}
+              onToggleShowResolved={() => setShowResolved((v) => !v)}
+            />
+            {sortedComments.length === 0 ? (
+              <Card>
+                <CardContent className="py-12 text-center">
+                  <Search className="size-8 text-muted-foreground/40 mx-auto mb-3" />
+                  <p className="text-sm font-medium text-muted-foreground">
+                    No comments match your filters
+                  </p>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="mt-3 text-xs gap-1.5"
+                    onClick={clearFilters}
+                  >
+                    <X className="size-3" />
+                    Clear Filters
+                  </Button>
+                </CardContent>
+              </Card>
+            ) : viewMode === "list" ? (
+              <div className="space-y-2.5">
+                {visibleComments.map((comment, index) => (
+                  <CommentCard
+                    key={`${comment.file}:${comment.line}:${index}`}
+                    comment={comment}
+                    index={index}
+                    forceExpanded={allExpanded}
+                    expandKey={expandKey}
+                    resolved={resolvedKeys.has(getCommentKey(comment))}
+                    onToggleResolved={() =>
+                      toggleResolved(getCommentKey(comment))
+                    }
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {Object.entries(groupedByFile).map(([file, fileComments]) => (
+                  <FileGroup
+                    key={file}
+                    file={file}
+                    comments={fileComments}
+                    allExpanded={allExpanded}
+                    expandKey={expandKey}
+                    resolvedKeys={resolvedKeys}
+                    onToggleResolved={toggleResolved}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        ) : (
+          review.status === "COMPLETED" && (
+            <div>
+              <NoIssuesCard />
+            </div>
+          )
+        )}
+
+        {review.status === "COMPLETED" && (
+          <div>
+            <FeedbackWidget reviewId={review.id} />
+          </div>
+        )}
+      </Fades>
     </div>
   );
 }

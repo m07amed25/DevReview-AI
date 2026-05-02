@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React from "react";
 import Link from "next/link";
 import {
   AlertTriangle,
@@ -11,8 +11,6 @@ import {
   Zap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -22,7 +20,11 @@ import {
   type ViewMode,
   type ReviewComment,
 } from "../../types/dashboard";
-import { relativeTime, isRecentlyCompleted, getRiskLevel } from "../../utils/dashboard-helpers";
+import {
+  relativeTime,
+  isRecentlyCompleted,
+  getRiskLevel,
+} from "../../utils/dashboard-helpers";
 import {
   MiniRiskGauge,
   SeverityDonut,
@@ -75,7 +77,6 @@ export function ReviewCard({
   index: number;
   viewMode: ViewMode;
 }) {
-  const cardRef = useRef<HTMLDivElement>(null);
   const status = review.status as ReviewStatus;
   const config = STATUS_CONFIG[status];
   const StatusIcon = config.icon;
@@ -86,116 +87,60 @@ export function ReviewCard({
   const recent =
     status === "COMPLETED" && isRecentlyCompleted(review.createdAt);
 
-  useGSAP(
-    () => {
-      if (!cardRef.current) return;
-      gsap.fromTo(
-        cardRef.current,
-        { opacity: 0, y: 15, scale: 0.98 },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.4,
-          delay: Math.min(index * 0.04, 0.4),
-          ease: "power2.out",
-        },
-      );
-    },
-    { scope: cardRef, dependencies: [index] },
-  );
-
   if (viewMode === "grid") {
     return (
-      <div ref={cardRef}>
+      <div className="h-full">
         <Link
           href={`/repo/${review.repositoryId}/pr/${review.prNumber}`}
           className="group block h-full"
         >
           <Card
             className={cn(
-              "relative h-full overflow-hidden border-border/50 bg-card/80 backdrop-blur-sm transition-all duration-300",
-              "hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-1",
-              recent && "ring-1 ring-emerald-500/30",
+              "h-full border bg-card transition-colors hover:border-primary/30 hover:bg-muted/5",
+              recent && "border-emerald-500/30"
             )}
           >
-            <div
-              className={cn(
-                "absolute inset-x-0 top-0 h-1 bg-linear-to-r",
-                config.gradient,
-              )}
-            />
-            <div className="absolute inset-0 bg-linear-to-br from-primary/0 via-primary/0 to-primary/0 group-hover:from-primary/3 group-hover:to-transparent transition-all duration-500" />
-            <CardContent className="relative p-4 pt-5 flex flex-col h-full">
-              <div className="flex items-start justify-between gap-2 mb-3">
-                <Badge
-                  variant="outline"
-                  className="shrink-0 font-mono text-[10px] px-1.5 py-0 h-5"
-                >
+            <CardContent className="p-4 flex flex-col h-full">
+              <div className="flex items-center justify-between gap-2 mb-3">
+                <span className="text-[10px] font-bold font-mono text-muted-foreground/60">
                   #{review.prNumber}
-                </Badge>
-                {status === "COMPLETED" && review.riskScore != null ? (
-                  <MiniRiskGauge score={review.riskScore} size={36} />
-                ) : (
-                  <div
-                    className={cn(
-                      "flex size-8 items-center justify-center rounded-lg ring-1",
-                      config.bg,
-                      config.ring,
-                    )}
-                  >
-                    <StatusIcon
-                      className={cn(
-                        "size-4",
-                        config.color,
-                        status === "PROCESSING" && "animate-spin",
-                      )}
-                    />
-                  </div>
-                )}
+                </span>
+                <div className={cn("size-2 rounded-full", config.color.split(' ')[0].replace('text-', 'bg-'))} />
               </div>
-              <h3 className="text-sm font-semibold leading-snug text-foreground group-hover:text-primary transition-colors line-clamp-2 mb-2">
+              
+              <h3 className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2 mb-2 leading-snug">
                 {review.prTitle}
               </h3>
-              {status === "COMPLETED" && review.summary && (
-                <p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed mb-3">
-                  {review.summary}
-                </p>
-              )}
-              {status === "FAILED" && review.error && (
-                <p className="text-[11px] text-red-400/80 line-clamp-2 mb-3 flex items-start gap-1">
-                  <AlertTriangle className="size-3 shrink-0 mt-0.5" />
-                  {review.error}
-                </p>
-              )}
+              
               <div className="flex-1" />
-              <div className="space-y-2 pt-3 border-t border-border/30">
-                <div className="flex items-center justify-between">
-                  <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                    <FolderGit2 className="size-3" />
-                    <span className="truncate max-w-24">
-                      {review.repository.name}
-                    </span>
+              
+              <div className="mt-4 pt-4 border-t border-border/40 space-y-3">
+                <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+                  <span className="truncate max-w-[120px] font-medium">
+                    {review.repository.name}
                   </span>
-                  <span className="text-[10px] text-muted-foreground tabular-nums">
+                  <span className="tabular-nums opacity-70">
                     {relativeTime(review.createdAt)}
                   </span>
                 </div>
-                {status === "COMPLETED" && comments.length > 0 && (
-                  <SeverityDonut comments={comments} />
-                )}
-                {status === "COMPLETED" && qualityScore !== null && (
-                  <QualityScorePill score={qualityScore} />
-                )}
-              </div>
-              {recent && (
-                <div className="absolute top-3 right-3">
-                  <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[9px] px-1.5 py-0 gap-1">
-                    <Zap className="size-2.5" />
-                    New
-                  </Badge>
+                
+                <div className="flex items-center gap-2">
+                  {status === "COMPLETED" && review.riskScore != null && (
+                    <div className={cn(
+                      "px-1.5 py-0.5 rounded text-[9px] font-bold uppercase",
+                      getRiskLevel(review.riskScore).color,
+                      "bg-muted/50"
+                    )}>
+                      {getRiskLevel(review.riskScore).label}
+                    </div>
+                  )}
+                  {status === "COMPLETED" && comments.length > 0 && (
+                    <span className="text-[10px] text-muted-foreground font-medium">
+                      {comments.length} issues
+                    </span>
+                  )}
                 </div>
-              )}
+              </div>
             </CardContent>
           </Card>
         </Link>
@@ -204,170 +149,89 @@ export function ReviewCard({
   }
 
   return (
-    <div ref={cardRef}>
+    <div className="w-full">
       <Link
         href={`/repo/${review.repositoryId}/pr/${review.prNumber}`}
         className="group block"
       >
-        <Card
+        <div
           className={cn(
-            "relative overflow-hidden border-border/50 bg-card/80 backdrop-blur-sm transition-all duration-300",
-            "hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-0.5",
-            recent && "ring-1 ring-emerald-500/30",
+            "flex items-center gap-4 p-4 border rounded-xl bg-card transition-all duration-200 hover:border-primary/30 hover:bg-muted/5",
+            recent && "border-emerald-500/20"
           )}
         >
-          <div
-            className={cn(
-              "absolute left-0 top-0 h-full w-0.75 transition-all duration-300 group-hover:w-1",
-              config.dot,
-            )}
-          />
-          <div className="absolute inset-0 bg-linear-to-r from-primary/0 to-primary/0 group-hover:from-primary/2 group-hover:to-transparent transition-all duration-500" />
-          <CardContent className="relative p-4 pl-5 sm:p-5 sm:pl-6">
-            <div className="flex items-start gap-3 sm:gap-4">
-              <div className="hidden sm:block shrink-0 pt-0.5">
-                {status === "COMPLETED" && review.riskScore != null ? (
-                  <MiniRiskGauge score={review.riskScore} />
-                ) : (
-                  <div
-                    className={cn(
-                      "flex size-11 items-center justify-center rounded-xl ring-1 transition-all duration-300 group-hover:scale-105 group-hover:shadow-md",
-                      config.bg,
-                      config.ring,
-                    )}
-                  >
-                    <StatusIcon
-                      className={cn(
-                        "size-5",
-                        config.color,
-                        status === "PROCESSING" && "animate-spin",
-                      )}
-                    />
-                  </div>
-                )}
-              </div>
-              <div className="flex-1 min-w-0 space-y-1.5">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <Badge
-                        variant="outline"
-                        className="shrink-0 font-mono text-[10px] px-1.5 py-0 h-5"
-                      >
-                        #{review.prNumber}
-                      </Badge>
-                      <h3 className="text-sm font-semibold leading-tight text-foreground group-hover:text-primary transition-colors truncate">
-                        {review.prTitle}
-                      </h3>
-                      {recent && (
-                        <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[9px] px-1.5 py-0 gap-1 animate-pulse">
-                          <Zap className="size-2.5" />
-                          New
-                        </Badge>
-                      )}
-                    </div>
-                    <div className="mt-1 flex items-center gap-2.5 flex-wrap text-[11px] text-muted-foreground">
-                      <span className="flex items-center gap-1">
-                        <FolderGit2 className="size-3 shrink-0" />
-                        <span className="truncate max-w-40">
-                          {review.repository.fullName}
-                        </span>
-                      </span>
-                      <span className="text-muted-foreground/30">|</span>
-                      <span className="flex items-center gap-1 tabular-nums">
-                        <Calendar className="size-3 shrink-0" />
-                        {relativeTime(review.createdAt)}
-                      </span>
-                      {status === "COMPLETED" && comments.length > 0 && (
-                        <>
-                          <span className="text-muted-foreground/30">|</span>
-                          <span className="flex items-center gap-1 tabular-nums">
-                            <Eye className="size-3 shrink-0" />
-                            {comments.length} issue
-                            {comments.length !== 1 ? "s" : ""}
-                          </span>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                  <div className="hidden sm:flex items-center gap-2 shrink-0">
-                    <Badge
-                      variant="outline"
-                      className={cn(
-                        "gap-1 text-[11px] font-medium ring-1",
-                        config.color,
-                        config.bg,
-                        config.ring,
-                      )}
-                    >
-                      <StatusIcon
-                        className={cn(
-                          "size-3",
-                          status === "PROCESSING" && "animate-spin",
-                        )}
-                      />
-                      {config.label}
-                    </Badge>
-                    {status === "COMPLETED" && review.riskScore != null && (
-                      <Badge
-                        variant="outline"
-                        className={cn(
-                          "gap-1 text-[11px] font-medium ring-1",
-                          getRiskLevel(review.riskScore).color,
-                          `${getRiskLevel(review.riskScore).bg}/10`,
-                        )}
-                      >
-                        {getRiskLevel(review.riskScore).label} Risk
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-                {status === "COMPLETED" && review.summary && (
-                  <p className="text-xs text-muted-foreground/80 line-clamp-2 leading-relaxed pr-4">
-                    {review.summary}
-                  </p>
-                )}
-                {status === "FAILED" && review.error && (
-                  <p className="text-xs text-red-400/80 line-clamp-1 flex items-center gap-1">
-                    <AlertTriangle className="size-3 shrink-0" />
-                    {review.error}
-                  </p>
-                )}
-                <div className="flex items-center justify-between pt-0.5">
-                  <div className="flex items-center gap-3">
-                    <Badge
-                      variant="outline"
-                      className={cn(
-                        "sm:hidden gap-1 text-[10px] font-medium ring-1",
-                        config.color,
-                        config.bg,
-                        config.ring,
-                      )}
-                    >
-                      <StatusIcon
-                        className={cn(
-                          "size-3",
-                          status === "PROCESSING" && "animate-spin",
-                        )}
-                      />
-                      {config.label}
-                    </Badge>
-                    {status === "COMPLETED" && comments.length > 0 && (
-                      <SeverityDonut comments={comments} />
-                    )}
-                    {status === "COMPLETED" && qualityScore !== null && (
-                      <QualityScorePill score={qualityScore} />
-                    )}
-                  </div>
-                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-all duration-200 translate-x-1 group-hover:translate-x-0">
-                    <span>View details</span>
-                    <ChevronRight className="size-3.5" />
-                  </div>
-                </div>
-              </div>
+          {/* Status Icon Column */}
+          <div className="shrink-0">
+            <div className={cn(
+              "flex size-9 items-center justify-center rounded-lg",
+              config.bg,
+              "opacity-80"
+            )}>
+              <StatusIcon className={cn("size-4", config.color, status === "PROCESSING" && "animate-spin")} />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+
+          {/* Main Content Column */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-3">
+              <span className="text-[10px] font-bold font-mono text-muted-foreground/50 tracking-tighter shrink-0">
+                #{review.prNumber}
+              </span>
+              <h3 className="text-sm font-semibold text-foreground truncate group-hover:text-primary transition-colors">
+                {review.prTitle}
+              </h3>
+              {recent && (
+                <span className="flex size-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+              )}
+            </div>
+            
+            <div className="mt-1 flex items-center gap-4 text-[11px] text-muted-foreground font-medium">
+              <span className="flex items-center gap-1.5">
+                <FolderGit2 className="size-3 text-muted-foreground/40" />
+                {review.repository.fullName}
+              </span>
+              <span className="flex items-center gap-1.5 opacity-60">
+                <Calendar className="size-3" />
+                {relativeTime(review.createdAt)}
+              </span>
+            </div>
+          </div>
+
+          {/* Metrics & Badges Column */}
+          <div className="flex items-center gap-6 shrink-0 hidden md:flex">
+            {status === "COMPLETED" && comments.length > 0 && (
+              <div className="flex items-center gap-2">
+                <SeverityDonut comments={comments} />
+                <span className="text-[11px] font-bold text-muted-foreground tabular-nums">
+                  {comments.length}
+                </span>
+              </div>
+            )}
+            
+            {status === "COMPLETED" && review.riskScore != null && (
+              <div className="flex flex-col items-end gap-1">
+                <div className={cn(
+                  "px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-widest",
+                  getRiskLevel(review.riskScore).color,
+                  "bg-muted/50 border border-border/50"
+                )}>
+                  {getRiskLevel(review.riskScore).label}
+                </div>
+                <div className="h-1 w-12 rounded-full bg-muted overflow-hidden">
+                  <div className={cn("h-full", getRiskLevel(review.riskScore).bg)} style={{ width: `${review.riskScore * 10}%` }} />
+                </div>
+              </div>
+            )}
+
+            {status !== "COMPLETED" && (
+              <Badge variant="outline" className={cn("rounded-lg border-border/60 text-[10px] font-bold uppercase tracking-wider", config.bg, config.color)}>
+                {config.label}
+              </Badge>
+            )}
+
+            <ChevronRight className="size-4 text-muted-foreground/30 transition-transform group-hover:translate-x-1" />
+          </div>
+        </div>
       </Link>
     </div>
   );

@@ -25,6 +25,7 @@ export const reviewPR = inngest.createFunction(
   {
     id: "review-pr",
     retries: 2,
+    triggers: [{ event: "review/pr.requested" }],
     onFailure: async ({
       event: {
         data: {
@@ -48,7 +49,6 @@ export const reviewPR = inngest.createFunction(
       }
     },
   },
-  { event: "review/pr.requested" },
   async ({ event, step }) => {
     const { reviewId, repositoryId, prNumber, userId, preferences } =
       event.data;
@@ -132,15 +132,19 @@ export const reviewPR = inngest.createFunction(
             OR: [
               { repositoryId },
               ...teamFilter,
-              { userId: repo?.userId ?? userId, repositoryId: null, teamId: null },
+              {
+                userId: repo?.userId ?? userId,
+                repositoryId: null,
+                teamId: null,
+              },
             ],
           },
         });
 
         // Repository rules override team/global rules with the same name
-        const ruleMap = new Map<string, typeof allRules[number]>();
+        const ruleMap = new Map<string, (typeof allRules)[number]>();
         const sorted = [...allRules].sort((a, b) => {
-          const priority = (r: typeof allRules[number]) =>
+          const priority = (r: (typeof allRules)[number]) =>
             r.repositoryId ? 2 : r.teamId ? 1 : 0;
           return priority(a) - priority(b);
         });
