@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import gsap from "gsap";
 
 interface ParticleBackgroundProps {
   className?: string;
@@ -41,17 +40,6 @@ export function ParticleBackground({
       `;
 
       container.appendChild(particle);
-
-      // Animate particle
-      gsap.to(particle, {
-        y: -100,
-        x: Math.random() * 50 - 25,
-        opacity: 0,
-        duration,
-        delay,
-        repeat: -1,
-        ease: "none",
-      });
     }
 
     return () => {
@@ -88,13 +76,6 @@ export function GradientBackground({
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-
-    gsap.to(container, {
-      backgroundPosition: "200% 200%",
-      duration: speed,
-      repeat: -1,
-      ease: "none",
-    });
   }, [speed]);
 
   return (
@@ -188,17 +169,6 @@ export function BlobBackground({ className = "" }: BlobBackgroundProps) {
       `;
 
       container.appendChild(blob);
-
-      // Animate blob
-      gsap.to(blob, {
-        x: `+=${Math.random() * 100 - 50}`,
-        y: `+=${Math.random() * 100 - 50}`,
-        scale: Math.random() * 0.5 + 1,
-        duration: Math.random() * 10 + 10,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-      });
     });
   }, []);
 
@@ -247,16 +217,6 @@ export function StarsBackground({
       `;
 
       container.appendChild(star);
-
-      // Twinkle effect
-      gsap.to(star, {
-        opacity: Math.random() * 0.3 + 0.1,
-        duration,
-        delay,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-      });
     }
 
     return () => {
@@ -305,15 +265,6 @@ export function WaveBackground({
       `;
 
       container.appendChild(wave);
-
-      gsap.to(wave, {
-        x: "25%",
-        duration: 5 + i,
-        delay,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-      });
     }
   }, [color]);
 
@@ -361,16 +312,6 @@ export function AuroraBackground({ className = "" }: AuroraBackgroundProps) {
       `;
 
       container.appendChild(aurora);
-
-      gsap.to(aurora, {
-        borderRadius: "40% 60% 70% 30% / 40% 50% 60% 50%",
-        x: `+=${Math.random() * 200 - 100}`,
-        y: `+=${Math.random() * 200 - 100}`,
-        duration: Math.random() * 10 + 15,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-      });
     });
   }, []);
 

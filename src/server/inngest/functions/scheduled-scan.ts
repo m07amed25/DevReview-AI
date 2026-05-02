@@ -166,20 +166,17 @@ async function runScheduledScan(
 }
 
 export const dailyScheduledScan = inngest.createFunction(
-  { id: "scheduled-scan-daily", retries: 1 },
-  { cron: "0 6 * * *" },
+  { id: "scheduled-scan-daily", retries: 1, triggers: [{ cron: "0 6 * * *" }] },
   async ({ step }) => runScheduledScan("DAILY", step),
 );
 
 export const weeklyScheduledScan = inngest.createFunction(
-  { id: "scheduled-scan-weekly", retries: 1 },
-  { cron: "0 6 * * 0" },
+  { id: "scheduled-scan-weekly", retries: 1, triggers: [{ cron: "0 6 * * 0" }] },
   async ({ step }) => runScheduledScan("WEEKLY", step),
 );
 
 export const handleScanCompleted = inngest.createFunction(
-  { id: "scheduled-scan-notify-owner", retries: 1 },
-  { event: "scan/completed" },
+  { id: "scheduled-scan-notify-owner", retries: 1, triggers: [{ event: "scan/completed" }] },
   async ({ event, step }) => {
     await step.run("create-notification", async () => {
       const data = event.data as {

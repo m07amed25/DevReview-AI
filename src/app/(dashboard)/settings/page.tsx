@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { trpc } from "@/lib/trpc/client";
@@ -41,10 +40,7 @@ import { PreferencesCardContent } from "./preferences-card";
 import { SessionsCardContent, SessionsCardHeader } from "./sessions-card";
 import { RulesManagerCard } from "@/features/settings/components/rules-manager-card";
 
-const ThemeSelector = dynamic(
-  () => import("@/features/settings/components/theme-selector"),
-  { ssr: false },
-);
+import { ThemeTogglerButton } from "@/components/animate-ui/components/buttons/theme-toggler";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -120,41 +116,6 @@ export default function SettingsPage() {
     [updatePreferencesMutation],
   );
 
-  const handleThemeChange = useCallback(
-    (newTheme: string, event?: React.MouseEvent) => {
-      const x = event?.clientX ?? window.innerWidth / 2;
-      const y = event?.clientY ?? 0;
-      const endRadius = Math.hypot(
-        Math.max(x, window.innerWidth - x),
-        Math.max(y, window.innerHeight - y),
-      );
-      const doc = document as Document & {
-        startViewTransition?: (cb: () => void) => { ready: Promise<void> };
-      };
-      if (doc.startViewTransition) {
-        const transition = doc.startViewTransition(() => setTheme(newTheme));
-        transition.ready.then(() => {
-          document.documentElement.animate(
-            {
-              clipPath: [
-                `circle(0px at ${x}px ${y}px)`,
-                `circle(${endRadius}px at ${x}px ${y}px)`,
-              ],
-            },
-            {
-              duration: 500,
-              easing: "cubic-bezier(0.4, 0, 0.2, 1)",
-              pseudoElement: "::view-transition-new(root)",
-            },
-          );
-        });
-      } else {
-        setTheme(newTheme);
-      }
-    },
-    [setTheme],
-  );
-
   const otherSessions = sessions?.filter((s) => !s.isCurrent) ?? [];
 
   return (
@@ -198,7 +159,20 @@ export default function SettingsPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="pb-6">
-            <ThemeSelector theme={theme} onThemeChange={handleThemeChange} />
+            <div className="flex items-center justify-between p-4 rounded-xl border bg-muted/30">
+              <div className="space-y-0.5">
+                <p className="text-sm font-medium">Switch Appearance</p>
+                <p className="text-xs text-muted-foreground">
+                  Click the button to cycle through light, dark, and system
+                  themes.
+                </p>
+              </div>
+              <ThemeTogglerButton
+                variant="outline"
+                size="lg"
+                className="shrink-0"
+              />
+            </div>
           </CardContent>
         </Card>
 

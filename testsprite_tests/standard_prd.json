@@ -12,7 +12,6 @@
     "background_jobs": "Inngest",
     "ai": ["Groq", "Google Gemini", "HuggingFace Inference", "OpenRouter"],
     "ui": "shadcn/ui + Radix UI",
-    "animations": "GSAP + Lenis"
   },
   "base_url": "http://localhost:3000",
   "pages": [

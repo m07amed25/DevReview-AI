@@ -56,6 +56,7 @@ export const generateDiagram = inngest.createFunction(
     id: "generate-diagram",
     retries: 1,
     timeouts: { finish: "1m" },
+    triggers: [{ event: "diagram/generation.requested" }],
     onFailure: async ({
       event: {
         data: {
@@ -92,7 +93,6 @@ export const generateDiagram = inngest.createFunction(
       }
     },
   },
-  { event: "diagram/generation.requested" },
   async ({ event, step }) => {
     const { diagramId, reviewId, repositoryId, userId, prNumber, type } =
       event.data;
@@ -141,16 +141,22 @@ export const generateDiagram = inngest.createFunction(
     // ── Step 3: Fetch files to map ────────────────────────────────────────────
     const changedFiles = await step.run("fetch-files", async () => {
       if (prNumber) {
-        const prFiles = await fetchPullRequestFiles(accessToken, owner, repo, prNumber);
-        return prFiles.map(f => ({ filename: f.filename }));
+        const prFiles = await fetchPullRequestFiles(
+          accessToken,
+          owner,
+          repo,
+          prNumber,
+        );
+        return prFiles.map((f) => ({ filename: f.filename }));
       }
-      
+
       const repoFiles = await fetchRepositoryFiles(accessToken, owner, repo);
       // Score files differently depending on what diagram we're generating
       const scoreFile = (path: string) => {
         // ── ERD: prioritise DB schema & migration files ───────────────────────
         if (type === "ERD") {
-          if (path.endsWith("schema.prisma") || path.endsWith(".prisma")) return 100;
+          if (path.endsWith("schema.prisma") || path.endsWith(".prisma"))
+            return 100;
           if (/migration/i.test(path) && path.endsWith(".sql")) return 90;
           if (path.endsWith("package.json")) return 20;
           if (path.endsWith(".ts") || path.endsWith(".tsx")) return 10;
@@ -165,9 +171,15 @@ export const generateDiagram = inngest.createFunction(
         }
         // ── USE_CASE: prioritise route / controller / handler / API files ─────
         if (/route\.(ts|js)$/.test(path)) return 100;
-        if (/\.(controller|router|handler|endpoint)\.(ts|js)$/.test(path)) return 100;
-        if (/routes?\/|controllers?\/|handlers?\/|endpoints?\//i.test(path)) return 90;
-        if (/api\//i.test(path) && (path.endsWith(".ts") || path.endsWith(".js"))) return 85;
+        if (/\.(controller|router|handler|endpoint)\.(ts|js)$/.test(path))
+          return 100;
+        if (/routes?\/|controllers?\/|handlers?\/|endpoints?\//i.test(path))
+          return 90;
+        if (
+          /api\//i.test(path) &&
+          (path.endsWith(".ts") || path.endsWith(".js"))
+        )
+          return 85;
         if (/inngest/i.test(path)) return 80;
         if (/webhook/i.test(path)) return 80;
         if (path.endsWith("package.json")) return 30;
@@ -175,11 +187,11 @@ export const generateDiagram = inngest.createFunction(
         if (path.endsWith(".js") || path.endsWith(".jsx")) return 10;
         return 0;
       };
-      
+
       return repoFiles
-        .map(f => ({ filename: f.path, score: scoreFile(f.path) }))
+        .map((f) => ({ filename: f.path, score: scoreFile(f.path) }))
         .sort((a, b) => b.score - a.score)
-        .map(f => ({ filename: f.filename }));
+        .map((f) => ({ filename: f.filename }));
     });
 
     // ── Step 4: Fetch file contents ───────────────────────────────────────────
@@ -231,12 +243,16 @@ export const generateDiagram = inngest.createFunction(
     await step.run("notify-pusher", async () => {
       const pusher = getPusherServer();
       if (!pusher) return;
-      await pusher.trigger(`private-repository-${repositoryId}`, "diagram.updated", {
-        diagramId,
-        repositoryId,
-        type,
-        status: "COMPLETED",
-      });
+      await pusher.trigger(
+        `private-repository-${repositoryId}`,
+        "diagram.updated",
+        {
+          diagramId,
+          repositoryId,
+          type,
+          status: "COMPLETED",
+        },
+      );
       if (reviewId) {
         // Also notify the review channel if requested from a PR
         await pusher.trigger(`private-review-${reviewId}`, "diagram.updated", {

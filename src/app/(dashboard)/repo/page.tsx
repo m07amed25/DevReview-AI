@@ -82,15 +82,15 @@ export default function ReposPage() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 pb-10">
       {/* Header */}
-      <div className="flex items-start justify-between gap-4">
-        <div>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="space-y-1">
           <h1 className="text-2xl font-semibold tracking-tight">
             Repositories
           </h1>
-          <p className="text-muted-foreground mt-1">
-            Manage and connect your GitHub repositories.
+          <p className="text-muted-foreground">
+            Connect and manage your GitHub repositories to track pull requests.
           </p>
         </div>
         <Button
@@ -103,12 +103,12 @@ export default function ReposPage() {
         >
           {showGitHubRepos ? (
             <>
-              <X className="size-4" />
-              Cancel
+              <X className="size-4 mr-2" />
+              Cancel Import
             </>
           ) : (
             <>
-              <Plus className="size-4" />
+              <Github className="size-4 mr-2" />
               Connect Repository
             </>
           )}
@@ -171,22 +171,16 @@ export default function ReposPage() {
             </div>
           </CardContent>
         ) : (
-          <CardContent className="py-16 text-center">
+          <CardContent className="py-20 text-center">
             <div className="flex flex-col items-center max-w-sm mx-auto">
-              <div className="relative mb-6">
-                <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
-                  <FolderGit2 className="w-8 h-8 text-muted-foreground" />
-                </div>
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-background border-2 border-border flex items-center justify-center">
-                  <Plus className="w-3 h-3 text-muted-foreground" />
-                </div>
+              <div className="flex items-center justify-center w-16 h-16 rounded-full bg-muted/50 border border-border mb-6">
+                <FolderGit2 className="w-8 h-8 text-muted-foreground" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">
+              <h3 className="text-lg font-medium mb-2 text-foreground">
                 No repositories connected
               </h3>
-              <p className="text-sm text-muted-foreground mb-6 max-w-xs">
-                Connect your GitHub repositories to start tracking pull requests
-                and managing your development workflow.
+              <p className="text-sm text-muted-foreground mb-8">
+                Connect your GitHub repositories to start tracking pull requests and managing your development workflow.
               </p>
               {githubRepos.error?.data?.code === "PRECONDITION_FAILED" ? (
                 <Button
@@ -197,10 +191,9 @@ export default function ReposPage() {
                       callbackURL: window.location.href,
                     });
                   }}
-                  className="gap-2"
                 >
-                  <Github className="size-4" />
-                  Connect GitHub
+                  <Github className="size-4 mr-2" />
+                  Connect GitHub Account
                 </Button>
               ) : (
                 <Button
@@ -209,10 +202,9 @@ export default function ReposPage() {
                     setSearchQuery("");
                     setSelectedRepos(new Set());
                   }}
-                  className="gap-2"
                 >
-                  <Plus className="size-4" />
-                  Connect Repository
+                  <Plus className="size-4 mr-2" />
+                  Import from GitHub
                 </Button>
               )}
             </div>

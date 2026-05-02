@@ -805,8 +805,15 @@ export async function runPostReviewToGitHub(
 }
 
 export const postReviewToGitHub = inngest.createFunction(
-  { id: "post-review-to-github", retries: 3 },
-  { event: "review/pr.completed" },
+  {
+    id: "post-review-to-github",
+    retries: 3,
+    triggers: [{ event: "review/pr.completed" }],
+  },
   async ({ event, step }) =>
-    runPostReviewToGitHub(event as ReviewCompletedEvent, step, defaultDeps),
+    runPostReviewToGitHub(
+      event as unknown as ReviewCompletedEvent,
+      step,
+      defaultDeps,
+    ),
 );

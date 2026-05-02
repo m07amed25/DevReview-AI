@@ -1,10 +1,7 @@
 "use client";
 
-import React, { useRef } from "react";
 import { TrendingUp, TrendingDown, Minus, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
 import {
   AnimatedCounter,
   MiniStatSparkline,
@@ -17,7 +14,6 @@ export function StatCard({
   icon: Icon,
   color,
   subtitle,
-  delay = 0,
   decimals = 0,
   trend,
   trendLabel,
@@ -38,36 +34,15 @@ export function StatCard({
   progress?: number;
   live?: boolean;
 }) {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const glowRef = useRef<HTMLDivElement>(null);
-
-  useGSAP(
-    () => {
-      if (!cardRef.current) return;
-      gsap.fromTo(
-        cardRef.current,
-        { opacity: 0, y: 24, scale: 0.92 },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.6,
-          delay,
-          ease: "back.out(1.4)",
-        },
-      );
-    },
-    { scope: cardRef, dependencies: [delay] },
-  );
-
   const TrendIcon =
     trend === "up" ? TrendingUp : trend === "down" ? TrendingDown : Minus;
+  
   const trendColor =
     trend === "up"
-      ? "text-emerald-500 bg-emerald-500/10"
+      ? "text-emerald-600 dark:text-emerald-400"
       : trend === "down"
-        ? "text-red-500 bg-red-500/10"
-        : "text-muted-foreground bg-muted/50";
+        ? "text-red-600 dark:text-red-400"
+        : "text-muted-foreground";
 
   const textColorMap: Record<string, string> = {
     "bg-primary": "text-primary",
@@ -77,134 +52,61 @@ export function StatCard({
     "bg-red-500": "text-red-500",
   };
   const textColor = textColorMap[color] ?? "text-primary";
+  const borderColor = color.replace('bg-', 'border-');
 
   return (
-    <div ref={cardRef}>
-      <div
-        className="group relative overflow-hidden rounded-2xl border border-border/40 bg-linear-to-br from-card/90 via-card/70 to-card/50 backdrop-blur-sm transition-all duration-500 hover:border-border/80 hover:shadow-2xl hover:shadow-primary/5 hover:-translate-y-1"
-        onMouseMove={(e) => {
-          if (!glowRef.current) return;
-          const rect = e.currentTarget.getBoundingClientRect();
-          glowRef.current.style.left = `${e.clientX - rect.left}px`;
-          glowRef.current.style.top = `${e.clientY - rect.top}px`;
-          glowRef.current.style.opacity = "1";
-        }}
-        onMouseLeave={() => {
-          if (glowRef.current) glowRef.current.style.opacity = "0";
-        }}
-      >
-        <div
-          ref={glowRef}
-          className={cn(
-            "pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 size-40 rounded-full blur-3xl transition-opacity duration-500 opacity-0",
-            color,
-          )}
-          style={{ opacity: 0 }}
-        />
-        <div
-          className={cn(
-            "absolute -right-6 -top-6 size-28 rounded-full opacity-[0.07] blur-3xl transition-all duration-700 group-hover:opacity-[0.15] group-hover:scale-125",
-            color,
-          )}
-        />
-        <div
-          className={cn(
-            "absolute -left-4 -bottom-4 size-20 rounded-full opacity-[0.04] blur-2xl transition-all duration-700 group-hover:opacity-[0.08]",
-            color,
-          )}
-        />
-        <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-border/60 to-transparent" />
-        <div
-          className={cn(
-            "absolute top-0 left-1/2 -translate-x-1/2 h-px w-0 transition-all duration-500 group-hover:w-full",
-            color,
-            "opacity-40",
-          )}
-        />
-
-        {sparklineData && sparklineData.length > 1 && (
-          <div className="absolute inset-x-0 bottom-0 h-16 opacity-30 group-hover:opacity-50 transition-opacity duration-500">
-            <MiniStatSparkline data={sparklineData} color={textColor} />
-          </div>
-        )}
-
-        <div className="relative p-4 sm:p-5 flex flex-col gap-3">
-          <div className="flex items-center justify-between">
+    <div className="group relative bg-card border rounded-xl overflow-hidden shadow-sm transition-all duration-200 hover:shadow-md hover:border-primary/20">
+      {/* Subtle Side Accent */}
+      <div className={cn("absolute inset-y-0 left-0 w-1", color, "opacity-70")} />
+      
+      <div className="p-4 sm:p-5">
+        <div className="flex items-start justify-between mb-4">
+          <div className="space-y-1">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground opacity-70">
+              {label}
+            </span>
             <div className="flex items-center gap-2">
-              <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">
-                {label}
-              </p>
+              <AnimatedCounter
+                value={value}
+                className="text-2xl font-bold tracking-tight text-foreground tabular-nums"
+                decimals={decimals}
+              />
               {live && (
-                <span className="relative flex size-2">
-                  <span
-                    className={cn(
-                      "absolute inline-flex h-full w-full animate-ping rounded-full opacity-75",
-                      color,
-                    )}
-                  />
-                  <span
-                    className={cn(
-                      "relative inline-flex size-2 rounded-full",
-                      color,
-                    )}
-                  />
-                </span>
-              )}
-            </div>
-            <div className="relative">
-              <div
-                className={cn(
-                  "flex size-10 items-center justify-center rounded-xl ring-1 ring-white/10 shadow-lg transition-all duration-500 group-hover:scale-110 group-hover:shadow-xl group-hover:rotate-3",
-                  color,
-                )}
-              >
-                <Icon className="size-4.5 text-white drop-shadow-sm" />
-              </div>
-              {progress != null && (
-                <div className="absolute -inset-0.5">
-                  <StatProgressRing
-                    progress={progress}
-                    color={textColor}
-                    size={44}
-                  />
-                </div>
+                <span className="flex size-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)] animate-pulse" />
               )}
             </div>
           </div>
-
-          <div className="flex items-end justify-between gap-2">
-            <div className="space-y-1 min-w-0">
-              <div className="flex items-baseline gap-2.5">
-                <AnimatedCounter
-                  value={value}
-                  className="text-3xl font-extrabold tabular-nums tracking-tight leading-none"
-                  decimals={decimals}
-                />
-                {trend && trendLabel && (
-                  <div
-                    className={cn(
-                      "inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[10px] font-semibold tabular-nums",
-                      trendColor,
-                    )}
-                  >
-                    <TrendIcon className="size-2.5" />
-                    {trendLabel}
-                  </div>
-                )}
-              </div>
-              {subtitle && (
-                <p className="text-[11px] text-muted-foreground/70 leading-tight truncate">
-                  {subtitle}
-                </p>
-              )}
-            </div>
+          <div className={cn(
+            "flex size-9 items-center justify-center rounded-lg bg-muted/20 border border-border/50",
+            "transition-colors duration-200 group-hover:bg-muted/40"
+          )}>
+            <Icon className={cn("size-4.5", textColor)} />
           </div>
+        </div>
 
-          <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-1 group-hover:translate-y-0">
-            <ArrowUpRight className="size-3.5 text-muted-foreground/50" />
+        <div className="flex items-center justify-between text-[11px] font-medium">
+          <div className="flex items-center gap-2">
+            {trend && trendLabel && (
+              <span className={cn("flex items-center gap-0.5", trendColor)}>
+                <TrendIcon className="size-3" />
+                {trendLabel}
+              </span>
+            )}
+            {subtitle && (
+              <span className="text-muted-foreground/60">
+                {subtitle}
+              </span>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Sparkline integrated at the very bottom */}
+      {sparklineData && sparklineData.length > 1 && (
+        <div className="absolute inset-x-0 bottom-0 h-8 opacity-20 group-hover:opacity-40 transition-opacity duration-300 pointer-events-none">
+          <MiniStatSparkline data={sparklineData} color={textColor} />
+        </div>
+      )}
     </div>
   );
 }

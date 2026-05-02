@@ -1,20 +1,40 @@
 import { GitPullRequest, FileCode, Users, Clock } from "lucide-react";
+import { Fade } from "@/components/animate-ui/primitives/effects/fade";
+import { CountingNumber } from "@/components/animate-ui/primitives/texts/counting-number";
 
 const stats = [
   {
-    value: "50K+",
+    value: 50,
+    suffix: "K+",
+    decimals: 0,
     label: "PRs Reviewed",
     icon: GitPullRequest,
     color: "text-indigo-400",
   },
   {
-    value: "2M+",
+    value: 2,
+    suffix: "M+",
+    decimals: 0,
     label: "Lines Analyzed",
     icon: FileCode,
     color: "text-purple-400",
   },
-  { value: "10K+", label: "Developers", icon: Users, color: "text-pink-400" },
-  { value: "99.9%", label: "Uptime", icon: Clock, color: "text-emerald-400" },
+  {
+    value: 10,
+    suffix: "K+",
+    decimals: 0,
+    label: "Developers",
+    icon: Users,
+    color: "text-pink-400",
+  },
+  {
+    value: 99.9,
+    suffix: "%",
+    decimals: 1,
+    label: "Uptime",
+    icon: Clock,
+    color: "text-emerald-400",
+  },
 ];
 
 export function StatsSection() {
@@ -29,10 +49,11 @@ export function StatsSection() {
           role="list"
           aria-label="Platform statistics"
         >
-          {stats.map((stat) => (
-            <div
+          {stats.map((stat, i) => (
+            <Fade
               key={stat.label}
-              className="text-center group px-4"
+              delay={i * 150}
+              className="text-center group px-4 flex flex-col items-center"
               role="listitem"
             >
               <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white/[0.03] border border-white/5 mb-4 transition-all duration-300 group-hover:bg-white/[0.08] group-hover:scale-110 group-hover:border-white/10 shadow-lg">
@@ -41,13 +62,17 @@ export function StatsSection() {
                   aria-hidden="true"
                 />
               </div>
-              <div className="stat-value text-4xl sm:text-5xl font-bold tracking-tight tabular-nums text-zinc-100">
-                {stat.value}
+              <div className="stat-value text-4xl sm:text-5xl font-bold tracking-tight tabular-nums text-zinc-100 flex items-center justify-center">
+                <CountingNumber
+                  number={stat.value}
+                  decimalPlaces={stat.decimals}
+                />
+                <span>{stat.suffix}</span>
               </div>
               <div className="text-sm font-medium text-zinc-500 mt-2 uppercase tracking-widest">
                 {stat.label}
               </div>
-            </div>
+            </Fade>
           ))}
         </div>
       </div>

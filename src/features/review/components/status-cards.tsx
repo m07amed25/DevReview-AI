@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRef } from "react";
-import gsap from "gsap";
 
 export function PendingCard() {
   return (
@@ -228,21 +227,6 @@ export function FailedCard({
 
 export function NoIssuesCard() {
   const cardRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!cardRef.current) return;
-    gsap.fromTo(
-      cardRef.current.querySelector("[data-check-icon]"),
-      { scale: 0, rotation: -180 },
-      {
-        scale: 1,
-        rotation: 0,
-        duration: 0.6,
-        ease: "back.out(1.7)",
-        delay: 0.2,
-      },
-    );
-  }, []);
 
   return (
     <Card ref={cardRef} className="overflow-hidden border-emerald-500/20">

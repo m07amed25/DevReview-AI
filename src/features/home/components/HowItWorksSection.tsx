@@ -52,10 +52,8 @@ export function HowItWorksSection() {
           role="list"
           aria-label="How it works steps"
         >
-          {/* Connecting Line behind steps */}
-          <div className="hidden sm:block absolute top-12 left-[16%] right-[16%] h-[2px] bg-zinc-800 z-0" />
-          {/* Scrubbing progress line */}
-          <div className="step-line-progress hidden sm:block absolute top-12 left-[16%] right-[16%] h-[2px] bg-gradient-to-r from-indigo-500 to-purple-500 shadow-[0_0_10px_rgba(99,102,241,0.8)] z-0 origin-left scale-x-0" />
+          {/* Connecting Line */}
+          <div className="hidden sm:block absolute top-12 left-[16%] right-[16%] h-[2px] bg-gradient-to-r from-indigo-500/30 via-purple-500/30 to-indigo-500/30 z-0" />
 
           {steps.map((item) => (
             <div

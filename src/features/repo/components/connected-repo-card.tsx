@@ -50,13 +50,13 @@ export function ConnectedRepoCard({
 }: ConnectedRepoCardProps) {
   return (
     <article
-      className="group relative flex flex-col h-full p-4 sm:p-5 rounded-xl border border-border bg-card hover:border-primary/40 hover:bg-muted/10 hover:shadow-md transition-all shadow-sm"
+      className="group flex flex-col h-full p-4 sm:p-5 rounded-xl border border-border bg-card hover:border-border/80 hover:shadow-sm transition-all"
       aria-labelledby={`repo-name-${repo.id}`}
     >
       {/* Top Header */}
       <div className="flex w-full gap-3.5 mb-2">
         <div className="pt-0.5 shrink-0">
-          <div className="flex shrink-0 items-center justify-center rounded-md border border-border bg-muted text-muted-foreground size-10">
+          <div className="flex shrink-0 items-center justify-center rounded-md border border-border bg-muted/50 text-muted-foreground size-10">
             <FolderGit2 className="size-4" />
           </div>
         </div>
@@ -126,15 +126,15 @@ export function ConnectedRepoCard({
         <div className="mt-auto pt-4 flex flex-wrap justify-between items-center gap-3 text-[11px] sm:text-xs text-muted-foreground font-medium border-t border-border/40">
           <div className="flex items-center gap-1.5">
             <span className="relative flex h-1.5 w-1.5">
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
             </span>
             <span>{formatConnectedDate(repo.createdAt.toString())}</span>
           </div>
 
           <Button
-            variant="secondary"
             size="sm"
-            className="h-7 text-[11px] sm:text-xs px-3 font-medium bg-primary/10 hover:bg-primary/20 text-primary border-0"
+            variant="outline"
+            className="h-7 text-[11px] sm:text-xs px-3 font-medium bg-background"
             asChild
           >
             <Link href={`/repo/${repo.id}`} className="flex items-center gap-1.5">

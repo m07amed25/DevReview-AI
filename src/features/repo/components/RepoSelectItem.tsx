@@ -5,8 +5,6 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
   FolderGit2,
-  Lock,
-  Globe,
   Star,
   GitFork,
   ExternalLink,
@@ -110,103 +108,102 @@ export function RepoSelectItem({
     <div
       onClick={() => onToggle(repo.githubId)}
       className={cn(
-        "group relative flex flex-col h-full items-start p-4 sm:p-5 rounded-xl border transition-all cursor-pointer shadow-sm",
+        "group flex flex-col h-full p-4 rounded-xl border transition-all cursor-pointer",
         selected
-          ? "border-primary bg-primary/5 ring-1 ring-primary/20"
-          : "border-border bg-card hover:border-primary/40 hover:bg-muted/10 hover:shadow-md",
+          ? "border-primary bg-primary/5"
+          : "border-border bg-card hover:border-border/80 hover:shadow-sm",
       )}
     >
-      <div className="flex w-full gap-3.5 mb-3">
+      <div className="flex w-full items-start gap-3">
         <div className="pt-0.5 shrink-0">
           <Checkbox
             checked={selected}
             onCheckedChange={() => onToggle(repo.githubId)}
-            className="transition-colors"
+            className="transition-colors data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
           />
         </div>
 
-        <div className="flex items-start justify-between w-full min-w-0">
-          <div className="flex items-center gap-2.5 min-w-0">
-            <FolderGit2 className="h-4 w-4 text-muted-foreground shrink-0" />
-            <h3 className="font-semibold text-sm sm:text-base text-foreground truncate">
-              {repo.fullName}
-            </h3>
+        <div className="flex flex-col min-w-0 flex-1">
+          <div className="flex items-start justify-between w-full min-w-0 mb-1.5">
+            <div className="flex items-center gap-2 min-w-0 flex-wrap sm:flex-nowrap">
+              <FolderGit2 className="h-4 w-4 text-muted-foreground shrink-0 hidden sm:block" />
+              <h3 className="font-medium text-sm text-foreground truncate">
+                {repo.fullName}
+              </h3>
+              <span
+                className={cn(
+                  "inline-flex items-center justify-center px-1.5 py-0.5 rounded-md border text-[10px] font-medium leading-none whitespace-nowrap",
+                  repo.private
+                    ? "border-border text-muted-foreground"
+                    : "border-transparent bg-secondary text-secondary-foreground"
+                )}
+              >
+                {repo.private ? "Private" : "Public"}
+              </span>
+            </div>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6 shrink-0 text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 ml-2"
+              onClick={(e) => {
+                e.stopPropagation();
+                window.open(repo.htmlUrl, "_blank");
+              }}
+              title="View on GitHub"
+            >
+              <ExternalLink className="h-3.5 w-3.5" />
+            </Button>
           </div>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-7 w-7 sm:h-8 sm:w-8 shrink-0 text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 ml-2"
-            onClick={(e) => {
-              e.stopPropagation();
-              window.open(repo.htmlUrl, "_blank");
-            }}
-            title="View on GitHub"
-          >
-            <ExternalLink className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-          </Button>
+          {repo.description && (
+            <p className="text-xs text-muted-foreground line-clamp-2 pr-2">
+              {repo.description}
+            </p>
+          )}
         </div>
       </div>
 
-      <div className="flex flex-col flex-1 w-full pl-[30px] sm:pl-[34px]">
-        <div className="mb-3">
-          <span
-            className={cn(
-              "inline-flex items-center justify-center px-2 py-0.5 rounded-full border text-[10px] font-medium leading-none whitespace-nowrap",
-              repo.private
-                ? "border-amber-500/30 text-amber-600 bg-amber-500/10 dark:text-amber-400"
-                : "border-emerald-500/30 text-emerald-600 bg-emerald-500/10 dark:text-emerald-400",
-            )}
-          >
-            {repo.private ? "Private" : "Public"}
-          </span>
-        </div>
-
-        {repo.description && (
-          <p className="text-xs sm:text-sm text-muted-foreground line-clamp-3 mb-4">
-            {repo.description}
-          </p>
-        )}
-
-        <div className="mt-auto pt-4 flex flex-wrap items-center gap-3 text-[11px] sm:text-xs text-muted-foreground font-medium border-t border-border/40">
+      <div className="mt-auto pt-4 pl-[26px]">
+        <div className="flex flex-wrap items-center gap-3 text-[11px] text-muted-foreground font-medium">
           {repo.language && (
             <div className="flex items-center gap-1.5">
-              <span className={cn("h-2.5 w-2.5 rounded-full", langColor)} />
+              <span className={cn("h-2 w-2 rounded-full", langColor)} />
               <span>{repo.language}</span>
             </div>
           )}
 
           {repo.stars > 0 && (
             <div
-              className="flex items-center gap-1.5"
+              className="flex items-center gap-1"
               title={`${repo.stars} stars`}
             >
-              <Star className="h-3.5 w-3.5" />
+              <Star className="h-3 w-3" />
               <span>{formatNumber(repo.stars)}</span>
             </div>
           )}
 
           {(repo.forksCount ?? 0) > 0 && (
             <div
-              className="flex items-center gap-1.5"
+              className="flex items-center gap-1"
               title={`${repo.forksCount} forks`}
             >
-              <GitFork className="h-3.5 w-3.5" />
+              <GitFork className="h-3 w-3" />
               <span>{formatNumber(repo.forksCount!)}</span>
             </div>
           )}
 
           {(repo.openIssuesCount ?? 0) > 0 && (
             <div
-              className="flex items-center gap-1.5"
+              className="flex items-center gap-1"
               title={`${repo.openIssuesCount} issues`}
             >
-              <BookOpen className="h-3.5 w-3.5" />
+              <BookOpen className="h-3 w-3" />
               <span>{formatNumber(repo.openIssuesCount!)}</span>
             </div>
           )}
 
-          <div className="flex items-center gap-1.5 ml-auto text-[10px] sm:text-xs">
+          <div className="flex items-center gap-1.5 ml-auto text-[10px]">
             <span>{formatDate(repo.updatedAt)}</span>
           </div>
         </div>

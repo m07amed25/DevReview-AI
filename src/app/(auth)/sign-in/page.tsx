@@ -17,7 +17,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import gsap from "gsap";
 import {
   AuroraBackground,
   GridBackground,
@@ -51,21 +50,6 @@ function SignInContent() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // GSAP entrance animation — runs once on mount, touches only the DOM
-    gsap.fromTo(
-      cardRef.current,
-      { opacity: 0, y: 30, scale: 0.95 },
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.6,
-        ease: "power3.out",
-      },
-    );
-  }, []);
 
   const validateFields = (): boolean => {
     const errors: FieldErrors = {};

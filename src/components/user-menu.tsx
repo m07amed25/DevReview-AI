@@ -39,10 +39,10 @@ import {
   Shield,
   Bell,
   Loader2,
-  Check,
   Users,
   BarChart3,
 } from "lucide-react";
+import { ThemeTogglerButton } from "./animate-ui/components/buttons/theme-toggler";
 
 interface UserProps {
   id: string;
@@ -56,49 +56,6 @@ export function UserMenu({ user }: { user: UserProps }) {
   const router = useRouter();
   const [isSigningOut, setIsSigningOut] = useState(false);
   const { theme, setTheme } = useTheme();
-
-  const handleThemeChange = useCallback(
-    (newTheme: string, event?: React.MouseEvent) => {
-      const x = event?.clientX ?? window.innerWidth / 2;
-      const y = event?.clientY ?? 0;
-
-      const endRadius = Math.hypot(
-        Math.max(x, window.innerWidth - x),
-        Math.max(y, window.innerHeight - y),
-      );
-
-      const doc = document as Document & {
-        startViewTransition?: (callback: () => void) => {
-          ready: Promise<void>;
-        };
-      };
-
-      if (doc.startViewTransition) {
-        const transition = doc.startViewTransition(() => {
-          setTheme(newTheme);
-        });
-
-        transition.ready.then(() => {
-          document.documentElement.animate(
-            {
-              clipPath: [
-                `circle(0px at ${x}px ${y}px)`,
-                `circle(${endRadius}px at ${x}px ${y}px)`,
-              ],
-            },
-            {
-              duration: 500,
-              easing: "cubic-bezier(0.4, 0, 0.2, 1)",
-              pseudoElement: "::view-transition-new(root)",
-            },
-          );
-        });
-      } else {
-        setTheme(newTheme);
-      }
-    },
-    [setTheme],
-  );
 
   const handleSignOut = async () => {
     setIsSigningOut(true);
@@ -338,79 +295,36 @@ export function UserMenu({ user }: { user: UserProps }) {
         {/* ── Preferences Section ── */}
         <div className="p-1">
           <DropdownMenuGroup>
-            <DropdownMenuSub>
-              <DropdownMenuSubTrigger className="gap-3 px-2 py-2 cursor-pointer rounded-md">
-                <div className="flex items-center justify-center size-8 rounded-md bg-sky-500/10 overflow-hidden">
-                  {theme === "light" ? (
-                    <Sun className="size-4 text-amber-500 theme-icon-enter" />
-                  ) : theme === "dark" ? (
-                    <Moon className="size-4 text-blue-400 theme-icon-enter" />
-                  ) : (
-                    <Monitor className="size-4 text-sky-500 theme-icon-enter" />
-                  )}
+            <DropdownMenuItem
+              className="p-0 focus:bg-transparent"
+              onSelect={(e) => e.preventDefault()}
+              asChild
+            >
+              <ThemeTogglerButton
+                variant="ghost"
+                className="w-full justify-start h-auto p-2 hover:bg-accent group/theme"
+              >
+                <div className="flex items-center w-full justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-center size-8 rounded-md bg-sky-500/10 overflow-hidden group-hover/theme:bg-sky-500/20 transition-colors">
+                      {theme === "light" ? (
+                        <Sun className="size-4 text-amber-500" />
+                      ) : theme === "dark" ? (
+                        <Moon className="size-4 text-blue-400" />
+                      ) : (
+                        <Monitor className="size-4 text-sky-500" />
+                      )}
+                    </div>
+                    <div className="flex flex-col items-start">
+                      <span className="text-sm font-medium">Theme</span>
+                      <span className="text-[11px] text-muted-foreground capitalize">
+                        {theme || "system"}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium">Theme</span>
-                  <span className="text-[11px] text-muted-foreground">
-                    {theme === "light"
-                      ? "Light"
-                      : theme === "dark"
-                        ? "Dark"
-                        : "System"}
-                  </span>
-                </div>
-              </DropdownMenuSubTrigger>
-              <DropdownMenuPortal>
-                <DropdownMenuSubContent
-                  className="min-w-[180px]"
-                  sideOffset={8}
-                  collisionPadding={16}
-                >
-                  <DropdownMenuItem
-                    className="gap-2 cursor-pointer justify-between group/theme-item"
-                    onClick={(e) => handleThemeChange("light", e)}
-                  >
-                    <div className="flex items-center gap-2">
-                      <div className="relative">
-                        <Sun className="size-4 transition-transform duration-300 group-hover/theme-item:rotate-90 group-hover/theme-item:text-amber-500" />
-                      </div>
-                      <span>Light</span>
-                    </div>
-                    {theme === "light" && (
-                      <Check className="size-4 text-primary theme-check-enter" />
-                    )}
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="gap-2 cursor-pointer justify-between group/theme-item"
-                    onClick={(e) => handleThemeChange("dark", e)}
-                  >
-                    <div className="flex items-center gap-2">
-                      <div className="relative">
-                        <Moon className="size-4 transition-transform duration-300 group-hover/theme-item:-rotate-12 group-hover/theme-item:scale-110 group-hover/theme-item:text-blue-400" />
-                      </div>
-                      <span>Dark</span>
-                    </div>
-                    {theme === "dark" && (
-                      <Check className="size-4 text-primary theme-check-enter" />
-                    )}
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="gap-2 cursor-pointer justify-between group/theme-item"
-                    onClick={(e) => handleThemeChange("system", e)}
-                  >
-                    <div className="flex items-center gap-2">
-                      <div className="relative">
-                        <Monitor className="size-4 transition-transform duration-300 group-hover/theme-item:scale-110 group-hover/theme-item:text-violet-500" />
-                      </div>
-                      <span>System</span>
-                    </div>
-                    {theme === "system" && (
-                      <Check className="size-4 text-primary theme-check-enter" />
-                    )}
-                  </DropdownMenuItem>
-                </DropdownMenuSubContent>
-              </DropdownMenuPortal>
-            </DropdownMenuSub>
+              </ThemeTogglerButton>
+            </DropdownMenuItem>
 
             {/* <DropdownMenuItem className="gap-3 px-2 py-2 cursor-pointer rounded-md">
               <div className="flex items-center justify-center size-8 rounded-md bg-slate-500/10">
