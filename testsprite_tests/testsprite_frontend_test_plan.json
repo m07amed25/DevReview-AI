@@ -1,0 +1,473 @@
+[
+  {
+    "id": "TS-001-01",
+    "title": "Landing page loads and hero section is visible",
+    "description": "Verify the public landing page renders with the hero heading visible",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      "Navigate to http://localhost:3000",
+      "Assert page title contains 'DevReview AI' or similar text",
+      "Assert the hero section heading is visible on screen"
+    ]
+  },
+  {
+    "id": "TS-001-02",
+    "title": "Landing page navigation links are present",
+    "description": "Verify Sign In link and CTA button are visible in the header",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      "Navigate to http://localhost:3000",
+      "Assert Sign In link is visible in the header",
+      "Assert a Get Started or Sign Up CTA button is visible"
+    ]
+  },
+  {
+    "id": "TS-001-03",
+    "title": "Landing page stats section is displayed",
+    "description": "Verify the stats section with numeric metrics renders on scroll",
+    "category": "functional",
+    "priority": "Low",
+    "steps": [
+      "Navigate to http://localhost:3000",
+      "Scroll down to the stats section",
+      "Assert at least one numeric statistic is visible"
+    ]
+  },
+  {
+    "id": "TS-002-01",
+    "title": "Sign-in page renders all form fields",
+    "description": "Verify the sign-in page renders email, password fields and Sign In button",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      "Navigate to http://localhost:3000/sign-in",
+      "Assert the email input field is visible",
+      "Assert the password input field is visible",
+      "Assert the Sign In submit button is visible"
+    ]
+  },
+  {
+    "id": "TS-002-02",
+    "title": "Sign-in empty form submission shows validation errors",
+    "description": "Verify inline validation errors appear when the sign-in form is submitted empty",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      "Navigate to http://localhost:3000/sign-in",
+      "Click the Sign In button without filling any fields",
+      "Assert an error message for the email field appears",
+      "Assert an error message for the password field appears"
+    ]
+  },
+  {
+    "id": "TS-002-03",
+    "title": "Sign-in invalid email format shows validation error",
+    "description": "Verify that entering a malformed email triggers a validation error",
+    "category": "error handling",
+    "priority": "Medium",
+    "steps": [
+      "Navigate to http://localhost:3000/sign-in",
+      "Type 'notanemail' in the email field",
+      "Type 'somepassword' in the password field",
+      "Click the Sign In button",
+      "Assert an email format validation error is shown"
+    ]
+  },
+  {
+    "id": "TS-002-04",
+    "title": "Sign-in password visibility toggle works",
+    "description": "Verify that clicking the eye icon toggles password field visibility",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      "Navigate to http://localhost:3000/sign-in",
+      "Type a password in the password field",
+      "Click the eye icon button to reveal the password",
+      "Assert the password input type changes to 'text'",
+      "Click the eye-off icon button to hide the password",
+      "Assert the password input type is 'password' again"
+    ]
+  },
+  {
+    "id": "TS-002-05",
+    "title": "Sign-in page Sign Up link navigates to registration",
+    "description": "Verify that the Sign Up link on the sign-in page navigates to /sign-up",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      "Navigate to http://localhost:3000/sign-in",
+      "Click the 'Sign up' link",
+      "Assert the URL is http://localhost:3000/sign-up"
+    ]
+  },
+  {
+    "id": "TS-002-06",
+    "title": "Sign-in GitHub OAuth button is rendered and enabled",
+    "description": "Verify the 'Sign in with GitHub' button exists and is not disabled on initial load",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      "Navigate to http://localhost:3000/sign-in",
+      "Assert the 'Sign in with GitHub' button is visible",
+      "Assert the button is not in a disabled state on initial load"
+    ]
+  },
+  {
+    "id": "TS-003-01",
+    "title": "Sign-up page renders all form fields",
+    "description": "Verify the sign-up page renders name, email, password fields and submit button",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      "Navigate to http://localhost:3000/sign-up",
+      "Assert the name input field is visible",
+      "Assert the email input field is visible",
+      "Assert the password input field is visible",
+      "Assert the Sign Up submit button is visible"
+    ]
+  },
+  {
+    "id": "TS-003-02",
+    "title": "Sign-up empty form submission shows validation errors",
+    "description": "Verify validation errors appear when the registration form is submitted empty",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      "Navigate to http://localhost:3000/sign-up",
+      "Click the submit button without filling any fields",
+      "Assert at least one validation error message appears on screen"
+    ]
+  },
+  {
+    "id": "TS-003-03",
+    "title": "Sign-up page Sign In link navigates to sign-in",
+    "description": "Verify that the Sign In link on the sign-up page navigates to /sign-in",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      "Navigate to http://localhost:3000/sign-up",
+      "Click the 'Sign in' link",
+      "Assert the URL is http://localhost:3000/sign-in"
+    ]
+  },
+  {
+    "id": "TS-004-01",
+    "title": "Protected /repo route redirects unauthenticated users",
+    "description": "Verify that accessing /repo without a session redirects to /sign-in",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      "Ensure no active session cookie is present",
+      "Navigate to http://localhost:3000/repo",
+      "Assert the URL has redirected to /sign-in"
+    ]
+  },
+  {
+    "id": "TS-004-02",
+    "title": "Custom 404 page renders for unknown routes",
+    "description": "Verify that navigating to a non-existent path shows the custom not-found page",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      "Navigate to http://localhost:3000/this-page-does-not-exist-xyz-12345",
+      "Assert a 404 or 'not found' message is visible on the page"
+    ]
+  },
+  {
+    "id": "TS-005-01",
+    "title": "Landing page uses dark theme by default",
+    "description": "Verify the landing page root element has the dark theme class applied",
+    "category": "functional",
+    "priority": "Low",
+    "steps": [
+      "Navigate to http://localhost:3000",
+      "Assert the root element has CSS class 'dark' or a dark background colour is applied"
+    ]
+  },
+  {
+    "id": "TS-006-01",
+    "title": "Full email sign-up flow redirects to /repo",
+    "description": "Register a brand-new account with valid credentials and verify redirect to the repositories dashboard",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      "Navigate to http://localhost:3000/sign-up",
+      "Fill in Name field with 'Test User'",
+      "Fill in Email field with a unique valid email e.g. testuser_unique@example.com",
+      "Fill in Password field with 'TestPass123!'",
+      "Fill in Confirm Password field with 'TestPass123!'",
+      "Click the Sign Up button",
+      "Assert the URL redirects to http://localhost:3000/repo"
+    ]
+  },
+  {
+    "id": "TS-006-02",
+    "title": "Sign-up password shorter than 8 characters shows error",
+    "description": "Verify that a password with fewer than 8 characters triggers a validation error",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      "Navigate to http://localhost:3000/sign-up",
+      "Fill in Name with 'Test'",
+      "Fill in Email with 'test@example.com'",
+      "Fill in Password with 'abc' (fewer than 8 characters)",
+      "Fill in Confirm Password with 'abc'",
+      "Click Sign Up",
+      "Assert an error 'Password must be at least 8 characters' is shown"
+    ]
+  },
+  {
+    "id": "TS-006-03",
+    "title": "Sign-up mismatched passwords shows confirmation error",
+    "description": "Verify that entering different values in Password and Confirm Password shows an error",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      "Navigate to http://localhost:3000/sign-up",
+      "Fill in Name with 'Test'",
+      "Fill in Email with 'test@example.com'",
+      "Fill in Password with 'TestPass123!'",
+      "Fill in Confirm Password with 'DifferentPass!'",
+      "Click Sign Up",
+      "Assert a 'Passwords do not match' error is displayed"
+    ]
+  },
+  {
+    "id": "TS-006-04",
+    "title": "Sign-up password strength indicator appears while typing",
+    "description": "Verify the password strength bar changes label as password complexity increases",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      "Navigate to http://localhost:3000/sign-up",
+      "Type 'abc' in the Password field",
+      "Assert a 'Weak' strength label is visible",
+      "Clear the password field and type 'TestPass123!'",
+      "Assert the strength label changes to 'Strong' or 'Very Strong'"
+    ]
+  },
+  {
+    "id": "TS-007-01",
+    "title": "Full email sign-in flow redirects to /repo",
+    "description": "Authenticate with valid credentials and confirm redirect to the repositories dashboard",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      "Navigate to http://localhost:3000/sign-in",
+      "Fill in Email with the test account email from loginUser config",
+      "Fill in Password with the test account password from loginPassword config",
+      "Click Sign In",
+      "Assert the URL redirects to http://localhost:3000/repo"
+    ]
+  },
+  {
+    "id": "TS-007-02",
+    "title": "Sign-in with wrong password shows error message",
+    "description": "Verify that an incorrect password shows a sign-in error banner",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      "Navigate to http://localhost:3000/sign-in",
+      "Fill in Email with a valid account email",
+      "Fill in Password with 'WrongPassword999!'",
+      "Click Sign In",
+      "Assert an error banner appears above the form"
+    ]
+  },
+  {
+    "id": "TS-008-01",
+    "title": "Dashboard header is visible after login",
+    "description": "After login, verify the main navigation header renders with all nav links",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      "Log in with valid credentials and navigate to http://localhost:3000/repo",
+      "Assert the header navigation is visible",
+      "Assert 'Repositories' nav link is present",
+      "Assert 'Reviews' nav link is present",
+      "Assert 'Teams' nav link is present",
+      "Assert 'Analytics' nav link is present"
+    ]
+  },
+  {
+    "id": "TS-008-02",
+    "title": "User menu is accessible in the dashboard header",
+    "description": "Verify the user avatar / menu button is rendered in the header after login",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      "Log in and navigate to http://localhost:3000/repo",
+      "Assert the user avatar or user menu button is visible in the top-right of the header",
+      "Click the user menu button",
+      "Assert a dropdown menu with Profile, Settings, and Sign Out options appears"
+    ]
+  },
+  {
+    "id": "TS-009-01",
+    "title": "Repositories page renders empty state with Connect button",
+    "description": "For a newly registered user, verify the /repo page shows an empty state with a Connect Repository button",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      "Log in and navigate to http://localhost:3000/repo",
+      "Assert the page heading 'Repositories' or similar is visible",
+      "Assert a 'Connect Repository' or 'Add Repository' button is present on the page"
+    ]
+  },
+  {
+    "id": "TS-009-02",
+    "title": "Connect Repository panel opens on button click",
+    "description": "Clicking the Connect Repository button opens a GitHub repository selector panel",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      "Log in and navigate to http://localhost:3000/repo",
+      "Click the 'Connect Repository' button",
+      "Assert a panel, drawer, or dialog appears listing GitHub repositories to connect"
+    ]
+  },
+  {
+    "id": "TS-010-01",
+    "title": "Reviews page renders with filters and search",
+    "description": "Verify the /reviews page loads with status filter tabs and a search input",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      "Log in and navigate to http://localhost:3000/reviews",
+      "Assert the page heading 'Reviews' or similar is visible",
+      "Assert at least one status filter tab (All, Completed, Pending) is visible",
+      "Assert a search input field is present"
+    ]
+  },
+  {
+    "id": "TS-010-02",
+    "title": "Reviews page list/grid view toggle works",
+    "description": "Verify the view mode can be switched between list and grid",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      "Log in and navigate to http://localhost:3000/reviews",
+      "Assert a list view icon button is visible",
+      "Assert a grid view icon button is visible",
+      "Click the grid view button",
+      "Assert the layout changes to a grid display"
+    ]
+  },
+  {
+    "id": "TS-011-01",
+    "title": "Analytics page renders key metrics section",
+    "description": "Verify the /analytics page loads with metrics cards and charts",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      "Log in and navigate to http://localhost:3000/analytics",
+      "Assert the page heading 'Analytics' or similar is visible",
+      "Assert at least one key metric card (Total Reviews, Approval Rate, etc.) is visible"
+    ]
+  },
+  {
+    "id": "TS-011-02",
+    "title": "Analytics time period filter changes data range",
+    "description": "Verify that changing the time period selector updates the displayed analytics range",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      "Log in and navigate to http://localhost:3000/analytics",
+      "Assert a time period selector (7d, 30d, 90d, etc.) is visible",
+      "Click a different time period option",
+      "Assert the page reflects the updated time period selection"
+    ]
+  },
+  {
+    "id": "TS-012-01",
+    "title": "Teams page renders with Create Team button",
+    "description": "Verify the /teams page loads with a Create Team button",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      "Log in and navigate to http://localhost:3000/teams",
+      "Assert the page heading 'Teams' is visible",
+      "Assert the 'Create Team' button is present"
+    ]
+  },
+  {
+    "id": "TS-012-02",
+    "title": "Create Team dialog opens and accepts a team name",
+    "description": "Verify clicking Create Team opens a dialog with a team name input",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      "Log in and navigate to http://localhost:3000/teams",
+      "Click 'Create Team' button",
+      "Assert a dialog or modal opens",
+      "Assert a text input for the team name is visible in the dialog"
+    ]
+  },
+  {
+    "id": "TS-013-01",
+    "title": "Settings page renders all setting sections",
+    "description": "Verify the /settings page loads with theme, preferences, and sessions sections",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      "Log in and navigate to http://localhost:3000/settings",
+      "Assert the page heading 'Settings' or similar is visible",
+      "Assert a theme selector section is visible",
+      "Assert a sessions section listing active sessions is visible"
+    ]
+  },
+  {
+    "id": "TS-013-02",
+    "title": "Settings theme selector switches between light and dark",
+    "description": "Verify the theme can be toggled to light or dark from the settings page",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      "Log in and navigate to http://localhost:3000/settings",
+      "Find the theme selector in the Appearance or Preferences section",
+      "Click 'Light' theme option",
+      "Assert the page background switches to a light colour",
+      "Click 'Dark' theme option",
+      "Assert the page background switches back to dark"
+    ]
+  },
+  {
+    "id": "TS-014-01",
+    "title": "Sign out from user menu redirects to landing page",
+    "description": "Clicking Sign Out in the user menu signs the user out and redirects to /",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      "Log in and navigate to http://localhost:3000/repo",
+      "Click the user menu button in the header",
+      "Click 'Sign Out' from the dropdown",
+      "Assert the URL redirects to http://localhost:3000 or http://localhost:3000/sign-in"
+    ]
+  },
+  {
+    "id": "TS-014-02",
+    "title": "Accessing protected route after sign-out redirects to sign-in",
+    "description": "After signing out, navigating directly to a protected page redirects to /sign-in",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      "Log in, then sign out from the user menu",
+      "Navigate directly to http://localhost:3000/repo",
+      "Assert the URL redirects to http://localhost:3000/sign-in"
+    ]
+  },
+  {
+    "id": "TS-015-01",
+    "title": "Profile page renders user information",
+    "description": "Verify the /profile page loads and displays the current user's name and email",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      "Log in and navigate to http://localhost:3000/profile",
+      "Assert a section showing user display name is visible",
+      "Assert the user's email is displayed or editable"
+    ]
+  }
+]

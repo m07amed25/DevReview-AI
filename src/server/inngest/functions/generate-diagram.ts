@@ -146,15 +146,33 @@ export const generateDiagram = inngest.createFunction(
       }
       
       const repoFiles = await fetchRepositoryFiles(accessToken, owner, repo);
-      // Sort to prioritize likely architectural files over random assets
-      // e.g. prisma schemas, package.json, main TS files
+      // Score files differently depending on what diagram we're generating
       const scoreFile = (path: string) => {
-        if (path.endsWith("schema.prisma")) return 100;
-        if (path.endsWith("package.json")) return 90;
-        if (path.includes("src/server/db/")) return 80;
-        if (path.includes("src/server/api/")) return 70;
-        if (path.endsWith(".ts") || path.endsWith(".tsx")) return 50;
-        if (path.endsWith(".js") || path.endsWith(".jsx")) return 40;
+        // ── ERD: prioritise DB schema & migration files ───────────────────────
+        if (type === "ERD") {
+          if (path.endsWith("schema.prisma") || path.endsWith(".prisma")) return 100;
+          if (/migration/i.test(path) && path.endsWith(".sql")) return 90;
+          if (path.endsWith("package.json")) return 20;
+          if (path.endsWith(".ts") || path.endsWith(".tsx")) return 10;
+          return 0;
+        }
+        // ── CLASS: prioritise service / model / entity files ─────────────────
+        if (type === "CLASS") {
+          if (/\.(service|model|entity|class)\.(ts|js)$/.test(path)) return 100;
+          if (path.endsWith(".ts") || path.endsWith(".tsx")) return 50;
+          if (path.endsWith(".js") || path.endsWith(".jsx")) return 40;
+          return 0;
+        }
+        // ── USE_CASE: prioritise route / controller / handler / API files ─────
+        if (/route\.(ts|js)$/.test(path)) return 100;
+        if (/\.(controller|router|handler|endpoint)\.(ts|js)$/.test(path)) return 100;
+        if (/routes?\/|controllers?\/|handlers?\/|endpoints?\//i.test(path)) return 90;
+        if (/api\//i.test(path) && (path.endsWith(".ts") || path.endsWith(".js"))) return 85;
+        if (/inngest/i.test(path)) return 80;
+        if (/webhook/i.test(path)) return 80;
+        if (path.endsWith("package.json")) return 30;
+        if (path.endsWith(".ts") || path.endsWith(".tsx")) return 20;
+        if (path.endsWith(".js") || path.endsWith(".jsx")) return 10;
         return 0;
       };
       

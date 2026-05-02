@@ -115,7 +115,9 @@ function generateERD(fileContents: Record<string, string>): {
 
         columns.push({
           name: fieldName,
-          type: fieldType.replace("?", ""),
+          // Strip optional marker and array brackets so the type is a plain
+          // Mermaid-erDiagram-compatible identifier (only word chars allowed).
+          type: fieldType.replace(/[?[\]]/g, ""),
           isPrimaryKey,
           isForeignKey,
         });
@@ -132,7 +134,14 @@ function generateERD(fileContents: Record<string, string>): {
     });
   }
 
-  // Extract relations for edges — reuse the already-parsed brace-balanced blocks
+  // Extract relations for edges — reuse the already-parsed brace-balanced blocks.
+  // Track processed pairs to detect MANY_TO_MANY (both sides are arrays).
+  const edgeKey = (a: string, b: string) => [a, b].sort().join("__");
+  const processedEdgePairs = new Map<
+    string,
+    { fromId: string; toId: string; fromIsArray: boolean }
+  >();
+
   for (const { name: modelName, body: modelBody } of modelBlocks) {
     const lines = modelBody.split("\n");
     for (const line of lines) {
@@ -145,15 +154,37 @@ function generateERD(fileContents: Record<string, string>): {
         if (fieldMatch) {
           const relType = fieldMatch[2]!;
           const isArray = relType.includes("[]");
-          const targetModel = relType.replace("[]", "").replace("?", "");
+          const targetModel = relType.replace(/[\[\]?]/g, "");
 
           if (models.has(targetModel)) {
-            edges.push({
-              fromId: `table_${modelName}`,
-              toId: `table_${targetModel}`,
-              label: isArray ? "has many" : "has one",
-              direction: isArray ? "ONE_TO_MANY" : "ONE_TO_ONE",
-            });
+            const key = edgeKey(modelName, targetModel);
+            if (processedEdgePairs.has(key)) {
+              // Both sides exist → could be MANY_TO_MANY; update direction
+              const existing = processedEdgePairs.get(key)!;
+              if (isArray && existing.fromIsArray) {
+                // Find and upgrade to MANY_TO_MANY
+                const existingEdge = edges.find(
+                  (e) =>
+                    e.fromId === existing.fromId && e.toId === existing.toId,
+                );
+                if (existingEdge) {
+                  existingEdge.direction = "MANY_TO_MANY";
+                  existingEdge.label = "many to many";
+                }
+              }
+            } else {
+              processedEdgePairs.set(key, {
+                fromId: `table_${modelName}`,
+                toId: `table_${targetModel}`,
+                fromIsArray: isArray,
+              });
+              edges.push({
+                fromId: `table_${modelName}`,
+                toId: `table_${targetModel}`,
+                label: isArray ? "has many" : "has one",
+                direction: isArray ? "ONE_TO_MANY" : "ONE_TO_ONE",
+              });
+            }
           }
         }
       }
@@ -175,7 +206,12 @@ function generateERD(fileContents: Record<string, string>): {
   for (const edge of edges) {
     const fromModel = edge.fromId.replace("table_", "");
     const toModel = edge.toId.replace("table_", "");
-    const rel = edge.direction === "ONE_TO_MANY" ? "||--o{" : "||--||";
+    const rel =
+      edge.direction === "ONE_TO_MANY"
+        ? "||--o{"
+        : edge.direction === "MANY_TO_MANY"
+          ? "}o--o{"
+          : "||--||";
     lines.push(`  ${fromModel} ${rel} ${toModel} : "${edge.label}"`);
   }
 
@@ -188,6 +224,57 @@ function generateERD(fileContents: Record<string, string>): {
 
 // ─── Class diagram generator ──────────────────────────────────────────────────
 
+/**
+ * Sanitise a TypeScript type string so it is valid inside a Mermaid
+ * classDiagram member definition.
+ *  • Union types  (string | null)  → keep only the first constituent
+ *  • Generic types (Array<T>)       → use Mermaid tilde notation (Array~T~)
+ *  • Strips any remaining chars that aren't word chars, brackets, or tildes
+ */
+function sanitizeMermaidClassType(raw: string): string {
+  return (
+    raw
+      // Keep only the first union member
+      .replace(/\s*\|.*/g, "")
+      // Convert generics: Map<K, V> → Map~K_V~
+      .replace(/<([^>]*)>/g, (_, inner: string) =>
+        `~${inner.replace(/[,\s]+/g, "_")}~`,
+      )
+      // Remove any remaining chars that would break Mermaid parsing
+      .replace(/[^\w[\]~]/g, "")
+      .trim() || "any"
+  );
+}
+
+/**
+ * Use brace-balanced extraction to find each class body.
+ * Returns an array of { name, parent?, body } entries in source order.
+ */
+function extractClassBodies(
+  content: string,
+): Array<{ name: string; parent?: string; body: string }> {
+  const results: Array<{ name: string; parent?: string; body: string }> = [];
+  // Match class declarations including `implements ...` clauses before the `{`
+  const headerRegex =
+    /(?:export\s+)?(?:abstract\s+)?class\s+(\w+)(?:\s+extends\s+(\w+))?[^{]*\{/g;
+  let header: RegExpExecArray | null;
+  while ((header = headerRegex.exec(content)) !== null) {
+    const className = header[1]!;
+    const parentClass = header[2];
+    const openBrace = header.index + header[0].length - 1;
+    let depth = 1;
+    let i = openBrace + 1;
+    while (i < content.length && depth > 0) {
+      if (content[i] === "{") depth++;
+      else if (content[i] === "}") depth--;
+      i++;
+    }
+    const body = content.slice(openBrace + 1, i - 1);
+    results.push({ name: className, parent: parentClass, body });
+  }
+  return results;
+}
+
 function generateClassDiagram(fileContents: Record<string, string>): {
   definition: string;
   nodes: DiagramNode[];
@@ -197,15 +284,9 @@ function generateClassDiagram(fileContents: Record<string, string>): {
   const edges: DiagramEdge[] = [];
 
   for (const [, content] of Object.entries(fileContents)) {
-    // Extract class definitions
-    const classRegex =
-      /(?:export\s+)?(?:abstract\s+)?class\s+(\w+)(?:\s+extends\s+(\w+))?/g;
-    let classMatch: RegExpExecArray | null;
+    const classBodies = extractClassBodies(content);
 
-    while ((classMatch = classRegex.exec(content)) !== null) {
-      const className = classMatch[1]!;
-      const parentClass = classMatch[2];
-
+    for (const { name: className, parent: parentClass, body } of classBodies) {
       const properties: Array<{
         name: string;
         type: string;
@@ -213,35 +294,39 @@ function generateClassDiagram(fileContents: Record<string, string>): {
       }> = [];
       const methods: string[] = [];
 
-      // Extract properties
+      // ── Properties ──────────────────────────────────────────────────────────
+      // Match lines like:
+      //   public  name: string
+      //   private readonly _value: number
+      //   protected data?: string[]
+      //   name: string          (implied public)
       const propRegex =
-        /(?:(?:public|private|protected|readonly)\s+)+(\w+)(?:\?)?:\s*([\w<>[\]|,\s]+)/g;
+        /^\s*(public|private|protected)?\s*(?:readonly\s+)?(\w+)\??:\s*([\w<>[\]\s|,]+)/gm;
       let propMatch: RegExpExecArray | null;
-      while ((propMatch = propRegex.exec(content)) !== null) {
-        const visibility = content
-          .slice(0, propMatch.index)
-          .match(/\b(public|private|protected)\b\s*$/)?.[1] as
+      while ((propMatch = propRegex.exec(body)) !== null) {
+        const vis = (propMatch[1] ?? "public") as
           | "public"
           | "private"
-          | "protected"
-          | undefined;
+          | "protected";
         properties.push({
-          name: propMatch[1]!,
-          type: propMatch[2]!.trim(),
-          visibility: visibility ?? "public",
+          name: propMatch[2]!,
+          type: sanitizeMermaidClassType(propMatch[3]!.trim()),
+          visibility: vis,
         });
       }
 
-      // Extract method signatures
+      // ── Methods ─────────────────────────────────────────────────────────────
+      // Match lines like:
+      //   public async doSomething(
+      //   private _helper(
+      //   async fetchData(
       const methodRegex =
-        /(?:(?:public|private|protected|async)\s+)+(\w+)\s*\([^)]*\)/g;
+        /^\s*(?:public|private|protected)?\s*(?:async\s+)?(\w+)\s*\(/gm;
       let methodMatch: RegExpExecArray | null;
-      while ((methodMatch = methodRegex.exec(content)) !== null) {
-        if (
-          methodMatch[1] !== "constructor" &&
-          !methods.includes(methodMatch[1]!)
-        ) {
-          methods.push(methodMatch[1]!);
+      while ((methodMatch = methodRegex.exec(body)) !== null) {
+        const name = methodMatch[1]!;
+        if (name !== "constructor" && !methods.includes(name)) {
+          methods.push(name);
         }
       }
 
@@ -274,7 +359,7 @@ function generateClassDiagram(fileContents: Record<string, string>): {
   for (const node of nodes) {
     const detail = node.detail as DiagramNodeDetailClass;
     lines.push(`  class ${node.label} {`);
-    for (const prop of detail.properties.slice(0, 5)) {
+    for (const prop of detail.properties.slice(0, 6)) {
       const vis =
         prop.visibility === "public"
           ? "+"
@@ -283,7 +368,7 @@ function generateClassDiagram(fileContents: Record<string, string>): {
             : "#";
       lines.push(`    ${vis}${prop.type} ${prop.name}`);
     }
-    for (const method of detail.methods.slice(0, 5)) {
+    for (const method of detail.methods.slice(0, 6)) {
       lines.push(`    +${method}()`);
     }
     lines.push("  }");
@@ -312,95 +397,396 @@ function generateUseCaseDiagram(fileContents: Record<string, string>): {
   const nodes: DiagramNode[] = [];
   const edges: DiagramEdge[] = [];
 
-  // Add an actor
-  const actorDetail: DiagramNodeDetailUseCase = {
-    description: "User interacting with the API",
-    interactions: [],
-  };
-  nodes.push({
-    id: "actor_User",
-    label: "User",
-    type: "ACTOR",
-    detail: actorDetail,
-  });
+  // ── Helper: humanise camelCase / kebab-case / snake_case identifiers ─────────
+  const toLabel = (name: string) =>
+    name
+      .replace(/([a-z])([A-Z])/g, "$1 $2")
+      .replace(/[-_]+/g, " ")
+      .replace(/\b\w/g, (c) => c.toUpperCase())
+      .trim();
+
+  // ── Step 1: Detect which actors appear in the provided files ─────────────────
+  // Start with the primary actor; others are added when evidence is found.
+  const actorSet = new Set<string>(["User"]);
 
   for (const [filePath, content] of Object.entries(fileContents)) {
-    // Extract route handlers / exported function names
+    if (/webhook/i.test(filePath)) actorSet.add("GitHub");
+    if (
+      /inngest/i.test(filePath) ||
+      content.includes("inngest.createFunction")
+    )
+      actorSet.add("Inngest");
+    if (/[/\\]admin[/\\.]/.test(filePath) || content.includes("adminProcedure"))
+      actorSet.add("Admin");
+  }
+
+  const actorDescriptions: Record<string, string> = {
+    User: "Authenticated developer using the application",
+    Admin: "System administrator with elevated privileges",
+    GitHub: "GitHub platform — sends webhook events",
+    Inngest: "Background job runner (scheduled / event-driven tasks)",
+  };
+
+  for (const actorName of actorSet) {
+    nodes.push({
+      id: `actor_${actorName}`,
+      label: actorName,
+      type: "ACTOR",
+      detail: {
+        description: actorDescriptions[actorName] ?? actorName,
+        interactions: [],
+      } as DiagramNodeDetailUseCase,
+    });
+  }
+
+  // ── Step 2: Extract use cases from each file ──────────────────────────────────
+
+  type GroupInfo = { label: string; ucIds: string[]; actorIds: Set<string> };
+  const groups = new Map<string, GroupInfo>();
+
+  // Helper: resolve the primary actor for a given file
+  const resolveActor = (filePath: string, content: string): string => {
+    if (/webhook/i.test(filePath)) return "actor_GitHub";
+    if (
+      /inngest/i.test(filePath) ||
+      content.includes("inngest.createFunction")
+    )
+      return "actor_Inngest";
+    if (/[/\\]admin[/\\.]/.test(filePath)) return "actor_Admin";
+    return "actor_User";
+  };
+
+  for (const [filePath, content] of Object.entries(fileContents)) {
+    const fileName =
+      filePath.split(/[/\\]/).pop()?.replace(/\.(ts|tsx|js|jsx)$/, "") ??
+      "unknown";
+    const groupId = `grp_${fileName.replace(/[^a-zA-Z0-9]/g, "_")}`;
+    const groupLabel = toLabel(fileName);
+
+    if (!groups.has(groupId)) {
+      groups.set(groupId, { label: groupLabel, ucIds: [], actorIds: new Set() });
+    }
+    const group = groups.get(groupId)!;
+
+    const defaultActor = resolveActor(filePath, content);
+
+    // ── 2a. HTTP route handlers (Next.js route.ts files) ───────────────────────
     const routeRegex =
       /export\s+(?:async\s+)?function\s+(GET|POST|PUT|PATCH|DELETE|HEAD)\s*\(/g;
-    const namedExportRegex =
-      /export\s+(?:const|async function|function)\s+(\w+)\s*[=(]/g;
-
     let routeMatch: RegExpExecArray | null;
     while ((routeMatch = routeRegex.exec(content)) !== null) {
       const method = routeMatch[1]!;
-      const pathSegment = filePath
+      const pathSeg = filePath
         .replace(/.*\/app\/api\//, "")
         .replace(/\/route\.(ts|js)$/, "");
-      const useCaseId = `usecase_${method}_${pathSegment.replace(/\//g, "_")}`;
-      const label = `${method} /${pathSegment}`;
+      const ucId = `uc_${method}_${pathSeg.replace(/[^a-zA-Z0-9]/g, "_")}`;
+      const label = `${method} /${pathSeg}`;
 
-      const detail: DiagramNodeDetailUseCase = {
-        description: `HTTP ${method} handler`,
-        interactions: ["User"],
-      };
-      (actorDetail.interactions as string[]).push(label);
-
-      nodes.push({ id: useCaseId, label, type: "USE_CASE", detail });
-      edges.push({
-        fromId: "actor_User",
-        toId: useCaseId,
-        label: "calls",
-        direction: "ASSOCIATES",
-      });
-    }
-
-    if (!content.match(routeRegex)) {
-      // Fallback: look for named exports from router/controller files
-      let namedMatch: RegExpExecArray | null;
-      while ((namedMatch = namedExportRegex.exec(content)) !== null) {
-        const fnName = namedMatch[1]!;
-        if (
-          ["default", "GET", "POST", "PUT", "PATCH", "DELETE"].includes(fnName)
-        )
-          continue;
-        const useCaseId = `usecase_${fnName}`;
-        const detail: DiagramNodeDetailUseCase = {
-          description: `Handler: ${fnName}`,
-          interactions: ["User"],
-        };
-        nodes.push({ id: useCaseId, label: fnName, type: "USE_CASE", detail });
+      if (!nodes.find((n) => n.id === ucId)) {
+        nodes.push({
+          id: ucId,
+          label,
+          type: "USE_CASE",
+          detail: {
+            description: `HTTP ${method} handler`,
+            interactions: [defaultActor.replace("actor_", "")],
+          } as DiagramNodeDetailUseCase,
+        });
+        group.ucIds.push(ucId);
+        group.actorIds.add(defaultActor);
         edges.push({
-          fromId: "actor_User",
-          toId: useCaseId,
-          label: "triggers",
+          fromId: defaultActor,
+          toId: ucId,
+          label: "calls",
           direction: "ASSOCIATES",
         });
       }
     }
-  }
 
-  if (nodes.length <= 1) {
-    throw new Error("No use-case endpoints found in the provided files");
-  }
+    // ── 2b. tRPC procedures (router files) ─────────────────────────────────────
+    // Matches:  procedureName: publicProcedure. / protectedProcedure. / adminProcedure.
+    const procRegex =
+      /(\w+):\s*(publicProcedure|protectedProcedure|adminProcedure)\b/g;
+    let procMatch: RegExpExecArray | null;
+    while ((procMatch = procRegex.exec(content)) !== null) {
+      const procName = procMatch[1]!;
+      const procType = procMatch[2]!;
 
-  // Build Mermaid flowchart for use-case approximation
-  const lines: string[] = ["flowchart LR", "  User((User))"];
+      // Skip common non-procedure identifiers
+      if (
+        ["default", "createTRPCRouter", "router", "procedure"].includes(
+          procName,
+        )
+      )
+        continue;
 
-  for (const node of nodes) {
-    if (node.type === "USE_CASE") {
-      const safeId = node.id.replace(/[^a-zA-Z0-9_]/g, "_");
-      lines.push(`  ${safeId}["${node.label}"]`);
+      const ucId = `uc_trpc_${groupId}_${procName}`;
+      const label = toLabel(procName);
+      const actor =
+        procType === "adminProcedure" ? "actor_Admin" : "actor_User";
+
+      if (!nodes.find((n) => n.id === ucId)) {
+        nodes.push({
+          id: ucId,
+          label,
+          type: "USE_CASE",
+          detail: {
+            description: `tRPC ${procType.replace("Procedure", "")} – ${label}`,
+            interactions: [actor.replace("actor_", "")],
+          } as DiagramNodeDetailUseCase,
+        });
+        group.ucIds.push(ucId);
+        group.actorIds.add(actor);
+        edges.push({
+          fromId: actor,
+          toId: ucId,
+          label: "uses",
+          direction: "ASSOCIATES",
+        });
+      }
+    }
+
+    // ── 2c. Inngest background functions ───────────────────────────────────────
+    if (
+      /inngest/i.test(filePath) ||
+      content.includes("inngest.createFunction")
+    ) {
+      const fnIdRegex = /\bid:\s*["']([^"']+)["']/g;
+      let fnIdMatch: RegExpExecArray | null;
+      while ((fnIdMatch = fnIdRegex.exec(content)) !== null) {
+        const fnId = fnIdMatch[1]!;
+        const ucId = `uc_inngest_${fnId.replace(/[^a-zA-Z0-9]/g, "_")}`;
+        const label = toLabel(fnId);
+
+        if (!nodes.find((n) => n.id === ucId)) {
+          nodes.push({
+            id: ucId,
+            label,
+            type: "USE_CASE",
+            detail: {
+              description: `Background job: ${fnId}`,
+              interactions: ["Inngest"],
+            } as DiagramNodeDetailUseCase,
+          });
+          group.ucIds.push(ucId);
+          group.actorIds.add("actor_Inngest");
+          edges.push({
+            fromId: "actor_Inngest",
+            toId: ucId,
+            label: "runs",
+            direction: "ASSOCIATES",
+          });
+        }
+      }
+    }
+
+    // ── 2d. Express / Fastify / Koa / Hono routes ──────────────────────────────
+    // Matches: router.get('/path', ...) / app.post('/path', ...) / server.put(...)
+    const expressRegex =
+      /(?:router|app|server|routes?)\.(get|post|put|patch|delete|all|use)\s*\(\s*["'`]([^"'`\n]+)["'`]/gi;
+    let expressMatch: RegExpExecArray | null;
+    while ((expressMatch = expressRegex.exec(content)) !== null) {
+      const method = expressMatch[1]!.toUpperCase();
+      const routePath = expressMatch[2]!;
+      const ucId = `uc_exp_${groupId}_${method}_${routePath.replace(/[^a-zA-Z0-9]/g, "_")}`;
+      const label = `${method} ${routePath}`;
+
+      if (!nodes.find((n) => n.id === ucId)) {
+        nodes.push({
+          id: ucId,
+          label,
+          type: "USE_CASE",
+          detail: {
+            description: `${method} ${routePath}`,
+            interactions: [defaultActor.replace("actor_", "")],
+          } as DiagramNodeDetailUseCase,
+        });
+        group.ucIds.push(ucId);
+        group.actorIds.add(defaultActor);
+        edges.push({
+          fromId: defaultActor,
+          toId: ucId,
+          label: "calls",
+          direction: "ASSOCIATES",
+        });
+      }
+    }
+
+    // ── 2e. NestJS / Spring-style decorators ───────────────────────────────────
+    // Matches: @Get('/path') / @Post('/users') followed by method name
+    const nestRegex =
+      /@(Get|Post|Put|Patch|Delete|All)\s*\(\s*["'`]?([^"'`)\n]*)["'`]?\s*\)\s*(?:[\s\S]{0,60}?)(?:async\s+)?(\w+)\s*\(/g;
+    let nestMatch: RegExpExecArray | null;
+    while ((nestMatch = nestRegex.exec(content)) !== null) {
+      const method = nestMatch[1]!.toUpperCase();
+      const routePath = nestMatch[2]?.trim() || "/";
+      const handlerName = nestMatch[3]!;
+      const ucId = `uc_nest_${groupId}_${handlerName}`;
+      const label = `${method} ${routePath || "/"} (${toLabel(handlerName)})`;
+
+      if (!nodes.find((n) => n.id === ucId)) {
+        nodes.push({
+          id: ucId,
+          label,
+          type: "USE_CASE",
+          detail: {
+            description: `${method} ${routePath || "/"}`,
+            interactions: [defaultActor.replace("actor_", "")],
+          } as DiagramNodeDetailUseCase,
+        });
+        group.ucIds.push(ucId);
+        group.actorIds.add(defaultActor);
+        edges.push({
+          fromId: defaultActor,
+          toId: ucId,
+          label: "calls",
+          direction: "ASSOCIATES",
+        });
+      }
+    }
+
+    // ── 2f. FastAPI / Flask / Django style decorators ──────────────────────────
+    // Matches: @app.route('/path', methods=['GET']) / @app.get('/path')
+    const fastApiRegex =
+      /@\w+\.(?:route|get|post|put|patch|delete)\s*\(\s*["'`]([^"'`\n]+)["'`]/g;
+    let fastApiMatch: RegExpExecArray | null;
+    while ((fastApiMatch = fastApiRegex.exec(content)) !== null) {
+      const routePath = fastApiMatch[1]!;
+      const methodGuess = /methods\s*=.*['"](\w+)['"]/.exec(content) ?? null;
+      const method = methodGuess ? methodGuess[1]!.toUpperCase() : "HTTP";
+      const ucId = `uc_py_${groupId}_${routePath.replace(/[^a-zA-Z0-9]/g, "_")}`;
+      const label = `${method} ${routePath}`;
+
+      if (!nodes.find((n) => n.id === ucId)) {
+        nodes.push({
+          id: ucId,
+          label,
+          type: "USE_CASE",
+          detail: {
+            description: `Route: ${routePath}`,
+            interactions: [defaultActor.replace("actor_", "")],
+          } as DiagramNodeDetailUseCase,
+        });
+        group.ucIds.push(ucId);
+        group.actorIds.add(defaultActor);
+        edges.push({
+          fromId: defaultActor,
+          toId: ucId,
+          label: "calls",
+          direction: "ASSOCIATES",
+        });
+      }
+    }
+
+    // ── 2g. Generic fallback: exported named functions ─────────────────────────
+    // Only run when no framework-specific pattern matched for this file, and
+    // the file looks like it could contain handlers (route/controller/api/handler in filename).
+    if (
+      group.ucIds.length === 0 &&
+      /route|controller|handler|service|endpoint|action|resolver/i.test(
+        fileName,
+      )
+    ) {
+      const namedFnRegex =
+        /export\s+(?:async\s+)?function\s+(\w+)\s*\(|export\s+const\s+(\w+)\s*=\s*(?:async\s+)?\(/g;
+      const skipNames = new Set([
+        "default",
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE",
+        "HEAD",
+        "OPTIONS",
+      ]);
+      let fnMatch: RegExpExecArray | null;
+      while ((fnMatch = namedFnRegex.exec(content)) !== null) {
+        const fnName = (fnMatch[1] ?? fnMatch[2])!;
+        if (skipNames.has(fnName)) continue;
+        // Skip ALL_CAPS constants
+        if (/^[A-Z_0-9]+$/.test(fnName)) continue;
+
+        const ucId = `uc_fn_${groupId}_${fnName}`;
+        const label = toLabel(fnName);
+
+        if (!nodes.find((n) => n.id === ucId)) {
+          nodes.push({
+            id: ucId,
+            label,
+            type: "USE_CASE",
+            detail: {
+              description: `Function: ${fnName}`,
+              interactions: [defaultActor.replace("actor_", "")],
+            } as DiagramNodeDetailUseCase,
+          });
+          group.ucIds.push(ucId);
+          group.actorIds.add(defaultActor);
+          edges.push({
+            fromId: defaultActor,
+            toId: ucId,
+            label: "triggers",
+            direction: "ASSOCIATES",
+          });
+        }
+      }
     }
   }
 
+  // Discard groups with no use cases
+  for (const [id, g] of groups) {
+    if (g.ucIds.length === 0) groups.delete(id);
+  }
+
+  // ── Fallback: if nothing was extracted, create a minimal skeleton ─────────────
+  if (nodes.filter((n) => n.type === "USE_CASE").length === 0) {
+    const skeletonId = "uc_system_boundary";
+    nodes.push({
+      id: skeletonId,
+      label: "System (no route patterns detected)",
+      type: "USE_CASE",
+      detail: {
+        description:
+          "No recognisable route or procedure patterns found in the provided files.",
+        interactions: ["User"],
+      } as DiagramNodeDetailUseCase,
+    });
+    edges.push({
+      fromId: "actor_User",
+      toId: skeletonId,
+      label: "interacts",
+      direction: "ASSOCIATES",
+    });
+    const fallbackGroupId = "grp_system";
+    groups.set(fallbackGroupId, {
+      label: "System",
+      ucIds: [skeletonId],
+      actorIds: new Set(["actor_User"]),
+    });
+  }
+
+  // ── Step 3: Build Mermaid flowchart ──────────────────────────────────────────
+  const lines: string[] = ["flowchart LR"];
+
+  // Actors (top-level circles)
+  for (const actorName of actorSet) {
+    lines.push(`  actor_${actorName}(("${actorName}"))`);
+  }
+
+  // One subgraph per file/router group
+  for (const [groupId, group] of groups) {
+    lines.push(`  subgraph ${groupId}["${group.label}"]`);
+    for (const ucId of group.ucIds) {
+      const node = nodes.find((n) => n.id === ucId);
+      if (!node) continue;
+      lines.push(`    ${ucId}(["${node.label}"])`);
+    }
+    lines.push("  end");
+  }
+
+  // Edges: actor ──► use case
   for (const edge of edges) {
-    const fromId =
-      edge.fromId === "actor_User"
-        ? "User"
-        : edge.fromId.replace(/[^a-zA-Z0-9_]/g, "_");
-    const toId = edge.toId.replace(/[^a-zA-Z0-9_]/g, "_");
-    lines.push(`  ${fromId} --> ${toId}`);
+    const arrow = edge.label === "runs" ? "-..->" : "-->";
+    lines.push(`  ${edge.fromId} ${arrow} ${edge.toId}`);
   }
 
   return {

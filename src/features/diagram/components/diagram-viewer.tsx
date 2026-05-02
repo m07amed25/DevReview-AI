@@ -5,7 +5,7 @@ import type { DiagramNode } from "@/features/diagram/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { NodeInfoPanel } from "./node-info-panel";
 import { Button } from "@/components/ui/button";
-import { ZoomIn, ZoomOut, Maximize2, RotateCcw } from "lucide-react";
+import { ZoomIn, ZoomOut, Maximize2, RotateCcw, Download } from "lucide-react";
 
 interface DiagramViewerProps {
   definition: string;
@@ -28,30 +28,88 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
   const [error, setError] = useState<string | null>(null);
   const [selectedNode, setSelectedNode] = useState<DiagramNode | null>(null);
 
-  // Zoom / pan state
+  // ── Zoom / pan state ────────────────────────────────────────────────────────
   const [scale, setScale] = useState(1);
   const [translate, setTranslate] = useState({ x: 0, y: 0 });
-  const isPanning = useRef(false);
-  const panStart = useRef({ x: 0, y: 0 });
+
+  // Refs mirror state for use inside event handlers without stale closures
+  const scaleRef = useRef(1);
   const translateRef = useRef({ x: 0, y: 0 });
 
-  const MIN_SCALE = 0.25;
-  const MAX_SCALE = 4;
-  const ZOOM_STEP = 0.15;
+  const isPanning = useRef(false);
+  const panStart = useRef({ x: 0, y: 0 });
 
-  const zoomIn = useCallback(
-    () => setScale((s) => Math.min(+(s + ZOOM_STEP).toFixed(2), MAX_SCALE)),
-    [],
-  );
-  const zoomOut = useCallback(
-    () => setScale((s) => Math.max(+(s - ZOOM_STEP).toFixed(2), MIN_SCALE)),
-    [],
-  );
-  const resetView = useCallback(() => {
-    setScale(1);
-    setTranslate({ x: 0, y: 0 });
-    translateRef.current = { x: 0, y: 0 };
+  // will-change applied only while an active transform is in progress to avoid
+  // permanently rasterising the SVG into a GPU bitmap (which causes pixelation).
+  const [isTransforming, setIsTransforming] = useState(false);
+  const transformEndTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const MIN_SCALE = 0.1;
+  const MAX_SCALE = 5;
+  const ZOOM_STEP = 0.15;
+  const PAN_STEP = 60; // px per keyboard arrow press
+
+  // ── Helpers ─────────────────────────────────────────────────────────────────
+
+  const beginTransform = useCallback(() => {
+    setIsTransforming(true);
+    if (transformEndTimer.current) clearTimeout(transformEndTimer.current);
+    transformEndTimer.current = setTimeout(() => setIsTransforming(false), 300);
   }, []);
+
+  /** Apply a new scale + translate atomically and keep refs in sync. */
+  const applyTransform = useCallback(
+    (newScale: number, newTranslate: { x: number; y: number }) => {
+      scaleRef.current = newScale;
+      translateRef.current = newTranslate;
+      setScale(newScale);
+      setTranslate(newTranslate);
+    },
+    [],
+  );
+
+  /**
+   * Zoom toward a focal point (fx, fy) in wrapper-relative coordinates.
+   * Keeps the diagram pixel under the focal point stationary.
+   */
+  const zoomToward = useCallback(
+    (delta: number, fx: number, fy: number) => {
+      beginTransform();
+      const s = scaleRef.current;
+      const t = translateRef.current;
+      const newScale = Math.min(
+        Math.max(+(s + delta).toFixed(2), MIN_SCALE),
+        MAX_SCALE,
+      );
+      // Diagram-space point that should remain fixed under (fx, fy)
+      const px = (fx - t.x) / s;
+      const py = (fy - t.y) / s;
+      applyTransform(newScale, {
+        x: fx - px * newScale,
+        y: fy - py * newScale,
+      });
+    },
+    [beginTransform, applyTransform],
+  );
+
+  // ── Button zoom (toward the centre of the viewport) ─────────────────────────
+  const zoomIn = useCallback(() => {
+    const wrapper = wrapperRef.current;
+    const cx = wrapper ? wrapper.clientWidth / 2 : 0;
+    const cy = wrapper ? wrapper.clientHeight / 2 : 0;
+    zoomToward(ZOOM_STEP, cx, cy);
+  }, [zoomToward]);
+
+  const zoomOut = useCallback(() => {
+    const wrapper = wrapperRef.current;
+    const cx = wrapper ? wrapper.clientWidth / 2 : 0;
+    const cy = wrapper ? wrapper.clientHeight / 2 : 0;
+    zoomToward(-ZOOM_STEP, cx, cy);
+  }, [zoomToward]);
+
+  const resetView = useCallback(() => {
+    applyTransform(1, { x: 0, y: 0 });
+  }, [applyTransform]);
 
   const fitToScreen = useCallback(() => {
     const wrapper = wrapperRef.current;
@@ -60,7 +118,6 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
     const svgEl = container.querySelector("svg");
     if (!svgEl) return;
 
-    // Read intrinsic size from viewBox (unaffected by CSS transforms)
     const vb = svgEl.viewBox?.baseVal;
     const naturalW = vb && vb.width > 0 ? vb.width : svgEl.getBBox().width;
     const naturalH = vb && vb.height > 0 ? vb.height : svgEl.getBBox().height;
@@ -68,28 +125,47 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
 
     const wrapperW = wrapper.clientWidth;
     const maxH = Math.max(window.innerHeight * 0.72, 600);
-    const newScale = +Math.min(wrapperW / naturalW, maxH / naturalH, 2).toFixed(
-      3,
-    );
+    const newScale = +Math.min(
+      wrapperW / naturalW,
+      maxH / naturalH,
+      2,
+    ).toFixed(3);
     const tx = Math.max(0, (wrapperW - naturalW * newScale) / 2);
     const ty = Math.max(0, (maxH - naturalH * newScale) / 2);
-    const newTranslate = { x: tx, y: ty };
+    applyTransform(newScale, { x: tx, y: ty });
+  }, [applyTransform]);
 
-    setScale(newScale);
-    setTranslate(newTranslate);
-    translateRef.current = newTranslate;
+  // ── Download SVG ─────────────────────────────────────────────────────────────
+  const downloadSVG = useCallback(() => {
+    const svgEl = containerRef.current?.querySelector("svg");
+    if (!svgEl) return;
+    const serializer = new XMLSerializer();
+    const svgStr = serializer.serializeToString(svgEl);
+    const blob = new Blob([svgStr], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "diagram.svg";
+    a.click();
+    URL.revokeObjectURL(url);
   }, []);
 
-  // Mouse-wheel zoom centred on cursor position
-  const handleWheel = useCallback((e: WheelEvent) => {
-    e.preventDefault();
-    const delta = e.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP;
-    setScale((s) =>
-      Math.min(Math.max(+(s + delta).toFixed(2), MIN_SCALE), MAX_SCALE),
-    );
-  }, []);
+  // ── Mouse-wheel zoom ─ centred on the cursor ─────────────────────────────────
+  const handleWheel = useCallback(
+    (e: WheelEvent) => {
+      e.preventDefault();
+      const wrapper = wrapperRef.current;
+      if (!wrapper) return;
+      const rect = wrapper.getBoundingClientRect();
+      const fx = e.clientX - rect.left;
+      const fy = e.clientY - rect.top;
+      const delta = e.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP;
+      zoomToward(delta, fx, fy);
+    },
+    [zoomToward],
+  );
 
-  // Pan handlers
+  // ── Mouse pan ────────────────────────────────────────────────────────────────
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     if (e.button !== 0) return;
     isPanning.current = true;
@@ -99,38 +175,195 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
     };
   }, []);
 
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!isPanning.current) return;
-    const newTranslate = {
-      x: e.clientX - panStart.current.x,
-      y: e.clientY - panStart.current.y,
-    };
-    translateRef.current = newTranslate;
-    setTranslate({ ...newTranslate });
-  }, []);
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent) => {
+      if (!isPanning.current) return;
+      beginTransform();
+      const newTranslate = {
+        x: e.clientX - panStart.current.x,
+        y: e.clientY - panStart.current.y,
+      };
+      translateRef.current = newTranslate;
+      setTranslate({ ...newTranslate });
+    },
+    [beginTransform],
+  );
 
   const stopPanning = useCallback(() => {
     isPanning.current = false;
   }, []);
 
-  // Attach non-passive wheel listener
+  // ── Touch pan + pinch-to-zoom ─────────────────────────────────────────────────
+  const lastTouchRef = useRef<{ x: number; y: number } | null>(null);
+  const lastPinchDistRef = useRef<number | null>(null);
+
+  const handleTouchStart = useCallback((e: TouchEvent) => {
+    if (e.touches.length === 1) {
+      lastTouchRef.current = {
+        x: e.touches[0]!.clientX,
+        y: e.touches[0]!.clientY,
+      };
+      lastPinchDistRef.current = null;
+    } else if (e.touches.length === 2) {
+      const dx = e.touches[0]!.clientX - e.touches[1]!.clientX;
+      const dy = e.touches[0]!.clientY - e.touches[1]!.clientY;
+      lastPinchDistRef.current = Math.sqrt(dx * dx + dy * dy);
+      lastTouchRef.current = null;
+    }
+  }, []);
+
+  const handleTouchMove = useCallback(
+    (e: TouchEvent) => {
+      e.preventDefault();
+      beginTransform();
+      const wrapper = wrapperRef.current;
+
+      if (e.touches.length === 1 && lastTouchRef.current) {
+        // Single-finger pan
+        const dx = e.touches[0]!.clientX - lastTouchRef.current.x;
+        const dy = e.touches[0]!.clientY - lastTouchRef.current.y;
+        lastTouchRef.current = {
+          x: e.touches[0]!.clientX,
+          y: e.touches[0]!.clientY,
+        };
+        const newT = {
+          x: translateRef.current.x + dx,
+          y: translateRef.current.y + dy,
+        };
+        translateRef.current = newT;
+        setTranslate({ ...newT });
+      } else if (
+        e.touches.length === 2 &&
+        lastPinchDistRef.current !== null &&
+        wrapper
+      ) {
+        // Two-finger pinch zoom toward midpoint
+        const dx = e.touches[0]!.clientX - e.touches[1]!.clientX;
+        const dy = e.touches[0]!.clientY - e.touches[1]!.clientY;
+        const newDist = Math.sqrt(dx * dx + dy * dy);
+        const ratio = newDist / lastPinchDistRef.current;
+        lastPinchDistRef.current = newDist;
+
+        const midX =
+          (e.touches[0]!.clientX + e.touches[1]!.clientX) / 2 -
+          wrapper.getBoundingClientRect().left;
+        const midY =
+          (e.touches[0]!.clientY + e.touches[1]!.clientY) / 2 -
+          wrapper.getBoundingClientRect().top;
+
+        const s = scaleRef.current;
+        const newScale = Math.min(
+          Math.max(+(s * ratio).toFixed(3), MIN_SCALE),
+          MAX_SCALE,
+        );
+        const px = (midX - translateRef.current.x) / s;
+        const py = (midY - translateRef.current.y) / s;
+        const newT = {
+          x: midX - px * newScale,
+          y: midY - py * newScale,
+        };
+        scaleRef.current = newScale;
+        translateRef.current = newT;
+        setScale(newScale);
+        setTranslate({ ...newT });
+      }
+    },
+    [beginTransform],
+  );
+
+  const handleTouchEnd = useCallback(() => {
+    lastTouchRef.current = null;
+    lastPinchDistRef.current = null;
+  }, []);
+
+  // ── Keyboard shortcuts ───────────────────────────────────────────────────────
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement).tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+
+      switch (e.key) {
+        case "+":
+        case "=":
+          e.preventDefault();
+          zoomIn();
+          break;
+        case "-":
+          e.preventDefault();
+          zoomOut();
+          break;
+        case "0":
+          e.preventDefault();
+          resetView();
+          break;
+        case "f":
+        case "F":
+          e.preventDefault();
+          fitToScreen();
+          break;
+        case "ArrowLeft":
+          e.preventDefault();
+          translateRef.current = {
+            x: translateRef.current.x + PAN_STEP,
+            y: translateRef.current.y,
+          };
+          setTranslate({ ...translateRef.current });
+          break;
+        case "ArrowRight":
+          e.preventDefault();
+          translateRef.current = {
+            x: translateRef.current.x - PAN_STEP,
+            y: translateRef.current.y,
+          };
+          setTranslate({ ...translateRef.current });
+          break;
+        case "ArrowUp":
+          e.preventDefault();
+          translateRef.current = {
+            x: translateRef.current.x,
+            y: translateRef.current.y + PAN_STEP,
+          };
+          setTranslate({ ...translateRef.current });
+          break;
+        case "ArrowDown":
+          e.preventDefault();
+          translateRef.current = {
+            x: translateRef.current.x,
+            y: translateRef.current.y - PAN_STEP,
+          };
+          setTranslate({ ...translateRef.current });
+          break;
+      }
+    };
+
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [zoomIn, zoomOut, resetView, fitToScreen]);
+
+  // ── Attach non-passive listeners ─────────────────────────────────────────────
   useEffect(() => {
     const el = wrapperRef.current;
     if (!el) return;
     el.addEventListener("wheel", handleWheel, { passive: false });
-    return () => el.removeEventListener("wheel", handleWheel);
-  }, [handleWheel]);
+    el.addEventListener("touchstart", handleTouchStart, { passive: true });
+    el.addEventListener("touchmove", handleTouchMove, { passive: false });
+    el.addEventListener("touchend", handleTouchEnd, { passive: true });
+    return () => {
+      el.removeEventListener("wheel", handleWheel);
+      el.removeEventListener("touchstart", handleTouchStart);
+      el.removeEventListener("touchmove", handleTouchMove);
+      el.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, [handleWheel, handleTouchStart, handleTouchMove, handleTouchEnd]);
 
+  // ── Node click ───────────────────────────────────────────────────────────────
   const activeNodeElRef = useRef<SVGElement | null>(null);
 
   const handleNodeClick = useCallback(
     (node: DiagramNode, el: SVGElement) => {
-      // Remove highlight from previous node
       if (activeNodeElRef.current) {
         activeNodeElRef.current.style.filter = "";
-        activeNodeElRef.current.style.outline = "";
       }
-      // Highlight new node
       el.style.filter = "drop-shadow(0 0 6px hsl(var(--primary) / 0.7))";
       activeNodeElRef.current = el;
       setSelectedNode(node);
@@ -139,17 +372,16 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
     [onNodeClick],
   );
 
+  // ── Mermaid render ───────────────────────────────────────────────────────────
   useEffect(() => {
     let cancelled = false;
 
     const render = async () => {
       if (!containerRef.current) return;
-
       setLoading(true);
       setError(null);
 
       try {
-        // Remove any stale mermaid element left from a previous render (StrictMode)
         document.getElementById(containerId)?.remove();
 
         const mermaid = (await import("mermaid")).default;
@@ -158,30 +390,23 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
           theme: "dark",
           securityLevel: "loose",
           fontFamily: "inherit",
-          themeVariables: {
-            fontSize: "16px",
-          },
-          flowchart: {
-            nodeSpacing: 70,
-            rankSpacing: 70,
-          },
+          themeVariables: { fontSize: "16px" },
+          flowchart: { nodeSpacing: 70, rankSpacing: 70 },
         });
 
         const { svg } = await mermaid.render(containerId, definition);
-
         if (cancelled || !containerRef.current) return;
 
         containerRef.current.innerHTML = svg;
 
-        // Make the generated SVG responsive
         const svgEl = containerRef.current.querySelector("svg");
         if (svgEl) {
           svgEl.removeAttribute("width");
           svgEl.removeAttribute("height");
-          svgEl.style.maxWidth = "100%";
-          svgEl.style.height = "auto";
+          svgEl.style.display = "block";
+          svgEl.style.shapeRendering = "geometricPrecision";
+          svgEl.style.textRendering = "geometricPrecision";
 
-          // Wire node click handlers
           if (nodes.length > 0) {
             svgEl
               .querySelectorAll<SVGElement>(".node, [data-id]")
@@ -204,35 +429,29 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
           }
         }
       } catch (err) {
-        if (!cancelled) {
+        if (!cancelled)
           setError(
             err instanceof Error ? err.message : "Failed to render diagram",
           );
-        }
       } finally {
-        if (!cancelled) {
-          setLoading(false);
-          // fitToScreen runs in the effect below once the SVG is visible
-        }
+        if (!cancelled) setLoading(false);
       }
     };
 
     void render();
-
     return () => {
       cancelled = true;
-      // Clean up the element mermaid may have appended to <body>
       document.getElementById(containerId)?.remove();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [definition]);
 
-  // Fit to screen after the SVG becomes visible
   useEffect(() => {
     if (!loading) fitToScreen();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
+  // ── Error state ──────────────────────────────────────────────────────────────
   if (error) {
     return (
       <div className="rounded-md border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
@@ -242,6 +461,7 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
     );
   }
 
+  // ── Render ───────────────────────────────────────────────────────────────────
   return (
     <div className="relative w-full">
       {/* Toolbar */}
@@ -252,46 +472,78 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
             size="icon"
             className="h-7 w-7"
             onClick={zoomIn}
-            title="Zoom in"
+            title="Zoom in  (+)"
             aria-label="Zoom in"
           >
             <ZoomIn className="h-4 w-4" />
           </Button>
-          <span className="min-w-12 text-center text-xs tabular-nums text-muted-foreground select-none">
+
+          {/* Clickable zoom % — click resets to 100 % */}
+          <button
+            type="button"
+            className="min-w-12 text-center text-xs tabular-nums text-muted-foreground select-none hover:text-foreground transition-colors"
+            title="Click to reset zoom (0)"
+            onClick={resetView}
+            aria-label="Reset zoom to 100%"
+          >
             {Math.round(scale * 100)}%
-          </span>
+          </button>
+
           <Button
             variant="ghost"
             size="icon"
             className="h-7 w-7"
             onClick={zoomOut}
-            title="Zoom out"
+            title="Zoom out  (-)"
             aria-label="Zoom out"
           >
             <ZoomOut className="h-4 w-4" />
           </Button>
+
           <div className="mx-1 h-4 w-px bg-border" />
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-7 w-7"
-            onClick={resetView}
-            title="Reset view"
-            aria-label="Reset view"
-          >
-            <RotateCcw className="h-4 w-4" />
-          </Button>
+
           <Button
             variant="ghost"
             size="icon"
             className="h-7 w-7"
             onClick={fitToScreen}
-            title="Fit to screen"
+            title="Fit to screen  (F)"
             aria-label="Fit to screen"
           >
             <Maximize2 className="h-4 w-4" />
           </Button>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7"
+            onClick={resetView}
+            title="Reset view  (0)"
+            aria-label="Reset view"
+          >
+            <RotateCcw className="h-4 w-4" />
+          </Button>
+
+          <div className="mx-1 h-4 w-px bg-border" />
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7"
+            onClick={downloadSVG}
+            title="Download SVG"
+            aria-label="Download SVG"
+          >
+            <Download className="h-4 w-4" />
+          </Button>
         </div>
+      )}
+
+      {/* Keyboard hint */}
+      {!loading && !error && (
+        <p className="absolute bottom-2 left-2 z-10 text-[10px] text-muted-foreground/50 select-none pointer-events-none">
+          Scroll / pinch to zoom · Drag to pan · + − 0 F ↑ ↓ ← →
+        </p>
       )}
 
       {/* Pan / zoom viewport */}
@@ -301,6 +553,7 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
         style={{
           minHeight: 600,
           cursor: isPanning.current ? "grabbing" : "grab",
+          touchAction: "none",
         }}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
@@ -316,11 +569,12 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
         )}
         <div
           ref={containerRef}
-          className="mermaid-container w-full origin-top-left will-change-transform"
+          className="mermaid-container origin-top-left"
           style={{
             display: loading ? "none" : "block",
             transform: `translate(${translate.x}px, ${translate.y}px) scale(${scale})`,
             transition: isPanning.current ? "none" : "transform 0.15s ease",
+            willChange: isTransforming ? "transform" : "auto",
           }}
           aria-label="Diagram visualization"
         />
