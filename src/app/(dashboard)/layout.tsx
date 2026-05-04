@@ -8,6 +8,7 @@ import { auth } from "@/server/auth";
 import { db } from "@/server/db";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { FeedbackButton } from "@/components/feedback/feedback-button";
 
 /**
  * User type matching the Header component's expectations.
@@ -66,6 +67,7 @@ function DashboardContent({
           </div>
         )}
         <main className="container mx-auto px-4 py-8">{children}</main>
+        <FeedbackButton />
       </div>
     </ErrorBoundary>
   );

@@ -28593,24 +28593,36 @@ export namespace Prisma {
 
   export type SupportMessageMinAggregateOutputType = {
     id: string | null
+    userId: string | null
+    name: string | null
     email: string | null
+    subject: string | null
     message: string | null
+    type: string | null
     status: string | null
     createdAt: Date | null
   }
 
   export type SupportMessageMaxAggregateOutputType = {
     id: string | null
+    userId: string | null
+    name: string | null
     email: string | null
+    subject: string | null
     message: string | null
+    type: string | null
     status: string | null
     createdAt: Date | null
   }
 
   export type SupportMessageCountAggregateOutputType = {
     id: number
+    userId: number
+    name: number
     email: number
+    subject: number
     message: number
+    type: number
     status: number
     createdAt: number
     _all: number
@@ -28619,24 +28631,36 @@ export namespace Prisma {
 
   export type SupportMessageMinAggregateInputType = {
     id?: true
+    userId?: true
+    name?: true
     email?: true
+    subject?: true
     message?: true
+    type?: true
     status?: true
     createdAt?: true
   }
 
   export type SupportMessageMaxAggregateInputType = {
     id?: true
+    userId?: true
+    name?: true
     email?: true
+    subject?: true
     message?: true
+    type?: true
     status?: true
     createdAt?: true
   }
 
   export type SupportMessageCountAggregateInputType = {
     id?: true
+    userId?: true
+    name?: true
     email?: true
+    subject?: true
     message?: true
+    type?: true
     status?: true
     createdAt?: true
     _all?: true
@@ -28716,8 +28740,12 @@ export namespace Prisma {
 
   export type SupportMessageGroupByOutputType = {
     id: string
+    userId: string | null
+    name: string | null
     email: string | null
+    subject: string | null
     message: string
+    type: string
     status: string
     createdAt: Date
     _count: SupportMessageCountAggregateOutputType | null
@@ -28741,45 +28769,65 @@ export namespace Prisma {
 
   export type SupportMessageSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    userId?: boolean
+    name?: boolean
     email?: boolean
+    subject?: boolean
     message?: boolean
+    type?: boolean
     status?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["supportMessage"]>
 
   export type SupportMessageSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    userId?: boolean
+    name?: boolean
     email?: boolean
+    subject?: boolean
     message?: boolean
+    type?: boolean
     status?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["supportMessage"]>
 
   export type SupportMessageSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    userId?: boolean
+    name?: boolean
     email?: boolean
+    subject?: boolean
     message?: boolean
+    type?: boolean
     status?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["supportMessage"]>
 
   export type SupportMessageSelectScalar = {
     id?: boolean
+    userId?: boolean
+    name?: boolean
     email?: boolean
+    subject?: boolean
     message?: boolean
+    type?: boolean
     status?: boolean
     createdAt?: boolean
   }
 
-  export type SupportMessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "message" | "status" | "createdAt", ExtArgs["result"]["supportMessage"]>
+  export type SupportMessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "name" | "email" | "subject" | "message" | "type" | "status" | "createdAt", ExtArgs["result"]["supportMessage"]>
 
   export type $SupportMessagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SupportMessage"
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: string
+      userId: string | null
+      name: string | null
       email: string | null
+      subject: string | null
       message: string
+      type: string
       status: string
       createdAt: Date
     }, ExtArgs["result"]["supportMessage"]>
@@ -29206,8 +29254,12 @@ export namespace Prisma {
    */
   interface SupportMessageFieldRefs {
     readonly id: FieldRef<"SupportMessage", 'String'>
+    readonly userId: FieldRef<"SupportMessage", 'String'>
+    readonly name: FieldRef<"SupportMessage", 'String'>
     readonly email: FieldRef<"SupportMessage", 'String'>
+    readonly subject: FieldRef<"SupportMessage", 'String'>
     readonly message: FieldRef<"SupportMessage", 'String'>
+    readonly type: FieldRef<"SupportMessage", 'String'>
     readonly status: FieldRef<"SupportMessage", 'String'>
     readonly createdAt: FieldRef<"SupportMessage", 'DateTime'>
   }
@@ -29908,8 +29960,12 @@ export namespace Prisma {
 
   export const SupportMessageScalarFieldEnum: {
     id: 'id',
+    userId: 'userId',
+    name: 'name',
     email: 'email',
+    subject: 'subject',
     message: 'message',
+    type: 'type',
     status: 'status',
     createdAt: 'createdAt'
   };
@@ -31938,16 +31994,24 @@ export namespace Prisma {
     OR?: SupportMessageWhereInput[]
     NOT?: SupportMessageWhereInput | SupportMessageWhereInput[]
     id?: StringFilter<"SupportMessage"> | string
+    userId?: StringNullableFilter<"SupportMessage"> | string | null
+    name?: StringNullableFilter<"SupportMessage"> | string | null
     email?: StringNullableFilter<"SupportMessage"> | string | null
+    subject?: StringNullableFilter<"SupportMessage"> | string | null
     message?: StringFilter<"SupportMessage"> | string
+    type?: StringFilter<"SupportMessage"> | string
     status?: StringFilter<"SupportMessage"> | string
     createdAt?: DateTimeFilter<"SupportMessage"> | Date | string
   }
 
   export type SupportMessageOrderByWithRelationInput = {
     id?: SortOrder
+    userId?: SortOrderInput | SortOrder
+    name?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
+    subject?: SortOrderInput | SortOrder
     message?: SortOrder
+    type?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
   }
@@ -31957,16 +32021,24 @@ export namespace Prisma {
     AND?: SupportMessageWhereInput | SupportMessageWhereInput[]
     OR?: SupportMessageWhereInput[]
     NOT?: SupportMessageWhereInput | SupportMessageWhereInput[]
+    userId?: StringNullableFilter<"SupportMessage"> | string | null
+    name?: StringNullableFilter<"SupportMessage"> | string | null
     email?: StringNullableFilter<"SupportMessage"> | string | null
+    subject?: StringNullableFilter<"SupportMessage"> | string | null
     message?: StringFilter<"SupportMessage"> | string
+    type?: StringFilter<"SupportMessage"> | string
     status?: StringFilter<"SupportMessage"> | string
     createdAt?: DateTimeFilter<"SupportMessage"> | Date | string
   }, "id">
 
   export type SupportMessageOrderByWithAggregationInput = {
     id?: SortOrder
+    userId?: SortOrderInput | SortOrder
+    name?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
+    subject?: SortOrderInput | SortOrder
     message?: SortOrder
+    type?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     _count?: SupportMessageCountOrderByAggregateInput
@@ -31979,8 +32051,12 @@ export namespace Prisma {
     OR?: SupportMessageScalarWhereWithAggregatesInput[]
     NOT?: SupportMessageScalarWhereWithAggregatesInput | SupportMessageScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"SupportMessage"> | string
+    userId?: StringNullableWithAggregatesFilter<"SupportMessage"> | string | null
+    name?: StringNullableWithAggregatesFilter<"SupportMessage"> | string | null
     email?: StringNullableWithAggregatesFilter<"SupportMessage"> | string | null
+    subject?: StringNullableWithAggregatesFilter<"SupportMessage"> | string | null
     message?: StringWithAggregatesFilter<"SupportMessage"> | string
+    type?: StringWithAggregatesFilter<"SupportMessage"> | string
     status?: StringWithAggregatesFilter<"SupportMessage"> | string
     createdAt?: DateTimeWithAggregatesFilter<"SupportMessage"> | Date | string
   }
@@ -33818,56 +33894,84 @@ export namespace Prisma {
 
   export type SupportMessageCreateInput = {
     id?: string
+    userId?: string | null
+    name?: string | null
     email?: string | null
+    subject?: string | null
     message: string
+    type?: string
     status?: string
     createdAt?: Date | string
   }
 
   export type SupportMessageUncheckedCreateInput = {
     id?: string
+    userId?: string | null
+    name?: string | null
     email?: string | null
+    subject?: string | null
     message: string
+    type?: string
     status?: string
     createdAt?: Date | string
   }
 
   export type SupportMessageUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     message?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SupportMessageUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     message?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SupportMessageCreateManyInput = {
     id?: string
+    userId?: string | null
+    name?: string | null
     email?: string | null
+    subject?: string | null
     message: string
+    type?: string
     status?: string
     createdAt?: Date | string
   }
 
   export type SupportMessageUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     message?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SupportMessageUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     message?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -35402,24 +35506,36 @@ export namespace Prisma {
 
   export type SupportMessageCountOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
+    name?: SortOrder
     email?: SortOrder
+    subject?: SortOrder
     message?: SortOrder
+    type?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
   }
 
   export type SupportMessageMaxOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
+    name?: SortOrder
     email?: SortOrder
+    subject?: SortOrder
     message?: SortOrder
+    type?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
   }
 
   export type SupportMessageMinOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
+    name?: SortOrder
     email?: SortOrder
+    subject?: SortOrder
     message?: SortOrder
+    type?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
   }

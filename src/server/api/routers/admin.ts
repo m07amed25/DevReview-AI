@@ -1,6 +1,11 @@
 import { z } from "zod";
 import { UserRole } from "../../db/client";
-import { createTRPCRouter, adminProcedure, publicProcedure } from "../trpc";
+import {
+  createTRPCRouter,
+  adminProcedure,
+  publicProcedure,
+  protectedProcedure,
+} from "../trpc";
 import {
   sendSupportReplyEmail,
   sendAdminPromotedEmail,
@@ -688,6 +693,85 @@ export const adminRouter = createTRPCRouter({
           email: input.email,
           message: input.message,
         },
+      });
+    }),
+
+  submitFeedback: protectedProcedure
+    .input(
+      z.object({
+        subject: z.string().min(1).max(200),
+        message: z.string().min(1).max(5000),
+        category: z
+          .enum(["BUG", "FEATURE", "GENERAL", "OTHER"])
+          .default("GENERAL"),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.supportMessage.create({
+        data: {
+          userId: ctx.user.id,
+          name: ctx.user.name ?? undefined,
+          email: ctx.user.email,
+          subject: `[${input.category}] ${input.subject}`,
+          message: input.message,
+          type: "FEEDBACK",
+        },
+      });
+    }),
+
+  getAppFeedbacks: adminProcedure
+    .input(
+      z.object({
+        page: z.number().min(1).default(1),
+        limit: z.number().min(1).max(100).default(20),
+        status: z.enum(["ALL", "PENDING", "RESOLVED"]).default("ALL"),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { page, limit, status } = input;
+      const skip = (page - 1) * limit;
+      const where = {
+        type: "FEEDBACK",
+        ...(status !== "ALL" ? { status } : {}),
+      };
+
+      const [feedbacks, total] = await Promise.all([
+        ctx.db.supportMessage.findMany({
+          where,
+          skip,
+          take: limit,
+          orderBy: { createdAt: "desc" },
+        }),
+        ctx.db.supportMessage.count({ where }),
+      ]);
+
+      return { feedbacks, total, pages: Math.ceil(total / limit) };
+    }),
+
+  replyToAppFeedback: adminProcedure
+    .input(
+      z.object({
+        id: z.string().max(255),
+        replyMessage: z.string().min(1).max(5000),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const feedback = await ctx.db.supportMessage.findUnique({
+        where: { id: input.id },
+      });
+
+      if (!feedback) throw new Error("Feedback not found");
+      if (!feedback.email) throw new Error("No email address on this feedback");
+
+      await sendSupportReplyEmail({
+        to: feedback.email,
+        originalMessage: feedback.message,
+        replyMessage: input.replyMessage,
+      });
+
+      return ctx.db.supportMessage.update({
+        where: { id: input.id },
+        data: { status: "RESOLVED" },
       });
     }),
 
