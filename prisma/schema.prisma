@@ -503,8 +503,12 @@ model SystemSettings {
 
 model SupportMessage {
   id        String   @id @default(cuid())
+  userId    String?
+  name      String?
   email     String?
+  subject   String?
   message   String   @db.Text
+  type      String   @default("SUPPORT")
   status    String   @default("PENDING")
   createdAt DateTime @default(now())
 

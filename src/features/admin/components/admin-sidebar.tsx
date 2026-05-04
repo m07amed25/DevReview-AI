@@ -43,7 +43,8 @@ const NAV_GROUPS = [
     items: [
       { href: "/admin/audit", label: "Audit Logs", icon: Activity },
       { href: "/admin/security", label: "Security", icon: ShieldCheck },
-      { href: "/admin/feedback", label: "Feedback", icon: MessageSquareText },
+      { href: "/admin/feedback", label: "Review Feedback", icon: MessageSquareText },
+      { href: "/admin/user-feedback", label: "User Feedback", icon: ShieldAlert },
       { href: "/admin/settings", label: "Settings", icon: Settings },
     ],
   },
