@@ -58,6 +58,7 @@ import {
   MoreHorizontal,
   Eye,
   Copy,
+  StopCircle,
 } from "lucide-react";
 
 type StatusFilter = "ALL" | "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED";
@@ -295,6 +296,10 @@ export default function AdminReviewsPage() {
     onSuccess: () => void refetch(),
   });
 
+  const stopAllReviews = trpc.admin.stopAllActiveReviews.useMutation({
+    onSuccess: () => void refetch(),
+  });
+
   const handleStatusChange = (val: StatusFilter) => {
     setStatus(val);
     setPage(1);
@@ -327,11 +332,75 @@ export default function AdminReviewsPage() {
     <TooltipProvider>
       <div className="space-y-6">
         {/* ─── Header ─── */}
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Reviews</h1>
-          <p className="text-muted-foreground">
-            Manage and inspect all PR reviews across the platform
-          </p>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">Reviews</h1>
+            <p className="text-muted-foreground">
+              Manage and inspect all PR reviews across the platform
+            </p>
+          </div>
+
+          {/* Stop All Reviews */}
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="destructive"
+                size="sm"
+                className="gap-2 shrink-0"
+                disabled={
+                  stopAllReviews.isPending ||
+                  (data?.statusBreakdown
+                    ? data.statusBreakdown.PENDING +
+                        data.statusBreakdown.PROCESSING ===
+                      0
+                    : false)
+                }
+                isLoading={stopAllReviews.isPending}
+              >
+                <StopCircle className="h-4 w-4" />
+                Stop All Reviews
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Stop all active reviews?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will immediately mark every{" "}
+                  <strong>Pending</strong> and <strong>Processing</strong>{" "}
+                  review as <strong>Failed</strong>
+                  {data?.statusBreakdown &&
+                    data.statusBreakdown.PENDING +
+                      data.statusBreakdown.PROCESSING >
+                      0 && (
+                      <>
+                        {" "}
+                        (
+                        {data.statusBreakdown.PENDING +
+                          data.statusBreakdown.PROCESSING}{" "}
+                        review
+                        {data.statusBreakdown.PENDING +
+                          data.statusBreakdown.PROCESSING ===
+                        1
+                          ? ""
+                          : "s"}
+                        )
+                      </>
+                    )}
+                  . In-flight AI jobs will not be refunded. This action cannot
+                  be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  onClick={() => stopAllReviews.mutate()}
+                >
+                  {stopAllReviews.isPending ? "Stopping…" : "Stop All Reviews"}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
 
         {/* ─── Search + Sort controls ─── */}

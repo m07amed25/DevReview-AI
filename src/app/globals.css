@@ -165,6 +165,12 @@
       box-shadow 0.3s ease,
       opacity 0.3s ease;
   }
+
+  /* Use loading cursor while a button is actively pressed or marked busy. */
+  button:active,
+  button[aria-busy="true"] {
+    cursor: progress;
+  }
 }
 
 /* View Transition API — circular reveal for theme toggle */

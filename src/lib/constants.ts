@@ -1,5 +1,3 @@
-// ─── Analytics ─────────────────────────────────────────────────────────────
-
 export type TimePeriod = "7d" | "30d" | "90d" | "6m" | "1y";
 
 export const TIME_PERIOD_LABELS: Record<TimePeriod, string> = {
@@ -20,7 +18,6 @@ export const COLORS = {
   muted: "#64748b",
 };
 
-// ─── Code Timeline ──────────────────────────────────────────────────────────
 
 export const BRANCH_COLORS = [
   "#10b981",
@@ -35,7 +32,6 @@ export const BRANCH_COLORS = [
   "#14b8a6",
 ];
 
-// ─── Pusher Events ──────────────────────────────────────────────────────────
 
 export const PUSHER_EVENTS = {
   // Thread events
@@ -48,12 +44,20 @@ export const PUSHER_EVENTS = {
   COMMENT_UPDATED: "comment:updated",
   COMMENT_DELETED: "comment:deleted",
 
+  // Reaction events
+  REACTION_UPDATED: "reaction:updated",
+
+  // Approval events
+  APPROVAL_SUBMITTED: "approval:submitted",
+
+  // Assignment events
+  ASSIGNMENT_UPDATED: "assignment:updated",
+
   // Presence / cursor events (client events)
   CLIENT_TYPING: "client-typing",
   CLIENT_CURSOR: "client-cursor",
 } as const;
 
-// ─── Animations ─────────────────────────────────────────────────────────────
 
 export const ANIMATION = {
   duration: { fast: 0.3, normal: 0.5, slow: 0.8, verySlow: 1.2 },
@@ -74,8 +78,6 @@ export const ANIMATION = {
     toggleActions: "play none none reverse",
   },
 } as const;
-
-// ─── Review Severity Colors ─────────────────────────────────────────────────
 
 export const SEVERITY_COLORS = {
   red: {
@@ -108,8 +110,6 @@ export const SEVERITY_COLORS = {
   },
 } as const;
 
-// ─── Email / Review Status ──────────────────────────────────────────────────
-
 export interface ReviewStatus {
   status: "APPROVED" | "CHANGES_REQUESTED" | "COMMENTED";
   label: string;
@@ -133,8 +133,6 @@ export const REVIEW_STATUS_CONFIG: Record<string, ReviewStatus> = {
     color: "#6366f1",
   },
 };
-
-// ─── Diff Viewer – Language Color Palette ───────────────────────────────────
 
 const LANG_BLUE = "bg-blue-500/15 text-blue-600 dark:text-blue-400";
 const LANG_YELLOW = "bg-yellow-500/15 text-yellow-600 dark:text-yellow-400";

@@ -6,7 +6,6 @@ import { TRPCProvider } from "@/lib/trpc/provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { PageTransitionProvider } from "@/components/animations/page-transition";
 import { ErrorBoundary } from "@/components/error-boundary";
-import { GlobalCursorProvider } from "@/components/global-cursor-provider";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -95,9 +94,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="dark">
           <TRPCProvider>
             <PageTransitionProvider>
-              <GlobalCursorProvider>
-                <ErrorBoundary>{children}</ErrorBoundary>
-              </GlobalCursorProvider>
+              <ErrorBoundary>{children}</ErrorBoundary>
             </PageTransitionProvider>
           </TRPCProvider>
         </ThemeProvider>

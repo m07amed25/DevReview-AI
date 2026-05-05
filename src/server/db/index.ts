@@ -7,11 +7,18 @@ const createPrismaClient = () => {
     try {
       const parsedUrl = new URL(url);
 
+      // How long (seconds) to wait when establishing a new connection.
       if (!parsedUrl.searchParams.has("connect_timeout")) {
-        parsedUrl.searchParams.set("connect_timeout", "30");
+        parsedUrl.searchParams.set("connect_timeout", "15");
       }
+      // How long (seconds) to wait for an idle connection from the pool.
       if (!parsedUrl.searchParams.has("pool_timeout")) {
-        parsedUrl.searchParams.set("pool_timeout", "30");
+        parsedUrl.searchParams.set("pool_timeout", "15");
+      }
+      // Detect stale connections quickly so Neon's auto-pause wake-up cycle
+      // is short. socket_timeout causes a P1017 sooner rather than later.
+      if (!parsedUrl.searchParams.has("socket_timeout")) {
+        parsedUrl.searchParams.set("socket_timeout", "10");
       }
 
       if (
@@ -47,22 +54,35 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 /**
- * Wraps a Prisma operation with a single retry on P1001 (Can't reach database).
- * This handles Neon's auto-pause cold-start: the first request wakes the compute,
- * and the retry succeeds once the server is ready.
+ * Prisma error codes that indicate the database TCP connection was closed or
+ * the compute node is waking up (Neon auto-pause). Safe to disconnect the
+ * client, wait briefly, and retry once.
+ *
+ *  P1001 – Can't reach database server (compute still waking)
+ *  P1017 – Server has closed the connection (Neon killed the idle socket)
+ */
+const RECONNECT_CODES = new Set(["P1001", "P1017"]);
+
+/**
+ * Wraps a Prisma operation with a single retry on connection drop errors.
+ * On P1001/P1017 it calls `db.$disconnect()` first so Prisma opens a brand-new
+ * connection pool on the retry instead of re-using the broken socket.
  */
 export async function withDbRetry<T>(fn: () => Promise<T>): Promise<T> {
   try {
     return await fn();
   } catch (err: unknown) {
-    const isConnectionError =
+    const code =
       typeof err === "object" &&
       err !== null &&
-      "code" in err &&
-      (err as { code: string }).code === "P1001";
+      "code" in err
+        ? (err as { code: string }).code
+        : undefined;
 
-    if (isConnectionError) {
-      // Wait briefly for Neon compute to finish waking up, then retry once
+    if (code && RECONNECT_CODES.has(code)) {
+      // Drop the broken connection pool so the retry opens a fresh socket.
+      await db.$disconnect().catch(() => {});
+      // Give Neon a moment to finish waking the compute node.
       await new Promise((resolve) => setTimeout(resolve, 2000));
       return await fn();
     }

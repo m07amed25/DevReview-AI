@@ -12,8 +12,58 @@ import {
   type RateLimitRule,
 } from "./rate-limiter/index";
 
+/**
+ * Attempt to fetch the Better Auth session and transparently retry once when
+ * the database connection was dropped by Neon's auto-pause.
+ *
+ * Better Auth catches the raw Prisma P1017 error and re-throws it as
+ * `APIError { body: { code: "FAILED_TO_GET_SESSION" } }`.  We detect that
+ * specific code, force-disconnect Prisma's connection pool so the next call
+ * opens a fresh socket, and retry exactly once.  If the second attempt also
+ * fails we return `null` so public routes continue to work; protected routes
+ * will still throw UNAUTHORIZED because there is no session.
+ */
+async function getSessionWithRetry(headers: Headers) {
+  try {
+    return await auth.api.getSession({ headers });
+  } catch (err: unknown) {
+    const isConnectionDrop =
+      typeof err === "object" &&
+      err !== null &&
+      // Better Auth wraps the DB error in an APIError with this body code
+      "body" in err &&
+      typeof (err as { body?: { code?: string } }).body === "object" &&
+      (err as { body: { code?: string } }).body?.code === "FAILED_TO_GET_SESSION";
+
+    if (isConnectionDrop) {
+      console.warn(
+        "[tRPC] DB connection dropped during session lookup (Neon auto-pause). " +
+          "Forcing reconnect and retrying …",
+      );
+      // Drop the broken pool — Prisma opens a fresh connection on the next query.
+      await db.$disconnect().catch(() => {});
+      // Give Neon's compute node a moment to wake before the retry.
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      try {
+        return await auth.api.getSession({ headers });
+      } catch (retryErr) {
+        console.error(
+          "[tRPC] Session retry also failed after reconnect:",
+          retryErr,
+        );
+        // Return null so the context is still built and public routes work.
+        return null;
+      }
+    }
+
+    // Any other error (auth misconfiguration, etc.) bubbles up normally.
+    throw err;
+  }
+}
+
 export const createTRPCContext = async (opts: { headers: Headers }) => {
-  const session = await auth.api.getSession({ headers: opts.headers });
+  const session = await getSessionWithRetry(opts.headers);
   return {
     db,
     session,

@@ -532,6 +532,27 @@ export const adminRouter = createTRPCRouter({
       return { success: true };
     }),
 
+  stopAllActiveReviews: adminProcedure.mutation(async ({ ctx }) => {
+    const { count } = await ctx.db.review.updateMany({
+      where: { status: { in: ["PENDING", "PROCESSING"] } },
+      data: {
+        status: "FAILED",
+        error: "Stopped by administrator.",
+      },
+    });
+
+    void logAudit({
+      actorId: ctx.user.id,
+      action: "REVIEWS_STOPPED",
+      resource: "REVIEW",
+      ipAddress: ctx.ip,
+      userAgent: ctx.userAgent,
+      metadata: { stoppedCount: count },
+    });
+
+    return { success: true, stoppedCount: count };
+  }),
+
   getTeams: adminProcedure
     .input(
       z.object({

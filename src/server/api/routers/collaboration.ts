@@ -2,9 +2,7 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { getPusherServer, reviewChannel, PUSHER_EVENTS } from "@/server/pusher";
-
 export const collaborationRouter = createTRPCRouter({
-  // ─── Get all threads for a review ────────────────────────────────
   getThreads: protectedProcedure
     .input(z.object({ reviewId: z.string().max(255) }))
     .query(async ({ ctx, input }) => {
