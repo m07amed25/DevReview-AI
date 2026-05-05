@@ -9,7 +9,9 @@ import { ErrorBoundary } from "@/components/error-boundary";
 import { GlobalCursorProvider } from "@/components/global-cursor-provider";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+  ),
   title: {
     default: "DevReview AI",
     template: "%s | DevReview AI",

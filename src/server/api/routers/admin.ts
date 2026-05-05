@@ -11,6 +11,7 @@ import {
   sendAdminPromotedEmail,
   sendAdminDemotedEmail,
 } from "../../email/service";
+import { logAudit } from "../../services/audit";
 
 export const adminRouter = createTRPCRouter({
   getStats: adminProcedure.query(async ({ ctx }) => {
@@ -232,6 +233,17 @@ export const adminRouter = createTRPCRouter({
         data: { role: input.role },
       });
 
+      // Audit log
+      void logAudit({
+        actorId: ctx.user.id,
+        action: "USER_ROLE_UPDATED",
+        resource: "USER",
+        resourceId: input.userId,
+        ipAddress: ctx.ip,
+        userAgent: ctx.userAgent,
+        metadata: { newRole: input.role },
+      });
+
       // Send email notification
       if (input.role === "ADMIN") {
         void sendAdminPromotedEmail({
@@ -273,6 +285,14 @@ export const adminRouter = createTRPCRouter({
       }
 
       await ctx.db.user.delete({ where: { id: input.userId } });
+      void logAudit({
+        actorId: ctx.user.id,
+        action: "USER_DELETED",
+        resource: "USER",
+        resourceId: input.userId,
+        ipAddress: ctx.ip,
+        userAgent: ctx.userAgent,
+      });
       return { success: true };
     }),
 
@@ -316,6 +336,15 @@ export const adminRouter = createTRPCRouter({
           where: { userId: input.userId },
         }),
       ]);
+      void logAudit({
+        actorId: ctx.user.id,
+        action: "USER_BANNED",
+        resource: "USER",
+        resourceId: input.userId,
+        ipAddress: ctx.ip,
+        userAgent: ctx.userAgent,
+        metadata: { reason: input.reason ?? null },
+      });
       return { success: true };
     }),
 
@@ -325,6 +354,14 @@ export const adminRouter = createTRPCRouter({
       await ctx.db.user.update({
         where: { id: input.userId },
         data: { banned: false, bannedReason: null },
+      });
+      void logAudit({
+        actorId: ctx.user.id,
+        action: "USER_UNBANNED",
+        resource: "USER",
+        resourceId: input.userId,
+        ipAddress: ctx.ip,
+        userAgent: ctx.userAgent,
       });
       return { success: true };
     }),
@@ -484,6 +521,14 @@ export const adminRouter = createTRPCRouter({
     .input(z.object({ reviewId: z.string().max(255) }))
     .mutation(async ({ ctx, input }) => {
       await ctx.db.review.delete({ where: { id: input.reviewId } });
+      void logAudit({
+        actorId: ctx.user.id,
+        action: "REVIEW_DELETED",
+        resource: "REVIEW",
+        resourceId: input.reviewId,
+        ipAddress: ctx.ip,
+        userAgent: ctx.userAgent,
+      });
       return { success: true };
     }),
 
@@ -517,6 +562,14 @@ export const adminRouter = createTRPCRouter({
     .input(z.object({ teamId: z.string().max(255) }))
     .mutation(async ({ ctx, input }) => {
       await ctx.db.team.delete({ where: { id: input.teamId } });
+      void logAudit({
+        actorId: ctx.user.id,
+        action: "TEAM_DELETED",
+        resource: "TEAM",
+        resourceId: input.teamId,
+        ipAddress: ctx.ip,
+        userAgent: ctx.userAgent,
+      });
       return { success: true };
     }),
 
@@ -780,63 +833,122 @@ export const adminRouter = createTRPCRouter({
       z.object({
         page: z.number().min(1).default(1),
         limit: z.number().min(1).max(100).default(20),
+        search: z.string().max(100).trim().optional(),
+        resource: z.string().max(50).optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
-      const { page, limit } = input;
+      const { page, limit, search, resource } = input;
       const skip = (page - 1) * limit;
 
-      const [actions, total] = await Promise.all([
-        ctx.db.teamAction.findMany({
+      // ── 1. New structured AuditLog events ───────────────────────────────
+      const auditWhere = {
+        ...(resource ? { resource } : {}),
+        ...(search
+          ? {
+              OR: [
+                { action: { contains: search, mode: "insensitive" as const } },
+                {
+                  resource: { contains: search, mode: "insensitive" as const },
+                },
+                {
+                  ipAddress: { contains: search, mode: "insensitive" as const },
+                },
+              ],
+            }
+          : {}),
+      };
+
+      const [auditLogs, auditTotal] = await Promise.all([
+        ctx.db.auditLog.findMany({
+          where: auditWhere,
           skip,
           take: limit,
           orderBy: { createdAt: "desc" },
-          include: {
-            team: { select: { id: true, name: true } },
-          },
+          include: { actor: { select: { id: true, name: true, email: true } } },
         }),
-        ctx.db.teamAction.count(),
+        ctx.db.auditLog.count({ where: auditWhere }),
       ]);
 
-      // Batch-load user info for all actor IDs
-      const userIds = [
-        ...new Set([
-          ...actions.map((a) => a.requestedBy),
-          ...actions.map((a) => a.resolvedBy).filter(Boolean),
-        ]),
-      ] as string[];
-
-      const users = await ctx.db.user.findMany({
-        where: { id: { in: userIds } },
-        select: { id: true, name: true, email: true },
-      });
-      const userMap = new Map(users.map((u) => [u.id, u]));
-
-      const logs = actions.map((a) => ({
-        id: a.id,
-        actionType: a.actionType,
-        status: a.status,
-        teamId: a.teamId,
-        teamName: a.team.name,
-        requestedBy: userMap.get(a.requestedBy) ?? {
-          id: a.requestedBy,
-          name: "Unknown",
-          email: "",
-        },
-        resolvedBy: a.resolvedBy
-          ? (userMap.get(a.resolvedBy) ?? {
-              id: a.resolvedBy,
-              name: "Unknown",
-              email: "",
-            })
-          : null,
-        targetUserId: a.targetUserId,
-        targetRepoId: a.targetRepoId,
-        createdAt: a.createdAt,
-        resolvedAt: a.resolvedAt,
+      const structuredLogs = auditLogs.map((l) => ({
+        id: l.id,
+        source: "system" as const,
+        action: l.action,
+        resource: l.resource,
+        resourceId: l.resourceId,
+        actor: l.actor ?? null,
+        ipAddress: l.ipAddress,
+        userAgent: l.userAgent,
+        country: l.country,
+        city: l.city,
+        metadata: l.metadata,
+        createdAt: l.createdAt,
       }));
 
-      return { logs, total, pages: Math.ceil(total / limit) };
+      return {
+        logs: structuredLogs,
+        total: auditTotal,
+        pages: Math.ceil(auditTotal / limit),
+      };
+    }),
+
+  /** Export audit logs as a CSV string (max 5 000 rows). */
+  exportAuditLogs: adminProcedure
+    .input(
+      z.object({
+        resource: z.string().max(50).optional(),
+        search: z.string().max(100).trim().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { resource, search } = input;
+
+      const where = {
+        ...(resource ? { resource } : {}),
+        ...(search
+          ? {
+              OR: [
+                { action: { contains: search, mode: "insensitive" as const } },
+                {
+                  resource: { contains: search, mode: "insensitive" as const },
+                },
+                {
+                  ipAddress: { contains: search, mode: "insensitive" as const },
+                },
+              ],
+            }
+          : {}),
+      };
+
+      const logs = await ctx.db.auditLog.findMany({
+        where,
+        take: 5000,
+        orderBy: { createdAt: "desc" },
+        include: { actor: { select: { name: true, email: true } } },
+      });
+
+      const escape = (v: unknown) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+
+      const header =
+        "id,timestamp,action,resource,resourceId,actor,ip,country,city,userAgent";
+      const rows = logs.map((l) =>
+        [
+          l.id,
+          l.createdAt.toISOString(),
+          l.action,
+          l.resource ?? "",
+          l.resourceId ?? "",
+          l.actor ? (l.actor.name ?? l.actor.email) : "",
+          l.ipAddress ?? "",
+          l.country ?? "",
+          l.city ?? "",
+          l.userAgent ?? "",
+        ]
+          .map(escape)
+          .join(","),
+      );
+
+      return { csv: [header, ...rows].join("\n") };
     }),
 
   getSecuritySettings: adminProcedure.query(async ({ ctx }) => {
@@ -870,4 +982,212 @@ export const adminRouter = createTRPCRouter({
       failedReviewsLast24h: failedReviewsCount,
     };
   }),
+
+  // ── SSO Providers ─────────────────────────────────────────────────────────
+  getSsoProviders: adminProcedure.query(async ({ ctx }) => {
+    return ctx.db.ssoProvider.findMany({ orderBy: { createdAt: "asc" } });
+  }),
+
+  upsertSsoProvider: adminProcedure
+    .input(
+      z.object({
+        id: z.string().max(255).optional(),
+        name: z.string().min(1).max(100),
+        type: z.enum(["OIDC", "SAML"]),
+        enabled: z.boolean().default(false),
+        issuer: z.string().url().optional().or(z.literal("")),
+        clientId: z.string().max(500).optional(),
+        clientSecret: z.string().max(500).optional(),
+        entryPoint: z.string().url().optional().or(z.literal("")),
+        certificate: z.string().max(10000).optional(),
+        emailDomain: z.string().max(253).optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, ...data } = input;
+      const result = id
+        ? await ctx.db.ssoProvider.update({ where: { id }, data })
+        : await ctx.db.ssoProvider.create({ data });
+
+      void logAudit({
+        actorId: ctx.user.id,
+        action: id ? "SSO_PROVIDER_UPDATED" : "SSO_PROVIDER_CREATED",
+        resource: "SSO_PROVIDER",
+        resourceId: result.id,
+        ipAddress: ctx.ip,
+        userAgent: ctx.userAgent,
+        metadata: { name: input.name, type: input.type },
+      });
+
+      return result;
+    }),
+
+  deleteSsoProvider: adminProcedure
+    .input(z.object({ id: z.string().max(255) }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.ssoProvider.delete({ where: { id: input.id } });
+      void logAudit({
+        actorId: ctx.user.id,
+        action: "SSO_PROVIDER_DELETED",
+        resource: "SSO_PROVIDER",
+        resourceId: input.id,
+        ipAddress: ctx.ip,
+        userAgent: ctx.userAgent,
+      });
+      return { success: true };
+    }),
+
+  // ── Custom RBAC Roles ─────────────────────────────────────────────────────
+  getCustomRoles: adminProcedure.query(async ({ ctx }) => {
+    return ctx.db.customRole.findMany({
+      orderBy: { createdAt: "asc" },
+      include: { _count: { select: { userRoles: true } } },
+    });
+  }),
+
+  upsertCustomRole: adminProcedure
+    .input(
+      z.object({
+        id: z.string().max(255).optional(),
+        name: z.string().min(1).max(100),
+        description: z.string().max(500).optional(),
+        canViewReviews: z.boolean().default(true),
+        canTriggerReviews: z.boolean().default(false),
+        canManageRepositories: z.boolean().default(false),
+        canManageTeams: z.boolean().default(false),
+        canViewAnalytics: z.boolean().default(false),
+        canManageUsers: z.boolean().default(false),
+        canAccessAdmin: z.boolean().default(false),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, ...data } = input;
+      const result = id
+        ? await ctx.db.customRole.update({ where: { id }, data })
+        : await ctx.db.customRole.create({ data });
+
+      void logAudit({
+        actorId: ctx.user.id,
+        action: id ? "CUSTOM_ROLE_UPDATED" : "CUSTOM_ROLE_CREATED",
+        resource: "CUSTOM_ROLE",
+        resourceId: result.id,
+        ipAddress: ctx.ip,
+        userAgent: ctx.userAgent,
+        metadata: { name: input.name },
+      });
+
+      return result;
+    }),
+
+  deleteCustomRole: adminProcedure
+    .input(z.object({ id: z.string().max(255) }))
+    .mutation(async ({ ctx, input }) => {
+      // Prevent deletion of seeded roles
+      if (["role_viewer", "role_reviewer", "role_manager"].includes(input.id)) {
+        throw new Error("Built-in roles cannot be deleted.");
+      }
+      await ctx.db.customRole.delete({ where: { id: input.id } });
+      void logAudit({
+        actorId: ctx.user.id,
+        action: "CUSTOM_ROLE_DELETED",
+        resource: "CUSTOM_ROLE",
+        resourceId: input.id,
+        ipAddress: ctx.ip,
+        userAgent: ctx.userAgent,
+      });
+      return { success: true };
+    }),
+
+  assignCustomRole: adminProcedure
+    .input(
+      z.object({
+        userId: z.string().max(255),
+        roleId: z.string().max(255),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.userCustomRole.upsert({
+        where: {
+          userId_roleId: { userId: input.userId, roleId: input.roleId },
+        },
+        update: {},
+        create: { userId: input.userId, roleId: input.roleId },
+      });
+      void logAudit({
+        actorId: ctx.user.id,
+        action: "USER_ROLE_ASSIGNED",
+        resource: "USER",
+        resourceId: input.userId,
+        ipAddress: ctx.ip,
+        userAgent: ctx.userAgent,
+        metadata: { roleId: input.roleId },
+      });
+      return { success: true };
+    }),
+
+  revokeCustomRole: adminProcedure
+    .input(
+      z.object({
+        userId: z.string().max(255),
+        roleId: z.string().max(255),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.userCustomRole.deleteMany({
+        where: { userId: input.userId, roleId: input.roleId },
+      });
+      void logAudit({
+        actorId: ctx.user.id,
+        action: "USER_ROLE_REVOKED",
+        resource: "USER",
+        resourceId: input.userId,
+        ipAddress: ctx.ip,
+        userAgent: ctx.userAgent,
+        metadata: { roleId: input.roleId },
+      });
+      return { success: true };
+    }),
+
+  getUserCustomRoles: adminProcedure
+    .input(z.object({ userId: z.string().max(255) }))
+    .query(async ({ ctx, input }) => {
+      return ctx.db.userCustomRole.findMany({
+        where: { userId: input.userId },
+        include: { role: true },
+      });
+    }),
+
+  // ── Data Retention Settings ───────────────────────────────────────────────
+  getRetentionSettings: adminProcedure.query(async ({ ctx }) => {
+    return ctx.db.systemSettings.upsert({
+      where: { id: "global" },
+      update: {},
+      create: { id: "global", maintenanceMode: false },
+    });
+  }),
+
+  updateRetentionSettings: adminProcedure
+    .input(
+      z.object({
+        reviewRetentionDays: z.number().int().min(0).max(3650),
+        auditLogRetentionDays: z.number().int().min(0).max(3650),
+        sessionRetentionDays: z.number().int().min(0).max(365),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const result = await ctx.db.systemSettings.update({
+        where: { id: "global" },
+        data: input,
+      });
+      void logAudit({
+        actorId: ctx.user.id,
+        action: "RETENTION_SETTINGS_UPDATED",
+        resource: "SYSTEM_SETTINGS",
+        resourceId: "global",
+        ipAddress: ctx.ip,
+        userAgent: ctx.userAgent,
+        metadata: input as Record<string, unknown>,
+      });
+      return result;
+    }),
 });

@@ -41,6 +41,8 @@ model User {
   notifications   Notification[]
   reviewFeedbacks ReviewFeedback[]
   reviewRules     ReviewRule[]
+  auditLogs       AuditLog[]
+  customRoles     UserCustomRole[]
 
   // Code review preferences
   reviewDepth            String  @default("standard")
@@ -490,9 +492,13 @@ model ReviewRule {
 }
 
 model SystemSettings {
-  id              String   @id @default("global")
-  maintenanceMode Boolean  @default(false)
-  updatedAt       DateTime @updatedAt
+  id                    String   @id @default("global")
+  maintenanceMode       Boolean  @default(false)
+  // Data retention policies (0 = disabled / keep forever)
+  reviewRetentionDays   Int      @default(0)
+  auditLogRetentionDays Int      @default(0)
+  sessionRetentionDays  Int      @default(0)
+  updatedAt             DateTime @updatedAt
 
   @@map("system_settings")
 }
@@ -509,4 +515,86 @@ model SupportMessage {
   createdAt DateTime @default(now())
 
   @@map("support_message")
+}
+
+// ─── Audit Log ───────────────────────────────────────────────────────────────
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?
+  action     String
+  resource   String?
+  resourceId String?
+  ipAddress  String?
+  userAgent  String?
+  country    String?
+  city       String?
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  actor User? @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([actorId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_log")
+}
+
+enum SsoType {
+  OIDC
+  SAML
+}
+
+model SsoProvider {
+  id           String   @id @default(cuid())
+  name         String
+  type         SsoType
+  enabled      Boolean  @default(false)
+  // OIDC fields
+  issuer       String?
+  clientId     String?
+  clientSecret String?
+  // SAML fields
+  entryPoint   String?
+  certificate  String?  @db.Text
+  // shared
+  emailDomain  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("sso_provider")
+}
+
+model CustomRole {
+  id                    String   @id @default(cuid())
+  name                  String   @unique
+  description           String?
+  // permission flags
+  canViewReviews        Boolean  @default(true)
+  canTriggerReviews     Boolean  @default(false)
+  canManageRepositories Boolean  @default(false)
+  canManageTeams        Boolean  @default(false)
+  canViewAnalytics      Boolean  @default(false)
+  canManageUsers        Boolean  @default(false)
+  canAccessAdmin        Boolean  @default(false)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  userRoles UserCustomRole[]
+
+  @@map("custom_role")
+}
+
+model UserCustomRole {
+  id         String   @id @default(cuid())
+  userId     String
+  roleId     String
+  assignedAt DateTime @default(now())
+
+  user User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role CustomRole @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roleId])
+  @@index([userId])
+  @@index([roleId])
+  @@map("user_custom_role")
 }

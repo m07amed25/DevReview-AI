@@ -18,6 +18,9 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
     db,
     session,
     headers: opts.headers,
+    // Expose for audit logging
+    ip: getClientIP(opts.headers) ?? undefined,
+    userAgent: opts.headers.get("user-agent") ?? undefined,
   };
 };
 

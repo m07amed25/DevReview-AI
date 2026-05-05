@@ -368,6 +368,9 @@ exports.Prisma.ReviewRuleScalarFieldEnum = {
 exports.Prisma.SystemSettingsScalarFieldEnum = {
   id: 'id',
   maintenanceMode: 'maintenanceMode',
+  reviewRetentionDays: 'reviewRetentionDays',
+  auditLogRetentionDays: 'auditLogRetentionDays',
+  sessionRetentionDays: 'sessionRetentionDays',
   updatedAt: 'updatedAt'
 };
 
@@ -381,6 +384,57 @@ exports.Prisma.SupportMessageScalarFieldEnum = {
   type: 'type',
   status: 'status',
   createdAt: 'createdAt'
+};
+
+exports.Prisma.AuditLogScalarFieldEnum = {
+  id: 'id',
+  actorId: 'actorId',
+  action: 'action',
+  resource: 'resource',
+  resourceId: 'resourceId',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  country: 'country',
+  city: 'city',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.SsoProviderScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  type: 'type',
+  enabled: 'enabled',
+  issuer: 'issuer',
+  clientId: 'clientId',
+  clientSecret: 'clientSecret',
+  entryPoint: 'entryPoint',
+  certificate: 'certificate',
+  emailDomain: 'emailDomain',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CustomRoleScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  canViewReviews: 'canViewReviews',
+  canTriggerReviews: 'canTriggerReviews',
+  canManageRepositories: 'canManageRepositories',
+  canManageTeams: 'canManageTeams',
+  canViewAnalytics: 'canViewAnalytics',
+  canManageUsers: 'canManageUsers',
+  canAccessAdmin: 'canAccessAdmin',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.UserCustomRoleScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  roleId: 'roleId',
+  assignedAt: 'assignedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -494,6 +548,11 @@ exports.RuleSeverity = exports.$Enums.RuleSeverity = {
   LOW: 'LOW'
 };
 
+exports.SsoType = exports.$Enums.SsoType = {
+  OIDC: 'OIDC',
+  SAML: 'SAML'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Session: 'Session',
@@ -517,7 +576,11 @@ exports.Prisma.ModelName = {
   Diagram: 'Diagram',
   ReviewRule: 'ReviewRule',
   SystemSettings: 'SystemSettings',
-  SupportMessage: 'SupportMessage'
+  SupportMessage: 'SupportMessage',
+  AuditLog: 'AuditLog',
+  SsoProvider: 'SsoProvider',
+  CustomRole: 'CustomRole',
+  UserCustomRole: 'UserCustomRole'
 };
 
 /**
