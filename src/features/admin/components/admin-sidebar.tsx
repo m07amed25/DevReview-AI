@@ -18,6 +18,8 @@ import {
   Activity,
   Settings,
   ShieldCheck,
+  KeyRound,
+  Shield,
 } from "lucide-react";
 
 const NAV_GROUPS = [
@@ -35,16 +37,30 @@ const NAV_GROUPS = [
       { href: "/admin/repos", label: "Repositories", icon: Database },
       { href: "/admin/reviews", label: "Reviews", icon: GitPullRequest },
       { href: "/admin/teams", label: "Teams", icon: Users2 },
-      { href: "/admin/support", label: "Support Messages", icon: MessageSquareText },
+      {
+        href: "/admin/support",
+        label: "Support Messages",
+        icon: MessageSquareText,
+      },
     ],
   },
   {
     title: "System",
     items: [
       { href: "/admin/audit", label: "Audit Logs", icon: Activity },
+      { href: "/admin/sso", label: "SSO / SAML", icon: KeyRound },
+      { href: "/admin/roles", label: "Custom Roles", icon: Shield },
       { href: "/admin/security", label: "Security", icon: ShieldCheck },
-      { href: "/admin/feedback", label: "Review Feedback", icon: MessageSquareText },
-      { href: "/admin/user-feedback", label: "User Feedback", icon: ShieldAlert },
+      {
+        href: "/admin/feedback",
+        label: "Review Feedback",
+        icon: MessageSquareText,
+      },
+      {
+        href: "/admin/user-feedback",
+        label: "User Feedback",
+        icon: ShieldAlert,
+      },
       { href: "/admin/settings", label: "Settings", icon: Settings },
     ],
   },
