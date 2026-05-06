@@ -42,6 +42,7 @@ function generateERD(fileContents: Record<string, string>): {
   definition: string;
   nodes: DiagramNode[];
   edges: DiagramEdge[];
+  warning?: string;
 } {
   const nodes: DiagramNode[] = [];
   const edges: DiagramEdge[] = [];
@@ -237,8 +238,9 @@ function sanitizeMermaidClassType(raw: string): string {
       // Keep only the first union member
       .replace(/\s*\|.*/g, "")
       // Convert generics: Map<K, V> → Map~K_V~
-      .replace(/<([^>]*)>/g, (_, inner: string) =>
-        `~${inner.replace(/[,\s]+/g, "_")}~`,
+      .replace(
+        /<([^>]*)>/g,
+        (_, inner: string) => `~${inner.replace(/[,\s]+/g, "_")}~`,
       )
       // Remove any remaining chars that would break Mermaid parsing
       .replace(/[^\w[\]~]/g, "")
@@ -275,10 +277,73 @@ function extractClassBodies(
   return results;
 }
 
+/**
+ * Extract TypeScript interface declarations, including optional `extends` parents.
+ */
+function extractInterfaceBodies(
+  content: string,
+): Array<{ name: string; parents: string[]; body: string }> {
+  const results: Array<{ name: string; parents: string[]; body: string }> = [];
+  const headerRegex =
+    /(?:export\s+)?interface\s+(\w+)(?:<[^>]*>)?(?:\s+extends\s+([\w,\s<>]+?))?\s*\{/g;
+  let header: RegExpExecArray | null;
+  while ((header = headerRegex.exec(content)) !== null) {
+    const name = header[1]!;
+    const extendsStr = header[2];
+    const parents = extendsStr
+      ? extendsStr
+          .split(",")
+          .map((s) =>
+            s
+              .trim()
+              .replace(/<[^>]*>/g, "")
+              .trim(),
+          )
+          .filter(Boolean)
+      : [];
+    const openBrace = header.index + header[0].length - 1;
+    let depth = 1;
+    let i = openBrace + 1;
+    while (i < content.length && depth > 0) {
+      if (content[i] === "{") depth++;
+      else if (content[i] === "}") depth--;
+      i++;
+    }
+    results.push({ name, parents, body: content.slice(openBrace + 1, i - 1) });
+  }
+  return results;
+}
+
+/**
+ * Extract TypeScript object-type alias bodies: `type X = { ... }`.
+ * Only captures plain object shapes, not union/function types.
+ */
+function extractObjectTypeBodies(
+  content: string,
+): Array<{ name: string; body: string }> {
+  const results: Array<{ name: string; body: string }> = [];
+  const headerRegex = /(?:export\s+)?type\s+(\w+)(?:<[^>]*>)?\s*=\s*\{/g;
+  let header: RegExpExecArray | null;
+  while ((header = headerRegex.exec(content)) !== null) {
+    const name = header[1]!;
+    const openBrace = header.index + header[0].length - 1;
+    let depth = 1;
+    let i = openBrace + 1;
+    while (i < content.length && depth > 0) {
+      if (content[i] === "{") depth++;
+      else if (content[i] === "}") depth--;
+      i++;
+    }
+    results.push({ name, body: content.slice(openBrace + 1, i - 1) });
+  }
+  return results;
+}
+
 function generateClassDiagram(fileContents: Record<string, string>): {
   definition: string;
   nodes: DiagramNode[];
   edges: DiagramEdge[];
+  warning?: string;
 } {
   const nodes: DiagramNode[] = [];
   const edges: DiagramEdge[] = [];
@@ -301,7 +366,7 @@ function generateClassDiagram(fileContents: Record<string, string>): {
       //   protected data?: string[]
       //   name: string          (implied public)
       const propRegex =
-        /^\s*(public|private|protected)?\s*(?:readonly\s+)?(\w+)\??:\s*([\w<>[\]\s|,]+)/gm;
+        /^\s*(public|private|protected)?\s*(?:readonly\s+)?(\w+)\??:\s*([\w<>\[\]\s|,]+)/gm;
       let propMatch: RegExpExecArray | null;
       while ((propMatch = propRegex.exec(body)) !== null) {
         const vis = (propMatch[1] ?? "public") as
@@ -349,8 +414,82 @@ function generateClassDiagram(fileContents: Record<string, string>): {
     }
   }
 
+  // ── TypeScript interfaces ──────────────────────────────────────────────────
+  // Skips any interface that was already captured as a class above.
+  for (const [, content] of Object.entries(fileContents)) {
+    for (const { name, parents, body } of extractInterfaceBodies(content)) {
+      if (nodes.find((n) => n.id === `class_${name}`)) continue;
+
+      const properties: DiagramNodeDetailClass["properties"] = [];
+      // Match property lines; exclude method signatures (they have `(` after the name)
+      const propRegex =
+        /^\s*(?:readonly\s+)?(\w+)\??(?!\s*[(<]):\s*([\w<>\[\]\s|,&]+)/gm;
+      let pm: RegExpExecArray | null;
+      while ((pm = propRegex.exec(body)) !== null) {
+        properties.push({
+          name: pm[1]!,
+          type: sanitizeMermaidClassType(pm[2]!.trim()),
+          visibility: "public",
+        });
+      }
+
+      const detail: DiagramNodeDetailClass = {
+        properties,
+        methods: [],
+        stereotype: "interface",
+      };
+      nodes.push({ id: `class_${name}`, label: name, type: "CLASS", detail });
+
+      for (const parent of parents) {
+        edges.push({
+          fromId: `class_${name}`,
+          toId: `class_${parent}`,
+          label: "extends",
+          direction: "INHERITS",
+        });
+      }
+    }
+  }
+
+  // ── TypeScript object-type aliases ─────────────────────────────────────────
+  // Only added when they have at least one property (filters out opaque / scalar aliases).
+  for (const [, content] of Object.entries(fileContents)) {
+    for (const { name, body } of extractObjectTypeBodies(content)) {
+      if (nodes.find((n) => n.id === `class_${name}`)) continue;
+
+      const properties: DiagramNodeDetailClass["properties"] = [];
+      const propRegex =
+        /^\s*(?:readonly\s+)?(\w+)\??(?!\s*[(<]):\s*([\w<>\[\]\s|,&]+)/gm;
+      let pm: RegExpExecArray | null;
+      while ((pm = propRegex.exec(body)) !== null) {
+        properties.push({
+          name: pm[1]!,
+          type: sanitizeMermaidClassType(pm[2]!.trim()),
+          visibility: "public",
+        });
+      }
+
+      if (properties.length > 0) {
+        const detail: DiagramNodeDetailClass = {
+          properties,
+          methods: [],
+          stereotype: "type",
+        };
+        nodes.push({ id: `class_${name}`, label: name, type: "CLASS", detail });
+      }
+    }
+  }
+
   if (nodes.length === 0) {
-    throw new Error("No classes found in the provided files");
+    return {
+      definition: "",
+      nodes: [],
+      edges: [],
+      warning:
+        "No classes, interfaces, or object types were found in the selected files. " +
+        "The files fetched may be configuration or markup files rather than " +
+        "source code. The previous diagram (if any) has been kept.",
+    };
   }
 
   // Build Mermaid class diagram definition
@@ -359,6 +498,9 @@ function generateClassDiagram(fileContents: Record<string, string>): {
   for (const node of nodes) {
     const detail = node.detail as DiagramNodeDetailClass;
     lines.push(`  class ${node.label} {`);
+    if (detail.stereotype) {
+      lines.push(`    <<${detail.stereotype}>>`);
+    }
     for (const prop of detail.properties.slice(0, 6)) {
       const vis =
         prop.visibility === "public"
@@ -393,6 +535,7 @@ function generateUseCaseDiagram(fileContents: Record<string, string>): {
   definition: string;
   nodes: DiagramNode[];
   edges: DiagramEdge[];
+  warning?: string;
 } {
   const nodes: DiagramNode[] = [];
   const edges: DiagramEdge[] = [];
@@ -411,10 +554,7 @@ function generateUseCaseDiagram(fileContents: Record<string, string>): {
 
   for (const [filePath, content] of Object.entries(fileContents)) {
     if (/webhook/i.test(filePath)) actorSet.add("GitHub");
-    if (
-      /inngest/i.test(filePath) ||
-      content.includes("inngest.createFunction")
-    )
+    if (/inngest/i.test(filePath) || content.includes("inngest.createFunction"))
       actorSet.add("Inngest");
     if (/[/\\]admin[/\\.]/.test(filePath) || content.includes("adminProcedure"))
       actorSet.add("Admin");
@@ -447,10 +587,7 @@ function generateUseCaseDiagram(fileContents: Record<string, string>): {
   // Helper: resolve the primary actor for a given file
   const resolveActor = (filePath: string, content: string): string => {
     if (/webhook/i.test(filePath)) return "actor_GitHub";
-    if (
-      /inngest/i.test(filePath) ||
-      content.includes("inngest.createFunction")
-    )
+    if (/inngest/i.test(filePath) || content.includes("inngest.createFunction"))
       return "actor_Inngest";
     if (/[/\\]admin[/\\.]/.test(filePath)) return "actor_Admin";
     return "actor_User";
@@ -458,13 +595,19 @@ function generateUseCaseDiagram(fileContents: Record<string, string>): {
 
   for (const [filePath, content] of Object.entries(fileContents)) {
     const fileName =
-      filePath.split(/[/\\]/).pop()?.replace(/\.(ts|tsx|js|jsx)$/, "") ??
-      "unknown";
+      filePath
+        .split(/[/\\]/)
+        .pop()
+        ?.replace(/\.(ts|tsx|js|jsx)$/, "") ?? "unknown";
     const groupId = `grp_${fileName.replace(/[^a-zA-Z0-9]/g, "_")}`;
     const groupLabel = toLabel(fileName);
 
     if (!groups.has(groupId)) {
-      groups.set(groupId, { label: groupLabel, ucIds: [], actorIds: new Set() });
+      groups.set(groupId, {
+        label: groupLabel,
+        ucIds: [],
+        actorIds: new Set(),
+      });
     }
     const group = groups.get(groupId)!;
 
@@ -806,7 +949,12 @@ function generateUseCaseDiagram(fileContents: Record<string, string>): {
 export function generateMermaidDefinition(
   type: DiagramType,
   fileContents: Record<string, string>,
-): { definition: string; nodes: DiagramNode[]; edges: DiagramEdge[] } {
+): {
+  definition: string;
+  nodes: DiagramNode[];
+  edges: DiagramEdge[];
+  warning?: string;
+} {
   switch (type) {
     case "ERD":
       return generateERD(fileContents);

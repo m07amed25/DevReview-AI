@@ -5,17 +5,34 @@ import type { DiagramNode } from "@/features/diagram/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { NodeInfoPanel } from "./node-info-panel";
 import { Button } from "@/components/ui/button";
-import { ZoomIn, ZoomOut, Maximize2, RotateCcw, Download } from "lucide-react";
+import {
+  ZoomIn,
+  ZoomOut,
+  Maximize2,
+  RotateCcw,
+  Download,
+  ImageDown,
+  Copy,
+  Check,
+  Expand,
+  Shrink,
+} from "lucide-react";
 
 interface DiagramViewerProps {
   definition: string;
   nodes: DiagramNode[];
   onNodeClick?: (node: DiagramNode) => void;
+  onRetry?: () => void;
 }
 
 let diagramCounter = 0;
 
-function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
+function DiagramViewer({
+  definition,
+  nodes,
+  onNodeClick,
+  onRetry,
+}: DiagramViewerProps) {
   const idRef = useRef<string | null>(null);
   if (!idRef.current) {
     idRef.current = `mermaid-diagram-${++diagramCounter}`;
@@ -28,7 +45,6 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
   const [error, setError] = useState<string | null>(null);
   const [selectedNode, setSelectedNode] = useState<DiagramNode | null>(null);
 
-  // ── Zoom / pan state ────────────────────────────────────────────────────────
   const [scale, setScale] = useState(1);
   const [translate, setTranslate] = useState({ x: 0, y: 0 });
 
@@ -37,7 +53,12 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
   const translateRef = useRef({ x: 0, y: 0 });
 
   const isPanning = useRef(false);
+  // Mirrors isPanning as React state so CSS cursor/transition re-renders correctly
+  const [isPanningState, setIsPanningState] = useState(false);
   const panStart = useRef({ x: 0, y: 0 });
+
+  const [copied, setCopied] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   // will-change applied only while an active transform is in progress to avoid
   // permanently rasterising the SVG into a GPU bitmap (which causes pixelation).
@@ -48,8 +69,6 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
   const MAX_SCALE = 5;
   const ZOOM_STEP = 0.15;
   const PAN_STEP = 60; // px per keyboard arrow press
-
-  // ── Helpers ─────────────────────────────────────────────────────────────────
 
   const beginTransform = useCallback(() => {
     setIsTransforming(true);
@@ -92,7 +111,6 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
     [beginTransform, applyTransform],
   );
 
-  // ── Button zoom (toward the centre of the viewport) ─────────────────────────
   const zoomIn = useCallback(() => {
     const wrapper = wrapperRef.current;
     const cx = wrapper ? wrapper.clientWidth / 2 : 0;
@@ -125,17 +143,14 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
 
     const wrapperW = wrapper.clientWidth;
     const maxH = Math.max(window.innerHeight * 0.72, 600);
-    const newScale = +Math.min(
-      wrapperW / naturalW,
-      maxH / naturalH,
-      2,
-    ).toFixed(3);
+    const newScale = +Math.min(wrapperW / naturalW, maxH / naturalH, 2).toFixed(
+      3,
+    );
     const tx = Math.max(0, (wrapperW - naturalW * newScale) / 2);
     const ty = Math.max(0, (maxH - naturalH * newScale) / 2);
     applyTransform(newScale, { x: tx, y: ty });
   }, [applyTransform]);
 
-  // ── Download SVG ─────────────────────────────────────────────────────────────
   const downloadSVG = useCallback(() => {
     const svgEl = containerRef.current?.querySelector("svg");
     if (!svgEl) return;
@@ -150,7 +165,66 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
     URL.revokeObjectURL(url);
   }, []);
 
-  // ── Mouse-wheel zoom ─ centred on the cursor ─────────────────────────────────
+  const downloadPNG = useCallback(() => {
+    const svgEl = containerRef.current?.querySelector("svg");
+    if (!svgEl) return;
+    const serializer = new XMLSerializer();
+    const svgStr = serializer.serializeToString(svgEl);
+    const vb = svgEl.viewBox?.baseVal;
+    const w =
+      vb && vb.width > 0 ? vb.width : svgEl.getBoundingClientRect().width;
+    const h =
+      vb && vb.height > 0 ? vb.height : svgEl.getBoundingClientRect().height;
+    const dpr = Math.max(window.devicePixelRatio ?? 1, 2);
+    const canvas = document.createElement("canvas");
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const blob = new Blob([svgStr], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const img = new Image();
+    img.onload = () => {
+      ctx.scale(dpr, dpr);
+      // Fill with the page background so transparent SVGs render cleanly
+      ctx.fillStyle = "hsl(222.2 84% 4.9%)";
+      ctx.fillRect(0, 0, w, h);
+      ctx.drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      const a = document.createElement("a");
+      a.href = canvas.toDataURL("image/png");
+      a.download = "diagram.png";
+      a.click();
+    };
+    img.src = url;
+  }, []);
+
+  const copyDefinition = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(definition);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard API unavailable
+    }
+  }, [definition]);
+
+  const toggleFullscreen = useCallback(() => {
+    const el = wrapperRef.current;
+    if (!el) return;
+    if (!document.fullscreenElement) {
+      el.requestFullscreen().catch(() => {});
+    } else {
+      document.exitFullscreen().catch(() => {});
+    }
+  }, []);
+
+  useEffect(() => {
+    const handler = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener("fullscreenchange", handler);
+    return () => document.removeEventListener("fullscreenchange", handler);
+  }, []);
+
   const handleWheel = useCallback(
     (e: WheelEvent) => {
       e.preventDefault();
@@ -165,10 +239,10 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
     [zoomToward],
   );
 
-  // ── Mouse pan ────────────────────────────────────────────────────────────────
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     if (e.button !== 0) return;
     isPanning.current = true;
+    setIsPanningState(true);
     panStart.current = {
       x: e.clientX - translateRef.current.x,
       y: e.clientY - translateRef.current.y,
@@ -191,9 +265,9 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
 
   const stopPanning = useCallback(() => {
     isPanning.current = false;
+    setIsPanningState(false);
   }, []);
 
-  // ── Touch pan + pinch-to-zoom ─────────────────────────────────────────────────
   const lastTouchRef = useRef<{ x: number; y: number } | null>(null);
   const lastPinchDistRef = useRef<number | null>(null);
 
@@ -276,7 +350,6 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
     lastPinchDistRef.current = null;
   }, []);
 
-  // ── Keyboard shortcuts ───────────────────────────────────────────────────────
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement).tagName;
@@ -340,7 +413,6 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
     return () => window.removeEventListener("keydown", onKey);
   }, [zoomIn, zoomOut, resetView, fitToScreen]);
 
-  // ── Attach non-passive listeners ─────────────────────────────────────────────
   useEffect(() => {
     const el = wrapperRef.current;
     if (!el) return;
@@ -356,7 +428,6 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
     };
   }, [handleWheel, handleTouchStart, handleTouchMove, handleTouchEnd]);
 
-  // ── Node click ───────────────────────────────────────────────────────────────
   const activeNodeElRef = useRef<SVGElement | null>(null);
 
   const handleNodeClick = useCallback(
@@ -372,7 +443,7 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
     [onNodeClick],
   );
 
-  // ── Mermaid render ───────────────────────────────────────────────────────────
+  // Mermaid render
   useEffect(() => {
     let cancelled = false;
 
@@ -447,21 +518,32 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
   }, [definition]);
 
   useEffect(() => {
-    if (!loading) fitToScreen();
+    if (!loading) {
+      // Use rAF to ensure the SVG is committed to the DOM before measuring
+      requestAnimationFrame(() => fitToScreen());
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
-  // ── Error state ──────────────────────────────────────────────────────────────
   if (error) {
     return (
-      <div className="rounded-md border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
+      <div className="rounded-md border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive space-y-2">
         <p className="font-medium">Failed to render diagram</p>
-        <p className="mt-1 font-mono text-xs opacity-75 break-all">{error}</p>
+        <p className="font-mono text-xs opacity-75 break-all">{error}</p>
+        {onRetry && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="text-xs border-destructive/40 text-destructive hover:bg-destructive/10"
+            onClick={onRetry}
+          >
+            Retry generation
+          </Button>
+        )}
       </div>
     );
   }
 
-  // ── Render ───────────────────────────────────────────────────────────────────
   return (
     <div className="relative w-full">
       {/* Toolbar */}
@@ -536,6 +618,49 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
           >
             <Download className="h-4 w-4" />
           </Button>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7"
+            onClick={downloadPNG}
+            title="Download PNG"
+            aria-label="Download PNG"
+          >
+            <ImageDown className="h-4 w-4" />
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7"
+            onClick={copyDefinition}
+            title="Copy Mermaid source"
+            aria-label="Copy Mermaid source"
+          >
+            {copied ? (
+              <Check className="h-4 w-4 text-green-500" />
+            ) : (
+              <Copy className="h-4 w-4" />
+            )}
+          </Button>
+
+          <div className="mx-1 h-4 w-px bg-border" />
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7"
+            onClick={toggleFullscreen}
+            title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
+            aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+          >
+            {isFullscreen ? (
+              <Shrink className="h-4 w-4" />
+            ) : (
+              <Expand className="h-4 w-4" />
+            )}
+          </Button>
         </div>
       )}
 
@@ -552,19 +677,28 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
         className="relative w-full overflow-hidden rounded-md"
         style={{
           minHeight: 600,
-          cursor: isPanning.current ? "grabbing" : "grab",
+          cursor: isPanningState ? "grabbing" : "grab",
           touchAction: "none",
         }}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={stopPanning}
         onMouseLeave={stopPanning}
+        tabIndex={0}
+        aria-label="Diagram canvas — use scroll to zoom, drag to pan"
       >
         {loading && (
-          <div className="space-y-2 p-4">
-            <Skeleton className="h-4 w-3/4" />
-            <Skeleton className="h-48 w-full" />
-            <Skeleton className="h-4 w-1/2" />
+          <div className="space-y-3 p-6">
+            <div className="flex items-center gap-3">
+              <Skeleton className="h-4 w-4 rounded-full" />
+              <Skeleton className="h-4 w-48" />
+            </div>
+            <Skeleton className="h-64 w-full" />
+            <div className="flex gap-4">
+              <Skeleton className="h-3 w-24" />
+              <Skeleton className="h-3 w-32" />
+              <Skeleton className="h-3 w-20" />
+            </div>
           </div>
         )}
         <div
@@ -573,7 +707,7 @@ function DiagramViewer({ definition, nodes, onNodeClick }: DiagramViewerProps) {
           style={{
             display: loading ? "none" : "block",
             transform: `translate(${translate.x}px, ${translate.y}px) scale(${scale})`,
-            transition: isPanning.current ? "none" : "transform 0.15s ease",
+            transition: isPanningState ? "none" : "transform 0.15s ease",
             willChange: isTransforming ? "transform" : "auto",
           }}
           aria-label="Diagram visualization"

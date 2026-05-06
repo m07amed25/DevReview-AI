@@ -162,11 +162,45 @@ export const generateDiagram = inngest.createFunction(
           if (path.endsWith(".ts") || path.endsWith(".tsx")) return 10;
           return 0;
         }
-        // ── CLASS: prioritise service / model / entity files ─────────────────
+        // ── CLASS: prioritise service / model / entity / hook files ──────
         if (type === "CLASS") {
-          if (/\.(service|model|entity|class)\.(ts|js)$/.test(path)) return 100;
-          if (path.endsWith(".ts") || path.endsWith(".tsx")) return 50;
-          if (path.endsWith(".js") || path.endsWith(".jsx")) return 40;
+          // Skip test, spec, page, layout, config, and generated files entirely
+          if (/\.(test|spec)\.(ts|js|tsx|jsx)$/.test(path)) return 0;
+          if (
+            /(page|layout|not-found|error|loading|template)\.(tsx|jsx)$/.test(
+              path,
+            )
+          )
+            return 0;
+          if (/\.(config|setup)\.(ts|js)$/.test(path)) return 0;
+          if (/node_modules|\.next|\.prisma|prisma\/migrations/.test(path))
+            return 0;
+          // Highest priority: explicit OOP naming convention
+          if (
+            /\.(service|model|entity|class|controller|repository|store)\.(ts|js)$/.test(
+              path,
+            )
+          )
+            return 100;
+          // High priority: files in service/model/feature directories
+          if (
+            /\/(services?|models?|entities|controllers?|repositories?|stores?)\//i.test(
+              path,
+            ) &&
+            /\.(ts|js)$/.test(path)
+          )
+            return 90;
+          if (
+            /\/server\/(api|services?|auth|db)\//i.test(path) &&
+            path.endsWith(".ts")
+          )
+            return 85;
+          if (/\/features?\//i.test(path) && path.endsWith(".ts")) return 70;
+          if (/\/hooks?\//i.test(path) && path.endsWith(".ts")) return 60;
+          // Generic TypeScript files
+          if (path.endsWith(".ts")) return 50;
+          if (path.endsWith(".tsx")) return 30;
+          if (path.endsWith(".js") || path.endsWith(".jsx")) return 20;
           return 0;
         }
         // ── USE_CASE: prioritise route / controller / handler / API files ─────
@@ -226,6 +260,35 @@ export const generateDiagram = inngest.createFunction(
 
     // ── Step 6: Persist result ────────────────────────────────────────────────
     await step.run("save-result", async () => {
+      // If the generator produced no content (e.g. no classes found) but
+      // returned a warning instead of throwing, keep the previous diagram
+      // definition so the UI can continue showing it with a tip.
+      if (generated.warning && !generated.definition) {
+        const existing = await db.diagram.findUnique({
+          where: { id: diagramId },
+          select: { definition: true, nodes: true, edges: true },
+        });
+
+        await db.diagram.update({
+          where: { id: diagramId },
+          data: {
+            status: "COMPLETED",
+            // Restore previous definition/nodes/edges when available
+            ...(existing?.definition
+              ? {
+                  definition: existing.definition,
+                  nodes: existing.nodes ?? undefined,
+                  edges: existing.edges ?? undefined,
+                }
+              : {}),
+            // Surface the warning as a non-fatal error so the panel can show a tip
+            error: generated.warning,
+            generatedAt: new Date(),
+          },
+        });
+        return;
+      }
+
       await db.diagram.update({
         where: { id: diagramId },
         data: {

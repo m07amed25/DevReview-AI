@@ -18,6 +18,8 @@ export interface DiagramNodeDetailClass {
     visibility: "public" | "private" | "protected";
   }>;
   methods: string[];
+  /** UML stereotype shown in the Mermaid diagram header */
+  stereotype?: "interface" | "type";
 }
 
 export interface DiagramNodeDetailUseCase {
