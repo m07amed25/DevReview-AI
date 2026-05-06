@@ -34,15 +34,19 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
-  repositories    Repository[]
-  reviews         Review[]
-  threadComments  ReviewThreadComment[]
-  teamMembers     TeamMember[]
-  notifications   Notification[]
-  reviewFeedbacks ReviewFeedback[]
-  reviewRules     ReviewRule[]
-  auditLogs       AuditLog[]
-  customRoles     UserCustomRole[]
+  repositories     Repository[]
+  reviews          Review[]
+  threadComments   ReviewThreadComment[]
+  teamMembers      TeamMember[]
+  notifications    Notification[]
+  reviewFeedbacks  ReviewFeedback[]
+  reviewRules      ReviewRule[]
+  auditLogs        AuditLog[]
+  customRoles      UserCustomRole[]
+  commentReactions ReviewThreadCommentReaction[]
+  reviewApprovals  ReviewApproval[]
+  assignedReviews  ReviewAssignment[]            @relation("ReviewAssignee")
+  assignedByMe     ReviewAssignment[]            @relation("ReviewAssigner")
 
   // Code review preferences
   reviewDepth            String  @default("standard")
@@ -155,6 +159,8 @@ model Review {
   githubComment     GitHubComment?
   githubStatusCheck GitHubStatusCheck?
   feedbacks         ReviewFeedback[]
+  approvals         ReviewApproval[]
+  assignments       ReviewAssignment[]
 
   @@index([repositoryId])
   @@index([userId])
@@ -201,11 +207,27 @@ model ReviewThreadComment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  thread ReviewThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
-  user   User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  thread    ReviewThread                  @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  user      User                          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reactions ReviewThreadCommentReaction[]
 
   @@index([threadId])
   @@index([userId])
+}
+
+model ReviewThreadCommentReaction {
+  id        String   @id @default(cuid())
+  commentId String
+  userId    String
+  emoji     String   @db.VarChar(10)
+  createdAt DateTime @default(now())
+
+  comment ReviewThreadComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  user    User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([commentId, userId, emoji])
+  @@index([commentId])
+  @@map("review_thread_comment_reaction")
 }
 
 enum ReviewStatus {
@@ -213,6 +235,65 @@ enum ReviewStatus {
   PROCESSING
   COMPLETED
   FAILED
+}
+
+enum ReviewApprovalState {
+  APPROVED
+  CHANGES_REQUESTED
+  COMMENTED
+}
+
+enum AssignmentPriority {
+  CRITICAL
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum AssignmentStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+model ReviewApproval {
+  id        String              @id @default(cuid())
+  reviewId  String
+  userId    String
+  state     ReviewApprovalState
+  body      String?             @db.Text
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+
+  review Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([reviewId, userId])
+  @@index([reviewId])
+  @@index([userId])
+  @@map("review_approval")
+}
+
+model ReviewAssignment {
+  id         String             @id @default(cuid())
+  reviewId   String
+  assigneeId String
+  assignedBy String
+  dueDate    DateTime?
+  priority   AssignmentPriority @default(MEDIUM)
+  status     AssignmentStatus   @default(PENDING)
+  note       String?            @db.Text
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+
+  review   Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  assignee User   @relation("ReviewAssignee", fields: [assigneeId], references: [id], onDelete: Cascade)
+  assigner User   @relation("ReviewAssigner", fields: [assignedBy], references: [id], onDelete: Cascade)
+
+  @@unique([reviewId, assigneeId])
+  @@index([reviewId])
+  @@index([assigneeId])
+  @@map("review_assignment")
 }
 
 model Team {
@@ -309,6 +390,9 @@ enum NotificationType {
   REVIEW_COMPLETED
   REVIEW_FAILED
   SCHEDULED_SCAN_COMPLETED
+  REVIEW_ASSIGNED
+  REVIEW_APPROVED
+  REVIEW_CHANGES_REQUESTED
 }
 
 enum ScanCadence {
@@ -340,6 +424,7 @@ model WebhookConfig {
   repositoryId    String  @unique
   enabled         Boolean @default(false)
   githubWebhookId Int?
+  scoreThreshold  Int?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -517,7 +602,6 @@ model SupportMessage {
   @@map("support_message")
 }
 
-// ─── Audit Log ───────────────────────────────────────────────────────────────
 model AuditLog {
   id         String   @id @default(cuid())
   actorId    String?

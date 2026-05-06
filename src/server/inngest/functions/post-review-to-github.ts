@@ -610,7 +610,9 @@ export async function runPostReviewToGitHub(
     const review = await dbClient.review.findUnique({
       where: { id: completedEvent.data.reviewId },
       include: {
-        repository: true,
+        repository: {
+          include: { webhookConfig: { select: { scoreThreshold: true } } },
+        },
         user: true,
       },
     });
@@ -629,7 +631,11 @@ export async function runPostReviewToGitHub(
       riskScore: number | null;
       comments: unknown;
       qualityMetrics: unknown;
-      repository: { fullName: string; userId: string };
+      repository: {
+        fullName: string;
+        userId: string;
+        webhookConfig: { scoreThreshold: number | null } | null;
+      };
       user: { id: string };
     };
     accessToken: string | null;
@@ -744,18 +750,30 @@ export async function runPostReviewToGitHub(
   });
 
   await step.run("update-status-check", async () => {
+    // Determine pass/fail using the per-repo score threshold when set;
+    // otherwise fall back to the hasHighSeverity heuristic.
+    const scoreThreshold = review.repository.webhookConfig?.scoreThreshold;
+    const reviewFails =
+      scoreThreshold !== null && scoreThreshold !== undefined
+        ? (review.riskScore ?? 0) >= scoreThreshold
+        : completedEvent.data.hasHighSeverity;
+
     const state: "success" | "failure" | "error" =
       completedEvent.data.status === "FAILED"
         ? "error"
-        : completedEvent.data.hasHighSeverity
+        : reviewFails
           ? "failure"
           : "success";
 
     const description =
       state === "success"
-        ? "DevReview AI — no critical issues"
+        ? scoreThreshold !== null && scoreThreshold !== undefined
+          ? `DevReview AI — risk score ${review.riskScore ?? 0}/100 (threshold ${scoreThreshold})`
+          : "DevReview AI — no critical issues"
         : state === "failure"
-          ? "DevReview AI — critical issues found"
+          ? scoreThreshold !== null && scoreThreshold !== undefined
+            ? `DevReview AI — risk score ${review.riskScore ?? 0}/100 exceeds threshold ${scoreThreshold}`
+            : "DevReview AI — critical issues found"
           : "DevReview AI — review processing failed";
 
     await postCommitStatusFn(

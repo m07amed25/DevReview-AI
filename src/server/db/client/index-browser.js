@@ -235,6 +235,37 @@ exports.Prisma.ReviewThreadCommentScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ReviewThreadCommentReactionScalarFieldEnum = {
+  id: 'id',
+  commentId: 'commentId',
+  userId: 'userId',
+  emoji: 'emoji',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ReviewApprovalScalarFieldEnum = {
+  id: 'id',
+  reviewId: 'reviewId',
+  userId: 'userId',
+  state: 'state',
+  body: 'body',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ReviewAssignmentScalarFieldEnum = {
+  id: 'id',
+  reviewId: 'reviewId',
+  assigneeId: 'assigneeId',
+  assignedBy: 'assignedBy',
+  dueDate: 'dueDate',
+  priority: 'priority',
+  status: 'status',
+  note: 'note',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.TeamScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -283,6 +314,7 @@ exports.Prisma.WebhookConfigScalarFieldEnum = {
   repositoryId: 'repositoryId',
   enabled: 'enabled',
   githubWebhookId: 'githubWebhookId',
+  scoreThreshold: 'scoreThreshold',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -474,6 +506,25 @@ exports.ReviewStatus = exports.$Enums.ReviewStatus = {
   FAILED: 'FAILED'
 };
 
+exports.ReviewApprovalState = exports.$Enums.ReviewApprovalState = {
+  APPROVED: 'APPROVED',
+  CHANGES_REQUESTED: 'CHANGES_REQUESTED',
+  COMMENTED: 'COMMENTED'
+};
+
+exports.AssignmentPriority = exports.$Enums.AssignmentPriority = {
+  CRITICAL: 'CRITICAL',
+  HIGH: 'HIGH',
+  MEDIUM: 'MEDIUM',
+  LOW: 'LOW'
+};
+
+exports.AssignmentStatus = exports.$Enums.AssignmentStatus = {
+  PENDING: 'PENDING',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED'
+};
+
 exports.TeamRole = exports.$Enums.TeamRole = {
   OWNER: 'OWNER',
   ADMIN: 'ADMIN',
@@ -502,7 +553,10 @@ exports.NotificationType = exports.$Enums.NotificationType = {
   TEAM_MEMBER_ADDED: 'TEAM_MEMBER_ADDED',
   REVIEW_COMPLETED: 'REVIEW_COMPLETED',
   REVIEW_FAILED: 'REVIEW_FAILED',
-  SCHEDULED_SCAN_COMPLETED: 'SCHEDULED_SCAN_COMPLETED'
+  SCHEDULED_SCAN_COMPLETED: 'SCHEDULED_SCAN_COMPLETED',
+  REVIEW_ASSIGNED: 'REVIEW_ASSIGNED',
+  REVIEW_APPROVED: 'REVIEW_APPROVED',
+  REVIEW_CHANGES_REQUESTED: 'REVIEW_CHANGES_REQUESTED'
 };
 
 exports.ScanCadence = exports.$Enums.ScanCadence = {
@@ -563,6 +617,9 @@ exports.Prisma.ModelName = {
   ReviewFeedback: 'ReviewFeedback',
   ReviewThread: 'ReviewThread',
   ReviewThreadComment: 'ReviewThreadComment',
+  ReviewThreadCommentReaction: 'ReviewThreadCommentReaction',
+  ReviewApproval: 'ReviewApproval',
+  ReviewAssignment: 'ReviewAssignment',
   Team: 'Team',
   TeamMember: 'TeamMember',
   TeamAction: 'TeamAction',

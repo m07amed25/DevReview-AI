@@ -190,6 +190,7 @@ export const repositoryRouter = createTRPCRouter({
       z.object({
         repositoryId: z.string().max(255).cuid(),
         enabled: z.boolean(),
+        scoreThreshold: z.number().int().min(0).max(100).nullable().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -228,8 +229,12 @@ export const repositoryRouter = createTRPCRouter({
         });
       }
 
+      // WEBHOOK_BASE_URL lets you override the public URL used for webhook
+      // registration (e.g. an ngrok tunnel in dev) without changing APP_BASE_URL.
       const appBaseUrl =
-        process.env.APP_BASE_URL ?? process.env.BETTER_AUTH_URL;
+        process.env.WEBHOOK_BASE_URL ??
+        process.env.APP_BASE_URL ??
+        process.env.BETTER_AUTH_URL;
       const webhookSecret = process.env.GITHUB_WEBHOOK_SECRET;
 
       if (!appBaseUrl || !webhookSecret) {
@@ -239,18 +244,32 @@ export const repositoryRouter = createTRPCRouter({
         });
       }
 
+      if (
+        input.enabled &&
+        (appBaseUrl.includes("localhost") || appBaseUrl.includes("127.0.0.1"))
+      ) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message:
+            "Webhooks require a publicly reachable URL. Set WEBHOOK_BASE_URL to your ngrok (or tunnel) address in .env.local, e.g. WEBHOOK_BASE_URL=https://xxxx.ngrok-free.app",
+        });
+      }
+
       const existingConfig = await ctx.db.webhookConfig.findUnique({
         where: { repositoryId: repository.id },
       });
 
       try {
         if (input.enabled) {
-          const githubWebhookId = await registerWebhook(
-            accessToken,
-            repository.fullName,
-            `${appBaseUrl}/api/webhooks/github`,
-            webhookSecret,
-          );
+          // Reuse existing ID if already registered to avoid a 422 on re-enable.
+          const githubWebhookId =
+            existingConfig?.githubWebhookId ??
+            (await registerWebhook(
+              accessToken,
+              repository.fullName,
+              `${appBaseUrl}/api/webhooks/github`,
+              webhookSecret,
+            ));
 
           return ctx.db.webhookConfig.upsert({
             where: { repositoryId: repository.id },
@@ -258,16 +277,21 @@ export const repositoryRouter = createTRPCRouter({
               repositoryId: repository.id,
               enabled: true,
               githubWebhookId,
+              scoreThreshold: input.scoreThreshold ?? null,
             },
             update: {
               enabled: true,
               githubWebhookId,
+              ...(input.scoreThreshold !== undefined
+                ? { scoreThreshold: input.scoreThreshold }
+                : {}),
             },
             select: {
               id: true,
               repositoryId: true,
               enabled: true,
               githubWebhookId: true,
+              scoreThreshold: true,
             },
           });
         }
@@ -286,16 +310,21 @@ export const repositoryRouter = createTRPCRouter({
             repositoryId: repository.id,
             enabled: false,
             githubWebhookId: null,
+            scoreThreshold: input.scoreThreshold ?? null,
           },
           update: {
             enabled: false,
             githubWebhookId: null,
+            ...(input.scoreThreshold !== undefined
+              ? { scoreThreshold: input.scoreThreshold }
+              : {}),
           },
           select: {
             id: true,
             repositoryId: true,
             enabled: true,
             githubWebhookId: true,
+            scoreThreshold: true,
           },
         });
       } catch (error) {
@@ -307,6 +336,59 @@ export const repositoryRouter = createTRPCRouter({
               : "Failed to update webhook configuration",
         });
       }
+    }),
+
+  updateScoreThreshold: protectedProcedure
+    .input(
+      z.object({
+        repositoryId: z.string().max(255).cuid(),
+        /** 0–100 inclusive, or null to revert to the hasHighSeverity heuristic. */
+        scoreThreshold: z.number().int().min(0).max(100).nullable(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const repository = await ctx.db.repository.findFirst({
+        where: {
+          id: input.repositoryId,
+          OR: [
+            { userId: ctx.user.id },
+            {
+              team: {
+                members: {
+                  some: {
+                    userId: ctx.user.id,
+                    role: { in: ["OWNER", "ADMIN"] },
+                  },
+                },
+              },
+            },
+          ],
+        },
+      });
+
+      if (!repository) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message:
+            "Only repository owners or team admins can update the score threshold",
+        });
+      }
+
+      return ctx.db.webhookConfig.upsert({
+        where: { repositoryId: repository.id },
+        create: {
+          repositoryId: repository.id,
+          enabled: false,
+          scoreThreshold: input.scoreThreshold,
+        },
+        update: { scoreThreshold: input.scoreThreshold },
+        select: {
+          id: true,
+          repositoryId: true,
+          enabled: true,
+          scoreThreshold: true,
+        },
+      });
     }),
 
   getScheduledScanConfig: protectedProcedure
