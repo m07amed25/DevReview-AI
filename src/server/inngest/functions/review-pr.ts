@@ -160,7 +160,7 @@ export const reviewPR = inngest.createFunction(
           ...preferences,
           customRules: activeRules.length > 0 ? activeRules : undefined,
         };
-        return reviewCode(
+        const result = await reviewCode(
           pr.title,
           files.map((f) => ({
             filename: f.filename,
@@ -171,6 +171,33 @@ export const reviewPR = inngest.createFunction(
           })),
           mergedPreferences,
         );
+
+        // --- Server-side enforcement ---
+        // 1. Drop low-confidence guesses regardless of what the model returns.
+        const filteredComments = result.comments.filter(
+          (c) => c.confidence === null || c.confidence === undefined || c.confidence >= 70,
+        );
+
+        // 2. Recompute riskScore from only actionable categories so that
+        //    style/suggestion issues can never inflate the score.
+        const severityWeight: Record<string, number> = {
+          critical: 30,
+          high: 15,
+          medium: 7,
+          low: 1,
+        };
+        const computedRisk = Math.min(
+          100,
+          filteredComments
+            .filter((c) => c.category !== "style" && c.category !== "suggestion")
+            .reduce((sum, c) => sum + (severityWeight[c.severity] ?? 1), 0),
+        );
+
+        return {
+          ...result,
+          comments: filteredComments,
+          riskScore: computedRisk,
+        };
       });
 
       await step.run("save-review-result", async () => {
