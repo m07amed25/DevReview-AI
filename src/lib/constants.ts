@@ -1,3 +1,12 @@
+/** GitHub commit-status context name used for branch protection rules. */
+export const GITHUB_STATUS_CHECK_CONTEXT = "devreview-ai/code-review";
+
+/** Valid GitHub username regex (alphanumeric + hyphens, max 39 chars). */
+export const GITHUB_OWNER_RE = /^[a-zA-Z0-9-]{1,39}$/;
+
+/** Valid GitHub repository name regex (alphanumeric + hyphens/underscores/dots, max 100 chars). */
+export const GITHUB_REPO_RE = /^[a-zA-Z0-9._-]{1,100}$/;
+
 export type TimePeriod = "7d" | "30d" | "90d" | "6m" | "1y";
 
 export const TIME_PERIOD_LABELS: Record<TimePeriod, string> = {

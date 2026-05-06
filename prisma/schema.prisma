@@ -426,6 +426,10 @@ model WebhookConfig {
   repositoryId    String   @unique
   enabled         Boolean  @default(false)
   githubWebhookId Int?
+  /// Optional numeric risk-score threshold (0–100). Reviews with riskScore >= this
+  /// value fail the GitHub branch-protection status check. NULL = use the default
+  /// heuristic (fail on any critical/high severity finding).
+  scoreThreshold  Int?
 
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt

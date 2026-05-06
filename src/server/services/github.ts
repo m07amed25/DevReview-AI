@@ -395,15 +395,59 @@ export async function registerWebhook(
   secret: string,
 ): Promise<number> {
   const [owner, repo] = repoFullName.split("/");
-  const response = await fetch(
+  const headers = {
+    Authorization: `Bearer ${accessToken}`,
+    Accept: "application/vnd.github.v3+json",
+    "Content-Type": "application/json",
+  };
+
+  // --- 1. Check for an existing hook at this URL first ---
+  const listRes = await fetch(
+    `https://api.github.com/repos/${owner}/${repo}/hooks?per_page=100`,
+    { headers },
+  );
+  console.log(
+    `[registerWebhook] list status=${listRes.status} targetUrl=${webhookUrl}`,
+  );
+  if (listRes.ok) {
+    const hooks = (await listRes.json()) as Array<{
+      id: number;
+      active: boolean;
+      config: { url?: string };
+    }>;
+    console.log(
+      `[registerWebhook] existing hooks:`,
+      hooks.map((h) => h.config?.url),
+    );
+    const existing = hooks.find((h) => h.config?.url === webhookUrl);
+    if (existing) {
+      // Re-activate it if it was deactivated, then return the ID.
+      if (!existing.active) {
+        await fetch(
+          `https://api.github.com/repos/${owner}/${repo}/hooks/${existing.id}`,
+          {
+            method: "PATCH",
+            headers,
+            body: JSON.stringify({ active: true }),
+          },
+        );
+      }
+      console.log(`[registerWebhook] reusing existing hook id=${existing.id}`);
+      return existing.id;
+    }
+  } else {
+    const body = await listRes.text();
+    console.warn(
+      `[registerWebhook] list failed status=${listRes.status} body=${body}`,
+    );
+  }
+
+  // --- 2. None found — create a new one ---
+  const createRes = await fetch(
     `https://api.github.com/repos/${owner}/${repo}/hooks`,
     {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        Accept: "application/vnd.github.v3+json",
-        "Content-Type": "application/json",
-      },
+      headers,
       body: JSON.stringify({
         name: "web",
         active: true,
@@ -418,14 +462,18 @@ export async function registerWebhook(
     },
   );
 
-  if (!response.ok) {
-    throw new Error(
-      `GitHub API error ${response.status} registering webhook for ${repoFullName}`,
-    );
+  if (createRes.ok) {
+    const data = (await createRes.json()) as { id: number };
+    return data.id;
   }
 
-  const data = (await response.json()) as { id: number };
-  return data.id;
+  const errorBody = await createRes.text();
+  console.error(
+    `[registerWebhook] create failed status=${createRes.status} body=${errorBody}`,
+  );
+  throw new Error(
+    `GitHub API error ${createRes.status} registering webhook for ${repoFullName}`,
+  );
 }
 
 export async function deleteWebhook(

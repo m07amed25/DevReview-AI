@@ -31,6 +31,8 @@ import { cn, formatDate } from "@/lib/utils";
 import { CodeTimeline } from "@/features/code-timeline";
 import { DiagramPanel } from "@/features/review/components/diagram-panel";
 import { PullRequestCard } from "@/features/repo/components/pull-request-card";
+import { AutoReviewToggle } from "@/features/settings/components/auto-review-toggle";
+import { BranchProtectionCard } from "@/features/repo/components/branch-protection-card";
 
 type PageProps = { params: Promise<{ id: string }> };
 
@@ -422,6 +424,24 @@ export default function RepositoryDetailPage({ params }: PageProps) {
             <PullRequestCard key={pr.id} pr={pr} repositoryId={id} />
           ))
         )}
+      </div>
+
+      {/* Automation */}
+      <div>
+        <h2 className="text-xl font-semibold tracking-tight mb-4 flex items-center gap-2">
+          <GitBranch className="size-5" />
+          Automation & Branch Protection
+        </h2>
+        <div className="grid gap-4 md:grid-cols-2">
+          <AutoReviewToggle
+            repositoryId={id}
+            repoFullName={repo.fullName ?? undefined}
+          />
+          <BranchProtectionCard
+            repositoryId={id}
+            repoFullName={repo.fullName ?? undefined}
+          />
+        </div>
       </div>
 
       {/* Architecture Diagrams */}
