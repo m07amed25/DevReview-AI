@@ -17,8 +17,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { makeBadge, type Format } from "badge-maker";
 import { db } from "@/server/db";
+import { GITHUB_OWNER_RE, GITHUB_REPO_RE } from "@/lib/constants";
 
-const ALLOWED_STYLES = new Set([
+/** Permitted badge-maker style values. */
+const ALLOWED_STYLES: ReadonlySet<string> = new Set([
   "flat",
   "flat-square",
   "plastic",
@@ -73,12 +75,7 @@ export async function GET(
   const owner = segments[0]!;
   const repoName = segments.slice(1).join("/");
 
-  // GitHub usernames: alphanumeric + hyphens, 1–39 chars.
-  // GitHub repo names: alphanumeric + hyphens, underscores, dots, 1–100 chars.
-  const OWNER_RE = /^[a-zA-Z0-9-]{1,39}$/;
-  const REPO_RE = /^[a-zA-Z0-9._-]{1,100}$/;
-
-  if (!OWNER_RE.test(owner) || !REPO_RE.test(repoName)) {
+  if (!GITHUB_OWNER_RE.test(owner) || !GITHUB_REPO_RE.test(repoName)) {
     return svgError("invalid path");
   }
 

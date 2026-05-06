@@ -6,8 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { GitBranch, Shield } from "lucide-react";
-
-const STATUS_CHECK_CONTEXT = "devreview-ai/code-review";
+import { GITHUB_STATUS_CHECK_CONTEXT } from "@/lib/constants";
 
 type BranchProtectionCardProps = {
   repositoryId: string;
@@ -80,7 +79,7 @@ export function BranchProtectionCard({
             context name:
           </p>
           <code className="block rounded bg-muted px-3 py-2 text-xs font-mono select-all">
-            {STATUS_CHECK_CONTEXT}
+            {GITHUB_STATUS_CHECK_CONTEXT}
           </code>
           <p className="text-xs text-muted-foreground">
             Go to{" "}
