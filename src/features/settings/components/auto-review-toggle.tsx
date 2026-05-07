@@ -15,6 +15,7 @@ import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
+import { Copy, Check } from "lucide-react";
 
 type AutoReviewToggleProps = {
   repositoryId: string;
@@ -34,6 +35,7 @@ export function AutoReviewToggle({
   const serverThreshold = data?.scoreThreshold ?? null;
   const [localThreshold, setLocalThreshold] = useState<number | null>(null);
   const [webhookError, setWebhookError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
   // Use local state if the user has dragged the slider, otherwise use server value
   const displayThreshold = localThreshold ?? serverThreshold;
 
@@ -66,6 +68,13 @@ export function AutoReviewToggle({
   const badgeMarkdown = badgeUrl
     ? `[![DevReview AI](${badgeUrl})](${appBase})`
     : null;
+
+  const handleCopyBadge = async () => {
+    if (!badgeMarkdown) return;
+    await navigator.clipboard.writeText(badgeMarkdown);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <Card>
@@ -207,12 +216,35 @@ export function AutoReviewToggle({
           <>
             <Separator />
             <div className="space-y-2">
-              <p className="text-sm font-medium">README badge</p>
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium">README badge</p>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleCopyBadge}
+                  className="h-7 text-xs"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="mr-1 size-3" />
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="mr-1 size-3" />
+                      Copy
+                    </>
+                  )}
+                </Button>
+              </div>
               <p className="text-xs text-muted-foreground">
                 Embed this Markdown in your README to display the latest review
                 status:
               </p>
-              <pre className="rounded bg-muted px-3 py-2 text-xs font-mono whitespace-pre-wrap break-all select-all">
+              <pre
+                onClick={handleCopyBadge}
+                className="rounded bg-muted px-3 py-2 text-xs font-mono whitespace-pre-wrap break-all cursor-pointer hover:bg-muted/80 transition-colors"
+              >
                 {badgeMarkdown}
               </pre>
             </div>

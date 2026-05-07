@@ -1,11 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import { trpc } from "@/lib/trpc/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { GitBranch, Shield } from "lucide-react";
+import { GitBranch, Shield, Copy, Check } from "lucide-react";
 import { GITHUB_STATUS_CHECK_CONTEXT } from "@/lib/constants";
 
 type BranchProtectionCardProps = {
@@ -33,6 +34,15 @@ export function BranchProtectionCard({
 
   const appBase = typeof window !== "undefined" ? window.location.origin : "";
   const badgeUrl = repoFullName ? `${appBase}/api/badge/${repoFullName}` : null;
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyBadge = async () => {
+    if (!badgeUrl) return;
+    const badgeMarkdown = `[![DevReview AI](${badgeUrl})](${appBase})`;
+    await navigator.clipboard.writeText(badgeMarkdown);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <Card>
@@ -107,14 +117,37 @@ export function BranchProtectionCard({
           <>
             <Separator />
             <div className="space-y-2 pt-1">
-              <div className="flex items-center gap-2 text-sm font-medium">
-                <GitBranch className="size-4 text-muted-foreground" />
-                README badge
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sm font-medium">
+                  <GitBranch className="size-4 text-muted-foreground" />
+                  README badge
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleCopyBadge}
+                  className="h-7 text-xs"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="mr-1 size-3" />
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="mr-1 size-3" />
+                      Copy
+                    </>
+                  )}
+                </Button>
               </div>
               <p className="text-sm text-muted-foreground">
                 Embed a live review-score badge in your README:
               </p>
-              <code className="block rounded bg-muted px-3 py-2 text-xs font-mono break-all select-all">
+              <code
+                onClick={handleCopyBadge}
+                className="block rounded bg-muted px-3 py-2 text-xs font-mono break-all cursor-pointer hover:bg-muted/80 transition-colors"
+              >
                 {badgeUrl && `[![DevReview AI](${badgeUrl})](${appBase})`}
               </code>
             </div>
