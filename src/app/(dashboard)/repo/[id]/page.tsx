@@ -26,6 +26,7 @@ import {
   Activity,
   ExternalLink,
   Network,
+  ShieldCheck,
 } from "lucide-react";
 import { cn, formatDate } from "@/lib/utils";
 import { CodeTimeline } from "@/features/code-timeline";
@@ -33,6 +34,7 @@ import { DiagramPanel } from "@/features/review/components/diagram-panel";
 import { PullRequestCard } from "@/features/repo/components/pull-request-card";
 import { AutoReviewToggle } from "@/features/settings/components/auto-review-toggle";
 import { BranchProtectionCard } from "@/features/repo/components/branch-protection-card";
+import { RulesManagerCard } from "@/features/settings/components/rules-manager-card";
 
 type PageProps = { params: Promise<{ id: string }> };
 
@@ -442,6 +444,15 @@ export default function RepositoryDetailPage({ params }: PageProps) {
             repoFullName={repo.fullName ?? undefined}
           />
         </div>
+      </div>
+
+      {/* Custom Review Rules */}
+      <div>
+        <h2 className="text-xl font-semibold tracking-tight mb-4 flex items-center gap-2">
+          <ShieldCheck className="size-5" />
+          Custom Review Rules
+        </h2>
+        <RulesManagerCard repositoryId={id} />
       </div>
 
       {/* Architecture Diagrams */}

@@ -116,6 +116,7 @@ export function ReviewResult({
     high: comments.filter((c) => c.severity === "high").length,
     medium: comments.filter((c) => c.severity === "medium").length,
     low: comments.filter((c) => c.severity === "low").length,
+    info: comments.filter((c) => c.severity === "info").length,
   };
 
   const totalIssues = comments.length;
@@ -331,7 +332,7 @@ export function ReviewResult({
           />
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
           <SeverityStatCard
             label="Critical"
             count={severityCounts.critical}
@@ -363,6 +364,14 @@ export function ReviewResult({
             color="slate"
             active={activeSeverities.has("low")}
             onClick={() => toggleSeverity("low")}
+          />
+          <SeverityStatCard
+            label="Info"
+            count={severityCounts.info}
+            icon={Info}
+            color="sky"
+            active={activeSeverities.has("info")}
+            onClick={() => toggleSeverity("info")}
           />
         </div>
 
@@ -445,6 +454,7 @@ export function ReviewResult({
                     onToggleResolved={() =>
                       toggleResolved(getCommentKey(comment))
                     }
+                    reviewId={review.id}
                   />
                 ))}
               </div>
@@ -459,6 +469,7 @@ export function ReviewResult({
                     expandKey={expandKey}
                     resolvedKeys={resolvedKeys}
                     onToggleResolved={toggleResolved}
+                    reviewId={review.id}
                   />
                 ))}
               </div>

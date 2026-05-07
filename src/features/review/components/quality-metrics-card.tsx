@@ -27,17 +27,17 @@ export function AISummaryCard({ summary }: { summary: string }) {
   };
 
   return (
-    <Card className="overflow-hidden border-primary/10">
+    <Card className="overflow-hidden border-border/60">
       <CardContent className="p-0">
         <div className="relative">
-          <div className="absolute inset-0 bg-linear-to-br from-primary/3 via-transparent to-primary/2" />
+          <div className="absolute inset-0 bg-linear-to-br from-primary/3 via-transparent to-transparent pointer-events-none" />
           <div className="relative p-5 sm:p-6">
             <div className="flex items-start gap-3">
-              <div className="size-9 rounded-xl bg-linear-to-br from-primary/15 to-primary/5 border border-primary/10 flex items-center justify-center shrink-0">
+              <div className="size-8 rounded-lg bg-primary/10 border border-primary/15 flex items-center justify-center shrink-0">
                 <Sparkles className="size-4 text-primary" />
               </div>
-              <div className="flex-1 min-w-0 space-y-1.5">
-                <div className="flex items-center justify-between">
+              <div className="flex-1 min-w-0 space-y-2">
+                <div className="flex items-center justify-between gap-2">
                   <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
                     AI Summary
                     <Badge
@@ -50,18 +50,18 @@ export function AISummaryCard({ summary }: { summary: string }) {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="size-7 p-0 shrink-0"
+                    className="size-7 p-0 shrink-0 hover:bg-muted"
                     onClick={copySummary}
                     title="Copy summary"
                   >
                     {copied ? (
                       <Check className="size-3.5 text-emerald-500" />
                     ) : (
-                      <Copy className="size-3.5" />
+                      <Copy className="size-3.5 text-muted-foreground" />
                     )}
                   </Button>
                 </div>
-                <p className="text-sm leading-relaxed text-foreground/80">
+                <p className="text-sm leading-relaxed text-foreground/75">
                   {summary}
                 </p>
               </div>
@@ -185,14 +185,14 @@ export function QualityMetricsCard({
   };
 
   return (
-    <Card className="overflow-hidden border-primary/10">
+    <Card className="overflow-hidden border-border/60">
       <CardContent className="p-0">
         <div className="relative">
-          <div className="absolute inset-0 bg-linear-to-br from-primary/3 via-transparent to-primary/2" />
-          <div className="relative p-5 sm:p-6 space-y-5">
+          <div className="absolute inset-0 bg-linear-to-br from-primary/3 via-transparent to-transparent pointer-events-none" />
+          <div className="relative p-5 sm:p-6 space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="size-9 rounded-xl bg-linear-to-br from-primary/15 to-primary/5 border border-primary/10 flex items-center justify-center">
+                <div className="size-8 rounded-lg bg-primary/10 border border-primary/15 flex items-center justify-center">
                   <Activity className="size-4 text-primary" />
                 </div>
                 <div>
@@ -206,7 +206,7 @@ export function QualityMetricsCard({
                     </Badge>
                   </h3>
                   <p className="text-xs text-muted-foreground mt-0.5">
-                    Code quality breakdown across 4 dimensions
+                    4-dimension code quality breakdown
                   </p>
                 </div>
               </div>
@@ -219,42 +219,38 @@ export function QualityMetricsCard({
                 >
                   {overallScore}
                 </div>
-                <div className="text-[10px] text-muted-foreground font-medium">
-                  Overall
+                <div className="text-[10px] text-muted-foreground/70 font-semibold uppercase tracking-wider">
+                  avg score
                 </div>
               </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {metricItems.map((item) => (
                 <div
                   key={item.key}
-                  className="group relative rounded-xl border bg-background/50 p-4 transition-all hover:border-primary/20 hover:shadow-sm"
+                  className="rounded-xl border border-border/50 bg-muted/20 p-3.5 hover:border-border/80 hover:bg-muted/30 transition-all duration-200"
                 >
-                  <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center justify-between mb-2.5">
                     <div className="flex items-center gap-2">
-                      <div className="size-7 rounded-lg bg-muted flex items-center justify-center">
-                        <item.icon className="size-3.5 text-muted-foreground" />
+                      <div className="size-6 rounded-md bg-muted/60 flex items-center justify-center">
+                        <item.icon className="size-3 text-muted-foreground/80" />
                       </div>
-                      <div>
-                        <span className="text-xs font-semibold">
-                          {item.label}
-                        </span>
-                        <p className="text-[10px] text-muted-foreground leading-tight">
-                          {item.description}
-                        </p>
-                      </div>
+                      <span className="text-xs font-semibold text-foreground/90">
+                        {item.label}
+                      </span>
                     </div>
                     <span
                       className={cn(
-                        "text-lg font-bold tabular-nums",
+                        "text-base font-bold tabular-nums",
                         getScoreColor(item.score),
                       )}
                     >
                       {item.score}
                     </span>
                   </div>
-                  <div className="space-y-1.5">
-                    <div className="h-2 rounded-full bg-muted/70 overflow-hidden">
+                  <div className="space-y-1">
+                    <div className="h-1.5 rounded-full bg-muted/60 overflow-hidden">
                       <div
                         className={cn(
                           "h-full rounded-full transition-all duration-700 ease-out",
@@ -264,25 +260,26 @@ export function QualityMetricsCard({
                       />
                     </div>
                     <div className="flex justify-between">
+                      <span className="text-[10px] text-muted-foreground/70">
+                        {item.description}
+                      </span>
                       <span
                         className={cn(
-                          "text-[10px] font-medium",
+                          "text-[10px] font-semibold",
                           getScoreColor(item.score),
                         )}
                       >
                         {getScoreLabel(item.score)}
-                      </span>
-                      <span className="text-[10px] text-muted-foreground tabular-nums">
-                        {item.score}/100
                       </span>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
+
             {avgConfidence !== null && (
-              <div className="flex items-center gap-3 rounded-lg border bg-muted/30 px-4 py-3">
-                <Activity className="size-4 text-muted-foreground shrink-0" />
+              <div className="flex items-center gap-3 rounded-lg border border-border/40 bg-muted/20 px-4 py-3">
+                <Activity className="size-3.5 text-muted-foreground/60 shrink-0" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs font-medium text-muted-foreground">
@@ -297,7 +294,7 @@ export function QualityMetricsCard({
                       {avgConfidence}%
                     </span>
                   </div>
-                  <div className="h-1.5 rounded-full bg-muted/70 overflow-hidden">
+                  <div className="h-1 rounded-full bg-muted/70 overflow-hidden">
                     <div
                       className={cn(
                         "h-full rounded-full transition-all duration-700 ease-out",

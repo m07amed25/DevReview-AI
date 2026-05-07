@@ -505,7 +505,8 @@ export async function postCommitStatus(
   repoFullName: string,
   commitSha: string,
   state: "pending" | "success" | "failure" | "error",
-  reviewId: string,
+  repositoryId: string,
+  prNumber: number,
   description: string,
 ): Promise<void> {
   const [owner, repo] = repoFullName.split("/");
@@ -515,7 +516,7 @@ export async function postCommitStatus(
       "APP_BASE_URL (or BETTER_AUTH_URL) is required to post commit statuses",
     );
   }
-  const targetUrl = `${appBaseUrl}/reviews/${reviewId}`;
+  const targetUrl = `${appBaseUrl}/repo/${repositoryId}/pr/${prNumber}`;
 
   const response = await fetch(
     `https://api.github.com/repos/${owner}/${repo}/statuses/${commitSha}`,

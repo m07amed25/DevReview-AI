@@ -31,6 +31,9 @@ export function BranchProtectionCard({
     },
   });
 
+  const appBase = typeof window !== "undefined" ? window.location.origin : "";
+  const badgeUrl = repoFullName ? `${appBase}/api/badge/${repoFullName}` : null;
+
   return (
     <Card>
       <CardHeader>
@@ -112,7 +115,7 @@ export function BranchProtectionCard({
                 Embed a live review-score badge in your README:
               </p>
               <code className="block rounded bg-muted px-3 py-2 text-xs font-mono break-all select-all">
-                {`[![DevReview AI](https://dev-review-ai-chi.vercel.app/api/badge/${repoFullName})](https://dev-review-ai-chi.vercel.app))`}
+                {badgeUrl && `[![DevReview AI](${badgeUrl})](${appBase})`}
               </code>
             </div>
           </>

@@ -8,6 +8,7 @@ import {
   fetchPullRequestByFullName,
   getGitHubAccessToken,
 } from "@/server/services/github";
+import { askFollowUp } from "@/server/services/ai";
 
 export const reviewRouter = createTRPCRouter({
   trigger: protectedProcedure
@@ -446,5 +447,56 @@ export const reviewRouter = createTRPCRouter({
           currentTotal: currentFindings.length,
         },
       };
+    }),
+
+  askAI: protectedProcedure
+    .input(
+      z.object({
+        reviewId: z.string().max(255),
+        file: z.string().max(500),
+        line: z.number().int().min(1),
+        severity: z.string().max(50),
+        category: z.string().max(50).optional(),
+        message: z.string().max(2000),
+        suggestion: z.string().max(2000).optional(),
+        question: z.string().min(1).max(500),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const review = await ctx.db.review.findFirst({
+        where: {
+          id: input.reviewId,
+          OR: [
+            { userId: ctx.user.id },
+            {
+              repository: {
+                team: { members: { some: { userId: ctx.user.id } } },
+              },
+            },
+          ],
+        },
+        select: { id: true },
+      });
+
+      if (!review) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Review not found",
+        });
+      }
+
+      const answer = await askFollowUp(
+        {
+          file: input.file,
+          line: input.line,
+          severity: input.severity,
+          category: input.category,
+          message: input.message,
+          suggestion: input.suggestion,
+        },
+        input.question,
+      );
+
+      return { answer };
     }),
 });

@@ -216,7 +216,8 @@ export async function POST(request: NextRequest) {
         data.repository.full_name,
         livePr.head.sha,
         "pending",
-        review.id,
+        repository.id,
+        livePr.number,
         "DevReview AI — review in progress",
       );
 

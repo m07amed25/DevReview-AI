@@ -181,8 +181,13 @@ function DiagramViewer({
     canvas.height = h * dpr;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    const blob = new Blob([svgStr], { type: "image/svg+xml;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
+    // Encode as a base64 data URL instead of a blob URL.
+    // Blob URLs can taint the canvas when the SVG references cross-origin
+    // resources (e.g. web fonts loaded by Mermaid), blocking toDataURL().
+    // Data URLs are treated as same-origin and avoid the SecurityError.
+    const svgDataUrl = `data:image/svg+xml;base64,${btoa(
+      unescape(encodeURIComponent(svgStr)),
+    )}`;
     const img = new Image();
     img.onload = () => {
       ctx.scale(dpr, dpr);
@@ -190,13 +195,12 @@ function DiagramViewer({
       ctx.fillStyle = "hsl(222.2 84% 4.9%)";
       ctx.fillRect(0, 0, w, h);
       ctx.drawImage(img, 0, 0, w, h);
-      URL.revokeObjectURL(url);
       const a = document.createElement("a");
       a.href = canvas.toDataURL("image/png");
       a.download = "diagram.png";
       a.click();
     };
-    img.src = url;
+    img.src = svgDataUrl;
   }, []);
 
   const copyDefinition = useCallback(async () => {

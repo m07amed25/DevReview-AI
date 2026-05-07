@@ -131,6 +131,23 @@ export function getSeverityStyles(severity: string) {
         borderHover: "hover:border-amber-500/20",
         activeBorder: "border-amber-500/15",
       };
+    case "low":
+      return {
+        bar: "bg-slate-400 dark:bg-slate-500",
+        badge:
+          "border-slate-400/30 bg-slate-400/10 text-slate-600 dark:text-slate-400",
+        iconBg: "bg-slate-400/10",
+        borderHover: "hover:border-slate-400/20",
+        activeBorder: "border-slate-400/15",
+      };
+    case "info":
+      return {
+        bar: "bg-sky-400 dark:bg-sky-500",
+        badge: "border-sky-500/30 bg-sky-500/10 text-sky-600 dark:text-sky-400",
+        iconBg: "bg-sky-500/10",
+        borderHover: "hover:border-sky-500/20",
+        activeBorder: "border-sky-500/15",
+      };
     default:
       return {
         bar: "bg-slate-400 dark:bg-slate-500",

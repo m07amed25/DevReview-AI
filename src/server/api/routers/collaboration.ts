@@ -41,7 +41,6 @@ export const collaborationRouter = createTRPCRouter({
       });
     }),
 
-  // ─── Create a new thread on a file/line ──────────────────────────
   createThread: protectedProcedure
     .input(
       z.object({

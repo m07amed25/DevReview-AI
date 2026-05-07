@@ -11,18 +11,24 @@ const ALLOWED_DOMAINS = [
   "localhost:3000",
 ];
 
-function isValidUUID(value: string): boolean {
-  const uuidRegex =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  return uuidRegex.test(value);
+function isValidCUID(value: string): boolean {
+  // CUID pattern: c + 24 alphanumeric characters
+  const cuidRegex = /^c[a-z0-9]{24}$/i;
+  return cuidRegex.test(value);
 }
 
-function buildReviewUrl(appUrl: string, reviewId: string): string {
-  if (!isValidUUID(reviewId)) {
-    throw new Error(`Invalid review ID format: ${reviewId}`);
+function buildReviewUrl(
+  appUrl: string,
+  repositoryId: string,
+  prNumber: number,
+): string {
+  if (!isValidCUID(repositoryId)) {
+    throw new Error(`Invalid repository ID format: ${repositoryId}`);
   }
 
-  const url = new URL(`${appUrl}/reviews/${encodeURIComponent(reviewId)}`);
+  const url = new URL(
+    `${appUrl}/repo/${encodeURIComponent(repositoryId)}/pr/${prNumber}`,
+  );
 
   if (
     !ALLOWED_DOMAINS.includes(url.hostname) &&
@@ -82,7 +88,7 @@ export async function sendReviewCompletedEmailNotification({
 
     const appUrl = getAppUrl();
 
-    const viewReviewUrl = buildReviewUrl(appUrl, review.id);
+    const viewReviewUrl = buildReviewUrl(appUrl, review.repositoryId, review.prNumber);
 
     const result = await sendReviewCompletedEmail({
       to: review.user.email,
@@ -139,10 +145,10 @@ interface SendReviewCompletedEmailExplicitParams {
   prUrl: string;
   repositoryName: string;
   repositoryFullName: string;
+  repositoryId: string;
   reviewStatus: "APPROVED" | "CHANGES_REQUESTED" | "COMMENTED";
   summary?: string;
   issuesFound?: number;
-  reviewId: string;
 }
 
 export async function sendReviewCompletedEmailExplicit({
@@ -155,16 +161,16 @@ export async function sendReviewCompletedEmailExplicit({
   prUrl,
   repositoryName,
   repositoryFullName,
+  repositoryId,
   reviewStatus,
   summary,
   issuesFound = 0,
-  reviewId,
 }: SendReviewCompletedEmailExplicitParams): Promise<void> {
   try {
     const appUrl = getAppUrl();
 
     // Use safe URL construction to prevent injection attacks
-    const viewReviewUrl = buildReviewUrl(appUrl, reviewId);
+    const viewReviewUrl = buildReviewUrl(appUrl, repositoryId, prNumber);
 
     const statusConfig =
       REVIEW_STATUS_CONFIG[reviewStatus] || REVIEW_STATUS_CONFIG.COMMENTED;

@@ -27,7 +27,6 @@ export const COLORS = {
   muted: "#64748b",
 };
 
-
 export const BRANCH_COLORS = [
   "#10b981",
   "#3b82f6",
@@ -40,7 +39,6 @@ export const BRANCH_COLORS = [
   "#6366f1",
   "#14b8a6",
 ];
-
 
 export const PUSHER_EVENTS = {
   // Thread events
@@ -66,7 +64,6 @@ export const PUSHER_EVENTS = {
   CLIENT_TYPING: "client-typing",
   CLIENT_CURSOR: "client-cursor",
 } as const;
-
 
 export const ANIMATION = {
   duration: { fast: 0.3, normal: 0.5, slow: 0.8, verySlow: 1.2 },
@@ -116,6 +113,13 @@ export const SEVERITY_COLORS = {
     icon: "text-slate-400 dark:text-slate-500",
     text: "text-slate-600 dark:text-slate-400",
     glow: "shadow-slate-500/5",
+  },
+  sky: {
+    bg: "bg-sky-500/8 dark:bg-sky-500/10",
+    border: "border-sky-500/15 hover:border-sky-500/30",
+    icon: "text-sky-500",
+    text: "text-sky-600 dark:text-sky-400",
+    glow: "shadow-sky-500/5",
   },
 } as const;
 

@@ -22,7 +22,7 @@ export const ReviewCommentSchema = z.object({
   severity: z
     .string()
     .transform((val) => val.toLowerCase())
-    .pipe(z.enum(["critical", "high", "medium", "low"]))
+    .pipe(z.enum(["critical", "high", "medium", "low", "info"]))
     .catch("medium"),
   category: z
     .string()
@@ -101,6 +101,7 @@ The riskScore must be calculated from only: critical + high + medium severity is
 - high:     Bug that will fail in normal production use
 - medium:   Logic gap or missing guard that may cause issues in edge cases
 - low:      Minor style issue, cosmetic improvement — never affects risk score
+- info:     Non-actionable observation, documentation note, or FYI remark — never affects risk score
 
 ## Category guide
 - bug:          Incorrect logic, broken behaviour
@@ -128,7 +129,7 @@ The riskScore must be calculated from only: critical + high + medium severity is
     {
       "file": "path/to/file.ts",
       "line": <integer>,
-      "severity": "critical" | "high" | "medium" | "low",
+      "severity": "critical" | "high" | "medium" | "low" | "info",
       "category": "bug" | "security" | "performance" | "style" | "suggestion" | "custom-rule",
       "message": "Clear, specific description of the issue",
       "suggestion": "Concrete fix (optional)",
@@ -137,7 +138,6 @@ The riskScore must be calculated from only: critical + high + medium severity is
     }
   ]
 }`;
-
 
 export interface CustomRule {
   name: string;
@@ -270,6 +270,7 @@ async function callGroq(
   systemPrompt: string,
   userPrompt: string,
   model: string,
+  responseFormat: "json_object" | "text" = "json_object",
 ): Promise<string | undefined> {
   const response = await groq.chat.completions.create({
     model,
@@ -279,7 +280,9 @@ async function callGroq(
     ],
     max_tokens: 4096,
     temperature: 0.2,
-    response_format: { type: "json_object" },
+    ...(responseFormat === "json_object"
+      ? { response_format: { type: "json_object" } }
+      : {}),
   });
   return response.choices[0]?.message?.content ?? undefined;
 }
@@ -375,4 +378,70 @@ ${diffContent}`;
       comments: [],
     };
   }
+}
+
+export interface AskFollowUpContext {
+  file: string;
+  line: number;
+  severity: string;
+  category?: string | null;
+  message: string;
+  suggestion?: string | null;
+}
+
+/**
+ * Answer a developer's follow-up question about a specific code review finding.
+ */
+export async function askFollowUp(
+  context: AskFollowUpContext,
+  question: string,
+): Promise<string> {
+  const groq = getGroqClient();
+
+  const systemPrompt = `You are a senior software engineer helping a developer understand a code review finding.
+Be concise (2–4 sentences), practical, and educational. Focus only on answering the question.
+Do not repeat information already visible in the finding. If a short code snippet clarifies the answer, include it.`;
+
+  const safeMessage = sanitizePromptField(context.message);
+  const safeQuestion = sanitizePromptField(question);
+  const safeSuggestion = context.suggestion
+    ? sanitizePromptField(context.suggestion)
+    : null;
+
+  const userPrompt = `Code review finding:
+- File: ${context.file}, Line ${context.line}
+- Severity: ${context.severity}${context.category ? `, Category: ${context.category}` : ""}
+- Issue: ${safeMessage}${safeSuggestion ? `\n- Suggested fix: ${safeSuggestion}` : ""}
+
+Developer question: ${safeQuestion}`;
+
+  let content: string | undefined;
+  try {
+    content = await callGroq(
+      groq,
+      systemPrompt,
+      userPrompt,
+      "llama-3.3-70b-versatile",
+      "text",
+    );
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : "";
+    if (
+      msg.includes("413") ||
+      msg.includes("429") ||
+      msg.includes("rate_limit")
+    ) {
+      content = await callGroq(
+        groq,
+        systemPrompt,
+        userPrompt,
+        "llama-3.1-8b-instant",
+        "text",
+      );
+    } else {
+      throw err;
+    }
+  }
+
+  return content?.trim() ?? "Unable to generate a response. Please try again.";
 }

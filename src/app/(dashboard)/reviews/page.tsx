@@ -310,51 +310,67 @@ export default function ReviewsPage() {
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-border/50">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">
-            Reviews
-          </h1>
-          <p className="mt-1 text-sm text-muted-foreground font-medium flex items-center gap-2">
-            <span className="flex size-1.5 rounded-full bg-emerald-500" />
-            {stats
-              ? `${stats.total} review${stats.total !== 1 ? "s" : ""} across all repositories`
-              : "Review history and insights"}
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Button
-            asChild
-            variant="outline"
-            size="sm"
-            className="gap-2 shrink-0 h-9 rounded-lg"
-          >
-            <Link href="/repo">
-              <FolderGit2 className="size-4 text-muted-foreground" />
-              Manage Repositories
-            </Link>
-          </Button>
+      <div className="relative overflow-hidden rounded-2xl border bg-card px-6 py-5 shadow-sm">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute top-0 right-0 w-48 h-48 bg-primary/3 rounded-full blur-3xl pointer-events-none -translate-y-1/2 translate-x-1/2" />
+        <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="size-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0 shadow-sm">
+              <BarChart3 className="size-6 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight text-foreground">
+                Code Reviews
+              </h1>
+              <p className="mt-0.5 text-sm text-muted-foreground font-medium flex items-center gap-2">
+                {stats && stats.pending > 0 && (
+                  <span className="flex size-1.5 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.6)] animate-pulse" />
+                )}
+                {stats
+                  ? `${stats.total} review${stats.total !== 1 ? "s" : ""} · ${stats.completed} completed · ${stats.pending} in progress`
+                  : "Review history and insights"}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="gap-2 shrink-0 h-9 rounded-lg border-border/60 hover:bg-muted/60"
+            >
+              <Link href="/repo">
+                <FolderGit2 className="size-4 text-muted-foreground" />
+                Manage Repos
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
 
       {reviews.data && reviews.data.length > 0 && (
-        <div className="py-2 flex flex-col md:flex-row md:items-center gap-6">
-          <div className="flex-1 max-w-lg">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4 px-1">
+          <div className="flex-1 max-w-md">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2 opacity-70">
+              Risk Distribution
+            </p>
             <RiskDistributionBar reviews={reviews.data} />
           </div>
-          <div className="flex items-center gap-6 text-[11px] text-muted-foreground font-semibold uppercase tracking-wider">
-            <div className="flex items-center gap-2">
-              <span className="text-foreground">{repos.data?.length ?? 0}</span>{" "}
-              Repositories
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-foreground">{stats?.completed ?? 0}</span>{" "}
-              Completed
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-foreground">{stats?.pending ?? 0}</span>{" "}
-              Processing
-            </div>
+          <div className="flex items-center gap-5 sm:gap-8 sm:ml-4">
+            {[
+              { label: "Repositories", value: repos.data?.length ?? 0 },
+              { label: "Completed", value: stats?.completed ?? 0 },
+              { label: "In Progress", value: stats?.pending ?? 0 },
+            ].map(({ label, value }) => (
+              <div key={label} className="text-center">
+                <div className="text-xl font-bold text-foreground tabular-nums">
+                  {value}
+                </div>
+                <div className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60 mt-0.5">
+                  {label}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}
@@ -420,59 +436,61 @@ export default function ReviewsPage() {
         </div>
       )}
 
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-card border rounded-xl p-3 shadow-sm">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 bg-card/80 backdrop-blur-sm border rounded-xl p-3 shadow-sm">
         <StatusTabs
           active={statusFilter}
           onChange={setStatusFilter}
           counts={statusCounts}
         />
 
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1 rounded-md border p-1 bg-muted/20">
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center rounded-lg border border-border/50 bg-muted/30 p-1 gap-0.5">
             <button
               onClick={() => setViewMode("list")}
               className={cn(
-                "flex items-center justify-center size-8 rounded transition-all",
+                "flex items-center justify-center size-7 rounded-md transition-all duration-150",
                 viewMode === "list"
-                  ? "bg-background text-foreground shadow-sm border border-border/50"
-                  : "text-muted-foreground hover:text-foreground",
+                  ? "bg-background text-foreground shadow-sm border border-border/40"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50",
               )}
+              title="List view"
             >
-              <LayoutList className="size-4" />
+              <LayoutList className="size-3.5" />
             </button>
             <button
               onClick={() => setViewMode("grid")}
               className={cn(
-                "flex items-center justify-center size-8 rounded transition-all",
+                "flex items-center justify-center size-7 rounded-md transition-all duration-150",
                 viewMode === "grid"
-                  ? "bg-background text-foreground shadow-sm border border-border/50"
-                  : "text-muted-foreground hover:text-foreground",
+                  ? "bg-background text-foreground shadow-sm border border-border/40"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50",
               )}
+              title="Grid view"
             >
-              <LayoutGrid className="size-4" />
+              <LayoutGrid className="size-3.5" />
             </button>
           </div>
         </div>
       </div>
 
-      <Card className="shadow-none border-none bg-transparent">
-        <CardContent className="p-0">
+      <Card className="shadow-none border-border/50 bg-card/50">
+        <CardContent className="p-3">
           <div className="flex flex-col sm:flex-row gap-2">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground/60" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/60" />
               <Input
                 id="review-search"
                 placeholder="Search by title, repo, or PR #..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-9 pr-16 h-10 text-sm bg-background shadow-none border-border/60 focus-visible:ring-primary/20"
+                className="pl-9 pr-16 h-9 text-sm bg-background shadow-none border-border/50 focus-visible:ring-1 focus-visible:ring-primary/30 focus-visible:border-primary/40"
               />
               {search ? (
                 <button
                   onClick={() => setSearch("")}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  <X className="size-4" />
+                  <X className="size-3.5" />
                 </button>
               ) : (
                 <kbd className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 hidden sm:inline-flex h-5 items-center gap-0.5 rounded border border-border/60 bg-muted/50 px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
@@ -483,7 +501,7 @@ export default function ReviewsPage() {
             <DropdownSelect
               value={repoFilter}
               onValueChange={(v) => setRepoFilter(v)}
-              className="w-full sm:w-52 h-10 text-sm bg-background shadow-none border-border/60"
+              className="w-full sm:w-48 h-9 text-sm bg-background shadow-none border-border/50"
               placeholder="Filter by repository"
             >
               <SelectItem value="ALL">All Repositories</SelectItem>
@@ -493,8 +511,8 @@ export default function ReviewsPage() {
                 </SelectItem>
               ))}
             </DropdownSelect>
-            <div className="flex gap-1 items-center bg-muted/40 p-1 rounded-md border border-border/50">
-              <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold px-2 hidden lg:block">
+            <div className="flex gap-1 items-center bg-muted/30 p-1 rounded-lg border border-border/40">
+              <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold px-1.5 hidden lg:block">
                 Sort
               </span>
               {(
@@ -509,24 +527,24 @@ export default function ReviewsPage() {
                   variant={sortKey === key ? "secondary" : "ghost"}
                   size="sm"
                   className={cn(
-                    "h-8 px-3 text-[11px] gap-2 rounded-sm transition-all",
+                    "h-7 px-2.5 text-[11px] gap-1.5 rounded-md transition-all duration-150",
                     sortKey === key
-                      ? "bg-background text-foreground shadow-xs font-bold"
+                      ? "bg-background text-foreground shadow-sm font-bold border border-border/40"
                       : "text-muted-foreground hover:text-foreground",
                   )}
                   onClick={() => toggleSort(key)}
                 >
                   <SortIcon
                     className={cn(
-                      "size-3.5",
+                      "size-3",
                       sortKey === key
                         ? "text-primary"
-                        : "text-muted-foreground/60",
+                        : "text-muted-foreground/50",
                     )}
                   />
                   <span>{label}</span>
                   {sortKey === key && (
-                    <span className="ml-0.5 text-primary opacity-70">
+                    <span className="text-primary/60">
                       {sortDir === "desc" ? "↓" : "↑"}
                     </span>
                   )}
@@ -537,10 +555,10 @@ export default function ReviewsPage() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-9 px-2.5 text-xs text-muted-foreground hover:text-foreground gap-1"
+                className="h-9 px-2.5 text-xs text-muted-foreground hover:text-destructive gap-1 transition-colors"
                 onClick={clearFilters}
               >
-                <X className="size-3.5" />
+                <X className="size-3" />
                 Clear
               </Button>
             )}
@@ -549,20 +567,25 @@ export default function ReviewsPage() {
       </Card>
 
       {hasFilters && filtered.length > 0 && (
-        <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2 px-1">
+          <div className="size-1.5 rounded-full bg-primary animate-pulse" />
           <p className="text-xs text-muted-foreground">
             Showing{" "}
-            <span className="font-medium text-foreground">
+            <span className="font-semibold text-foreground">
               {filtered.length}
             </span>{" "}
-            of {reviews.data?.length ?? 0} reviews
+            of{" "}
+            <span className="font-semibold text-foreground">
+              {reviews.data?.length ?? 0}
+            </span>{" "}
+            reviews
           </p>
         </div>
       )}
 
       {filtered.length > 0 ? (
         viewMode === "grid" ? (
-          <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
             {filtered.map((review, i) => (
               <ReviewCard
                 key={review.id}
@@ -577,7 +600,7 @@ export default function ReviewsPage() {
             ))}
           </div>
         ) : (
-          <div className="space-y-2.5">
+          <div className="space-y-2">
             {filtered.map((review, i) => (
               <ReviewCard
                 key={review.id}

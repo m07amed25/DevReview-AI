@@ -194,6 +194,7 @@ export type ReviewPayloadOptions = {
   reviewId: string;
   prTitle?: string;
   commitSha?: string;
+  prNumber?: number;
   summary?: string | null;
   riskScore?: number | null;
   qualityMetrics?: unknown;
@@ -212,10 +213,14 @@ export function mapFindingsToReviewPayload(
 
   const appBaseUrl =
     process.env.APP_BASE_URL ?? process.env.BETTER_AUTH_URL ?? "";
-  const reviewUrl = `${appBaseUrl}/repo/${repositoryId}/reviews/${reviewId}`;
 
   const prTitle = options?.prTitle ?? null;
   const commitSha = options?.commitSha ?? null;
+  const prNumber = options?.prNumber ?? null;
+  const reviewUrl =
+    prNumber !== null
+      ? `${appBaseUrl}/repo/${repositoryId}/pr/${prNumber}`
+      : `${appBaseUrl}/repo/${repositoryId}`;
   const aiSummary = options?.summary ?? null;
   const riskScore = options?.riskScore ?? null;
   const overallStatus = options?.overallStatus ?? "COMPLETED";
@@ -657,7 +662,8 @@ export async function runPostReviewToGitHub(
         review.repository.fullName,
         completedEvent.data.commitSha,
         "error",
-        review.id,
+        review.repositoryId,
+        review.prNumber,
         "DevReview AI — review processing failed",
       );
 
@@ -714,6 +720,7 @@ export async function runPostReviewToGitHub(
       {
         prTitle: review.prTitle,
         commitSha: completedEvent.data.commitSha,
+        prNumber: review.prNumber,
         summary: review.summary,
         riskScore: review.riskScore,
         qualityMetrics: review.qualityMetrics,
@@ -781,7 +788,8 @@ export async function runPostReviewToGitHub(
       review.repository.fullName,
       completedEvent.data.commitSha,
       state,
-      review.id,
+      review.repositoryId,
+      review.prNumber,
       description,
     );
 
