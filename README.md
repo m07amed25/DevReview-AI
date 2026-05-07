@@ -6,7 +6,12 @@
   <img src="https://img.shields.io/badge/Prisma-6.19-2D3748?style=for-the-badge&logo=prisma" alt="Prisma">
   <img src="https://img.shields.io/badge/tRPC-11-10.0-black?style=for-the-badge" alt="tRPC">
 </p>
+
+# Test Badge
+
 [![DevReview AI](https://dev-review-ai-chi.vercel.app/api/badge/m07amed25/DevReview-AI)](https://dev-review-ai-chi.vercel.app)
+
+![Shields.io test](https://img.shields.io/badge/test-working-green)
 
 > AI-powered code reviews that catch bugs, security issues, and maintainability problems before they reach production.
 
