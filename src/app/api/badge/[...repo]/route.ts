@@ -152,6 +152,8 @@ function svgBadge(
       "Cache-Control":
         "public, max-age=300, s-maxage=300, stale-while-revalidate=60",
       "X-Content-Type-Options": "nosniff",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, OPTIONS",
     },
   });
 }
@@ -169,6 +171,8 @@ function svgError(reason: string): NextResponse {
       "Content-Type": "image/svg+xml",
       "Cache-Control": "no-store",
       "X-Content-Type-Options": "nosniff",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, OPTIONS",
     },
   });
 }

@@ -53,6 +53,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       "Cache-Control":
         "public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800",
       "X-Content-Type-Options": "nosniff",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, OPTIONS",
     },
   });
 }
