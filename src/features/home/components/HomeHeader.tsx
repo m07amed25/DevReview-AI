@@ -105,12 +105,21 @@ export function HomeHeader() {
           <Link
             href="/"
             className="flex items-center gap-2.5 font-semibold tracking-tight hover:opacity-80 transition-all duration-200 group relative z-10"
-            aria-label="DevReview AI - Home"
+            aria-label="Code Catch - Home"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white shadow-lg shadow-indigo-500/25 transition-all duration-300 group-hover:scale-105 group-hover:shadow-indigo-500/40 group-hover:rotate-3">
-              <Code2 className="h-5 w-5" />
+            {/* Logo placeholder — replace with <Image> once logo is ready */}
+            <div
+              className="flex h-9 w-9 items-center justify-center rounded-xl border-2 border-dashed border-indigo-500/60 bg-indigo-500/10 text-indigo-400 text-xs font-bold transition-all duration-300 group-hover:scale-105 group-hover:border-indigo-400 group-hover:bg-indigo-500/20"
+              title="Logo coming soon"
+            >
+              CC
             </div>
-            <span className="text-lg text-white font-bold">DevReview AI</span>
+            <span className="text-lg text-white font-bold tracking-tight">
+              Code{" "}
+              <span className="bg-linear-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Catch
+              </span>
+            </span>
             <span className="absolute -top-1 -right-8 text-[10px] font-bold text-indigo-400 bg-indigo-500/10 px-1.5 py-0.5 rounded-full border border-indigo-500/20">
               BETA
             </span>

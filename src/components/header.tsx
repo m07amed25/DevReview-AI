@@ -8,7 +8,6 @@ import {
   GitPullRequest,
   Users,
   BarChart3,
-  Workflow,
   Shield,
 } from "lucide-react";
 import { UserMenu } from "./user-menu";
@@ -64,7 +63,28 @@ export function Header({ user }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/80 backdrop-blur-xl supports-backdrop-filter:bg-background/60">
       <div className="container mx-auto flex h-14 items-center justify-between px-4">
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-6">
+          {/* Brand */}
+          <Link
+            href="/"
+            className="flex items-center gap-2 font-semibold tracking-tight hover:opacity-80 transition-opacity group"
+            aria-label="Code Catch - Home"
+          >
+            {/* Logo placeholder — replace with <Image> once logo is ready */}
+            <div
+              className="flex h-7 w-7 items-center justify-center rounded-lg border-2 border-dashed border-primary/50 bg-primary/10 text-primary text-[10px] font-bold transition-all duration-200 group-hover:scale-105 group-hover:border-primary/80"
+              title="Logo coming soon"
+            >
+              CC
+            </div>
+            <span className="text-sm font-bold">
+              Code{" "}
+              <span className="bg-linear-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">
+                Catch
+              </span>
+            </span>
+          </Link>
+
           <nav className="hidden md:flex items-center gap-1">
             {items.map((item) => {
               const isActive =

@@ -12,22 +12,24 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
   ),
   title: {
-    default: "DevReview AI",
-    template: "%s | DevReview AI",
+    default: "Code Catch | Smart Automated Code Reviews",
+    template: "%s | Code Catch",
   },
   description:
-    "AI-powered code reviews that catch bugs, security issues, and maintainability problems before they reach production.",
+    "AI-powered code reviews that catch bugs, security issues, and maintainability problems before they reach production. Integrates directly with GitHub pull requests.",
   keywords: [
     "code review",
-    "AI",
-    "GitHub",
-    "pull request",
-    "security",
-    "developer tools",
-    "automated code review",
     "AI code review",
-    "SaaS",
+    "automated code review",
+    "GitHub pull request review",
+    "AI developer tools",
+    "code quality",
+    "security analysis",
+    "bug detection",
     "continuous integration",
+    "SaaS developer tools",
+    "static analysis",
+    "code analysis tool",
   ],
   authors: [{ name: "Mohamed Reda" }],
   creator: "Mohamed Reda",
@@ -38,9 +40,6 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  alternates: {
-    canonical: "/",
-  },
   icons: {
     icon: "/favicon.svg",
     apple: "/favicon.svg",
@@ -48,22 +47,31 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "DevReview AI",
+    title: "Code Catch",
   },
   openGraph: {
-    title: "DevReview AI | Smart Automated Code Reviews",
+    title: "Code Catch | Smart Automated Code Reviews",
     description:
       "Automated code reviews powered by AI. Catch bugs, security issues, and code quality problems instantly directly in your GitHub pull requests.",
     type: "website",
-    siteName: "DevReview AI",
+    siteName: "Code Catch",
     locale: "en_US",
     url: "/",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Code Catch | Smart Automated Code Reviews",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "DevReview AI | Smart Automated Code Reviews",
     description:
       "Automated code reviews powered by AI. Catch bugs, security issues, and code quality problems instantly.",
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,
@@ -77,7 +85,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: "google-site-verification-token", // User will need to replace this
+    google: "ae4f3c860cae5a91",
   },
 };
 
