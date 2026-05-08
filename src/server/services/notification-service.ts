@@ -1,9 +1,9 @@
 import { getPusherServer } from "@/server/pusher";
-import type { PrismaClient } from "@/server/db/client";
+import type { PrismaClient, NotificationType } from "@/server/db/client";
 
 interface CreateNotificationParams {
   userId: string;
-  type: string;
+  type: NotificationType;
   title: string;
   message: string;
   link?: string | null;
