@@ -575,6 +575,7 @@ export default function PullRequestPage({ params }: PageProps) {
                     Current (newer)
                   </label>
                   <select
+                    aria-label="Current (newer) review"
                     value={compareCurrentId ?? ""}
                     onChange={(e) =>
                       setCompareCurrentId(e.target.value || null)
@@ -597,6 +598,7 @@ export default function PullRequestPage({ params }: PageProps) {
                     Previous (older)
                   </label>
                   <select
+                    aria-label="Previous (older) review"
                     value={comparePreviousId ?? ""}
                     onChange={(e) =>
                       setComparePreviousId(e.target.value || null)

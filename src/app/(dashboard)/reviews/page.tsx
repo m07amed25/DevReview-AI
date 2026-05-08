@@ -415,23 +415,23 @@ export default function ReviewsPage() {
             label="Avg. Risk"
             value={stats.avgRisk}
             icon={
-              stats.avgRisk <= 3
+              stats.avgRisk <= 30
                 ? ShieldCheck
-                : stats.avgRisk <= 6
+                : stats.avgRisk <= 60
                   ? ShieldAlert
                   : ShieldX
             }
             color={
-              stats.avgRisk <= 3
+              stats.avgRisk <= 30
                 ? "bg-emerald-500"
-                : stats.avgRisk <= 6
+                : stats.avgRisk <= 60
                   ? "bg-amber-500"
                   : "bg-red-500"
             }
             subtitle={`${getRiskLevel(stats.avgRisk).label} risk overall`}
             decimals={1}
             sparklineData={stats.riskSparkline}
-            progress={stats.avgRisk * 10}
+            progress={stats.avgRisk}
           />
         </div>
       )}
@@ -489,6 +489,7 @@ export default function ReviewsPage() {
                 <button
                   onClick={() => setSearch("")}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  title="Clear search"
                 >
                   <X className="size-3.5" />
                 </button>
@@ -557,6 +558,7 @@ export default function ReviewsPage() {
                 size="sm"
                 className="h-9 px-2.5 text-xs text-muted-foreground hover:text-destructive gap-1 transition-colors"
                 onClick={clearFilters}
+                title="Clear filters"
               >
                 <X className="size-3" />
                 Clear

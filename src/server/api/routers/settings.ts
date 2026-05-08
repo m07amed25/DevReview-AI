@@ -37,9 +37,12 @@ export const settingsRouter = createTRPCRouter({
    * Revoke a specific session (sign out from that device)
    */
   revokeSession: protectedProcedure
-    .input(z.object({ sessionId: z.string().max(255).min(1) }))
+    .input(
+      z.object({
+        sessionId: z.string().max(255).min(1),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
-      // Don't allow revoking the current session via this endpoint
       if (input.sessionId === ctx.session.session.id) {
         throw new TRPCError({
           code: "BAD_REQUEST",
@@ -47,8 +50,6 @@ export const settingsRouter = createTRPCRouter({
         });
       }
 
-      // Use deleteMany so it's idempotent — if the session was already
-      // removed (e.g. by "revoke all"), we simply return success.
       const result = await ctx.db.session.deleteMany({
         where: {
           id: input.sessionId,
@@ -56,7 +57,10 @@ export const settingsRouter = createTRPCRouter({
         },
       });
 
-      return { success: true, deleted: result.count };
+      return {
+        success: true,
+        deleted: result.count,
+      };
     }),
 
   /**
@@ -66,11 +70,15 @@ export const settingsRouter = createTRPCRouter({
     const result = await ctx.db.session.deleteMany({
       where: {
         userId: ctx.user.id,
-        id: { not: ctx.session.session.id },
+        id: {
+          not: ctx.session.session.id,
+        },
       },
     });
 
-    return { revoked: result.count };
+    return {
+      revoked: result.count,
+    };
   }),
 
   /**
@@ -92,17 +100,23 @@ export const settingsRouter = createTRPCRouter({
         });
       }
 
-      // Revoke all sessions for this user so the cookie-cached session
-      // (Better-Auth cookieCache maxAge: 5 min) cannot be replayed after
-      // the account is deleted.
-      await ctx.db.session.deleteMany({ where: { userId: ctx.user.id } });
-
-      // Delete user — cascades to accounts, repositories, reviews
-      await ctx.db.user.delete({
-        where: { id: ctx.user.id },
+      // Revoke all sessions
+      await ctx.db.session.deleteMany({
+        where: {
+          userId: ctx.user.id,
+        },
       });
 
-      return { success: true };
+      // Delete user account
+      await ctx.db.user.delete({
+        where: {
+          id: ctx.user.id,
+        },
+      });
+
+      return {
+        success: true,
+      };
     }),
 
   /**
@@ -110,7 +124,9 @@ export const settingsRouter = createTRPCRouter({
    */
   getPreferences: protectedProcedure.query(async ({ ctx }) => {
     const user = await ctx.db.user.findUnique({
-      where: { id: ctx.user.id },
+      where: {
+        id: ctx.user.id,
+      },
       select: {
         reviewDepth: true,
         defaultLanguage: true,
@@ -136,9 +152,9 @@ export const settingsRouter = createTRPCRouter({
   updatePreferences: protectedProcedure
     .input(
       z.object({
-        reviewDepth: z.enum(["quick", "standard", "thorough"]).optional(),
-        // Restrict to known language identifiers to prevent the value from
-        // being used as a prompt-injection vector in the AI service.
+        reviewDepth: z
+          .enum(["quick", "standard", "thorough"])
+          .optional(),
         defaultLanguage: z
           .enum([
             "auto",
@@ -172,7 +188,9 @@ export const settingsRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const updated = await ctx.db.user.update({
-        where: { id: ctx.user.id },
+        where: {
+          id: ctx.user.id,
+        },
         data: input,
         select: {
           reviewDepth: true,
@@ -184,5 +202,117 @@ export const settingsRouter = createTRPCRouter({
       });
 
       return updated;
+    }),
+
+  /**
+   * Get the current user's notification preferences
+   */
+  getNotificationPreferences: protectedProcedure.query(async ({ ctx }) => {
+    const user = await ctx.db.user.findUnique({
+      where: {
+        id: ctx.user.id,
+      },
+      select: {
+        emailNotifications: true,
+        notifyTeamInvites: true,
+        notifyTeamMemberAdded: true,
+        notifyReviewCompleted: true,
+        notifyReviewFailed: true,
+        notifyScheduledScanCompleted: true,
+        notifyReviewAssigned: true,
+        notifyReviewApproved: true,
+        notifyReviewChangesRequested: true,
+        notificationSoundEnabled: true,
+        desktopNotifications: true,
+      },
+    });
+
+    if (!user) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "User not found",
+      });
+    }
+
+    return {
+      emailNotifications: user.emailNotifications,
+      teamInvites: user.notifyTeamInvites,
+      teamMemberAdded: user.notifyTeamMemberAdded,
+      reviewCompleted: user.notifyReviewCompleted,
+      reviewFailed: user.notifyReviewFailed,
+      scheduledScanCompleted: user.notifyScheduledScanCompleted,
+      reviewAssigned: user.notifyReviewAssigned,
+      reviewApproved: user.notifyReviewApproved,
+      reviewChangesRequested: user.notifyReviewChangesRequested,
+      soundEnabled: user.notificationSoundEnabled,
+      desktopNotifications: user.desktopNotifications,
+    };
+  }),
+
+  /**
+   * Update the current user's notification preferences
+   */
+  updateNotificationPreferences: protectedProcedure
+    .input(
+      z.object({
+        emailNotifications: z.boolean().optional(),
+        teamInvites: z.boolean().optional(),
+        teamMemberAdded: z.boolean().optional(),
+        reviewCompleted: z.boolean().optional(),
+        reviewFailed: z.boolean().optional(),
+        scheduledScanCompleted: z.boolean().optional(),
+        reviewAssigned: z.boolean().optional(),
+        reviewApproved: z.boolean().optional(),
+        reviewChangesRequested: z.boolean().optional(),
+        soundEnabled: z.boolean().optional(),
+        desktopNotifications: z.boolean().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const data: Record<string, boolean> = {};
+
+      // Map frontend-friendly names to database field names
+      if (input.emailNotifications !== undefined) {
+        data.emailNotifications = input.emailNotifications;
+      }
+      if (input.teamInvites !== undefined) {
+        data.notifyTeamInvites = input.teamInvites;
+      }
+      if (input.teamMemberAdded !== undefined) {
+        data.notifyTeamMemberAdded = input.teamMemberAdded;
+      }
+      if (input.reviewCompleted !== undefined) {
+        data.notifyReviewCompleted = input.reviewCompleted;
+      }
+      if (input.reviewFailed !== undefined) {
+        data.notifyReviewFailed = input.reviewFailed;
+      }
+      if (input.scheduledScanCompleted !== undefined) {
+        data.notifyScheduledScanCompleted = input.scheduledScanCompleted;
+      }
+      if (input.reviewAssigned !== undefined) {
+        data.notifyReviewAssigned = input.reviewAssigned;
+      }
+      if (input.reviewApproved !== undefined) {
+        data.notifyReviewApproved = input.reviewApproved;
+      }
+      if (input.reviewChangesRequested !== undefined) {
+        data.notifyReviewChangesRequested = input.reviewChangesRequested;
+      }
+      if (input.soundEnabled !== undefined) {
+        data.notificationSoundEnabled = input.soundEnabled;
+      }
+      if (input.desktopNotifications !== undefined) {
+        data.desktopNotifications = input.desktopNotifications;
+      }
+
+      await ctx.db.user.update({
+        where: {
+          id: ctx.user.id,
+        },
+        data,
+      });
+
+      return { success: true };
     }),
 });

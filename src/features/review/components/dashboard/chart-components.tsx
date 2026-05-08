@@ -352,8 +352,8 @@ export function RiskDistributionBar({
     const d = { low: 0, medium: 0, high: 0 };
     reviews.forEach((r) => {
       if (r.riskScore == null) return;
-      if (r.riskScore <= 3) d.low++;
-      else if (r.riskScore <= 6) d.medium++;
+      if (r.riskScore <= 30) d.low++;
+      else if (r.riskScore <= 60) d.medium++;
       else d.high++;
     });
     return d;

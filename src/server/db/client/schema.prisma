@@ -55,6 +55,19 @@ model User {
   includeSecurityChecks  Boolean @default(true)
   includePerfSuggestions Boolean @default(true)
 
+  // Notification preferences
+  emailNotifications           Boolean @default(true)
+  notifyTeamInvites            Boolean @default(true)
+  notifyTeamMemberAdded        Boolean @default(true)
+  notifyReviewCompleted        Boolean @default(true)
+  notifyReviewFailed           Boolean @default(true)
+  notifyScheduledScanCompleted Boolean @default(false)
+  notifyReviewAssigned         Boolean @default(true)
+  notifyReviewApproved         Boolean @default(true)
+  notifyReviewChangesRequested Boolean @default(true)
+  notificationSoundEnabled     Boolean @default(false)
+  desktopNotifications         Boolean @default(true)
+
   @@unique([email])
   @@map("user")
 }
@@ -424,6 +437,9 @@ model WebhookConfig {
   repositoryId    String  @unique
   enabled         Boolean @default(false)
   githubWebhookId Int?
+  /// Optional numeric risk-score threshold (0–100). Reviews with riskScore >= this
+  /// value fail the GitHub branch-protection status check. NULL = use the default
+  /// heuristic (fail on any critical/high severity finding).
   scoreThreshold  Int?
 
   createdAt DateTime @default(now())

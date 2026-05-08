@@ -55,6 +55,19 @@ model User {
   includeSecurityChecks  Boolean @default(true)
   includePerfSuggestions Boolean @default(true)
 
+  // Notification preferences
+  emailNotifications            Boolean @default(true)
+  notifyTeamInvites             Boolean @default(true)
+  notifyTeamMemberAdded         Boolean @default(true)
+  notifyReviewCompleted         Boolean @default(true)
+  notifyReviewFailed            Boolean @default(true)
+  notifyScheduledScanCompleted  Boolean @default(false)
+  notifyReviewAssigned          Boolean @default(true)
+  notifyReviewApproved          Boolean @default(true)
+  notifyReviewChangesRequested  Boolean @default(true)
+  notificationSoundEnabled      Boolean @default(false)
+  desktopNotifications          Boolean @default(true)
+
   @@unique([email])
   @@map("user")
 }

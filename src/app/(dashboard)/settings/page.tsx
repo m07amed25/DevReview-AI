@@ -39,6 +39,7 @@ import {
 import { PreferencesCardContent } from "./preferences-card";
 import { SessionsCardContent, SessionsCardHeader } from "./sessions-card";
 import { RulesManagerCard } from "@/features/settings/components/rules-manager-card";
+import { NotificationPreferencesCard } from "./notification-preferences-card";
 
 import { ThemeTogglerButton } from "@/components/animate-ui/components/buttons/theme-toggler";
 
@@ -199,6 +200,8 @@ export default function SettingsPage() {
         </Card>
 
         <RulesManagerCard />
+
+        <NotificationPreferencesCard />
 
         <Card>
           <CardHeader>

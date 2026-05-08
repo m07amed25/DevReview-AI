@@ -4235,6 +4235,17 @@ export namespace Prisma {
     autoReview: boolean | null
     includeSecurityChecks: boolean | null
     includePerfSuggestions: boolean | null
+    emailNotifications: boolean | null
+    notifyTeamInvites: boolean | null
+    notifyTeamMemberAdded: boolean | null
+    notifyReviewCompleted: boolean | null
+    notifyReviewFailed: boolean | null
+    notifyScheduledScanCompleted: boolean | null
+    notifyReviewAssigned: boolean | null
+    notifyReviewApproved: boolean | null
+    notifyReviewChangesRequested: boolean | null
+    notificationSoundEnabled: boolean | null
+    desktopNotifications: boolean | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -4253,6 +4264,17 @@ export namespace Prisma {
     autoReview: boolean | null
     includeSecurityChecks: boolean | null
     includePerfSuggestions: boolean | null
+    emailNotifications: boolean | null
+    notifyTeamInvites: boolean | null
+    notifyTeamMemberAdded: boolean | null
+    notifyReviewCompleted: boolean | null
+    notifyReviewFailed: boolean | null
+    notifyScheduledScanCompleted: boolean | null
+    notifyReviewAssigned: boolean | null
+    notifyReviewApproved: boolean | null
+    notifyReviewChangesRequested: boolean | null
+    notificationSoundEnabled: boolean | null
+    desktopNotifications: boolean | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -4271,6 +4293,17 @@ export namespace Prisma {
     autoReview: number
     includeSecurityChecks: number
     includePerfSuggestions: number
+    emailNotifications: number
+    notifyTeamInvites: number
+    notifyTeamMemberAdded: number
+    notifyReviewCompleted: number
+    notifyReviewFailed: number
+    notifyScheduledScanCompleted: number
+    notifyReviewAssigned: number
+    notifyReviewApproved: number
+    notifyReviewChangesRequested: number
+    notificationSoundEnabled: number
+    desktopNotifications: number
     _all: number
   }
 
@@ -4291,6 +4324,17 @@ export namespace Prisma {
     autoReview?: true
     includeSecurityChecks?: true
     includePerfSuggestions?: true
+    emailNotifications?: true
+    notifyTeamInvites?: true
+    notifyTeamMemberAdded?: true
+    notifyReviewCompleted?: true
+    notifyReviewFailed?: true
+    notifyScheduledScanCompleted?: true
+    notifyReviewAssigned?: true
+    notifyReviewApproved?: true
+    notifyReviewChangesRequested?: true
+    notificationSoundEnabled?: true
+    desktopNotifications?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -4309,6 +4353,17 @@ export namespace Prisma {
     autoReview?: true
     includeSecurityChecks?: true
     includePerfSuggestions?: true
+    emailNotifications?: true
+    notifyTeamInvites?: true
+    notifyTeamMemberAdded?: true
+    notifyReviewCompleted?: true
+    notifyReviewFailed?: true
+    notifyScheduledScanCompleted?: true
+    notifyReviewAssigned?: true
+    notifyReviewApproved?: true
+    notifyReviewChangesRequested?: true
+    notificationSoundEnabled?: true
+    desktopNotifications?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -4327,6 +4382,17 @@ export namespace Prisma {
     autoReview?: true
     includeSecurityChecks?: true
     includePerfSuggestions?: true
+    emailNotifications?: true
+    notifyTeamInvites?: true
+    notifyTeamMemberAdded?: true
+    notifyReviewCompleted?: true
+    notifyReviewFailed?: true
+    notifyScheduledScanCompleted?: true
+    notifyReviewAssigned?: true
+    notifyReviewApproved?: true
+    notifyReviewChangesRequested?: true
+    notificationSoundEnabled?: true
+    desktopNotifications?: true
     _all?: true
   }
 
@@ -4418,6 +4484,17 @@ export namespace Prisma {
     autoReview: boolean
     includeSecurityChecks: boolean
     includePerfSuggestions: boolean
+    emailNotifications: boolean
+    notifyTeamInvites: boolean
+    notifyTeamMemberAdded: boolean
+    notifyReviewCompleted: boolean
+    notifyReviewFailed: boolean
+    notifyScheduledScanCompleted: boolean
+    notifyReviewAssigned: boolean
+    notifyReviewApproved: boolean
+    notifyReviewChangesRequested: boolean
+    notificationSoundEnabled: boolean
+    desktopNotifications: boolean
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -4453,6 +4530,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     accounts?: boolean | User$accountsArgs<ExtArgs>
     repositories?: boolean | User$repositoriesArgs<ExtArgs>
@@ -4487,6 +4575,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -4505,6 +4604,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -4523,9 +4633,20 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "banned" | "bannedReason" | "createdAt" | "updatedAt" | "reviewDepth" | "defaultLanguage" | "autoReview" | "includeSecurityChecks" | "includePerfSuggestions", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "banned" | "bannedReason" | "createdAt" | "updatedAt" | "reviewDepth" | "defaultLanguage" | "autoReview" | "includeSecurityChecks" | "includePerfSuggestions" | "emailNotifications" | "notifyTeamInvites" | "notifyTeamMemberAdded" | "notifyReviewCompleted" | "notifyReviewFailed" | "notifyScheduledScanCompleted" | "notifyReviewAssigned" | "notifyReviewApproved" | "notifyReviewChangesRequested" | "notificationSoundEnabled" | "desktopNotifications", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     accounts?: boolean | User$accountsArgs<ExtArgs>
@@ -4582,6 +4703,17 @@ export namespace Prisma {
       autoReview: boolean
       includeSecurityChecks: boolean
       includePerfSuggestions: boolean
+      emailNotifications: boolean
+      notifyTeamInvites: boolean
+      notifyTeamMemberAdded: boolean
+      notifyReviewCompleted: boolean
+      notifyReviewFailed: boolean
+      notifyScheduledScanCompleted: boolean
+      notifyReviewAssigned: boolean
+      notifyReviewApproved: boolean
+      notifyReviewChangesRequested: boolean
+      notificationSoundEnabled: boolean
+      desktopNotifications: boolean
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -5035,6 +5167,17 @@ export namespace Prisma {
     readonly autoReview: FieldRef<"User", 'Boolean'>
     readonly includeSecurityChecks: FieldRef<"User", 'Boolean'>
     readonly includePerfSuggestions: FieldRef<"User", 'Boolean'>
+    readonly emailNotifications: FieldRef<"User", 'Boolean'>
+    readonly notifyTeamInvites: FieldRef<"User", 'Boolean'>
+    readonly notifyTeamMemberAdded: FieldRef<"User", 'Boolean'>
+    readonly notifyReviewCompleted: FieldRef<"User", 'Boolean'>
+    readonly notifyReviewFailed: FieldRef<"User", 'Boolean'>
+    readonly notifyScheduledScanCompleted: FieldRef<"User", 'Boolean'>
+    readonly notifyReviewAssigned: FieldRef<"User", 'Boolean'>
+    readonly notifyReviewApproved: FieldRef<"User", 'Boolean'>
+    readonly notifyReviewChangesRequested: FieldRef<"User", 'Boolean'>
+    readonly notificationSoundEnabled: FieldRef<"User", 'Boolean'>
+    readonly desktopNotifications: FieldRef<"User", 'Boolean'>
   }
     
 
@@ -23306,6 +23449,11 @@ export namespace Prisma {
       repositoryId: string
       enabled: boolean
       githubWebhookId: number | null
+      /**
+       * Optional numeric risk-score threshold (0–100). Reviews with riskScore >= this
+       * value fail the GitHub branch-protection status check. NULL = use the default
+       * heuristic (fail on any critical/high severity finding).
+       */
       scoreThreshold: number | null
       createdAt: Date
       updatedAt: Date
@@ -38583,7 +38731,18 @@ export namespace Prisma {
     defaultLanguage: 'defaultLanguage',
     autoReview: 'autoReview',
     includeSecurityChecks: 'includeSecurityChecks',
-    includePerfSuggestions: 'includePerfSuggestions'
+    includePerfSuggestions: 'includePerfSuggestions',
+    emailNotifications: 'emailNotifications',
+    notifyTeamInvites: 'notifyTeamInvites',
+    notifyTeamMemberAdded: 'notifyTeamMemberAdded',
+    notifyReviewCompleted: 'notifyReviewCompleted',
+    notifyReviewFailed: 'notifyReviewFailed',
+    notifyScheduledScanCompleted: 'notifyScheduledScanCompleted',
+    notifyReviewAssigned: 'notifyReviewAssigned',
+    notifyReviewApproved: 'notifyReviewApproved',
+    notifyReviewChangesRequested: 'notifyReviewChangesRequested',
+    notificationSoundEnabled: 'notificationSoundEnabled',
+    desktopNotifications: 'desktopNotifications'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -39403,6 +39562,17 @@ export namespace Prisma {
     autoReview?: BoolFilter<"User"> | boolean
     includeSecurityChecks?: BoolFilter<"User"> | boolean
     includePerfSuggestions?: BoolFilter<"User"> | boolean
+    emailNotifications?: BoolFilter<"User"> | boolean
+    notifyTeamInvites?: BoolFilter<"User"> | boolean
+    notifyTeamMemberAdded?: BoolFilter<"User"> | boolean
+    notifyReviewCompleted?: BoolFilter<"User"> | boolean
+    notifyReviewFailed?: BoolFilter<"User"> | boolean
+    notifyScheduledScanCompleted?: BoolFilter<"User"> | boolean
+    notifyReviewAssigned?: BoolFilter<"User"> | boolean
+    notifyReviewApproved?: BoolFilter<"User"> | boolean
+    notifyReviewChangesRequested?: BoolFilter<"User"> | boolean
+    notificationSoundEnabled?: BoolFilter<"User"> | boolean
+    desktopNotifications?: BoolFilter<"User"> | boolean
     sessions?: SessionListRelationFilter
     accounts?: AccountListRelationFilter
     repositories?: RepositoryListRelationFilter
@@ -39436,6 +39606,17 @@ export namespace Prisma {
     autoReview?: SortOrder
     includeSecurityChecks?: SortOrder
     includePerfSuggestions?: SortOrder
+    emailNotifications?: SortOrder
+    notifyTeamInvites?: SortOrder
+    notifyTeamMemberAdded?: SortOrder
+    notifyReviewCompleted?: SortOrder
+    notifyReviewFailed?: SortOrder
+    notifyScheduledScanCompleted?: SortOrder
+    notifyReviewAssigned?: SortOrder
+    notifyReviewApproved?: SortOrder
+    notifyReviewChangesRequested?: SortOrder
+    notificationSoundEnabled?: SortOrder
+    desktopNotifications?: SortOrder
     sessions?: SessionOrderByRelationAggregateInput
     accounts?: AccountOrderByRelationAggregateInput
     repositories?: RepositoryOrderByRelationAggregateInput
@@ -39472,6 +39653,17 @@ export namespace Prisma {
     autoReview?: BoolFilter<"User"> | boolean
     includeSecurityChecks?: BoolFilter<"User"> | boolean
     includePerfSuggestions?: BoolFilter<"User"> | boolean
+    emailNotifications?: BoolFilter<"User"> | boolean
+    notifyTeamInvites?: BoolFilter<"User"> | boolean
+    notifyTeamMemberAdded?: BoolFilter<"User"> | boolean
+    notifyReviewCompleted?: BoolFilter<"User"> | boolean
+    notifyReviewFailed?: BoolFilter<"User"> | boolean
+    notifyScheduledScanCompleted?: BoolFilter<"User"> | boolean
+    notifyReviewAssigned?: BoolFilter<"User"> | boolean
+    notifyReviewApproved?: BoolFilter<"User"> | boolean
+    notifyReviewChangesRequested?: BoolFilter<"User"> | boolean
+    notificationSoundEnabled?: BoolFilter<"User"> | boolean
+    desktopNotifications?: BoolFilter<"User"> | boolean
     sessions?: SessionListRelationFilter
     accounts?: AccountListRelationFilter
     repositories?: RepositoryListRelationFilter
@@ -39505,6 +39697,17 @@ export namespace Prisma {
     autoReview?: SortOrder
     includeSecurityChecks?: SortOrder
     includePerfSuggestions?: SortOrder
+    emailNotifications?: SortOrder
+    notifyTeamInvites?: SortOrder
+    notifyTeamMemberAdded?: SortOrder
+    notifyReviewCompleted?: SortOrder
+    notifyReviewFailed?: SortOrder
+    notifyScheduledScanCompleted?: SortOrder
+    notifyReviewAssigned?: SortOrder
+    notifyReviewApproved?: SortOrder
+    notifyReviewChangesRequested?: SortOrder
+    notificationSoundEnabled?: SortOrder
+    desktopNotifications?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -39529,6 +39732,17 @@ export namespace Prisma {
     autoReview?: BoolWithAggregatesFilter<"User"> | boolean
     includeSecurityChecks?: BoolWithAggregatesFilter<"User"> | boolean
     includePerfSuggestions?: BoolWithAggregatesFilter<"User"> | boolean
+    emailNotifications?: BoolWithAggregatesFilter<"User"> | boolean
+    notifyTeamInvites?: BoolWithAggregatesFilter<"User"> | boolean
+    notifyTeamMemberAdded?: BoolWithAggregatesFilter<"User"> | boolean
+    notifyReviewCompleted?: BoolWithAggregatesFilter<"User"> | boolean
+    notifyReviewFailed?: BoolWithAggregatesFilter<"User"> | boolean
+    notifyScheduledScanCompleted?: BoolWithAggregatesFilter<"User"> | boolean
+    notifyReviewAssigned?: BoolWithAggregatesFilter<"User"> | boolean
+    notifyReviewApproved?: BoolWithAggregatesFilter<"User"> | boolean
+    notifyReviewChangesRequested?: BoolWithAggregatesFilter<"User"> | boolean
+    notificationSoundEnabled?: BoolWithAggregatesFilter<"User"> | boolean
+    desktopNotifications?: BoolWithAggregatesFilter<"User"> | boolean
   }
 
   export type SessionWhereInput = {
@@ -41746,6 +41960,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     repositories?: RepositoryCreateNestedManyWithoutUserInput
@@ -41779,6 +42004,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
@@ -41812,6 +42048,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
@@ -41845,6 +42092,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
@@ -41878,6 +42136,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
   }
 
   export type UserUpdateManyMutationInput = {
@@ -41896,6 +42165,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -41914,6 +42194,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type SessionCreateInput = {
@@ -44491,6 +44782,17 @@ export namespace Prisma {
     autoReview?: SortOrder
     includeSecurityChecks?: SortOrder
     includePerfSuggestions?: SortOrder
+    emailNotifications?: SortOrder
+    notifyTeamInvites?: SortOrder
+    notifyTeamMemberAdded?: SortOrder
+    notifyReviewCompleted?: SortOrder
+    notifyReviewFailed?: SortOrder
+    notifyScheduledScanCompleted?: SortOrder
+    notifyReviewAssigned?: SortOrder
+    notifyReviewApproved?: SortOrder
+    notifyReviewChangesRequested?: SortOrder
+    notificationSoundEnabled?: SortOrder
+    desktopNotifications?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -44509,6 +44811,17 @@ export namespace Prisma {
     autoReview?: SortOrder
     includeSecurityChecks?: SortOrder
     includePerfSuggestions?: SortOrder
+    emailNotifications?: SortOrder
+    notifyTeamInvites?: SortOrder
+    notifyTeamMemberAdded?: SortOrder
+    notifyReviewCompleted?: SortOrder
+    notifyReviewFailed?: SortOrder
+    notifyScheduledScanCompleted?: SortOrder
+    notifyReviewAssigned?: SortOrder
+    notifyReviewApproved?: SortOrder
+    notifyReviewChangesRequested?: SortOrder
+    notificationSoundEnabled?: SortOrder
+    desktopNotifications?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -44527,6 +44840,17 @@ export namespace Prisma {
     autoReview?: SortOrder
     includeSecurityChecks?: SortOrder
     includePerfSuggestions?: SortOrder
+    emailNotifications?: SortOrder
+    notifyTeamInvites?: SortOrder
+    notifyTeamMemberAdded?: SortOrder
+    notifyReviewCompleted?: SortOrder
+    notifyReviewFailed?: SortOrder
+    notifyScheduledScanCompleted?: SortOrder
+    notifyReviewAssigned?: SortOrder
+    notifyReviewApproved?: SortOrder
+    notifyReviewChangesRequested?: SortOrder
+    notificationSoundEnabled?: SortOrder
+    desktopNotifications?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -49928,6 +50252,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     accounts?: AccountCreateNestedManyWithoutUserInput
     repositories?: RepositoryCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
@@ -49960,6 +50295,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
@@ -50008,6 +50354,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     accounts?: AccountUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
@@ -50040,6 +50397,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
@@ -50072,6 +50440,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionCreateNestedManyWithoutUserInput
     repositories?: RepositoryCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
@@ -50104,6 +50483,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
@@ -50152,6 +50542,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
@@ -50184,6 +50585,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
@@ -50216,6 +50628,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
@@ -50248,6 +50671,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
@@ -50563,6 +50997,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
@@ -50595,6 +51040,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
@@ -50888,6 +51344,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     repositories?: RepositoryCreateNestedManyWithoutUserInput
@@ -50920,6 +51387,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
@@ -51296,6 +51774,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
@@ -51328,6 +51817,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
@@ -51627,6 +52127,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     repositories?: RepositoryCreateNestedManyWithoutUserInput
@@ -51659,6 +52170,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
@@ -51768,6 +52290,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
@@ -51800,6 +52333,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
@@ -52017,6 +52561,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     repositories?: RepositoryCreateNestedManyWithoutUserInput
@@ -52049,6 +52604,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
@@ -52152,6 +52718,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
@@ -52184,6 +52761,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
@@ -52255,6 +52843,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     repositories?: RepositoryCreateNestedManyWithoutUserInput
@@ -52287,6 +52886,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
@@ -52364,6 +52974,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
@@ -52396,6 +53017,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
@@ -52483,6 +53115,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     repositories?: RepositoryCreateNestedManyWithoutUserInput
@@ -52515,6 +53158,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
@@ -52624,6 +53278,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
@@ -52656,6 +53321,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
@@ -52743,6 +53419,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     repositories?: RepositoryCreateNestedManyWithoutUserInput
@@ -52775,6 +53462,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
@@ -52812,6 +53510,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     repositories?: RepositoryCreateNestedManyWithoutUserInput
@@ -52844,6 +53553,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
@@ -52953,6 +53673,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
@@ -52985,6 +53716,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
@@ -53028,6 +53770,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
@@ -53060,6 +53813,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
@@ -53349,6 +54113,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     repositories?: RepositoryCreateNestedManyWithoutUserInput
@@ -53381,6 +54156,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
@@ -53464,6 +54250,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
@@ -53496,6 +54293,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
@@ -53592,6 +54400,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     repositories?: RepositoryCreateNestedManyWithoutUserInput
@@ -53624,6 +54443,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
@@ -53672,6 +54502,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
@@ -53704,6 +54545,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
@@ -54537,6 +55389,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     repositories?: RepositoryCreateNestedManyWithoutUserInput
@@ -54569,6 +55432,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
@@ -54689,6 +55563,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
@@ -54721,6 +55606,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
@@ -54837,6 +55733,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     repositories?: RepositoryCreateNestedManyWithoutUserInput
@@ -54869,6 +55776,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
@@ -54917,6 +55835,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
@@ -54949,6 +55878,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
@@ -55019,6 +55959,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     repositories?: RepositoryCreateNestedManyWithoutUserInput
@@ -55051,6 +56002,17 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    emailNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewChangesRequested?: boolean
+    notificationSoundEnabled?: boolean
+    desktopNotifications?: boolean
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
@@ -55134,6 +56096,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
@@ -55166,6 +56139,17 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput

@@ -17,6 +17,7 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           className,
         )}
         ref={ref}
+        aria-label={props['aria-label'] || 'Select option'}
         {...props}
       >
         {children}
@@ -193,7 +194,7 @@ const DropdownSelect = React.forwardRef<HTMLButtonElement, DropdownSelectProps>(
         </button>
 
         {isOpen && (
-          <div className="absolute z-50 mt-1.5 w-full min-w-[8rem] overflow-hidden rounded-lg border border-border/60 bg-popover text-popover-foreground shadow-lg shadow-black/5 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2">
+          <div className="absolute z-50 mt-1.5 w-full min-w-32 overflow-hidden rounded-lg border border-border/60 bg-popover text-popover-foreground shadow-lg shadow-black/5 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2">
             <div
               className="p-1 space-y-0.5 max-h-64 overflow-y-auto"
               role="listbox"
@@ -214,7 +215,7 @@ const DropdownSelect = React.forwardRef<HTMLButtonElement, DropdownSelectProps>(
                   <div
                     key={childProps.value}
                     role="option"
-                    aria-selected={value === childProps.value}
+                    aria-selected={value === childProps.value ? "true" : "false"}
                     data-state={
                       value === childProps.value ? "checked" : "unchecked"
                     }
@@ -268,7 +269,7 @@ const SelectItem = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50",
         icon ? "pl-2" : "pl-8",
         className,
       )}

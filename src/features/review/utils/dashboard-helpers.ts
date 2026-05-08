@@ -1,7 +1,8 @@
 export function getRiskLevel(score: number) {
-  if (score <= 3)
+  // Risk scores are 0-100 scale
+  if (score <= 30)
     return { label: "Low", color: "text-emerald-500", bg: "bg-emerald-500", glow: "shadow-emerald-500/20" };
-  if (score <= 6)
+  if (score <= 60)
     return { label: "Medium", color: "text-amber-500", bg: "bg-amber-500", glow: "shadow-amber-500/20" };
   return { label: "High", color: "text-red-500", bg: "bg-red-500", glow: "shadow-red-500/20" };
 }
