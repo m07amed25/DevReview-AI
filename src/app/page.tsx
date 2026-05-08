@@ -5,6 +5,7 @@ import { StatsSection } from "@/features/home/components/StatsSection";
 import { FeaturesSection } from "@/features/home/components/FeaturesSection";
 import { HowItWorksSection } from "@/features/home/components/HowItWorksSection";
 import { LanguagesSection } from "@/features/home/components/LanguagesSection";
+import { DocsSection } from "@/features/home/components/DocsSection";
 import { CtaSection } from "@/features/home/components/CtaSection";
 import { HomeFooter } from "@/features/home/components/HomeFooter";
 
@@ -48,6 +49,7 @@ export default function HomePage() {
         <FeaturesSection />
         <HowItWorksSection />
         <LanguagesSection />
+        <DocsSection />
         <CtaSection />
       </main>
 

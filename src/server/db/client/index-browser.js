@@ -136,7 +136,18 @@ exports.Prisma.UserScalarFieldEnum = {
   defaultLanguage: 'defaultLanguage',
   autoReview: 'autoReview',
   includeSecurityChecks: 'includeSecurityChecks',
-  includePerfSuggestions: 'includePerfSuggestions'
+  includePerfSuggestions: 'includePerfSuggestions',
+  emailNotifications: 'emailNotifications',
+  notifyTeamInvites: 'notifyTeamInvites',
+  notifyTeamMemberAdded: 'notifyTeamMemberAdded',
+  notifyReviewCompleted: 'notifyReviewCompleted',
+  notifyReviewFailed: 'notifyReviewFailed',
+  notifyScheduledScanCompleted: 'notifyScheduledScanCompleted',
+  notifyReviewAssigned: 'notifyReviewAssigned',
+  notifyReviewApproved: 'notifyReviewApproved',
+  notifyReviewChangesRequested: 'notifyReviewChangesRequested',
+  notificationSoundEnabled: 'notificationSoundEnabled',
+  desktopNotifications: 'desktopNotifications'
 };
 
 exports.Prisma.SessionScalarFieldEnum = {

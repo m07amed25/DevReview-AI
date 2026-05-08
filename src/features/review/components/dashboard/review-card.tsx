@@ -206,7 +206,7 @@ export function ReviewCard({
                           "h-full rounded-full transition-all",
                           getRiskLevel(review.riskScore).bg,
                         )}
-                        style={{ width: `${review.riskScore * 10}%` }}
+                        style={{ width: `${review.riskScore}%` }}
                       />
                     </div>
                     <span
@@ -334,7 +334,7 @@ export function ReviewCard({
                       "h-full rounded-full",
                       getRiskLevel(review.riskScore).bg,
                     )}
-                    style={{ width: `${review.riskScore * 10}%` }}
+                    style={{ width: `${review.riskScore}%` }}
                   />
                 </div>
               </div>

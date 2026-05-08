@@ -165,6 +165,7 @@ function InlineAIChat({
         <button
           onClick={handleSubmit}
           disabled={!question.trim() || askAI.isPending}
+          title="Send question"
           className="p-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <Send className="size-3.5" />

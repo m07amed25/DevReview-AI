@@ -168,6 +168,7 @@ export function CommentsToolbar({
             <button
               onClick={() => onSearchChange("")}
               className="absolute right-6 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+              title="Clear search"
             >
               <X className="size-3.5" />
             </button>

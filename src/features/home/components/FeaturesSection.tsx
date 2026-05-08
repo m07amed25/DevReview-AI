@@ -107,6 +107,7 @@ export function FeaturesSection() {
 
   return (
     <section
+      id="features"
       className="relative border-t border-white/5 bg-zinc-950"
       aria-labelledby="features-heading"
     >

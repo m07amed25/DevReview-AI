@@ -16,6 +16,7 @@ const languages = [
 export function LanguagesSection() {
   return (
     <section
+      id="languages"
       className="relative border-t border-white/5 bg-zinc-950 overflow-hidden"
       aria-labelledby="languages-heading"
     >

@@ -10,10 +10,44 @@ import type {
 } from "@/features/diagram/types";
 
 export const DIAGRAM_TRIGGER_RULES: DiagramTriggerRule[] = [
-  { type: "ERD", patterns: ["prisma/schema.prisma", "**/*.prisma"] },
+  {
+    type: "ERD",
+    patterns: [
+      // Prisma
+      "prisma/schema.prisma",
+      "**/*.prisma",
+      // SQL DDL
+      "**/schema.sql",
+      "**/migrations/**/*.sql",
+      "**/*.ddl.sql",
+      // TypeORM
+      "**/*.entity.ts",
+      "**/*.entity.js",
+      "**/entities/**/*.ts",
+      // Sequelize
+      "**/models/**/*.js",
+      "**/models/**/*.ts",
+      "**/*.model.js",
+      "**/*.model.ts",
+      // Drizzle ORM
+      "**/drizzle/schema.ts",
+      "**/drizzle/schema/**/*.ts",
+      "**/schema/drizzle.ts",
+      // Mongoose
+      "**/schemas/**/*.ts",
+      "**/schemas/**/*.js",
+      "**/*.schema.ts",
+      "**/*.schema.js",
+      // Knex
+      "**/migrations/**/*.js",
+      "**/migrations/**/*.ts",
+      "knexfile.js",
+      "knexfile.ts",
+    ],
+  },
   {
     type: "CLASS",
-    patterns: ["**/*.service.ts", "**/*.model.ts", "**/*.entity.ts"],
+    patterns: ["**/*.service.ts", "**/*.controller.ts"],
   },
   {
     type: "USE_CASE",
@@ -38,19 +72,26 @@ export function matchTriggerRules(changedFiles: string[]): DiagramType[] {
 
 // ─── ERD generator ────────────────────────────────────────────────────────────
 
-function generateERD(fileContents: Record<string, string>): {
-  definition: string;
-  nodes: DiagramNode[];
+// ─── Helper types for all parsers ─────────────────────────────────────────────
+
+interface TableColumn {
+  name: string;
+  type: string;
+  isPrimaryKey: boolean;
+  isForeignKey: boolean;
+}
+
+interface ERDResult {
+  models: Map<string, TableColumn[]>;
   edges: DiagramEdge[];
-  warning?: string;
-} {
-  const nodes: DiagramNode[] = [];
+}
+
+// ─── Prisma Parser ────────────────────────────────────────────────────────────
+
+function parsePrismaSchema(content: string): ERDResult {
+  const models = new Map<string, TableColumn[]>();
   const edges: DiagramEdge[] = [];
 
-  const schemaContent = Object.values(fileContents).join("\n");
-
-  // Brace-balanced model block extractor — handles `}` inside quoted defaults
-  // or attribute expressions that would prematurely terminate a [^}]+ regex.
   function extractModelBlocks(
     schema: string,
   ): Array<{ name: string; body: string }> {
@@ -59,7 +100,6 @@ function generateERD(fileContents: Record<string, string>): {
     let header: RegExpExecArray | null;
     while ((header = headerRegex.exec(schema)) !== null) {
       const modelName = header[1]!;
-      // headerRegex matched up to and including the opening '{'
       const openBrace = header.index + header[0].length - 1;
       let depth = 1;
       let i = openBrace + 1;
@@ -74,25 +114,10 @@ function generateERD(fileContents: Record<string, string>): {
     return results;
   }
 
-  const modelBlocks = extractModelBlocks(schemaContent);
-
-  const models = new Map<
-    string,
-    Array<{
-      name: string;
-      type: string;
-      isPrimaryKey: boolean;
-      isForeignKey: boolean;
-    }>
-  >();
+  const modelBlocks = extractModelBlocks(content);
 
   for (const { name: modelName, body: modelBody } of modelBlocks) {
-    const columns: Array<{
-      name: string;
-      type: string;
-      isPrimaryKey: boolean;
-      isForeignKey: boolean;
-    }> = [];
+    const columns: TableColumn[] = [];
 
     const lines = modelBody.split("\n");
     for (const line of lines) {
@@ -104,7 +129,6 @@ function generateERD(fileContents: Record<string, string>): {
       if (fieldMatch) {
         const fieldName = fieldMatch[1]!;
         const fieldType = fieldMatch[2]!;
-        // Skip relation fields (those with a lowercase first letter that are model references)
         const isPrimitive =
           /^(String|Int|Float|Boolean|DateTime|Json|BigInt|Decimal|Bytes)/.test(
             fieldType,
@@ -116,8 +140,6 @@ function generateERD(fileContents: Record<string, string>): {
 
         columns.push({
           name: fieldName,
-          // Strip optional marker and array brackets so the type is a plain
-          // Mermaid-erDiagram-compatible identifier (only word chars allowed).
           type: fieldType.replace(/[?[\]]/g, ""),
           isPrimaryKey,
           isForeignKey,
@@ -126,17 +148,9 @@ function generateERD(fileContents: Record<string, string>): {
     }
 
     models.set(modelName, columns);
-    const detail: DiagramNodeDetailTable = { columns };
-    nodes.push({
-      id: `table_${modelName}`,
-      label: modelName,
-      type: "TABLE",
-      detail,
-    });
   }
 
-  // Extract relations for edges — reuse the already-parsed brace-balanced blocks.
-  // Track processed pairs to detect MANY_TO_MANY (both sides are arrays).
+  // Extract relations
   const edgeKey = (a: string, b: string) => [a, b].sort().join("__");
   const processedEdgePairs = new Map<
     string,
@@ -149,7 +163,6 @@ function generateERD(fileContents: Record<string, string>): {
       const trimmed = line.trim();
       if (!trimmed || trimmed.startsWith("@@")) continue;
 
-      // Look for @relation fields
       if (trimmed.includes("@relation")) {
         const fieldMatch = /^(\w+)\s+([\w\[\]?]+)/.exec(trimmed);
         if (fieldMatch) {
@@ -160,10 +173,8 @@ function generateERD(fileContents: Record<string, string>): {
           if (models.has(targetModel)) {
             const key = edgeKey(modelName, targetModel);
             if (processedEdgePairs.has(key)) {
-              // Both sides exist → could be MANY_TO_MANY; update direction
               const existing = processedEdgePairs.get(key)!;
               if (isArray && existing.fromIsArray) {
-                // Find and upgrade to MANY_TO_MANY
                 const existingEdge = edges.find(
                   (e) =>
                     e.fromId === existing.fromId && e.toId === existing.toId,
@@ -192,10 +203,610 @@ function generateERD(fileContents: Record<string, string>): {
     }
   }
 
+  return { models, edges };
+}
+
+// ─── SQL DDL Parser ───────────────────────────────────────────────────────────
+
+function parseSQLDDL(content: string): ERDResult {
+  const models = new Map<string, TableColumn[]>();
+  const edges: DiagramEdge[] = [];
+
+  // Match CREATE TABLE statements
+  const tableRegex =
+    /CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?(?:`|"|')?(\w+)(?:`|"|')?\s*\(([\s\S]*?)\);/gi;
+  let tableMatch: RegExpExecArray | null;
+
+  while ((tableMatch = tableRegex.exec(content)) !== null) {
+    const tableName = tableMatch[1]!;
+    const tableBody = tableMatch[2]!;
+
+    const columns: TableColumn[] = [];
+    const foreignKeys: Array<{ from: string; to: string; toColumn: string }> =
+      [];
+
+    // Split by commas but ignore commas inside parentheses
+    const parts = tableBody.split(/,(?![^(]*\))/);
+
+    for (const part of parts) {
+      const trimmed = part.trim();
+
+      // Column definition
+      const colMatch =
+        /^(?:`|"|')?(\w+)(?:`|"|')?\s+([\w()]+)(?:\s+(?:PRIMARY\s+KEY|NOT\s+NULL|NULL|AUTO_INCREMENT|DEFAULT\s+.+?))*$/i.exec(
+          trimmed,
+        );
+      if (colMatch) {
+        const colName = colMatch[1]!;
+        const colType = colMatch[2]!.replace(/[()0-9]/g, "").toUpperCase();
+
+        const isPrimaryKey =
+          /PRIMARY\s+KEY/i.test(trimmed) || /\bid\b/i.test(colName);
+        const isForeignKey = colName.toLowerCase().endsWith("_id");
+
+        columns.push({
+          name: colName,
+          type: colType,
+          isPrimaryKey,
+          isForeignKey,
+        });
+      }
+
+      // FOREIGN KEY constraint
+      const fkMatch =
+        /FOREIGN\s+KEY\s*\((?:`|"|')?(\w+)(?:`|"|')?\)\s*REFERENCES\s+(?:`|"|')?(\w+)(?:`|"|')?\s*\((?:`|"|')?(\w+)(?:`|"|')?\)/i.exec(
+          trimmed,
+        );
+      if (fkMatch) {
+        foreignKeys.push({
+          from: fkMatch[1]!,
+          to: fkMatch[2]!,
+          toColumn: fkMatch[3]!,
+        });
+      }
+    }
+
+    models.set(tableName, columns);
+
+    // Create edges for foreign keys
+    for (const fk of foreignKeys) {
+      edges.push({
+        fromId: `table_${tableName}`,
+        toId: `table_${fk.to}`,
+        label: "references",
+        direction: "ONE_TO_MANY",
+      });
+    }
+  }
+
+  return { models, edges };
+}
+
+// ─── TypeORM Parser ───────────────────────────────────────────────────────────
+
+function parseTypeORM(content: string): ERDResult {
+  const models = new Map<string, TableColumn[]>();
+  const edges: DiagramEdge[] = [];
+
+  // Extract @Entity classes
+  const entityRegex = /@Entity\s*\([^)]*\)?\s*export\s+class\s+(\w+)/g;
+  const entities: string[] = [];
+  let entityMatch: RegExpExecArray | null;
+
+  while ((entityMatch = entityRegex.exec(content)) !== null) {
+    entities.push(entityMatch[1]!);
+  }
+
+  // For each entity, extract columns
+  for (const entityName of entities) {
+    const columns: TableColumn[] = [];
+
+    // Find class body
+    const classRegex = new RegExp(
+      `class\\s+${entityName}[^{]*\\{([\\s\\S]*?)\\n\\}`,
+      "m",
+    );
+    const classMatch = classRegex.exec(content);
+    if (!classMatch) continue;
+
+    const classBody = classMatch[1]!;
+
+    // Match @Column, @PrimaryGeneratedColumn, etc.
+    const columnRegex =
+      /@(PrimaryGeneratedColumn|PrimaryColumn|Column|CreateDateColumn|UpdateDateColumn)\s*\([^)]*\)?\s*(\w+)(?:\?)?:\s*([\w<>\[\]]+)/g;
+    let colMatch: RegExpExecArray | null;
+
+    while ((colMatch = columnRegex.exec(classBody)) !== null) {
+      const decorator = colMatch[1]!;
+      const colName = colMatch[2]!;
+      let colType = colMatch[3]!;
+
+      // Simplify type
+      colType = colType.replace(/[<>\[\]]/g, "");
+
+      const isPrimaryKey =
+        decorator === "PrimaryGeneratedColumn" || decorator === "PrimaryColumn";
+      const isForeignKey =
+        colName.toLowerCase().endsWith("id") && !isPrimaryKey;
+
+      columns.push({
+        name: colName,
+        type: colType,
+        isPrimaryKey,
+        isForeignKey,
+      });
+    }
+
+    // Extract relations
+    const relationRegex =
+      /@(OneToOne|OneToMany|ManyToOne|ManyToMany)\s*\(\s*\(\)\s*=>\s*(\w+)/g;
+    let relMatch: RegExpExecArray | null;
+
+    while ((relMatch = relationRegex.exec(classBody)) !== null) {
+      const relationType = relMatch[1]!;
+      const targetEntity = relMatch[2]!;
+
+      if (entities.includes(targetEntity)) {
+        let direction: DiagramEdge["direction"] = "ASSOCIATES";
+        let label = "relates to";
+
+        switch (relationType) {
+          case "OneToOne":
+            direction = "ONE_TO_ONE";
+            label = "one to one";
+            break;
+          case "OneToMany":
+            direction = "ONE_TO_MANY";
+            label = "has many";
+            break;
+          case "ManyToOne":
+            direction = "ONE_TO_MANY";
+            label = "belongs to";
+            break;
+          case "ManyToMany":
+            direction = "MANY_TO_MANY";
+            label = "many to many";
+            break;
+        }
+
+        edges.push({
+          fromId: `table_${entityName}`,
+          toId: `table_${targetEntity}`,
+          label,
+          direction,
+        });
+      }
+    }
+
+    models.set(entityName, columns);
+  }
+
+  return { models, edges };
+}
+
+// ─── Sequelize Parser ─────────────────────────────────────────────────────────
+
+function parseSequelize(content: string): ERDResult {
+  const models = new Map<string, TableColumn[]>();
+  const edges: DiagramEdge[] = [];
+
+  // Match sequelize.define or Model.init
+  const defineRegex =
+    /(?:sequelize\.define|Model\.init)\s*\(\s*['"`](\w+)['"`]\s*,\s*\{([^}]+(?:\{[^}]*\}[^}]*)*)\}/g;
+  let defineMatch: RegExpExecArray | null;
+
+  while ((defineMatch = defineRegex.exec(content)) !== null) {
+    const modelName = defineMatch[1]!;
+    const modelBody = defineMatch[2]!;
+
+    const columns: TableColumn[] = [];
+
+    // Match column definitions
+    const colRegex =
+      /(\w+):\s*\{[^}]*type:\s*DataTypes\.(\w+)(?:[^}]*primaryKey:\s*true)?(?:[^}]*references:\s*\{[^}]*model:\s*['"`](\w+)['"`])?/g;
+    let colMatch: RegExpExecArray | null;
+
+    while ((colMatch = colRegex.exec(modelBody)) !== null) {
+      const colName = colMatch[1]!;
+      const colType = colMatch[2]!;
+      const isPrimaryKey = /primaryKey:\s*true/.test(colMatch[0]);
+      const referencedModel = colMatch[3];
+
+      const isForeignKey =
+        !!referencedModel || (colName.toLowerCase().endsWith("id") && !isPrimaryKey);
+
+      columns.push({
+        name: colName,
+        type: colType,
+        isPrimaryKey,
+        isForeignKey,
+      });
+
+      // Add edge if there's a reference
+      if (referencedModel) {
+        edges.push({
+          fromId: `table_${modelName}`,
+          toId: `table_${referencedModel}`,
+          label: "references",
+          direction: "ONE_TO_MANY",
+        });
+      }
+    }
+
+    models.set(modelName, columns);
+  }
+
+  // Also match hasMany, belongsTo, etc.
+  const assocRegex =
+    /(\w+)\.(hasMany|belongsTo|hasOne|belongsToMany)\s*\(\s*(\w+)/g;
+  let assocMatch: RegExpExecArray | null;
+
+  while ((assocMatch = assocRegex.exec(content)) !== null) {
+    const fromModel = assocMatch[1]!;
+    const assocType = assocMatch[2]!;
+    const toModel = assocMatch[3]!;
+
+    let direction: DiagramEdge["direction"] = "ASSOCIATES";
+    let label = "relates to";
+
+    switch (assocType) {
+      case "hasMany":
+        direction = "ONE_TO_MANY";
+        label = "has many";
+        break;
+      case "hasOne":
+        direction = "ONE_TO_ONE";
+        label = "has one";
+        break;
+      case "belongsTo":
+        direction = "ONE_TO_MANY";
+        label = "belongs to";
+        break;
+      case "belongsToMany":
+        direction = "MANY_TO_MANY";
+        label = "many to many";
+        break;
+    }
+
+    if (models.has(fromModel) && models.has(toModel)) {
+      edges.push({
+        fromId: `table_${fromModel}`,
+        toId: `table_${toModel}`,
+        label,
+        direction,
+      });
+    }
+  }
+
+  return { models, edges };
+}
+
+// ─── Drizzle ORM Parser ───────────────────────────────────────────────────────
+
+function parseDrizzleORM(content: string): ERDResult {
+  const models = new Map<string, TableColumn[]>();
+  const edges: DiagramEdge[] = [];
+
+  // Match table definitions: export const tableName = pgTable(...) or mysqlTable(...)
+  const tableRegex =
+    /export\s+const\s+(\w+)\s*=\s*(?:pg|mysql|sqlite)Table\s*\(\s*['"`](\w+)['"`]\s*,\s*\{([^}]+(?:\{[^}]*\}[^}]*)*)\}/g;
+  let tableMatch: RegExpExecArray | null;
+
+  while ((tableMatch = tableRegex.exec(content)) !== null) {
+    const tableName = tableMatch[2]!;
+    const tableBody = tableMatch[3]!;
+
+    const columns: TableColumn[] = [];
+
+    // Match column definitions
+    const colRegex = /(\w+):\s*(?:\w+\.)?(\w+)\([^)]*\)(?:\.(primaryKey|notNull|unique|references)\([^)]*\))*/g;
+    let colMatch: RegExpExecArray | null;
+
+    while ((colMatch = colRegex.exec(tableBody)) !== null) {
+      const colName = colMatch[1]!;
+      const colType = colMatch[2]!;
+      const modifiers = colMatch[0];
+
+      const isPrimaryKey = /\.primaryKey\(/.test(modifiers);
+      const hasReferences = /\.references\(/.test(modifiers);
+      const isForeignKey =
+        hasReferences || (colName.toLowerCase().endsWith("id") && !isPrimaryKey);
+
+      columns.push({
+        name: colName,
+        type: colType,
+        isPrimaryKey,
+        isForeignKey,
+      });
+
+      // Extract references
+      const refMatch = /\.references\(\s*\(\)\s*=>\s*(\w+)\.(\w+)/. exec(modifiers);
+      if (refMatch) {
+        const refTable = refMatch[1]!;
+        edges.push({
+          fromId: `table_${tableName}`,
+          toId: `table_${refTable}`,
+          label: "references",
+          direction: "ONE_TO_MANY",
+        });
+      }
+    }
+
+    models.set(tableName, columns);
+  }
+
+  // Match relations
+  const relationRegex =
+    /export\s+const\s+\w+Relations\s*=\s*relations\s*\(\s*(\w+)\s*,\s*\(\{\s*(\w+)\s*\}\)\s*=>\s*\(\{([^}]+)\}\)/g;
+  let relationMatch: RegExpExecArray | null;
+
+  while ((relationMatch = relationRegex.exec(content)) !== null) {
+    const fromTable = relationMatch[1]!;
+    const relationsBody = relationMatch[3]!;
+
+    // Match relation definitions
+    const relRegex = /(\w+):\s*(one|many)\s*\(\s*(\w+)/g;
+    let relMatch: RegExpExecArray | null;
+
+    while ((relMatch = relRegex.exec(relationsBody)) !== null) {
+      const relType = relMatch[2]!;
+      const toTable = relMatch[3]!;
+
+      edges.push({
+        fromId: `table_${fromTable}`,
+        toId: `table_${toTable}`,
+        label: relType === "one" ? "has one" : "has many",
+        direction: relType === "one" ? "ONE_TO_ONE" : "ONE_TO_MANY",
+      });
+    }
+  }
+
+  return { models, edges };
+}
+
+// ─── Mongoose Parser ──────────────────────────────────────────────────────────
+
+function parseMongoose(content: string): ERDResult {
+  const models = new Map<string, TableColumn[]>();
+  const edges: DiagramEdge[] = [];
+
+  // Match mongoose.model or new Schema
+  const schemaRegex =
+    /(?:const|let|var)\s+(\w+)Schema\s*=\s*new\s+(?:mongoose\.)?Schema\s*\(\s*\{([^}]+(?:\{[^}]*\}[^}]*)*)\}/g;
+  let schemaMatch: RegExpExecArray | null;
+
+  const schemaNames = new Map<string, string>();
+
+  while ((schemaMatch = schemaRegex.exec(content)) !== null) {
+    const schemaVar = schemaMatch[1]!;
+    const schemaBody = schemaMatch[2]!;
+
+    const columns: TableColumn[] = [];
+
+    // Match field definitions
+    const fieldRegex =
+      /(\w+):\s*\{[^}]*type:\s*(?:mongoose\.Schema\.Types\.)?(\w+)(?:[^}]*ref:\s*['"`](\w+)['"`])?/g;
+    let fieldMatch: RegExpExecArray | null;
+
+    while ((fieldMatch = fieldRegex.exec(schemaBody)) !== null) {
+      const fieldName = fieldMatch[1]!;
+      const fieldType = fieldMatch[2]!;
+      const refModel = fieldMatch[3];
+
+      const isPrimaryKey = fieldName === "_id" || fieldName === "id";
+      const isForeignKey = fieldType === "ObjectId" || !!refModel;
+
+      columns.push({
+        name: fieldName,
+        type: fieldType,
+        isPrimaryKey,
+        isForeignKey,
+      });
+
+      // Add edge for refs
+      if (refModel) {
+        edges.push({
+          fromId: `table_${schemaVar}`,
+          toId: `table_${refModel}Schema`,
+          label: "references",
+          direction: "ONE_TO_MANY",
+        });
+      }
+    }
+
+    // Also match simple field definitions (field: Type)
+    const simpleFieldRegex = /(\w+):\s*(String|Number|Boolean|Date|Buffer|Mixed|ObjectId|Array)/g;
+    let simpleMatch: RegExpExecArray | null;
+
+    while ((simpleMatch = simpleFieldRegex.exec(schemaBody)) !== null) {
+      const fieldName = simpleMatch[1]!;
+      const fieldType = simpleMatch[2]!;
+
+      if (!columns.find((c) => c.name === fieldName)) {
+        columns.push({
+          name: fieldName,
+          type: fieldType,
+          isPrimaryKey: fieldName === "_id",
+          isForeignKey: fieldType === "ObjectId",
+        });
+      }
+    }
+
+    schemaNames.set(schemaVar, schemaVar);
+    models.set(schemaVar, columns);
+  }
+
+  // Match mongoose.model definitions
+  const modelRegex =
+    /mongoose\.model\s*\(\s*['"`](\w+)['"`]\s*,\s*(\w+)Schema\s*\)/g;
+  let modelMatch: RegExpExecArray | null;
+
+  while ((modelMatch = modelRegex.exec(content)) !== null) {
+    const modelName = modelMatch[1]!;
+    const schemaVar = modelMatch[2]!;
+
+    if (models.has(schemaVar)) {
+      const columns = models.get(schemaVar)!;
+      models.delete(schemaVar);
+      models.set(modelName, columns);
+
+      // Update edges
+      edges.forEach((edge) => {
+        if (edge.fromId === `table_${schemaVar}`) {
+          edge.fromId = `table_${modelName}`;
+        }
+        if (edge.toId === `table_${schemaVar}`) {
+          edge.toId = `table_${modelName}`;
+        }
+      });
+    }
+  }
+
+  return { models, edges };
+}
+
+// ─── Knex Parser ──────────────────────────────────────────────────────────────
+
+function parseKnex(content: string): ERDResult {
+  const models = new Map<string, TableColumn[]>();
+  const edges: DiagramEdge[] = [];
+
+  // Match table.create or createTable
+  const tableRegex =
+    /(?:knex\.schema\.)?createTable\s*\(\s*['"`](\w+)['"`]\s*,\s*(?:function\s*\(|\()\s*(\w+)\s*\)\s*(?:=>)?\s*\{([^}]+(?:\{[^}]*\}[^}]*)*)\}/g;
+  let tableMatch: RegExpExecArray | null;
+
+  while ((tableMatch = tableRegex.exec(content)) !== null) {
+    const tableName = tableMatch[1]!;
+    const tableVar = tableMatch[2]!;
+    const tableBody = tableMatch[3]!;
+
+    const columns: TableColumn[] = [];
+
+    // Match column definitions
+    const colRegex = new RegExp(
+      `${tableVar}\\.(increments|integer|string|text|boolean|date|datetime|timestamp|json|uuid|binary|float|decimal|bigInteger)\\s*\\(\\s*['"\`]?(\\w+)['"\`]?`,
+      "g",
+    );
+    let colMatch: RegExpExecArray | null;
+
+    while ((colMatch = colRegex.exec(tableBody)) !== null) {
+      const colType = colMatch[1]!;
+      const colName = colMatch[2]!;
+
+      // Find if there's a .primary() call
+      const colDefRegex = new RegExp(
+        `${tableVar}\\.${colType}\\s*\\(\\s*['"\`]?${colName}['"\`]?[^;]*`,
+        "g",
+      );
+      const colDef = colDefRegex.exec(tableBody)?.[0] || "";
+
+      const isPrimaryKey =
+        /\.primary\(\)/.test(colDef) ||
+        colType === "increments" ||
+        colName === "id";
+      const hasForeignKey = /\.references\(/.test(colDef);
+      const isForeignKey =
+        hasForeignKey || (colName.toLowerCase().endsWith("_id") && !isPrimaryKey);
+
+      columns.push({
+        name: colName,
+        type: colType,
+        isPrimaryKey,
+        isForeignKey,
+      });
+
+      // Extract foreign key reference
+      const fkMatch =
+        /\.references\(\s*['"`](\w+)['"`]\s*\)\.inTable\(\s*['"`](\w+)['"`]\s*\)/.exec(
+          colDef,
+        );
+      if (fkMatch) {
+        const refTable = fkMatch[2]!;
+        edges.push({
+          fromId: `table_${tableName}`,
+          toId: `table_${refTable}`,
+          label: "references",
+          direction: "ONE_TO_MANY",
+        });
+      }
+    }
+
+    models.set(tableName, columns);
+  }
+
+  return { models, edges };
+}
+
+// ─── Main ERD Generator with Format Detection ─────────────────────────────────
+
+function generateERD(fileContents: Record<string, string>): {
+  definition: string;
+  nodes: DiagramNode[];
+  edges: DiagramEdge[];
+  warning?: string;
+} {
+  const nodes: DiagramNode[] = [];
+  const schemaContent = Object.values(fileContents).join("\n");
+  const filePaths = Object.keys(fileContents);
+
+  // Detect schema format
+  let result: ERDResult | null = null;
+
+  // Check for Prisma
+  if (/model\s+\w+\s*\{/.test(schemaContent) || filePaths.some((p) => p.endsWith(".prisma"))) {
+    result = parsePrismaSchema(schemaContent);
+  }
+  // Check for SQL DDL
+  else if (/CREATE\s+TABLE/i.test(schemaContent) || filePaths.some((p) => p.endsWith(".sql"))) {
+    result = parseSQLDDL(schemaContent);
+  }
+  // Check for TypeORM
+  else if (/@Entity\s*\(/.test(schemaContent) || /@Column\s*\(/.test(schemaContent)) {
+    result = parseTypeORM(schemaContent);
+  }
+  // Check for Drizzle
+  else if (/(?:pg|mysql|sqlite)Table\s*\(/.test(schemaContent)) {
+    result = parseDrizzleORM(schemaContent);
+  }
+  // Check for Sequelize
+  else if (/sequelize\.define|Model\.init/.test(schemaContent)) {
+    result = parseSequelize(schemaContent);
+  }
+  // Check for Mongoose
+  else if (/new\s+(?:mongoose\.)?Schema\s*\(/.test(schemaContent) || /mongoose\.model/.test(schemaContent)) {
+    result = parseMongoose(schemaContent);
+  }
+  // Check for Knex
+  else if (/createTable\s*\(/.test(schemaContent) || /knex\.schema/.test(schemaContent)) {
+    result = parseKnex(schemaContent);
+  }
+
+  if (!result || result.models.size === 0) {
+    return {
+      definition: "",
+      nodes: [],
+      edges: [],
+      warning:
+        "No database schema detected. Supported formats: Prisma, SQL DDL, TypeORM, Sequelize, Drizzle ORM, Mongoose, Knex.js",
+    };
+  }
+
+  // Convert to nodes
+  for (const [modelName, columns] of result.models) {
+    const detail: DiagramNodeDetailTable = { columns };
+    nodes.push({
+      id: `table_${modelName}`,
+      label: modelName,
+      type: "TABLE",
+      detail,
+    });
+  }
+
   // Build Mermaid ERD definition
   const lines: string[] = ["erDiagram"];
 
-  for (const [modelName, columns] of models) {
+  for (const [modelName, columns] of result.models) {
     lines.push(`  ${modelName} {`);
     for (const col of columns) {
       const pkMarker = col.isPrimaryKey ? " PK" : col.isForeignKey ? " FK" : "";
@@ -204,7 +815,7 @@ function generateERD(fileContents: Record<string, string>): {
     lines.push("  }");
   }
 
-  for (const edge of edges) {
+  for (const edge of result.edges) {
     const fromModel = edge.fromId.replace("table_", "");
     const toModel = edge.toId.replace("table_", "");
     const rel =
@@ -219,7 +830,7 @@ function generateERD(fileContents: Record<string, string>): {
   return {
     definition: lines.join("\n"),
     nodes,
-    edges,
+    edges: result.edges,
   };
 }
 

@@ -17,6 +17,7 @@
 - **🔗 GitHub Integration** - Seamlessly connect your GitHub repositories and review pull requests
 - **👥 Team Collaboration** - Work together with team members on code reviews with real-time features
 - **📊 Analytics Dashboard** - Track review metrics, code quality trends, and team performance
+- **📐 Automatic Diagrams** - Generate ERD, Class, and Use-Case diagrams from your codebase (supports Prisma, TypeORM, Sequelize, Drizzle, Mongoose, Knex, SQL DDL)
 - **⚡ Real-time Updates** - Live notifications and collaborative review features via Pusher
 - **🎨 Modern UI** - Beautiful, responsive interface with dark mode support
 - **🔒 Rate Limiting** - Built-in protection against abuse using Upstash Redis

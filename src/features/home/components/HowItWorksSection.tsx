@@ -27,6 +27,7 @@ const steps = [
 export function HowItWorksSection() {
   return (
     <section
+      id="how-it-works"
       className="relative border-t border-white/5 bg-zinc-950/50"
       aria-labelledby="how-it-works-heading"
     >
