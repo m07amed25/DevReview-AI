@@ -49,6 +49,11 @@ export type Review = $Result.DefaultSelection<Prisma.$ReviewPayload>
  */
 export type ReviewFeedback = $Result.DefaultSelection<Prisma.$ReviewFeedbackPayload>
 /**
+ * Model SecurityIssue
+ * 
+ */
+export type SecurityIssue = $Result.DefaultSelection<Prisma.$SecurityIssuePayload>
+/**
  * Model ReviewThread
  * 
  */
@@ -174,6 +179,28 @@ export namespace $Enums {
 };
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
+
+
+export const SecuritySeverity: {
+  CRITICAL: 'CRITICAL',
+  HIGH: 'HIGH',
+  MEDIUM: 'MEDIUM',
+  LOW: 'LOW',
+  INFO: 'INFO'
+};
+
+export type SecuritySeverity = (typeof SecuritySeverity)[keyof typeof SecuritySeverity]
+
+
+export const SecurityIssueType: {
+  VULNERABILITY: 'VULNERABILITY',
+  SECRET_EXPOSURE: 'SECRET_EXPOSURE',
+  OWASP_TOP_10: 'OWASP_TOP_10',
+  CODE_QUALITY: 'CODE_QUALITY',
+  CWE: 'CWE'
+};
+
+export type SecurityIssueType = (typeof SecurityIssueType)[keyof typeof SecurityIssueType]
 
 
 export const ReviewStatus: {
@@ -336,6 +363,14 @@ export type SsoType = (typeof SsoType)[keyof typeof SsoType]
 export type UserRole = $Enums.UserRole
 
 export const UserRole: typeof $Enums.UserRole
+
+export type SecuritySeverity = $Enums.SecuritySeverity
+
+export const SecuritySeverity: typeof $Enums.SecuritySeverity
+
+export type SecurityIssueType = $Enums.SecurityIssueType
+
+export const SecurityIssueType: typeof $Enums.SecurityIssueType
 
 export type ReviewStatus = $Enums.ReviewStatus
 
@@ -588,6 +623,16 @@ export class PrismaClient<
     * ```
     */
   get reviewFeedback(): Prisma.ReviewFeedbackDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.securityIssue`: Exposes CRUD operations for the **SecurityIssue** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SecurityIssues
+    * const securityIssues = await prisma.securityIssue.findMany()
+    * ```
+    */
+  get securityIssue(): Prisma.SecurityIssueDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.reviewThread`: Exposes CRUD operations for the **ReviewThread** model.
@@ -1266,6 +1311,7 @@ export namespace Prisma {
     Repository: 'Repository',
     Review: 'Review',
     ReviewFeedback: 'ReviewFeedback',
+    SecurityIssue: 'SecurityIssue',
     ReviewThread: 'ReviewThread',
     ReviewThreadComment: 'ReviewThreadComment',
     ReviewThreadCommentReaction: 'ReviewThreadCommentReaction',
@@ -1307,7 +1353,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "repository" | "review" | "reviewFeedback" | "reviewThread" | "reviewThreadComment" | "reviewThreadCommentReaction" | "reviewApproval" | "reviewAssignment" | "team" | "teamMember" | "teamAction" | "notification" | "webhookConfig" | "scheduledScanConfig" | "scheduledScanRun" | "gitHubComment" | "gitHubStatusCheck" | "branchProtectionRecommendation" | "diagram" | "reviewRule" | "systemSettings" | "supportMessage" | "auditLog" | "ssoProvider" | "customRole" | "userCustomRole"
+      modelProps: "user" | "session" | "account" | "verification" | "repository" | "review" | "reviewFeedback" | "securityIssue" | "reviewThread" | "reviewThreadComment" | "reviewThreadCommentReaction" | "reviewApproval" | "reviewAssignment" | "team" | "teamMember" | "teamAction" | "notification" | "webhookConfig" | "scheduledScanConfig" | "scheduledScanRun" | "gitHubComment" | "gitHubStatusCheck" | "branchProtectionRecommendation" | "diagram" | "reviewRule" | "systemSettings" | "supportMessage" | "auditLog" | "ssoProvider" | "customRole" | "userCustomRole"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1826,6 +1872,80 @@ export namespace Prisma {
           count: {
             args: Prisma.ReviewFeedbackCountArgs<ExtArgs>
             result: $Utils.Optional<ReviewFeedbackCountAggregateOutputType> | number
+          }
+        }
+      }
+      SecurityIssue: {
+        payload: Prisma.$SecurityIssuePayload<ExtArgs>
+        fields: Prisma.SecurityIssueFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SecurityIssueFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecurityIssuePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SecurityIssueFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecurityIssuePayload>
+          }
+          findFirst: {
+            args: Prisma.SecurityIssueFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecurityIssuePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SecurityIssueFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecurityIssuePayload>
+          }
+          findMany: {
+            args: Prisma.SecurityIssueFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecurityIssuePayload>[]
+          }
+          create: {
+            args: Prisma.SecurityIssueCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecurityIssuePayload>
+          }
+          createMany: {
+            args: Prisma.SecurityIssueCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SecurityIssueCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecurityIssuePayload>[]
+          }
+          delete: {
+            args: Prisma.SecurityIssueDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecurityIssuePayload>
+          }
+          update: {
+            args: Prisma.SecurityIssueUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecurityIssuePayload>
+          }
+          deleteMany: {
+            args: Prisma.SecurityIssueDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SecurityIssueUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SecurityIssueUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecurityIssuePayload>[]
+          }
+          upsert: {
+            args: Prisma.SecurityIssueUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecurityIssuePayload>
+          }
+          aggregate: {
+            args: Prisma.SecurityIssueAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSecurityIssue>
+          }
+          groupBy: {
+            args: Prisma.SecurityIssueGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SecurityIssueGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SecurityIssueCountArgs<ExtArgs>
+            result: $Utils.Optional<SecurityIssueCountAggregateOutputType> | number
           }
         }
       }
@@ -3634,6 +3754,7 @@ export namespace Prisma {
     repository?: RepositoryOmit
     review?: ReviewOmit
     reviewFeedback?: ReviewFeedbackOmit
+    securityIssue?: SecurityIssueOmit
     reviewThread?: ReviewThreadOmit
     reviewThreadComment?: ReviewThreadCommentOmit
     reviewThreadCommentReaction?: ReviewThreadCommentReactionOmit
@@ -3966,6 +4087,7 @@ export namespace Prisma {
     feedbacks: number
     approvals: number
     assignments: number
+    securityIssues: number
   }
 
   export type ReviewCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3974,6 +4096,7 @@ export namespace Prisma {
     feedbacks?: boolean | ReviewCountOutputTypeCountFeedbacksArgs
     approvals?: boolean | ReviewCountOutputTypeCountApprovalsArgs
     assignments?: boolean | ReviewCountOutputTypeCountAssignmentsArgs
+    securityIssues?: boolean | ReviewCountOutputTypeCountSecurityIssuesArgs
   }
 
   // Custom InputTypes
@@ -4020,6 +4143,13 @@ export namespace Prisma {
    */
   export type ReviewCountOutputTypeCountAssignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReviewAssignmentWhereInput
+  }
+
+  /**
+   * ReviewCountOutputType without action
+   */
+  export type ReviewCountOutputTypeCountSecurityIssuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SecurityIssueWhereInput
   }
 
 
@@ -10871,6 +11001,7 @@ export namespace Prisma {
     feedbacks?: boolean | Review$feedbacksArgs<ExtArgs>
     approvals?: boolean | Review$approvalsArgs<ExtArgs>
     assignments?: boolean | Review$assignmentsArgs<ExtArgs>
+    securityIssues?: boolean | Review$securityIssuesArgs<ExtArgs>
     _count?: boolean | ReviewCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["review"]>
 
@@ -10949,6 +11080,7 @@ export namespace Prisma {
     feedbacks?: boolean | Review$feedbacksArgs<ExtArgs>
     approvals?: boolean | Review$approvalsArgs<ExtArgs>
     assignments?: boolean | Review$assignmentsArgs<ExtArgs>
+    securityIssues?: boolean | Review$securityIssuesArgs<ExtArgs>
     _count?: boolean | ReviewCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ReviewIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10975,6 +11107,7 @@ export namespace Prisma {
       feedbacks: Prisma.$ReviewFeedbackPayload<ExtArgs>[]
       approvals: Prisma.$ReviewApprovalPayload<ExtArgs>[]
       assignments: Prisma.$ReviewAssignmentPayload<ExtArgs>[]
+      securityIssues: Prisma.$SecurityIssuePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -11397,6 +11530,7 @@ export namespace Prisma {
     feedbacks<T extends Review$feedbacksArgs<ExtArgs> = {}>(args?: Subset<T, Review$feedbacksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     approvals<T extends Review$approvalsArgs<ExtArgs> = {}>(args?: Subset<T, Review$approvalsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewApprovalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     assignments<T extends Review$assignmentsArgs<ExtArgs> = {}>(args?: Subset<T, Review$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    securityIssues<T extends Review$securityIssuesArgs<ExtArgs> = {}>(args?: Subset<T, Review$securityIssuesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SecurityIssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12012,6 +12146,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ReviewAssignmentScalarFieldEnum | ReviewAssignmentScalarFieldEnum[]
+  }
+
+  /**
+   * Review.securityIssues
+   */
+  export type Review$securityIssuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecurityIssue
+     */
+    select?: SecurityIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecurityIssue
+     */
+    omit?: SecurityIssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecurityIssueInclude<ExtArgs> | null
+    where?: SecurityIssueWhereInput
+    orderBy?: SecurityIssueOrderByWithRelationInput | SecurityIssueOrderByWithRelationInput[]
+    cursor?: SecurityIssueWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SecurityIssueScalarFieldEnum | SecurityIssueScalarFieldEnum[]
   }
 
   /**
@@ -13143,6 +13301,1229 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ReviewFeedbackInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SecurityIssue
+   */
+
+  export type AggregateSecurityIssue = {
+    _count: SecurityIssueCountAggregateOutputType | null
+    _min: SecurityIssueMinAggregateOutputType | null
+    _max: SecurityIssueMaxAggregateOutputType | null
+  }
+
+  export type SecurityIssueMinAggregateOutputType = {
+    id: string | null
+    reviewId: string | null
+    severity: $Enums.SecuritySeverity | null
+    type: $Enums.SecurityIssueType | null
+    cveId: string | null
+    cweId: string | null
+    packageName: string | null
+    packageVersion: string | null
+    title: string | null
+    description: string | null
+    remediation: string | null
+    falsePositive: boolean | null
+    resolved: boolean | null
+    resolvedAt: Date | null
+    resolvedBy: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SecurityIssueMaxAggregateOutputType = {
+    id: string | null
+    reviewId: string | null
+    severity: $Enums.SecuritySeverity | null
+    type: $Enums.SecurityIssueType | null
+    cveId: string | null
+    cweId: string | null
+    packageName: string | null
+    packageVersion: string | null
+    title: string | null
+    description: string | null
+    remediation: string | null
+    falsePositive: boolean | null
+    resolved: boolean | null
+    resolvedAt: Date | null
+    resolvedBy: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SecurityIssueCountAggregateOutputType = {
+    id: number
+    reviewId: number
+    severity: number
+    type: number
+    cveId: number
+    cweId: number
+    packageName: number
+    packageVersion: number
+    title: number
+    description: number
+    remediation: number
+    affectedLines: number
+    falsePositive: number
+    resolved: number
+    resolvedAt: number
+    resolvedBy: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SecurityIssueMinAggregateInputType = {
+    id?: true
+    reviewId?: true
+    severity?: true
+    type?: true
+    cveId?: true
+    cweId?: true
+    packageName?: true
+    packageVersion?: true
+    title?: true
+    description?: true
+    remediation?: true
+    falsePositive?: true
+    resolved?: true
+    resolvedAt?: true
+    resolvedBy?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SecurityIssueMaxAggregateInputType = {
+    id?: true
+    reviewId?: true
+    severity?: true
+    type?: true
+    cveId?: true
+    cweId?: true
+    packageName?: true
+    packageVersion?: true
+    title?: true
+    description?: true
+    remediation?: true
+    falsePositive?: true
+    resolved?: true
+    resolvedAt?: true
+    resolvedBy?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SecurityIssueCountAggregateInputType = {
+    id?: true
+    reviewId?: true
+    severity?: true
+    type?: true
+    cveId?: true
+    cweId?: true
+    packageName?: true
+    packageVersion?: true
+    title?: true
+    description?: true
+    remediation?: true
+    affectedLines?: true
+    falsePositive?: true
+    resolved?: true
+    resolvedAt?: true
+    resolvedBy?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SecurityIssueAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SecurityIssue to aggregate.
+     */
+    where?: SecurityIssueWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SecurityIssues to fetch.
+     */
+    orderBy?: SecurityIssueOrderByWithRelationInput | SecurityIssueOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SecurityIssueWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SecurityIssues from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SecurityIssues.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SecurityIssues
+    **/
+    _count?: true | SecurityIssueCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SecurityIssueMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SecurityIssueMaxAggregateInputType
+  }
+
+  export type GetSecurityIssueAggregateType<T extends SecurityIssueAggregateArgs> = {
+        [P in keyof T & keyof AggregateSecurityIssue]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSecurityIssue[P]>
+      : GetScalarType<T[P], AggregateSecurityIssue[P]>
+  }
+
+
+
+
+  export type SecurityIssueGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SecurityIssueWhereInput
+    orderBy?: SecurityIssueOrderByWithAggregationInput | SecurityIssueOrderByWithAggregationInput[]
+    by: SecurityIssueScalarFieldEnum[] | SecurityIssueScalarFieldEnum
+    having?: SecurityIssueScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SecurityIssueCountAggregateInputType | true
+    _min?: SecurityIssueMinAggregateInputType
+    _max?: SecurityIssueMaxAggregateInputType
+  }
+
+  export type SecurityIssueGroupByOutputType = {
+    id: string
+    reviewId: string
+    severity: $Enums.SecuritySeverity
+    type: $Enums.SecurityIssueType
+    cveId: string | null
+    cweId: string | null
+    packageName: string | null
+    packageVersion: string | null
+    title: string
+    description: string
+    remediation: string
+    affectedLines: JsonValue
+    falsePositive: boolean
+    resolved: boolean
+    resolvedAt: Date | null
+    resolvedBy: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: SecurityIssueCountAggregateOutputType | null
+    _min: SecurityIssueMinAggregateOutputType | null
+    _max: SecurityIssueMaxAggregateOutputType | null
+  }
+
+  type GetSecurityIssueGroupByPayload<T extends SecurityIssueGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SecurityIssueGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SecurityIssueGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SecurityIssueGroupByOutputType[P]>
+            : GetScalarType<T[P], SecurityIssueGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SecurityIssueSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    reviewId?: boolean
+    severity?: boolean
+    type?: boolean
+    cveId?: boolean
+    cweId?: boolean
+    packageName?: boolean
+    packageVersion?: boolean
+    title?: boolean
+    description?: boolean
+    remediation?: boolean
+    affectedLines?: boolean
+    falsePositive?: boolean
+    resolved?: boolean
+    resolvedAt?: boolean
+    resolvedBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["securityIssue"]>
+
+  export type SecurityIssueSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    reviewId?: boolean
+    severity?: boolean
+    type?: boolean
+    cveId?: boolean
+    cweId?: boolean
+    packageName?: boolean
+    packageVersion?: boolean
+    title?: boolean
+    description?: boolean
+    remediation?: boolean
+    affectedLines?: boolean
+    falsePositive?: boolean
+    resolved?: boolean
+    resolvedAt?: boolean
+    resolvedBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["securityIssue"]>
+
+  export type SecurityIssueSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    reviewId?: boolean
+    severity?: boolean
+    type?: boolean
+    cveId?: boolean
+    cweId?: boolean
+    packageName?: boolean
+    packageVersion?: boolean
+    title?: boolean
+    description?: boolean
+    remediation?: boolean
+    affectedLines?: boolean
+    falsePositive?: boolean
+    resolved?: boolean
+    resolvedAt?: boolean
+    resolvedBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["securityIssue"]>
+
+  export type SecurityIssueSelectScalar = {
+    id?: boolean
+    reviewId?: boolean
+    severity?: boolean
+    type?: boolean
+    cveId?: boolean
+    cweId?: boolean
+    packageName?: boolean
+    packageVersion?: boolean
+    title?: boolean
+    description?: boolean
+    remediation?: boolean
+    affectedLines?: boolean
+    falsePositive?: boolean
+    resolved?: boolean
+    resolvedAt?: boolean
+    resolvedBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SecurityIssueOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "reviewId" | "severity" | "type" | "cveId" | "cweId" | "packageName" | "packageVersion" | "title" | "description" | "remediation" | "affectedLines" | "falsePositive" | "resolved" | "resolvedAt" | "resolvedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["securityIssue"]>
+  export type SecurityIssueInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+  }
+  export type SecurityIssueIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+  }
+  export type SecurityIssueIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
+  }
+
+  export type $SecurityIssuePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SecurityIssue"
+    objects: {
+      review: Prisma.$ReviewPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      reviewId: string
+      severity: $Enums.SecuritySeverity
+      type: $Enums.SecurityIssueType
+      cveId: string | null
+      cweId: string | null
+      packageName: string | null
+      packageVersion: string | null
+      title: string
+      description: string
+      remediation: string
+      affectedLines: Prisma.JsonValue
+      falsePositive: boolean
+      resolved: boolean
+      resolvedAt: Date | null
+      resolvedBy: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["securityIssue"]>
+    composites: {}
+  }
+
+  type SecurityIssueGetPayload<S extends boolean | null | undefined | SecurityIssueDefaultArgs> = $Result.GetResult<Prisma.$SecurityIssuePayload, S>
+
+  type SecurityIssueCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SecurityIssueFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SecurityIssueCountAggregateInputType | true
+    }
+
+  export interface SecurityIssueDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SecurityIssue'], meta: { name: 'SecurityIssue' } }
+    /**
+     * Find zero or one SecurityIssue that matches the filter.
+     * @param {SecurityIssueFindUniqueArgs} args - Arguments to find a SecurityIssue
+     * @example
+     * // Get one SecurityIssue
+     * const securityIssue = await prisma.securityIssue.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SecurityIssueFindUniqueArgs>(args: SelectSubset<T, SecurityIssueFindUniqueArgs<ExtArgs>>): Prisma__SecurityIssueClient<$Result.GetResult<Prisma.$SecurityIssuePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SecurityIssue that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SecurityIssueFindUniqueOrThrowArgs} args - Arguments to find a SecurityIssue
+     * @example
+     * // Get one SecurityIssue
+     * const securityIssue = await prisma.securityIssue.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SecurityIssueFindUniqueOrThrowArgs>(args: SelectSubset<T, SecurityIssueFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SecurityIssueClient<$Result.GetResult<Prisma.$SecurityIssuePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SecurityIssue that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SecurityIssueFindFirstArgs} args - Arguments to find a SecurityIssue
+     * @example
+     * // Get one SecurityIssue
+     * const securityIssue = await prisma.securityIssue.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SecurityIssueFindFirstArgs>(args?: SelectSubset<T, SecurityIssueFindFirstArgs<ExtArgs>>): Prisma__SecurityIssueClient<$Result.GetResult<Prisma.$SecurityIssuePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SecurityIssue that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SecurityIssueFindFirstOrThrowArgs} args - Arguments to find a SecurityIssue
+     * @example
+     * // Get one SecurityIssue
+     * const securityIssue = await prisma.securityIssue.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SecurityIssueFindFirstOrThrowArgs>(args?: SelectSubset<T, SecurityIssueFindFirstOrThrowArgs<ExtArgs>>): Prisma__SecurityIssueClient<$Result.GetResult<Prisma.$SecurityIssuePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SecurityIssues that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SecurityIssueFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SecurityIssues
+     * const securityIssues = await prisma.securityIssue.findMany()
+     * 
+     * // Get first 10 SecurityIssues
+     * const securityIssues = await prisma.securityIssue.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const securityIssueWithIdOnly = await prisma.securityIssue.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SecurityIssueFindManyArgs>(args?: SelectSubset<T, SecurityIssueFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SecurityIssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SecurityIssue.
+     * @param {SecurityIssueCreateArgs} args - Arguments to create a SecurityIssue.
+     * @example
+     * // Create one SecurityIssue
+     * const SecurityIssue = await prisma.securityIssue.create({
+     *   data: {
+     *     // ... data to create a SecurityIssue
+     *   }
+     * })
+     * 
+     */
+    create<T extends SecurityIssueCreateArgs>(args: SelectSubset<T, SecurityIssueCreateArgs<ExtArgs>>): Prisma__SecurityIssueClient<$Result.GetResult<Prisma.$SecurityIssuePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SecurityIssues.
+     * @param {SecurityIssueCreateManyArgs} args - Arguments to create many SecurityIssues.
+     * @example
+     * // Create many SecurityIssues
+     * const securityIssue = await prisma.securityIssue.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SecurityIssueCreateManyArgs>(args?: SelectSubset<T, SecurityIssueCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SecurityIssues and returns the data saved in the database.
+     * @param {SecurityIssueCreateManyAndReturnArgs} args - Arguments to create many SecurityIssues.
+     * @example
+     * // Create many SecurityIssues
+     * const securityIssue = await prisma.securityIssue.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SecurityIssues and only return the `id`
+     * const securityIssueWithIdOnly = await prisma.securityIssue.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SecurityIssueCreateManyAndReturnArgs>(args?: SelectSubset<T, SecurityIssueCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SecurityIssuePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SecurityIssue.
+     * @param {SecurityIssueDeleteArgs} args - Arguments to delete one SecurityIssue.
+     * @example
+     * // Delete one SecurityIssue
+     * const SecurityIssue = await prisma.securityIssue.delete({
+     *   where: {
+     *     // ... filter to delete one SecurityIssue
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SecurityIssueDeleteArgs>(args: SelectSubset<T, SecurityIssueDeleteArgs<ExtArgs>>): Prisma__SecurityIssueClient<$Result.GetResult<Prisma.$SecurityIssuePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SecurityIssue.
+     * @param {SecurityIssueUpdateArgs} args - Arguments to update one SecurityIssue.
+     * @example
+     * // Update one SecurityIssue
+     * const securityIssue = await prisma.securityIssue.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SecurityIssueUpdateArgs>(args: SelectSubset<T, SecurityIssueUpdateArgs<ExtArgs>>): Prisma__SecurityIssueClient<$Result.GetResult<Prisma.$SecurityIssuePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SecurityIssues.
+     * @param {SecurityIssueDeleteManyArgs} args - Arguments to filter SecurityIssues to delete.
+     * @example
+     * // Delete a few SecurityIssues
+     * const { count } = await prisma.securityIssue.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SecurityIssueDeleteManyArgs>(args?: SelectSubset<T, SecurityIssueDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SecurityIssues.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SecurityIssueUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SecurityIssues
+     * const securityIssue = await prisma.securityIssue.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SecurityIssueUpdateManyArgs>(args: SelectSubset<T, SecurityIssueUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SecurityIssues and returns the data updated in the database.
+     * @param {SecurityIssueUpdateManyAndReturnArgs} args - Arguments to update many SecurityIssues.
+     * @example
+     * // Update many SecurityIssues
+     * const securityIssue = await prisma.securityIssue.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SecurityIssues and only return the `id`
+     * const securityIssueWithIdOnly = await prisma.securityIssue.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SecurityIssueUpdateManyAndReturnArgs>(args: SelectSubset<T, SecurityIssueUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SecurityIssuePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SecurityIssue.
+     * @param {SecurityIssueUpsertArgs} args - Arguments to update or create a SecurityIssue.
+     * @example
+     * // Update or create a SecurityIssue
+     * const securityIssue = await prisma.securityIssue.upsert({
+     *   create: {
+     *     // ... data to create a SecurityIssue
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SecurityIssue we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SecurityIssueUpsertArgs>(args: SelectSubset<T, SecurityIssueUpsertArgs<ExtArgs>>): Prisma__SecurityIssueClient<$Result.GetResult<Prisma.$SecurityIssuePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SecurityIssues.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SecurityIssueCountArgs} args - Arguments to filter SecurityIssues to count.
+     * @example
+     * // Count the number of SecurityIssues
+     * const count = await prisma.securityIssue.count({
+     *   where: {
+     *     // ... the filter for the SecurityIssues we want to count
+     *   }
+     * })
+    **/
+    count<T extends SecurityIssueCountArgs>(
+      args?: Subset<T, SecurityIssueCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SecurityIssueCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SecurityIssue.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SecurityIssueAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SecurityIssueAggregateArgs>(args: Subset<T, SecurityIssueAggregateArgs>): Prisma.PrismaPromise<GetSecurityIssueAggregateType<T>>
+
+    /**
+     * Group by SecurityIssue.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SecurityIssueGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SecurityIssueGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SecurityIssueGroupByArgs['orderBy'] }
+        : { orderBy?: SecurityIssueGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SecurityIssueGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSecurityIssueGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SecurityIssue model
+   */
+  readonly fields: SecurityIssueFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SecurityIssue.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SecurityIssueClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    review<T extends ReviewDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ReviewDefaultArgs<ExtArgs>>): Prisma__ReviewClient<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SecurityIssue model
+   */
+  interface SecurityIssueFieldRefs {
+    readonly id: FieldRef<"SecurityIssue", 'String'>
+    readonly reviewId: FieldRef<"SecurityIssue", 'String'>
+    readonly severity: FieldRef<"SecurityIssue", 'SecuritySeverity'>
+    readonly type: FieldRef<"SecurityIssue", 'SecurityIssueType'>
+    readonly cveId: FieldRef<"SecurityIssue", 'String'>
+    readonly cweId: FieldRef<"SecurityIssue", 'String'>
+    readonly packageName: FieldRef<"SecurityIssue", 'String'>
+    readonly packageVersion: FieldRef<"SecurityIssue", 'String'>
+    readonly title: FieldRef<"SecurityIssue", 'String'>
+    readonly description: FieldRef<"SecurityIssue", 'String'>
+    readonly remediation: FieldRef<"SecurityIssue", 'String'>
+    readonly affectedLines: FieldRef<"SecurityIssue", 'Json'>
+    readonly falsePositive: FieldRef<"SecurityIssue", 'Boolean'>
+    readonly resolved: FieldRef<"SecurityIssue", 'Boolean'>
+    readonly resolvedAt: FieldRef<"SecurityIssue", 'DateTime'>
+    readonly resolvedBy: FieldRef<"SecurityIssue", 'String'>
+    readonly createdAt: FieldRef<"SecurityIssue", 'DateTime'>
+    readonly updatedAt: FieldRef<"SecurityIssue", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SecurityIssue findUnique
+   */
+  export type SecurityIssueFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecurityIssue
+     */
+    select?: SecurityIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecurityIssue
+     */
+    omit?: SecurityIssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecurityIssueInclude<ExtArgs> | null
+    /**
+     * Filter, which SecurityIssue to fetch.
+     */
+    where: SecurityIssueWhereUniqueInput
+  }
+
+  /**
+   * SecurityIssue findUniqueOrThrow
+   */
+  export type SecurityIssueFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecurityIssue
+     */
+    select?: SecurityIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecurityIssue
+     */
+    omit?: SecurityIssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecurityIssueInclude<ExtArgs> | null
+    /**
+     * Filter, which SecurityIssue to fetch.
+     */
+    where: SecurityIssueWhereUniqueInput
+  }
+
+  /**
+   * SecurityIssue findFirst
+   */
+  export type SecurityIssueFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecurityIssue
+     */
+    select?: SecurityIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecurityIssue
+     */
+    omit?: SecurityIssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecurityIssueInclude<ExtArgs> | null
+    /**
+     * Filter, which SecurityIssue to fetch.
+     */
+    where?: SecurityIssueWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SecurityIssues to fetch.
+     */
+    orderBy?: SecurityIssueOrderByWithRelationInput | SecurityIssueOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SecurityIssues.
+     */
+    cursor?: SecurityIssueWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SecurityIssues from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SecurityIssues.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SecurityIssues.
+     */
+    distinct?: SecurityIssueScalarFieldEnum | SecurityIssueScalarFieldEnum[]
+  }
+
+  /**
+   * SecurityIssue findFirstOrThrow
+   */
+  export type SecurityIssueFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecurityIssue
+     */
+    select?: SecurityIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecurityIssue
+     */
+    omit?: SecurityIssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecurityIssueInclude<ExtArgs> | null
+    /**
+     * Filter, which SecurityIssue to fetch.
+     */
+    where?: SecurityIssueWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SecurityIssues to fetch.
+     */
+    orderBy?: SecurityIssueOrderByWithRelationInput | SecurityIssueOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SecurityIssues.
+     */
+    cursor?: SecurityIssueWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SecurityIssues from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SecurityIssues.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SecurityIssues.
+     */
+    distinct?: SecurityIssueScalarFieldEnum | SecurityIssueScalarFieldEnum[]
+  }
+
+  /**
+   * SecurityIssue findMany
+   */
+  export type SecurityIssueFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecurityIssue
+     */
+    select?: SecurityIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecurityIssue
+     */
+    omit?: SecurityIssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecurityIssueInclude<ExtArgs> | null
+    /**
+     * Filter, which SecurityIssues to fetch.
+     */
+    where?: SecurityIssueWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SecurityIssues to fetch.
+     */
+    orderBy?: SecurityIssueOrderByWithRelationInput | SecurityIssueOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SecurityIssues.
+     */
+    cursor?: SecurityIssueWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SecurityIssues from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SecurityIssues.
+     */
+    skip?: number
+    distinct?: SecurityIssueScalarFieldEnum | SecurityIssueScalarFieldEnum[]
+  }
+
+  /**
+   * SecurityIssue create
+   */
+  export type SecurityIssueCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecurityIssue
+     */
+    select?: SecurityIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecurityIssue
+     */
+    omit?: SecurityIssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecurityIssueInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SecurityIssue.
+     */
+    data: XOR<SecurityIssueCreateInput, SecurityIssueUncheckedCreateInput>
+  }
+
+  /**
+   * SecurityIssue createMany
+   */
+  export type SecurityIssueCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SecurityIssues.
+     */
+    data: SecurityIssueCreateManyInput | SecurityIssueCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SecurityIssue createManyAndReturn
+   */
+  export type SecurityIssueCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecurityIssue
+     */
+    select?: SecurityIssueSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecurityIssue
+     */
+    omit?: SecurityIssueOmit<ExtArgs> | null
+    /**
+     * The data used to create many SecurityIssues.
+     */
+    data: SecurityIssueCreateManyInput | SecurityIssueCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecurityIssueIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SecurityIssue update
+   */
+  export type SecurityIssueUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecurityIssue
+     */
+    select?: SecurityIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecurityIssue
+     */
+    omit?: SecurityIssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecurityIssueInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SecurityIssue.
+     */
+    data: XOR<SecurityIssueUpdateInput, SecurityIssueUncheckedUpdateInput>
+    /**
+     * Choose, which SecurityIssue to update.
+     */
+    where: SecurityIssueWhereUniqueInput
+  }
+
+  /**
+   * SecurityIssue updateMany
+   */
+  export type SecurityIssueUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SecurityIssues.
+     */
+    data: XOR<SecurityIssueUpdateManyMutationInput, SecurityIssueUncheckedUpdateManyInput>
+    /**
+     * Filter which SecurityIssues to update
+     */
+    where?: SecurityIssueWhereInput
+    /**
+     * Limit how many SecurityIssues to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SecurityIssue updateManyAndReturn
+   */
+  export type SecurityIssueUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecurityIssue
+     */
+    select?: SecurityIssueSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecurityIssue
+     */
+    omit?: SecurityIssueOmit<ExtArgs> | null
+    /**
+     * The data used to update SecurityIssues.
+     */
+    data: XOR<SecurityIssueUpdateManyMutationInput, SecurityIssueUncheckedUpdateManyInput>
+    /**
+     * Filter which SecurityIssues to update
+     */
+    where?: SecurityIssueWhereInput
+    /**
+     * Limit how many SecurityIssues to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecurityIssueIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SecurityIssue upsert
+   */
+  export type SecurityIssueUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecurityIssue
+     */
+    select?: SecurityIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecurityIssue
+     */
+    omit?: SecurityIssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecurityIssueInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SecurityIssue to update in case it exists.
+     */
+    where: SecurityIssueWhereUniqueInput
+    /**
+     * In case the SecurityIssue found by the `where` argument doesn't exist, create a new SecurityIssue with this data.
+     */
+    create: XOR<SecurityIssueCreateInput, SecurityIssueUncheckedCreateInput>
+    /**
+     * In case the SecurityIssue was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SecurityIssueUpdateInput, SecurityIssueUncheckedUpdateInput>
+  }
+
+  /**
+   * SecurityIssue delete
+   */
+  export type SecurityIssueDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecurityIssue
+     */
+    select?: SecurityIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecurityIssue
+     */
+    omit?: SecurityIssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecurityIssueInclude<ExtArgs> | null
+    /**
+     * Filter which SecurityIssue to delete.
+     */
+    where: SecurityIssueWhereUniqueInput
+  }
+
+  /**
+   * SecurityIssue deleteMany
+   */
+  export type SecurityIssueDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SecurityIssues to delete
+     */
+    where?: SecurityIssueWhereInput
+    /**
+     * Limit how many SecurityIssues to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SecurityIssue without action
+   */
+  export type SecurityIssueDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecurityIssue
+     */
+    select?: SecurityIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecurityIssue
+     */
+    omit?: SecurityIssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecurityIssueInclude<ExtArgs> | null
   }
 
 
@@ -38843,6 +40224,30 @@ export namespace Prisma {
   export type ReviewFeedbackScalarFieldEnum = (typeof ReviewFeedbackScalarFieldEnum)[keyof typeof ReviewFeedbackScalarFieldEnum]
 
 
+  export const SecurityIssueScalarFieldEnum: {
+    id: 'id',
+    reviewId: 'reviewId',
+    severity: 'severity',
+    type: 'type',
+    cveId: 'cveId',
+    cweId: 'cweId',
+    packageName: 'packageName',
+    packageVersion: 'packageVersion',
+    title: 'title',
+    description: 'description',
+    remediation: 'remediation',
+    affectedLines: 'affectedLines',
+    falsePositive: 'falsePositive',
+    resolved: 'resolved',
+    resolvedAt: 'resolvedAt',
+    resolvedBy: 'resolvedBy',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SecurityIssueScalarFieldEnum = (typeof SecurityIssueScalarFieldEnum)[keyof typeof SecurityIssueScalarFieldEnum]
+
+
   export const ReviewThreadScalarFieldEnum: {
     id: 'id',
     reviewId: 'reviewId',
@@ -39181,6 +40586,13 @@ export namespace Prisma {
   export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
+  export const JsonNullValueInput: {
+    JsonNull: typeof JsonNull
+  };
+
+  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
   export const QueryMode: {
     default: 'default',
     insensitive: 'insensitive'
@@ -39299,6 +40711,34 @@ export namespace Prisma {
    * Reference to a field of type 'QueryMode'
    */
   export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+  /**
+   * Reference to a field of type 'SecuritySeverity'
+   */
+  export type EnumSecuritySeverityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SecuritySeverity'>
+    
+
+
+  /**
+   * Reference to a field of type 'SecuritySeverity[]'
+   */
+  export type ListEnumSecuritySeverityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SecuritySeverity[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'SecurityIssueType'
+   */
+  export type EnumSecurityIssueTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SecurityIssueType'>
+    
+
+
+  /**
+   * Reference to a field of type 'SecurityIssueType[]'
+   */
+  export type ListEnumSecurityIssueTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SecurityIssueType[]'>
     
 
 
@@ -40104,6 +41544,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackListRelationFilter
     approvals?: ReviewApprovalListRelationFilter
     assignments?: ReviewAssignmentListRelationFilter
+    securityIssues?: SecurityIssueListRelationFilter
   }
 
   export type ReviewOrderByWithRelationInput = {
@@ -40133,6 +41574,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackOrderByRelationAggregateInput
     approvals?: ReviewApprovalOrderByRelationAggregateInput
     assignments?: ReviewAssignmentOrderByRelationAggregateInput
+    securityIssues?: SecurityIssueOrderByRelationAggregateInput
   }
 
   export type ReviewWhereUniqueInput = Prisma.AtLeast<{
@@ -40165,6 +41607,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackListRelationFilter
     approvals?: ReviewApprovalListRelationFilter
     assignments?: ReviewAssignmentListRelationFilter
+    securityIssues?: SecurityIssueListRelationFilter
   }, "id">
 
   export type ReviewOrderByWithAggregationInput = {
@@ -40277,6 +41720,126 @@ export namespace Prisma {
     rating?: IntWithAggregatesFilter<"ReviewFeedback"> | number
     comment?: StringNullableWithAggregatesFilter<"ReviewFeedback"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"ReviewFeedback"> | Date | string
+  }
+
+  export type SecurityIssueWhereInput = {
+    AND?: SecurityIssueWhereInput | SecurityIssueWhereInput[]
+    OR?: SecurityIssueWhereInput[]
+    NOT?: SecurityIssueWhereInput | SecurityIssueWhereInput[]
+    id?: StringFilter<"SecurityIssue"> | string
+    reviewId?: StringFilter<"SecurityIssue"> | string
+    severity?: EnumSecuritySeverityFilter<"SecurityIssue"> | $Enums.SecuritySeverity
+    type?: EnumSecurityIssueTypeFilter<"SecurityIssue"> | $Enums.SecurityIssueType
+    cveId?: StringNullableFilter<"SecurityIssue"> | string | null
+    cweId?: StringNullableFilter<"SecurityIssue"> | string | null
+    packageName?: StringNullableFilter<"SecurityIssue"> | string | null
+    packageVersion?: StringNullableFilter<"SecurityIssue"> | string | null
+    title?: StringFilter<"SecurityIssue"> | string
+    description?: StringFilter<"SecurityIssue"> | string
+    remediation?: StringFilter<"SecurityIssue"> | string
+    affectedLines?: JsonFilter<"SecurityIssue">
+    falsePositive?: BoolFilter<"SecurityIssue"> | boolean
+    resolved?: BoolFilter<"SecurityIssue"> | boolean
+    resolvedAt?: DateTimeNullableFilter<"SecurityIssue"> | Date | string | null
+    resolvedBy?: StringNullableFilter<"SecurityIssue"> | string | null
+    createdAt?: DateTimeFilter<"SecurityIssue"> | Date | string
+    updatedAt?: DateTimeFilter<"SecurityIssue"> | Date | string
+    review?: XOR<ReviewScalarRelationFilter, ReviewWhereInput>
+  }
+
+  export type SecurityIssueOrderByWithRelationInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    severity?: SortOrder
+    type?: SortOrder
+    cveId?: SortOrderInput | SortOrder
+    cweId?: SortOrderInput | SortOrder
+    packageName?: SortOrderInput | SortOrder
+    packageVersion?: SortOrderInput | SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    remediation?: SortOrder
+    affectedLines?: SortOrder
+    falsePositive?: SortOrder
+    resolved?: SortOrder
+    resolvedAt?: SortOrderInput | SortOrder
+    resolvedBy?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    review?: ReviewOrderByWithRelationInput
+  }
+
+  export type SecurityIssueWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: SecurityIssueWhereInput | SecurityIssueWhereInput[]
+    OR?: SecurityIssueWhereInput[]
+    NOT?: SecurityIssueWhereInput | SecurityIssueWhereInput[]
+    reviewId?: StringFilter<"SecurityIssue"> | string
+    severity?: EnumSecuritySeverityFilter<"SecurityIssue"> | $Enums.SecuritySeverity
+    type?: EnumSecurityIssueTypeFilter<"SecurityIssue"> | $Enums.SecurityIssueType
+    cveId?: StringNullableFilter<"SecurityIssue"> | string | null
+    cweId?: StringNullableFilter<"SecurityIssue"> | string | null
+    packageName?: StringNullableFilter<"SecurityIssue"> | string | null
+    packageVersion?: StringNullableFilter<"SecurityIssue"> | string | null
+    title?: StringFilter<"SecurityIssue"> | string
+    description?: StringFilter<"SecurityIssue"> | string
+    remediation?: StringFilter<"SecurityIssue"> | string
+    affectedLines?: JsonFilter<"SecurityIssue">
+    falsePositive?: BoolFilter<"SecurityIssue"> | boolean
+    resolved?: BoolFilter<"SecurityIssue"> | boolean
+    resolvedAt?: DateTimeNullableFilter<"SecurityIssue"> | Date | string | null
+    resolvedBy?: StringNullableFilter<"SecurityIssue"> | string | null
+    createdAt?: DateTimeFilter<"SecurityIssue"> | Date | string
+    updatedAt?: DateTimeFilter<"SecurityIssue"> | Date | string
+    review?: XOR<ReviewScalarRelationFilter, ReviewWhereInput>
+  }, "id">
+
+  export type SecurityIssueOrderByWithAggregationInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    severity?: SortOrder
+    type?: SortOrder
+    cveId?: SortOrderInput | SortOrder
+    cweId?: SortOrderInput | SortOrder
+    packageName?: SortOrderInput | SortOrder
+    packageVersion?: SortOrderInput | SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    remediation?: SortOrder
+    affectedLines?: SortOrder
+    falsePositive?: SortOrder
+    resolved?: SortOrder
+    resolvedAt?: SortOrderInput | SortOrder
+    resolvedBy?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SecurityIssueCountOrderByAggregateInput
+    _max?: SecurityIssueMaxOrderByAggregateInput
+    _min?: SecurityIssueMinOrderByAggregateInput
+  }
+
+  export type SecurityIssueScalarWhereWithAggregatesInput = {
+    AND?: SecurityIssueScalarWhereWithAggregatesInput | SecurityIssueScalarWhereWithAggregatesInput[]
+    OR?: SecurityIssueScalarWhereWithAggregatesInput[]
+    NOT?: SecurityIssueScalarWhereWithAggregatesInput | SecurityIssueScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SecurityIssue"> | string
+    reviewId?: StringWithAggregatesFilter<"SecurityIssue"> | string
+    severity?: EnumSecuritySeverityWithAggregatesFilter<"SecurityIssue"> | $Enums.SecuritySeverity
+    type?: EnumSecurityIssueTypeWithAggregatesFilter<"SecurityIssue"> | $Enums.SecurityIssueType
+    cveId?: StringNullableWithAggregatesFilter<"SecurityIssue"> | string | null
+    cweId?: StringNullableWithAggregatesFilter<"SecurityIssue"> | string | null
+    packageName?: StringNullableWithAggregatesFilter<"SecurityIssue"> | string | null
+    packageVersion?: StringNullableWithAggregatesFilter<"SecurityIssue"> | string | null
+    title?: StringWithAggregatesFilter<"SecurityIssue"> | string
+    description?: StringWithAggregatesFilter<"SecurityIssue"> | string
+    remediation?: StringWithAggregatesFilter<"SecurityIssue"> | string
+    affectedLines?: JsonWithAggregatesFilter<"SecurityIssue">
+    falsePositive?: BoolWithAggregatesFilter<"SecurityIssue"> | boolean
+    resolved?: BoolWithAggregatesFilter<"SecurityIssue"> | boolean
+    resolvedAt?: DateTimeNullableWithAggregatesFilter<"SecurityIssue"> | Date | string | null
+    resolvedBy?: StringNullableWithAggregatesFilter<"SecurityIssue"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"SecurityIssue"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"SecurityIssue"> | Date | string
   }
 
   export type ReviewThreadWhereInput = {
@@ -42598,6 +44161,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentCreateNestedManyWithoutReviewInput
+    securityIssues?: SecurityIssueCreateNestedManyWithoutReviewInput
   }
 
   export type ReviewUncheckedCreateInput = {
@@ -42624,6 +44188,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalUncheckedCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentUncheckedCreateNestedManyWithoutReviewInput
+    securityIssues?: SecurityIssueUncheckedCreateNestedManyWithoutReviewInput
   }
 
   export type ReviewUpdateInput = {
@@ -42650,6 +44215,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUpdateManyWithoutReviewNestedInput
+    securityIssues?: SecurityIssueUpdateManyWithoutReviewNestedInput
   }
 
   export type ReviewUncheckedUpdateInput = {
@@ -42676,6 +44242,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUncheckedUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUncheckedUpdateManyWithoutReviewNestedInput
+    securityIssues?: SecurityIssueUncheckedUpdateManyWithoutReviewNestedInput
   }
 
   export type ReviewCreateManyInput = {
@@ -42791,6 +44358,152 @@ export namespace Prisma {
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SecurityIssueCreateInput = {
+    id?: string
+    severity: $Enums.SecuritySeverity
+    type?: $Enums.SecurityIssueType
+    cveId?: string | null
+    cweId?: string | null
+    packageName?: string | null
+    packageVersion?: string | null
+    title: string
+    description: string
+    remediation: string
+    affectedLines: JsonNullValueInput | InputJsonValue
+    falsePositive?: boolean
+    resolved?: boolean
+    resolvedAt?: Date | string | null
+    resolvedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    review: ReviewCreateNestedOneWithoutSecurityIssuesInput
+  }
+
+  export type SecurityIssueUncheckedCreateInput = {
+    id?: string
+    reviewId: string
+    severity: $Enums.SecuritySeverity
+    type?: $Enums.SecurityIssueType
+    cveId?: string | null
+    cweId?: string | null
+    packageName?: string | null
+    packageVersion?: string | null
+    title: string
+    description: string
+    remediation: string
+    affectedLines: JsonNullValueInput | InputJsonValue
+    falsePositive?: boolean
+    resolved?: boolean
+    resolvedAt?: Date | string | null
+    resolvedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SecurityIssueUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    severity?: EnumSecuritySeverityFieldUpdateOperationsInput | $Enums.SecuritySeverity
+    type?: EnumSecurityIssueTypeFieldUpdateOperationsInput | $Enums.SecurityIssueType
+    cveId?: NullableStringFieldUpdateOperationsInput | string | null
+    cweId?: NullableStringFieldUpdateOperationsInput | string | null
+    packageName?: NullableStringFieldUpdateOperationsInput | string | null
+    packageVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    remediation?: StringFieldUpdateOperationsInput | string
+    affectedLines?: JsonNullValueInput | InputJsonValue
+    falsePositive?: BoolFieldUpdateOperationsInput | boolean
+    resolved?: BoolFieldUpdateOperationsInput | boolean
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    review?: ReviewUpdateOneRequiredWithoutSecurityIssuesNestedInput
+  }
+
+  export type SecurityIssueUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewId?: StringFieldUpdateOperationsInput | string
+    severity?: EnumSecuritySeverityFieldUpdateOperationsInput | $Enums.SecuritySeverity
+    type?: EnumSecurityIssueTypeFieldUpdateOperationsInput | $Enums.SecurityIssueType
+    cveId?: NullableStringFieldUpdateOperationsInput | string | null
+    cweId?: NullableStringFieldUpdateOperationsInput | string | null
+    packageName?: NullableStringFieldUpdateOperationsInput | string | null
+    packageVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    remediation?: StringFieldUpdateOperationsInput | string
+    affectedLines?: JsonNullValueInput | InputJsonValue
+    falsePositive?: BoolFieldUpdateOperationsInput | boolean
+    resolved?: BoolFieldUpdateOperationsInput | boolean
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SecurityIssueCreateManyInput = {
+    id?: string
+    reviewId: string
+    severity: $Enums.SecuritySeverity
+    type?: $Enums.SecurityIssueType
+    cveId?: string | null
+    cweId?: string | null
+    packageName?: string | null
+    packageVersion?: string | null
+    title: string
+    description: string
+    remediation: string
+    affectedLines: JsonNullValueInput | InputJsonValue
+    falsePositive?: boolean
+    resolved?: boolean
+    resolvedAt?: Date | string | null
+    resolvedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SecurityIssueUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    severity?: EnumSecuritySeverityFieldUpdateOperationsInput | $Enums.SecuritySeverity
+    type?: EnumSecurityIssueTypeFieldUpdateOperationsInput | $Enums.SecurityIssueType
+    cveId?: NullableStringFieldUpdateOperationsInput | string | null
+    cweId?: NullableStringFieldUpdateOperationsInput | string | null
+    packageName?: NullableStringFieldUpdateOperationsInput | string | null
+    packageVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    remediation?: StringFieldUpdateOperationsInput | string
+    affectedLines?: JsonNullValueInput | InputJsonValue
+    falsePositive?: BoolFieldUpdateOperationsInput | boolean
+    resolved?: BoolFieldUpdateOperationsInput | boolean
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SecurityIssueUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewId?: StringFieldUpdateOperationsInput | string
+    severity?: EnumSecuritySeverityFieldUpdateOperationsInput | $Enums.SecuritySeverity
+    type?: EnumSecurityIssueTypeFieldUpdateOperationsInput | $Enums.SecurityIssueType
+    cveId?: NullableStringFieldUpdateOperationsInput | string | null
+    cweId?: NullableStringFieldUpdateOperationsInput | string | null
+    packageName?: NullableStringFieldUpdateOperationsInput | string | null
+    packageVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    remediation?: StringFieldUpdateOperationsInput | string
+    affectedLines?: JsonNullValueInput | InputJsonValue
+    falsePositive?: BoolFieldUpdateOperationsInput | boolean
+    resolved?: BoolFieldUpdateOperationsInput | boolean
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ReviewThreadCreateInput = {
@@ -45258,7 +46971,17 @@ export namespace Prisma {
     isNot?: GitHubStatusCheckWhereInput | null
   }
 
+  export type SecurityIssueListRelationFilter = {
+    every?: SecurityIssueWhereInput
+    some?: SecurityIssueWhereInput
+    none?: SecurityIssueWhereInput
+  }
+
   export type ReviewThreadOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SecurityIssueOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -45418,6 +47141,150 @@ export namespace Prisma {
 
   export type ReviewFeedbackSumOrderByAggregateInput = {
     rating?: SortOrder
+  }
+
+  export type EnumSecuritySeverityFilter<$PrismaModel = never> = {
+    equals?: $Enums.SecuritySeverity | EnumSecuritySeverityFieldRefInput<$PrismaModel>
+    in?: $Enums.SecuritySeverity[] | ListEnumSecuritySeverityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SecuritySeverity[] | ListEnumSecuritySeverityFieldRefInput<$PrismaModel>
+    not?: NestedEnumSecuritySeverityFilter<$PrismaModel> | $Enums.SecuritySeverity
+  }
+
+  export type EnumSecurityIssueTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.SecurityIssueType | EnumSecurityIssueTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SecurityIssueType[] | ListEnumSecurityIssueTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SecurityIssueType[] | ListEnumSecurityIssueTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSecurityIssueTypeFilter<$PrismaModel> | $Enums.SecurityIssueType
+  }
+  export type JsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type SecurityIssueCountOrderByAggregateInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    severity?: SortOrder
+    type?: SortOrder
+    cveId?: SortOrder
+    cweId?: SortOrder
+    packageName?: SortOrder
+    packageVersion?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    remediation?: SortOrder
+    affectedLines?: SortOrder
+    falsePositive?: SortOrder
+    resolved?: SortOrder
+    resolvedAt?: SortOrder
+    resolvedBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SecurityIssueMaxOrderByAggregateInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    severity?: SortOrder
+    type?: SortOrder
+    cveId?: SortOrder
+    cweId?: SortOrder
+    packageName?: SortOrder
+    packageVersion?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    remediation?: SortOrder
+    falsePositive?: SortOrder
+    resolved?: SortOrder
+    resolvedAt?: SortOrder
+    resolvedBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SecurityIssueMinOrderByAggregateInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    severity?: SortOrder
+    type?: SortOrder
+    cveId?: SortOrder
+    cweId?: SortOrder
+    packageName?: SortOrder
+    packageVersion?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    remediation?: SortOrder
+    falsePositive?: SortOrder
+    resolved?: SortOrder
+    resolvedAt?: SortOrder
+    resolvedBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumSecuritySeverityWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SecuritySeverity | EnumSecuritySeverityFieldRefInput<$PrismaModel>
+    in?: $Enums.SecuritySeverity[] | ListEnumSecuritySeverityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SecuritySeverity[] | ListEnumSecuritySeverityFieldRefInput<$PrismaModel>
+    not?: NestedEnumSecuritySeverityWithAggregatesFilter<$PrismaModel> | $Enums.SecuritySeverity
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSecuritySeverityFilter<$PrismaModel>
+    _max?: NestedEnumSecuritySeverityFilter<$PrismaModel>
+  }
+
+  export type EnumSecurityIssueTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SecurityIssueType | EnumSecurityIssueTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SecurityIssueType[] | ListEnumSecurityIssueTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SecurityIssueType[] | ListEnumSecurityIssueTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSecurityIssueTypeWithAggregatesFilter<$PrismaModel> | $Enums.SecurityIssueType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSecurityIssueTypeFilter<$PrismaModel>
+    _max?: NestedEnumSecurityIssueTypeFilter<$PrismaModel>
+  }
+  export type JsonWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedJsonFilter<$PrismaModel>
+    _max?: NestedJsonFilter<$PrismaModel>
   }
 
   export type ReviewThreadCountOrderByAggregateInput = {
@@ -47652,6 +49519,13 @@ export namespace Prisma {
     connect?: ReviewAssignmentWhereUniqueInput | ReviewAssignmentWhereUniqueInput[]
   }
 
+  export type SecurityIssueCreateNestedManyWithoutReviewInput = {
+    create?: XOR<SecurityIssueCreateWithoutReviewInput, SecurityIssueUncheckedCreateWithoutReviewInput> | SecurityIssueCreateWithoutReviewInput[] | SecurityIssueUncheckedCreateWithoutReviewInput[]
+    connectOrCreate?: SecurityIssueCreateOrConnectWithoutReviewInput | SecurityIssueCreateOrConnectWithoutReviewInput[]
+    createMany?: SecurityIssueCreateManyReviewInputEnvelope
+    connect?: SecurityIssueWhereUniqueInput | SecurityIssueWhereUniqueInput[]
+  }
+
   export type ReviewUncheckedCreateNestedManyWithoutParentReviewInput = {
     create?: XOR<ReviewCreateWithoutParentReviewInput, ReviewUncheckedCreateWithoutParentReviewInput> | ReviewCreateWithoutParentReviewInput[] | ReviewUncheckedCreateWithoutParentReviewInput[]
     connectOrCreate?: ReviewCreateOrConnectWithoutParentReviewInput | ReviewCreateOrConnectWithoutParentReviewInput[]
@@ -47697,6 +49571,13 @@ export namespace Prisma {
     connectOrCreate?: ReviewAssignmentCreateOrConnectWithoutReviewInput | ReviewAssignmentCreateOrConnectWithoutReviewInput[]
     createMany?: ReviewAssignmentCreateManyReviewInputEnvelope
     connect?: ReviewAssignmentWhereUniqueInput | ReviewAssignmentWhereUniqueInput[]
+  }
+
+  export type SecurityIssueUncheckedCreateNestedManyWithoutReviewInput = {
+    create?: XOR<SecurityIssueCreateWithoutReviewInput, SecurityIssueUncheckedCreateWithoutReviewInput> | SecurityIssueCreateWithoutReviewInput[] | SecurityIssueUncheckedCreateWithoutReviewInput[]
+    connectOrCreate?: SecurityIssueCreateOrConnectWithoutReviewInput | SecurityIssueCreateOrConnectWithoutReviewInput[]
+    createMany?: SecurityIssueCreateManyReviewInputEnvelope
+    connect?: SecurityIssueWhereUniqueInput | SecurityIssueWhereUniqueInput[]
   }
 
   export type EnumReviewStatusFieldUpdateOperationsInput = {
@@ -47832,6 +49713,20 @@ export namespace Prisma {
     deleteMany?: ReviewAssignmentScalarWhereInput | ReviewAssignmentScalarWhereInput[]
   }
 
+  export type SecurityIssueUpdateManyWithoutReviewNestedInput = {
+    create?: XOR<SecurityIssueCreateWithoutReviewInput, SecurityIssueUncheckedCreateWithoutReviewInput> | SecurityIssueCreateWithoutReviewInput[] | SecurityIssueUncheckedCreateWithoutReviewInput[]
+    connectOrCreate?: SecurityIssueCreateOrConnectWithoutReviewInput | SecurityIssueCreateOrConnectWithoutReviewInput[]
+    upsert?: SecurityIssueUpsertWithWhereUniqueWithoutReviewInput | SecurityIssueUpsertWithWhereUniqueWithoutReviewInput[]
+    createMany?: SecurityIssueCreateManyReviewInputEnvelope
+    set?: SecurityIssueWhereUniqueInput | SecurityIssueWhereUniqueInput[]
+    disconnect?: SecurityIssueWhereUniqueInput | SecurityIssueWhereUniqueInput[]
+    delete?: SecurityIssueWhereUniqueInput | SecurityIssueWhereUniqueInput[]
+    connect?: SecurityIssueWhereUniqueInput | SecurityIssueWhereUniqueInput[]
+    update?: SecurityIssueUpdateWithWhereUniqueWithoutReviewInput | SecurityIssueUpdateWithWhereUniqueWithoutReviewInput[]
+    updateMany?: SecurityIssueUpdateManyWithWhereWithoutReviewInput | SecurityIssueUpdateManyWithWhereWithoutReviewInput[]
+    deleteMany?: SecurityIssueScalarWhereInput | SecurityIssueScalarWhereInput[]
+  }
+
   export type ReviewUncheckedUpdateManyWithoutParentReviewNestedInput = {
     create?: XOR<ReviewCreateWithoutParentReviewInput, ReviewUncheckedCreateWithoutParentReviewInput> | ReviewCreateWithoutParentReviewInput[] | ReviewUncheckedCreateWithoutParentReviewInput[]
     connectOrCreate?: ReviewCreateOrConnectWithoutParentReviewInput | ReviewCreateOrConnectWithoutParentReviewInput[]
@@ -47922,6 +49817,20 @@ export namespace Prisma {
     deleteMany?: ReviewAssignmentScalarWhereInput | ReviewAssignmentScalarWhereInput[]
   }
 
+  export type SecurityIssueUncheckedUpdateManyWithoutReviewNestedInput = {
+    create?: XOR<SecurityIssueCreateWithoutReviewInput, SecurityIssueUncheckedCreateWithoutReviewInput> | SecurityIssueCreateWithoutReviewInput[] | SecurityIssueUncheckedCreateWithoutReviewInput[]
+    connectOrCreate?: SecurityIssueCreateOrConnectWithoutReviewInput | SecurityIssueCreateOrConnectWithoutReviewInput[]
+    upsert?: SecurityIssueUpsertWithWhereUniqueWithoutReviewInput | SecurityIssueUpsertWithWhereUniqueWithoutReviewInput[]
+    createMany?: SecurityIssueCreateManyReviewInputEnvelope
+    set?: SecurityIssueWhereUniqueInput | SecurityIssueWhereUniqueInput[]
+    disconnect?: SecurityIssueWhereUniqueInput | SecurityIssueWhereUniqueInput[]
+    delete?: SecurityIssueWhereUniqueInput | SecurityIssueWhereUniqueInput[]
+    connect?: SecurityIssueWhereUniqueInput | SecurityIssueWhereUniqueInput[]
+    update?: SecurityIssueUpdateWithWhereUniqueWithoutReviewInput | SecurityIssueUpdateWithWhereUniqueWithoutReviewInput[]
+    updateMany?: SecurityIssueUpdateManyWithWhereWithoutReviewInput | SecurityIssueUpdateManyWithWhereWithoutReviewInput[]
+    deleteMany?: SecurityIssueScalarWhereInput | SecurityIssueScalarWhereInput[]
+  }
+
   export type ReviewCreateNestedOneWithoutFeedbacksInput = {
     create?: XOR<ReviewCreateWithoutFeedbacksInput, ReviewUncheckedCreateWithoutFeedbacksInput>
     connectOrCreate?: ReviewCreateOrConnectWithoutFeedbacksInput
@@ -47948,6 +49857,28 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutReviewFeedbacksInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReviewFeedbacksInput, UserUpdateWithoutReviewFeedbacksInput>, UserUncheckedUpdateWithoutReviewFeedbacksInput>
+  }
+
+  export type ReviewCreateNestedOneWithoutSecurityIssuesInput = {
+    create?: XOR<ReviewCreateWithoutSecurityIssuesInput, ReviewUncheckedCreateWithoutSecurityIssuesInput>
+    connectOrCreate?: ReviewCreateOrConnectWithoutSecurityIssuesInput
+    connect?: ReviewWhereUniqueInput
+  }
+
+  export type EnumSecuritySeverityFieldUpdateOperationsInput = {
+    set?: $Enums.SecuritySeverity
+  }
+
+  export type EnumSecurityIssueTypeFieldUpdateOperationsInput = {
+    set?: $Enums.SecurityIssueType
+  }
+
+  export type ReviewUpdateOneRequiredWithoutSecurityIssuesNestedInput = {
+    create?: XOR<ReviewCreateWithoutSecurityIssuesInput, ReviewUncheckedCreateWithoutSecurityIssuesInput>
+    connectOrCreate?: ReviewCreateOrConnectWithoutSecurityIssuesInput
+    upsert?: ReviewUpsertWithoutSecurityIssuesInput
+    connect?: ReviewWhereUniqueInput
+    update?: XOR<XOR<ReviewUpdateToOneWithWhereWithoutSecurityIssuesInput, ReviewUpdateWithoutSecurityIssuesInput>, ReviewUncheckedUpdateWithoutSecurityIssuesInput>
   }
 
   export type ReviewCreateNestedOneWithoutThreadsInput = {
@@ -49010,6 +50941,63 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
+  export type NestedEnumSecuritySeverityFilter<$PrismaModel = never> = {
+    equals?: $Enums.SecuritySeverity | EnumSecuritySeverityFieldRefInput<$PrismaModel>
+    in?: $Enums.SecuritySeverity[] | ListEnumSecuritySeverityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SecuritySeverity[] | ListEnumSecuritySeverityFieldRefInput<$PrismaModel>
+    not?: NestedEnumSecuritySeverityFilter<$PrismaModel> | $Enums.SecuritySeverity
+  }
+
+  export type NestedEnumSecurityIssueTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.SecurityIssueType | EnumSecurityIssueTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SecurityIssueType[] | ListEnumSecurityIssueTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SecurityIssueType[] | ListEnumSecurityIssueTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSecurityIssueTypeFilter<$PrismaModel> | $Enums.SecurityIssueType
+  }
+
+  export type NestedEnumSecuritySeverityWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SecuritySeverity | EnumSecuritySeverityFieldRefInput<$PrismaModel>
+    in?: $Enums.SecuritySeverity[] | ListEnumSecuritySeverityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SecuritySeverity[] | ListEnumSecuritySeverityFieldRefInput<$PrismaModel>
+    not?: NestedEnumSecuritySeverityWithAggregatesFilter<$PrismaModel> | $Enums.SecuritySeverity
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSecuritySeverityFilter<$PrismaModel>
+    _max?: NestedEnumSecuritySeverityFilter<$PrismaModel>
+  }
+
+  export type NestedEnumSecurityIssueTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SecurityIssueType | EnumSecurityIssueTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SecurityIssueType[] | ListEnumSecurityIssueTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SecurityIssueType[] | ListEnumSecurityIssueTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSecurityIssueTypeWithAggregatesFilter<$PrismaModel> | $Enums.SecurityIssueType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSecurityIssueTypeFilter<$PrismaModel>
+    _max?: NestedEnumSecurityIssueTypeFilter<$PrismaModel>
+  }
+  export type NestedJsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
   export type NestedEnumReviewApprovalStateFilter<$PrismaModel = never> = {
     equals?: $Enums.ReviewApprovalState | EnumReviewApprovalStateFieldRefInput<$PrismaModel>
     in?: $Enums.ReviewApprovalState[] | ListEnumReviewApprovalStateFieldRefInput<$PrismaModel>
@@ -49433,6 +51421,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentCreateNestedManyWithoutReviewInput
+    securityIssues?: SecurityIssueCreateNestedManyWithoutReviewInput
   }
 
   export type ReviewUncheckedCreateWithoutUserInput = {
@@ -49458,6 +51447,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalUncheckedCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentUncheckedCreateNestedManyWithoutReviewInput
+    securityIssues?: SecurityIssueUncheckedCreateNestedManyWithoutReviewInput
   }
 
   export type ReviewCreateOrConnectWithoutUserInput = {
@@ -50755,6 +52745,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentCreateNestedManyWithoutReviewInput
+    securityIssues?: SecurityIssueCreateNestedManyWithoutReviewInput
   }
 
   export type ReviewUncheckedCreateWithoutRepositoryInput = {
@@ -50780,6 +52771,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalUncheckedCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentUncheckedCreateNestedManyWithoutReviewInput
+    securityIssues?: SecurityIssueUncheckedCreateNestedManyWithoutReviewInput
   }
 
   export type ReviewCreateOrConnectWithoutRepositoryInput = {
@@ -51442,6 +53434,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentCreateNestedManyWithoutReviewInput
+    securityIssues?: SecurityIssueCreateNestedManyWithoutReviewInput
   }
 
   export type ReviewUncheckedCreateWithoutChildReviewsInput = {
@@ -51467,6 +53460,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalUncheckedCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentUncheckedCreateNestedManyWithoutReviewInput
+    securityIssues?: SecurityIssueUncheckedCreateNestedManyWithoutReviewInput
   }
 
   export type ReviewCreateOrConnectWithoutChildReviewsInput = {
@@ -51497,6 +53491,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentCreateNestedManyWithoutReviewInput
+    securityIssues?: SecurityIssueCreateNestedManyWithoutReviewInput
   }
 
   export type ReviewUncheckedCreateWithoutParentReviewInput = {
@@ -51522,6 +53517,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalUncheckedCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentUncheckedCreateNestedManyWithoutReviewInput
+    securityIssues?: SecurityIssueUncheckedCreateNestedManyWithoutReviewInput
   }
 
   export type ReviewCreateOrConnectWithoutParentReviewInput = {
@@ -51695,6 +53691,56 @@ export namespace Prisma {
 
   export type ReviewAssignmentCreateManyReviewInputEnvelope = {
     data: ReviewAssignmentCreateManyReviewInput | ReviewAssignmentCreateManyReviewInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SecurityIssueCreateWithoutReviewInput = {
+    id?: string
+    severity: $Enums.SecuritySeverity
+    type?: $Enums.SecurityIssueType
+    cveId?: string | null
+    cweId?: string | null
+    packageName?: string | null
+    packageVersion?: string | null
+    title: string
+    description: string
+    remediation: string
+    affectedLines: JsonNullValueInput | InputJsonValue
+    falsePositive?: boolean
+    resolved?: boolean
+    resolvedAt?: Date | string | null
+    resolvedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SecurityIssueUncheckedCreateWithoutReviewInput = {
+    id?: string
+    severity: $Enums.SecuritySeverity
+    type?: $Enums.SecurityIssueType
+    cveId?: string | null
+    cweId?: string | null
+    packageName?: string | null
+    packageVersion?: string | null
+    title: string
+    description: string
+    remediation: string
+    affectedLines: JsonNullValueInput | InputJsonValue
+    falsePositive?: boolean
+    resolved?: boolean
+    resolvedAt?: Date | string | null
+    resolvedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SecurityIssueCreateOrConnectWithoutReviewInput = {
+    where: SecurityIssueWhereUniqueInput
+    create: XOR<SecurityIssueCreateWithoutReviewInput, SecurityIssueUncheckedCreateWithoutReviewInput>
+  }
+
+  export type SecurityIssueCreateManyReviewInputEnvelope = {
+    data: SecurityIssueCreateManyReviewInput | SecurityIssueCreateManyReviewInput[]
     skipDuplicates?: boolean
   }
 
@@ -51878,6 +53924,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUpdateManyWithoutReviewNestedInput
+    securityIssues?: SecurityIssueUpdateManyWithoutReviewNestedInput
   }
 
   export type ReviewUncheckedUpdateWithoutChildReviewsInput = {
@@ -51903,6 +53950,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUncheckedUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUncheckedUpdateManyWithoutReviewNestedInput
+    securityIssues?: SecurityIssueUncheckedUpdateManyWithoutReviewNestedInput
   }
 
   export type ReviewUpsertWithWhereUniqueWithoutParentReviewInput = {
@@ -52056,6 +54104,46 @@ export namespace Prisma {
     data: XOR<ReviewAssignmentUpdateManyMutationInput, ReviewAssignmentUncheckedUpdateManyWithoutReviewInput>
   }
 
+  export type SecurityIssueUpsertWithWhereUniqueWithoutReviewInput = {
+    where: SecurityIssueWhereUniqueInput
+    update: XOR<SecurityIssueUpdateWithoutReviewInput, SecurityIssueUncheckedUpdateWithoutReviewInput>
+    create: XOR<SecurityIssueCreateWithoutReviewInput, SecurityIssueUncheckedCreateWithoutReviewInput>
+  }
+
+  export type SecurityIssueUpdateWithWhereUniqueWithoutReviewInput = {
+    where: SecurityIssueWhereUniqueInput
+    data: XOR<SecurityIssueUpdateWithoutReviewInput, SecurityIssueUncheckedUpdateWithoutReviewInput>
+  }
+
+  export type SecurityIssueUpdateManyWithWhereWithoutReviewInput = {
+    where: SecurityIssueScalarWhereInput
+    data: XOR<SecurityIssueUpdateManyMutationInput, SecurityIssueUncheckedUpdateManyWithoutReviewInput>
+  }
+
+  export type SecurityIssueScalarWhereInput = {
+    AND?: SecurityIssueScalarWhereInput | SecurityIssueScalarWhereInput[]
+    OR?: SecurityIssueScalarWhereInput[]
+    NOT?: SecurityIssueScalarWhereInput | SecurityIssueScalarWhereInput[]
+    id?: StringFilter<"SecurityIssue"> | string
+    reviewId?: StringFilter<"SecurityIssue"> | string
+    severity?: EnumSecuritySeverityFilter<"SecurityIssue"> | $Enums.SecuritySeverity
+    type?: EnumSecurityIssueTypeFilter<"SecurityIssue"> | $Enums.SecurityIssueType
+    cveId?: StringNullableFilter<"SecurityIssue"> | string | null
+    cweId?: StringNullableFilter<"SecurityIssue"> | string | null
+    packageName?: StringNullableFilter<"SecurityIssue"> | string | null
+    packageVersion?: StringNullableFilter<"SecurityIssue"> | string | null
+    title?: StringFilter<"SecurityIssue"> | string
+    description?: StringFilter<"SecurityIssue"> | string
+    remediation?: StringFilter<"SecurityIssue"> | string
+    affectedLines?: JsonFilter<"SecurityIssue">
+    falsePositive?: BoolFilter<"SecurityIssue"> | boolean
+    resolved?: BoolFilter<"SecurityIssue"> | boolean
+    resolvedAt?: DateTimeNullableFilter<"SecurityIssue"> | Date | string | null
+    resolvedBy?: StringNullableFilter<"SecurityIssue"> | string | null
+    createdAt?: DateTimeFilter<"SecurityIssue"> | Date | string
+    updatedAt?: DateTimeFilter<"SecurityIssue"> | Date | string
+  }
+
   export type ReviewCreateWithoutFeedbacksInput = {
     id?: string
     prNumber: number
@@ -52079,6 +54167,7 @@ export namespace Prisma {
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
     approvals?: ReviewApprovalCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentCreateNestedManyWithoutReviewInput
+    securityIssues?: SecurityIssueCreateNestedManyWithoutReviewInput
   }
 
   export type ReviewUncheckedCreateWithoutFeedbacksInput = {
@@ -52104,6 +54193,7 @@ export namespace Prisma {
     githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
     approvals?: ReviewApprovalUncheckedCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentUncheckedCreateNestedManyWithoutReviewInput
+    securityIssues?: SecurityIssueUncheckedCreateNestedManyWithoutReviewInput
   }
 
   export type ReviewCreateOrConnectWithoutFeedbacksInput = {
@@ -52236,6 +54326,7 @@ export namespace Prisma {
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
     approvals?: ReviewApprovalUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUpdateManyWithoutReviewNestedInput
+    securityIssues?: SecurityIssueUpdateManyWithoutReviewNestedInput
   }
 
   export type ReviewUncheckedUpdateWithoutFeedbacksInput = {
@@ -52261,6 +54352,7 @@ export namespace Prisma {
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
     approvals?: ReviewApprovalUncheckedUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUncheckedUpdateManyWithoutReviewNestedInput
+    securityIssues?: SecurityIssueUncheckedUpdateManyWithoutReviewNestedInput
   }
 
   export type UserUpsertWithoutReviewFeedbacksInput = {
@@ -52360,6 +54452,126 @@ export namespace Prisma {
     assignedByMe?: ReviewAssignmentUncheckedUpdateManyWithoutAssignerNestedInput
   }
 
+  export type ReviewCreateWithoutSecurityIssuesInput = {
+    id?: string
+    prNumber: number
+    prTitle: string
+    prUrl: string
+    status?: $Enums.ReviewStatus
+    summary?: string | null
+    riskScore?: number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    repository: RepositoryCreateNestedOneWithoutReviewsInput
+    user: UserCreateNestedOneWithoutReviewsInput
+    parentReview?: ReviewCreateNestedOneWithoutChildReviewsInput
+    childReviews?: ReviewCreateNestedManyWithoutParentReviewInput
+    threads?: ReviewThreadCreateNestedManyWithoutReviewInput
+    githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
+    githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
+    feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
+    approvals?: ReviewApprovalCreateNestedManyWithoutReviewInput
+    assignments?: ReviewAssignmentCreateNestedManyWithoutReviewInput
+  }
+
+  export type ReviewUncheckedCreateWithoutSecurityIssuesInput = {
+    id?: string
+    repositoryId: string
+    userId: string
+    prNumber: number
+    prTitle: string
+    prUrl: string
+    status?: $Enums.ReviewStatus
+    summary?: string | null
+    riskScore?: number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    parentReviewId?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
+    threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
+    githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
+    githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
+    feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
+    approvals?: ReviewApprovalUncheckedCreateNestedManyWithoutReviewInput
+    assignments?: ReviewAssignmentUncheckedCreateNestedManyWithoutReviewInput
+  }
+
+  export type ReviewCreateOrConnectWithoutSecurityIssuesInput = {
+    where: ReviewWhereUniqueInput
+    create: XOR<ReviewCreateWithoutSecurityIssuesInput, ReviewUncheckedCreateWithoutSecurityIssuesInput>
+  }
+
+  export type ReviewUpsertWithoutSecurityIssuesInput = {
+    update: XOR<ReviewUpdateWithoutSecurityIssuesInput, ReviewUncheckedUpdateWithoutSecurityIssuesInput>
+    create: XOR<ReviewCreateWithoutSecurityIssuesInput, ReviewUncheckedCreateWithoutSecurityIssuesInput>
+    where?: ReviewWhereInput
+  }
+
+  export type ReviewUpdateToOneWithWhereWithoutSecurityIssuesInput = {
+    where?: ReviewWhereInput
+    data: XOR<ReviewUpdateWithoutSecurityIssuesInput, ReviewUncheckedUpdateWithoutSecurityIssuesInput>
+  }
+
+  export type ReviewUpdateWithoutSecurityIssuesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    prNumber?: IntFieldUpdateOperationsInput | number
+    prTitle?: StringFieldUpdateOperationsInput | string
+    prUrl?: StringFieldUpdateOperationsInput | string
+    status?: EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    riskScore?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
+    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    parentReview?: ReviewUpdateOneWithoutChildReviewsNestedInput
+    childReviews?: ReviewUpdateManyWithoutParentReviewNestedInput
+    threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
+    githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
+    githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
+    feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
+    approvals?: ReviewApprovalUpdateManyWithoutReviewNestedInput
+    assignments?: ReviewAssignmentUpdateManyWithoutReviewNestedInput
+  }
+
+  export type ReviewUncheckedUpdateWithoutSecurityIssuesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    repositoryId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    prNumber?: IntFieldUpdateOperationsInput | number
+    prTitle?: StringFieldUpdateOperationsInput | string
+    prUrl?: StringFieldUpdateOperationsInput | string
+    status?: EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    riskScore?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
+    threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
+    githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
+    githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
+    feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
+    approvals?: ReviewApprovalUncheckedUpdateManyWithoutReviewNestedInput
+    assignments?: ReviewAssignmentUncheckedUpdateManyWithoutReviewNestedInput
+  }
+
   export type ReviewCreateWithoutThreadsInput = {
     id?: string
     prNumber: number
@@ -52383,6 +54595,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentCreateNestedManyWithoutReviewInput
+    securityIssues?: SecurityIssueCreateNestedManyWithoutReviewInput
   }
 
   export type ReviewUncheckedCreateWithoutThreadsInput = {
@@ -52408,6 +54621,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalUncheckedCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentUncheckedCreateNestedManyWithoutReviewInput
+    securityIssues?: SecurityIssueUncheckedCreateNestedManyWithoutReviewInput
   }
 
   export type ReviewCreateOrConnectWithoutThreadsInput = {
@@ -52477,6 +54691,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUpdateManyWithoutReviewNestedInput
+    securityIssues?: SecurityIssueUpdateManyWithoutReviewNestedInput
   }
 
   export type ReviewUncheckedUpdateWithoutThreadsInput = {
@@ -52502,6 +54717,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUncheckedUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUncheckedUpdateManyWithoutReviewNestedInput
+    securityIssues?: SecurityIssueUncheckedUpdateManyWithoutReviewNestedInput
   }
 
   export type ReviewThreadCommentUpsertWithWhereUniqueWithoutThreadInput = {
@@ -53067,6 +55283,7 @@ export namespace Prisma {
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
     feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentCreateNestedManyWithoutReviewInput
+    securityIssues?: SecurityIssueCreateNestedManyWithoutReviewInput
   }
 
   export type ReviewUncheckedCreateWithoutApprovalsInput = {
@@ -53092,6 +55309,7 @@ export namespace Prisma {
     githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
     feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentUncheckedCreateNestedManyWithoutReviewInput
+    securityIssues?: SecurityIssueUncheckedCreateNestedManyWithoutReviewInput
   }
 
   export type ReviewCreateOrConnectWithoutApprovalsInput = {
@@ -53224,6 +55442,7 @@ export namespace Prisma {
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
     feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUpdateManyWithoutReviewNestedInput
+    securityIssues?: SecurityIssueUpdateManyWithoutReviewNestedInput
   }
 
   export type ReviewUncheckedUpdateWithoutApprovalsInput = {
@@ -53249,6 +55468,7 @@ export namespace Prisma {
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
     feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUncheckedUpdateManyWithoutReviewNestedInput
+    securityIssues?: SecurityIssueUncheckedUpdateManyWithoutReviewNestedInput
   }
 
   export type UserUpsertWithoutReviewApprovalsInput = {
@@ -53371,6 +55591,7 @@ export namespace Prisma {
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
     feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalCreateNestedManyWithoutReviewInput
+    securityIssues?: SecurityIssueCreateNestedManyWithoutReviewInput
   }
 
   export type ReviewUncheckedCreateWithoutAssignmentsInput = {
@@ -53396,6 +55617,7 @@ export namespace Prisma {
     githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
     feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalUncheckedCreateNestedManyWithoutReviewInput
+    securityIssues?: SecurityIssueUncheckedCreateNestedManyWithoutReviewInput
   }
 
   export type ReviewCreateOrConnectWithoutAssignmentsInput = {
@@ -53619,6 +55841,7 @@ export namespace Prisma {
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
     feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUpdateManyWithoutReviewNestedInput
+    securityIssues?: SecurityIssueUpdateManyWithoutReviewNestedInput
   }
 
   export type ReviewUncheckedUpdateWithoutAssignmentsInput = {
@@ -53644,6 +55867,7 @@ export namespace Prisma {
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
     feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUncheckedUpdateManyWithoutReviewNestedInput
+    securityIssues?: SecurityIssueUncheckedUpdateManyWithoutReviewNestedInput
   }
 
   export type UserUpsertWithoutAssignedReviewsInput = {
@@ -54888,6 +57112,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentCreateNestedManyWithoutReviewInput
+    securityIssues?: SecurityIssueCreateNestedManyWithoutReviewInput
   }
 
   export type ReviewUncheckedCreateWithoutGithubCommentInput = {
@@ -54913,6 +57138,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalUncheckedCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentUncheckedCreateNestedManyWithoutReviewInput
+    securityIssues?: SecurityIssueUncheckedCreateNestedManyWithoutReviewInput
   }
 
   export type ReviewCreateOrConnectWithoutGithubCommentInput = {
@@ -54997,6 +57223,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUpdateManyWithoutReviewNestedInput
+    securityIssues?: SecurityIssueUpdateManyWithoutReviewNestedInput
   }
 
   export type ReviewUncheckedUpdateWithoutGithubCommentInput = {
@@ -55022,6 +57249,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUncheckedUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUncheckedUpdateManyWithoutReviewNestedInput
+    securityIssues?: SecurityIssueUncheckedUpdateManyWithoutReviewNestedInput
   }
 
   export type RepositoryUpsertWithoutGithubCommentsInput = {
@@ -55096,6 +57324,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentCreateNestedManyWithoutReviewInput
+    securityIssues?: SecurityIssueCreateNestedManyWithoutReviewInput
   }
 
   export type ReviewUncheckedCreateWithoutGithubStatusCheckInput = {
@@ -55121,6 +57350,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalUncheckedCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentUncheckedCreateNestedManyWithoutReviewInput
+    securityIssues?: SecurityIssueUncheckedCreateNestedManyWithoutReviewInput
   }
 
   export type ReviewCreateOrConnectWithoutGithubStatusCheckInput = {
@@ -55162,6 +57392,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUpdateManyWithoutReviewNestedInput
+    securityIssues?: SecurityIssueUpdateManyWithoutReviewNestedInput
   }
 
   export type ReviewUncheckedUpdateWithoutGithubStatusCheckInput = {
@@ -55187,6 +57418,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUncheckedUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUncheckedUpdateManyWithoutReviewNestedInput
+    securityIssues?: SecurityIssueUncheckedUpdateManyWithoutReviewNestedInput
   }
 
   export type RepositoryCreateWithoutBranchProtectionRecsInput = {
@@ -56515,6 +58747,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUpdateManyWithoutReviewNestedInput
+    securityIssues?: SecurityIssueUpdateManyWithoutReviewNestedInput
   }
 
   export type ReviewUncheckedUpdateWithoutUserInput = {
@@ -56540,6 +58773,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUncheckedUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUncheckedUpdateManyWithoutReviewNestedInput
+    securityIssues?: SecurityIssueUncheckedUpdateManyWithoutReviewNestedInput
   }
 
   export type ReviewUncheckedUpdateManyWithoutUserInput = {
@@ -56964,6 +59198,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUpdateManyWithoutReviewNestedInput
+    securityIssues?: SecurityIssueUpdateManyWithoutReviewNestedInput
   }
 
   export type ReviewUncheckedUpdateWithoutRepositoryInput = {
@@ -56989,6 +59224,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUncheckedUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUncheckedUpdateManyWithoutReviewNestedInput
+    securityIssues?: SecurityIssueUncheckedUpdateManyWithoutReviewNestedInput
   }
 
   export type ReviewUncheckedUpdateManyWithoutRepositoryInput = {
@@ -57203,6 +59439,26 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type SecurityIssueCreateManyReviewInput = {
+    id?: string
+    severity: $Enums.SecuritySeverity
+    type?: $Enums.SecurityIssueType
+    cveId?: string | null
+    cweId?: string | null
+    packageName?: string | null
+    packageVersion?: string | null
+    title: string
+    description: string
+    remediation: string
+    affectedLines: JsonNullValueInput | InputJsonValue
+    falsePositive?: boolean
+    resolved?: boolean
+    resolvedAt?: Date | string | null
+    resolvedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type ReviewUpdateWithoutParentReviewInput = {
     id?: StringFieldUpdateOperationsInput | string
     prNumber?: IntFieldUpdateOperationsInput | number
@@ -57226,6 +59482,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUpdateManyWithoutReviewNestedInput
+    securityIssues?: SecurityIssueUpdateManyWithoutReviewNestedInput
   }
 
   export type ReviewUncheckedUpdateWithoutParentReviewInput = {
@@ -57251,6 +59508,7 @@ export namespace Prisma {
     feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUncheckedUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUncheckedUpdateManyWithoutReviewNestedInput
+    securityIssues?: SecurityIssueUncheckedUpdateManyWithoutReviewNestedInput
   }
 
   export type ReviewUncheckedUpdateManyWithoutParentReviewInput = {
@@ -57383,6 +59641,66 @@ export namespace Prisma {
     priority?: EnumAssignmentPriorityFieldUpdateOperationsInput | $Enums.AssignmentPriority
     status?: EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
     note?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SecurityIssueUpdateWithoutReviewInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    severity?: EnumSecuritySeverityFieldUpdateOperationsInput | $Enums.SecuritySeverity
+    type?: EnumSecurityIssueTypeFieldUpdateOperationsInput | $Enums.SecurityIssueType
+    cveId?: NullableStringFieldUpdateOperationsInput | string | null
+    cweId?: NullableStringFieldUpdateOperationsInput | string | null
+    packageName?: NullableStringFieldUpdateOperationsInput | string | null
+    packageVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    remediation?: StringFieldUpdateOperationsInput | string
+    affectedLines?: JsonNullValueInput | InputJsonValue
+    falsePositive?: BoolFieldUpdateOperationsInput | boolean
+    resolved?: BoolFieldUpdateOperationsInput | boolean
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SecurityIssueUncheckedUpdateWithoutReviewInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    severity?: EnumSecuritySeverityFieldUpdateOperationsInput | $Enums.SecuritySeverity
+    type?: EnumSecurityIssueTypeFieldUpdateOperationsInput | $Enums.SecurityIssueType
+    cveId?: NullableStringFieldUpdateOperationsInput | string | null
+    cweId?: NullableStringFieldUpdateOperationsInput | string | null
+    packageName?: NullableStringFieldUpdateOperationsInput | string | null
+    packageVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    remediation?: StringFieldUpdateOperationsInput | string
+    affectedLines?: JsonNullValueInput | InputJsonValue
+    falsePositive?: BoolFieldUpdateOperationsInput | boolean
+    resolved?: BoolFieldUpdateOperationsInput | boolean
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SecurityIssueUncheckedUpdateManyWithoutReviewInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    severity?: EnumSecuritySeverityFieldUpdateOperationsInput | $Enums.SecuritySeverity
+    type?: EnumSecurityIssueTypeFieldUpdateOperationsInput | $Enums.SecurityIssueType
+    cveId?: NullableStringFieldUpdateOperationsInput | string | null
+    cweId?: NullableStringFieldUpdateOperationsInput | string | null
+    packageName?: NullableStringFieldUpdateOperationsInput | string | null
+    packageVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    remediation?: StringFieldUpdateOperationsInput | string
+    affectedLines?: JsonNullValueInput | InputJsonValue
+    falsePositive?: BoolFieldUpdateOperationsInput | boolean
+    resolved?: BoolFieldUpdateOperationsInput | boolean
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

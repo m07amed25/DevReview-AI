@@ -7,6 +7,7 @@ export {
   handleScanCompleted,
 } from "./functions/scheduled-scan";
 export { generateDiagram } from "./functions/generate-diagram";
+export { securityScan } from "./functions/security-scan";
 
 import { reviewPR } from "./functions/review-pr";
 import { postReviewToGitHub } from "./functions/post-review-to-github";
@@ -16,6 +17,7 @@ import {
   handleScanCompleted,
 } from "./functions/scheduled-scan";
 import { generateDiagram } from "./functions/generate-diagram";
+import { securityScan } from "./functions/security-scan";
 
 export const functions = [
   reviewPR,
@@ -24,4 +26,5 @@ export const functions = [
   weeklyScheduledScan,
   handleScanCompleted,
   generateDiagram,
+  securityScan,
 ];

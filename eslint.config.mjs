@@ -17,6 +17,14 @@ const eslintConfig = defineConfig([
     "**/*.min.js",
     "next-env.d.ts",
   ]),
+  {
+    rules: {
+      // Allow inline styles for dynamic runtime values (virtualization, canvas, progress bars)
+      // These are necessary for performance and cannot be moved to CSS
+      "react/forbid-dom-props": "off",
+      "react/forbid-component-props": "off",
+    },
+  },
 ]);
 
 export default eslintConfig;

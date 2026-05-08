@@ -117,6 +117,15 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  
+  /* Enhanced dark theme colors for diff viewer */
+  --diff-addition-bg: oklch(0.25 0.1 150 / 12%);
+  --diff-addition-text: oklch(0.75 0.15 150);
+  --diff-deletion-bg: oklch(0.25 0.1 30 / 12%);
+  --diff-deletion-text: oklch(0.75 0.15 30);
+  --diff-context-bg: oklch(0.18 0 0);
+  --diff-hunk-bg: oklch(0.22 0.05 240 / 8%);
+  --diff-hunk-text: oklch(0.7 0.1 240);
 }
 
 @utility container {
@@ -397,6 +406,217 @@ html {
   outline: 2px solid oklch(0.556 0 0);
   outline-offset: 2px;
 }
+
+/* Enhanced Diff Viewer Styles */
+.diff-line-addition {
+  background-color: var(--diff-addition-bg, oklch(0.9 0.05 150 / 15%));
+  color: var(--diff-addition-text, oklch(0.3 0.15 150));
+}
+
+.dark .diff-line-addition {
+  background-color: var(--diff-addition-bg);
+  color: var(--diff-addition-text);
+}
+
+.diff-line-deletion {
+  background-color: var(--diff-deletion-bg, oklch(0.9 0.05 30 / 15%));
+  color: var(--diff-deletion-text, oklch(0.3 0.15 30));
+}
+
+.dark .diff-line-deletion {
+  background-color: var(--diff-deletion-bg);
+  color: var(--diff-deletion-text);
+}
+
+.diff-line-context {
+  background-color: var(--diff-context-bg, oklch(0.98 0 0));
+}
+
+.dark .diff-line-context {
+  background-color: var(--diff-context-bg);
+}
+
+.diff-hunk-header {
+  background-color: var(--diff-hunk-bg, oklch(0.95 0.05 240 / 20%));
+  color: var(--diff-hunk-text, oklch(0.4 0.1 240));
+}
+
+.dark .diff-hunk-header {
+  background-color: var(--diff-hunk-bg);
+  color: var(--diff-hunk-text);
+}
+
+/* Code Syntax Highlighting Improvements */
+.syntax-comment {
+  color: oklch(0.5 0.05 140);
+  font-style: italic;
+  opacity: 0.8;
+}
+
+.dark .syntax-comment {
+  color: oklch(0.6 0.05 140);
+}
+
+.syntax-keyword {
+  color: oklch(0.45 0.15 280);
+  font-weight: 600;
+}
+
+.dark .syntax-keyword {
+  color: oklch(0.7 0.15 280);
+}
+
+.syntax-string {
+  color: oklch(0.5 0.15 80);
+}
+
+.dark .syntax-string {
+  color: oklch(0.7 0.15 80);
+}
+
+.syntax-number {
+  color: oklch(0.5 0.15 220);
+}
+
+.dark .syntax-number {
+  color: oklch(0.65 0.15 220);
+}
+
+/* Mobile Responsive Utilities */
+@media (max-width: 640px) {
+  .hide-mobile {
+    display: none !important;
+  }
+  
+  .mobile-full-width {
+    width: 100% !important;
+  }
+  
+  /* Adjust padding for mobile */
+  .mobile-compact {
+    padding: 0.5rem !important;
+  }
+  
+  /* Stack items vertically on mobile */
+  .mobile-stack {
+    flex-direction: column !important;
+  }
+  
+  /* Smaller text on mobile */
+  .mobile-text-sm {
+    font-size: 0.875rem !important;
+  }
+  
+  /* Hide secondary information on mobile */
+  .mobile-hide-secondary {
+    display: none !important;
+  }
+  
+  /* Full viewport height minus header on mobile */
+  .mobile-vh-full {
+    height: calc(100vh - 4rem) !important;
+  }
+  
+  /* Touch-friendly tap targets */
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Improved scrolling on mobile */
+  .mobile-scroll {
+    -webkit-overflow-scrolling: touch;
+    overflow-x: auto;
+  }
+}
+
+/* Tablet responsive */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .hide-tablet {
+    display: none !important;
+  }
+  
+  .tablet-compact {
+    padding: 0.75rem !important;
+  }
+}
+
+/* Dark theme specific enhancements for review UI */
+.dark .review-card {
+  background: oklch(0.195 0 0);
+  border-color: oklch(0.25 0 0);
+  box-shadow: 0 2px 8px oklch(0.1 0 0 / 50%);
+}
+
+.dark .review-card:hover {
+  background: oklch(0.21 0 0);
+  border-color: oklch(0.28 0 0);
+  box-shadow: 0 4px 12px oklch(0.08 0 0 / 60%);
+}
+
+.dark .code-block {
+  background: oklch(0.17 0 0);
+  border: 1px solid oklch(0.23 0 0);
+}
+
+.dark .minimap-viewport {
+  border-color: oklch(0.55 0.15 240 / 80%);
+  background: oklch(0.55 0.15 240 / 10%);
+}
+
+/* Smooth transitions for theme switching */
+.theme-transition * {
+  transition: 
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease !important;
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .diff-viewer {
+    page-break-inside: avoid;
+  }
+  
+  .review-card {
+    page-break-inside: avoid;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --border: oklch(0 0 0);
+  }
+  
+  .dark {
+    --border: oklch(1 0 0);
+  }
+}
+
+/* Scrollbar styling for thin variant */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-thumb-muted::-webkit-scrollbar-thumb {
+  background: oklch(0.556 0 0);
+  border-radius: 3px;
+}
+
+.scrollbar-track-transparent::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 
 /* Selection styling */
 ::selection {
