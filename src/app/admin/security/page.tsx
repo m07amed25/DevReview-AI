@@ -21,6 +21,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import { AdminSecurityDashboard } from "@/features/security/admin-security-dashboard";
 
 const PROTECTIONS = [
   {
@@ -230,6 +231,9 @@ export default function AdminSecurityPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* CVE / Vulnerability Analytics */}
+      <AdminSecurityDashboard />
     </div>
   );
 }

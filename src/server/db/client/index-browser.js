@@ -227,6 +227,27 @@ exports.Prisma.ReviewFeedbackScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.SecurityIssueScalarFieldEnum = {
+  id: 'id',
+  reviewId: 'reviewId',
+  severity: 'severity',
+  type: 'type',
+  cveId: 'cveId',
+  cweId: 'cweId',
+  packageName: 'packageName',
+  packageVersion: 'packageVersion',
+  title: 'title',
+  description: 'description',
+  remediation: 'remediation',
+  affectedLines: 'affectedLines',
+  falsePositive: 'falsePositive',
+  resolved: 'resolved',
+  resolvedAt: 'resolvedAt',
+  resolvedBy: 'resolvedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.ReviewThreadScalarFieldEnum = {
   id: 'id',
   reviewId: 'reviewId',
@@ -490,6 +511,10 @@ exports.Prisma.NullableJsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
+};
+
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -515,6 +540,22 @@ exports.ReviewStatus = exports.$Enums.ReviewStatus = {
   PROCESSING: 'PROCESSING',
   COMPLETED: 'COMPLETED',
   FAILED: 'FAILED'
+};
+
+exports.SecuritySeverity = exports.$Enums.SecuritySeverity = {
+  CRITICAL: 'CRITICAL',
+  HIGH: 'HIGH',
+  MEDIUM: 'MEDIUM',
+  LOW: 'LOW',
+  INFO: 'INFO'
+};
+
+exports.SecurityIssueType = exports.$Enums.SecurityIssueType = {
+  VULNERABILITY: 'VULNERABILITY',
+  SECRET_EXPOSURE: 'SECRET_EXPOSURE',
+  OWASP_TOP_10: 'OWASP_TOP_10',
+  CODE_QUALITY: 'CODE_QUALITY',
+  CWE: 'CWE'
 };
 
 exports.ReviewApprovalState = exports.$Enums.ReviewApprovalState = {
@@ -626,6 +667,7 @@ exports.Prisma.ModelName = {
   Repository: 'Repository',
   Review: 'Review',
   ReviewFeedback: 'ReviewFeedback',
+  SecurityIssue: 'SecurityIssue',
   ReviewThread: 'ReviewThread',
   ReviewThreadComment: 'ReviewThreadComment',
   ReviewThreadCommentReaction: 'ReviewThreadCommentReaction',

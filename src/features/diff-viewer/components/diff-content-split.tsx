@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useRef, useCallback, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import {
   DiffGroup,
@@ -7,6 +7,7 @@ import {
   computeWordDiff,
 } from "./diff-algorithm";
 import { WordDiffSegments } from "./diff-content-unified";
+import { HighlightedLine } from "./syntax-highlighter";
 
 interface SplitRow {
   left: { line: ParsedLine | null; segments?: DiffSegment[] };
@@ -66,18 +67,45 @@ export function DiffContentSplit({
   groups,
   wordDiffEnabled,
   wrapLines,
+  enableSyntaxHighlighting = true,
+  language,
 }: {
   groups: DiffGroup[];
   wordDiffEnabled: boolean;
   wrapLines: boolean;
+  enableSyntaxHighlighting?: boolean;
+  language?: string;
 }) {
   const rows = useMemo(
     () => buildSplitRows(groups, wordDiffEnabled),
     [groups, wordDiffEnabled],
   );
+
+  const leftScrollRef = useRef<HTMLDivElement>(null);
+  const rightScrollRef = useRef<HTMLDivElement>(null);
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  // Synchronized scrolling for split view
+  const handleScroll = useCallback(
+    (source: "left" | "right") => {
+      if (isSyncing) return;
+      setIsSyncing(true);
+
+      const sourceRef = source === "left" ? leftScrollRef : rightScrollRef;
+      const targetRef = source === "left" ? rightScrollRef : leftScrollRef;
+
+      if (sourceRef.current && targetRef.current) {
+        targetRef.current.scrollTop = sourceRef.current.scrollTop;
+      }
+
+      setTimeout(() => setIsSyncing(false), 10);
+    },
+    [isSyncing],
+  );
+
   return (
     <div className="overflow-x-auto">
-      <table className="w-full text-xs font-mono border-collapse table-fixed">
+      <table className="w-full text-xs font-mono border-collapse table-fixed md:table-auto">
         <colgroup>
           <col className="w-12" />
           <col />
@@ -132,7 +160,7 @@ export function DiffContentSplit({
                     leftIsChange
                       ? "bg-red-500/8 text-red-700 dark:text-red-300"
                       : leftLine
-                        ? "hover:bg-muted/30"
+                        ? "hover:bg-muted/30 transition-colors"
                         : "bg-muted/20",
                     wrapLines
                       ? "whitespace-pre-wrap break-all"
@@ -144,6 +172,11 @@ export function DiffContentSplit({
                       <WordDiffSegments
                         segments={row.left.segments}
                         side="old"
+                      />
+                    ) : enableSyntaxHighlighting && !leftIsChange ? (
+                      <HighlightedLine
+                        content={leftLine.content}
+                        language={language}
                       />
                     ) : (
                       leftLine.content || " "
@@ -166,7 +199,7 @@ export function DiffContentSplit({
                     rightIsChange
                       ? "bg-emerald-500/8 text-emerald-700 dark:text-emerald-300"
                       : rightLine
-                        ? "hover:bg-muted/30"
+                        ? "hover:bg-muted/30 transition-colors"
                         : "bg-muted/20",
                     wrapLines
                       ? "whitespace-pre-wrap break-all"
@@ -178,6 +211,11 @@ export function DiffContentSplit({
                       <WordDiffSegments
                         segments={row.right.segments}
                         side="new"
+                      />
+                    ) : enableSyntaxHighlighting && !rightIsChange ? (
+                      <HighlightedLine
+                        content={rightLine.content}
+                        language={language}
                       />
                     ) : (
                       rightLine.content || " "

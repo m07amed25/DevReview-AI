@@ -21,6 +21,7 @@ import {
   AlignJustify,
   Columns3,
   WrapText,
+  Code2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -72,6 +73,7 @@ export function DiffViewer({ files }: DiffViewerProps) {
   const [statusFilter, setStatusFilter] = useState<FileStatusFilter>("all");
   const [wordDiffEnabled, setWordDiffEnabled] = useState(true);
   const [wrapLines, setWrapLines] = useState(false);
+  const [syntaxHighlighting, setSyntaxHighlighting] = useState(true);
   const [isLoading] = useState(false);
 
   const statusCounts = useMemo(() => {
@@ -120,13 +122,17 @@ export function DiffViewer({ files }: DiffViewerProps) {
     setVisibleRange({ start: startIndex, end: endIndex });
   }, [filteredFiles.length, useVirtualization]);
 
+  // Reset scroll position and recalculate visible range when filters change
   useEffect(() => {
-    if (!useVirtualization) {
-      setVisibleRange({ start: 0, end: filteredFiles.length });
-    } else {
-      setVisibleRange({ start: 0, end: 20 });
-      if (containerRef.current) containerRef.current.scrollTop = 0;
+    if (containerRef.current) {
+      containerRef.current.scrollTop = 0;
     }
+    // Update visible range based on current virtualization mode
+    const newRange = useVirtualization
+      ? { start: 0, end: 20 }
+      : { start: 0, end: filteredFiles.length };
+    // Use setTimeout to avoid setState during render
+    setTimeout(() => setVisibleRange(newRange), 0);
   }, [filteredFiles.length, searchQuery, statusFilter, useVirtualization]);
 
   const visibleFiles = useVirtualization
@@ -196,8 +202,8 @@ export function DiffViewer({ files }: DiffViewerProps) {
     <div className="space-y-4">
       <div className="space-y-3">
         {/* Header stats + view mode toggles */}
-        <div className="flex items-center justify-between flex-wrap gap-3">
-          <div className="flex items-center gap-4">
+        <div className="flex items-start sm:items-center justify-between flex-wrap gap-3">
+          <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
             <div className="flex items-center gap-2">
               <div className="p-2 rounded-lg bg-primary/10">
                 <FolderTree className="size-4 text-primary" />
@@ -211,8 +217,8 @@ export function DiffViewer({ files }: DiffViewerProps) {
                 </span>
               </div>
             </div>
-            <div className="h-5 w-px bg-border" />
-            <div className="flex items-center gap-3">
+            <div className="h-5 w-px bg-border hidden sm:block" />
+            <div className="flex items-center gap-2 sm:gap-3">
               <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium text-sm">
                 <Plus className="size-3.5" />
                 <span className="tabular-nums">{totalAdditions}</span>
@@ -227,6 +233,7 @@ export function DiffViewer({ files }: DiffViewerProps) {
                 <div className="h-5 w-px bg-border hidden sm:block" />
                 <div className="hidden sm:flex items-center gap-2">
                   <div className="w-24 h-2 rounded-full bg-muted overflow-hidden flex">
+                    {/* Dynamic width calculated at runtime */}
                     <div
                       className="h-full bg-emerald-500 transition-all duration-300"
                       style={{ width: `${addPercent}%` }}
@@ -241,12 +248,12 @@ export function DiffViewer({ files }: DiffViewerProps) {
             )}
           </div>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1 sm:gap-1.5 flex-wrap">
             <div className="flex items-center border rounded-lg overflow-hidden">
               <Button
                 variant={viewMode === "unified" ? "secondary" : "ghost"}
                 size="sm"
-                className="rounded-none gap-1.5 text-xs h-8"
+                className="rounded-none gap-1.5 text-xs h-8 px-2 sm:px-3"
                 onClick={() => setViewMode("unified")}
                 title="Unified view"
               >
@@ -256,7 +263,7 @@ export function DiffViewer({ files }: DiffViewerProps) {
               <Button
                 variant={viewMode === "split" ? "secondary" : "ghost"}
                 size="sm"
-                className="rounded-none gap-1.5 text-xs h-8"
+                className="rounded-none gap-1.5 text-xs h-8 px-2 sm:px-3"
                 onClick={() => setViewMode("split")}
                 title="Side-by-side view"
               >
@@ -264,11 +271,21 @@ export function DiffViewer({ files }: DiffViewerProps) {
                 <span className="hidden md:inline">Split</span>
               </Button>
             </div>
-            <div className="h-5 w-px bg-border" />
+            <div className="h-5 w-px bg-border hidden sm:block" />
+            <Button
+              variant={syntaxHighlighting ? "secondary" : "ghost"}
+              size="sm"
+              className="gap-1.5 text-xs h-8 px-2 sm:px-3"
+              onClick={() => setSyntaxHighlighting(!syntaxHighlighting)}
+              title="Toggle syntax highlighting"
+            >
+              <Code2 className="size-3.5" />
+              <span className="hidden lg:inline">Syntax</span>
+            </Button>
             <Button
               variant={wordDiffEnabled ? "secondary" : "ghost"}
               size="sm"
-              className="gap-1.5 text-xs h-8"
+              className="gap-1.5 text-xs h-8 px-2 sm:px-3"
               onClick={() => setWordDiffEnabled(!wordDiffEnabled)}
               title="Toggle word-level diff highlighting"
             >
@@ -277,23 +294,23 @@ export function DiffViewer({ files }: DiffViewerProps) {
               ) : (
                 <EyeOff className="size-3.5" />
               )}
-              <span className="hidden md:inline">Word diff</span>
+              <span className="hidden lg:inline">Word diff</span>
             </Button>
             <Button
               variant={wrapLines ? "secondary" : "ghost"}
               size="sm"
-              className="gap-1.5 text-xs h-8"
+              className="gap-1.5 text-xs h-8 px-2 sm:px-3"
               onClick={() => setWrapLines(!wrapLines)}
               title="Toggle line wrapping"
             >
               <WrapText className="size-3.5" />
-              <span className="hidden md:inline">Wrap</span>
+              <span className="hidden lg:inline">Wrap</span>
             </Button>
-            <div className="h-5 w-px bg-border" />
+            <div className="h-5 w-px bg-border hidden sm:block" />
             <Button
               variant="ghost"
               size="sm"
-              className="text-xs h-8"
+              className="text-xs h-8 px-2 sm:px-3 hidden sm:inline-flex"
               onClick={() =>
                 setExpandedFiles(new Set(filteredFiles.map((f) => f.filename)))
               }
@@ -303,7 +320,7 @@ export function DiffViewer({ files }: DiffViewerProps) {
             <Button
               variant="ghost"
               size="sm"
-              className="text-xs h-8"
+              className="text-xs h-8 px-2 sm:px-3 hidden sm:inline-flex"
               onClick={() => setExpandedFiles(new Set())}
             >
               Collapse all
@@ -328,12 +345,14 @@ export function DiffViewer({ files }: DiffViewerProps) {
               <button
                 onClick={() => setSearchQuery("")}
                 className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                title="Clear search"
+                aria-label="Clear search"
               >
                 <X className="size-3.5" />
               </button>
             )}
           </div>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 flex-wrap">
             {(
               [
                 "all",
@@ -351,7 +370,7 @@ export function DiffViewer({ files }: DiffViewerProps) {
                   key={status}
                   onClick={() => setStatusFilter(status)}
                   className={cn(
-                    "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
+                    "px-2 sm:px-2.5 py-1 rounded-md text-[11px] sm:text-xs font-medium transition-colors",
                     statusFilter === status
                       ? cfg.activeClass
                       : "text-muted-foreground hover:text-foreground hover:bg-muted",
@@ -367,6 +386,7 @@ export function DiffViewer({ files }: DiffViewerProps) {
       </div>
 
       {/* File Cards - Virtualized for large datasets */}
+      {/* Dynamic styles for virtualization performance - inline styles required for runtime values */}
       <div
         ref={containerRef}
         className="space-y-3"
@@ -394,12 +414,14 @@ export function DiffViewer({ files }: DiffViewerProps) {
             ))}
           </div>
         ) : useVirtualization ? (
-          <div style={{ height: totalHeight, position: "relative" }}>
-            <div
-              style={{
-                transform: `translateY(${visibleRange.start * ITEM_HEIGHT}px)`,
-              }}
-            >
+          <React.Fragment>
+            {/* Dynamic virtualization layout - inline styles required for performance */}
+            <div style={{ height: totalHeight, position: "relative" }}>
+              <div
+                style={{
+                  transform: `translateY(${visibleRange.start * ITEM_HEIGHT}px)`,
+                }}
+              >
               {visibleFiles.map((file) => (
                 <DiffFileCard
                   key={file.filename}
@@ -409,10 +431,12 @@ export function DiffViewer({ files }: DiffViewerProps) {
                   viewMode={viewMode}
                   wordDiffEnabled={wordDiffEnabled}
                   wrapLines={wrapLines}
+                  enableSyntaxHighlighting={syntaxHighlighting}
                 />
               ))}
             </div>
           </div>
+          </React.Fragment>
         ) : (
           <>
             {filteredFiles.length === 0 ? (
@@ -430,6 +454,7 @@ export function DiffViewer({ files }: DiffViewerProps) {
                   viewMode={viewMode}
                   wordDiffEnabled={wordDiffEnabled}
                   wrapLines={wrapLines}
+                  enableSyntaxHighlighting={syntaxHighlighting}
                 />
               ))
             )}
@@ -438,24 +463,24 @@ export function DiffViewer({ files }: DiffViewerProps) {
       </div>
 
       {/* Keyboard Shortcut Hints */}
-      <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground/60 pt-2 select-none">
+      <div className="flex items-center justify-center gap-2 sm:gap-4 text-xs text-muted-foreground/60 pt-2 select-none flex-wrap">
         <span className="flex items-center gap-1">
           <kbd className="px-1.5 py-0.5 rounded bg-muted text-[10px] font-mono border border-border/50">
             /
           </kbd>
-          Search
+          <span className="hidden sm:inline">Search</span>
         </span>
         <span className="flex items-center gap-1">
           <kbd className="px-1.5 py-0.5 rounded bg-muted text-[10px] font-mono border border-border/50">
             E
           </kbd>
-          Expand
+          <span className="hidden sm:inline">Expand</span>
         </span>
         <span className="flex items-center gap-1">
           <kbd className="px-1.5 py-0.5 rounded bg-muted text-[10px] font-mono border border-border/50">
             W
           </kbd>
-          Wrap
+          <span className="hidden sm:inline">Wrap</span>
         </span>
       </div>
     </div>

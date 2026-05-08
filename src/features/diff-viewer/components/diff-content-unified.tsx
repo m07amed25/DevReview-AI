@@ -7,6 +7,7 @@ import {
   DiffSegment,
   computeWordDiff,
 } from "./diff-algorithm";
+import { HighlightedLine } from "./syntax-highlighter";
 
 const CONTEXT_COLLAPSE_THRESHOLD = 8;
 
@@ -38,9 +39,13 @@ export function WordDiffSegments({
 function UnifiedContextRow({
   line,
   wrapLines,
+  language,
+  enableSyntaxHighlighting = true,
 }: {
   line: ParsedLine;
   wrapLines: boolean;
+  language?: string;
+  enableSyntaxHighlighting?: boolean;
 }) {
   return (
     <tr className="group/line hover:bg-muted/30 transition-colors">
@@ -57,7 +62,11 @@ function UnifiedContextRow({
         )}
       >
         <span className="select-none text-transparent mr-1"> </span>
-        {line.content || " "}
+        {enableSyntaxHighlighting ? (
+          <HighlightedLine content={line.content} language={language} />
+        ) : (
+          line.content || " "
+        )}
       </td>
     </tr>
   );
@@ -67,10 +76,14 @@ export function DiffContentUnified({
   groups,
   wordDiffEnabled,
   wrapLines,
+  enableSyntaxHighlighting = true,
+  language,
 }: {
   groups: DiffGroup[];
   wordDiffEnabled: boolean;
   wrapLines: boolean;
+  enableSyntaxHighlighting?: boolean;
+  language?: string;
 }) {
   const [expandedContexts, setExpandedContexts] = useState<Set<number>>(
     new Set(),
@@ -129,6 +142,8 @@ export function DiffContentUnified({
                         key={`top-${li}`}
                         line={line}
                         wrapLines={wrapLines}
+                        language={language}
+                        enableSyntaxHighlighting={enableSyntaxHighlighting}
                       />
                     ))}
                     <tr>
@@ -147,6 +162,8 @@ export function DiffContentUnified({
                         key={`bot-${li}`}
                         line={line}
                         wrapLines={wrapLines}
+                        language={language}
+                        enableSyntaxHighlighting={enableSyntaxHighlighting}
                       />
                     ))}
                   </React.Fragment>
@@ -159,6 +176,8 @@ export function DiffContentUnified({
                       key={li}
                       line={line}
                       wrapLines={wrapLines}
+                      language={language}
+                      enableSyntaxHighlighting={enableSyntaxHighlighting}
                     />
                   ))}
                 </React.Fragment>

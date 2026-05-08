@@ -65,11 +65,15 @@ function DiffContentRouter({
   viewMode,
   wordDiffEnabled,
   wrapLines,
+  enableSyntaxHighlighting,
+  language,
 }: {
   patch: string;
   viewMode: ViewMode;
   wordDiffEnabled: boolean;
   wrapLines: boolean;
+  enableSyntaxHighlighting?: boolean;
+  language?: string;
 }) {
   const hunks = useMemo(() => parsePatch(patch), [patch]);
   const groups = useMemo(() => groupLines(hunks), [hunks]);
@@ -79,6 +83,8 @@ function DiffContentRouter({
         groups={groups}
         wordDiffEnabled={wordDiffEnabled}
         wrapLines={wrapLines}
+        enableSyntaxHighlighting={enableSyntaxHighlighting}
+        language={language}
       />
     );
   return (
@@ -86,6 +92,8 @@ function DiffContentRouter({
       groups={groups}
       wordDiffEnabled={wordDiffEnabled}
       wrapLines={wrapLines}
+      enableSyntaxHighlighting={enableSyntaxHighlighting}
+      language={language}
     />
   );
 }
@@ -97,6 +105,7 @@ export function DiffFileCard({
   viewMode,
   wordDiffEnabled,
   wrapLines,
+  enableSyntaxHighlighting = true,
 }: {
   file: DiffFile;
   expanded: boolean;
@@ -104,6 +113,7 @@ export function DiffFileCard({
   viewMode: ViewMode;
   wordDiffEnabled: boolean;
   wrapLines: boolean;
+  enableSyntaxHighlighting?: boolean;
 }) {
   const [copied, setCopied] = useState(false);
   const statusIcon = getStatusIcon(file.status);
@@ -232,6 +242,8 @@ export function DiffFileCard({
               viewMode={viewMode}
               wordDiffEnabled={wordDiffEnabled}
               wrapLines={wrapLines}
+              enableSyntaxHighlighting={enableSyntaxHighlighting}
+              language={langInfo?.lang.toLowerCase()}
             />
           ) : (
             <div className="py-8 text-center text-sm text-muted-foreground">

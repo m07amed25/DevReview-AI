@@ -33,6 +33,7 @@ import {
 import { cn } from "@/lib/utils";
 import { DiffViewer } from "@/features/diff-viewer";
 import { ReviewResult } from "@/features/review";
+import { SecurityDashboard } from "@/features/security/security-dashboard";
 import { CollaborativeReview } from "@/features/collaborative-review";
 import { DiagramPanel } from "@/features/review/components/diagram-panel";
 import { ReviewDiffPanel } from "@/features/review/components/review-diff-panel";
@@ -51,7 +52,7 @@ export default function PullRequestPage({ params }: PageProps) {
   const { id, prNumber } = use(params);
   const prNum = parseInt(prNumber, 10);
   const [activeTab, setActiveTab] = useState<
-    "review" | "files" | "discussion" | "diagrams" | "compare"
+    "review" | "files" | "discussion" | "diagrams" | "compare" | "security"
   >("files");
   const [compareCurrentId, setCompareCurrentId] = useState<string | null>(null);
   const [comparePreviousId, setComparePreviousId] = useState<string | null>(
@@ -465,6 +466,12 @@ export default function PullRequestPage({ params }: PageProps) {
             />
           )}
           <TabButton
+            active={activeTab === "security"}
+            onClick={() => setActiveTab("security")}
+            icon={ScanSearch}
+            label="Security"
+          />
+          <TabButton
             active={activeTab === "diagrams"}
             onClick={() => setActiveTab("diagrams")}
             icon={Network}
@@ -633,6 +640,22 @@ export default function PullRequestPage({ params }: PageProps) {
                 <ArrowLeftRight className="size-8 text-muted-foreground/30 mx-auto mb-3" />
                 <p className="text-sm font-medium text-muted-foreground">
                   Select two reviews above to see what changed
+                </p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      )}
+      {activeTab === "security" && (
+        <div>
+          {reviewId ? (
+            <SecurityDashboard reviewId={reviewId} />
+          ) : (
+            <Card className="border-dashed">
+              <CardContent className="py-16 text-center">
+                <ScanSearch className="size-8 text-muted-foreground/30 mx-auto mb-3" />
+                <p className="text-sm font-medium text-muted-foreground">
+                  Run an AI review first to see security scan results
                 </p>
               </CardContent>
             </Card>

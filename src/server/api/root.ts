@@ -11,6 +11,7 @@ import { automationRouter } from "./routers/automation";
 import { diagramRouter } from "./routers/diagram";
 import { adminRouter } from "./routers/admin";
 import { rulesRouter } from "./routers/rules";
+import { securityRouter } from "./routers/security";
 import { createCallerFactory, createTRPCRouter, publicProcedure } from "./trpc";
 
 export const appRouter = createTRPCRouter({
@@ -33,6 +34,7 @@ export const appRouter = createTRPCRouter({
   diagram: diagramRouter,
   admin: adminRouter,
   rules: rulesRouter,
+  security: securityRouter,
 });
 
 export type AppRouter = typeof appRouter;
