@@ -282,7 +282,6 @@ export function mapFindingsToReviewPayload(
     }
   }
 
-  // ── Severity counts ──────────────────────────────────────────────────────
   const counts = {
     critical: values.filter(
       (f) => (f.severity ?? f.severityLevel ?? "").toLowerCase() === "critical",
@@ -293,18 +292,17 @@ export function mapFindingsToReviewPayload(
     medium: values.filter(
       (f) => (f.severity ?? f.severityLevel ?? "").toLowerCase() === "medium",
     ).length,
-    low: values.filter((f) => {
-      const s = (f.severity ?? f.severityLevel ?? "").toLowerCase();
-      return (
-        s === "low" || (s !== "critical" && s !== "high" && s !== "medium")
-      );
-    }).length,
+    low: values.filter(
+      (f) => (f.severity ?? f.severityLevel ?? "").toLowerCase() === "low",
+    ).length,
+    info: values.filter(
+      (f) => (f.severity ?? f.severityLevel ?? "").toLowerCase() === "info",
+    ).length,
   };
-  const totalIssues = values.length;
+  const totalIssues = counts.critical + counts.high + counts.medium + counts.low;
   const hasCritical = counts.critical > 0;
   const hasFailed = overallStatus === "FAILED";
 
-  // ── Quality overall ──────────────────────────────────────────────────────
   const qualityOverall = qualityMetrics
     ? Math.round(
         (qualityMetrics.complexity +
@@ -315,16 +313,14 @@ export function mapFindingsToReviewPayload(
       )
     : null;
 
-  // ────────────────────────────────────────────────────────────────────────
   // Build the Markdown body
-  // ────────────────────────────────────────────────────────────────────────
   const lines: string[] = [];
 
-  // ── Title ─────────────────────────────────────────────────────────────────
+  //  Title 
   lines.push(`## 🤖 DevReview AI — Automated Code Review`);
   lines.push("");
 
-  // ── Meta quote (PR title + commit) ───────────────────────────────────────
+  //  Meta quote (PR title + commit) 
   const metaParts: string[] = [];
   if (prTitle) metaParts.push(`**PR:** ${prTitle}`);
   if (commitSha) metaParts.push(`**Commit:** \`${shortSha(commitSha)}\``);
@@ -436,6 +432,12 @@ export function mapFindingsToReviewPayload(
           style: "flat-square",
         }),
       );
+    if (counts.info > 0)
+      sevBadges.push(
+        badge("Info", String(counts.info), "lightgrey", {
+          style: "flat-square",
+        }),
+      );
     lines.push(sevBadges.join(" "));
     lines.push("");
 
@@ -451,6 +453,10 @@ export function mapFindingsToReviewPayload(
     if (counts.low > 0) lines.push(row("🔵", "Low", counts.low));
     lines.push(`| — | **${totalIssues}** | | 100% |`);
     lines.push("");
+    if (counts.info > 0) {
+      lines.push(`> ℹ️ **${counts.info}** informational note${counts.info !== 1 ? "s" : ""} (not counted as issues)`);
+      lines.push("");
+    }
     lines.push("---");
     lines.push("");
   }

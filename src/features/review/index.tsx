@@ -119,7 +119,7 @@ export function ReviewResult({
     info: comments.filter((c) => c.severity === "info").length,
   };
 
-  const totalIssues = comments.length;
+  const totalIssues = comments.filter((c) => c.severity !== "info").length;
 
   const allCategories = Array.from(
     new Set(comments.map((c) => c.category).filter(Boolean) as string[]),
@@ -400,8 +400,8 @@ export function ReviewResult({
         {comments.length > 0 ? (
           <div className="space-y-3">
             <CommentsToolbar
-              totalComments={comments.length}
-              filteredCount={visibleComments.length}
+              totalComments={totalIssues}
+              filteredCount={visibleComments.filter((c) => c.severity !== "info").length}
               searchQuery={searchQuery}
               onSearchChange={setSearchQuery}
               allCategories={allCategories}

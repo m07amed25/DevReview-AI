@@ -312,7 +312,7 @@ export function ReviewCard({
               <div className="flex items-center gap-2">
                 <SeverityDonut comments={comments} />
                 <span className="text-[11px] font-bold text-muted-foreground tabular-nums">
-                  {comments.length}
+                  {comments.filter((c) => c.severity !== "info").length}
                 </span>
               </div>
             )}
