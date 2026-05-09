@@ -350,14 +350,6 @@ export const RuleSeverity: {
 
 export type RuleSeverity = (typeof RuleSeverity)[keyof typeof RuleSeverity]
 
-
-export const SsoType: {
-  OIDC: 'OIDC',
-  SAML: 'SAML'
-};
-
-export type SsoType = (typeof SsoType)[keyof typeof SsoType]
-
 }
 
 export type UserRole = $Enums.UserRole
@@ -431,10 +423,6 @@ export const DiagramStatus: typeof $Enums.DiagramStatus
 export type RuleSeverity = $Enums.RuleSeverity
 
 export const RuleSeverity: typeof $Enums.RuleSeverity
-
-export type SsoType = $Enums.SsoType
-
-export const SsoType: typeof $Enums.SsoType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -36795,45 +36783,45 @@ export namespace Prisma {
 
   export type SsoProviderMinAggregateOutputType = {
     id: string | null
-    name: string | null
-    type: $Enums.SsoType | null
-    enabled: boolean | null
     issuer: string | null
-    clientId: string | null
-    clientSecret: string | null
-    entryPoint: string | null
-    certificate: string | null
-    emailDomain: string | null
+    domain: string | null
+    oidcConfig: string | null
+    samlConfig: string | null
+    userId: string | null
+    providerId: string | null
+    organizationId: string | null
+    name: string | null
+    enabled: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
   export type SsoProviderMaxAggregateOutputType = {
     id: string | null
-    name: string | null
-    type: $Enums.SsoType | null
-    enabled: boolean | null
     issuer: string | null
-    clientId: string | null
-    clientSecret: string | null
-    entryPoint: string | null
-    certificate: string | null
-    emailDomain: string | null
+    domain: string | null
+    oidcConfig: string | null
+    samlConfig: string | null
+    userId: string | null
+    providerId: string | null
+    organizationId: string | null
+    name: string | null
+    enabled: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
   export type SsoProviderCountAggregateOutputType = {
     id: number
-    name: number
-    type: number
-    enabled: number
     issuer: number
-    clientId: number
-    clientSecret: number
-    entryPoint: number
-    certificate: number
-    emailDomain: number
+    domain: number
+    oidcConfig: number
+    samlConfig: number
+    userId: number
+    providerId: number
+    organizationId: number
+    name: number
+    enabled: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -36842,45 +36830,45 @@ export namespace Prisma {
 
   export type SsoProviderMinAggregateInputType = {
     id?: true
-    name?: true
-    type?: true
-    enabled?: true
     issuer?: true
-    clientId?: true
-    clientSecret?: true
-    entryPoint?: true
-    certificate?: true
-    emailDomain?: true
+    domain?: true
+    oidcConfig?: true
+    samlConfig?: true
+    userId?: true
+    providerId?: true
+    organizationId?: true
+    name?: true
+    enabled?: true
     createdAt?: true
     updatedAt?: true
   }
 
   export type SsoProviderMaxAggregateInputType = {
     id?: true
-    name?: true
-    type?: true
-    enabled?: true
     issuer?: true
-    clientId?: true
-    clientSecret?: true
-    entryPoint?: true
-    certificate?: true
-    emailDomain?: true
+    domain?: true
+    oidcConfig?: true
+    samlConfig?: true
+    userId?: true
+    providerId?: true
+    organizationId?: true
+    name?: true
+    enabled?: true
     createdAt?: true
     updatedAt?: true
   }
 
   export type SsoProviderCountAggregateInputType = {
     id?: true
-    name?: true
-    type?: true
-    enabled?: true
     issuer?: true
-    clientId?: true
-    clientSecret?: true
-    entryPoint?: true
-    certificate?: true
-    emailDomain?: true
+    domain?: true
+    oidcConfig?: true
+    samlConfig?: true
+    userId?: true
+    providerId?: true
+    organizationId?: true
+    name?: true
+    enabled?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -36960,15 +36948,15 @@ export namespace Prisma {
 
   export type SsoProviderGroupByOutputType = {
     id: string
+    issuer: string
+    domain: string
+    oidcConfig: string | null
+    samlConfig: string | null
+    userId: string
+    providerId: string
+    organizationId: string | null
     name: string
-    type: $Enums.SsoType
     enabled: boolean
-    issuer: string | null
-    clientId: string | null
-    clientSecret: string | null
-    entryPoint: string | null
-    certificate: string | null
-    emailDomain: string | null
     createdAt: Date
     updatedAt: Date
     _count: SsoProviderCountAggregateOutputType | null
@@ -36992,80 +36980,80 @@ export namespace Prisma {
 
   export type SsoProviderSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    name?: boolean
-    type?: boolean
-    enabled?: boolean
     issuer?: boolean
-    clientId?: boolean
-    clientSecret?: boolean
-    entryPoint?: boolean
-    certificate?: boolean
-    emailDomain?: boolean
+    domain?: boolean
+    oidcConfig?: boolean
+    samlConfig?: boolean
+    userId?: boolean
+    providerId?: boolean
+    organizationId?: boolean
+    name?: boolean
+    enabled?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["ssoProvider"]>
 
   export type SsoProviderSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    name?: boolean
-    type?: boolean
-    enabled?: boolean
     issuer?: boolean
-    clientId?: boolean
-    clientSecret?: boolean
-    entryPoint?: boolean
-    certificate?: boolean
-    emailDomain?: boolean
+    domain?: boolean
+    oidcConfig?: boolean
+    samlConfig?: boolean
+    userId?: boolean
+    providerId?: boolean
+    organizationId?: boolean
+    name?: boolean
+    enabled?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["ssoProvider"]>
 
   export type SsoProviderSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    name?: boolean
-    type?: boolean
-    enabled?: boolean
     issuer?: boolean
-    clientId?: boolean
-    clientSecret?: boolean
-    entryPoint?: boolean
-    certificate?: boolean
-    emailDomain?: boolean
+    domain?: boolean
+    oidcConfig?: boolean
+    samlConfig?: boolean
+    userId?: boolean
+    providerId?: boolean
+    organizationId?: boolean
+    name?: boolean
+    enabled?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["ssoProvider"]>
 
   export type SsoProviderSelectScalar = {
     id?: boolean
-    name?: boolean
-    type?: boolean
-    enabled?: boolean
     issuer?: boolean
-    clientId?: boolean
-    clientSecret?: boolean
-    entryPoint?: boolean
-    certificate?: boolean
-    emailDomain?: boolean
+    domain?: boolean
+    oidcConfig?: boolean
+    samlConfig?: boolean
+    userId?: boolean
+    providerId?: boolean
+    organizationId?: boolean
+    name?: boolean
+    enabled?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type SsoProviderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "type" | "enabled" | "issuer" | "clientId" | "clientSecret" | "entryPoint" | "certificate" | "emailDomain" | "createdAt" | "updatedAt", ExtArgs["result"]["ssoProvider"]>
+  export type SsoProviderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "issuer" | "domain" | "oidcConfig" | "samlConfig" | "userId" | "providerId" | "organizationId" | "name" | "enabled" | "createdAt" | "updatedAt", ExtArgs["result"]["ssoProvider"]>
 
   export type $SsoProviderPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SsoProvider"
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: string
+      issuer: string
+      domain: string
+      oidcConfig: string | null
+      samlConfig: string | null
+      userId: string
+      providerId: string
+      organizationId: string | null
       name: string
-      type: $Enums.SsoType
       enabled: boolean
-      issuer: string | null
-      clientId: string | null
-      clientSecret: string | null
-      entryPoint: string | null
-      certificate: string | null
-      emailDomain: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["ssoProvider"]>
@@ -37492,15 +37480,15 @@ export namespace Prisma {
    */
   interface SsoProviderFieldRefs {
     readonly id: FieldRef<"SsoProvider", 'String'>
-    readonly name: FieldRef<"SsoProvider", 'String'>
-    readonly type: FieldRef<"SsoProvider", 'SsoType'>
-    readonly enabled: FieldRef<"SsoProvider", 'Boolean'>
     readonly issuer: FieldRef<"SsoProvider", 'String'>
-    readonly clientId: FieldRef<"SsoProvider", 'String'>
-    readonly clientSecret: FieldRef<"SsoProvider", 'String'>
-    readonly entryPoint: FieldRef<"SsoProvider", 'String'>
-    readonly certificate: FieldRef<"SsoProvider", 'String'>
-    readonly emailDomain: FieldRef<"SsoProvider", 'String'>
+    readonly domain: FieldRef<"SsoProvider", 'String'>
+    readonly oidcConfig: FieldRef<"SsoProvider", 'String'>
+    readonly samlConfig: FieldRef<"SsoProvider", 'String'>
+    readonly userId: FieldRef<"SsoProvider", 'String'>
+    readonly providerId: FieldRef<"SsoProvider", 'String'>
+    readonly organizationId: FieldRef<"SsoProvider", 'String'>
+    readonly name: FieldRef<"SsoProvider", 'String'>
+    readonly enabled: FieldRef<"SsoProvider", 'Boolean'>
     readonly createdAt: FieldRef<"SsoProvider", 'DateTime'>
     readonly updatedAt: FieldRef<"SsoProvider", 'DateTime'>
   }
@@ -40526,15 +40514,15 @@ export namespace Prisma {
 
   export const SsoProviderScalarFieldEnum: {
     id: 'id',
-    name: 'name',
-    type: 'type',
-    enabled: 'enabled',
     issuer: 'issuer',
-    clientId: 'clientId',
-    clientSecret: 'clientSecret',
-    entryPoint: 'entryPoint',
-    certificate: 'certificate',
-    emailDomain: 'emailDomain',
+    domain: 'domain',
+    oidcConfig: 'oidcConfig',
+    samlConfig: 'samlConfig',
+    userId: 'userId',
+    providerId: 'providerId',
+    organizationId: 'organizationId',
+    name: 'name',
+    enabled: 'enabled',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -40949,20 +40937,6 @@ export namespace Prisma {
    * Reference to a field of type 'RuleSeverity[]'
    */
   export type ListEnumRuleSeverityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RuleSeverity[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'SsoType'
-   */
-  export type EnumSsoTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SsoType'>
-    
-
-
-  /**
-   * Reference to a field of type 'SsoType[]'
-   */
-  export type ListEnumSsoTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SsoType[]'>
     
 
 
@@ -43281,63 +43255,63 @@ export namespace Prisma {
     OR?: SsoProviderWhereInput[]
     NOT?: SsoProviderWhereInput | SsoProviderWhereInput[]
     id?: StringFilter<"SsoProvider"> | string
+    issuer?: StringFilter<"SsoProvider"> | string
+    domain?: StringFilter<"SsoProvider"> | string
+    oidcConfig?: StringNullableFilter<"SsoProvider"> | string | null
+    samlConfig?: StringNullableFilter<"SsoProvider"> | string | null
+    userId?: StringFilter<"SsoProvider"> | string
+    providerId?: StringFilter<"SsoProvider"> | string
+    organizationId?: StringNullableFilter<"SsoProvider"> | string | null
     name?: StringFilter<"SsoProvider"> | string
-    type?: EnumSsoTypeFilter<"SsoProvider"> | $Enums.SsoType
     enabled?: BoolFilter<"SsoProvider"> | boolean
-    issuer?: StringNullableFilter<"SsoProvider"> | string | null
-    clientId?: StringNullableFilter<"SsoProvider"> | string | null
-    clientSecret?: StringNullableFilter<"SsoProvider"> | string | null
-    entryPoint?: StringNullableFilter<"SsoProvider"> | string | null
-    certificate?: StringNullableFilter<"SsoProvider"> | string | null
-    emailDomain?: StringNullableFilter<"SsoProvider"> | string | null
     createdAt?: DateTimeFilter<"SsoProvider"> | Date | string
     updatedAt?: DateTimeFilter<"SsoProvider"> | Date | string
   }
 
   export type SsoProviderOrderByWithRelationInput = {
     id?: SortOrder
+    issuer?: SortOrder
+    domain?: SortOrder
+    oidcConfig?: SortOrderInput | SortOrder
+    samlConfig?: SortOrderInput | SortOrder
+    userId?: SortOrder
+    providerId?: SortOrder
+    organizationId?: SortOrderInput | SortOrder
     name?: SortOrder
-    type?: SortOrder
     enabled?: SortOrder
-    issuer?: SortOrderInput | SortOrder
-    clientId?: SortOrderInput | SortOrder
-    clientSecret?: SortOrderInput | SortOrder
-    entryPoint?: SortOrderInput | SortOrder
-    certificate?: SortOrderInput | SortOrder
-    emailDomain?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type SsoProviderWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    providerId?: string
     AND?: SsoProviderWhereInput | SsoProviderWhereInput[]
     OR?: SsoProviderWhereInput[]
     NOT?: SsoProviderWhereInput | SsoProviderWhereInput[]
+    issuer?: StringFilter<"SsoProvider"> | string
+    domain?: StringFilter<"SsoProvider"> | string
+    oidcConfig?: StringNullableFilter<"SsoProvider"> | string | null
+    samlConfig?: StringNullableFilter<"SsoProvider"> | string | null
+    userId?: StringFilter<"SsoProvider"> | string
+    organizationId?: StringNullableFilter<"SsoProvider"> | string | null
     name?: StringFilter<"SsoProvider"> | string
-    type?: EnumSsoTypeFilter<"SsoProvider"> | $Enums.SsoType
     enabled?: BoolFilter<"SsoProvider"> | boolean
-    issuer?: StringNullableFilter<"SsoProvider"> | string | null
-    clientId?: StringNullableFilter<"SsoProvider"> | string | null
-    clientSecret?: StringNullableFilter<"SsoProvider"> | string | null
-    entryPoint?: StringNullableFilter<"SsoProvider"> | string | null
-    certificate?: StringNullableFilter<"SsoProvider"> | string | null
-    emailDomain?: StringNullableFilter<"SsoProvider"> | string | null
     createdAt?: DateTimeFilter<"SsoProvider"> | Date | string
     updatedAt?: DateTimeFilter<"SsoProvider"> | Date | string
-  }, "id">
+  }, "id" | "providerId">
 
   export type SsoProviderOrderByWithAggregationInput = {
     id?: SortOrder
+    issuer?: SortOrder
+    domain?: SortOrder
+    oidcConfig?: SortOrderInput | SortOrder
+    samlConfig?: SortOrderInput | SortOrder
+    userId?: SortOrder
+    providerId?: SortOrder
+    organizationId?: SortOrderInput | SortOrder
     name?: SortOrder
-    type?: SortOrder
     enabled?: SortOrder
-    issuer?: SortOrderInput | SortOrder
-    clientId?: SortOrderInput | SortOrder
-    clientSecret?: SortOrderInput | SortOrder
-    entryPoint?: SortOrderInput | SortOrder
-    certificate?: SortOrderInput | SortOrder
-    emailDomain?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: SsoProviderCountOrderByAggregateInput
@@ -43350,15 +43324,15 @@ export namespace Prisma {
     OR?: SsoProviderScalarWhereWithAggregatesInput[]
     NOT?: SsoProviderScalarWhereWithAggregatesInput | SsoProviderScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"SsoProvider"> | string
+    issuer?: StringWithAggregatesFilter<"SsoProvider"> | string
+    domain?: StringWithAggregatesFilter<"SsoProvider"> | string
+    oidcConfig?: StringNullableWithAggregatesFilter<"SsoProvider"> | string | null
+    samlConfig?: StringNullableWithAggregatesFilter<"SsoProvider"> | string | null
+    userId?: StringWithAggregatesFilter<"SsoProvider"> | string
+    providerId?: StringWithAggregatesFilter<"SsoProvider"> | string
+    organizationId?: StringNullableWithAggregatesFilter<"SsoProvider"> | string | null
     name?: StringWithAggregatesFilter<"SsoProvider"> | string
-    type?: EnumSsoTypeWithAggregatesFilter<"SsoProvider"> | $Enums.SsoType
     enabled?: BoolWithAggregatesFilter<"SsoProvider"> | boolean
-    issuer?: StringNullableWithAggregatesFilter<"SsoProvider"> | string | null
-    clientId?: StringNullableWithAggregatesFilter<"SsoProvider"> | string | null
-    clientSecret?: StringNullableWithAggregatesFilter<"SsoProvider"> | string | null
-    entryPoint?: StringNullableWithAggregatesFilter<"SsoProvider"> | string | null
-    certificate?: StringNullableWithAggregatesFilter<"SsoProvider"> | string | null
-    emailDomain?: StringNullableWithAggregatesFilter<"SsoProvider"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"SsoProvider"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"SsoProvider"> | Date | string
   }
@@ -46022,105 +45996,105 @@ export namespace Prisma {
 
   export type SsoProviderCreateInput = {
     id?: string
+    issuer: string
+    domain: string
+    oidcConfig?: string | null
+    samlConfig?: string | null
+    userId: string
+    providerId: string
+    organizationId?: string | null
     name: string
-    type: $Enums.SsoType
     enabled?: boolean
-    issuer?: string | null
-    clientId?: string | null
-    clientSecret?: string | null
-    entryPoint?: string | null
-    certificate?: string | null
-    emailDomain?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type SsoProviderUncheckedCreateInput = {
     id?: string
+    issuer: string
+    domain: string
+    oidcConfig?: string | null
+    samlConfig?: string | null
+    userId: string
+    providerId: string
+    organizationId?: string | null
     name: string
-    type: $Enums.SsoType
     enabled?: boolean
-    issuer?: string | null
-    clientId?: string | null
-    clientSecret?: string | null
-    entryPoint?: string | null
-    certificate?: string | null
-    emailDomain?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type SsoProviderUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    issuer?: StringFieldUpdateOperationsInput | string
+    domain?: StringFieldUpdateOperationsInput | string
+    oidcConfig?: NullableStringFieldUpdateOperationsInput | string | null
+    samlConfig?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
+    providerId?: StringFieldUpdateOperationsInput | string
+    organizationId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
-    type?: EnumSsoTypeFieldUpdateOperationsInput | $Enums.SsoType
     enabled?: BoolFieldUpdateOperationsInput | boolean
-    issuer?: NullableStringFieldUpdateOperationsInput | string | null
-    clientId?: NullableStringFieldUpdateOperationsInput | string | null
-    clientSecret?: NullableStringFieldUpdateOperationsInput | string | null
-    entryPoint?: NullableStringFieldUpdateOperationsInput | string | null
-    certificate?: NullableStringFieldUpdateOperationsInput | string | null
-    emailDomain?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SsoProviderUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    issuer?: StringFieldUpdateOperationsInput | string
+    domain?: StringFieldUpdateOperationsInput | string
+    oidcConfig?: NullableStringFieldUpdateOperationsInput | string | null
+    samlConfig?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
+    providerId?: StringFieldUpdateOperationsInput | string
+    organizationId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
-    type?: EnumSsoTypeFieldUpdateOperationsInput | $Enums.SsoType
     enabled?: BoolFieldUpdateOperationsInput | boolean
-    issuer?: NullableStringFieldUpdateOperationsInput | string | null
-    clientId?: NullableStringFieldUpdateOperationsInput | string | null
-    clientSecret?: NullableStringFieldUpdateOperationsInput | string | null
-    entryPoint?: NullableStringFieldUpdateOperationsInput | string | null
-    certificate?: NullableStringFieldUpdateOperationsInput | string | null
-    emailDomain?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SsoProviderCreateManyInput = {
     id?: string
+    issuer: string
+    domain: string
+    oidcConfig?: string | null
+    samlConfig?: string | null
+    userId: string
+    providerId: string
+    organizationId?: string | null
     name: string
-    type: $Enums.SsoType
     enabled?: boolean
-    issuer?: string | null
-    clientId?: string | null
-    clientSecret?: string | null
-    entryPoint?: string | null
-    certificate?: string | null
-    emailDomain?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type SsoProviderUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    issuer?: StringFieldUpdateOperationsInput | string
+    domain?: StringFieldUpdateOperationsInput | string
+    oidcConfig?: NullableStringFieldUpdateOperationsInput | string | null
+    samlConfig?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
+    providerId?: StringFieldUpdateOperationsInput | string
+    organizationId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
-    type?: EnumSsoTypeFieldUpdateOperationsInput | $Enums.SsoType
     enabled?: BoolFieldUpdateOperationsInput | boolean
-    issuer?: NullableStringFieldUpdateOperationsInput | string | null
-    clientId?: NullableStringFieldUpdateOperationsInput | string | null
-    clientSecret?: NullableStringFieldUpdateOperationsInput | string | null
-    entryPoint?: NullableStringFieldUpdateOperationsInput | string | null
-    certificate?: NullableStringFieldUpdateOperationsInput | string | null
-    emailDomain?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SsoProviderUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    issuer?: StringFieldUpdateOperationsInput | string
+    domain?: StringFieldUpdateOperationsInput | string
+    oidcConfig?: NullableStringFieldUpdateOperationsInput | string | null
+    samlConfig?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
+    providerId?: StringFieldUpdateOperationsInput | string
+    organizationId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
-    type?: EnumSsoTypeFieldUpdateOperationsInput | $Enums.SsoType
     enabled?: BoolFieldUpdateOperationsInput | boolean
-    issuer?: NullableStringFieldUpdateOperationsInput | string | null
-    clientId?: NullableStringFieldUpdateOperationsInput | string | null
-    clientSecret?: NullableStringFieldUpdateOperationsInput | string | null
-    entryPoint?: NullableStringFieldUpdateOperationsInput | string | null
-    certificate?: NullableStringFieldUpdateOperationsInput | string | null
-    emailDomain?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -48318,66 +48292,49 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
-  export type EnumSsoTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.SsoType | EnumSsoTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.SsoType[] | ListEnumSsoTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.SsoType[] | ListEnumSsoTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumSsoTypeFilter<$PrismaModel> | $Enums.SsoType
-  }
-
   export type SsoProviderCountOrderByAggregateInput = {
     id?: SortOrder
-    name?: SortOrder
-    type?: SortOrder
-    enabled?: SortOrder
     issuer?: SortOrder
-    clientId?: SortOrder
-    clientSecret?: SortOrder
-    entryPoint?: SortOrder
-    certificate?: SortOrder
-    emailDomain?: SortOrder
+    domain?: SortOrder
+    oidcConfig?: SortOrder
+    samlConfig?: SortOrder
+    userId?: SortOrder
+    providerId?: SortOrder
+    organizationId?: SortOrder
+    name?: SortOrder
+    enabled?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type SsoProviderMaxOrderByAggregateInput = {
     id?: SortOrder
-    name?: SortOrder
-    type?: SortOrder
-    enabled?: SortOrder
     issuer?: SortOrder
-    clientId?: SortOrder
-    clientSecret?: SortOrder
-    entryPoint?: SortOrder
-    certificate?: SortOrder
-    emailDomain?: SortOrder
+    domain?: SortOrder
+    oidcConfig?: SortOrder
+    samlConfig?: SortOrder
+    userId?: SortOrder
+    providerId?: SortOrder
+    organizationId?: SortOrder
+    name?: SortOrder
+    enabled?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type SsoProviderMinOrderByAggregateInput = {
     id?: SortOrder
-    name?: SortOrder
-    type?: SortOrder
-    enabled?: SortOrder
     issuer?: SortOrder
-    clientId?: SortOrder
-    clientSecret?: SortOrder
-    entryPoint?: SortOrder
-    certificate?: SortOrder
-    emailDomain?: SortOrder
+    domain?: SortOrder
+    oidcConfig?: SortOrder
+    samlConfig?: SortOrder
+    userId?: SortOrder
+    providerId?: SortOrder
+    organizationId?: SortOrder
+    name?: SortOrder
+    enabled?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type EnumSsoTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.SsoType | EnumSsoTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.SsoType[] | ListEnumSsoTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.SsoType[] | ListEnumSsoTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumSsoTypeWithAggregatesFilter<$PrismaModel> | $Enums.SsoType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumSsoTypeFilter<$PrismaModel>
-    _max?: NestedEnumSsoTypeFilter<$PrismaModel>
   }
 
   export type CustomRoleCountOrderByAggregateInput = {
@@ -50609,10 +50566,6 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAuditLogsInput, UserUpdateWithoutAuditLogsInput>, UserUncheckedUpdateWithoutAuditLogsInput>
   }
 
-  export type EnumSsoTypeFieldUpdateOperationsInput = {
-    set?: $Enums.SsoType
-  }
-
   export type UserCustomRoleCreateNestedManyWithoutRoleInput = {
     create?: XOR<UserCustomRoleCreateWithoutRoleInput, UserCustomRoleUncheckedCreateWithoutRoleInput> | UserCustomRoleCreateWithoutRoleInput[] | UserCustomRoleUncheckedCreateWithoutRoleInput[]
     connectOrCreate?: UserCustomRoleCreateOrConnectWithoutRoleInput | UserCustomRoleCreateOrConnectWithoutRoleInput[]
@@ -51261,23 +51214,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumRuleSeverityFilter<$PrismaModel>
     _max?: NestedEnumRuleSeverityFilter<$PrismaModel>
-  }
-
-  export type NestedEnumSsoTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.SsoType | EnumSsoTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.SsoType[] | ListEnumSsoTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.SsoType[] | ListEnumSsoTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumSsoTypeFilter<$PrismaModel> | $Enums.SsoType
-  }
-
-  export type NestedEnumSsoTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.SsoType | EnumSsoTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.SsoType[] | ListEnumSsoTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.SsoType[] | ListEnumSsoTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumSsoTypeWithAggregatesFilter<$PrismaModel> | $Enums.SsoType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumSsoTypeFilter<$PrismaModel>
-    _max?: NestedEnumSsoTypeFilter<$PrismaModel>
   }
 
   export type SessionCreateWithoutUserInput = {

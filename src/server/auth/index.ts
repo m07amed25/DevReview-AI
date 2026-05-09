@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { APIError } from "better-auth/api";
 import { prismaAdapter } from "better-auth/adapters/prisma";
+import { sso } from "@better-auth/sso";
 import { db } from "../db";
 import { sendGithubConnectionWarningEmail } from "../email";
 
@@ -178,6 +179,7 @@ export const auth = betterAuth({
     },
   },
   trustedOrigins: getTrustedOrigins(),
+  plugins: [sso()],
 });
 
 export type Session = typeof auth.$Infer.Session;

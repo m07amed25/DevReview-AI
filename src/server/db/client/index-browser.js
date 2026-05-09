@@ -466,15 +466,15 @@ exports.Prisma.AuditLogScalarFieldEnum = {
 
 exports.Prisma.SsoProviderScalarFieldEnum = {
   id: 'id',
-  name: 'name',
-  type: 'type',
-  enabled: 'enabled',
   issuer: 'issuer',
-  clientId: 'clientId',
-  clientSecret: 'clientSecret',
-  entryPoint: 'entryPoint',
-  certificate: 'certificate',
-  emailDomain: 'emailDomain',
+  domain: 'domain',
+  oidcConfig: 'oidcConfig',
+  samlConfig: 'samlConfig',
+  userId: 'userId',
+  providerId: 'providerId',
+  organizationId: 'organizationId',
+  name: 'name',
+  enabled: 'enabled',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -652,11 +652,6 @@ exports.RuleSeverity = exports.$Enums.RuleSeverity = {
   HIGH: 'HIGH',
   MEDIUM: 'MEDIUM',
   LOW: 'LOW'
-};
-
-exports.SsoType = exports.$Enums.SsoType = {
-  OIDC: 'OIDC',
-  SAML: 'SAML'
 };
 
 exports.Prisma.ModelName = {

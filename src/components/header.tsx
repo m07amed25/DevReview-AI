@@ -97,7 +97,7 @@ export function Header({ user }: HeaderProps) {
                   className={cn(
                     "nav-link flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200 hover:scale-105",
                     isActive
-                      ? "text-foreground bg-muted"
+                      ? "text-primary bg-primary/8 shadow-sm"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted/50 hover:shadow-sm",
                   )}
                 >

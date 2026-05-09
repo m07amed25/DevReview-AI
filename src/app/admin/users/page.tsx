@@ -50,6 +50,7 @@ import {
   ShieldCheck,
   ArrowUp,
   ArrowDown,
+  Github,
 } from "lucide-react";
 
 export default function AdminUsersPage() {
@@ -231,6 +232,16 @@ export default function AdminUsersPage() {
                         {user.emailVerified && (
                           <Badge variant="outline" className="text-xs">
                             Verified
+                          </Badge>
+                        )}
+
+                        {user.githubConnected && (
+                          <Badge
+                            variant="outline"
+                            className="gap-1 border-neutral-500 bg-neutral-500/10 text-xs text-neutral-400"
+                          >
+                            <Github className="h-3 w-3" />
+                            GitHub
                           </Badge>
                         )}
                       </div>

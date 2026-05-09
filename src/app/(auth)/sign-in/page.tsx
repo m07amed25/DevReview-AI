@@ -1,11 +1,11 @@
 "use client";
 
 import { FaGithub } from "react-icons/fa";
-import { AlertCircle, Eye, EyeOff, Loader2, X } from "lucide-react";
-import { useState, useEffect, useRef, Suspense } from "react";
+import { AlertCircle, Building2, Eye, EyeOff, Loader2, X } from "lucide-react";
+import { useState, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { signIn } from "@/lib/auth-client";
+import { signIn, authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,6 +25,7 @@ import {
 interface FieldErrors {
   email?: string;
   password?: string;
+  ssoEmail?: string;
 }
 
 function getUrlError(searchParams: Pick<URLSearchParams, "get">): string {
@@ -44,6 +45,10 @@ function SignInContent() {
   const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [ssoEmail, setSsoEmail] = useState("");
+  const [ssoMode, setSsoMode] = useState(false);
+  const [ssoLoading, setSsoLoading] = useState(false);
+  const [ssoFieldError, setSsoFieldError] = useState("");
   // Lazily initialise from the URL so we never call setState inside an effect
   const [error, setError] = useState(() => getUrlError(searchParams));
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
@@ -103,6 +108,50 @@ function SignInContent() {
         "Something went wrong. Please check your connection and try again.",
       );
       setLoading(false);
+    }
+  };
+
+  const validateSsoEmail = (): boolean => {
+    const v = ssoEmail.trim();
+    if (!v) {
+      setSsoFieldError("Work email is required.");
+      return false;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+      setSsoFieldError("Please enter a valid email address.");
+      return false;
+    }
+    // must have a domain part (e.g. company.com)
+    const domain = v.split("@")[1] ?? "";
+    if (!domain.includes(".")) {
+      setSsoFieldError("Enter a full work email, e.g. name@company.com.");
+      return false;
+    }
+    setSsoFieldError("");
+    return true;
+  };
+
+  const handleSsoSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateSsoEmail()) return;
+    setSsoLoading(true);
+    setError("");
+    try {
+      const result = await authClient.signIn.sso({
+        email: ssoEmail,
+        callbackURL: "/repo",
+        errorCallbackURL: "/sign-in",
+      });
+      if (result?.error) {
+        setError(
+          result.error.message ??
+            "SSO sign-in failed. Please check your work email domain.",
+        );
+        setSsoLoading(false);
+      }
+    } catch {
+      setError("SSO sign-in failed. Please try again.");
+      setSsoLoading(false);
     }
   };
 
@@ -180,10 +229,11 @@ function SignInContent() {
               <p className="flex-1">{error}</p>
               <button
                 type="button"
+                aria-label="Dismiss error"
                 onClick={() => setError("")}
                 className="shrink-0 rounded-md p-0.5 text-red-800/70 transition-colors hover:text-red-800 dark:text-red-300/70 dark:hover:text-red-300"
               >
-                <X className="size-4" />
+                <X className="size-4" aria-hidden="true" />
               </button>
             </div>
           )}
@@ -266,6 +316,80 @@ function SignInContent() {
               Sign up
             </Link>
           </p>
+
+          {/* Enterprise SSO */}
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <Separator className="w-full" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-card px-2 text-muted-foreground">
+                Enterprise SSO
+              </span>
+            </div>
+          </div>
+
+          {!ssoMode ? (
+            <Button
+              variant="outline"
+              onClick={() => setSsoMode(true)}
+              disabled={loading}
+              className="w-full"
+            >
+              <Building2 className="mr-2 size-4" />
+              Sign in with SSO
+            </Button>
+          ) : (
+            <form onSubmit={handleSsoSignIn} className="space-y-3">
+              <div className="space-y-2">
+                <Label htmlFor="sso-email">Work email</Label>
+                <Input
+                  id="sso-email"
+                  type="email"
+                  placeholder="name@company.com"
+                  value={ssoEmail}
+                  onChange={(e) => {
+                    setSsoEmail(e.target.value);
+                    if (ssoFieldError) setSsoFieldError("");
+                  }}
+                  disabled={ssoLoading}
+                  aria-invalid={!!ssoFieldError}
+                  aria-describedby={ssoFieldError ? "sso-email-error" : undefined}
+                  autoFocus
+                />
+                {ssoFieldError && (
+                  <p
+                    id="sso-email-error"
+                    className="text-xs text-destructive animate-in fade-in slide-in-from-top-1 duration-200"
+                  >
+                    {ssoFieldError}
+                  </p>
+                )}
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => { setSsoMode(false); setSsoFieldError(""); setSsoEmail(""); }}
+                  disabled={ssoLoading}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  size="sm"
+                  disabled={ssoLoading}
+                  className="flex-1"
+                >
+                  {ssoLoading ? (
+                    <Loader2 className="mr-2 size-4 animate-spin" />
+                  ) : null}
+                  Continue with SSO
+                </Button>
+              </div>
+            </form>
+          )}
         </CardContent>
       </Card>
     </div>

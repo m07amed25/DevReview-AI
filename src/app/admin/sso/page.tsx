@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import {
   Card,
   CardContent,
@@ -50,8 +50,22 @@ interface ProviderFormState {
   clientSecret: string;
   entryPoint: string;
   certificate: string;
-  emailDomain: string;
+  domain: string;
 }
+
+interface FormErrors {
+  name?: string;
+  domain?: string;
+  issuer?: string;
+  clientId?: string;
+  clientSecret?: string;
+  entryPoint?: string;
+  certificate?: string;
+}
+
+const URL_RE = /^https?:\/\/.+\..+/i;
+const DOMAIN_RE = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const PEM_RE = /-----BEGIN CERTIFICATE-----[\s\S]+-----END CERTIFICATE-----/;
 
 const EMPTY_FORM: ProviderFormState = {
   name: "",
@@ -62,7 +76,7 @@ const EMPTY_FORM: ProviderFormState = {
   clientSecret: "",
   entryPoint: "",
   certificate: "",
-  emailDomain: "",
+  domain: "",
 };
 
 export default function AdminSsoPage() {
@@ -70,6 +84,61 @@ export default function AdminSsoPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [form, setForm] = useState<ProviderFormState>(EMPTY_FORM);
+  const [formErrors, setFormErrors] = useState<FormErrors>({});
+
+  const clearError = useCallback((field: keyof FormErrors) => {
+    setFormErrors((prev) => {
+      if (!prev[field]) return prev;
+      const next = { ...prev };
+      delete next[field];
+      return next;
+    });
+  }, []);
+
+  const validate = (): boolean => {
+    const errors: FormErrors = {};
+
+    if (!form.name.trim()) {
+      errors.name = "Provider name is required.";
+    } else if (form.name.trim().length < 2) {
+      errors.name = "Name must be at least 2 characters.";
+    }
+
+    if (form.domain.trim() && !DOMAIN_RE.test(form.domain.trim())) {
+      errors.domain = "Enter a valid domain, e.g. company.com";
+    }
+
+    if (form.type === "OIDC") {
+      if (!form.issuer.trim()) {
+        errors.issuer = "Issuer URL is required for OIDC.";
+      } else if (!URL_RE.test(form.issuer.trim())) {
+        errors.issuer = "Must be a valid URL starting with https://";
+      }
+      if (!form.clientId.trim()) {
+        errors.clientId = "Client ID is required for OIDC.";
+      }
+      if (!form.clientSecret.trim()) {
+        errors.clientSecret = "Client Secret is required for OIDC.";
+      }
+    }
+
+    if (form.type === "SAML") {
+      if (!form.entryPoint.trim()) {
+        errors.entryPoint = "Entry Point URL is required for SAML.";
+      } else if (!URL_RE.test(form.entryPoint.trim())) {
+        errors.entryPoint = "Must be a valid URL starting with https://";
+      }
+      if (!form.certificate.trim()) {
+        errors.certificate = "IdP Certificate is required for SAML.";
+      } else if (!PEM_RE.test(form.certificate.trim())) {
+        errors.certificate =
+          "Must be a valid PEM certificate (BEGIN/END CERTIFICATE markers required).";
+      }
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const { data: providers, isLoading } = trpc.admin.getSsoProviders.useQuery();
 
@@ -79,6 +148,7 @@ export default function AdminSsoPage() {
       utils.admin.getSsoProviders.invalidate();
       setDialogOpen(false);
       setForm(EMPTY_FORM);
+      setFormErrors({});
     },
     onError: (e) => toast.error(e.message),
   });
@@ -93,26 +163,24 @@ export default function AdminSsoPage() {
   });
 
   const openEdit = (p: NonNullable<typeof providers>[number]) => {
+    setFormErrors({});
     setForm({
       id: p.id,
       name: p.name,
-      type: p.type as SsoType,
+      type: p.type,
       enabled: p.enabled,
       issuer: p.issuer ?? "",
       clientId: p.clientId ?? "",
       clientSecret: p.clientSecret ?? "",
       entryPoint: p.entryPoint ?? "",
       certificate: p.certificate ?? "",
-      emailDomain: p.emailDomain ?? "",
+      domain: p.domain ?? "",
     });
     setDialogOpen(true);
   };
 
   const handleSubmit = () => {
-    if (!form.name.trim()) {
-      toast.error("Provider name is required");
-      return;
-    }
+    if (!validate()) return;
     upsert.mutate({
       id: form.id,
       name: form.name,
@@ -123,7 +191,7 @@ export default function AdminSsoPage() {
       clientSecret: form.clientSecret || undefined,
       entryPoint: form.entryPoint || undefined,
       certificate: form.certificate || undefined,
-      emailDomain: form.emailDomain || undefined,
+      domain: form.domain || undefined,
     });
   };
 
@@ -184,7 +252,7 @@ export default function AdminSsoPage() {
                     <div>
                       <CardTitle className="text-base">{p.name}</CardTitle>
                       <CardDescription className="text-xs mt-0.5">
-                        {p.emailDomain ? `@${p.emailDomain}` : "All domains"}
+                        {p.domain ? `@${p.domain}` : "All domains"}
                       </CardDescription>
                     </div>
                   </div>
@@ -230,6 +298,12 @@ export default function AdminSsoPage() {
                       {p.entryPoint}
                     </span>
                   )}
+                  {p.domain && (
+                    <span>
+                      <span className="font-medium text-foreground">Domain:</span>{" "}
+                      {p.domain}
+                    </span>
+                  )}
                   {p.clientId && (
                     <span>
                       <span className="font-medium text-foreground">
@@ -245,8 +319,16 @@ export default function AdminSsoPage() {
         </div>
       )}
 
-      {/* Create / Edit dialog */}
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+      <Dialog
+        open={dialogOpen}
+        onOpenChange={(open) => {
+          if (!open) {
+            setFormErrors({});
+            setForm(EMPTY_FORM);
+          }
+          setDialogOpen(open);
+        }}
+      >
         <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
@@ -264,9 +346,17 @@ export default function AdminSsoPage() {
                 <Input
                   id="sso-name"
                   value={form.name}
-                  onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+                  onChange={(e) => {
+                    setForm((f) => ({ ...f, name: e.target.value }));
+                    clearError("name");
+                  }}
                   placeholder="Okta, Azure AD…"
+                  aria-invalid={!!formErrors.name}
+                  aria-describedby={formErrors.name ? "err-name" : undefined}
                 />
+                {formErrors.name && (
+                  <p id="err-name" className="text-xs text-destructive">{formErrors.name}</p>
+                )}
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="sso-type">Type</Label>
@@ -284,50 +374,74 @@ export default function AdminSsoPage() {
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="sso-domain">Email domain restriction</Label>
+              <Label htmlFor="sso-domain">Email domain</Label>
               <Input
                 id="sso-domain"
-                value={form.emailDomain}
-                onChange={(e) =>
-                  setForm((f) => ({ ...f, emailDomain: e.target.value }))
-                }
+                value={form.domain}
+                onChange={(e) => {
+                  setForm((f) => ({ ...f, domain: e.target.value }));
+                  clearError("domain");
+                }}
                 placeholder="example.com (leave blank for all domains)"
+                aria-invalid={!!formErrors.domain}
+                aria-describedby={formErrors.domain ? "err-domain" : undefined}
               />
+              {formErrors.domain && (
+                <p id="err-domain" className="text-xs text-destructive">{formErrors.domain}</p>
+              )}
             </div>
 
             {form.type === "OIDC" && (
               <>
                 <div className="space-y-1.5">
-                  <Label htmlFor="sso-issuer">Issuer URL</Label>
+                  <Label htmlFor="sso-issuer">Issuer URL *</Label>
                   <Input
                     id="sso-issuer"
                     value={form.issuer}
-                    onChange={(e) =>
-                      setForm((f) => ({ ...f, issuer: e.target.value }))
-                    }
+                    onChange={(e) => {
+                      setForm((f) => ({ ...f, issuer: e.target.value }));
+                      clearError("issuer");
+                    }}
                     placeholder="https://accounts.example.com"
+                    aria-invalid={!!formErrors.issuer}
+                    aria-describedby={formErrors.issuer ? "err-issuer" : undefined}
                   />
+                  {formErrors.issuer && (
+                    <p id="err-issuer" className="text-xs text-destructive">{formErrors.issuer}</p>
+                  )}
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="sso-client-id">Client ID</Label>
+                  <Label htmlFor="sso-client-id">Client ID *</Label>
                   <Input
                     id="sso-client-id"
                     value={form.clientId}
-                    onChange={(e) =>
-                      setForm((f) => ({ ...f, clientId: e.target.value }))
-                    }
+                    onChange={(e) => {
+                      setForm((f) => ({ ...f, clientId: e.target.value }));
+                      clearError("clientId");
+                    }}
+                    aria-invalid={!!formErrors.clientId}
+                    aria-describedby={formErrors.clientId ? "err-clientid" : undefined}
                   />
+                  {formErrors.clientId && (
+                    <p id="err-clientid" className="text-xs text-destructive">{formErrors.clientId}</p>
+                  )}
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="sso-client-secret">Client Secret</Label>
+                  <Label htmlFor="sso-client-secret">Client Secret *</Label>
                   <Input
                     id="sso-client-secret"
                     type="password"
                     value={form.clientSecret}
-                    onChange={(e) =>
-                      setForm((f) => ({ ...f, clientSecret: e.target.value }))
-                    }
+                    onChange={(e) => {
+                      setForm((f) => ({ ...f, clientSecret: e.target.value }));
+                      clearError("clientSecret");
+                    }}
+                    aria-invalid={!!formErrors.clientSecret}
+                    aria-describedby={formErrors.clientSecret ? "err-secret" : undefined}
                   />
+                  {formErrors.clientSecret && (
+                    <p id="err-secret" className="text-xs text-destructive">{formErrors.clientSecret}</p>
+                  )}
                 </div>
               </>
             )}
@@ -335,28 +449,40 @@ export default function AdminSsoPage() {
             {form.type === "SAML" && (
               <>
                 <div className="space-y-1.5">
-                  <Label htmlFor="sso-entry">Entry Point (SSO URL)</Label>
+                  <Label htmlFor="sso-entry">Entry Point (SSO URL) *</Label>
                   <Input
                     id="sso-entry"
                     value={form.entryPoint}
-                    onChange={(e) =>
-                      setForm((f) => ({ ...f, entryPoint: e.target.value }))
-                    }
+                    onChange={(e) => {
+                      setForm((f) => ({ ...f, entryPoint: e.target.value }));
+                      clearError("entryPoint");
+                    }}
                     placeholder="https://idp.example.com/saml/sso"
+                    aria-invalid={!!formErrors.entryPoint}
+                    aria-describedby={formErrors.entryPoint ? "err-entry" : undefined}
                   />
+                  {formErrors.entryPoint && (
+                    <p id="err-entry" className="text-xs text-destructive">{formErrors.entryPoint}</p>
+                  )}
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="sso-cert">IdP Certificate (PEM)</Label>
+                  <Label htmlFor="sso-cert">IdP Certificate (PEM) *</Label>
                   <Textarea
                     id="sso-cert"
                     rows={5}
                     value={form.certificate}
-                    onChange={(e) =>
-                      setForm((f) => ({ ...f, certificate: e.target.value }))
-                    }
+                    onChange={(e) => {
+                      setForm((f) => ({ ...f, certificate: e.target.value }));
+                      clearError("certificate");
+                    }}
                     placeholder="-----BEGIN CERTIFICATE-----&#10;…&#10;-----END CERTIFICATE-----"
                     className="font-mono text-xs"
+                    aria-invalid={!!formErrors.certificate}
+                    aria-describedby={formErrors.certificate ? "err-cert" : undefined}
                   />
+                  {formErrors.certificate && (
+                    <p id="err-cert" className="text-xs text-destructive">{formErrors.certificate}</p>
+                  )}
                 </div>
               </>
             )}

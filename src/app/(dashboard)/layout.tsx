@@ -34,6 +34,12 @@ function DashboardContent({
   return (
     <ErrorBoundary>
       <div className="min-h-screen bg-background">
+        {/* Ambient indigo glow — subtle, top-right and bottom-left */}
+        <div className="pointer-events-none fixed inset-0 overflow-hidden -z-10" aria-hidden>
+          <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-indigo-500/5 blur-3xl" />
+          <div className="absolute top-1/2 -left-32 h-72 w-72 rounded-full bg-violet-500/4 blur-3xl" />
+          <div className="absolute bottom-0 right-1/3 h-64 w-64 rounded-full bg-indigo-400/3 blur-3xl" />
+        </div>
         <Header user={user} />
         {needsGithubConnection && (
           <div className="container mx-auto px-4 pt-6">

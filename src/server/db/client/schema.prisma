@@ -685,27 +685,22 @@ model AuditLog {
   @@map("audit_log")
 }
 
-enum SsoType {
-  OIDC
-  SAML
-}
-
+// SSO provider table — schema required by @better-auth/sso
+// oidcConfig / samlConfig are JSON strings managed by the plugin
 model SsoProvider {
-  id           String   @id @default(cuid())
-  name         String
-  type         SsoType
-  enabled      Boolean  @default(false)
-  // OIDC fields
-  issuer       String?
-  clientId     String?
-  clientSecret String?
-  // SAML fields
-  entryPoint   String?
-  certificate  String?  @db.Text
-  // shared
-  emailDomain  String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id             String   @id @default(cuid())
+  issuer         String
+  domain         String
+  oidcConfig     String?  @db.Text
+  samlConfig     String?  @db.Text
+  userId         String
+  providerId     String   @unique
+  organizationId String?
+  // admin UI display fields (not used by better-auth internally)
+  name           String
+  enabled        Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   @@map("sso_provider")
 }

@@ -139,6 +139,10 @@ export const adminRouter = createTRPCRouter({
             banned: true,
             bannedReason: true,
             createdAt: true,
+            accounts: {
+              where: { providerId: "github" },
+              select: { id: true },
+            },
             _count: {
               select: {
                 repositories: true,
@@ -155,6 +159,7 @@ export const adminRouter = createTRPCRouter({
         users: users.map((u) => ({
           ...u,
           isOwner: u.email === process.env.OWNER_MAIL,
+          githubConnected: u.accounts.length > 0,
         })),
         total,
         pages: Math.ceil(total / limit),
@@ -1004,9 +1009,39 @@ export const adminRouter = createTRPCRouter({
     };
   }),
 
-  // ── SSO Providers ─────────────────────────────────────────────────────────
+  // SSO Providers
   getSsoProviders: adminProcedure.query(async ({ ctx }) => {
-    return ctx.db.ssoProvider.findMany({ orderBy: { createdAt: "asc" } });
+    const providers = await ctx.db.ssoProvider.findMany({
+      orderBy: { createdAt: "asc" },
+    });
+    return providers.map((p) => {
+      const oidcConfig = p.oidcConfig
+        ? (JSON.parse(p.oidcConfig) as {
+            clientId?: string;
+            clientSecret?: string;
+          })
+        : null;
+      const samlConfig = p.samlConfig
+        ? (JSON.parse(p.samlConfig) as {
+            entryPoint?: string;
+            certificate?: string;
+          })
+        : null;
+      return {
+        id: p.id,
+        name: p.name,
+        type: (oidcConfig ? "OIDC" : "SAML") as "OIDC" | "SAML",
+        enabled: p.enabled,
+        issuer: p.issuer,
+        domain: p.domain,
+        providerId: p.providerId,
+        clientId: oidcConfig?.clientId ?? "",
+        clientSecret: oidcConfig?.clientSecret ?? "",
+        entryPoint: samlConfig?.entryPoint ?? "",
+        certificate: samlConfig?.certificate ?? "",
+        createdAt: p.createdAt,
+      };
+    });
   }),
 
   upsertSsoProvider: adminProcedure
@@ -1021,11 +1056,46 @@ export const adminRouter = createTRPCRouter({
         clientSecret: z.string().max(500).optional(),
         entryPoint: z.string().url().optional().or(z.literal("")),
         certificate: z.string().max(10000).optional(),
-        emailDomain: z.string().max(253).optional(),
+        domain: z.string().max(253).optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { id, ...data } = input;
+      const {
+        id,
+        type,
+        clientId,
+        clientSecret,
+        entryPoint,
+        certificate,
+        domain,
+        issuer,
+        name,
+        enabled,
+      } = input;
+
+      const oidcConfig =
+        type === "OIDC"
+          ? JSON.stringify({ clientId: clientId ?? "", clientSecret: clientSecret ?? "" })
+          : null;
+      const samlConfig =
+        type === "SAML"
+          ? JSON.stringify({ entryPoint: entryPoint ?? "", certificate: certificate ?? "" })
+          : null;
+
+      // Auto-generate providerId slug from name when creating
+      const providerId = name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+
+      const data = {
+        name,
+        enabled,
+        issuer: issuer ?? "",
+        domain: domain ?? "",
+        oidcConfig,
+        samlConfig,
+        userId: ctx.user.id,
+        providerId,
+      };
+
       const result = id
         ? await ctx.db.ssoProvider.update({ where: { id }, data })
         : await ctx.db.ssoProvider.create({ data });
@@ -1037,7 +1107,7 @@ export const adminRouter = createTRPCRouter({
         resourceId: result.id,
         ipAddress: ctx.ip,
         userAgent: ctx.userAgent,
-        metadata: { name: input.name, type: input.type },
+        metadata: { name, type },
       });
 
       return result;
