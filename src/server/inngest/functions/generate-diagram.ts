@@ -272,7 +272,7 @@ export const generateDiagram = inngest.createFunction(
       return result;
     });
 
-    // ── Step 6: Persist result ────────────────────────────────────────────────
+    // Step 6: Persist result
     await step.run("save-result", async () => {
       // If the generator produced no content (e.g. no classes found) but
       // returned a warning instead of throwing, keep the previous diagram
@@ -316,7 +316,7 @@ export const generateDiagram = inngest.createFunction(
       });
     });
 
-    // ── Step 7: Notify via Pusher ─────────────────────────────────────────────
+    // Step 7: Notify via Pusher
     await step.run("notify-pusher", async () => {
       const pusher = getPusherServer();
       if (!pusher) return;
