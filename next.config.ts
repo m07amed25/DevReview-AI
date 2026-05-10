@@ -1,19 +1,19 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // mermaid is browser-only — do NOT transpile or bundle it server-side.
-  // Its transitive dep chain (jsdom → html-encoding-sniffer → @exodus/bytes)
-  // is ESM-only and crashes when require()'d in a CJS server context.
-  // Prevent heavy server-side SDKs from being bundled into every function.
-  // They are still deployed as node_modules and required at runtime.
+  // mermaid is browser-only — never bundle it on the server.
+  // isomorphic-dompurify + jsdom ARE intentionally used server-side (Inngest),
+  // so they must remain resolvable. Add them to serverExternalPackages so
+  // they're required from node_modules at runtime (never statically bundled),
+  // which avoids the ERR_REQUIRE_ESM from @exodus/bytes.
   serverExternalPackages: [
     "groq-sdk",
     "@google/generative-ai",
     "@huggingface/inference",
     "nodemailer",
-    // Keep mermaid and its jsdom dep-chain out of server bundles entirely
-    "mermaid",
+    // jsdom dep-chain must be external (not bundled) to avoid ESM conflict
     "jsdom",
+    "isomorphic-dompurify",
     "html-encoding-sniffer",
     "@exodus/bytes",
   ],
