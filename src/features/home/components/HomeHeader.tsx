@@ -102,7 +102,7 @@ export function HomeHeader() {
             <Logo className="h-9 transition-all duration-300 group-hover:scale-105" />
             <span className="text-lg text-white font-bold tracking-tight">
               Code{" "}
-              <span className="bg-linear-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-indigo-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">
                 Catch
               </span>
             </span>
@@ -156,7 +156,7 @@ export function HomeHeader() {
               <Button
                 size="sm"
                 asChild
-                className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 rounded-full font-semibold shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 px-5 group transition-all duration-200"
+                className="bg-gradient-to-r from-indigo-500 to-blue-600 text-white hover:from-indigo-600 hover:to-blue-700 rounded-full font-semibold shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 px-5 group transition-all duration-200"
               >
                 <Link
                   href="/repo"
@@ -189,7 +189,7 @@ export function HomeHeader() {
                 <Button
                   size="sm"
                   asChild
-                  className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 rounded-full font-semibold shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 px-5 group transition-all duration-200"
+                  className="bg-gradient-to-r from-indigo-500 to-blue-600 text-white hover:from-indigo-600 hover:to-blue-700 rounded-full font-semibold shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 px-5 group transition-all duration-200"
                 >
                   <Link
                     href="/sign-up"
@@ -267,7 +267,7 @@ export function HomeHeader() {
                       </Link>
                       <Link
                         href="/sign-up"
-                        className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-semibold bg-gradient-to-r from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 transition-all duration-200"
+                        className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-semibold bg-gradient-to-r from-indigo-500 to-blue-600 text-white hover:from-indigo-600 hover:to-blue-700 transition-all duration-200"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         Get Started

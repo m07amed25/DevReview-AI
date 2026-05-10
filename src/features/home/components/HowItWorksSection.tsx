@@ -38,7 +38,7 @@ export function HowItWorksSection() {
             className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-zinc-100"
           >
             Up and running in{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-blue-400">
               minutes
             </span>
           </h2>
@@ -54,7 +54,7 @@ export function HowItWorksSection() {
           aria-label="How it works steps"
         >
           {/* Connecting Line */}
-          <div className="hidden sm:block absolute top-12 left-[16%] right-[16%] h-[2px] bg-gradient-to-r from-indigo-500/30 via-purple-500/30 to-indigo-500/30 z-0" />
+          <div className="hidden sm:block absolute top-12 left-[16%] right-[16%] h-[2px] bg-gradient-to-r from-indigo-500/30 via-blue-500/30 to-indigo-500/30 z-0" />
 
           {steps.map((item) => (
             <div

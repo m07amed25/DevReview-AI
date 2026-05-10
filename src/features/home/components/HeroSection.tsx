@@ -51,7 +51,7 @@ export function HeroSection() {
         >
           <SplittingText text="Code reviews on" type="words" delay={100} />
           <Fade delay={600} className="inline-block">
-            <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent drop-shadow-sm">
+            <span className="bg-gradient-to-r from-indigo-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-sm">
               autopilot
             </span>
           </Fade>
@@ -139,7 +139,7 @@ export function HeroSection() {
               No credit card required
             </span>
             <span className="flex items-center gap-2">
-              <CheckCircle className="h-4 w-4 text-purple-500" />
+              <CheckCircle className="h-4 w-4 text-blue-500" />
               1-click GitHub setup
             </span>
             <span className="flex items-center gap-2">
@@ -296,9 +296,9 @@ export function HeroSection() {
 
               {/* Insight Card 2 */}
               <div className="bg-zinc-900 border border-white/5 rounded-lg p-4 shadow-sm relative overflow-hidden hover:border-white/10 transition-colors">
-                <div className="absolute top-0 left-0 w-1 h-full bg-purple-500/50" />
+                <div className="absolute top-0 left-0 w-1 h-full bg-blue-500/50" />
                 <div className="flex justify-between items-start mb-2">
-                  <div className="flex items-center gap-2 text-purple-400">
+                  <div className="flex items-center gap-2 text-blue-400">
                     <Sparkles className="h-4 w-4" />
                     <span className="text-xs font-semibold uppercase tracking-wider">
                       Performance

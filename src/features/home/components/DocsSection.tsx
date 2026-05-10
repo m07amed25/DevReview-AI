@@ -71,7 +71,7 @@ export function DocsSection() {
         </div>
 
         <div className="grid sm:grid-cols-2 gap-6">
-          <div className="p-6 rounded-2xl bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 hover:border-indigo-500/40 transition-all duration-300 group">
+          <div className="p-6 rounded-2xl bg-gradient-to-br from-indigo-500/10 to-blue-500/10 border border-indigo-500/20 hover:border-indigo-500/40 transition-all duration-300 group">
             <h3 className="text-xl font-semibold text-white mb-2 flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-indigo-400" />
               What Gets Reviewed
@@ -91,9 +91,9 @@ export function DocsSection() {
             </Button>
           </div>
 
-          <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 group">
+          <div className="p-6 rounded-2xl bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300 group">
             <h3 className="text-xl font-semibold text-white mb-2 flex items-center gap-2">
-              <Github className="w-5 h-5 text-purple-400" />
+              <Github className="w-5 h-5 text-blue-400" />
               GitHub Integration
             </h3>
             <p className="text-zinc-400 mb-4">
@@ -101,7 +101,7 @@ export function DocsSection() {
             </p>
             <Button
               variant="ghost"
-              className="text-purple-400 hover:text-purple-300 hover:bg-purple-500/10 p-0 h-auto group-hover:translate-x-1 transition-transform"
+              className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 p-0 h-auto group-hover:translate-x-1 transition-transform"
               asChild
             >
               <Link href="/sign-up">

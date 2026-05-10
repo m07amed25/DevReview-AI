@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { Fade } from "@/components/animate-ui/primitives/effects/fade";
 
-type ColorKey = "amber" | "red" | "blue" | "purple" | "emerald" | "pink";
+type ColorKey = "amber" | "red" | "blue" | "cyan" | "emerald" | "pink";
 
 const colorStyles: Record<
   ColorKey,
@@ -37,11 +37,11 @@ const colorStyles: Record<
     shadow: "group-hover:shadow-blue-500/20",
     border: "group-hover:border-blue-500/30",
   },
-  purple: {
-    bg: "bg-purple-500/10",
-    text: "text-purple-400",
-    shadow: "group-hover:shadow-purple-500/20",
-    border: "group-hover:border-purple-500/30",
+  cyan: {
+    bg: "bg-cyan-500/10",
+    text: "text-cyan-400",
+    shadow: "group-hover:shadow-cyan-500/20",
+    border: "group-hover:border-cyan-500/30",
   },
   emerald: {
     bg: "bg-emerald-500/10",
@@ -84,7 +84,7 @@ const features = [
     title: "PR integration",
     description:
       "Reviews appear right in your GitHub pull requests with inline comments just like a human reviewer.",
-    color: "purple" as ColorKey,
+    color: "cyan" as ColorKey,
   },
   {
     icon: ScanSearch,

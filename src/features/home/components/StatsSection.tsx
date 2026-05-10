@@ -17,7 +17,7 @@ const stats = [
     decimals: 0,
     label: "Lines Analyzed",
     icon: FileCode,
-    color: "text-purple-400",
+    color: "text-blue-400",
   },
   {
     value: 10,

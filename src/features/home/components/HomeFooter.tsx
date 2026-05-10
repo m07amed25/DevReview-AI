@@ -88,7 +88,7 @@ export async function HomeFooter() {
 
       {/* Background glows */}
       <div className="absolute bottom-0 left-1/4 w-64 h-64 bg-indigo-600/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-1/2 right-1/4 w-48 h-48 bg-purple-600/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 right-1/4 w-48 h-48 bg-blue-600/5 rounded-full blur-3xl pointer-events-none" />
 
       {/* Stats bar */}
       <div className="border-b border-white/5">
@@ -118,7 +118,7 @@ export async function HomeFooter() {
               <Logo className="h-9 transition-all duration-200 group-hover:scale-105" />
               <span className="font-bold text-lg text-white tracking-tight">
                 Code{" "}
-                <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-400 to-purple-400">
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-400 to-blue-400">
                   Catch
                 </span>
               </span>
