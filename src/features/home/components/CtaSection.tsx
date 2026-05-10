@@ -8,11 +8,14 @@ import { Button } from "@/components/ui/button";
 import { useSession } from "@/lib/auth-client";
 
 interface CtaSectionProps {
-  recentUsers?: { id: string; image: string | null }[];
+  recentUsers?: { id: string; image: string | null; name: string }[];
   totalUsers?: number;
 }
 
-export function CtaSection({ recentUsers = [], totalUsers = 15 }: CtaSectionProps) {
+export function CtaSection({
+  recentUsers = [],
+  totalUsers = 15,
+}: CtaSectionProps) {
   const { data: session } = useSession();
   const [mounted, setMounted] = useState(false);
 
@@ -122,14 +125,18 @@ export function CtaSection({ recentUsers = [], totalUsers = 15 }: CtaSectionProp
                   className="relative h-10 w-10 rounded-full border-2 border-zinc-950 overflow-hidden bg-zinc-800 shadow-sm"
                   aria-hidden="true"
                 >
-                  {user.image && (
+                  {user.image ? (
                     <Image
                       src={user.image}
-                      alt={`User avatar`}
+                      alt={user.name || "User avatar"}
                       fill
                       className="object-cover"
                       sizes="40px"
                     />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-indigo-500/20 text-indigo-400 text-xs font-bold">
+                      {(user.name || "U").charAt(0).toUpperCase()}
+                    </div>
                   )}
                 </div>
               ))}

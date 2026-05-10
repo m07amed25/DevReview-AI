@@ -26,15 +26,17 @@ const jsonLd = {
   url: "https://dev-review-ai-chi.vercel.app",
 };
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function HomePage() {
   const [totalUsers, recentUsers] = await Promise.all([
     db.user.count(),
-    db.user.findMany({
-      where: { image: { not: null } },
-      orderBy: { createdAt: "desc" },
-      take: 5,
-      select: { id: true, image: true },
-    }),
+    db.$queryRaw<{ id: string; image: string | null; name: string }[]>`
+      SELECT id, image, name FROM "user" 
+      ORDER BY RANDOM() 
+      LIMIT 5
+    `,
   ]);
 
   const displayUsers = Math.max(15, totalUsers);
