@@ -7,7 +7,7 @@ import {
 } from "@/server/services/github";
 import { generateMermaidDefinition } from "@/server/services/diagram-generator";
 import { getPusherServer } from "@/server/pusher";
-import DOMPurify from "isomorphic-dompurify";
+import sanitizeHtml from "sanitize-html";
 
 export type GenerateDiagramEvent = {
   name: "diagram/generation.requested";
@@ -256,7 +256,10 @@ export const generateDiagram = inngest.createFunction(
       const result = await generateMermaidDefinition(type, fileContents);
       
       if (result.definition) {
-        let sanitized = DOMPurify.sanitize(result.definition);
+        let sanitized = sanitizeHtml(result.definition, {
+          allowedTags: [], // Strip all HTML tags to prevent XSS
+          allowedAttributes: {},
+        });
         sanitized = sanitized
           .replace(/&gt;/g, ">")
           .replace(/&lt;/g, "<")

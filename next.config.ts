@@ -11,11 +11,6 @@ const nextConfig: NextConfig = {
     "@google/generative-ai",
     "@huggingface/inference",
     "nodemailer",
-    // jsdom dep-chain must be external (not bundled) to avoid ESM conflict
-    "jsdom",
-    "isomorphic-dompurify",
-    "html-encoding-sniffer",
-    "@exodus/bytes",
   ],
   // Exclude browser-only packages and large non-Linux binaries from server
   // function traces to stay under Vercel's 250 MB per-function limit.
