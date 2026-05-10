@@ -2,11 +2,17 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Sparkles, Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/lib/auth-client";
 
-export function CtaSection() {
+interface CtaSectionProps {
+  recentUsers?: { id: string; image: string | null }[];
+  totalUsers?: number;
+}
+
+export function CtaSection({ recentUsers = [], totalUsers = 15 }: CtaSectionProps) {
   const { data: session } = useSession();
   const [mounted, setMounted] = useState(false);
 
@@ -108,18 +114,28 @@ export function CtaSection() {
 
         {/* Social proof */}
         <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-zinc-500 font-medium">
-          <div className="flex -space-x-3">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div
-                key={i}
-                className="h-10 w-10 rounded-full bg-zinc-800 border-2 border-zinc-950 flex items-center justify-center text-xs font-medium text-zinc-400 shadow-sm"
-                aria-hidden="true"
-              >
-                {String.fromCharCode(64 + i)}
-              </div>
-            ))}
-          </div>
-          <span className="mt-2 sm:mt-0">Join 10,000+ developers</span>
+          {recentUsers.length > 0 && (
+            <div className="flex -space-x-3">
+              {recentUsers.map((user, i) => (
+                <div
+                  key={user.id || i}
+                  className="relative h-10 w-10 rounded-full border-2 border-zinc-950 overflow-hidden bg-zinc-800 shadow-sm"
+                  aria-hidden="true"
+                >
+                  {user.image && (
+                    <Image
+                      src={user.image}
+                      alt={`User avatar`}
+                      fill
+                      className="object-cover"
+                      sizes="40px"
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+          <span className="mt-2 sm:mt-0">Join {totalUsers}+ developers</span>
         </div>
       </div>
     </section>

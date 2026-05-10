@@ -8,6 +8,7 @@ import { LanguagesSection } from "@/features/home/components/LanguagesSection";
 import { DocsSection } from "@/features/home/components/DocsSection";
 import { CtaSection } from "@/features/home/components/CtaSection";
 import { HomeFooter } from "@/features/home/components/HomeFooter";
+import { db } from "@/server/db";
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -25,7 +26,19 @@ const jsonLd = {
   url: "https://dev-review-ai-chi.vercel.app",
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [totalUsers, recentUsers] = await Promise.all([
+    db.user.count(),
+    db.user.findMany({
+      where: { image: { not: null } },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+      select: { id: true, image: true },
+    }),
+  ]);
+
+  const displayUsers = Math.max(15, totalUsers);
+
   return (
     <div className="dark min-h-screen bg-zinc-950 text-zinc-50 selection:bg-indigo-500/30 overflow-x-hidden relative">
       <script
@@ -50,7 +63,7 @@ export default function HomePage() {
         <HowItWorksSection />
         <LanguagesSection />
         <DocsSection />
-        <CtaSection />
+        <CtaSection recentUsers={recentUsers} totalUsers={displayUsers} />
       </main>
 
       <HomeFooter />

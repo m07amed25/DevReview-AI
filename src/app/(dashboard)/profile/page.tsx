@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
+import Image from "next/image";
 import { trpc } from "@/lib/trpc/client";
 import { linkSocial } from "@/lib/auth-client";
 import { CropDialog } from "@/features/profile/components/crop-dialog";
@@ -304,8 +305,13 @@ export default function ProfilePage() {
                   onClick={() => document.getElementById("avatar-file-input")?.click()}
                 >
                   {(isEditing ? editImage : profile.image) ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={isEditing ? editImage : (profile.image ?? "")} alt={displayName} className="size-full object-cover" />
+                    <Image
+                      src={isEditing ? editImage : (profile.image ?? "")}
+                      alt={displayName || "User avatar"}
+                      fill
+                      className="object-cover"
+                      sizes="80px"
+                    />
                   ) : (
                     displayName ? displayName.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2) : "U"
                   )}
