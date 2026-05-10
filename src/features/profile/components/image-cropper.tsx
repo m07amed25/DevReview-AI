@@ -88,8 +88,7 @@ export function ImageCropper({
 
   // ── Derived: crop rectangle ────────────────────────────────────
   const cropRect = (() => {
-    if (!containerSize.w || !containerSize.h)
-      return { x: 0, y: 0, w: 0, h: 0 };
+    if (!containerSize.w || !containerSize.h) return { x: 0, y: 0, w: 0, h: 0 };
     const padding = 28;
     const maxW = containerSize.w - padding * 2;
     const maxH = containerSize.h - padding * 2;
@@ -134,23 +133,47 @@ export function ImageCropper({
     [scaledImg.w, scaledImg.h, cropRect.x, cropRect.y, cropRect.w, cropRect.h],
   );
 
-  // ── Re-centre on zoom / resize ────────────────────────────────
-  useEffect(() => {
-    if (!scaledImg.w || !scaledImg.h) return;
-    setPosition((prev) => {
+  const [prevScaleSize, setPrevScaleSize] = useState({
+    sw: scaledImg.w,
+    sh: scaledImg.h,
+    cw: containerSize.w,
+    ch: containerSize.h,
+  });
+
+  if (
+    scaledImg.w !== prevScaleSize.sw ||
+    scaledImg.h !== prevScaleSize.sh ||
+    containerSize.w !== prevScaleSize.cw ||
+    containerSize.h !== prevScaleSize.ch
+  ) {
+    setPrevScaleSize({
+      sw: scaledImg.w,
+      sh: scaledImg.h,
+      cw: containerSize.w,
+      ch: containerSize.h,
+    });
+    if (scaledImg.w && scaledImg.h) {
       const centreX = (containerSize.w - scaledImg.w) / 2;
       const centreY = (containerSize.h - scaledImg.h) / 2;
-      // First render → snap; subsequent → constrain only
-      if (prev.x === 0 && prev.y === 0)
-        return constrainPosition({ x: centreX, y: centreY });
-      return constrainPosition(prev);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scaledImg.w, scaledImg.h, containerSize.w, containerSize.h]);
+      const nextPos =
+        position.x === 0 && position.y === 0
+          ? constrainPosition({ x: centreX, y: centreY })
+          : constrainPosition(position);
 
-  // ── Publish normalised crop ────────────────────────────────────
+      if (nextPos.x !== position.x || nextPos.y !== position.y) {
+        setPosition(nextPos);
+      }
+    }
+  }
+
   useEffect(() => {
-    if (!onCropChange || !scaledImg.w || !scaledImg.h || !imgSize.w || !imgSize.h)
+    if (
+      !onCropChange ||
+      !scaledImg.w ||
+      !scaledImg.h ||
+      !imgSize.w ||
+      !imgSize.h
+    )
       return;
     const fitScale = Math.max(cropRect.w / imgSize.w, cropRect.h / imgSize.h);
     const s = fitScale * zoom;
@@ -165,9 +188,18 @@ export function ImageCropper({
       height: ch / imgSize.h,
     });
   }, [
-    onCropChange, position.x, position.y, zoom,
-    scaledImg.w, scaledImg.h, imgSize.w, imgSize.h,
-    cropRect.x, cropRect.y, cropRect.w, cropRect.h,
+    onCropChange,
+    position.x,
+    position.y,
+    zoom,
+    scaledImg.w,
+    scaledImg.h,
+    imgSize.w,
+    imgSize.h,
+    cropRect.x,
+    cropRect.y,
+    cropRect.w,
+    cropRect.h,
   ]);
 
   // ── Observe container size ─────────────────────────────────────
@@ -176,7 +208,10 @@ export function ImageCropper({
     if (!el) return;
     const ro = new ResizeObserver(([entry]) => {
       if (!entry) return;
-      setContainerSize({ w: entry.contentRect.width, h: entry.contentRect.height });
+      setContainerSize({
+        w: entry.contentRect.width,
+        h: entry.contentRect.height,
+      });
     });
     ro.observe(el);
     return () => ro.disconnect();
@@ -200,7 +235,12 @@ export function ImageCropper({
       (e.target as HTMLElement).setPointerCapture(e.pointerId);
       setIsDragging(true);
       flashGrid();
-      dragStart.current = { x: e.clientX, y: e.clientY, posX: position.x, posY: position.y };
+      dragStart.current = {
+        x: e.clientX,
+        y: e.clientY,
+        posX: position.x,
+        posY: position.y,
+      };
     },
     [position.x, position.y, flashGrid],
   );
@@ -230,7 +270,6 @@ export function ImageCropper({
     [zoom, updateZoom, flashGrid],
   );
 
-  // ── Pinch-to-zoom ─────────────────────────────────────────────
   const lastPinchDist = useRef<number | null>(null);
 
   useEffect(() => {
@@ -249,28 +288,79 @@ export function ImageCropper({
         lastPinchDist.current = dist;
       }
     };
-    const onTouchEnd = () => { lastPinchDist.current = null; };
+    const onTouchEnd = () => {
+      lastPinchDist.current = null;
+    };
     el.addEventListener("touchmove", onTouchMove, { passive: false });
     el.addEventListener("touchend", onTouchEnd);
-    return () => { el.removeEventListener("touchmove", onTouchMove); el.removeEventListener("touchend", onTouchEnd); };
+    return () => {
+      el.removeEventListener("touchmove", onTouchMove);
+      el.removeEventListener("touchend", onTouchEnd);
+    };
   }, [zoom, updateZoom, flashGrid]);
 
-  // ── Corner / edge handle definitions ───────────────────────────
   const corners = [
-    { pos: "top-0 left-0", border: "border-t-[3px] border-l-[3px]", round: "rounded-tl" },
-    { pos: "top-0 right-0", border: "border-t-[3px] border-r-[3px]", round: "rounded-tr" },
-    { pos: "bottom-0 left-0", border: "border-b-[3px] border-l-[3px]", round: "rounded-bl" },
-    { pos: "bottom-0 right-0", border: "border-b-[3px] border-r-[3px]", round: "rounded-br" },
+    {
+      pos: "top-0 left-0",
+      border: "border-t-[3px] border-l-[3px]",
+      round: "rounded-tl",
+    },
+    {
+      pos: "top-0 right-0",
+      border: "border-t-[3px] border-r-[3px]",
+      round: "rounded-tr",
+    },
+    {
+      pos: "bottom-0 left-0",
+      border: "border-b-[3px] border-l-[3px]",
+      round: "rounded-bl",
+    },
+    {
+      pos: "bottom-0 right-0",
+      border: "border-b-[3px] border-r-[3px]",
+      round: "rounded-br",
+    },
   ];
 
   const edges = [
-    { style: { top: -1, left: "50%", transform: "translateX(-50%)", width: 28, height: 3 } as React.CSSProperties },
-    { style: { bottom: -1, left: "50%", transform: "translateX(-50%)", width: 28, height: 3 } as React.CSSProperties },
-    { style: { left: -1, top: "50%", transform: "translateY(-50%)", width: 3, height: 28 } as React.CSSProperties },
-    { style: { right: -1, top: "50%", transform: "translateY(-50%)", width: 3, height: 28 } as React.CSSProperties },
+    {
+      style: {
+        top: -1,
+        left: "50%",
+        transform: "translateX(-50%)",
+        width: 28,
+        height: 3,
+      } as React.CSSProperties,
+    },
+    {
+      style: {
+        bottom: -1,
+        left: "50%",
+        transform: "translateX(-50%)",
+        width: 28,
+        height: 3,
+      } as React.CSSProperties,
+    },
+    {
+      style: {
+        left: -1,
+        top: "50%",
+        transform: "translateY(-50%)",
+        width: 3,
+        height: 28,
+      } as React.CSSProperties,
+    },
+    {
+      style: {
+        right: -1,
+        top: "50%",
+        transform: "translateY(-50%)",
+        width: 3,
+        height: 28,
+      } as React.CSSProperties,
+    },
   ];
 
-  // ── Render ─────────────────────────────────────────────────────
   return (
     <div
       ref={containerRef}
@@ -327,7 +417,8 @@ export function ImageCropper({
           backdropFilter: isDragging ? "none" : "blur(1px)",
           maskImage: "linear-gradient(#000 0 0),linear-gradient(#000 0 0)",
           maskComposite: "exclude",
-          WebkitMaskImage: "linear-gradient(#000 0 0),linear-gradient(#000 0 0)",
+          WebkitMaskImage:
+            "linear-gradient(#000 0 0),linear-gradient(#000 0 0)",
           WebkitMaskComposite: "xor",
           maskSize: `100% 100%, ${cropRect.w}px ${cropRect.h}px`,
           maskPosition: `0 0, ${cropRect.x}px ${cropRect.y}px`,
@@ -338,10 +429,14 @@ export function ImageCropper({
         }}
       />
 
-      {/* ── Crop frame ──────────────────────────────────────── */}
       <div
         className="absolute pointer-events-none"
-        style={{ left: cropRect.x, top: cropRect.y, width: cropRect.w, height: cropRect.h }}
+        style={{
+          left: cropRect.x,
+          top: cropRect.y,
+          width: cropRect.w,
+          height: cropRect.h,
+        }}
       >
         {/* Border + subtle inner shadow */}
         <div className="absolute inset-0 rounded-[3px] border border-white/70 shadow-[0_0_0_1px_rgba(0,0,0,0.25),inset_0_0_0_1px_rgba(0,0,0,0.1)]" />
@@ -357,7 +452,8 @@ export function ImageCropper({
               className="absolute top-0 bottom-0 w-px"
               style={{
                 left: `${(i / 3) * 100}%`,
-                background: "linear-gradient(to bottom,transparent,rgba(255,255,255,0.35) 20%,rgba(255,255,255,0.35) 80%,transparent)",
+                background:
+                  "linear-gradient(to bottom,transparent,rgba(255,255,255,0.35) 20%,rgba(255,255,255,0.35) 80%,transparent)",
               }}
             />
           ))}
@@ -367,7 +463,8 @@ export function ImageCropper({
               className="absolute left-0 right-0 h-px"
               style={{
                 top: `${(i / 3) * 100}%`,
-                background: "linear-gradient(to right,transparent,rgba(255,255,255,0.35) 20%,rgba(255,255,255,0.35) 80%,transparent)",
+                background:
+                  "linear-gradient(to right,transparent,rgba(255,255,255,0.35) 20%,rgba(255,255,255,0.35) 80%,transparent)",
               }}
             />
           ))}
@@ -381,7 +478,9 @@ export function ImageCropper({
             key={pos}
             className={cn(
               "absolute size-5 border-white transition-all duration-200",
-              pos, border, round,
+              pos,
+              border,
+              round,
               isDragging ? "scale-90 opacity-70" : "scale-100 opacity-100",
             )}
             style={{ filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.5))" }}
@@ -396,7 +495,10 @@ export function ImageCropper({
               "absolute rounded-full bg-white/80 transition-opacity duration-200",
               isDragging ? "opacity-50" : "opacity-90",
             )}
-            style={{ ...style, filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.4))" }}
+            style={{
+              ...style,
+              filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.4))",
+            }}
           />
         ))}
       </div>
@@ -411,7 +513,11 @@ export function ImageCropper({
       {/* Instruction hint */}
       {imgSize.w > 0 && !isDragging && zoom <= 1.01 && (
         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-full bg-black/50 backdrop-blur-sm text-white/70 text-[11px] pointer-events-none flex items-center gap-1.5 animate-in fade-in-0 slide-in-from-bottom-2 duration-500">
-          <svg viewBox="0 0 16 16" fill="currentColor" className="size-3 opacity-60">
+          <svg
+            viewBox="0 0 16 16"
+            fill="currentColor"
+            className="size-3 opacity-60"
+          >
             <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1ZM7.25 5a.75.75 0 1 1 1.5 0 .75.75 0 0 1-1.5 0ZM7 7.25a.75.75 0 0 1 1.5 0v3.5a.75.75 0 0 1-1.5 0v-3.5Z" />
           </svg>
           Drag to move · Scroll to zoom
@@ -442,7 +548,8 @@ export function cropImageToBlob(
       const sh = crop.height * img.naturalHeight;
       ctx.drawImage(img, sx, sy, sw, sh, 0, 0, outputSize, outputSize);
       canvas.toBlob(
-        (blob) => (blob ? resolve(blob) : reject(new Error("Failed to create blob"))),
+        (blob) =>
+          blob ? resolve(blob) : reject(new Error("Failed to create blob")),
         "image/jpeg",
         0.92,
       );

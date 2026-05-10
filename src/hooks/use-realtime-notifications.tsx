@@ -7,10 +7,12 @@ import { toast } from "sonner";
 
 interface NotificationPayload {
   id: string;
-  type: string;
+  type: any; // Using any for type compatibility with Prisma/TRPC
   title: string;
   message: string;
   link: string | null;
+  read: boolean;
+  createdAt: Date | string;
 }
 
 export function useRealtimeNotifications(userId: string | undefined) {
@@ -19,9 +21,34 @@ export function useRealtimeNotifications(userId: string | undefined) {
 
   const handleNewNotification = useCallback(
     (data: NotificationPayload) => {
-      // Invalidate notification queries to refresh the UI
-      void utils.notification.unreadCount.invalidate();
-      void utils.notification.list.invalidate();
+      // 1. Update unread count manually
+      utils.notification.unreadCount.setData(undefined, (old) => {
+        if (!old) return { count: 1 };
+        return { count: old.count + 1 };
+      });
+
+      // 2. Prepend the new notification to the infinite list cache
+      // This avoids invalidating and refetching all pages
+      utils.notification.list.setInfiniteData({}, (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          pages: old.pages.map((page, i) => {
+            if (i === 0) {
+              return {
+                ...page,
+                notifications: [data as any, ...page.notifications],
+              };
+            }
+            return page;
+          }),
+        };
+      });
+
+      // Also invalidate to be safe, but since we updated the cache manually,
+      // subsequent fetches will be consistent. We only invalidate unreadCount
+      // if we want to be absolutely sure, but setData is faster.
+      // We don't invalidate 'list' here to avoid the large payload refetch.
 
       // Show a toast notification
       toast.info(data.title, {
@@ -45,7 +72,7 @@ export function useRealtimeNotifications(userId: string | undefined) {
       // Show desktop notification if enabled and permitted
       showDesktopNotification(data);
     },
-    [utils]
+    [utils],
   );
 
   useEffect(() => {
@@ -68,8 +95,9 @@ export function useRealtimeNotifications(userId: string | undefined) {
 function playNotificationSound() {
   try {
     // Create a simple notification sound using Web Audio API
-    const audioContext = new (window.AudioContext ||
-      (window as any).webkitAudioContext)();
+    const audioContext = new (
+      window.AudioContext || (window as any).webkitAudioContext
+    )();
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
 
@@ -82,7 +110,7 @@ function playNotificationSound() {
     gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
     gainNode.gain.exponentialRampToValueAtTime(
       0.01,
-      audioContext.currentTime + 0.5
+      audioContext.currentTime + 0.5,
     );
 
     oscillator.start(audioContext.currentTime);

@@ -7,8 +7,7 @@ import {
 } from "@/server/services/github";
 import { generateMermaidDefinition } from "@/server/services/diagram-generator";
 import { getPusherServer } from "@/server/pusher";
-
-// ─── Event types ──────────────────────────────────────────────────────────────
+import DOMPurify from "isomorphic-dompurify";
 
 export type GenerateDiagramEvent = {
   name: "diagram/generation.requested";
@@ -253,9 +252,21 @@ export const generateDiagram = inngest.createFunction(
       return contents;
     });
 
-    // ── Step 5: Generate diagram definition ──────────────────────────────────
     const generated = await step.run("generate-definition", async () => {
-      return generateMermaidDefinition(type, fileContents);
+      const result = await generateMermaidDefinition(type, fileContents);
+      
+      if (result.definition) {
+        let sanitized = DOMPurify.sanitize(result.definition);
+        sanitized = sanitized
+          .replace(/&gt;/g, ">")
+          .replace(/&lt;/g, "<")
+          .replace(/&amp;/g, "&")
+          .replace(/&quot;/g, '"')
+          .replace(/&#39;/g, "'");
+        result.definition = sanitized;
+      }
+      
+      return result;
     });
 
     // ── Step 6: Persist result ────────────────────────────────────────────────

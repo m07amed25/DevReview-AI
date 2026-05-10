@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { useEffect, ReactNode } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { NavigationLoader } from "./navigation-loader";
 
 interface PageTransitionProviderProps {
   children: ReactNode;
@@ -18,7 +19,12 @@ export function PageTransitionProvider({
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [pathname]);
 
-  return <>{children}</>;
+  return (
+    <>
+      <NavigationLoader />
+      {children}
+    </>
+  );
 }
 
 // Fade page transition

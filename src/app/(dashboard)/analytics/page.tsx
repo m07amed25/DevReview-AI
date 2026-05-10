@@ -31,10 +31,11 @@ export default function AnalyticsPage() {
     trpc.analytics.getReviewerWorkload.useQuery({ timePeriod });
   const { data: qualityData, isLoading: qualityLoading } =
     trpc.analytics.getQualityScores.useQuery({ timePeriod });
-  const { data: issuesData } = trpc.analytics.getTopIssues.useQuery({
-    timePeriod,
-    limit: 10,
-  });
+  const { data: issuesData, isLoading: issuesLoading } =
+    trpc.analytics.getTopIssues.useQuery({
+      timePeriod,
+      limit: 10,
+    });
   const { data: anomaliesData, isLoading: anomaliesLoading } =
     trpc.analytics.getAnomalies.useQuery({ timePeriod });
   const { data: feedbackStats, isLoading: feedbackLoading } =
@@ -133,12 +134,12 @@ export default function AnalyticsPage() {
           workloadLoading={workloadLoading}
         />
 
-        <FeedbackTrendRow
-          data={feedbackStats}
-          isLoading={feedbackLoading}
-        />
+        <FeedbackTrendRow data={feedbackStats} isLoading={feedbackLoading} />
 
-        <IssuesTablesRow issuesData={issuesData} />
+        <IssuesTablesRow
+          issuesData={issuesData}
+          issuesLoading={issuesLoading}
+        />
 
         <QuickActionsCard />
       </div>

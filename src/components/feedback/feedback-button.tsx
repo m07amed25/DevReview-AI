@@ -56,6 +56,7 @@ export function FeedbackButton() {
       <button
         onClick={() => setOpen(true)}
         aria-label="Send feedback"
+        data-feedback-button
         className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full bg-primary px-4 py-3 text-sm font-medium text-primary-foreground shadow-lg transition-all hover:scale-105 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       >
         <MessageSquarePlus className="h-4 w-4" />

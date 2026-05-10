@@ -77,6 +77,14 @@ export function QualityWorkloadRow({
         <h3 className="text-lg font-semibold mb-2">Quality Metrics</h3>
         {qualityLoading ? (
           <Skeleton className="h-[280px] w-full" />
+        ) : !qualityData ||
+          (qualityData.avgCoverage === 0 &&
+            qualityData.avgMaintainability === 0 &&
+            qualityData.avgPerformance === 0 &&
+            qualityData.avgSecurity === 0) ? (
+          <div className="h-[280px] w-full flex items-center justify-center text-muted-foreground border rounded-md bg-muted/10">
+            No quality metrics available.
+          </div>
         ) : (
           <div className="flex flex-col gap-4">
             <ChartContainer
@@ -155,9 +163,9 @@ export function QualityWorkloadRow({
             ))}
             {(!workloadData?.reviewers ||
               workloadData.reviewers.length === 0) && (
-              <p className="text-center text-muted-foreground py-8">
-                No reviewer data available
-              </p>
+              <div className="h-[200px] flex items-center justify-center text-muted-foreground border rounded-md bg-muted/10">
+                No reviewer data available for this period.
+              </div>
             )}
           </div>
         )}

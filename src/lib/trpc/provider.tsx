@@ -1,10 +1,16 @@
 "use client";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+  QueryCache,
+  MutationCache,
+} from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/react-query";
 import { useState } from "react";
 import superjson from "superjson";
 import { trpc } from "./client";
+import { toast } from "sonner";
 
 function getBaseUrl() {
   if (typeof window !== "undefined") return "";
@@ -12,10 +18,36 @@ function getBaseUrl() {
   return `http://localhost:${process.env.PORT ?? 3000}`;
 }
 
+function handleGlobalError(error: unknown) {
+  if (error && typeof error === "object" && "data" in error) {
+    const errData = (error as { data?: { code?: string; retryAfter?: number } })
+      .data;
+    if (errData && errData.code === "TOO_MANY_REQUESTS") {
+      const retryAfter = errData.retryAfter;
+      if (retryAfter) {
+        toast.error(
+          `Too many requests. Please try again in ${retryAfter} seconds.`,
+          { id: "rate-limit-error" },
+        );
+      } else {
+        toast.error("Too many requests. Please try again later.", {
+          id: "rate-limit-error",
+        });
+      }
+    }
+  }
+}
+
 export function TRPCProvider({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
+        queryCache: new QueryCache({
+          onError: handleGlobalError,
+        }),
+        mutationCache: new MutationCache({
+          onError: handleGlobalError,
+        }),
         defaultOptions: {
           queries: {
             staleTime: 5 * 1000,

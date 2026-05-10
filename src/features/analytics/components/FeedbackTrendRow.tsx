@@ -35,6 +35,10 @@ export function FeedbackTrendRow({ data, isLoading }: FeedbackTrendRowProps) {
         </div>
         {isLoading ? (
           <Skeleton className="h-[300px] w-full" />
+        ) : !data || data.length === 0 ? (
+          <div className="h-[300px] w-full flex items-center justify-center text-muted-foreground border rounded-md bg-muted/10">
+            No feedback data available.
+          </div>
         ) : (
           <ChartContainer
             config={feedbackChartConfig}

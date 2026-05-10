@@ -78,6 +78,10 @@ export function ChartsRow({
         </div>
         {trendsLoading ? (
           <Skeleton className="h-[300px] w-full" />
+        ) : !trendsData || trendsData.length === 0 ? (
+          <div className="h-[300px] w-full flex items-center justify-center text-muted-foreground border rounded-md bg-muted/10">
+            No trend data available for this period.
+          </div>
         ) : (
           <ChartContainer
             config={trendChartConfig}
@@ -154,6 +158,14 @@ export function ChartsRow({
         <h3 className="text-lg font-semibold mb-4">Review Outcomes</h3>
         {ratesLoading ? (
           <Skeleton className="h-[250px] w-full" />
+        ) : !ratesData ||
+          (ratesData.approved.count === 0 &&
+            ratesData.needsChanges.count === 0 &&
+            ratesData.rejected.count === 0 &&
+            ratesData.pending.count === 0) ? (
+          <div className="h-[250px] w-full flex items-center justify-center text-muted-foreground border rounded-md bg-muted/10">
+            No outcomes data available.
+          </div>
         ) : (
           <ChartContainer
             config={outcomesChartConfig}

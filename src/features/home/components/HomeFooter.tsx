@@ -9,7 +9,6 @@ import {
   Zap,
   Users,
   Star,
-  ExternalLink,
 } from "lucide-react";
 import { db } from "@/server/db";
 
@@ -54,7 +53,7 @@ const socialLinks = [
   },
   {
     label: "Email",
-    href: "mailto:hello@codecatch.dev",
+    href: "mailto:codecatch27@gmail.com",
     icon: Mail,
   },
 ];
@@ -166,19 +165,15 @@ export async function HomeFooter() {
               <ul className="space-y-2.5">
                 {footerLinks.product.map(({ label, href, soon }) => (
                   <li key={label}>
-                    {soon ? (
-                      <span className="text-sm text-zinc-600 inline-flex items-center gap-2 cursor-default select-none">
-                        {label}
+                    <Link
+                      href={href}
+                      className="text-sm text-zinc-400 hover:text-white transition-colors duration-200 inline-flex items-center gap-2"
+                    >
+                      {label}
+                      {soon && (
                         <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-500 leading-none">soon</span>
-                      </span>
-                    ) : (
-                      <Link
-                        href={href}
-                        className="text-sm text-zinc-400 hover:text-white transition-colors duration-200"
-                      >
-                        {label}
-                      </Link>
-                    )}
+                      )}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -192,19 +187,15 @@ export async function HomeFooter() {
               <ul className="space-y-2.5">
                 {footerLinks.resources.map(({ label, href, soon }) => (
                   <li key={label}>
-                    {soon ? (
-                      <span className="text-sm text-zinc-600 inline-flex items-center gap-2 cursor-default select-none">
-                        {label}
+                    <Link
+                      href={href}
+                      className="text-sm text-zinc-400 hover:text-white transition-colors duration-200 inline-flex items-center gap-2"
+                    >
+                      {label}
+                      {soon && (
                         <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-500 leading-none">soon</span>
-                      </span>
-                    ) : (
-                      <Link
-                        href={href}
-                        className="text-sm text-zinc-400 hover:text-white transition-colors duration-200"
-                      >
-                        {label}
-                      </Link>
-                    )}
+                      )}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -218,19 +209,15 @@ export async function HomeFooter() {
               <ul className="space-y-2.5">
                 {footerLinks.company.map(({ label, href, soon }) => (
                   <li key={label}>
-                    {soon ? (
-                      <span className="text-sm text-zinc-600 inline-flex items-center gap-2 cursor-default select-none">
-                        {label}
+                    <Link
+                      href={href}
+                      className="text-sm text-zinc-400 hover:text-white transition-colors duration-200 inline-flex items-center gap-2"
+                    >
+                      {label}
+                      {soon && (
                         <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-500 leading-none">soon</span>
-                      </span>
-                    ) : (
-                      <Link
-                        href={href}
-                        className="text-sm text-zinc-400 hover:text-white transition-colors duration-200"
-                      >
-                        {label}
-                      </Link>
-                    )}
+                      )}
+                    </Link>
                   </li>
                 ))}
               </ul>

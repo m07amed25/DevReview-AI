@@ -2,6 +2,7 @@ import Groq from "groq-sdk";
 import { z } from "zod";
 
 let groqClient: Groq | null = null;
+let currentApiKey: string | undefined = undefined;
 
 function getGroqClient(): Groq {
   const apiKey = process.env.GROQ_API_KEY;
@@ -9,11 +10,21 @@ function getGroqClient(): Groq {
     throw new Error("GROQ_API_KEY is not set");
   }
 
+  if (currentApiKey && currentApiKey !== apiKey) {
+    resetClient();
+  }
+
   if (!groqClient) {
     groqClient = new Groq({ apiKey });
+    currentApiKey = apiKey;
   }
 
   return groqClient;
+}
+
+export function resetClient(): void {
+  groqClient = null;
+  currentApiKey = undefined;
 }
 
 export const ReviewCommentSchema = z.object({

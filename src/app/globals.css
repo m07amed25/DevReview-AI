@@ -83,6 +83,23 @@
   --sidebar-accent-foreground: oklch(0.444 0.245 278);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.511 0.262 277);
+  /* Scrollbar */
+  --scrollbar-track: oklch(0.95 0 0);
+  --scrollbar-thumb: oklch(0.205 0 0);
+  --scrollbar-thumb-hover: oklch(0.25 0 0);
+  /* Diff viewer — light mode */
+  --diff-addition-bg: oklch(0.9 0.05 150 / 15%);
+  --diff-addition-text: oklch(0.3 0.15 150);
+  --diff-deletion-bg: oklch(0.9 0.05 30 / 15%);
+  --diff-deletion-text: oklch(0.3 0.15 30);
+  --diff-context-bg: oklch(0.98 0 0);
+  --diff-hunk-bg: oklch(0.95 0.05 240 / 20%);
+  --diff-hunk-text: oklch(0.4 0.1 240);
+  /* Syntax highlighting — light mode */
+  --syntax-comment-color: oklch(0.5 0.05 140);
+  --syntax-keyword-color: oklch(0.45 0.15 280);
+  --syntax-string-color: oklch(0.5 0.15 80);
+  --syntax-number-color: oklch(0.5 0.15 220);
 }
 
 .dark {
@@ -126,6 +143,26 @@
   --diff-context-bg: oklch(0.18 0 0);
   --diff-hunk-bg: oklch(0.22 0.05 240 / 8%);
   --diff-hunk-text: oklch(0.7 0.1 240);
+  /* Scrollbar */
+  --scrollbar-track: oklch(0.15 0 0);
+  --scrollbar-thumb: oklch(0.922 0 0);
+  --scrollbar-thumb-hover: oklch(0.85 0 0);
+  /* Syntax highlighting — dark mode */
+  --syntax-comment-color: oklch(0.6 0.05 140);
+  --syntax-keyword-color: oklch(0.7 0.15 280);
+  --syntax-string-color: oklch(0.7 0.15 80);
+  --syntax-number-color: oklch(0.65 0.15 220);
+  /* Dark review cards */
+  --review-card-bg: oklch(0.195 0 0);
+  --review-card-border: oklch(0.25 0 0);
+  --review-card-shadow: oklch(0.1 0 0 / 50%);
+  --review-card-hover-bg: oklch(0.21 0 0);
+  --review-card-hover-border: oklch(0.28 0 0);
+  --review-card-hover-shadow: oklch(0.08 0 0 / 60%);
+  --code-block-bg: oklch(0.17 0 0);
+  --code-block-border: oklch(0.23 0 0);
+  --minimap-border-color: oklch(0.55 0.15 240 / 80%);
+  --minimap-bg-color: oklch(0.55 0.15 240 / 10%);
 }
 
 @utility container {
@@ -150,6 +187,13 @@
   @media (width >= 1536px) {
     max-width: 1536px;
   }
+}
+
+.coming-soon-dot-grid {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
+  background-size: 32px 32px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 40%, transparent 100%);
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 40%, transparent 100%);
 }
 
 @layer base {
@@ -198,45 +242,45 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: oklch(0.95 0 0);
+  background: var(--scrollbar-track);
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: oklch(0.205 0 0);
+  background: var(--scrollbar-thumb);
   border-radius: 5px;
-  border: 2px solid oklch(0.95 0 0);
+  border: 2px solid var(--scrollbar-track);
   background-clip: content-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.25 0 0);
+  background: var(--scrollbar-thumb-hover);
   background-clip: content-box;
 }
 
 .dark ::-webkit-scrollbar-track {
-  background: oklch(0.15 0 0);
+  background: var(--scrollbar-track);
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: oklch(0.922 0 0);
-  border: 2px solid oklch(0.15 0 0);
+  background: var(--scrollbar-thumb);
+  border: 2px solid var(--scrollbar-track);
   background-clip: content-box;
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.85 0 0);
+  background: var(--scrollbar-thumb-hover);
   background-clip: content-box;
 }
 
 /* Firefox scrollbar */
 * {
   scrollbar-width: thin;
-  scrollbar-color: oklch(0.205 0 0) oklch(0.95 0 0);
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
 
 .dark * {
-  scrollbar-color: oklch(0.922 0 0) oklch(0.15 0 0);
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
 
 /* Page entrance animations */
@@ -403,14 +447,14 @@ html {
 
 /* Focus visible for accessibility */
 :focus-visible {
-  outline: 2px solid oklch(0.556 0 0);
+  outline: 2px solid var(--ring);
   outline-offset: 2px;
 }
 
 /* Enhanced Diff Viewer Styles */
 .diff-line-addition {
-  background-color: var(--diff-addition-bg, oklch(0.9 0.05 150 / 15%));
-  color: var(--diff-addition-text, oklch(0.3 0.15 150));
+  background-color: var(--diff-addition-bg);
+  color: var(--diff-addition-text);
 }
 
 .dark .diff-line-addition {
@@ -419,8 +463,8 @@ html {
 }
 
 .diff-line-deletion {
-  background-color: var(--diff-deletion-bg, oklch(0.9 0.05 30 / 15%));
-  color: var(--diff-deletion-text, oklch(0.3 0.15 30));
+  background-color: var(--diff-deletion-bg);
+  color: var(--diff-deletion-text);
 }
 
 .dark .diff-line-deletion {
@@ -429,7 +473,7 @@ html {
 }
 
 .diff-line-context {
-  background-color: var(--diff-context-bg, oklch(0.98 0 0));
+  background-color: var(--diff-context-bg);
 }
 
 .dark .diff-line-context {
@@ -437,8 +481,8 @@ html {
 }
 
 .diff-hunk-header {
-  background-color: var(--diff-hunk-bg, oklch(0.95 0.05 240 / 20%));
-  color: var(--diff-hunk-text, oklch(0.4 0.1 240));
+  background-color: var(--diff-hunk-bg);
+  color: var(--diff-hunk-text);
 }
 
 .dark .diff-hunk-header {
@@ -448,38 +492,38 @@ html {
 
 /* Code Syntax Highlighting Improvements */
 .syntax-comment {
-  color: oklch(0.5 0.05 140);
+  color: var(--syntax-comment-color);
   font-style: italic;
   opacity: 0.8;
 }
 
 .dark .syntax-comment {
-  color: oklch(0.6 0.05 140);
+  color: var(--syntax-comment-color);
 }
 
 .syntax-keyword {
-  color: oklch(0.45 0.15 280);
+  color: var(--syntax-keyword-color);
   font-weight: 600;
 }
 
 .dark .syntax-keyword {
-  color: oklch(0.7 0.15 280);
+  color: var(--syntax-keyword-color);
 }
 
 .syntax-string {
-  color: oklch(0.5 0.15 80);
+  color: var(--syntax-string-color);
 }
 
 .dark .syntax-string {
-  color: oklch(0.7 0.15 80);
+  color: var(--syntax-string-color);
 }
 
 .syntax-number {
-  color: oklch(0.5 0.15 220);
+  color: var(--syntax-number-color);
 }
 
 .dark .syntax-number {
-  color: oklch(0.65 0.15 220);
+  color: var(--syntax-number-color);
 }
 
 /* Mobile Responsive Utilities */
@@ -525,7 +569,6 @@ html {
   
   /* Improved scrolling on mobile */
   .mobile-scroll {
-    -webkit-overflow-scrolling: touch;
     overflow-x: auto;
   }
 }
@@ -543,25 +586,25 @@ html {
 
 /* Dark theme specific enhancements for review UI */
 .dark .review-card {
-  background: oklch(0.195 0 0);
-  border-color: oklch(0.25 0 0);
-  box-shadow: 0 2px 8px oklch(0.1 0 0 / 50%);
+  background: var(--review-card-bg);
+  border-color: var(--review-card-border);
+  box-shadow: 0 2px 8px var(--review-card-shadow);
 }
 
 .dark .review-card:hover {
-  background: oklch(0.21 0 0);
-  border-color: oklch(0.28 0 0);
-  box-shadow: 0 4px 12px oklch(0.08 0 0 / 60%);
+  background: var(--review-card-hover-bg);
+  border-color: var(--review-card-hover-border);
+  box-shadow: 0 4px 12px var(--review-card-hover-shadow);
 }
 
 .dark .code-block {
-  background: oklch(0.17 0 0);
-  border: 1px solid oklch(0.23 0 0);
+  background: var(--code-block-bg);
+  border: 1px solid var(--code-block-border);
 }
 
 .dark .minimap-viewport {
-  border-color: oklch(0.55 0.15 240 / 80%);
-  background: oklch(0.55 0.15 240 / 10%);
+  border-color: var(--minimap-border-color);
+  background: var(--minimap-bg-color);
 }
 
 /* Smooth transitions for theme switching */

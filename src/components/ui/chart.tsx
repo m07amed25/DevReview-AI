@@ -116,13 +116,21 @@ function ChartTooltipContent({
   color,
   nameKey,
   labelKey,
-}: Omit<React.ComponentProps<typeof RechartsPrimitive.Tooltip>, "payload" | "active" | "label"> &
+}: Omit<
+  React.ComponentProps<typeof RechartsPrimitive.Tooltip>,
+  "payload" | "active" | "label"
+> &
   React.ComponentProps<"div"> & {
     active?: boolean;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    payload?: any[];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    label?: any;
+    payload?: {
+      dataKey?: string | number;
+      name?: string | number;
+      value?: number | string | Array<number | string>;
+      color?: string;
+      payload?: { fill?: string; [key: string]: unknown };
+      [key: string]: unknown;
+    }[];
+    label?: unknown;
     hideLabel?: boolean;
     hideIndicator?: boolean;
     indicator?: "line" | "dot" | "dashed";
@@ -147,7 +155,7 @@ function ChartTooltipContent({
     if (labelFormatter) {
       return (
         <div className={cn("font-medium", labelClassName)}>
-          {labelFormatter(value, payload)}
+          {labelFormatter(value, payload as never)}
         </div>
       );
     }
@@ -185,7 +193,7 @@ function ChartTooltipContent({
         {payload.map((item, index) => {
           const key = `${nameKey || item.name || item.dataKey || "value"}`;
           const itemConfig = getPayloadConfigFromPayload(config, item, key);
-          const indicatorColor = color || item.payload.fill || item.color;
+          const indicatorColor = color || item.payload?.fill || item.color;
 
           return (
             <div
@@ -196,7 +204,13 @@ function ChartTooltipContent({
               )}
             >
               {formatter && item?.value !== undefined && item.name ? (
-                formatter(item.value, item.name, item, index, item.payload)
+                formatter(
+                  item.value as never,
+                  item.name as never,
+                  item as never,
+                  index,
+                  item.payload as never,
+                )
               ) : (
                 <>
                   {itemConfig?.icon ? (
@@ -261,8 +275,12 @@ function ChartLegendContent({
   nameKey,
 }: React.ComponentProps<"div"> &
   Omit<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    payload?: any[];
+    payload?: {
+      dataKey?: string | number;
+      value?: string | number;
+      color?: string;
+      [key: string]: unknown;
+    }[];
     verticalAlign?: "top" | "middle" | "bottom";
     hideIcon?: boolean;
     nameKey?: string;

@@ -196,12 +196,10 @@ export async function fetchPullRequests(
   repo: string,
   state: "open" | "closed" | "all" = "open",
 ): Promise<GitHubPullRequest[]> {
-  const response = await githubFetch(
-    `https://api.github.com/repos/${owner}/${repo}/pulls?state=${state}&per_page=30&sort=updated&direction=desc`,
+  const pulls = await fetchAllPages<GitHubPullRequest>(
+    `https://api.github.com/repos/${owner}/${repo}/pulls?state=${state}&sort=updated&direction=desc`,
     accessToken,
   );
-
-  const pulls = (await response.json()) as GitHubPullRequest[];
 
   // Fetch all PR details in parallel instead of sequential batches of 5
   return Promise.all(
@@ -242,24 +240,10 @@ export async function fetchPullRequestFiles(
   repo: string,
   prNumber: number,
 ): Promise<GitHubPullRequestFile[]> {
-  const files: GitHubPullRequestFile[] = [];
-  let page = 1;
-  const perPage = 100;
-
-  while (true) {
-    const response = await githubFetch(
-      `https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}/files?per_page=${perPage}&page=${page}`,
-      accessToken,
-    );
-
-    const data = (await response.json()) as GitHubPullRequestFile[];
-    files.push(...data);
-
-    if (data.length < perPage) break;
-    page++;
-  }
-
-  return files;
+  return fetchAllPages<GitHubPullRequestFile>(
+    `https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}/files`,
+    accessToken,
+  );
 }
 
 export interface GitHubTreeFile {
@@ -406,19 +390,14 @@ export async function registerWebhook(
     `https://api.github.com/repos/${owner}/${repo}/hooks?per_page=100`,
     { headers },
   );
-  console.log(
-    `[registerWebhook] list status=${listRes.status} targetUrl=${webhookUrl}`,
-  );
+
   if (listRes.ok) {
     const hooks = (await listRes.json()) as Array<{
       id: number;
       active: boolean;
       config: { url?: string };
     }>;
-    console.log(
-      `[registerWebhook] existing hooks:`,
-      hooks.map((h) => h.config?.url),
-    );
+
     const existing = hooks.find((h) => h.config?.url === webhookUrl);
     if (existing) {
       // Re-activate it if it was deactivated, then return the ID.
@@ -432,7 +411,7 @@ export async function registerWebhook(
           },
         );
       }
-      console.log(`[registerWebhook] reusing existing hook id=${existing.id}`);
+
       return existing.id;
     }
   } else {
@@ -633,13 +612,9 @@ export async function listOpenPullRequests(
   repoFullName: string,
 ): Promise<OpenPullRequest[]> {
   const [owner, repo] = repoFullName.split("/");
-  const response = await githubFetch(
-    `https://api.github.com/repos/${owner}/${repo}/pulls?state=open&per_page=100`,
+  const pulls = await fetchAllPages<OpenPullRequest & { draft: boolean }>(
+    `https://api.github.com/repos/${owner}/${repo}/pulls?state=open`,
     accessToken,
   );
-
-  const pulls = (await response.json()) as (OpenPullRequest & {
-    draft: boolean;
-  })[];
   return pulls.filter((pr) => !pr.draft);
 }

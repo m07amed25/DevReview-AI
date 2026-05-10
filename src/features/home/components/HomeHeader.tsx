@@ -37,6 +37,11 @@ export function HomeHeader() {
   const [activeSection, setActiveSection] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -166,7 +171,7 @@ export function HomeHeader() {
 
           {/* Action Buttons */}
           <div className="flex items-center gap-2">
-            {session ? (
+            {mounted && session ? (
               <Button
                 size="sm"
                 asChild

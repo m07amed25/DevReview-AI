@@ -266,12 +266,14 @@ export function CommentCard({
 }) {
   const [expanded, setExpanded] = useState(index < 3);
 
-  useEffect(() => {
+  const [prevExpandKey, setPrevExpandKey] = useState(expandKey);
+
+  if (expandKey !== prevExpandKey) {
+    setPrevExpandKey(expandKey);
     if (forceExpanded !== null && forceExpanded !== undefined) {
       setExpanded(forceExpanded);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [expandKey]);
+  }
 
   const [copied, setCopied] = useState(false);
   const CategoryIcon = getCategoryIcon(comment.category);

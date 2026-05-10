@@ -447,6 +447,16 @@ function DiagramViewer({
     [onNodeClick],
   );
 
+  const nodesRef = useRef(nodes);
+  useEffect(() => {
+    nodesRef.current = nodes;
+  }, [nodes]);
+  
+  const handleNodeClickRef = useRef(handleNodeClick);
+  useEffect(() => {
+    handleNodeClickRef.current = handleNodeClick;
+  }, [handleNodeClick]);
+
   // Mermaid render
   useEffect(() => {
     let cancelled = false;
@@ -463,7 +473,7 @@ function DiagramViewer({
         mermaid.initialize({
           startOnLoad: false,
           theme: "dark",
-          securityLevel: "loose",
+          securityLevel: "strict",
           fontFamily: "inherit",
           themeVariables: { fontSize: "16px" },
           flowchart: { nodeSpacing: 70, rankSpacing: 70 },
@@ -482,13 +492,13 @@ function DiagramViewer({
           svgEl.style.shapeRendering = "geometricPrecision";
           svgEl.style.textRendering = "geometricPrecision";
 
-          if (nodes.length > 0) {
+          if (nodesRef.current.length > 0) {
             svgEl
               .querySelectorAll<SVGElement>(".node, [data-id]")
               .forEach((el) => {
                 const dataId =
                   el.getAttribute("data-id") ?? el.getAttribute("id") ?? "";
-                const matchedNode = nodes.find(
+                const matchedNode = nodesRef.current.find(
                   (n) =>
                     n.id === dataId ||
                     dataId.includes(n.id) ||
@@ -497,7 +507,7 @@ function DiagramViewer({
                 if (matchedNode) {
                   el.style.cursor = "pointer";
                   el.addEventListener("click", () =>
-                    handleNodeClick(matchedNode, el),
+                    handleNodeClickRef.current(matchedNode, el),
                   );
                 }
               });
@@ -518,16 +528,14 @@ function DiagramViewer({
       cancelled = true;
       document.getElementById(containerId)?.remove();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [definition]);
+  }, [definition, containerId]);
 
   useEffect(() => {
     if (!loading) {
       // Use rAF to ensure the SVG is committed to the DOM before measuring
       requestAnimationFrame(() => fitToScreen());
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading]);
+  }, [loading, fitToScreen]);
 
   if (error) {
     return (

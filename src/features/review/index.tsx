@@ -65,10 +65,14 @@ export function ReviewResult({
   const [resolvedKeys, setResolvedKeys] = useState<Set<string>>(
     () => new Set(review.resolvedComments ?? []),
   );
-  useEffect(() => {
-    setResolvedKeys(new Set(review.resolvedComments ?? []));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [review.id]);
+
+  const resolvedCommentsStr = JSON.stringify(review.resolvedComments ?? []);
+  const [prevResolvedStr, setPrevResolvedStr] = useState(resolvedCommentsStr);
+
+  if (resolvedCommentsStr !== prevResolvedStr) {
+    setPrevResolvedStr(resolvedCommentsStr);
+    setResolvedKeys(new Set(JSON.parse(resolvedCommentsStr) as string[]));
+  }
   const [showResolved, setShowResolved] = useState(true);
   const toggleResolvedMutation =
     trpc.review.toggleResolvedComment.useMutation();
@@ -401,7 +405,9 @@ export function ReviewResult({
           <div className="space-y-3">
             <CommentsToolbar
               totalComments={totalIssues}
-              filteredCount={visibleComments.filter((c) => c.severity !== "info").length}
+              filteredCount={
+                visibleComments.filter((c) => c.severity !== "info").length
+              }
               searchQuery={searchQuery}
               onSearchChange={setSearchQuery}
               allCategories={allCategories}

@@ -163,7 +163,7 @@ export const teamRouter = createTRPCRouter({
     .input(
       z.object({
         teamId: z.string().max(255),
-        email: z.string().email().max(255).email(),
+        email: z.string().email().max(255),
         role: z.enum(["ADMIN", "MEMBER"]).default("MEMBER"),
       }),
     )
@@ -652,8 +652,9 @@ export const teamRouter = createTRPCRouter({
         const action = await ctx.db.teamAction.create({
           data: {
             teamId: input.teamId,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            actionType: input.actionType as any,
+            actionType: input.actionType as NonNullable<
+              Parameters<typeof ctx.db.teamAction.create>[0]["data"]
+            >["actionType"],
             status: requiresApproval ? "PENDING" : "APPROVED",
             requestedBy: ctx.user.id,
             targetUserId: input.targetUserId,
@@ -823,8 +824,7 @@ async function executeApprovedAction(
     teamId: string;
     targetUserId: string | null;
     targetRepoId: string | null;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    metadata: any;
+    metadata: unknown;
     requestedBy: string;
   },
 ) {

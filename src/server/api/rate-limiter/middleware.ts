@@ -70,18 +70,17 @@ export function createRateLimitMiddleware(
   // Initialize the rate limiter
   const rateLimiter = RateLimiterFactory.initialize(config);
 
-  // Return the middleware function directly
   return async (opts: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ctx: any;
+    ctx: { headers?: Headers | unknown; [key: string]: unknown };
     next: () => Promise<unknown>;
     path: string;
   }) => {
     const { ctx, next, path } = opts;
 
     // Get client information from headers
-    const clientIP = getClientIP(ctx.headers) || "unknown";
-    const apiKey = getAPIKey(ctx.headers);
+    const headers = (ctx.headers as Headers) || new Headers();
+    const clientIP = getClientIP(headers) || "unknown";
+    const apiKey = getAPIKey(headers);
 
     // Check if should skip rate limiting
     if (skip && skip({ clientIP, apiKey } as RateLimitContext, path)) {
@@ -155,9 +154,12 @@ export function createRateLimitMiddleware(
       }
 
       // Throw a simple error that tRPC will handle
-      const error = new Error(result.error || "Too many requests");
-      (error as any).code = "TOO_MANY_REQUESTS";
-      (error as any).cause = {
+      const error = new Error(result.error || "Too many requests") as Error & {
+        code?: string;
+        cause?: unknown;
+      };
+      error.code = "TOO_MANY_REQUESTS";
+      error.cause = {
         retryAfter: result.retryAfter,
         limit: result.limit,
         remaining: result.remaining,

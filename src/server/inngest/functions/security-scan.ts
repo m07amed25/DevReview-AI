@@ -11,6 +11,8 @@ import {
   getGitHubAccessToken,
 } from "@/server/services/github";
 import { Octokit } from "octokit";
+import { sendSecurityAlertEmail } from "@/server/email";
+import { getAppUrl } from "@/server/email/transporter";
 
 export type SecurityScanEvent = {
   name: "security/scan.requested";
@@ -202,10 +204,19 @@ export const securityScan = inngest.createFunction(
         });
 
         if (user?.email) {
-          // TODO: Send email notification about critical security issues
-          console.log(
-            `Security alert: ${scanResult.criticalCount} critical, ${scanResult.highCount} high issues found in PR #${prNumber}`
-          );
+          const appUrl = getAppUrl();
+          const viewReviewUrl = `${appUrl}/repo/${encodeURIComponent(repositoryId)}/pr/${prNumber}`;
+
+          await sendSecurityAlertEmail({
+            to: user.email,
+            recipientName: user.name ?? "",
+            repositoryName: repository.name,
+            repositoryFullName: repository.fullName,
+            prNumber,
+            criticalCount: scanResult.criticalCount,
+            highCount: scanResult.highCount,
+            viewReviewUrl,
+          });
         }
       });
     }

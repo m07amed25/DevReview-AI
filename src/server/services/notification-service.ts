@@ -38,6 +38,8 @@ export async function createNotification(
         title: notification.title,
         message: notification.message,
         link: notification.link,
+        read: notification.read,
+        createdAt: notification.createdAt,
       });
     } catch (error) {
       console.error("Failed to trigger Pusher notification:", error);

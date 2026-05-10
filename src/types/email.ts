@@ -59,6 +59,17 @@ export interface ReviewCompletionEmailParams {
   viewReviewUrl: string;
 }
 
+export interface SecurityAlertEmailParams {
+  to: string;
+  recipientName: string;
+  repositoryName: string;
+  repositoryFullName: string;
+  prNumber: number;
+  criticalCount: number;
+  highCount: number;
+  viewReviewUrl: string;
+}
+
 export interface EmailSendResult {
   success: boolean;
   messageId?: string;

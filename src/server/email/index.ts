@@ -11,6 +11,7 @@ export {
   sendReviewCompletedEmail,
   sendTestEmail,
   sendGithubConnectionWarningEmail,
+  sendSecurityAlertEmail,
 } from "./service";
 
 export { sendTeamInviteEmailNotification } from "./integrations/team";
@@ -29,10 +30,16 @@ export {
   renderReviewCompletedEmail,
 } from "./templates/review-completed";
 
+export {
+  SecurityAlertEmail,
+  renderSecurityAlertEmail,
+} from "./templates/security-alert";
+
 export type {
   TeamMemberAddedEmailParams,
   ReviewCompletionEmailParams,
   GithubConnectionWarningEmailParams,
+  SecurityAlertEmailParams,
   ReviewStatus,
   EmailSendResult,
   EmailServiceConfig,

@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface IssuesTablesRowProps {
   issuesData:
@@ -8,16 +9,26 @@ interface IssuesTablesRowProps {
         topRejectionReasons: Array<{ reason: string; count: number }>;
       }
     | undefined;
+  issuesLoading: boolean;
 }
 
-export function IssuesTablesRow({ issuesData }: IssuesTablesRowProps) {
+export function IssuesTablesRow({
+  issuesData,
+  issuesLoading,
+}: IssuesTablesRowProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
       {/* Top Issues */}
       <Card className="p-6">
         <h3 className="text-lg font-semibold mb-4">Top Issues Detected</h3>
         <div className="space-y-2">
-          {issuesData?.topIssues && issuesData.topIssues.length > 0 ? (
+          {issuesLoading ? (
+            <div className="space-y-2">
+              <Skeleton className="h-[46px] w-full" />
+              <Skeleton className="h-[46px] w-full" />
+              <Skeleton className="h-[46px] w-full" />
+            </div>
+          ) : issuesData?.topIssues && issuesData.topIssues.length > 0 ? (
             issuesData.topIssues.map((item, index) => (
               <div
                 key={index}
@@ -28,9 +39,9 @@ export function IssuesTablesRow({ issuesData }: IssuesTablesRowProps) {
               </div>
             ))
           ) : (
-            <p className="text-center text-muted-foreground py-8">
+            <div className="h-[100px] flex items-center justify-center text-muted-foreground border rounded-md bg-muted/10">
               No issues data available
-            </p>
+            </div>
           )}
         </div>
       </Card>
@@ -39,8 +50,14 @@ export function IssuesTablesRow({ issuesData }: IssuesTablesRowProps) {
       <Card className="p-6">
         <h3 className="text-lg font-semibold mb-4">Rejection Reasons</h3>
         <div className="space-y-2">
-          {issuesData?.topRejectionReasons &&
-          issuesData.topRejectionReasons.length > 0 ? (
+          {issuesLoading ? (
+            <div className="space-y-2">
+              <Skeleton className="h-[46px] w-full" />
+              <Skeleton className="h-[46px] w-full" />
+              <Skeleton className="h-[46px] w-full" />
+            </div>
+          ) : issuesData?.topRejectionReasons &&
+            issuesData.topRejectionReasons.length > 0 ? (
             issuesData.topRejectionReasons.map((item, index) => (
               <div
                 key={index}
@@ -51,9 +68,9 @@ export function IssuesTablesRow({ issuesData }: IssuesTablesRowProps) {
               </div>
             ))
           ) : (
-            <p className="text-center text-muted-foreground py-8">
+            <div className="h-[100px] flex items-center justify-center text-muted-foreground border rounded-md bg-muted/10">
               No rejection data available
-            </p>
+            </div>
           )}
         </div>
       </Card>

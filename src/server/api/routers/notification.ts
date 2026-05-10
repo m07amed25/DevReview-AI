@@ -7,9 +7,11 @@ export const notificationRouter = createTRPCRouter({
     .input(
       z
         .object({
-          limit: z.number().min(1).max(50).default(20),
+          limit: z.number().min(1).max(100).default(20),
           cursor: z.string().max(255).optional(),
           unreadOnly: z.boolean().default(false),
+          type: z.string().optional(),
+          search: z.string().optional(),
         })
         .optional(),
     )
@@ -17,10 +19,21 @@ export const notificationRouter = createTRPCRouter({
       const limit = input?.limit ?? 20;
       const cursor = input?.cursor;
       const unreadOnly = input?.unreadOnly ?? false;
+      const type = input?.type;
+      const search = input?.search;
 
       const where = {
         userId: ctx.user.id,
         ...(unreadOnly ? { read: false } : {}),
+        ...(type && type !== "all" ? { type: type as any } : {}),
+        ...(search
+          ? {
+              OR: [
+                { title: { contains: search, mode: "insensitive" as const } },
+                { message: { contains: search, mode: "insensitive" as const } },
+              ],
+            }
+          : {}),
       };
 
       const notifications = await ctx.db.notification.findMany({

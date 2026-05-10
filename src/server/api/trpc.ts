@@ -33,7 +33,8 @@ async function getSessionWithRetry(headers: Headers) {
       // Better Auth wraps the DB error in an APIError with this body code
       "body" in err &&
       typeof (err as { body?: { code?: string } }).body === "object" &&
-      (err as { body: { code?: string } }).body?.code === "FAILED_TO_GET_SESSION";
+      (err as { body: { code?: string } }).body?.code ===
+        "FAILED_TO_GET_SESSION";
 
     if (isConnectionDrop) {
       console.warn(
@@ -77,12 +78,16 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
   errorFormatter({ shape, error }) {
+    const cause = error.cause as Record<string, unknown> | undefined;
+    const retryAfter = cause?.retryAfter ? Number(cause.retryAfter) : null;
+
     return {
       ...shape,
       data: {
         ...shape.data,
         ZodError:
           error.cause instanceof ZodError ? error.cause.flatten() : null,
+        retryAfter,
       },
     };
   },

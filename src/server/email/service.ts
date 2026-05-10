@@ -5,6 +5,7 @@ import { renderGithubConnectionWarningEmail } from "./templates/github-connectio
 import { renderSupportReplyEmail } from "./templates/support-reply";
 import { renderAdminPromotedEmail } from "./templates/admin-promoted";
 import { renderAdminDemotedEmail } from "./templates/admin-demoted";
+import { renderSecurityAlertEmail } from "./templates/security-alert";
 import type {
   TeamMemberAddedEmailParams,
   ReviewCompletionEmailParams,
@@ -12,6 +13,7 @@ import type {
   SupportReplyEmailParams,
   AdminPromotedEmailParams,
   AdminDemotedEmailParams,
+  SecurityAlertEmailParams,
   EmailSendResult,
 } from "@/types/email";
 
@@ -225,4 +227,33 @@ export async function sendTestEmail(to: string): Promise<EmailSendResult> {
   `;
 
   return sendEmail(to, "Test Email - DEPI Code Review", testHtml);
+}
+
+/**
+ * Send security alert email when critical/high severity issues are found
+ */
+export async function sendSecurityAlertEmail(
+  params: SecurityAlertEmailParams,
+): Promise<EmailSendResult> {
+  const { to, repositoryName, prNumber, criticalCount, highCount } = params;
+
+  try {
+    const html = await renderSecurityAlertEmail(params);
+
+    const severityLabel =
+      criticalCount > 0
+        ? `${criticalCount} critical${highCount > 0 ? ` & ${highCount} high` : ""}`
+        : `${highCount} high`;
+
+    const subject = `⚠️ Security Alert: ${severityLabel} issue${criticalCount + highCount !== 1 ? "s" : ""} in ${repositoryName} PR #${prNumber}`;
+
+    return await sendEmail(to, subject, html);
+  } catch (error) {
+    console.error("❌ Error generating security alert email:", error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "Failed to generate email",
+    };
+  }
 }
