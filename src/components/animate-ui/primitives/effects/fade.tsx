@@ -41,7 +41,7 @@ function Fade({
     },
   );
 
-  const Component = asChild ? Slot : motion.div;
+  const Component = (asChild ? Slot : motion.div) as any;
 
   return (
     <Component

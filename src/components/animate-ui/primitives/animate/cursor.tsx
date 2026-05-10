@@ -147,7 +147,7 @@ function CursorContainer({
   const { containerRef, global, active } = useCursor();
   React.useImperativeHandle(ref, () => containerRef.current as HTMLDivElement);
 
-  const Component = asChild ? Slot : motion.div;
+  const Component = (asChild ? Slot : motion.div) as any;
 
   return (
     <Component
@@ -196,7 +196,7 @@ function Cursor({ ref, asChild = false, style, ...props }: CursorProps) {
     y.set(cursorPos.y);
   }, [cursorPos, x, y]);
 
-  const Component = asChild ? Slot : motion.div;
+  const Component = (asChild ? Slot : motion.div) as any;
 
   return (
     <AnimatePresence>
@@ -346,7 +346,7 @@ function CursorFollow({
     y.set(cursorPos.y - offset.y + cursorHeight / 2);
   }, [calculateOffset, cursorPos, cursorRef, x, y]);
 
-  const Component = asChild ? Slot : motion.div;
+  const Component = (asChild ? Slot : motion.div) as any;
 
   return (
     <AnimatePresence>
