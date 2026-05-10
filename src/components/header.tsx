@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { UserMenu } from "./user-menu";
 import { Notifications } from "./notifications";
+import { Logo } from "./ui/logo";
 
 interface User {
   id: string;
@@ -70,13 +71,7 @@ export function Header({ user }: HeaderProps) {
             className="flex items-center gap-2 font-semibold tracking-tight hover:opacity-80 transition-opacity group"
             aria-label="Code Catch - Home"
           >
-            {/* Logo placeholder — replace with <Image> once logo is ready */}
-            <div
-              className="flex h-7 w-7 items-center justify-center rounded-lg border-2 border-dashed border-primary/50 bg-primary/10 text-primary text-[10px] font-bold transition-all duration-200 group-hover:scale-105 group-hover:border-primary/80"
-              title="Logo coming soon"
-            >
-              CC
-            </div>
+            <Logo className="h-7 transition-all duration-200 group-hover:scale-105" />
             <span className="text-sm font-bold">
               Code{" "}
               <span className="bg-linear-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">

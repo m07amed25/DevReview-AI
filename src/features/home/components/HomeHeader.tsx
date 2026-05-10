@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useSyncExternalStore } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -16,6 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
+import { Logo } from "@/components/ui/logo";
 import {
   Dialog,
   DialogContent,
@@ -36,24 +37,18 @@ export function HomeHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const isClient = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
 
-      // Calculate scroll progress
-      const winScroll = window.scrollY;
-      const height =
-        document.documentElement.scrollHeight -
-        document.documentElement.clientHeight;
-      const scrolled = (winScroll / height) * 100;
-      setScrollProgress(scrolled);
+
 
       // Detect active section
       const sections = navigationLinks.map((link) =>
@@ -88,14 +83,6 @@ export function HomeHeader() {
 
   return (
     <>
-      {/* Scroll Progress Bar */}
-      <div className="fixed top-0 left-0 right-0 h-1 bg-zinc-900 z-[100]">
-        <div
-          className="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transition-all duration-150 ease-out"
-          style={{ width: `${scrollProgress}%` }}
-        />
-      </div>
-
       <header
         className={cn(
           "fixed top-0 w-full z-50 transition-all duration-300",
@@ -112,13 +99,7 @@ export function HomeHeader() {
             className="flex items-center gap-2.5 font-semibold tracking-tight hover:opacity-80 transition-all duration-200 group relative z-10"
             aria-label="Code Catch - Home"
           >
-            {/* Logo placeholder — replace with <Image> once logo is ready */}
-            <div
-              className="flex h-9 w-9 items-center justify-center rounded-xl border-2 border-dashed border-indigo-500/60 bg-indigo-500/10 text-indigo-400 text-xs font-bold transition-all duration-300 group-hover:scale-105 group-hover:border-indigo-400 group-hover:bg-indigo-500/20"
-              title="Logo coming soon"
-            >
-              CC
-            </div>
+            <Logo className="h-9 transition-all duration-300 group-hover:scale-105" />
             <span className="text-lg text-white font-bold tracking-tight">
               Code{" "}
               <span className="bg-linear-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
@@ -171,7 +152,7 @@ export function HomeHeader() {
 
           {/* Action Buttons */}
           <div className="flex items-center gap-2">
-            {mounted && session ? (
+            {isClient && session ? (
               <Button
                 size="sm"
                 asChild

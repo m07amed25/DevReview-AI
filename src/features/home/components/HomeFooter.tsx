@@ -1,6 +1,5 @@
 import Link from "next/link";
 import {
-  Code2,
   Github,
   Twitter,
   Linkedin,
@@ -9,8 +8,10 @@ import {
   Zap,
   Users,
   Star,
+  Instagram,
 } from "lucide-react";
 import { db } from "@/server/db";
+import { Logo } from "@/components/ui/logo";
 
 const footerLinks = {
   product: [
@@ -37,13 +38,13 @@ const footerLinks = {
 
 const socialLinks = [
   {
-    label: "GitHub",
-    href: "https://github.com/m07amed25/DevReview-AI",
-    icon: Github,
+    label: "Instagram",
+    href: "https://www.instagram.com/code.catch/",
+    icon: Instagram,
   },
   {
-    label: "Twitter",
-    href: "https://twitter.com/codecatch",
+    label: "X",
+    href: "https://x.com/codecatchdev",
     icon: Twitter,
   },
   {
@@ -59,7 +60,8 @@ const socialLinks = [
 ];
 
 function formatCount(n: number): string {
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1).replace(/\.0$/, "")}M+`;
+  if (n >= 1_000_000)
+    return `${(n / 1_000_000).toFixed(1).replace(/\.0$/, "")}M+`;
   if (n >= 1_000) return `${(n / 1_000).toFixed(1).replace(/\.0$/, "")}k+`;
   return n.toString();
 }
@@ -110,20 +112,22 @@ export async function HomeFooter() {
       {/* Main footer content */}
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-5">
-
           {/* Brand column */}
           <div className="lg:col-span-2 space-y-5">
             <Link href="/" className="flex items-center gap-2.5 group w-fit">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 text-indigo-300 group-hover:border-indigo-400/50 transition-all duration-200">
-                <Code2 className="h-4.5 w-4.5" aria-hidden="true" />
-              </div>
+              <Logo className="h-9 transition-all duration-200 group-hover:scale-105" />
               <span className="font-bold text-lg text-white tracking-tight">
-                Code <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-400 to-purple-400">Catch</span>
+                Code{" "}
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-400 to-purple-400">
+                  Catch
+                </span>
               </span>
             </Link>
 
             <p className="text-sm text-zinc-400 leading-relaxed max-w-xs">
-              Automated AI-powered code reviews for engineering teams. Catch bugs, security vulnerabilities, and quality issues instantly in every pull request.
+              Automated AI-powered code reviews for engineering teams. Catch
+              bugs, security vulnerabilities, and quality issues instantly in
+              every pull request.
             </p>
 
             {/* Social links */}
@@ -151,7 +155,10 @@ export async function HomeFooter() {
             >
               <Github className="h-4 w-4" aria-hidden="true" />
               <span>Star on GitHub</span>
-              <Star className="h-3.5 w-3.5 text-yellow-400 fill-yellow-400/50 group-hover:fill-yellow-400 transition-colors" aria-hidden="true" />
+              <Star
+                className="h-3.5 w-3.5 text-yellow-400 fill-yellow-400/50 group-hover:fill-yellow-400 transition-colors"
+                aria-hidden="true"
+              />
             </a>
           </div>
 
@@ -171,7 +178,9 @@ export async function HomeFooter() {
                     >
                       {label}
                       {soon && (
-                        <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-500 leading-none">soon</span>
+                        <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-500 leading-none">
+                          soon
+                        </span>
                       )}
                     </Link>
                   </li>
@@ -193,7 +202,9 @@ export async function HomeFooter() {
                     >
                       {label}
                       {soon && (
-                        <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-500 leading-none">soon</span>
+                        <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-500 leading-none">
+                          soon
+                        </span>
                       )}
                     </Link>
                   </li>
@@ -215,7 +226,9 @@ export async function HomeFooter() {
                     >
                       {label}
                       {soon && (
-                        <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-500 leading-none">soon</span>
+                        <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-500 leading-none">
+                          soon
+                        </span>
                       )}
                     </Link>
                   </li>
@@ -231,23 +244,36 @@ export async function HomeFooter() {
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-5">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
             <p className="text-xs text-zinc-600">
-              © {new Date().getFullYear()} Code Catch. All rights reserved. Built with{" "}
-              <span className="text-indigo-500/70">♥</span> for developers.
+              © {new Date().getFullYear()} Code Catch. All rights reserved.
+              Built with <span className="text-indigo-500/70">♥</span> for
+              developers.
             </p>
             <div className="flex items-center gap-4 text-xs text-zinc-600">
-              <Link href="/privacy" className="hover:text-zinc-400 transition-colors">
+              <Link
+                href="/privacy"
+                className="hover:text-zinc-400 transition-colors"
+              >
                 Privacy
               </Link>
               <span className="text-zinc-800">·</span>
-              <Link href="/terms" className="hover:text-zinc-400 transition-colors">
+              <Link
+                href="/terms"
+                className="hover:text-zinc-400 transition-colors"
+              >
                 Terms
               </Link>
               <span className="text-zinc-800">·</span>
-              <Link href="/security" className="hover:text-zinc-400 transition-colors">
+              <Link
+                href="/security"
+                className="hover:text-zinc-400 transition-colors"
+              >
                 Security
               </Link>
               <span className="text-zinc-800">·</span>
-              <Link href="/sitemap.xml" className="hover:text-zinc-400 transition-colors">
+              <Link
+                href="/sitemap.xml"
+                className="hover:text-zinc-400 transition-colors"
+              >
                 Sitemap
               </Link>
             </div>
