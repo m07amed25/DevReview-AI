@@ -46,12 +46,13 @@ export function HeroSection() {
         {/* Main heading */}
         <h1
           id="hero-heading"
-          className="text-5xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl xl:text-8xl flex flex-wrap justify-center gap-x-4"
+          className="text-5xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl xl:text-8xl"
           style={{ textWrap: "balance" }}
         >
           <SplittingText text="Code reviews on" type="words" delay={100} />
+          {" "}
           <Fade delay={600} className="inline-block">
-            <span className="bg-gradient-to-r from-indigo-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-sm">
+            <span className="bg-gradient-to-r from-indigo-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-sm ml-2 md:ml-4">
               autopilot
             </span>
           </Fade>
@@ -186,7 +187,7 @@ export function HeroSection() {
 
           <div className="flex flex-col md:flex-row">
             {/* Code Editor Left */}
-            <div className="w-full md:w-3/5 border-r border-white/5 p-6 font-mono text-[13px] leading-relaxed overflow-x-auto text-zinc-300">
+            <div className="w-full md:w-3/5 border-b md:border-b-0 md:border-r border-white/5 p-6 font-mono text-[13px] leading-relaxed overflow-x-auto text-zinc-300">
               <div className="flex gap-4">
                 <div className="text-zinc-600 select-none text-right flex flex-col gap-1">
                   <span>1</span>

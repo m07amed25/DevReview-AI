@@ -62,7 +62,7 @@ export async function StatsSection() {
     >
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-20">
         <div
-          className="grid grid-cols-2 gap-8 md:grid-cols-4 divide-x divide-white/5"
+          className="grid grid-cols-2 gap-8 md:grid-cols-4 md:divide-x divide-white/5"
           role="list"
           aria-label="Platform statistics"
         >

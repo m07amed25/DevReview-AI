@@ -560,13 +560,7 @@ html {
   .mobile-vh-full {
     height: calc(100vh - 4rem) !important;
   }
-  
-  /* Touch-friendly tap targets */
-  button, a {
-    min-height: 44px;
-    min-width: 44px;
-  }
-  
+
   /* Improved scrolling on mobile */
   .mobile-scroll {
     overflow-x: auto;
