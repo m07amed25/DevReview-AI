@@ -23,7 +23,7 @@ export function AdminDemotedEmail({
 }) {
   const { userName, demotedByName } = params;
   const previewText =
-    "Your Administrator privileges have been revoked - DevReview AI";
+    "Your Administrator privileges have been revoked - Code Catch";
 
   return (
     <Html>

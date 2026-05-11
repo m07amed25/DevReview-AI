@@ -1,58 +1,52 @@
+"use client";
+
 import { GitPullRequest, FileCode, Users, Clock } from "lucide-react";
 import { Fade } from "@/components/animate-ui/primitives/effects/fade";
 import { CountingNumber } from "@/components/animate-ui/primitives/texts/counting-number";
-import { db } from "@/server/db";
+import { trpc } from "@/lib/trpc/client";
 
-export async function StatsSection() {
-  const [totalUsers, totalReviews, completedReviews] = await Promise.all([
-    db.user.count(),
-    db.review.count(),
-    db.review.count({ where: { status: "COMPLETED" } }),
-  ]);
+const STATS_CONFIG = [
+  {
+    key: "displayReviews" as const,
+    suffix: "+",
+    decimals: 0,
+    label: "PRs Reviewed",
+    icon: GitPullRequest,
+    color: "text-indigo-400",
+  },
+  {
+    key: "displayLinesAnalyzed" as const,
+    suffix: "K+",
+    decimals: 0,
+    label: "Lines Analyzed",
+    icon: FileCode,
+    color: "text-blue-400",
+  },
+  {
+    key: "displayUsers" as const,
+    suffix: "+",
+    decimals: 0,
+    label: "Developers",
+    icon: Users,
+    color: "text-pink-400",
+  },
+];
 
-  // Fallback to initial milestones if current db count is lower
-  const displayUsers = Math.max(15, totalUsers);
-  const displayReviews = Math.max(50, totalReviews);
+const UPTIME_STAT = {
+  value: 99.9,
+  suffix: "%",
+  decimals: 1,
+  label: "Uptime",
+  icon: Clock,
+  color: "text-emerald-400",
+};
 
-  // Approximate lines analyzed in thousands
-  const displayLinesAnalyzed = Math.max(
-    10,
-    Math.floor((completedReviews * 150) / 1000) + 10,
-  );
+export function StatsSection() {
+  const [data] = trpc.home.getStats.useSuspenseQuery();
 
   const stats = [
-    {
-      value: displayReviews,
-      suffix: "+",
-      decimals: 0,
-      label: "PRs Reviewed",
-      icon: GitPullRequest,
-      color: "text-indigo-400",
-    },
-    {
-      value: displayLinesAnalyzed,
-      suffix: "K+",
-      decimals: 0,
-      label: "Lines Analyzed",
-      icon: FileCode,
-      color: "text-blue-400",
-    },
-    {
-      value: displayUsers,
-      suffix: "+",
-      decimals: 0,
-      label: "Developers",
-      icon: Users,
-      color: "text-pink-400",
-    },
-    {
-      value: 99.9,
-      suffix: "%",
-      decimals: 1,
-      label: "Uptime",
-      icon: Clock,
-      color: "text-emerald-400",
-    },
+    ...STATS_CONFIG.map((s) => ({ ...s, value: data[s.key] })),
+    UPTIME_STAT,
   ];
 
   return (

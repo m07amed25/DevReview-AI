@@ -501,6 +501,80 @@ exports.Prisma.UserCustomRoleScalarFieldEnum = {
   assignedAt: 'assignedAt'
 };
 
+exports.Prisma.DiscountScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  description: 'description',
+  type: 'type',
+  value: 'value',
+  planId: 'planId',
+  maxUses: 'maxUses',
+  usedCount: 'usedCount',
+  active: 'active',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.UserPriceOverrideScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  planId: 'planId',
+  overrideMonthlyPrice: 'overrideMonthlyPrice',
+  overrideYearlyPrice: 'overrideYearlyPrice',
+  reason: 'reason',
+  active: 'active',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PartnerDomainScalarFieldEnum = {
+  id: 'id',
+  domain: 'domain',
+  companyName: 'companyName',
+  planId: 'planId',
+  overrideMonthlyPrice: 'overrideMonthlyPrice',
+  overrideYearlyPrice: 'overrideYearlyPrice',
+  note: 'note',
+  active: 'active',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PricingPlanScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  tagline: 'tagline',
+  monthlyPrice: 'monthlyPrice',
+  visible: 'visible',
+  highlight: 'highlight',
+  features: 'features',
+  reposLimit: 'reposLimit',
+  reviewsLimit: 'reviewsLimit',
+  seatsLimit: 'seatsLimit',
+  privateRepos: 'privateRepos',
+  sortOrder: 'sortOrder',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PricingSettingsScalarFieldEnum = {
+  id: 'id',
+  pricingEnabled: 'pricingEnabled',
+  annualDiscount: 'annualDiscount',
+  trialDays: 'trialDays',
+  trialPlan: 'trialPlan',
+  gracePeriodDays: 'gracePeriodDays',
+  refundEnabled: 'refundEnabled',
+  refundWindowDays: 'refundWindowDays',
+  taxEnabled: 'taxEnabled',
+  taxRate: 'taxRate',
+  promoCodesAtCheckout: 'promoCodesAtCheckout',
+  freeSignupEnabled: 'freeSignupEnabled',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -654,6 +728,11 @@ exports.RuleSeverity = exports.$Enums.RuleSeverity = {
   LOW: 'LOW'
 };
 
+exports.DiscountType = exports.$Enums.DiscountType = {
+  PERCENTAGE: 'PERCENTAGE',
+  FIXED: 'FIXED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Session: 'Session',
@@ -685,7 +764,12 @@ exports.Prisma.ModelName = {
   AuditLog: 'AuditLog',
   SsoProvider: 'SsoProvider',
   CustomRole: 'CustomRole',
-  UserCustomRole: 'UserCustomRole'
+  UserCustomRole: 'UserCustomRole',
+  Discount: 'Discount',
+  UserPriceOverride: 'UserPriceOverride',
+  PartnerDomain: 'PartnerDomain',
+  PricingPlan: 'PricingPlan',
+  PricingSettings: 'PricingSettings'
 };
 
 /**

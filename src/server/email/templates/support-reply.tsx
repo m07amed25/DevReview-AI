@@ -27,7 +27,7 @@ export function SupportReplyEmail({
   params: SupportReplyEmailParams;
 }) {
   const { originalMessage, replyMessage } = params;
-  const previewText = "Response to your support inquiry - DevReview AI";
+  const previewText = "Response to your support inquiry - Code Catch";
 
   return (
     <Html>

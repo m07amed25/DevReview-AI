@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Sign Up",
   description:
-    "Create a free DevReview AI account and start catching bugs, security issues, and code quality problems with AI-powered code reviews.",
+    "Create a free Code Catch account and start catching bugs, security issues, and code quality problems with AI-powered code reviews.",
   robots: { index: true, follow: true },
 };
 

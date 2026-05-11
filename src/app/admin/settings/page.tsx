@@ -88,7 +88,7 @@ export default function AdminSettingsPage() {
           <CardContent className="space-y-6 pb-4">
             <div className="space-y-2 opacity-50">
               <Label htmlFor="siteName">Platform Name</Label>
-              <Input id="siteName" defaultValue="DevReview AI" disabled />
+              <Input id="siteName" defaultValue="Code Catch" disabled />
               <p className="text-[10px] text-muted-foreground italic">
                 Name configuration is currently locked to project defaults.
               </p>

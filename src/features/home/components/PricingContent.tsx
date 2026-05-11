@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Check,
@@ -17,13 +17,47 @@ import {
   Shield,
   Clock,
 } from "lucide-react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { trpc } from "@/lib/trpc/client";
 
-/* -- Types -- */
+export interface PricingSettings {
+  annualDiscount: number;
+  trialDays: number;
+  trialPlan: string;
+  freeSignupEnabled: boolean;
+  promoCodesAtCheckout: boolean;
+}
+
+export interface DbPricingPlan {
+  id: string;
+  name: string;
+  tagline: string;
+  monthlyPrice: number;
+  highlight: boolean;
+  visible: boolean;
+  features: string[];
+  reposLimit: number | null;
+  reviewsLimit: number | null;
+  seatsLimit: number | null;
+  privateRepos: boolean;
+  sortOrder: number;
+}
+
+interface MergedPlan extends DbPricingPlan {
+  icon: React.ElementType;
+  color: string;
+  borderColor: string;
+  badge: string | null;
+  badgeColor: string;
+  cta: string;
+  ctaVariant: "default" | "outline";
+}
+
 interface PlanFeature {
   label: string;
   free: boolean | string;
@@ -31,105 +65,63 @@ interface PlanFeature {
   ultra: boolean | string;
 }
 
-/* -- Data -- */
-const PLANS = [
-  {
-    id: "free",
-    name: "Free",
+/* Display-only constants (not stored in DB) */
+const PLAN_DISPLAY_MAP: Record<string, Omit<MergedPlan, keyof DbPricingPlan>> = {
+  free: {
     icon: Zap,
-    tagline: "Zero cost. Real results. Ship today.",
-    monthlyPrice: 0,
-    yearlyPrice: 0,
     color: "from-slate-500 to-slate-600",
     borderColor: "border-border",
-    badgeColor: "",
     badge: null,
+    badgeColor: "",
     cta: "Start Free",
-    ctaVariant: "outline" as const,
-    highlight: false,
-    features: [
-      "1 repository",
-      "5 AI reviews / month",
-      "Basic code analysis",
-      "Public repos only",
-      "Community support",
-      "GitHub integration",
-    ],
+    ctaVariant: "outline",
   },
-  {
-    id: "pro",
-    name: "Pro",
+  pro: {
     icon: Rocket,
-    tagline: "10× faster reviews. Zero blind spots.",
-    monthlyPrice: 24,
-    yearlyPrice: 19,
     color: "from-indigo-500 to-violet-600",
     borderColor: "border-indigo-500/50",
     badge: "Most Popular",
     badgeColor: "bg-linear-to-r from-indigo-500 to-violet-600 text-white",
     cta: "Start Pro Trial",
-    ctaVariant: "default" as const,
-    highlight: true,
-    features: [
-      "10 repositories",
-      "100 AI reviews / month",
-      "Advanced code analysis",
-      "Public & private repos",
-      "Priority email support",
-      "GitHub & GitLab integration",
-      "Custom review rules",
-      "PR inline comments",
-      "Team collaboration (5 seats)",
-    ],
+    ctaVariant: "default",
   },
-  {
-    id: "ultra",
-    name: "Ultra",
+  ultra: {
     icon: Crown,
-    tagline: "Unlimited scale. Total confidence.",
-    monthlyPrice: 59,
-    yearlyPrice: 49,
     color: "from-amber-500 to-orange-600",
     borderColor: "border-amber-500/40",
     badge: "Best Value",
     badgeColor: "bg-amber-500 text-white",
     cta: "Go Ultra",
-    ctaVariant: "outline" as const,
-    highlight: false,
-    features: [
-      "Unlimited repositories",
-      "Unlimited AI reviews",
-      "Full AI analysis suite",
-      "All repo types",
-      "24/7 dedicated support + SLA",
-      "All Git providers",
-      "Custom review rules",
-      "PR inline comments",
-      "Unlimited team seats",
-      "SSO / SAML",
-      "Advanced analytics",
-      "Custom webhooks",
-      "Audit logs",
-    ],
+    ctaVariant: "outline",
   },
-] as const;
+};
 
-const COMPARISON: PlanFeature[] = [
-  { label: "Repositories", free: "1", pro: "10", ultra: "Unlimited" },
-  { label: "AI Reviews / month", free: "5", pro: "100", ultra: "Unlimited" },
-  { label: "Team seats", free: "1", pro: "5", ultra: "Unlimited" },
-  { label: "Private repos", free: false, pro: true, ultra: true },
-  { label: "Custom review rules", free: false, pro: true, ultra: true },
-  { label: "PR inline comments", free: false, pro: true, ultra: true },
-  { label: "Advanced analytics", free: false, pro: false, ultra: true },
-  { label: "SSO / SAML", free: false, pro: false, ultra: true },
-  { label: "Custom webhooks", free: false, pro: false, ultra: true },
-  { label: "Audit logs", free: false, pro: false, ultra: true },
-  { label: "Dedicated support", free: false, pro: false, ultra: true },
-  { label: "99.9% SLA", free: false, pro: false, ultra: true },
-];
+function limitLabel(v: number | null): string {
+  return v === null ? "Unlimited" : v.toString();
+}
 
-const FAQS = [
+function buildComparison(plans: MergedPlan[]): PlanFeature[] {
+  const get = (id: string) => plans.find((p) => p.id === id);
+  const f = get("free");
+  const p = get("pro");
+  const u = get("ultra");
+  return [
+    { label: "Repositories", free: limitLabel(f?.reposLimit ?? 1), pro: limitLabel(p?.reposLimit ?? 10), ultra: limitLabel(u?.reposLimit ?? null) },
+    { label: "AI Reviews / month", free: limitLabel(f?.reviewsLimit ?? 5), pro: limitLabel(p?.reviewsLimit ?? 100), ultra: limitLabel(u?.reviewsLimit ?? null) },
+    { label: "Team seats", free: limitLabel(f?.seatsLimit ?? 1), pro: limitLabel(p?.seatsLimit ?? 5), ultra: limitLabel(u?.seatsLimit ?? null) },
+    { label: "Private repos", free: f?.privateRepos ?? false, pro: p?.privateRepos ?? true, ultra: u?.privateRepos ?? true },
+    { label: "Custom review rules", free: false, pro: true, ultra: true },
+    { label: "PR inline comments", free: false, pro: true, ultra: true },
+    { label: "Advanced analytics", free: false, pro: false, ultra: true },
+    { label: "SSO / SAML", free: false, pro: false, ultra: true },
+    { label: "Custom webhooks", free: false, pro: false, ultra: true },
+    { label: "Audit logs", free: false, pro: false, ultra: true },
+    { label: "Dedicated support", free: false, pro: false, ultra: true },
+    { label: "99.9% SLA", free: false, pro: false, ultra: true },
+  ];
+}
+
+const FAQS = (trialDays: number, annualDiscount: number, trialPlan: string) => [
   {
     q: "Can I change plans later?",
     a: "Absolutely. You can upgrade or downgrade your plan at any time. Changes take effect immediately and billing is prorated.",
@@ -140,11 +132,13 @@ const FAQS = [
   },
   {
     q: "Do you offer a free trial for paid plans?",
-    a: "Yes! Pro includes a 14-day free trial with no credit card required. Ultra trials are available on request.",
+    a: trialDays > 0
+      ? `Yes! The ${trialPlan.charAt(0).toUpperCase() + trialPlan.slice(1)} plan includes a ${trialDays}-day free trial with no credit card required. Ultra trials are available on request.`
+      : "Trial periods are not available at this time. All paid plans can be cancelled anytime.",
   },
   {
     q: "Is there a discount for annual billing?",
-    a: "Yes — switching to annual billing saves you ~20% compared to month-to-month pricing.",
+    a: `Yes — switching to annual billing saves you ${annualDiscount}% compared to month-to-month pricing.`,
   },
   {
     q: "What happens if I exceed my review limit?",
@@ -161,16 +155,25 @@ function PlanCard({
   plan,
   yearly,
   index,
+  freeSignupEnabled,
+  annualDiscount,
 }: {
-  plan: (typeof PLANS)[number];
+  plan: MergedPlan;
   yearly: boolean;
   index: number;
+  freeSignupEnabled: boolean;
+  annualDiscount: number;
 }) {
-  const price = yearly ? plan.yearlyPrice : plan.monthlyPrice;
+  const isFreeUnavailable = plan.id === "free" && !freeSignupEnabled;
+  const yearlyMonthlyPrice =
+    plan.monthlyPrice > 0
+      ? Math.round(plan.monthlyPrice * (1 - annualDiscount / 100))
+      : 0;
+  const price = yearly ? yearlyMonthlyPrice : plan.monthlyPrice;
   const Icon = plan.icon;
   const savings =
     !yearly && plan.monthlyPrice > 0
-      ? (plan.monthlyPrice - plan.yearlyPrice) * 12
+      ? (plan.monthlyPrice - yearlyMonthlyPrice) * 12
       : 0;
 
   return (
@@ -264,9 +267,9 @@ function PlanCard({
             <span className="mb-1.5 text-muted-foreground">/ forever</span>
           )}
         </div>
-        {yearly && plan.yearlyPrice > 0 && (
+        {yearly && yearlyMonthlyPrice > 0 && (
           <p className="mt-1 text-xs text-muted-foreground">
-            Billed annually (${plan.yearlyPrice * 12}/yr)
+            Billed annually (${yearlyMonthlyPrice * 12}/yr)
           </p>
         )}
         {savings > 0 && (
@@ -291,14 +294,22 @@ function PlanCard({
             "bg-linear-to-r from-indigo-500 to-violet-600 hover:from-indigo-600 hover:to-violet-700 border-0 text-white shadow-lg shadow-indigo-500/40 hover:shadow-indigo-500/60 hover:scale-[1.02]",
           plan.id === "ultra" &&
             "border-amber-500/50 hover:bg-amber-500/10 hover:border-amber-500 hover:scale-[1.02]",
+          isFreeUnavailable && "opacity-60 cursor-not-allowed",
         )}
         size="lg"
         asChild
       >
-        <Link href="/sign-up">
-          {plan.cta}
-          <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
-        </Link>
+        {isFreeUnavailable ? (
+          <Link href="/contact">
+            Join Waitlist
+            <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+          </Link>
+        ) : (
+          <Link href="/sign-up">
+            {plan.cta}
+            <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+          </Link>
+        )}
       </Button>
 
       {/* Divider */}
@@ -377,12 +388,61 @@ function FaqItem({ q, a, index }: { q: string; a: string; index: number }) {
   );
 }
 
-export function PricingContent() {
+function PricingCtaUsers() {
+  const [data] = trpc.home.getRecentUsers.useSuspenseQuery();
+  const recentUsers = data.recentUsers;
+  const totalUsers = data.totalUsers;
+
+  return (
+    <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 text-sm text-muted-foreground font-medium">
+      {recentUsers.length > 0 && (
+        <div className="flex -space-x-3">
+          {recentUsers.map((user, i) => (
+            <div
+              key={user.id || i}
+              className="relative h-9 w-9 rounded-full border-2 border-background overflow-hidden bg-muted shadow-sm"
+              aria-hidden="true"
+            >
+              {user.image ? (
+                <Image
+                  src={user.image}
+                  alt={user.name || "User avatar"}
+                  fill
+                  className="object-cover"
+                  sizes="36px"
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center bg-indigo-500/20 text-indigo-400 text-xs font-bold">
+                  {(user.name || "U").charAt(0).toUpperCase()}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+      <span>Join {totalUsers}+ developers already using Code Catch</span>
+    </div>
+  );
+}
+
+export function PricingContent({
+  settings,
+  plans: dbPlans,
+}: {
+  settings: PricingSettings;
+  plans: DbPricingPlan[];
+}) {
+  const { annualDiscount, trialDays, trialPlan, freeSignupEnabled } = settings;
   const [yearly, setYearly] = useState(true);
+
+  const mergedPlans: MergedPlan[] = dbPlans.map((p) => ({
+    ...p,
+    ...(PLAN_DISPLAY_MAP[p.id] ?? PLAN_DISPLAY_MAP.free!),
+  }));
+  const COMPARISON = buildComparison(mergedPlans);
 
   return (
     <>
-      {/* -- Hero -- */}
       <section className="relative overflow-hidden py-24 sm:py-32">
         {/* Multi-layered background glows */}
         <div className="pointer-events-none absolute inset-0 -z-10">
@@ -446,7 +506,7 @@ export function PricingContent() {
           >
             {[
               { icon: Shield, text: "No credit card required" },
-              { icon: Clock, text: "14-day free trial" },
+              { icon: Clock, text: trialDays > 0 ? `${trialDays}-day free trial` : "No trial required" },
               { icon: Zap, text: "Cancel anytime" },
             ].map(({ icon: Icon, text }) => (
               <div key={text} className="flex items-center gap-1.5">
@@ -487,7 +547,7 @@ export function PricingContent() {
                 transition={{ repeat: Infinity, duration: 2.5, delay: 1 }}
                 className="ml-2 inline-block rounded-full bg-linear-to-r from-green-500 to-emerald-500 px-2.5 py-0.5 text-xs font-bold text-white shadow-sm shadow-green-500/30"
               >
-                Save 20%
+                Save {annualDiscount}%
               </motion.span>
             </span>
           </motion.div>
@@ -497,13 +557,13 @@ export function PricingContent() {
       {/* -- Plan Cards -- */}
       <section className="mx-auto max-w-6xl px-6 pb-24">
         <div className="grid gap-8 lg:grid-cols-3 lg:items-stretch">
-          {PLANS.map((plan, i) => (
-            <PlanCard key={plan.id} plan={plan} yearly={yearly} index={i} />
+          {mergedPlans.map((plan, i) => (
+            <PlanCard key={plan.id} plan={plan} yearly={yearly} index={i} freeSignupEnabled={freeSignupEnabled} annualDiscount={annualDiscount} />
           ))}
         </div>
         {yearly && (
           <p className="mt-4 text-center text-xs text-muted-foreground">
-            * Prices shown per month, billed annually.
+            * Prices shown per month, billed annually. Save {annualDiscount}% vs monthly.
           </p>
         )}
       </section>
@@ -529,7 +589,7 @@ export function PricingContent() {
                 <th className="px-6 py-4 text-sm font-semibold text-muted-foreground">
                   Feature
                 </th>
-                {PLANS.map((p) => {
+                {mergedPlans.map((p) => {
                   const Icon = p.icon;
                   return (
                     <th
@@ -588,7 +648,7 @@ export function PricingContent() {
             {[
               {
                 quote:
-                  "DevReview AI caught a critical SQL injection I missed in code review. Worth every penny.",
+                  "Code Catch caught a critical SQL injection I missed in code review. Worth every penny.",
                 author: "Sarah K.",
                 role: "Senior Backend Engineer",
               },
@@ -649,7 +709,7 @@ export function PricingContent() {
           </p>
         </div>
         <div>
-          {FAQS.map((faq, i) => (
+          {FAQS(trialDays, annualDiscount, trialPlan).map((faq, i) => (
             <FaqItem key={i} q={faq.q} a={faq.a} index={i} />
           ))}
         </div>
@@ -708,6 +768,9 @@ export function PricingContent() {
                 Join thousands of developers using AI-powered code reviews to
                 catch bugs earlier and merge with confidence.
               </p>
+              <Suspense fallback={null}>
+                <PricingCtaUsers />
+              </Suspense>
               <div className="mt-8 flex flex-wrap justify-center gap-4">
                 <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
                   <Button

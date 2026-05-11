@@ -38,7 +38,7 @@ export function BranchProtectionCard({
 
   const handleCopyBadge = async () => {
     if (!badgeUrl) return;
-    const badgeMarkdown = `[![DevReview AI](${badgeUrl})](${appBase})`;
+    const badgeMarkdown = `[![Code Catch](${badgeUrl})](${appBase})`;
     await navigator.clipboard.writeText(badgeMarkdown);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -87,7 +87,7 @@ export function BranchProtectionCard({
             Status check setup
           </div>
           <p className="text-sm text-muted-foreground">
-            To block merges when DevReview AI finds issues, add a required
+            To block merges when Code Catch finds issues, add a required
             status check in your GitHub branch protection settings using the
             context name:
           </p>
@@ -148,7 +148,7 @@ export function BranchProtectionCard({
                 onClick={handleCopyBadge}
                 className="block rounded bg-muted px-3 py-2 text-xs font-mono break-all cursor-pointer hover:bg-muted/80 transition-colors"
               >
-                {badgeUrl && `[![DevReview AI](${badgeUrl})](${appBase})`}
+                {badgeUrl && `[![Code Catch](${badgeUrl})](${appBase})`}
               </code>
             </div>
           </>

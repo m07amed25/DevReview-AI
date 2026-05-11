@@ -168,6 +168,31 @@ export type CustomRole = $Result.DefaultSelection<Prisma.$CustomRolePayload>
  * 
  */
 export type UserCustomRole = $Result.DefaultSelection<Prisma.$UserCustomRolePayload>
+/**
+ * Model Discount
+ * Coupon / promo codes that grant a discount on any or a specific plan.
+ */
+export type Discount = $Result.DefaultSelection<Prisma.$DiscountPayload>
+/**
+ * Model UserPriceOverride
+ * Per-email price overrides — grant a specific user a custom price on a plan.
+ */
+export type UserPriceOverride = $Result.DefaultSelection<Prisma.$UserPriceOverridePayload>
+/**
+ * Model PartnerDomain
+ * 
+ */
+export type PartnerDomain = $Result.DefaultSelection<Prisma.$PartnerDomainPayload>
+/**
+ * Model PricingPlan
+ * Editable plan definitions — prices, features, limits (id is "free" | "pro" | "ultra").
+ */
+export type PricingPlan = $Result.DefaultSelection<Prisma.$PricingPlanPayload>
+/**
+ * Model PricingSettings
+ * Single-row global pricing configuration (id is always "global").
+ */
+export type PricingSettings = $Result.DefaultSelection<Prisma.$PricingSettingsPayload>
 
 /**
  * Enums
@@ -350,6 +375,14 @@ export const RuleSeverity: {
 
 export type RuleSeverity = (typeof RuleSeverity)[keyof typeof RuleSeverity]
 
+
+export const DiscountType: {
+  PERCENTAGE: 'PERCENTAGE',
+  FIXED: 'FIXED'
+};
+
+export type DiscountType = (typeof DiscountType)[keyof typeof DiscountType]
+
 }
 
 export type UserRole = $Enums.UserRole
@@ -423,6 +456,10 @@ export const DiagramStatus: typeof $Enums.DiagramStatus
 export type RuleSeverity = $Enums.RuleSeverity
 
 export const RuleSeverity: typeof $Enums.RuleSeverity
+
+export type DiscountType = $Enums.DiscountType
+
+export const DiscountType: typeof $Enums.DiscountType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -851,6 +888,56 @@ export class PrismaClient<
     * ```
     */
   get userCustomRole(): Prisma.UserCustomRoleDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.discount`: Exposes CRUD operations for the **Discount** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Discounts
+    * const discounts = await prisma.discount.findMany()
+    * ```
+    */
+  get discount(): Prisma.DiscountDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.userPriceOverride`: Exposes CRUD operations for the **UserPriceOverride** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserPriceOverrides
+    * const userPriceOverrides = await prisma.userPriceOverride.findMany()
+    * ```
+    */
+  get userPriceOverride(): Prisma.UserPriceOverrideDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.partnerDomain`: Exposes CRUD operations for the **PartnerDomain** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PartnerDomains
+    * const partnerDomains = await prisma.partnerDomain.findMany()
+    * ```
+    */
+  get partnerDomain(): Prisma.PartnerDomainDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.pricingPlan`: Exposes CRUD operations for the **PricingPlan** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PricingPlans
+    * const pricingPlans = await prisma.pricingPlan.findMany()
+    * ```
+    */
+  get pricingPlan(): Prisma.PricingPlanDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.pricingSettings`: Exposes CRUD operations for the **PricingSettings** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PricingSettings
+    * const pricingSettings = await prisma.pricingSettings.findMany()
+    * ```
+    */
+  get pricingSettings(): Prisma.PricingSettingsDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1322,7 +1409,12 @@ export namespace Prisma {
     AuditLog: 'AuditLog',
     SsoProvider: 'SsoProvider',
     CustomRole: 'CustomRole',
-    UserCustomRole: 'UserCustomRole'
+    UserCustomRole: 'UserCustomRole',
+    Discount: 'Discount',
+    UserPriceOverride: 'UserPriceOverride',
+    PartnerDomain: 'PartnerDomain',
+    PricingPlan: 'PricingPlan',
+    PricingSettings: 'PricingSettings'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1341,7 +1433,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "repository" | "review" | "reviewFeedback" | "securityIssue" | "reviewThread" | "reviewThreadComment" | "reviewThreadCommentReaction" | "reviewApproval" | "reviewAssignment" | "team" | "teamMember" | "teamAction" | "notification" | "webhookConfig" | "scheduledScanConfig" | "scheduledScanRun" | "gitHubComment" | "gitHubStatusCheck" | "branchProtectionRecommendation" | "diagram" | "reviewRule" | "systemSettings" | "supportMessage" | "auditLog" | "ssoProvider" | "customRole" | "userCustomRole"
+      modelProps: "user" | "session" | "account" | "verification" | "repository" | "review" | "reviewFeedback" | "securityIssue" | "reviewThread" | "reviewThreadComment" | "reviewThreadCommentReaction" | "reviewApproval" | "reviewAssignment" | "team" | "teamMember" | "teamAction" | "notification" | "webhookConfig" | "scheduledScanConfig" | "scheduledScanRun" | "gitHubComment" | "gitHubStatusCheck" | "branchProtectionRecommendation" | "diagram" | "reviewRule" | "systemSettings" | "supportMessage" | "auditLog" | "ssoProvider" | "customRole" | "userCustomRole" | "discount" | "userPriceOverride" | "partnerDomain" | "pricingPlan" | "pricingSettings"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3639,6 +3731,376 @@ export namespace Prisma {
           }
         }
       }
+      Discount: {
+        payload: Prisma.$DiscountPayload<ExtArgs>
+        fields: Prisma.DiscountFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DiscountFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiscountPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DiscountFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiscountPayload>
+          }
+          findFirst: {
+            args: Prisma.DiscountFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiscountPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DiscountFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiscountPayload>
+          }
+          findMany: {
+            args: Prisma.DiscountFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiscountPayload>[]
+          }
+          create: {
+            args: Prisma.DiscountCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiscountPayload>
+          }
+          createMany: {
+            args: Prisma.DiscountCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DiscountCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiscountPayload>[]
+          }
+          delete: {
+            args: Prisma.DiscountDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiscountPayload>
+          }
+          update: {
+            args: Prisma.DiscountUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiscountPayload>
+          }
+          deleteMany: {
+            args: Prisma.DiscountDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DiscountUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DiscountUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiscountPayload>[]
+          }
+          upsert: {
+            args: Prisma.DiscountUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DiscountPayload>
+          }
+          aggregate: {
+            args: Prisma.DiscountAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDiscount>
+          }
+          groupBy: {
+            args: Prisma.DiscountGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DiscountGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DiscountCountArgs<ExtArgs>
+            result: $Utils.Optional<DiscountCountAggregateOutputType> | number
+          }
+        }
+      }
+      UserPriceOverride: {
+        payload: Prisma.$UserPriceOverridePayload<ExtArgs>
+        fields: Prisma.UserPriceOverrideFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserPriceOverrideFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPriceOverridePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserPriceOverrideFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPriceOverridePayload>
+          }
+          findFirst: {
+            args: Prisma.UserPriceOverrideFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPriceOverridePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserPriceOverrideFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPriceOverridePayload>
+          }
+          findMany: {
+            args: Prisma.UserPriceOverrideFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPriceOverridePayload>[]
+          }
+          create: {
+            args: Prisma.UserPriceOverrideCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPriceOverridePayload>
+          }
+          createMany: {
+            args: Prisma.UserPriceOverrideCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UserPriceOverrideCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPriceOverridePayload>[]
+          }
+          delete: {
+            args: Prisma.UserPriceOverrideDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPriceOverridePayload>
+          }
+          update: {
+            args: Prisma.UserPriceOverrideUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPriceOverridePayload>
+          }
+          deleteMany: {
+            args: Prisma.UserPriceOverrideDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserPriceOverrideUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.UserPriceOverrideUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPriceOverridePayload>[]
+          }
+          upsert: {
+            args: Prisma.UserPriceOverrideUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPriceOverridePayload>
+          }
+          aggregate: {
+            args: Prisma.UserPriceOverrideAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserPriceOverride>
+          }
+          groupBy: {
+            args: Prisma.UserPriceOverrideGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserPriceOverrideGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserPriceOverrideCountArgs<ExtArgs>
+            result: $Utils.Optional<UserPriceOverrideCountAggregateOutputType> | number
+          }
+        }
+      }
+      PartnerDomain: {
+        payload: Prisma.$PartnerDomainPayload<ExtArgs>
+        fields: Prisma.PartnerDomainFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PartnerDomainFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartnerDomainPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PartnerDomainFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartnerDomainPayload>
+          }
+          findFirst: {
+            args: Prisma.PartnerDomainFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartnerDomainPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PartnerDomainFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartnerDomainPayload>
+          }
+          findMany: {
+            args: Prisma.PartnerDomainFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartnerDomainPayload>[]
+          }
+          create: {
+            args: Prisma.PartnerDomainCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartnerDomainPayload>
+          }
+          createMany: {
+            args: Prisma.PartnerDomainCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PartnerDomainCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartnerDomainPayload>[]
+          }
+          delete: {
+            args: Prisma.PartnerDomainDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartnerDomainPayload>
+          }
+          update: {
+            args: Prisma.PartnerDomainUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartnerDomainPayload>
+          }
+          deleteMany: {
+            args: Prisma.PartnerDomainDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PartnerDomainUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PartnerDomainUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartnerDomainPayload>[]
+          }
+          upsert: {
+            args: Prisma.PartnerDomainUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartnerDomainPayload>
+          }
+          aggregate: {
+            args: Prisma.PartnerDomainAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePartnerDomain>
+          }
+          groupBy: {
+            args: Prisma.PartnerDomainGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PartnerDomainGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PartnerDomainCountArgs<ExtArgs>
+            result: $Utils.Optional<PartnerDomainCountAggregateOutputType> | number
+          }
+        }
+      }
+      PricingPlan: {
+        payload: Prisma.$PricingPlanPayload<ExtArgs>
+        fields: Prisma.PricingPlanFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PricingPlanFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PricingPlanPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PricingPlanFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PricingPlanPayload>
+          }
+          findFirst: {
+            args: Prisma.PricingPlanFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PricingPlanPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PricingPlanFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PricingPlanPayload>
+          }
+          findMany: {
+            args: Prisma.PricingPlanFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PricingPlanPayload>[]
+          }
+          create: {
+            args: Prisma.PricingPlanCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PricingPlanPayload>
+          }
+          createMany: {
+            args: Prisma.PricingPlanCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PricingPlanCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PricingPlanPayload>[]
+          }
+          delete: {
+            args: Prisma.PricingPlanDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PricingPlanPayload>
+          }
+          update: {
+            args: Prisma.PricingPlanUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PricingPlanPayload>
+          }
+          deleteMany: {
+            args: Prisma.PricingPlanDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PricingPlanUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PricingPlanUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PricingPlanPayload>[]
+          }
+          upsert: {
+            args: Prisma.PricingPlanUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PricingPlanPayload>
+          }
+          aggregate: {
+            args: Prisma.PricingPlanAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePricingPlan>
+          }
+          groupBy: {
+            args: Prisma.PricingPlanGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PricingPlanGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PricingPlanCountArgs<ExtArgs>
+            result: $Utils.Optional<PricingPlanCountAggregateOutputType> | number
+          }
+        }
+      }
+      PricingSettings: {
+        payload: Prisma.$PricingSettingsPayload<ExtArgs>
+        fields: Prisma.PricingSettingsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PricingSettingsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PricingSettingsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PricingSettingsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PricingSettingsPayload>
+          }
+          findFirst: {
+            args: Prisma.PricingSettingsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PricingSettingsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PricingSettingsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PricingSettingsPayload>
+          }
+          findMany: {
+            args: Prisma.PricingSettingsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PricingSettingsPayload>[]
+          }
+          create: {
+            args: Prisma.PricingSettingsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PricingSettingsPayload>
+          }
+          createMany: {
+            args: Prisma.PricingSettingsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PricingSettingsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PricingSettingsPayload>[]
+          }
+          delete: {
+            args: Prisma.PricingSettingsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PricingSettingsPayload>
+          }
+          update: {
+            args: Prisma.PricingSettingsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PricingSettingsPayload>
+          }
+          deleteMany: {
+            args: Prisma.PricingSettingsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PricingSettingsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PricingSettingsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PricingSettingsPayload>[]
+          }
+          upsert: {
+            args: Prisma.PricingSettingsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PricingSettingsPayload>
+          }
+          aggregate: {
+            args: Prisma.PricingSettingsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePricingSettings>
+          }
+          groupBy: {
+            args: Prisma.PricingSettingsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PricingSettingsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PricingSettingsCountArgs<ExtArgs>
+            result: $Utils.Optional<PricingSettingsCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -3766,6 +4228,11 @@ export namespace Prisma {
     ssoProvider?: SsoProviderOmit
     customRole?: CustomRoleOmit
     userCustomRole?: UserCustomRoleOmit
+    discount?: DiscountOmit
+    userPriceOverride?: UserPriceOverrideOmit
+    partnerDomain?: PartnerDomainOmit
+    pricingPlan?: PricingPlanOmit
+    pricingSettings?: PricingSettingsOmit
   }
 
   /* Types for Logging */
@@ -40072,6 +40539,5658 @@ export namespace Prisma {
 
 
   /**
+   * Model Discount
+   */
+
+  export type AggregateDiscount = {
+    _count: DiscountCountAggregateOutputType | null
+    _avg: DiscountAvgAggregateOutputType | null
+    _sum: DiscountSumAggregateOutputType | null
+    _min: DiscountMinAggregateOutputType | null
+    _max: DiscountMaxAggregateOutputType | null
+  }
+
+  export type DiscountAvgAggregateOutputType = {
+    value: number | null
+    maxUses: number | null
+    usedCount: number | null
+  }
+
+  export type DiscountSumAggregateOutputType = {
+    value: number | null
+    maxUses: number | null
+    usedCount: number | null
+  }
+
+  export type DiscountMinAggregateOutputType = {
+    id: string | null
+    code: string | null
+    description: string | null
+    type: $Enums.DiscountType | null
+    value: number | null
+    planId: string | null
+    maxUses: number | null
+    usedCount: number | null
+    active: boolean | null
+    expiresAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DiscountMaxAggregateOutputType = {
+    id: string | null
+    code: string | null
+    description: string | null
+    type: $Enums.DiscountType | null
+    value: number | null
+    planId: string | null
+    maxUses: number | null
+    usedCount: number | null
+    active: boolean | null
+    expiresAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DiscountCountAggregateOutputType = {
+    id: number
+    code: number
+    description: number
+    type: number
+    value: number
+    planId: number
+    maxUses: number
+    usedCount: number
+    active: number
+    expiresAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DiscountAvgAggregateInputType = {
+    value?: true
+    maxUses?: true
+    usedCount?: true
+  }
+
+  export type DiscountSumAggregateInputType = {
+    value?: true
+    maxUses?: true
+    usedCount?: true
+  }
+
+  export type DiscountMinAggregateInputType = {
+    id?: true
+    code?: true
+    description?: true
+    type?: true
+    value?: true
+    planId?: true
+    maxUses?: true
+    usedCount?: true
+    active?: true
+    expiresAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DiscountMaxAggregateInputType = {
+    id?: true
+    code?: true
+    description?: true
+    type?: true
+    value?: true
+    planId?: true
+    maxUses?: true
+    usedCount?: true
+    active?: true
+    expiresAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DiscountCountAggregateInputType = {
+    id?: true
+    code?: true
+    description?: true
+    type?: true
+    value?: true
+    planId?: true
+    maxUses?: true
+    usedCount?: true
+    active?: true
+    expiresAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DiscountAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Discount to aggregate.
+     */
+    where?: DiscountWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Discounts to fetch.
+     */
+    orderBy?: DiscountOrderByWithRelationInput | DiscountOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DiscountWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Discounts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Discounts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Discounts
+    **/
+    _count?: true | DiscountCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DiscountAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DiscountSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DiscountMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DiscountMaxAggregateInputType
+  }
+
+  export type GetDiscountAggregateType<T extends DiscountAggregateArgs> = {
+        [P in keyof T & keyof AggregateDiscount]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDiscount[P]>
+      : GetScalarType<T[P], AggregateDiscount[P]>
+  }
+
+
+
+
+  export type DiscountGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DiscountWhereInput
+    orderBy?: DiscountOrderByWithAggregationInput | DiscountOrderByWithAggregationInput[]
+    by: DiscountScalarFieldEnum[] | DiscountScalarFieldEnum
+    having?: DiscountScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DiscountCountAggregateInputType | true
+    _avg?: DiscountAvgAggregateInputType
+    _sum?: DiscountSumAggregateInputType
+    _min?: DiscountMinAggregateInputType
+    _max?: DiscountMaxAggregateInputType
+  }
+
+  export type DiscountGroupByOutputType = {
+    id: string
+    code: string
+    description: string | null
+    type: $Enums.DiscountType
+    value: number
+    planId: string | null
+    maxUses: number | null
+    usedCount: number
+    active: boolean
+    expiresAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: DiscountCountAggregateOutputType | null
+    _avg: DiscountAvgAggregateOutputType | null
+    _sum: DiscountSumAggregateOutputType | null
+    _min: DiscountMinAggregateOutputType | null
+    _max: DiscountMaxAggregateOutputType | null
+  }
+
+  type GetDiscountGroupByPayload<T extends DiscountGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DiscountGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DiscountGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DiscountGroupByOutputType[P]>
+            : GetScalarType<T[P], DiscountGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DiscountSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    description?: boolean
+    type?: boolean
+    value?: boolean
+    planId?: boolean
+    maxUses?: boolean
+    usedCount?: boolean
+    active?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["discount"]>
+
+  export type DiscountSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    description?: boolean
+    type?: boolean
+    value?: boolean
+    planId?: boolean
+    maxUses?: boolean
+    usedCount?: boolean
+    active?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["discount"]>
+
+  export type DiscountSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    description?: boolean
+    type?: boolean
+    value?: boolean
+    planId?: boolean
+    maxUses?: boolean
+    usedCount?: boolean
+    active?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["discount"]>
+
+  export type DiscountSelectScalar = {
+    id?: boolean
+    code?: boolean
+    description?: boolean
+    type?: boolean
+    value?: boolean
+    planId?: boolean
+    maxUses?: boolean
+    usedCount?: boolean
+    active?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DiscountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "code" | "description" | "type" | "value" | "planId" | "maxUses" | "usedCount" | "active" | "expiresAt" | "createdAt" | "updatedAt", ExtArgs["result"]["discount"]>
+
+  export type $DiscountPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Discount"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      code: string
+      description: string | null
+      type: $Enums.DiscountType
+      /**
+       * Percentage (0-100) for PERCENTAGE; dollar amount for FIXED.
+       */
+      value: number
+      /**
+       * Null = applies to all plans; "free" | "pro" | "ultra" = specific plan.
+       */
+      planId: string | null
+      /**
+       * Null = unlimited uses.
+       */
+      maxUses: number | null
+      usedCount: number
+      active: boolean
+      expiresAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["discount"]>
+    composites: {}
+  }
+
+  type DiscountGetPayload<S extends boolean | null | undefined | DiscountDefaultArgs> = $Result.GetResult<Prisma.$DiscountPayload, S>
+
+  type DiscountCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DiscountFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DiscountCountAggregateInputType | true
+    }
+
+  export interface DiscountDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Discount'], meta: { name: 'Discount' } }
+    /**
+     * Find zero or one Discount that matches the filter.
+     * @param {DiscountFindUniqueArgs} args - Arguments to find a Discount
+     * @example
+     * // Get one Discount
+     * const discount = await prisma.discount.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DiscountFindUniqueArgs>(args: SelectSubset<T, DiscountFindUniqueArgs<ExtArgs>>): Prisma__DiscountClient<$Result.GetResult<Prisma.$DiscountPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Discount that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DiscountFindUniqueOrThrowArgs} args - Arguments to find a Discount
+     * @example
+     * // Get one Discount
+     * const discount = await prisma.discount.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DiscountFindUniqueOrThrowArgs>(args: SelectSubset<T, DiscountFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DiscountClient<$Result.GetResult<Prisma.$DiscountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Discount that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DiscountFindFirstArgs} args - Arguments to find a Discount
+     * @example
+     * // Get one Discount
+     * const discount = await prisma.discount.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DiscountFindFirstArgs>(args?: SelectSubset<T, DiscountFindFirstArgs<ExtArgs>>): Prisma__DiscountClient<$Result.GetResult<Prisma.$DiscountPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Discount that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DiscountFindFirstOrThrowArgs} args - Arguments to find a Discount
+     * @example
+     * // Get one Discount
+     * const discount = await prisma.discount.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DiscountFindFirstOrThrowArgs>(args?: SelectSubset<T, DiscountFindFirstOrThrowArgs<ExtArgs>>): Prisma__DiscountClient<$Result.GetResult<Prisma.$DiscountPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Discounts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DiscountFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Discounts
+     * const discounts = await prisma.discount.findMany()
+     * 
+     * // Get first 10 Discounts
+     * const discounts = await prisma.discount.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const discountWithIdOnly = await prisma.discount.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DiscountFindManyArgs>(args?: SelectSubset<T, DiscountFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DiscountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Discount.
+     * @param {DiscountCreateArgs} args - Arguments to create a Discount.
+     * @example
+     * // Create one Discount
+     * const Discount = await prisma.discount.create({
+     *   data: {
+     *     // ... data to create a Discount
+     *   }
+     * })
+     * 
+     */
+    create<T extends DiscountCreateArgs>(args: SelectSubset<T, DiscountCreateArgs<ExtArgs>>): Prisma__DiscountClient<$Result.GetResult<Prisma.$DiscountPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Discounts.
+     * @param {DiscountCreateManyArgs} args - Arguments to create many Discounts.
+     * @example
+     * // Create many Discounts
+     * const discount = await prisma.discount.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DiscountCreateManyArgs>(args?: SelectSubset<T, DiscountCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Discounts and returns the data saved in the database.
+     * @param {DiscountCreateManyAndReturnArgs} args - Arguments to create many Discounts.
+     * @example
+     * // Create many Discounts
+     * const discount = await prisma.discount.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Discounts and only return the `id`
+     * const discountWithIdOnly = await prisma.discount.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DiscountCreateManyAndReturnArgs>(args?: SelectSubset<T, DiscountCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DiscountPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Discount.
+     * @param {DiscountDeleteArgs} args - Arguments to delete one Discount.
+     * @example
+     * // Delete one Discount
+     * const Discount = await prisma.discount.delete({
+     *   where: {
+     *     // ... filter to delete one Discount
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DiscountDeleteArgs>(args: SelectSubset<T, DiscountDeleteArgs<ExtArgs>>): Prisma__DiscountClient<$Result.GetResult<Prisma.$DiscountPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Discount.
+     * @param {DiscountUpdateArgs} args - Arguments to update one Discount.
+     * @example
+     * // Update one Discount
+     * const discount = await prisma.discount.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DiscountUpdateArgs>(args: SelectSubset<T, DiscountUpdateArgs<ExtArgs>>): Prisma__DiscountClient<$Result.GetResult<Prisma.$DiscountPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Discounts.
+     * @param {DiscountDeleteManyArgs} args - Arguments to filter Discounts to delete.
+     * @example
+     * // Delete a few Discounts
+     * const { count } = await prisma.discount.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DiscountDeleteManyArgs>(args?: SelectSubset<T, DiscountDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Discounts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DiscountUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Discounts
+     * const discount = await prisma.discount.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DiscountUpdateManyArgs>(args: SelectSubset<T, DiscountUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Discounts and returns the data updated in the database.
+     * @param {DiscountUpdateManyAndReturnArgs} args - Arguments to update many Discounts.
+     * @example
+     * // Update many Discounts
+     * const discount = await prisma.discount.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Discounts and only return the `id`
+     * const discountWithIdOnly = await prisma.discount.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DiscountUpdateManyAndReturnArgs>(args: SelectSubset<T, DiscountUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DiscountPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Discount.
+     * @param {DiscountUpsertArgs} args - Arguments to update or create a Discount.
+     * @example
+     * // Update or create a Discount
+     * const discount = await prisma.discount.upsert({
+     *   create: {
+     *     // ... data to create a Discount
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Discount we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DiscountUpsertArgs>(args: SelectSubset<T, DiscountUpsertArgs<ExtArgs>>): Prisma__DiscountClient<$Result.GetResult<Prisma.$DiscountPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Discounts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DiscountCountArgs} args - Arguments to filter Discounts to count.
+     * @example
+     * // Count the number of Discounts
+     * const count = await prisma.discount.count({
+     *   where: {
+     *     // ... the filter for the Discounts we want to count
+     *   }
+     * })
+    **/
+    count<T extends DiscountCountArgs>(
+      args?: Subset<T, DiscountCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DiscountCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Discount.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DiscountAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DiscountAggregateArgs>(args: Subset<T, DiscountAggregateArgs>): Prisma.PrismaPromise<GetDiscountAggregateType<T>>
+
+    /**
+     * Group by Discount.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DiscountGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DiscountGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DiscountGroupByArgs['orderBy'] }
+        : { orderBy?: DiscountGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DiscountGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDiscountGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Discount model
+   */
+  readonly fields: DiscountFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Discount.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DiscountClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Discount model
+   */
+  interface DiscountFieldRefs {
+    readonly id: FieldRef<"Discount", 'String'>
+    readonly code: FieldRef<"Discount", 'String'>
+    readonly description: FieldRef<"Discount", 'String'>
+    readonly type: FieldRef<"Discount", 'DiscountType'>
+    readonly value: FieldRef<"Discount", 'Float'>
+    readonly planId: FieldRef<"Discount", 'String'>
+    readonly maxUses: FieldRef<"Discount", 'Int'>
+    readonly usedCount: FieldRef<"Discount", 'Int'>
+    readonly active: FieldRef<"Discount", 'Boolean'>
+    readonly expiresAt: FieldRef<"Discount", 'DateTime'>
+    readonly createdAt: FieldRef<"Discount", 'DateTime'>
+    readonly updatedAt: FieldRef<"Discount", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Discount findUnique
+   */
+  export type DiscountFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Discount
+     */
+    select?: DiscountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Discount
+     */
+    omit?: DiscountOmit<ExtArgs> | null
+    /**
+     * Filter, which Discount to fetch.
+     */
+    where: DiscountWhereUniqueInput
+  }
+
+  /**
+   * Discount findUniqueOrThrow
+   */
+  export type DiscountFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Discount
+     */
+    select?: DiscountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Discount
+     */
+    omit?: DiscountOmit<ExtArgs> | null
+    /**
+     * Filter, which Discount to fetch.
+     */
+    where: DiscountWhereUniqueInput
+  }
+
+  /**
+   * Discount findFirst
+   */
+  export type DiscountFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Discount
+     */
+    select?: DiscountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Discount
+     */
+    omit?: DiscountOmit<ExtArgs> | null
+    /**
+     * Filter, which Discount to fetch.
+     */
+    where?: DiscountWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Discounts to fetch.
+     */
+    orderBy?: DiscountOrderByWithRelationInput | DiscountOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Discounts.
+     */
+    cursor?: DiscountWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Discounts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Discounts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Discounts.
+     */
+    distinct?: DiscountScalarFieldEnum | DiscountScalarFieldEnum[]
+  }
+
+  /**
+   * Discount findFirstOrThrow
+   */
+  export type DiscountFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Discount
+     */
+    select?: DiscountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Discount
+     */
+    omit?: DiscountOmit<ExtArgs> | null
+    /**
+     * Filter, which Discount to fetch.
+     */
+    where?: DiscountWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Discounts to fetch.
+     */
+    orderBy?: DiscountOrderByWithRelationInput | DiscountOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Discounts.
+     */
+    cursor?: DiscountWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Discounts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Discounts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Discounts.
+     */
+    distinct?: DiscountScalarFieldEnum | DiscountScalarFieldEnum[]
+  }
+
+  /**
+   * Discount findMany
+   */
+  export type DiscountFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Discount
+     */
+    select?: DiscountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Discount
+     */
+    omit?: DiscountOmit<ExtArgs> | null
+    /**
+     * Filter, which Discounts to fetch.
+     */
+    where?: DiscountWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Discounts to fetch.
+     */
+    orderBy?: DiscountOrderByWithRelationInput | DiscountOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Discounts.
+     */
+    cursor?: DiscountWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Discounts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Discounts.
+     */
+    skip?: number
+    distinct?: DiscountScalarFieldEnum | DiscountScalarFieldEnum[]
+  }
+
+  /**
+   * Discount create
+   */
+  export type DiscountCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Discount
+     */
+    select?: DiscountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Discount
+     */
+    omit?: DiscountOmit<ExtArgs> | null
+    /**
+     * The data needed to create a Discount.
+     */
+    data: XOR<DiscountCreateInput, DiscountUncheckedCreateInput>
+  }
+
+  /**
+   * Discount createMany
+   */
+  export type DiscountCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Discounts.
+     */
+    data: DiscountCreateManyInput | DiscountCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Discount createManyAndReturn
+   */
+  export type DiscountCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Discount
+     */
+    select?: DiscountSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Discount
+     */
+    omit?: DiscountOmit<ExtArgs> | null
+    /**
+     * The data used to create many Discounts.
+     */
+    data: DiscountCreateManyInput | DiscountCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Discount update
+   */
+  export type DiscountUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Discount
+     */
+    select?: DiscountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Discount
+     */
+    omit?: DiscountOmit<ExtArgs> | null
+    /**
+     * The data needed to update a Discount.
+     */
+    data: XOR<DiscountUpdateInput, DiscountUncheckedUpdateInput>
+    /**
+     * Choose, which Discount to update.
+     */
+    where: DiscountWhereUniqueInput
+  }
+
+  /**
+   * Discount updateMany
+   */
+  export type DiscountUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Discounts.
+     */
+    data: XOR<DiscountUpdateManyMutationInput, DiscountUncheckedUpdateManyInput>
+    /**
+     * Filter which Discounts to update
+     */
+    where?: DiscountWhereInput
+    /**
+     * Limit how many Discounts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Discount updateManyAndReturn
+   */
+  export type DiscountUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Discount
+     */
+    select?: DiscountSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Discount
+     */
+    omit?: DiscountOmit<ExtArgs> | null
+    /**
+     * The data used to update Discounts.
+     */
+    data: XOR<DiscountUpdateManyMutationInput, DiscountUncheckedUpdateManyInput>
+    /**
+     * Filter which Discounts to update
+     */
+    where?: DiscountWhereInput
+    /**
+     * Limit how many Discounts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Discount upsert
+   */
+  export type DiscountUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Discount
+     */
+    select?: DiscountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Discount
+     */
+    omit?: DiscountOmit<ExtArgs> | null
+    /**
+     * The filter to search for the Discount to update in case it exists.
+     */
+    where: DiscountWhereUniqueInput
+    /**
+     * In case the Discount found by the `where` argument doesn't exist, create a new Discount with this data.
+     */
+    create: XOR<DiscountCreateInput, DiscountUncheckedCreateInput>
+    /**
+     * In case the Discount was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DiscountUpdateInput, DiscountUncheckedUpdateInput>
+  }
+
+  /**
+   * Discount delete
+   */
+  export type DiscountDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Discount
+     */
+    select?: DiscountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Discount
+     */
+    omit?: DiscountOmit<ExtArgs> | null
+    /**
+     * Filter which Discount to delete.
+     */
+    where: DiscountWhereUniqueInput
+  }
+
+  /**
+   * Discount deleteMany
+   */
+  export type DiscountDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Discounts to delete
+     */
+    where?: DiscountWhereInput
+    /**
+     * Limit how many Discounts to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Discount without action
+   */
+  export type DiscountDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Discount
+     */
+    select?: DiscountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Discount
+     */
+    omit?: DiscountOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model UserPriceOverride
+   */
+
+  export type AggregateUserPriceOverride = {
+    _count: UserPriceOverrideCountAggregateOutputType | null
+    _avg: UserPriceOverrideAvgAggregateOutputType | null
+    _sum: UserPriceOverrideSumAggregateOutputType | null
+    _min: UserPriceOverrideMinAggregateOutputType | null
+    _max: UserPriceOverrideMaxAggregateOutputType | null
+  }
+
+  export type UserPriceOverrideAvgAggregateOutputType = {
+    overrideMonthlyPrice: number | null
+    overrideYearlyPrice: number | null
+  }
+
+  export type UserPriceOverrideSumAggregateOutputType = {
+    overrideMonthlyPrice: number | null
+    overrideYearlyPrice: number | null
+  }
+
+  export type UserPriceOverrideMinAggregateOutputType = {
+    id: string | null
+    email: string | null
+    planId: string | null
+    overrideMonthlyPrice: number | null
+    overrideYearlyPrice: number | null
+    reason: string | null
+    active: boolean | null
+    expiresAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserPriceOverrideMaxAggregateOutputType = {
+    id: string | null
+    email: string | null
+    planId: string | null
+    overrideMonthlyPrice: number | null
+    overrideYearlyPrice: number | null
+    reason: string | null
+    active: boolean | null
+    expiresAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserPriceOverrideCountAggregateOutputType = {
+    id: number
+    email: number
+    planId: number
+    overrideMonthlyPrice: number
+    overrideYearlyPrice: number
+    reason: number
+    active: number
+    expiresAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type UserPriceOverrideAvgAggregateInputType = {
+    overrideMonthlyPrice?: true
+    overrideYearlyPrice?: true
+  }
+
+  export type UserPriceOverrideSumAggregateInputType = {
+    overrideMonthlyPrice?: true
+    overrideYearlyPrice?: true
+  }
+
+  export type UserPriceOverrideMinAggregateInputType = {
+    id?: true
+    email?: true
+    planId?: true
+    overrideMonthlyPrice?: true
+    overrideYearlyPrice?: true
+    reason?: true
+    active?: true
+    expiresAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserPriceOverrideMaxAggregateInputType = {
+    id?: true
+    email?: true
+    planId?: true
+    overrideMonthlyPrice?: true
+    overrideYearlyPrice?: true
+    reason?: true
+    active?: true
+    expiresAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserPriceOverrideCountAggregateInputType = {
+    id?: true
+    email?: true
+    planId?: true
+    overrideMonthlyPrice?: true
+    overrideYearlyPrice?: true
+    reason?: true
+    active?: true
+    expiresAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type UserPriceOverrideAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserPriceOverride to aggregate.
+     */
+    where?: UserPriceOverrideWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserPriceOverrides to fetch.
+     */
+    orderBy?: UserPriceOverrideOrderByWithRelationInput | UserPriceOverrideOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserPriceOverrideWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserPriceOverrides from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserPriceOverrides.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserPriceOverrides
+    **/
+    _count?: true | UserPriceOverrideCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: UserPriceOverrideAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserPriceOverrideSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserPriceOverrideMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserPriceOverrideMaxAggregateInputType
+  }
+
+  export type GetUserPriceOverrideAggregateType<T extends UserPriceOverrideAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserPriceOverride]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserPriceOverride[P]>
+      : GetScalarType<T[P], AggregateUserPriceOverride[P]>
+  }
+
+
+
+
+  export type UserPriceOverrideGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserPriceOverrideWhereInput
+    orderBy?: UserPriceOverrideOrderByWithAggregationInput | UserPriceOverrideOrderByWithAggregationInput[]
+    by: UserPriceOverrideScalarFieldEnum[] | UserPriceOverrideScalarFieldEnum
+    having?: UserPriceOverrideScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserPriceOverrideCountAggregateInputType | true
+    _avg?: UserPriceOverrideAvgAggregateInputType
+    _sum?: UserPriceOverrideSumAggregateInputType
+    _min?: UserPriceOverrideMinAggregateInputType
+    _max?: UserPriceOverrideMaxAggregateInputType
+  }
+
+  export type UserPriceOverrideGroupByOutputType = {
+    id: string
+    email: string
+    planId: string
+    overrideMonthlyPrice: number | null
+    overrideYearlyPrice: number | null
+    reason: string | null
+    active: boolean
+    expiresAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: UserPriceOverrideCountAggregateOutputType | null
+    _avg: UserPriceOverrideAvgAggregateOutputType | null
+    _sum: UserPriceOverrideSumAggregateOutputType | null
+    _min: UserPriceOverrideMinAggregateOutputType | null
+    _max: UserPriceOverrideMaxAggregateOutputType | null
+  }
+
+  type GetUserPriceOverrideGroupByPayload<T extends UserPriceOverrideGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserPriceOverrideGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserPriceOverrideGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserPriceOverrideGroupByOutputType[P]>
+            : GetScalarType<T[P], UserPriceOverrideGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserPriceOverrideSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    email?: boolean
+    planId?: boolean
+    overrideMonthlyPrice?: boolean
+    overrideYearlyPrice?: boolean
+    reason?: boolean
+    active?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["userPriceOverride"]>
+
+  export type UserPriceOverrideSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    email?: boolean
+    planId?: boolean
+    overrideMonthlyPrice?: boolean
+    overrideYearlyPrice?: boolean
+    reason?: boolean
+    active?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["userPriceOverride"]>
+
+  export type UserPriceOverrideSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    email?: boolean
+    planId?: boolean
+    overrideMonthlyPrice?: boolean
+    overrideYearlyPrice?: boolean
+    reason?: boolean
+    active?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["userPriceOverride"]>
+
+  export type UserPriceOverrideSelectScalar = {
+    id?: boolean
+    email?: boolean
+    planId?: boolean
+    overrideMonthlyPrice?: boolean
+    overrideYearlyPrice?: boolean
+    reason?: boolean
+    active?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type UserPriceOverrideOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "planId" | "overrideMonthlyPrice" | "overrideYearlyPrice" | "reason" | "active" | "expiresAt" | "createdAt" | "updatedAt", ExtArgs["result"]["userPriceOverride"]>
+
+  export type $UserPriceOverridePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserPriceOverride"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      email: string
+      /**
+       * "free" | "pro" | "ultra"
+       */
+      planId: string
+      overrideMonthlyPrice: number | null
+      overrideYearlyPrice: number | null
+      reason: string | null
+      active: boolean
+      expiresAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["userPriceOverride"]>
+    composites: {}
+  }
+
+  type UserPriceOverrideGetPayload<S extends boolean | null | undefined | UserPriceOverrideDefaultArgs> = $Result.GetResult<Prisma.$UserPriceOverridePayload, S>
+
+  type UserPriceOverrideCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UserPriceOverrideFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UserPriceOverrideCountAggregateInputType | true
+    }
+
+  export interface UserPriceOverrideDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserPriceOverride'], meta: { name: 'UserPriceOverride' } }
+    /**
+     * Find zero or one UserPriceOverride that matches the filter.
+     * @param {UserPriceOverrideFindUniqueArgs} args - Arguments to find a UserPriceOverride
+     * @example
+     * // Get one UserPriceOverride
+     * const userPriceOverride = await prisma.userPriceOverride.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserPriceOverrideFindUniqueArgs>(args: SelectSubset<T, UserPriceOverrideFindUniqueArgs<ExtArgs>>): Prisma__UserPriceOverrideClient<$Result.GetResult<Prisma.$UserPriceOverridePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one UserPriceOverride that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {UserPriceOverrideFindUniqueOrThrowArgs} args - Arguments to find a UserPriceOverride
+     * @example
+     * // Get one UserPriceOverride
+     * const userPriceOverride = await prisma.userPriceOverride.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserPriceOverrideFindUniqueOrThrowArgs>(args: SelectSubset<T, UserPriceOverrideFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserPriceOverrideClient<$Result.GetResult<Prisma.$UserPriceOverridePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserPriceOverride that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPriceOverrideFindFirstArgs} args - Arguments to find a UserPriceOverride
+     * @example
+     * // Get one UserPriceOverride
+     * const userPriceOverride = await prisma.userPriceOverride.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserPriceOverrideFindFirstArgs>(args?: SelectSubset<T, UserPriceOverrideFindFirstArgs<ExtArgs>>): Prisma__UserPriceOverrideClient<$Result.GetResult<Prisma.$UserPriceOverridePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserPriceOverride that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPriceOverrideFindFirstOrThrowArgs} args - Arguments to find a UserPriceOverride
+     * @example
+     * // Get one UserPriceOverride
+     * const userPriceOverride = await prisma.userPriceOverride.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserPriceOverrideFindFirstOrThrowArgs>(args?: SelectSubset<T, UserPriceOverrideFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserPriceOverrideClient<$Result.GetResult<Prisma.$UserPriceOverridePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UserPriceOverrides that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPriceOverrideFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserPriceOverrides
+     * const userPriceOverrides = await prisma.userPriceOverride.findMany()
+     * 
+     * // Get first 10 UserPriceOverrides
+     * const userPriceOverrides = await prisma.userPriceOverride.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userPriceOverrideWithIdOnly = await prisma.userPriceOverride.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserPriceOverrideFindManyArgs>(args?: SelectSubset<T, UserPriceOverrideFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPriceOverridePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a UserPriceOverride.
+     * @param {UserPriceOverrideCreateArgs} args - Arguments to create a UserPriceOverride.
+     * @example
+     * // Create one UserPriceOverride
+     * const UserPriceOverride = await prisma.userPriceOverride.create({
+     *   data: {
+     *     // ... data to create a UserPriceOverride
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserPriceOverrideCreateArgs>(args: SelectSubset<T, UserPriceOverrideCreateArgs<ExtArgs>>): Prisma__UserPriceOverrideClient<$Result.GetResult<Prisma.$UserPriceOverridePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many UserPriceOverrides.
+     * @param {UserPriceOverrideCreateManyArgs} args - Arguments to create many UserPriceOverrides.
+     * @example
+     * // Create many UserPriceOverrides
+     * const userPriceOverride = await prisma.userPriceOverride.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserPriceOverrideCreateManyArgs>(args?: SelectSubset<T, UserPriceOverrideCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UserPriceOverrides and returns the data saved in the database.
+     * @param {UserPriceOverrideCreateManyAndReturnArgs} args - Arguments to create many UserPriceOverrides.
+     * @example
+     * // Create many UserPriceOverrides
+     * const userPriceOverride = await prisma.userPriceOverride.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UserPriceOverrides and only return the `id`
+     * const userPriceOverrideWithIdOnly = await prisma.userPriceOverride.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UserPriceOverrideCreateManyAndReturnArgs>(args?: SelectSubset<T, UserPriceOverrideCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPriceOverridePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a UserPriceOverride.
+     * @param {UserPriceOverrideDeleteArgs} args - Arguments to delete one UserPriceOverride.
+     * @example
+     * // Delete one UserPriceOverride
+     * const UserPriceOverride = await prisma.userPriceOverride.delete({
+     *   where: {
+     *     // ... filter to delete one UserPriceOverride
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserPriceOverrideDeleteArgs>(args: SelectSubset<T, UserPriceOverrideDeleteArgs<ExtArgs>>): Prisma__UserPriceOverrideClient<$Result.GetResult<Prisma.$UserPriceOverridePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one UserPriceOverride.
+     * @param {UserPriceOverrideUpdateArgs} args - Arguments to update one UserPriceOverride.
+     * @example
+     * // Update one UserPriceOverride
+     * const userPriceOverride = await prisma.userPriceOverride.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserPriceOverrideUpdateArgs>(args: SelectSubset<T, UserPriceOverrideUpdateArgs<ExtArgs>>): Prisma__UserPriceOverrideClient<$Result.GetResult<Prisma.$UserPriceOverridePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more UserPriceOverrides.
+     * @param {UserPriceOverrideDeleteManyArgs} args - Arguments to filter UserPriceOverrides to delete.
+     * @example
+     * // Delete a few UserPriceOverrides
+     * const { count } = await prisma.userPriceOverride.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserPriceOverrideDeleteManyArgs>(args?: SelectSubset<T, UserPriceOverrideDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserPriceOverrides.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPriceOverrideUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserPriceOverrides
+     * const userPriceOverride = await prisma.userPriceOverride.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserPriceOverrideUpdateManyArgs>(args: SelectSubset<T, UserPriceOverrideUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserPriceOverrides and returns the data updated in the database.
+     * @param {UserPriceOverrideUpdateManyAndReturnArgs} args - Arguments to update many UserPriceOverrides.
+     * @example
+     * // Update many UserPriceOverrides
+     * const userPriceOverride = await prisma.userPriceOverride.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more UserPriceOverrides and only return the `id`
+     * const userPriceOverrideWithIdOnly = await prisma.userPriceOverride.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends UserPriceOverrideUpdateManyAndReturnArgs>(args: SelectSubset<T, UserPriceOverrideUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPriceOverridePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one UserPriceOverride.
+     * @param {UserPriceOverrideUpsertArgs} args - Arguments to update or create a UserPriceOverride.
+     * @example
+     * // Update or create a UserPriceOverride
+     * const userPriceOverride = await prisma.userPriceOverride.upsert({
+     *   create: {
+     *     // ... data to create a UserPriceOverride
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserPriceOverride we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserPriceOverrideUpsertArgs>(args: SelectSubset<T, UserPriceOverrideUpsertArgs<ExtArgs>>): Prisma__UserPriceOverrideClient<$Result.GetResult<Prisma.$UserPriceOverridePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of UserPriceOverrides.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPriceOverrideCountArgs} args - Arguments to filter UserPriceOverrides to count.
+     * @example
+     * // Count the number of UserPriceOverrides
+     * const count = await prisma.userPriceOverride.count({
+     *   where: {
+     *     // ... the filter for the UserPriceOverrides we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserPriceOverrideCountArgs>(
+      args?: Subset<T, UserPriceOverrideCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserPriceOverrideCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserPriceOverride.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPriceOverrideAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserPriceOverrideAggregateArgs>(args: Subset<T, UserPriceOverrideAggregateArgs>): Prisma.PrismaPromise<GetUserPriceOverrideAggregateType<T>>
+
+    /**
+     * Group by UserPriceOverride.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPriceOverrideGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserPriceOverrideGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserPriceOverrideGroupByArgs['orderBy'] }
+        : { orderBy?: UserPriceOverrideGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserPriceOverrideGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserPriceOverrideGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserPriceOverride model
+   */
+  readonly fields: UserPriceOverrideFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserPriceOverride.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserPriceOverrideClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UserPriceOverride model
+   */
+  interface UserPriceOverrideFieldRefs {
+    readonly id: FieldRef<"UserPriceOverride", 'String'>
+    readonly email: FieldRef<"UserPriceOverride", 'String'>
+    readonly planId: FieldRef<"UserPriceOverride", 'String'>
+    readonly overrideMonthlyPrice: FieldRef<"UserPriceOverride", 'Float'>
+    readonly overrideYearlyPrice: FieldRef<"UserPriceOverride", 'Float'>
+    readonly reason: FieldRef<"UserPriceOverride", 'String'>
+    readonly active: FieldRef<"UserPriceOverride", 'Boolean'>
+    readonly expiresAt: FieldRef<"UserPriceOverride", 'DateTime'>
+    readonly createdAt: FieldRef<"UserPriceOverride", 'DateTime'>
+    readonly updatedAt: FieldRef<"UserPriceOverride", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserPriceOverride findUnique
+   */
+  export type UserPriceOverrideFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPriceOverride
+     */
+    select?: UserPriceOverrideSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPriceOverride
+     */
+    omit?: UserPriceOverrideOmit<ExtArgs> | null
+    /**
+     * Filter, which UserPriceOverride to fetch.
+     */
+    where: UserPriceOverrideWhereUniqueInput
+  }
+
+  /**
+   * UserPriceOverride findUniqueOrThrow
+   */
+  export type UserPriceOverrideFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPriceOverride
+     */
+    select?: UserPriceOverrideSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPriceOverride
+     */
+    omit?: UserPriceOverrideOmit<ExtArgs> | null
+    /**
+     * Filter, which UserPriceOverride to fetch.
+     */
+    where: UserPriceOverrideWhereUniqueInput
+  }
+
+  /**
+   * UserPriceOverride findFirst
+   */
+  export type UserPriceOverrideFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPriceOverride
+     */
+    select?: UserPriceOverrideSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPriceOverride
+     */
+    omit?: UserPriceOverrideOmit<ExtArgs> | null
+    /**
+     * Filter, which UserPriceOverride to fetch.
+     */
+    where?: UserPriceOverrideWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserPriceOverrides to fetch.
+     */
+    orderBy?: UserPriceOverrideOrderByWithRelationInput | UserPriceOverrideOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserPriceOverrides.
+     */
+    cursor?: UserPriceOverrideWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserPriceOverrides from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserPriceOverrides.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserPriceOverrides.
+     */
+    distinct?: UserPriceOverrideScalarFieldEnum | UserPriceOverrideScalarFieldEnum[]
+  }
+
+  /**
+   * UserPriceOverride findFirstOrThrow
+   */
+  export type UserPriceOverrideFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPriceOverride
+     */
+    select?: UserPriceOverrideSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPriceOverride
+     */
+    omit?: UserPriceOverrideOmit<ExtArgs> | null
+    /**
+     * Filter, which UserPriceOverride to fetch.
+     */
+    where?: UserPriceOverrideWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserPriceOverrides to fetch.
+     */
+    orderBy?: UserPriceOverrideOrderByWithRelationInput | UserPriceOverrideOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserPriceOverrides.
+     */
+    cursor?: UserPriceOverrideWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserPriceOverrides from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserPriceOverrides.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserPriceOverrides.
+     */
+    distinct?: UserPriceOverrideScalarFieldEnum | UserPriceOverrideScalarFieldEnum[]
+  }
+
+  /**
+   * UserPriceOverride findMany
+   */
+  export type UserPriceOverrideFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPriceOverride
+     */
+    select?: UserPriceOverrideSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPriceOverride
+     */
+    omit?: UserPriceOverrideOmit<ExtArgs> | null
+    /**
+     * Filter, which UserPriceOverrides to fetch.
+     */
+    where?: UserPriceOverrideWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserPriceOverrides to fetch.
+     */
+    orderBy?: UserPriceOverrideOrderByWithRelationInput | UserPriceOverrideOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserPriceOverrides.
+     */
+    cursor?: UserPriceOverrideWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserPriceOverrides from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserPriceOverrides.
+     */
+    skip?: number
+    distinct?: UserPriceOverrideScalarFieldEnum | UserPriceOverrideScalarFieldEnum[]
+  }
+
+  /**
+   * UserPriceOverride create
+   */
+  export type UserPriceOverrideCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPriceOverride
+     */
+    select?: UserPriceOverrideSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPriceOverride
+     */
+    omit?: UserPriceOverrideOmit<ExtArgs> | null
+    /**
+     * The data needed to create a UserPriceOverride.
+     */
+    data: XOR<UserPriceOverrideCreateInput, UserPriceOverrideUncheckedCreateInput>
+  }
+
+  /**
+   * UserPriceOverride createMany
+   */
+  export type UserPriceOverrideCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserPriceOverrides.
+     */
+    data: UserPriceOverrideCreateManyInput | UserPriceOverrideCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserPriceOverride createManyAndReturn
+   */
+  export type UserPriceOverrideCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPriceOverride
+     */
+    select?: UserPriceOverrideSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPriceOverride
+     */
+    omit?: UserPriceOverrideOmit<ExtArgs> | null
+    /**
+     * The data used to create many UserPriceOverrides.
+     */
+    data: UserPriceOverrideCreateManyInput | UserPriceOverrideCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserPriceOverride update
+   */
+  export type UserPriceOverrideUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPriceOverride
+     */
+    select?: UserPriceOverrideSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPriceOverride
+     */
+    omit?: UserPriceOverrideOmit<ExtArgs> | null
+    /**
+     * The data needed to update a UserPriceOverride.
+     */
+    data: XOR<UserPriceOverrideUpdateInput, UserPriceOverrideUncheckedUpdateInput>
+    /**
+     * Choose, which UserPriceOverride to update.
+     */
+    where: UserPriceOverrideWhereUniqueInput
+  }
+
+  /**
+   * UserPriceOverride updateMany
+   */
+  export type UserPriceOverrideUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserPriceOverrides.
+     */
+    data: XOR<UserPriceOverrideUpdateManyMutationInput, UserPriceOverrideUncheckedUpdateManyInput>
+    /**
+     * Filter which UserPriceOverrides to update
+     */
+    where?: UserPriceOverrideWhereInput
+    /**
+     * Limit how many UserPriceOverrides to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserPriceOverride updateManyAndReturn
+   */
+  export type UserPriceOverrideUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPriceOverride
+     */
+    select?: UserPriceOverrideSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPriceOverride
+     */
+    omit?: UserPriceOverrideOmit<ExtArgs> | null
+    /**
+     * The data used to update UserPriceOverrides.
+     */
+    data: XOR<UserPriceOverrideUpdateManyMutationInput, UserPriceOverrideUncheckedUpdateManyInput>
+    /**
+     * Filter which UserPriceOverrides to update
+     */
+    where?: UserPriceOverrideWhereInput
+    /**
+     * Limit how many UserPriceOverrides to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserPriceOverride upsert
+   */
+  export type UserPriceOverrideUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPriceOverride
+     */
+    select?: UserPriceOverrideSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPriceOverride
+     */
+    omit?: UserPriceOverrideOmit<ExtArgs> | null
+    /**
+     * The filter to search for the UserPriceOverride to update in case it exists.
+     */
+    where: UserPriceOverrideWhereUniqueInput
+    /**
+     * In case the UserPriceOverride found by the `where` argument doesn't exist, create a new UserPriceOverride with this data.
+     */
+    create: XOR<UserPriceOverrideCreateInput, UserPriceOverrideUncheckedCreateInput>
+    /**
+     * In case the UserPriceOverride was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserPriceOverrideUpdateInput, UserPriceOverrideUncheckedUpdateInput>
+  }
+
+  /**
+   * UserPriceOverride delete
+   */
+  export type UserPriceOverrideDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPriceOverride
+     */
+    select?: UserPriceOverrideSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPriceOverride
+     */
+    omit?: UserPriceOverrideOmit<ExtArgs> | null
+    /**
+     * Filter which UserPriceOverride to delete.
+     */
+    where: UserPriceOverrideWhereUniqueInput
+  }
+
+  /**
+   * UserPriceOverride deleteMany
+   */
+  export type UserPriceOverrideDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserPriceOverrides to delete
+     */
+    where?: UserPriceOverrideWhereInput
+    /**
+     * Limit how many UserPriceOverrides to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserPriceOverride without action
+   */
+  export type UserPriceOverrideDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPriceOverride
+     */
+    select?: UserPriceOverrideSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPriceOverride
+     */
+    omit?: UserPriceOverrideOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PartnerDomain
+   */
+
+  export type AggregatePartnerDomain = {
+    _count: PartnerDomainCountAggregateOutputType | null
+    _avg: PartnerDomainAvgAggregateOutputType | null
+    _sum: PartnerDomainSumAggregateOutputType | null
+    _min: PartnerDomainMinAggregateOutputType | null
+    _max: PartnerDomainMaxAggregateOutputType | null
+  }
+
+  export type PartnerDomainAvgAggregateOutputType = {
+    overrideMonthlyPrice: number | null
+    overrideYearlyPrice: number | null
+  }
+
+  export type PartnerDomainSumAggregateOutputType = {
+    overrideMonthlyPrice: number | null
+    overrideYearlyPrice: number | null
+  }
+
+  export type PartnerDomainMinAggregateOutputType = {
+    id: string | null
+    domain: string | null
+    companyName: string | null
+    planId: string | null
+    overrideMonthlyPrice: number | null
+    overrideYearlyPrice: number | null
+    note: string | null
+    active: boolean | null
+    expiresAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PartnerDomainMaxAggregateOutputType = {
+    id: string | null
+    domain: string | null
+    companyName: string | null
+    planId: string | null
+    overrideMonthlyPrice: number | null
+    overrideYearlyPrice: number | null
+    note: string | null
+    active: boolean | null
+    expiresAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PartnerDomainCountAggregateOutputType = {
+    id: number
+    domain: number
+    companyName: number
+    planId: number
+    overrideMonthlyPrice: number
+    overrideYearlyPrice: number
+    note: number
+    active: number
+    expiresAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PartnerDomainAvgAggregateInputType = {
+    overrideMonthlyPrice?: true
+    overrideYearlyPrice?: true
+  }
+
+  export type PartnerDomainSumAggregateInputType = {
+    overrideMonthlyPrice?: true
+    overrideYearlyPrice?: true
+  }
+
+  export type PartnerDomainMinAggregateInputType = {
+    id?: true
+    domain?: true
+    companyName?: true
+    planId?: true
+    overrideMonthlyPrice?: true
+    overrideYearlyPrice?: true
+    note?: true
+    active?: true
+    expiresAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PartnerDomainMaxAggregateInputType = {
+    id?: true
+    domain?: true
+    companyName?: true
+    planId?: true
+    overrideMonthlyPrice?: true
+    overrideYearlyPrice?: true
+    note?: true
+    active?: true
+    expiresAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PartnerDomainCountAggregateInputType = {
+    id?: true
+    domain?: true
+    companyName?: true
+    planId?: true
+    overrideMonthlyPrice?: true
+    overrideYearlyPrice?: true
+    note?: true
+    active?: true
+    expiresAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PartnerDomainAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PartnerDomain to aggregate.
+     */
+    where?: PartnerDomainWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PartnerDomains to fetch.
+     */
+    orderBy?: PartnerDomainOrderByWithRelationInput | PartnerDomainOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PartnerDomainWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PartnerDomains from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PartnerDomains.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PartnerDomains
+    **/
+    _count?: true | PartnerDomainCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PartnerDomainAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PartnerDomainSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PartnerDomainMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PartnerDomainMaxAggregateInputType
+  }
+
+  export type GetPartnerDomainAggregateType<T extends PartnerDomainAggregateArgs> = {
+        [P in keyof T & keyof AggregatePartnerDomain]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePartnerDomain[P]>
+      : GetScalarType<T[P], AggregatePartnerDomain[P]>
+  }
+
+
+
+
+  export type PartnerDomainGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PartnerDomainWhereInput
+    orderBy?: PartnerDomainOrderByWithAggregationInput | PartnerDomainOrderByWithAggregationInput[]
+    by: PartnerDomainScalarFieldEnum[] | PartnerDomainScalarFieldEnum
+    having?: PartnerDomainScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PartnerDomainCountAggregateInputType | true
+    _avg?: PartnerDomainAvgAggregateInputType
+    _sum?: PartnerDomainSumAggregateInputType
+    _min?: PartnerDomainMinAggregateInputType
+    _max?: PartnerDomainMaxAggregateInputType
+  }
+
+  export type PartnerDomainGroupByOutputType = {
+    id: string
+    domain: string
+    companyName: string
+    planId: string
+    overrideMonthlyPrice: number | null
+    overrideYearlyPrice: number | null
+    note: string | null
+    active: boolean
+    expiresAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: PartnerDomainCountAggregateOutputType | null
+    _avg: PartnerDomainAvgAggregateOutputType | null
+    _sum: PartnerDomainSumAggregateOutputType | null
+    _min: PartnerDomainMinAggregateOutputType | null
+    _max: PartnerDomainMaxAggregateOutputType | null
+  }
+
+  type GetPartnerDomainGroupByPayload<T extends PartnerDomainGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PartnerDomainGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PartnerDomainGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PartnerDomainGroupByOutputType[P]>
+            : GetScalarType<T[P], PartnerDomainGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PartnerDomainSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    domain?: boolean
+    companyName?: boolean
+    planId?: boolean
+    overrideMonthlyPrice?: boolean
+    overrideYearlyPrice?: boolean
+    note?: boolean
+    active?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["partnerDomain"]>
+
+  export type PartnerDomainSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    domain?: boolean
+    companyName?: boolean
+    planId?: boolean
+    overrideMonthlyPrice?: boolean
+    overrideYearlyPrice?: boolean
+    note?: boolean
+    active?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["partnerDomain"]>
+
+  export type PartnerDomainSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    domain?: boolean
+    companyName?: boolean
+    planId?: boolean
+    overrideMonthlyPrice?: boolean
+    overrideYearlyPrice?: boolean
+    note?: boolean
+    active?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["partnerDomain"]>
+
+  export type PartnerDomainSelectScalar = {
+    id?: boolean
+    domain?: boolean
+    companyName?: boolean
+    planId?: boolean
+    overrideMonthlyPrice?: boolean
+    overrideYearlyPrice?: boolean
+    note?: boolean
+    active?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PartnerDomainOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "domain" | "companyName" | "planId" | "overrideMonthlyPrice" | "overrideYearlyPrice" | "note" | "active" | "expiresAt" | "createdAt" | "updatedAt", ExtArgs["result"]["partnerDomain"]>
+
+  export type $PartnerDomainPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PartnerDomain"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      /**
+       * e.g. "acme.com" — stored lowercase, without the leading @
+       */
+      domain: string
+      companyName: string
+      /**
+       * "free" | "pro" | "ultra"
+       */
+      planId: string
+      overrideMonthlyPrice: number | null
+      overrideYearlyPrice: number | null
+      /**
+       * Internal note visible only to admins
+       */
+      note: string | null
+      active: boolean
+      expiresAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["partnerDomain"]>
+    composites: {}
+  }
+
+  type PartnerDomainGetPayload<S extends boolean | null | undefined | PartnerDomainDefaultArgs> = $Result.GetResult<Prisma.$PartnerDomainPayload, S>
+
+  type PartnerDomainCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PartnerDomainFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PartnerDomainCountAggregateInputType | true
+    }
+
+  export interface PartnerDomainDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PartnerDomain'], meta: { name: 'PartnerDomain' } }
+    /**
+     * Find zero or one PartnerDomain that matches the filter.
+     * @param {PartnerDomainFindUniqueArgs} args - Arguments to find a PartnerDomain
+     * @example
+     * // Get one PartnerDomain
+     * const partnerDomain = await prisma.partnerDomain.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PartnerDomainFindUniqueArgs>(args: SelectSubset<T, PartnerDomainFindUniqueArgs<ExtArgs>>): Prisma__PartnerDomainClient<$Result.GetResult<Prisma.$PartnerDomainPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PartnerDomain that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PartnerDomainFindUniqueOrThrowArgs} args - Arguments to find a PartnerDomain
+     * @example
+     * // Get one PartnerDomain
+     * const partnerDomain = await prisma.partnerDomain.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PartnerDomainFindUniqueOrThrowArgs>(args: SelectSubset<T, PartnerDomainFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PartnerDomainClient<$Result.GetResult<Prisma.$PartnerDomainPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PartnerDomain that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PartnerDomainFindFirstArgs} args - Arguments to find a PartnerDomain
+     * @example
+     * // Get one PartnerDomain
+     * const partnerDomain = await prisma.partnerDomain.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PartnerDomainFindFirstArgs>(args?: SelectSubset<T, PartnerDomainFindFirstArgs<ExtArgs>>): Prisma__PartnerDomainClient<$Result.GetResult<Prisma.$PartnerDomainPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PartnerDomain that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PartnerDomainFindFirstOrThrowArgs} args - Arguments to find a PartnerDomain
+     * @example
+     * // Get one PartnerDomain
+     * const partnerDomain = await prisma.partnerDomain.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PartnerDomainFindFirstOrThrowArgs>(args?: SelectSubset<T, PartnerDomainFindFirstOrThrowArgs<ExtArgs>>): Prisma__PartnerDomainClient<$Result.GetResult<Prisma.$PartnerDomainPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PartnerDomains that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PartnerDomainFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PartnerDomains
+     * const partnerDomains = await prisma.partnerDomain.findMany()
+     * 
+     * // Get first 10 PartnerDomains
+     * const partnerDomains = await prisma.partnerDomain.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const partnerDomainWithIdOnly = await prisma.partnerDomain.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PartnerDomainFindManyArgs>(args?: SelectSubset<T, PartnerDomainFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PartnerDomainPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PartnerDomain.
+     * @param {PartnerDomainCreateArgs} args - Arguments to create a PartnerDomain.
+     * @example
+     * // Create one PartnerDomain
+     * const PartnerDomain = await prisma.partnerDomain.create({
+     *   data: {
+     *     // ... data to create a PartnerDomain
+     *   }
+     * })
+     * 
+     */
+    create<T extends PartnerDomainCreateArgs>(args: SelectSubset<T, PartnerDomainCreateArgs<ExtArgs>>): Prisma__PartnerDomainClient<$Result.GetResult<Prisma.$PartnerDomainPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PartnerDomains.
+     * @param {PartnerDomainCreateManyArgs} args - Arguments to create many PartnerDomains.
+     * @example
+     * // Create many PartnerDomains
+     * const partnerDomain = await prisma.partnerDomain.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PartnerDomainCreateManyArgs>(args?: SelectSubset<T, PartnerDomainCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PartnerDomains and returns the data saved in the database.
+     * @param {PartnerDomainCreateManyAndReturnArgs} args - Arguments to create many PartnerDomains.
+     * @example
+     * // Create many PartnerDomains
+     * const partnerDomain = await prisma.partnerDomain.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PartnerDomains and only return the `id`
+     * const partnerDomainWithIdOnly = await prisma.partnerDomain.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PartnerDomainCreateManyAndReturnArgs>(args?: SelectSubset<T, PartnerDomainCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PartnerDomainPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a PartnerDomain.
+     * @param {PartnerDomainDeleteArgs} args - Arguments to delete one PartnerDomain.
+     * @example
+     * // Delete one PartnerDomain
+     * const PartnerDomain = await prisma.partnerDomain.delete({
+     *   where: {
+     *     // ... filter to delete one PartnerDomain
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PartnerDomainDeleteArgs>(args: SelectSubset<T, PartnerDomainDeleteArgs<ExtArgs>>): Prisma__PartnerDomainClient<$Result.GetResult<Prisma.$PartnerDomainPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PartnerDomain.
+     * @param {PartnerDomainUpdateArgs} args - Arguments to update one PartnerDomain.
+     * @example
+     * // Update one PartnerDomain
+     * const partnerDomain = await prisma.partnerDomain.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PartnerDomainUpdateArgs>(args: SelectSubset<T, PartnerDomainUpdateArgs<ExtArgs>>): Prisma__PartnerDomainClient<$Result.GetResult<Prisma.$PartnerDomainPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PartnerDomains.
+     * @param {PartnerDomainDeleteManyArgs} args - Arguments to filter PartnerDomains to delete.
+     * @example
+     * // Delete a few PartnerDomains
+     * const { count } = await prisma.partnerDomain.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PartnerDomainDeleteManyArgs>(args?: SelectSubset<T, PartnerDomainDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PartnerDomains.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PartnerDomainUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PartnerDomains
+     * const partnerDomain = await prisma.partnerDomain.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PartnerDomainUpdateManyArgs>(args: SelectSubset<T, PartnerDomainUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PartnerDomains and returns the data updated in the database.
+     * @param {PartnerDomainUpdateManyAndReturnArgs} args - Arguments to update many PartnerDomains.
+     * @example
+     * // Update many PartnerDomains
+     * const partnerDomain = await prisma.partnerDomain.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more PartnerDomains and only return the `id`
+     * const partnerDomainWithIdOnly = await prisma.partnerDomain.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PartnerDomainUpdateManyAndReturnArgs>(args: SelectSubset<T, PartnerDomainUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PartnerDomainPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one PartnerDomain.
+     * @param {PartnerDomainUpsertArgs} args - Arguments to update or create a PartnerDomain.
+     * @example
+     * // Update or create a PartnerDomain
+     * const partnerDomain = await prisma.partnerDomain.upsert({
+     *   create: {
+     *     // ... data to create a PartnerDomain
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PartnerDomain we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PartnerDomainUpsertArgs>(args: SelectSubset<T, PartnerDomainUpsertArgs<ExtArgs>>): Prisma__PartnerDomainClient<$Result.GetResult<Prisma.$PartnerDomainPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PartnerDomains.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PartnerDomainCountArgs} args - Arguments to filter PartnerDomains to count.
+     * @example
+     * // Count the number of PartnerDomains
+     * const count = await prisma.partnerDomain.count({
+     *   where: {
+     *     // ... the filter for the PartnerDomains we want to count
+     *   }
+     * })
+    **/
+    count<T extends PartnerDomainCountArgs>(
+      args?: Subset<T, PartnerDomainCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PartnerDomainCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PartnerDomain.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PartnerDomainAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PartnerDomainAggregateArgs>(args: Subset<T, PartnerDomainAggregateArgs>): Prisma.PrismaPromise<GetPartnerDomainAggregateType<T>>
+
+    /**
+     * Group by PartnerDomain.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PartnerDomainGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PartnerDomainGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PartnerDomainGroupByArgs['orderBy'] }
+        : { orderBy?: PartnerDomainGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PartnerDomainGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPartnerDomainGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PartnerDomain model
+   */
+  readonly fields: PartnerDomainFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PartnerDomain.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PartnerDomainClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PartnerDomain model
+   */
+  interface PartnerDomainFieldRefs {
+    readonly id: FieldRef<"PartnerDomain", 'String'>
+    readonly domain: FieldRef<"PartnerDomain", 'String'>
+    readonly companyName: FieldRef<"PartnerDomain", 'String'>
+    readonly planId: FieldRef<"PartnerDomain", 'String'>
+    readonly overrideMonthlyPrice: FieldRef<"PartnerDomain", 'Float'>
+    readonly overrideYearlyPrice: FieldRef<"PartnerDomain", 'Float'>
+    readonly note: FieldRef<"PartnerDomain", 'String'>
+    readonly active: FieldRef<"PartnerDomain", 'Boolean'>
+    readonly expiresAt: FieldRef<"PartnerDomain", 'DateTime'>
+    readonly createdAt: FieldRef<"PartnerDomain", 'DateTime'>
+    readonly updatedAt: FieldRef<"PartnerDomain", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PartnerDomain findUnique
+   */
+  export type PartnerDomainFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PartnerDomain
+     */
+    select?: PartnerDomainSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PartnerDomain
+     */
+    omit?: PartnerDomainOmit<ExtArgs> | null
+    /**
+     * Filter, which PartnerDomain to fetch.
+     */
+    where: PartnerDomainWhereUniqueInput
+  }
+
+  /**
+   * PartnerDomain findUniqueOrThrow
+   */
+  export type PartnerDomainFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PartnerDomain
+     */
+    select?: PartnerDomainSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PartnerDomain
+     */
+    omit?: PartnerDomainOmit<ExtArgs> | null
+    /**
+     * Filter, which PartnerDomain to fetch.
+     */
+    where: PartnerDomainWhereUniqueInput
+  }
+
+  /**
+   * PartnerDomain findFirst
+   */
+  export type PartnerDomainFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PartnerDomain
+     */
+    select?: PartnerDomainSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PartnerDomain
+     */
+    omit?: PartnerDomainOmit<ExtArgs> | null
+    /**
+     * Filter, which PartnerDomain to fetch.
+     */
+    where?: PartnerDomainWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PartnerDomains to fetch.
+     */
+    orderBy?: PartnerDomainOrderByWithRelationInput | PartnerDomainOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PartnerDomains.
+     */
+    cursor?: PartnerDomainWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PartnerDomains from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PartnerDomains.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PartnerDomains.
+     */
+    distinct?: PartnerDomainScalarFieldEnum | PartnerDomainScalarFieldEnum[]
+  }
+
+  /**
+   * PartnerDomain findFirstOrThrow
+   */
+  export type PartnerDomainFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PartnerDomain
+     */
+    select?: PartnerDomainSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PartnerDomain
+     */
+    omit?: PartnerDomainOmit<ExtArgs> | null
+    /**
+     * Filter, which PartnerDomain to fetch.
+     */
+    where?: PartnerDomainWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PartnerDomains to fetch.
+     */
+    orderBy?: PartnerDomainOrderByWithRelationInput | PartnerDomainOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PartnerDomains.
+     */
+    cursor?: PartnerDomainWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PartnerDomains from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PartnerDomains.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PartnerDomains.
+     */
+    distinct?: PartnerDomainScalarFieldEnum | PartnerDomainScalarFieldEnum[]
+  }
+
+  /**
+   * PartnerDomain findMany
+   */
+  export type PartnerDomainFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PartnerDomain
+     */
+    select?: PartnerDomainSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PartnerDomain
+     */
+    omit?: PartnerDomainOmit<ExtArgs> | null
+    /**
+     * Filter, which PartnerDomains to fetch.
+     */
+    where?: PartnerDomainWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PartnerDomains to fetch.
+     */
+    orderBy?: PartnerDomainOrderByWithRelationInput | PartnerDomainOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PartnerDomains.
+     */
+    cursor?: PartnerDomainWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PartnerDomains from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PartnerDomains.
+     */
+    skip?: number
+    distinct?: PartnerDomainScalarFieldEnum | PartnerDomainScalarFieldEnum[]
+  }
+
+  /**
+   * PartnerDomain create
+   */
+  export type PartnerDomainCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PartnerDomain
+     */
+    select?: PartnerDomainSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PartnerDomain
+     */
+    omit?: PartnerDomainOmit<ExtArgs> | null
+    /**
+     * The data needed to create a PartnerDomain.
+     */
+    data: XOR<PartnerDomainCreateInput, PartnerDomainUncheckedCreateInput>
+  }
+
+  /**
+   * PartnerDomain createMany
+   */
+  export type PartnerDomainCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PartnerDomains.
+     */
+    data: PartnerDomainCreateManyInput | PartnerDomainCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PartnerDomain createManyAndReturn
+   */
+  export type PartnerDomainCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PartnerDomain
+     */
+    select?: PartnerDomainSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PartnerDomain
+     */
+    omit?: PartnerDomainOmit<ExtArgs> | null
+    /**
+     * The data used to create many PartnerDomains.
+     */
+    data: PartnerDomainCreateManyInput | PartnerDomainCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PartnerDomain update
+   */
+  export type PartnerDomainUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PartnerDomain
+     */
+    select?: PartnerDomainSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PartnerDomain
+     */
+    omit?: PartnerDomainOmit<ExtArgs> | null
+    /**
+     * The data needed to update a PartnerDomain.
+     */
+    data: XOR<PartnerDomainUpdateInput, PartnerDomainUncheckedUpdateInput>
+    /**
+     * Choose, which PartnerDomain to update.
+     */
+    where: PartnerDomainWhereUniqueInput
+  }
+
+  /**
+   * PartnerDomain updateMany
+   */
+  export type PartnerDomainUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PartnerDomains.
+     */
+    data: XOR<PartnerDomainUpdateManyMutationInput, PartnerDomainUncheckedUpdateManyInput>
+    /**
+     * Filter which PartnerDomains to update
+     */
+    where?: PartnerDomainWhereInput
+    /**
+     * Limit how many PartnerDomains to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PartnerDomain updateManyAndReturn
+   */
+  export type PartnerDomainUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PartnerDomain
+     */
+    select?: PartnerDomainSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PartnerDomain
+     */
+    omit?: PartnerDomainOmit<ExtArgs> | null
+    /**
+     * The data used to update PartnerDomains.
+     */
+    data: XOR<PartnerDomainUpdateManyMutationInput, PartnerDomainUncheckedUpdateManyInput>
+    /**
+     * Filter which PartnerDomains to update
+     */
+    where?: PartnerDomainWhereInput
+    /**
+     * Limit how many PartnerDomains to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PartnerDomain upsert
+   */
+  export type PartnerDomainUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PartnerDomain
+     */
+    select?: PartnerDomainSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PartnerDomain
+     */
+    omit?: PartnerDomainOmit<ExtArgs> | null
+    /**
+     * The filter to search for the PartnerDomain to update in case it exists.
+     */
+    where: PartnerDomainWhereUniqueInput
+    /**
+     * In case the PartnerDomain found by the `where` argument doesn't exist, create a new PartnerDomain with this data.
+     */
+    create: XOR<PartnerDomainCreateInput, PartnerDomainUncheckedCreateInput>
+    /**
+     * In case the PartnerDomain was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PartnerDomainUpdateInput, PartnerDomainUncheckedUpdateInput>
+  }
+
+  /**
+   * PartnerDomain delete
+   */
+  export type PartnerDomainDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PartnerDomain
+     */
+    select?: PartnerDomainSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PartnerDomain
+     */
+    omit?: PartnerDomainOmit<ExtArgs> | null
+    /**
+     * Filter which PartnerDomain to delete.
+     */
+    where: PartnerDomainWhereUniqueInput
+  }
+
+  /**
+   * PartnerDomain deleteMany
+   */
+  export type PartnerDomainDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PartnerDomains to delete
+     */
+    where?: PartnerDomainWhereInput
+    /**
+     * Limit how many PartnerDomains to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PartnerDomain without action
+   */
+  export type PartnerDomainDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PartnerDomain
+     */
+    select?: PartnerDomainSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PartnerDomain
+     */
+    omit?: PartnerDomainOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PricingPlan
+   */
+
+  export type AggregatePricingPlan = {
+    _count: PricingPlanCountAggregateOutputType | null
+    _avg: PricingPlanAvgAggregateOutputType | null
+    _sum: PricingPlanSumAggregateOutputType | null
+    _min: PricingPlanMinAggregateOutputType | null
+    _max: PricingPlanMaxAggregateOutputType | null
+  }
+
+  export type PricingPlanAvgAggregateOutputType = {
+    monthlyPrice: number | null
+    reposLimit: number | null
+    reviewsLimit: number | null
+    seatsLimit: number | null
+    sortOrder: number | null
+  }
+
+  export type PricingPlanSumAggregateOutputType = {
+    monthlyPrice: number | null
+    reposLimit: number | null
+    reviewsLimit: number | null
+    seatsLimit: number | null
+    sortOrder: number | null
+  }
+
+  export type PricingPlanMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    tagline: string | null
+    monthlyPrice: number | null
+    visible: boolean | null
+    highlight: boolean | null
+    reposLimit: number | null
+    reviewsLimit: number | null
+    seatsLimit: number | null
+    privateRepos: boolean | null
+    sortOrder: number | null
+    updatedAt: Date | null
+  }
+
+  export type PricingPlanMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    tagline: string | null
+    monthlyPrice: number | null
+    visible: boolean | null
+    highlight: boolean | null
+    reposLimit: number | null
+    reviewsLimit: number | null
+    seatsLimit: number | null
+    privateRepos: boolean | null
+    sortOrder: number | null
+    updatedAt: Date | null
+  }
+
+  export type PricingPlanCountAggregateOutputType = {
+    id: number
+    name: number
+    tagline: number
+    monthlyPrice: number
+    visible: number
+    highlight: number
+    features: number
+    reposLimit: number
+    reviewsLimit: number
+    seatsLimit: number
+    privateRepos: number
+    sortOrder: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PricingPlanAvgAggregateInputType = {
+    monthlyPrice?: true
+    reposLimit?: true
+    reviewsLimit?: true
+    seatsLimit?: true
+    sortOrder?: true
+  }
+
+  export type PricingPlanSumAggregateInputType = {
+    monthlyPrice?: true
+    reposLimit?: true
+    reviewsLimit?: true
+    seatsLimit?: true
+    sortOrder?: true
+  }
+
+  export type PricingPlanMinAggregateInputType = {
+    id?: true
+    name?: true
+    tagline?: true
+    monthlyPrice?: true
+    visible?: true
+    highlight?: true
+    reposLimit?: true
+    reviewsLimit?: true
+    seatsLimit?: true
+    privateRepos?: true
+    sortOrder?: true
+    updatedAt?: true
+  }
+
+  export type PricingPlanMaxAggregateInputType = {
+    id?: true
+    name?: true
+    tagline?: true
+    monthlyPrice?: true
+    visible?: true
+    highlight?: true
+    reposLimit?: true
+    reviewsLimit?: true
+    seatsLimit?: true
+    privateRepos?: true
+    sortOrder?: true
+    updatedAt?: true
+  }
+
+  export type PricingPlanCountAggregateInputType = {
+    id?: true
+    name?: true
+    tagline?: true
+    monthlyPrice?: true
+    visible?: true
+    highlight?: true
+    features?: true
+    reposLimit?: true
+    reviewsLimit?: true
+    seatsLimit?: true
+    privateRepos?: true
+    sortOrder?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PricingPlanAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PricingPlan to aggregate.
+     */
+    where?: PricingPlanWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PricingPlans to fetch.
+     */
+    orderBy?: PricingPlanOrderByWithRelationInput | PricingPlanOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PricingPlanWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PricingPlans from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PricingPlans.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PricingPlans
+    **/
+    _count?: true | PricingPlanCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PricingPlanAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PricingPlanSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PricingPlanMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PricingPlanMaxAggregateInputType
+  }
+
+  export type GetPricingPlanAggregateType<T extends PricingPlanAggregateArgs> = {
+        [P in keyof T & keyof AggregatePricingPlan]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePricingPlan[P]>
+      : GetScalarType<T[P], AggregatePricingPlan[P]>
+  }
+
+
+
+
+  export type PricingPlanGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PricingPlanWhereInput
+    orderBy?: PricingPlanOrderByWithAggregationInput | PricingPlanOrderByWithAggregationInput[]
+    by: PricingPlanScalarFieldEnum[] | PricingPlanScalarFieldEnum
+    having?: PricingPlanScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PricingPlanCountAggregateInputType | true
+    _avg?: PricingPlanAvgAggregateInputType
+    _sum?: PricingPlanSumAggregateInputType
+    _min?: PricingPlanMinAggregateInputType
+    _max?: PricingPlanMaxAggregateInputType
+  }
+
+  export type PricingPlanGroupByOutputType = {
+    id: string
+    name: string
+    tagline: string
+    monthlyPrice: number
+    visible: boolean
+    highlight: boolean
+    features: string[]
+    reposLimit: number | null
+    reviewsLimit: number | null
+    seatsLimit: number | null
+    privateRepos: boolean
+    sortOrder: number
+    updatedAt: Date
+    _count: PricingPlanCountAggregateOutputType | null
+    _avg: PricingPlanAvgAggregateOutputType | null
+    _sum: PricingPlanSumAggregateOutputType | null
+    _min: PricingPlanMinAggregateOutputType | null
+    _max: PricingPlanMaxAggregateOutputType | null
+  }
+
+  type GetPricingPlanGroupByPayload<T extends PricingPlanGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PricingPlanGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PricingPlanGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PricingPlanGroupByOutputType[P]>
+            : GetScalarType<T[P], PricingPlanGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PricingPlanSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    tagline?: boolean
+    monthlyPrice?: boolean
+    visible?: boolean
+    highlight?: boolean
+    features?: boolean
+    reposLimit?: boolean
+    reviewsLimit?: boolean
+    seatsLimit?: boolean
+    privateRepos?: boolean
+    sortOrder?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["pricingPlan"]>
+
+  export type PricingPlanSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    tagline?: boolean
+    monthlyPrice?: boolean
+    visible?: boolean
+    highlight?: boolean
+    features?: boolean
+    reposLimit?: boolean
+    reviewsLimit?: boolean
+    seatsLimit?: boolean
+    privateRepos?: boolean
+    sortOrder?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["pricingPlan"]>
+
+  export type PricingPlanSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    tagline?: boolean
+    monthlyPrice?: boolean
+    visible?: boolean
+    highlight?: boolean
+    features?: boolean
+    reposLimit?: boolean
+    reviewsLimit?: boolean
+    seatsLimit?: boolean
+    privateRepos?: boolean
+    sortOrder?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["pricingPlan"]>
+
+  export type PricingPlanSelectScalar = {
+    id?: boolean
+    name?: boolean
+    tagline?: boolean
+    monthlyPrice?: boolean
+    visible?: boolean
+    highlight?: boolean
+    features?: boolean
+    reposLimit?: boolean
+    reviewsLimit?: boolean
+    seatsLimit?: boolean
+    privateRepos?: boolean
+    sortOrder?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PricingPlanOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "tagline" | "monthlyPrice" | "visible" | "highlight" | "features" | "reposLimit" | "reviewsLimit" | "seatsLimit" | "privateRepos" | "sortOrder" | "updatedAt", ExtArgs["result"]["pricingPlan"]>
+
+  export type $PricingPlanPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PricingPlan"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      tagline: string
+      monthlyPrice: number
+      visible: boolean
+      highlight: boolean
+      features: string[]
+      reposLimit: number | null
+      reviewsLimit: number | null
+      seatsLimit: number | null
+      privateRepos: boolean
+      sortOrder: number
+      updatedAt: Date
+    }, ExtArgs["result"]["pricingPlan"]>
+    composites: {}
+  }
+
+  type PricingPlanGetPayload<S extends boolean | null | undefined | PricingPlanDefaultArgs> = $Result.GetResult<Prisma.$PricingPlanPayload, S>
+
+  type PricingPlanCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PricingPlanFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PricingPlanCountAggregateInputType | true
+    }
+
+  export interface PricingPlanDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PricingPlan'], meta: { name: 'PricingPlan' } }
+    /**
+     * Find zero or one PricingPlan that matches the filter.
+     * @param {PricingPlanFindUniqueArgs} args - Arguments to find a PricingPlan
+     * @example
+     * // Get one PricingPlan
+     * const pricingPlan = await prisma.pricingPlan.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PricingPlanFindUniqueArgs>(args: SelectSubset<T, PricingPlanFindUniqueArgs<ExtArgs>>): Prisma__PricingPlanClient<$Result.GetResult<Prisma.$PricingPlanPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PricingPlan that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PricingPlanFindUniqueOrThrowArgs} args - Arguments to find a PricingPlan
+     * @example
+     * // Get one PricingPlan
+     * const pricingPlan = await prisma.pricingPlan.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PricingPlanFindUniqueOrThrowArgs>(args: SelectSubset<T, PricingPlanFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PricingPlanClient<$Result.GetResult<Prisma.$PricingPlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PricingPlan that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PricingPlanFindFirstArgs} args - Arguments to find a PricingPlan
+     * @example
+     * // Get one PricingPlan
+     * const pricingPlan = await prisma.pricingPlan.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PricingPlanFindFirstArgs>(args?: SelectSubset<T, PricingPlanFindFirstArgs<ExtArgs>>): Prisma__PricingPlanClient<$Result.GetResult<Prisma.$PricingPlanPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PricingPlan that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PricingPlanFindFirstOrThrowArgs} args - Arguments to find a PricingPlan
+     * @example
+     * // Get one PricingPlan
+     * const pricingPlan = await prisma.pricingPlan.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PricingPlanFindFirstOrThrowArgs>(args?: SelectSubset<T, PricingPlanFindFirstOrThrowArgs<ExtArgs>>): Prisma__PricingPlanClient<$Result.GetResult<Prisma.$PricingPlanPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PricingPlans that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PricingPlanFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PricingPlans
+     * const pricingPlans = await prisma.pricingPlan.findMany()
+     * 
+     * // Get first 10 PricingPlans
+     * const pricingPlans = await prisma.pricingPlan.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const pricingPlanWithIdOnly = await prisma.pricingPlan.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PricingPlanFindManyArgs>(args?: SelectSubset<T, PricingPlanFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PricingPlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PricingPlan.
+     * @param {PricingPlanCreateArgs} args - Arguments to create a PricingPlan.
+     * @example
+     * // Create one PricingPlan
+     * const PricingPlan = await prisma.pricingPlan.create({
+     *   data: {
+     *     // ... data to create a PricingPlan
+     *   }
+     * })
+     * 
+     */
+    create<T extends PricingPlanCreateArgs>(args: SelectSubset<T, PricingPlanCreateArgs<ExtArgs>>): Prisma__PricingPlanClient<$Result.GetResult<Prisma.$PricingPlanPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PricingPlans.
+     * @param {PricingPlanCreateManyArgs} args - Arguments to create many PricingPlans.
+     * @example
+     * // Create many PricingPlans
+     * const pricingPlan = await prisma.pricingPlan.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PricingPlanCreateManyArgs>(args?: SelectSubset<T, PricingPlanCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PricingPlans and returns the data saved in the database.
+     * @param {PricingPlanCreateManyAndReturnArgs} args - Arguments to create many PricingPlans.
+     * @example
+     * // Create many PricingPlans
+     * const pricingPlan = await prisma.pricingPlan.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PricingPlans and only return the `id`
+     * const pricingPlanWithIdOnly = await prisma.pricingPlan.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PricingPlanCreateManyAndReturnArgs>(args?: SelectSubset<T, PricingPlanCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PricingPlanPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a PricingPlan.
+     * @param {PricingPlanDeleteArgs} args - Arguments to delete one PricingPlan.
+     * @example
+     * // Delete one PricingPlan
+     * const PricingPlan = await prisma.pricingPlan.delete({
+     *   where: {
+     *     // ... filter to delete one PricingPlan
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PricingPlanDeleteArgs>(args: SelectSubset<T, PricingPlanDeleteArgs<ExtArgs>>): Prisma__PricingPlanClient<$Result.GetResult<Prisma.$PricingPlanPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PricingPlan.
+     * @param {PricingPlanUpdateArgs} args - Arguments to update one PricingPlan.
+     * @example
+     * // Update one PricingPlan
+     * const pricingPlan = await prisma.pricingPlan.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PricingPlanUpdateArgs>(args: SelectSubset<T, PricingPlanUpdateArgs<ExtArgs>>): Prisma__PricingPlanClient<$Result.GetResult<Prisma.$PricingPlanPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PricingPlans.
+     * @param {PricingPlanDeleteManyArgs} args - Arguments to filter PricingPlans to delete.
+     * @example
+     * // Delete a few PricingPlans
+     * const { count } = await prisma.pricingPlan.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PricingPlanDeleteManyArgs>(args?: SelectSubset<T, PricingPlanDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PricingPlans.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PricingPlanUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PricingPlans
+     * const pricingPlan = await prisma.pricingPlan.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PricingPlanUpdateManyArgs>(args: SelectSubset<T, PricingPlanUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PricingPlans and returns the data updated in the database.
+     * @param {PricingPlanUpdateManyAndReturnArgs} args - Arguments to update many PricingPlans.
+     * @example
+     * // Update many PricingPlans
+     * const pricingPlan = await prisma.pricingPlan.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more PricingPlans and only return the `id`
+     * const pricingPlanWithIdOnly = await prisma.pricingPlan.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PricingPlanUpdateManyAndReturnArgs>(args: SelectSubset<T, PricingPlanUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PricingPlanPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one PricingPlan.
+     * @param {PricingPlanUpsertArgs} args - Arguments to update or create a PricingPlan.
+     * @example
+     * // Update or create a PricingPlan
+     * const pricingPlan = await prisma.pricingPlan.upsert({
+     *   create: {
+     *     // ... data to create a PricingPlan
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PricingPlan we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PricingPlanUpsertArgs>(args: SelectSubset<T, PricingPlanUpsertArgs<ExtArgs>>): Prisma__PricingPlanClient<$Result.GetResult<Prisma.$PricingPlanPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PricingPlans.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PricingPlanCountArgs} args - Arguments to filter PricingPlans to count.
+     * @example
+     * // Count the number of PricingPlans
+     * const count = await prisma.pricingPlan.count({
+     *   where: {
+     *     // ... the filter for the PricingPlans we want to count
+     *   }
+     * })
+    **/
+    count<T extends PricingPlanCountArgs>(
+      args?: Subset<T, PricingPlanCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PricingPlanCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PricingPlan.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PricingPlanAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PricingPlanAggregateArgs>(args: Subset<T, PricingPlanAggregateArgs>): Prisma.PrismaPromise<GetPricingPlanAggregateType<T>>
+
+    /**
+     * Group by PricingPlan.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PricingPlanGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PricingPlanGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PricingPlanGroupByArgs['orderBy'] }
+        : { orderBy?: PricingPlanGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PricingPlanGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPricingPlanGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PricingPlan model
+   */
+  readonly fields: PricingPlanFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PricingPlan.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PricingPlanClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PricingPlan model
+   */
+  interface PricingPlanFieldRefs {
+    readonly id: FieldRef<"PricingPlan", 'String'>
+    readonly name: FieldRef<"PricingPlan", 'String'>
+    readonly tagline: FieldRef<"PricingPlan", 'String'>
+    readonly monthlyPrice: FieldRef<"PricingPlan", 'Float'>
+    readonly visible: FieldRef<"PricingPlan", 'Boolean'>
+    readonly highlight: FieldRef<"PricingPlan", 'Boolean'>
+    readonly features: FieldRef<"PricingPlan", 'String[]'>
+    readonly reposLimit: FieldRef<"PricingPlan", 'Int'>
+    readonly reviewsLimit: FieldRef<"PricingPlan", 'Int'>
+    readonly seatsLimit: FieldRef<"PricingPlan", 'Int'>
+    readonly privateRepos: FieldRef<"PricingPlan", 'Boolean'>
+    readonly sortOrder: FieldRef<"PricingPlan", 'Int'>
+    readonly updatedAt: FieldRef<"PricingPlan", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PricingPlan findUnique
+   */
+  export type PricingPlanFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PricingPlan
+     */
+    select?: PricingPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PricingPlan
+     */
+    omit?: PricingPlanOmit<ExtArgs> | null
+    /**
+     * Filter, which PricingPlan to fetch.
+     */
+    where: PricingPlanWhereUniqueInput
+  }
+
+  /**
+   * PricingPlan findUniqueOrThrow
+   */
+  export type PricingPlanFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PricingPlan
+     */
+    select?: PricingPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PricingPlan
+     */
+    omit?: PricingPlanOmit<ExtArgs> | null
+    /**
+     * Filter, which PricingPlan to fetch.
+     */
+    where: PricingPlanWhereUniqueInput
+  }
+
+  /**
+   * PricingPlan findFirst
+   */
+  export type PricingPlanFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PricingPlan
+     */
+    select?: PricingPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PricingPlan
+     */
+    omit?: PricingPlanOmit<ExtArgs> | null
+    /**
+     * Filter, which PricingPlan to fetch.
+     */
+    where?: PricingPlanWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PricingPlans to fetch.
+     */
+    orderBy?: PricingPlanOrderByWithRelationInput | PricingPlanOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PricingPlans.
+     */
+    cursor?: PricingPlanWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PricingPlans from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PricingPlans.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PricingPlans.
+     */
+    distinct?: PricingPlanScalarFieldEnum | PricingPlanScalarFieldEnum[]
+  }
+
+  /**
+   * PricingPlan findFirstOrThrow
+   */
+  export type PricingPlanFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PricingPlan
+     */
+    select?: PricingPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PricingPlan
+     */
+    omit?: PricingPlanOmit<ExtArgs> | null
+    /**
+     * Filter, which PricingPlan to fetch.
+     */
+    where?: PricingPlanWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PricingPlans to fetch.
+     */
+    orderBy?: PricingPlanOrderByWithRelationInput | PricingPlanOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PricingPlans.
+     */
+    cursor?: PricingPlanWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PricingPlans from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PricingPlans.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PricingPlans.
+     */
+    distinct?: PricingPlanScalarFieldEnum | PricingPlanScalarFieldEnum[]
+  }
+
+  /**
+   * PricingPlan findMany
+   */
+  export type PricingPlanFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PricingPlan
+     */
+    select?: PricingPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PricingPlan
+     */
+    omit?: PricingPlanOmit<ExtArgs> | null
+    /**
+     * Filter, which PricingPlans to fetch.
+     */
+    where?: PricingPlanWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PricingPlans to fetch.
+     */
+    orderBy?: PricingPlanOrderByWithRelationInput | PricingPlanOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PricingPlans.
+     */
+    cursor?: PricingPlanWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PricingPlans from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PricingPlans.
+     */
+    skip?: number
+    distinct?: PricingPlanScalarFieldEnum | PricingPlanScalarFieldEnum[]
+  }
+
+  /**
+   * PricingPlan create
+   */
+  export type PricingPlanCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PricingPlan
+     */
+    select?: PricingPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PricingPlan
+     */
+    omit?: PricingPlanOmit<ExtArgs> | null
+    /**
+     * The data needed to create a PricingPlan.
+     */
+    data: XOR<PricingPlanCreateInput, PricingPlanUncheckedCreateInput>
+  }
+
+  /**
+   * PricingPlan createMany
+   */
+  export type PricingPlanCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PricingPlans.
+     */
+    data: PricingPlanCreateManyInput | PricingPlanCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PricingPlan createManyAndReturn
+   */
+  export type PricingPlanCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PricingPlan
+     */
+    select?: PricingPlanSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PricingPlan
+     */
+    omit?: PricingPlanOmit<ExtArgs> | null
+    /**
+     * The data used to create many PricingPlans.
+     */
+    data: PricingPlanCreateManyInput | PricingPlanCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PricingPlan update
+   */
+  export type PricingPlanUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PricingPlan
+     */
+    select?: PricingPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PricingPlan
+     */
+    omit?: PricingPlanOmit<ExtArgs> | null
+    /**
+     * The data needed to update a PricingPlan.
+     */
+    data: XOR<PricingPlanUpdateInput, PricingPlanUncheckedUpdateInput>
+    /**
+     * Choose, which PricingPlan to update.
+     */
+    where: PricingPlanWhereUniqueInput
+  }
+
+  /**
+   * PricingPlan updateMany
+   */
+  export type PricingPlanUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PricingPlans.
+     */
+    data: XOR<PricingPlanUpdateManyMutationInput, PricingPlanUncheckedUpdateManyInput>
+    /**
+     * Filter which PricingPlans to update
+     */
+    where?: PricingPlanWhereInput
+    /**
+     * Limit how many PricingPlans to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PricingPlan updateManyAndReturn
+   */
+  export type PricingPlanUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PricingPlan
+     */
+    select?: PricingPlanSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PricingPlan
+     */
+    omit?: PricingPlanOmit<ExtArgs> | null
+    /**
+     * The data used to update PricingPlans.
+     */
+    data: XOR<PricingPlanUpdateManyMutationInput, PricingPlanUncheckedUpdateManyInput>
+    /**
+     * Filter which PricingPlans to update
+     */
+    where?: PricingPlanWhereInput
+    /**
+     * Limit how many PricingPlans to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PricingPlan upsert
+   */
+  export type PricingPlanUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PricingPlan
+     */
+    select?: PricingPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PricingPlan
+     */
+    omit?: PricingPlanOmit<ExtArgs> | null
+    /**
+     * The filter to search for the PricingPlan to update in case it exists.
+     */
+    where: PricingPlanWhereUniqueInput
+    /**
+     * In case the PricingPlan found by the `where` argument doesn't exist, create a new PricingPlan with this data.
+     */
+    create: XOR<PricingPlanCreateInput, PricingPlanUncheckedCreateInput>
+    /**
+     * In case the PricingPlan was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PricingPlanUpdateInput, PricingPlanUncheckedUpdateInput>
+  }
+
+  /**
+   * PricingPlan delete
+   */
+  export type PricingPlanDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PricingPlan
+     */
+    select?: PricingPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PricingPlan
+     */
+    omit?: PricingPlanOmit<ExtArgs> | null
+    /**
+     * Filter which PricingPlan to delete.
+     */
+    where: PricingPlanWhereUniqueInput
+  }
+
+  /**
+   * PricingPlan deleteMany
+   */
+  export type PricingPlanDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PricingPlans to delete
+     */
+    where?: PricingPlanWhereInput
+    /**
+     * Limit how many PricingPlans to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PricingPlan without action
+   */
+  export type PricingPlanDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PricingPlan
+     */
+    select?: PricingPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PricingPlan
+     */
+    omit?: PricingPlanOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PricingSettings
+   */
+
+  export type AggregatePricingSettings = {
+    _count: PricingSettingsCountAggregateOutputType | null
+    _avg: PricingSettingsAvgAggregateOutputType | null
+    _sum: PricingSettingsSumAggregateOutputType | null
+    _min: PricingSettingsMinAggregateOutputType | null
+    _max: PricingSettingsMaxAggregateOutputType | null
+  }
+
+  export type PricingSettingsAvgAggregateOutputType = {
+    annualDiscount: number | null
+    trialDays: number | null
+    gracePeriodDays: number | null
+    refundWindowDays: number | null
+    taxRate: number | null
+  }
+
+  export type PricingSettingsSumAggregateOutputType = {
+    annualDiscount: number | null
+    trialDays: number | null
+    gracePeriodDays: number | null
+    refundWindowDays: number | null
+    taxRate: number | null
+  }
+
+  export type PricingSettingsMinAggregateOutputType = {
+    id: string | null
+    pricingEnabled: boolean | null
+    annualDiscount: number | null
+    trialDays: number | null
+    trialPlan: string | null
+    gracePeriodDays: number | null
+    refundEnabled: boolean | null
+    refundWindowDays: number | null
+    taxEnabled: boolean | null
+    taxRate: number | null
+    promoCodesAtCheckout: boolean | null
+    freeSignupEnabled: boolean | null
+    updatedAt: Date | null
+  }
+
+  export type PricingSettingsMaxAggregateOutputType = {
+    id: string | null
+    pricingEnabled: boolean | null
+    annualDiscount: number | null
+    trialDays: number | null
+    trialPlan: string | null
+    gracePeriodDays: number | null
+    refundEnabled: boolean | null
+    refundWindowDays: number | null
+    taxEnabled: boolean | null
+    taxRate: number | null
+    promoCodesAtCheckout: boolean | null
+    freeSignupEnabled: boolean | null
+    updatedAt: Date | null
+  }
+
+  export type PricingSettingsCountAggregateOutputType = {
+    id: number
+    pricingEnabled: number
+    annualDiscount: number
+    trialDays: number
+    trialPlan: number
+    gracePeriodDays: number
+    refundEnabled: number
+    refundWindowDays: number
+    taxEnabled: number
+    taxRate: number
+    promoCodesAtCheckout: number
+    freeSignupEnabled: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PricingSettingsAvgAggregateInputType = {
+    annualDiscount?: true
+    trialDays?: true
+    gracePeriodDays?: true
+    refundWindowDays?: true
+    taxRate?: true
+  }
+
+  export type PricingSettingsSumAggregateInputType = {
+    annualDiscount?: true
+    trialDays?: true
+    gracePeriodDays?: true
+    refundWindowDays?: true
+    taxRate?: true
+  }
+
+  export type PricingSettingsMinAggregateInputType = {
+    id?: true
+    pricingEnabled?: true
+    annualDiscount?: true
+    trialDays?: true
+    trialPlan?: true
+    gracePeriodDays?: true
+    refundEnabled?: true
+    refundWindowDays?: true
+    taxEnabled?: true
+    taxRate?: true
+    promoCodesAtCheckout?: true
+    freeSignupEnabled?: true
+    updatedAt?: true
+  }
+
+  export type PricingSettingsMaxAggregateInputType = {
+    id?: true
+    pricingEnabled?: true
+    annualDiscount?: true
+    trialDays?: true
+    trialPlan?: true
+    gracePeriodDays?: true
+    refundEnabled?: true
+    refundWindowDays?: true
+    taxEnabled?: true
+    taxRate?: true
+    promoCodesAtCheckout?: true
+    freeSignupEnabled?: true
+    updatedAt?: true
+  }
+
+  export type PricingSettingsCountAggregateInputType = {
+    id?: true
+    pricingEnabled?: true
+    annualDiscount?: true
+    trialDays?: true
+    trialPlan?: true
+    gracePeriodDays?: true
+    refundEnabled?: true
+    refundWindowDays?: true
+    taxEnabled?: true
+    taxRate?: true
+    promoCodesAtCheckout?: true
+    freeSignupEnabled?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PricingSettingsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PricingSettings to aggregate.
+     */
+    where?: PricingSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PricingSettings to fetch.
+     */
+    orderBy?: PricingSettingsOrderByWithRelationInput | PricingSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PricingSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PricingSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PricingSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PricingSettings
+    **/
+    _count?: true | PricingSettingsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PricingSettingsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PricingSettingsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PricingSettingsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PricingSettingsMaxAggregateInputType
+  }
+
+  export type GetPricingSettingsAggregateType<T extends PricingSettingsAggregateArgs> = {
+        [P in keyof T & keyof AggregatePricingSettings]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePricingSettings[P]>
+      : GetScalarType<T[P], AggregatePricingSettings[P]>
+  }
+
+
+
+
+  export type PricingSettingsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PricingSettingsWhereInput
+    orderBy?: PricingSettingsOrderByWithAggregationInput | PricingSettingsOrderByWithAggregationInput[]
+    by: PricingSettingsScalarFieldEnum[] | PricingSettingsScalarFieldEnum
+    having?: PricingSettingsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PricingSettingsCountAggregateInputType | true
+    _avg?: PricingSettingsAvgAggregateInputType
+    _sum?: PricingSettingsSumAggregateInputType
+    _min?: PricingSettingsMinAggregateInputType
+    _max?: PricingSettingsMaxAggregateInputType
+  }
+
+  export type PricingSettingsGroupByOutputType = {
+    id: string
+    pricingEnabled: boolean
+    annualDiscount: number
+    trialDays: number
+    trialPlan: string
+    gracePeriodDays: number
+    refundEnabled: boolean
+    refundWindowDays: number
+    taxEnabled: boolean
+    taxRate: number
+    promoCodesAtCheckout: boolean
+    freeSignupEnabled: boolean
+    updatedAt: Date
+    _count: PricingSettingsCountAggregateOutputType | null
+    _avg: PricingSettingsAvgAggregateOutputType | null
+    _sum: PricingSettingsSumAggregateOutputType | null
+    _min: PricingSettingsMinAggregateOutputType | null
+    _max: PricingSettingsMaxAggregateOutputType | null
+  }
+
+  type GetPricingSettingsGroupByPayload<T extends PricingSettingsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PricingSettingsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PricingSettingsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PricingSettingsGroupByOutputType[P]>
+            : GetScalarType<T[P], PricingSettingsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PricingSettingsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    pricingEnabled?: boolean
+    annualDiscount?: boolean
+    trialDays?: boolean
+    trialPlan?: boolean
+    gracePeriodDays?: boolean
+    refundEnabled?: boolean
+    refundWindowDays?: boolean
+    taxEnabled?: boolean
+    taxRate?: boolean
+    promoCodesAtCheckout?: boolean
+    freeSignupEnabled?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["pricingSettings"]>
+
+  export type PricingSettingsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    pricingEnabled?: boolean
+    annualDiscount?: boolean
+    trialDays?: boolean
+    trialPlan?: boolean
+    gracePeriodDays?: boolean
+    refundEnabled?: boolean
+    refundWindowDays?: boolean
+    taxEnabled?: boolean
+    taxRate?: boolean
+    promoCodesAtCheckout?: boolean
+    freeSignupEnabled?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["pricingSettings"]>
+
+  export type PricingSettingsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    pricingEnabled?: boolean
+    annualDiscount?: boolean
+    trialDays?: boolean
+    trialPlan?: boolean
+    gracePeriodDays?: boolean
+    refundEnabled?: boolean
+    refundWindowDays?: boolean
+    taxEnabled?: boolean
+    taxRate?: boolean
+    promoCodesAtCheckout?: boolean
+    freeSignupEnabled?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["pricingSettings"]>
+
+  export type PricingSettingsSelectScalar = {
+    id?: boolean
+    pricingEnabled?: boolean
+    annualDiscount?: boolean
+    trialDays?: boolean
+    trialPlan?: boolean
+    gracePeriodDays?: boolean
+    refundEnabled?: boolean
+    refundWindowDays?: boolean
+    taxEnabled?: boolean
+    taxRate?: boolean
+    promoCodesAtCheckout?: boolean
+    freeSignupEnabled?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PricingSettingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "pricingEnabled" | "annualDiscount" | "trialDays" | "trialPlan" | "gracePeriodDays" | "refundEnabled" | "refundWindowDays" | "taxEnabled" | "taxRate" | "promoCodesAtCheckout" | "freeSignupEnabled" | "updatedAt", ExtArgs["result"]["pricingSettings"]>
+
+  export type $PricingSettingsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PricingSettings"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      pricingEnabled: boolean
+      annualDiscount: number
+      trialDays: number
+      trialPlan: string
+      gracePeriodDays: number
+      refundEnabled: boolean
+      refundWindowDays: number
+      taxEnabled: boolean
+      taxRate: number
+      promoCodesAtCheckout: boolean
+      freeSignupEnabled: boolean
+      updatedAt: Date
+    }, ExtArgs["result"]["pricingSettings"]>
+    composites: {}
+  }
+
+  type PricingSettingsGetPayload<S extends boolean | null | undefined | PricingSettingsDefaultArgs> = $Result.GetResult<Prisma.$PricingSettingsPayload, S>
+
+  type PricingSettingsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PricingSettingsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PricingSettingsCountAggregateInputType | true
+    }
+
+  export interface PricingSettingsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PricingSettings'], meta: { name: 'PricingSettings' } }
+    /**
+     * Find zero or one PricingSettings that matches the filter.
+     * @param {PricingSettingsFindUniqueArgs} args - Arguments to find a PricingSettings
+     * @example
+     * // Get one PricingSettings
+     * const pricingSettings = await prisma.pricingSettings.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PricingSettingsFindUniqueArgs>(args: SelectSubset<T, PricingSettingsFindUniqueArgs<ExtArgs>>): Prisma__PricingSettingsClient<$Result.GetResult<Prisma.$PricingSettingsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PricingSettings that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PricingSettingsFindUniqueOrThrowArgs} args - Arguments to find a PricingSettings
+     * @example
+     * // Get one PricingSettings
+     * const pricingSettings = await prisma.pricingSettings.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PricingSettingsFindUniqueOrThrowArgs>(args: SelectSubset<T, PricingSettingsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PricingSettingsClient<$Result.GetResult<Prisma.$PricingSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PricingSettings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PricingSettingsFindFirstArgs} args - Arguments to find a PricingSettings
+     * @example
+     * // Get one PricingSettings
+     * const pricingSettings = await prisma.pricingSettings.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PricingSettingsFindFirstArgs>(args?: SelectSubset<T, PricingSettingsFindFirstArgs<ExtArgs>>): Prisma__PricingSettingsClient<$Result.GetResult<Prisma.$PricingSettingsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PricingSettings that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PricingSettingsFindFirstOrThrowArgs} args - Arguments to find a PricingSettings
+     * @example
+     * // Get one PricingSettings
+     * const pricingSettings = await prisma.pricingSettings.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PricingSettingsFindFirstOrThrowArgs>(args?: SelectSubset<T, PricingSettingsFindFirstOrThrowArgs<ExtArgs>>): Prisma__PricingSettingsClient<$Result.GetResult<Prisma.$PricingSettingsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PricingSettings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PricingSettingsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PricingSettings
+     * const pricingSettings = await prisma.pricingSettings.findMany()
+     * 
+     * // Get first 10 PricingSettings
+     * const pricingSettings = await prisma.pricingSettings.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const pricingSettingsWithIdOnly = await prisma.pricingSettings.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PricingSettingsFindManyArgs>(args?: SelectSubset<T, PricingSettingsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PricingSettingsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PricingSettings.
+     * @param {PricingSettingsCreateArgs} args - Arguments to create a PricingSettings.
+     * @example
+     * // Create one PricingSettings
+     * const PricingSettings = await prisma.pricingSettings.create({
+     *   data: {
+     *     // ... data to create a PricingSettings
+     *   }
+     * })
+     * 
+     */
+    create<T extends PricingSettingsCreateArgs>(args: SelectSubset<T, PricingSettingsCreateArgs<ExtArgs>>): Prisma__PricingSettingsClient<$Result.GetResult<Prisma.$PricingSettingsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PricingSettings.
+     * @param {PricingSettingsCreateManyArgs} args - Arguments to create many PricingSettings.
+     * @example
+     * // Create many PricingSettings
+     * const pricingSettings = await prisma.pricingSettings.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PricingSettingsCreateManyArgs>(args?: SelectSubset<T, PricingSettingsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PricingSettings and returns the data saved in the database.
+     * @param {PricingSettingsCreateManyAndReturnArgs} args - Arguments to create many PricingSettings.
+     * @example
+     * // Create many PricingSettings
+     * const pricingSettings = await prisma.pricingSettings.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PricingSettings and only return the `id`
+     * const pricingSettingsWithIdOnly = await prisma.pricingSettings.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PricingSettingsCreateManyAndReturnArgs>(args?: SelectSubset<T, PricingSettingsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PricingSettingsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a PricingSettings.
+     * @param {PricingSettingsDeleteArgs} args - Arguments to delete one PricingSettings.
+     * @example
+     * // Delete one PricingSettings
+     * const PricingSettings = await prisma.pricingSettings.delete({
+     *   where: {
+     *     // ... filter to delete one PricingSettings
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PricingSettingsDeleteArgs>(args: SelectSubset<T, PricingSettingsDeleteArgs<ExtArgs>>): Prisma__PricingSettingsClient<$Result.GetResult<Prisma.$PricingSettingsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PricingSettings.
+     * @param {PricingSettingsUpdateArgs} args - Arguments to update one PricingSettings.
+     * @example
+     * // Update one PricingSettings
+     * const pricingSettings = await prisma.pricingSettings.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PricingSettingsUpdateArgs>(args: SelectSubset<T, PricingSettingsUpdateArgs<ExtArgs>>): Prisma__PricingSettingsClient<$Result.GetResult<Prisma.$PricingSettingsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PricingSettings.
+     * @param {PricingSettingsDeleteManyArgs} args - Arguments to filter PricingSettings to delete.
+     * @example
+     * // Delete a few PricingSettings
+     * const { count } = await prisma.pricingSettings.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PricingSettingsDeleteManyArgs>(args?: SelectSubset<T, PricingSettingsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PricingSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PricingSettingsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PricingSettings
+     * const pricingSettings = await prisma.pricingSettings.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PricingSettingsUpdateManyArgs>(args: SelectSubset<T, PricingSettingsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PricingSettings and returns the data updated in the database.
+     * @param {PricingSettingsUpdateManyAndReturnArgs} args - Arguments to update many PricingSettings.
+     * @example
+     * // Update many PricingSettings
+     * const pricingSettings = await prisma.pricingSettings.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more PricingSettings and only return the `id`
+     * const pricingSettingsWithIdOnly = await prisma.pricingSettings.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PricingSettingsUpdateManyAndReturnArgs>(args: SelectSubset<T, PricingSettingsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PricingSettingsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one PricingSettings.
+     * @param {PricingSettingsUpsertArgs} args - Arguments to update or create a PricingSettings.
+     * @example
+     * // Update or create a PricingSettings
+     * const pricingSettings = await prisma.pricingSettings.upsert({
+     *   create: {
+     *     // ... data to create a PricingSettings
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PricingSettings we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PricingSettingsUpsertArgs>(args: SelectSubset<T, PricingSettingsUpsertArgs<ExtArgs>>): Prisma__PricingSettingsClient<$Result.GetResult<Prisma.$PricingSettingsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PricingSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PricingSettingsCountArgs} args - Arguments to filter PricingSettings to count.
+     * @example
+     * // Count the number of PricingSettings
+     * const count = await prisma.pricingSettings.count({
+     *   where: {
+     *     // ... the filter for the PricingSettings we want to count
+     *   }
+     * })
+    **/
+    count<T extends PricingSettingsCountArgs>(
+      args?: Subset<T, PricingSettingsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PricingSettingsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PricingSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PricingSettingsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PricingSettingsAggregateArgs>(args: Subset<T, PricingSettingsAggregateArgs>): Prisma.PrismaPromise<GetPricingSettingsAggregateType<T>>
+
+    /**
+     * Group by PricingSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PricingSettingsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PricingSettingsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PricingSettingsGroupByArgs['orderBy'] }
+        : { orderBy?: PricingSettingsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PricingSettingsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPricingSettingsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PricingSettings model
+   */
+  readonly fields: PricingSettingsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PricingSettings.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PricingSettingsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PricingSettings model
+   */
+  interface PricingSettingsFieldRefs {
+    readonly id: FieldRef<"PricingSettings", 'String'>
+    readonly pricingEnabled: FieldRef<"PricingSettings", 'Boolean'>
+    readonly annualDiscount: FieldRef<"PricingSettings", 'Int'>
+    readonly trialDays: FieldRef<"PricingSettings", 'Int'>
+    readonly trialPlan: FieldRef<"PricingSettings", 'String'>
+    readonly gracePeriodDays: FieldRef<"PricingSettings", 'Int'>
+    readonly refundEnabled: FieldRef<"PricingSettings", 'Boolean'>
+    readonly refundWindowDays: FieldRef<"PricingSettings", 'Int'>
+    readonly taxEnabled: FieldRef<"PricingSettings", 'Boolean'>
+    readonly taxRate: FieldRef<"PricingSettings", 'Float'>
+    readonly promoCodesAtCheckout: FieldRef<"PricingSettings", 'Boolean'>
+    readonly freeSignupEnabled: FieldRef<"PricingSettings", 'Boolean'>
+    readonly updatedAt: FieldRef<"PricingSettings", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PricingSettings findUnique
+   */
+  export type PricingSettingsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PricingSettings
+     */
+    select?: PricingSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PricingSettings
+     */
+    omit?: PricingSettingsOmit<ExtArgs> | null
+    /**
+     * Filter, which PricingSettings to fetch.
+     */
+    where: PricingSettingsWhereUniqueInput
+  }
+
+  /**
+   * PricingSettings findUniqueOrThrow
+   */
+  export type PricingSettingsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PricingSettings
+     */
+    select?: PricingSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PricingSettings
+     */
+    omit?: PricingSettingsOmit<ExtArgs> | null
+    /**
+     * Filter, which PricingSettings to fetch.
+     */
+    where: PricingSettingsWhereUniqueInput
+  }
+
+  /**
+   * PricingSettings findFirst
+   */
+  export type PricingSettingsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PricingSettings
+     */
+    select?: PricingSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PricingSettings
+     */
+    omit?: PricingSettingsOmit<ExtArgs> | null
+    /**
+     * Filter, which PricingSettings to fetch.
+     */
+    where?: PricingSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PricingSettings to fetch.
+     */
+    orderBy?: PricingSettingsOrderByWithRelationInput | PricingSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PricingSettings.
+     */
+    cursor?: PricingSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PricingSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PricingSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PricingSettings.
+     */
+    distinct?: PricingSettingsScalarFieldEnum | PricingSettingsScalarFieldEnum[]
+  }
+
+  /**
+   * PricingSettings findFirstOrThrow
+   */
+  export type PricingSettingsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PricingSettings
+     */
+    select?: PricingSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PricingSettings
+     */
+    omit?: PricingSettingsOmit<ExtArgs> | null
+    /**
+     * Filter, which PricingSettings to fetch.
+     */
+    where?: PricingSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PricingSettings to fetch.
+     */
+    orderBy?: PricingSettingsOrderByWithRelationInput | PricingSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PricingSettings.
+     */
+    cursor?: PricingSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PricingSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PricingSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PricingSettings.
+     */
+    distinct?: PricingSettingsScalarFieldEnum | PricingSettingsScalarFieldEnum[]
+  }
+
+  /**
+   * PricingSettings findMany
+   */
+  export type PricingSettingsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PricingSettings
+     */
+    select?: PricingSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PricingSettings
+     */
+    omit?: PricingSettingsOmit<ExtArgs> | null
+    /**
+     * Filter, which PricingSettings to fetch.
+     */
+    where?: PricingSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PricingSettings to fetch.
+     */
+    orderBy?: PricingSettingsOrderByWithRelationInput | PricingSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PricingSettings.
+     */
+    cursor?: PricingSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PricingSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PricingSettings.
+     */
+    skip?: number
+    distinct?: PricingSettingsScalarFieldEnum | PricingSettingsScalarFieldEnum[]
+  }
+
+  /**
+   * PricingSettings create
+   */
+  export type PricingSettingsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PricingSettings
+     */
+    select?: PricingSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PricingSettings
+     */
+    omit?: PricingSettingsOmit<ExtArgs> | null
+    /**
+     * The data needed to create a PricingSettings.
+     */
+    data: XOR<PricingSettingsCreateInput, PricingSettingsUncheckedCreateInput>
+  }
+
+  /**
+   * PricingSettings createMany
+   */
+  export type PricingSettingsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PricingSettings.
+     */
+    data: PricingSettingsCreateManyInput | PricingSettingsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PricingSettings createManyAndReturn
+   */
+  export type PricingSettingsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PricingSettings
+     */
+    select?: PricingSettingsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PricingSettings
+     */
+    omit?: PricingSettingsOmit<ExtArgs> | null
+    /**
+     * The data used to create many PricingSettings.
+     */
+    data: PricingSettingsCreateManyInput | PricingSettingsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PricingSettings update
+   */
+  export type PricingSettingsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PricingSettings
+     */
+    select?: PricingSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PricingSettings
+     */
+    omit?: PricingSettingsOmit<ExtArgs> | null
+    /**
+     * The data needed to update a PricingSettings.
+     */
+    data: XOR<PricingSettingsUpdateInput, PricingSettingsUncheckedUpdateInput>
+    /**
+     * Choose, which PricingSettings to update.
+     */
+    where: PricingSettingsWhereUniqueInput
+  }
+
+  /**
+   * PricingSettings updateMany
+   */
+  export type PricingSettingsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PricingSettings.
+     */
+    data: XOR<PricingSettingsUpdateManyMutationInput, PricingSettingsUncheckedUpdateManyInput>
+    /**
+     * Filter which PricingSettings to update
+     */
+    where?: PricingSettingsWhereInput
+    /**
+     * Limit how many PricingSettings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PricingSettings updateManyAndReturn
+   */
+  export type PricingSettingsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PricingSettings
+     */
+    select?: PricingSettingsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PricingSettings
+     */
+    omit?: PricingSettingsOmit<ExtArgs> | null
+    /**
+     * The data used to update PricingSettings.
+     */
+    data: XOR<PricingSettingsUpdateManyMutationInput, PricingSettingsUncheckedUpdateManyInput>
+    /**
+     * Filter which PricingSettings to update
+     */
+    where?: PricingSettingsWhereInput
+    /**
+     * Limit how many PricingSettings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PricingSettings upsert
+   */
+  export type PricingSettingsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PricingSettings
+     */
+    select?: PricingSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PricingSettings
+     */
+    omit?: PricingSettingsOmit<ExtArgs> | null
+    /**
+     * The filter to search for the PricingSettings to update in case it exists.
+     */
+    where: PricingSettingsWhereUniqueInput
+    /**
+     * In case the PricingSettings found by the `where` argument doesn't exist, create a new PricingSettings with this data.
+     */
+    create: XOR<PricingSettingsCreateInput, PricingSettingsUncheckedCreateInput>
+    /**
+     * In case the PricingSettings was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PricingSettingsUpdateInput, PricingSettingsUncheckedUpdateInput>
+  }
+
+  /**
+   * PricingSettings delete
+   */
+  export type PricingSettingsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PricingSettings
+     */
+    select?: PricingSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PricingSettings
+     */
+    omit?: PricingSettingsOmit<ExtArgs> | null
+    /**
+     * Filter which PricingSettings to delete.
+     */
+    where: PricingSettingsWhereUniqueInput
+  }
+
+  /**
+   * PricingSettings deleteMany
+   */
+  export type PricingSettingsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PricingSettings to delete
+     */
+    where?: PricingSettingsWhereInput
+    /**
+     * Limit how many PricingSettings to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PricingSettings without action
+   */
+  export type PricingSettingsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PricingSettings
+     */
+    select?: PricingSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PricingSettings
+     */
+    omit?: PricingSettingsOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -40558,6 +46677,95 @@ export namespace Prisma {
   export type UserCustomRoleScalarFieldEnum = (typeof UserCustomRoleScalarFieldEnum)[keyof typeof UserCustomRoleScalarFieldEnum]
 
 
+  export const DiscountScalarFieldEnum: {
+    id: 'id',
+    code: 'code',
+    description: 'description',
+    type: 'type',
+    value: 'value',
+    planId: 'planId',
+    maxUses: 'maxUses',
+    usedCount: 'usedCount',
+    active: 'active',
+    expiresAt: 'expiresAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DiscountScalarFieldEnum = (typeof DiscountScalarFieldEnum)[keyof typeof DiscountScalarFieldEnum]
+
+
+  export const UserPriceOverrideScalarFieldEnum: {
+    id: 'id',
+    email: 'email',
+    planId: 'planId',
+    overrideMonthlyPrice: 'overrideMonthlyPrice',
+    overrideYearlyPrice: 'overrideYearlyPrice',
+    reason: 'reason',
+    active: 'active',
+    expiresAt: 'expiresAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type UserPriceOverrideScalarFieldEnum = (typeof UserPriceOverrideScalarFieldEnum)[keyof typeof UserPriceOverrideScalarFieldEnum]
+
+
+  export const PartnerDomainScalarFieldEnum: {
+    id: 'id',
+    domain: 'domain',
+    companyName: 'companyName',
+    planId: 'planId',
+    overrideMonthlyPrice: 'overrideMonthlyPrice',
+    overrideYearlyPrice: 'overrideYearlyPrice',
+    note: 'note',
+    active: 'active',
+    expiresAt: 'expiresAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PartnerDomainScalarFieldEnum = (typeof PartnerDomainScalarFieldEnum)[keyof typeof PartnerDomainScalarFieldEnum]
+
+
+  export const PricingPlanScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    tagline: 'tagline',
+    monthlyPrice: 'monthlyPrice',
+    visible: 'visible',
+    highlight: 'highlight',
+    features: 'features',
+    reposLimit: 'reposLimit',
+    reviewsLimit: 'reviewsLimit',
+    seatsLimit: 'seatsLimit',
+    privateRepos: 'privateRepos',
+    sortOrder: 'sortOrder',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PricingPlanScalarFieldEnum = (typeof PricingPlanScalarFieldEnum)[keyof typeof PricingPlanScalarFieldEnum]
+
+
+  export const PricingSettingsScalarFieldEnum: {
+    id: 'id',
+    pricingEnabled: 'pricingEnabled',
+    annualDiscount: 'annualDiscount',
+    trialDays: 'trialDays',
+    trialPlan: 'trialPlan',
+    gracePeriodDays: 'gracePeriodDays',
+    refundEnabled: 'refundEnabled',
+    refundWindowDays: 'refundWindowDays',
+    taxEnabled: 'taxEnabled',
+    taxRate: 'taxRate',
+    promoCodesAtCheckout: 'promoCodesAtCheckout',
+    freeSignupEnabled: 'freeSignupEnabled',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PricingSettingsScalarFieldEnum = (typeof PricingSettingsScalarFieldEnum)[keyof typeof PricingSettingsScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -40937,6 +47145,20 @@ export namespace Prisma {
    * Reference to a field of type 'RuleSeverity[]'
    */
   export type ListEnumRuleSeverityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RuleSeverity[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'DiscountType'
+   */
+  export type EnumDiscountTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DiscountType'>
+    
+
+
+  /**
+   * Reference to a field of type 'DiscountType[]'
+   */
+  export type ListEnumDiscountTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DiscountType[]'>
     
 
 
@@ -43479,6 +49701,447 @@ export namespace Prisma {
     userId?: StringWithAggregatesFilter<"UserCustomRole"> | string
     roleId?: StringWithAggregatesFilter<"UserCustomRole"> | string
     assignedAt?: DateTimeWithAggregatesFilter<"UserCustomRole"> | Date | string
+  }
+
+  export type DiscountWhereInput = {
+    AND?: DiscountWhereInput | DiscountWhereInput[]
+    OR?: DiscountWhereInput[]
+    NOT?: DiscountWhereInput | DiscountWhereInput[]
+    id?: StringFilter<"Discount"> | string
+    code?: StringFilter<"Discount"> | string
+    description?: StringNullableFilter<"Discount"> | string | null
+    type?: EnumDiscountTypeFilter<"Discount"> | $Enums.DiscountType
+    value?: FloatFilter<"Discount"> | number
+    planId?: StringNullableFilter<"Discount"> | string | null
+    maxUses?: IntNullableFilter<"Discount"> | number | null
+    usedCount?: IntFilter<"Discount"> | number
+    active?: BoolFilter<"Discount"> | boolean
+    expiresAt?: DateTimeNullableFilter<"Discount"> | Date | string | null
+    createdAt?: DateTimeFilter<"Discount"> | Date | string
+    updatedAt?: DateTimeFilter<"Discount"> | Date | string
+  }
+
+  export type DiscountOrderByWithRelationInput = {
+    id?: SortOrder
+    code?: SortOrder
+    description?: SortOrderInput | SortOrder
+    type?: SortOrder
+    value?: SortOrder
+    planId?: SortOrderInput | SortOrder
+    maxUses?: SortOrderInput | SortOrder
+    usedCount?: SortOrder
+    active?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DiscountWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    code?: string
+    AND?: DiscountWhereInput | DiscountWhereInput[]
+    OR?: DiscountWhereInput[]
+    NOT?: DiscountWhereInput | DiscountWhereInput[]
+    description?: StringNullableFilter<"Discount"> | string | null
+    type?: EnumDiscountTypeFilter<"Discount"> | $Enums.DiscountType
+    value?: FloatFilter<"Discount"> | number
+    planId?: StringNullableFilter<"Discount"> | string | null
+    maxUses?: IntNullableFilter<"Discount"> | number | null
+    usedCount?: IntFilter<"Discount"> | number
+    active?: BoolFilter<"Discount"> | boolean
+    expiresAt?: DateTimeNullableFilter<"Discount"> | Date | string | null
+    createdAt?: DateTimeFilter<"Discount"> | Date | string
+    updatedAt?: DateTimeFilter<"Discount"> | Date | string
+  }, "id" | "code">
+
+  export type DiscountOrderByWithAggregationInput = {
+    id?: SortOrder
+    code?: SortOrder
+    description?: SortOrderInput | SortOrder
+    type?: SortOrder
+    value?: SortOrder
+    planId?: SortOrderInput | SortOrder
+    maxUses?: SortOrderInput | SortOrder
+    usedCount?: SortOrder
+    active?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DiscountCountOrderByAggregateInput
+    _avg?: DiscountAvgOrderByAggregateInput
+    _max?: DiscountMaxOrderByAggregateInput
+    _min?: DiscountMinOrderByAggregateInput
+    _sum?: DiscountSumOrderByAggregateInput
+  }
+
+  export type DiscountScalarWhereWithAggregatesInput = {
+    AND?: DiscountScalarWhereWithAggregatesInput | DiscountScalarWhereWithAggregatesInput[]
+    OR?: DiscountScalarWhereWithAggregatesInput[]
+    NOT?: DiscountScalarWhereWithAggregatesInput | DiscountScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Discount"> | string
+    code?: StringWithAggregatesFilter<"Discount"> | string
+    description?: StringNullableWithAggregatesFilter<"Discount"> | string | null
+    type?: EnumDiscountTypeWithAggregatesFilter<"Discount"> | $Enums.DiscountType
+    value?: FloatWithAggregatesFilter<"Discount"> | number
+    planId?: StringNullableWithAggregatesFilter<"Discount"> | string | null
+    maxUses?: IntNullableWithAggregatesFilter<"Discount"> | number | null
+    usedCount?: IntWithAggregatesFilter<"Discount"> | number
+    active?: BoolWithAggregatesFilter<"Discount"> | boolean
+    expiresAt?: DateTimeNullableWithAggregatesFilter<"Discount"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Discount"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Discount"> | Date | string
+  }
+
+  export type UserPriceOverrideWhereInput = {
+    AND?: UserPriceOverrideWhereInput | UserPriceOverrideWhereInput[]
+    OR?: UserPriceOverrideWhereInput[]
+    NOT?: UserPriceOverrideWhereInput | UserPriceOverrideWhereInput[]
+    id?: StringFilter<"UserPriceOverride"> | string
+    email?: StringFilter<"UserPriceOverride"> | string
+    planId?: StringFilter<"UserPriceOverride"> | string
+    overrideMonthlyPrice?: FloatNullableFilter<"UserPriceOverride"> | number | null
+    overrideYearlyPrice?: FloatNullableFilter<"UserPriceOverride"> | number | null
+    reason?: StringNullableFilter<"UserPriceOverride"> | string | null
+    active?: BoolFilter<"UserPriceOverride"> | boolean
+    expiresAt?: DateTimeNullableFilter<"UserPriceOverride"> | Date | string | null
+    createdAt?: DateTimeFilter<"UserPriceOverride"> | Date | string
+    updatedAt?: DateTimeFilter<"UserPriceOverride"> | Date | string
+  }
+
+  export type UserPriceOverrideOrderByWithRelationInput = {
+    id?: SortOrder
+    email?: SortOrder
+    planId?: SortOrder
+    overrideMonthlyPrice?: SortOrderInput | SortOrder
+    overrideYearlyPrice?: SortOrderInput | SortOrder
+    reason?: SortOrderInput | SortOrder
+    active?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserPriceOverrideWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    email_planId?: UserPriceOverrideEmailPlanIdCompoundUniqueInput
+    AND?: UserPriceOverrideWhereInput | UserPriceOverrideWhereInput[]
+    OR?: UserPriceOverrideWhereInput[]
+    NOT?: UserPriceOverrideWhereInput | UserPriceOverrideWhereInput[]
+    email?: StringFilter<"UserPriceOverride"> | string
+    planId?: StringFilter<"UserPriceOverride"> | string
+    overrideMonthlyPrice?: FloatNullableFilter<"UserPriceOverride"> | number | null
+    overrideYearlyPrice?: FloatNullableFilter<"UserPriceOverride"> | number | null
+    reason?: StringNullableFilter<"UserPriceOverride"> | string | null
+    active?: BoolFilter<"UserPriceOverride"> | boolean
+    expiresAt?: DateTimeNullableFilter<"UserPriceOverride"> | Date | string | null
+    createdAt?: DateTimeFilter<"UserPriceOverride"> | Date | string
+    updatedAt?: DateTimeFilter<"UserPriceOverride"> | Date | string
+  }, "id" | "email_planId">
+
+  export type UserPriceOverrideOrderByWithAggregationInput = {
+    id?: SortOrder
+    email?: SortOrder
+    planId?: SortOrder
+    overrideMonthlyPrice?: SortOrderInput | SortOrder
+    overrideYearlyPrice?: SortOrderInput | SortOrder
+    reason?: SortOrderInput | SortOrder
+    active?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: UserPriceOverrideCountOrderByAggregateInput
+    _avg?: UserPriceOverrideAvgOrderByAggregateInput
+    _max?: UserPriceOverrideMaxOrderByAggregateInput
+    _min?: UserPriceOverrideMinOrderByAggregateInput
+    _sum?: UserPriceOverrideSumOrderByAggregateInput
+  }
+
+  export type UserPriceOverrideScalarWhereWithAggregatesInput = {
+    AND?: UserPriceOverrideScalarWhereWithAggregatesInput | UserPriceOverrideScalarWhereWithAggregatesInput[]
+    OR?: UserPriceOverrideScalarWhereWithAggregatesInput[]
+    NOT?: UserPriceOverrideScalarWhereWithAggregatesInput | UserPriceOverrideScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"UserPriceOverride"> | string
+    email?: StringWithAggregatesFilter<"UserPriceOverride"> | string
+    planId?: StringWithAggregatesFilter<"UserPriceOverride"> | string
+    overrideMonthlyPrice?: FloatNullableWithAggregatesFilter<"UserPriceOverride"> | number | null
+    overrideYearlyPrice?: FloatNullableWithAggregatesFilter<"UserPriceOverride"> | number | null
+    reason?: StringNullableWithAggregatesFilter<"UserPriceOverride"> | string | null
+    active?: BoolWithAggregatesFilter<"UserPriceOverride"> | boolean
+    expiresAt?: DateTimeNullableWithAggregatesFilter<"UserPriceOverride"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"UserPriceOverride"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"UserPriceOverride"> | Date | string
+  }
+
+  export type PartnerDomainWhereInput = {
+    AND?: PartnerDomainWhereInput | PartnerDomainWhereInput[]
+    OR?: PartnerDomainWhereInput[]
+    NOT?: PartnerDomainWhereInput | PartnerDomainWhereInput[]
+    id?: StringFilter<"PartnerDomain"> | string
+    domain?: StringFilter<"PartnerDomain"> | string
+    companyName?: StringFilter<"PartnerDomain"> | string
+    planId?: StringFilter<"PartnerDomain"> | string
+    overrideMonthlyPrice?: FloatNullableFilter<"PartnerDomain"> | number | null
+    overrideYearlyPrice?: FloatNullableFilter<"PartnerDomain"> | number | null
+    note?: StringNullableFilter<"PartnerDomain"> | string | null
+    active?: BoolFilter<"PartnerDomain"> | boolean
+    expiresAt?: DateTimeNullableFilter<"PartnerDomain"> | Date | string | null
+    createdAt?: DateTimeFilter<"PartnerDomain"> | Date | string
+    updatedAt?: DateTimeFilter<"PartnerDomain"> | Date | string
+  }
+
+  export type PartnerDomainOrderByWithRelationInput = {
+    id?: SortOrder
+    domain?: SortOrder
+    companyName?: SortOrder
+    planId?: SortOrder
+    overrideMonthlyPrice?: SortOrderInput | SortOrder
+    overrideYearlyPrice?: SortOrderInput | SortOrder
+    note?: SortOrderInput | SortOrder
+    active?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PartnerDomainWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    domain?: string
+    AND?: PartnerDomainWhereInput | PartnerDomainWhereInput[]
+    OR?: PartnerDomainWhereInput[]
+    NOT?: PartnerDomainWhereInput | PartnerDomainWhereInput[]
+    companyName?: StringFilter<"PartnerDomain"> | string
+    planId?: StringFilter<"PartnerDomain"> | string
+    overrideMonthlyPrice?: FloatNullableFilter<"PartnerDomain"> | number | null
+    overrideYearlyPrice?: FloatNullableFilter<"PartnerDomain"> | number | null
+    note?: StringNullableFilter<"PartnerDomain"> | string | null
+    active?: BoolFilter<"PartnerDomain"> | boolean
+    expiresAt?: DateTimeNullableFilter<"PartnerDomain"> | Date | string | null
+    createdAt?: DateTimeFilter<"PartnerDomain"> | Date | string
+    updatedAt?: DateTimeFilter<"PartnerDomain"> | Date | string
+  }, "id" | "domain">
+
+  export type PartnerDomainOrderByWithAggregationInput = {
+    id?: SortOrder
+    domain?: SortOrder
+    companyName?: SortOrder
+    planId?: SortOrder
+    overrideMonthlyPrice?: SortOrderInput | SortOrder
+    overrideYearlyPrice?: SortOrderInput | SortOrder
+    note?: SortOrderInput | SortOrder
+    active?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PartnerDomainCountOrderByAggregateInput
+    _avg?: PartnerDomainAvgOrderByAggregateInput
+    _max?: PartnerDomainMaxOrderByAggregateInput
+    _min?: PartnerDomainMinOrderByAggregateInput
+    _sum?: PartnerDomainSumOrderByAggregateInput
+  }
+
+  export type PartnerDomainScalarWhereWithAggregatesInput = {
+    AND?: PartnerDomainScalarWhereWithAggregatesInput | PartnerDomainScalarWhereWithAggregatesInput[]
+    OR?: PartnerDomainScalarWhereWithAggregatesInput[]
+    NOT?: PartnerDomainScalarWhereWithAggregatesInput | PartnerDomainScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PartnerDomain"> | string
+    domain?: StringWithAggregatesFilter<"PartnerDomain"> | string
+    companyName?: StringWithAggregatesFilter<"PartnerDomain"> | string
+    planId?: StringWithAggregatesFilter<"PartnerDomain"> | string
+    overrideMonthlyPrice?: FloatNullableWithAggregatesFilter<"PartnerDomain"> | number | null
+    overrideYearlyPrice?: FloatNullableWithAggregatesFilter<"PartnerDomain"> | number | null
+    note?: StringNullableWithAggregatesFilter<"PartnerDomain"> | string | null
+    active?: BoolWithAggregatesFilter<"PartnerDomain"> | boolean
+    expiresAt?: DateTimeNullableWithAggregatesFilter<"PartnerDomain"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"PartnerDomain"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"PartnerDomain"> | Date | string
+  }
+
+  export type PricingPlanWhereInput = {
+    AND?: PricingPlanWhereInput | PricingPlanWhereInput[]
+    OR?: PricingPlanWhereInput[]
+    NOT?: PricingPlanWhereInput | PricingPlanWhereInput[]
+    id?: StringFilter<"PricingPlan"> | string
+    name?: StringFilter<"PricingPlan"> | string
+    tagline?: StringFilter<"PricingPlan"> | string
+    monthlyPrice?: FloatFilter<"PricingPlan"> | number
+    visible?: BoolFilter<"PricingPlan"> | boolean
+    highlight?: BoolFilter<"PricingPlan"> | boolean
+    features?: StringNullableListFilter<"PricingPlan">
+    reposLimit?: IntNullableFilter<"PricingPlan"> | number | null
+    reviewsLimit?: IntNullableFilter<"PricingPlan"> | number | null
+    seatsLimit?: IntNullableFilter<"PricingPlan"> | number | null
+    privateRepos?: BoolFilter<"PricingPlan"> | boolean
+    sortOrder?: IntFilter<"PricingPlan"> | number
+    updatedAt?: DateTimeFilter<"PricingPlan"> | Date | string
+  }
+
+  export type PricingPlanOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    tagline?: SortOrder
+    monthlyPrice?: SortOrder
+    visible?: SortOrder
+    highlight?: SortOrder
+    features?: SortOrder
+    reposLimit?: SortOrderInput | SortOrder
+    reviewsLimit?: SortOrderInput | SortOrder
+    seatsLimit?: SortOrderInput | SortOrder
+    privateRepos?: SortOrder
+    sortOrder?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PricingPlanWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: PricingPlanWhereInput | PricingPlanWhereInput[]
+    OR?: PricingPlanWhereInput[]
+    NOT?: PricingPlanWhereInput | PricingPlanWhereInput[]
+    name?: StringFilter<"PricingPlan"> | string
+    tagline?: StringFilter<"PricingPlan"> | string
+    monthlyPrice?: FloatFilter<"PricingPlan"> | number
+    visible?: BoolFilter<"PricingPlan"> | boolean
+    highlight?: BoolFilter<"PricingPlan"> | boolean
+    features?: StringNullableListFilter<"PricingPlan">
+    reposLimit?: IntNullableFilter<"PricingPlan"> | number | null
+    reviewsLimit?: IntNullableFilter<"PricingPlan"> | number | null
+    seatsLimit?: IntNullableFilter<"PricingPlan"> | number | null
+    privateRepos?: BoolFilter<"PricingPlan"> | boolean
+    sortOrder?: IntFilter<"PricingPlan"> | number
+    updatedAt?: DateTimeFilter<"PricingPlan"> | Date | string
+  }, "id">
+
+  export type PricingPlanOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    tagline?: SortOrder
+    monthlyPrice?: SortOrder
+    visible?: SortOrder
+    highlight?: SortOrder
+    features?: SortOrder
+    reposLimit?: SortOrderInput | SortOrder
+    reviewsLimit?: SortOrderInput | SortOrder
+    seatsLimit?: SortOrderInput | SortOrder
+    privateRepos?: SortOrder
+    sortOrder?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PricingPlanCountOrderByAggregateInput
+    _avg?: PricingPlanAvgOrderByAggregateInput
+    _max?: PricingPlanMaxOrderByAggregateInput
+    _min?: PricingPlanMinOrderByAggregateInput
+    _sum?: PricingPlanSumOrderByAggregateInput
+  }
+
+  export type PricingPlanScalarWhereWithAggregatesInput = {
+    AND?: PricingPlanScalarWhereWithAggregatesInput | PricingPlanScalarWhereWithAggregatesInput[]
+    OR?: PricingPlanScalarWhereWithAggregatesInput[]
+    NOT?: PricingPlanScalarWhereWithAggregatesInput | PricingPlanScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PricingPlan"> | string
+    name?: StringWithAggregatesFilter<"PricingPlan"> | string
+    tagline?: StringWithAggregatesFilter<"PricingPlan"> | string
+    monthlyPrice?: FloatWithAggregatesFilter<"PricingPlan"> | number
+    visible?: BoolWithAggregatesFilter<"PricingPlan"> | boolean
+    highlight?: BoolWithAggregatesFilter<"PricingPlan"> | boolean
+    features?: StringNullableListFilter<"PricingPlan">
+    reposLimit?: IntNullableWithAggregatesFilter<"PricingPlan"> | number | null
+    reviewsLimit?: IntNullableWithAggregatesFilter<"PricingPlan"> | number | null
+    seatsLimit?: IntNullableWithAggregatesFilter<"PricingPlan"> | number | null
+    privateRepos?: BoolWithAggregatesFilter<"PricingPlan"> | boolean
+    sortOrder?: IntWithAggregatesFilter<"PricingPlan"> | number
+    updatedAt?: DateTimeWithAggregatesFilter<"PricingPlan"> | Date | string
+  }
+
+  export type PricingSettingsWhereInput = {
+    AND?: PricingSettingsWhereInput | PricingSettingsWhereInput[]
+    OR?: PricingSettingsWhereInput[]
+    NOT?: PricingSettingsWhereInput | PricingSettingsWhereInput[]
+    id?: StringFilter<"PricingSettings"> | string
+    pricingEnabled?: BoolFilter<"PricingSettings"> | boolean
+    annualDiscount?: IntFilter<"PricingSettings"> | number
+    trialDays?: IntFilter<"PricingSettings"> | number
+    trialPlan?: StringFilter<"PricingSettings"> | string
+    gracePeriodDays?: IntFilter<"PricingSettings"> | number
+    refundEnabled?: BoolFilter<"PricingSettings"> | boolean
+    refundWindowDays?: IntFilter<"PricingSettings"> | number
+    taxEnabled?: BoolFilter<"PricingSettings"> | boolean
+    taxRate?: FloatFilter<"PricingSettings"> | number
+    promoCodesAtCheckout?: BoolFilter<"PricingSettings"> | boolean
+    freeSignupEnabled?: BoolFilter<"PricingSettings"> | boolean
+    updatedAt?: DateTimeFilter<"PricingSettings"> | Date | string
+  }
+
+  export type PricingSettingsOrderByWithRelationInput = {
+    id?: SortOrder
+    pricingEnabled?: SortOrder
+    annualDiscount?: SortOrder
+    trialDays?: SortOrder
+    trialPlan?: SortOrder
+    gracePeriodDays?: SortOrder
+    refundEnabled?: SortOrder
+    refundWindowDays?: SortOrder
+    taxEnabled?: SortOrder
+    taxRate?: SortOrder
+    promoCodesAtCheckout?: SortOrder
+    freeSignupEnabled?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PricingSettingsWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: PricingSettingsWhereInput | PricingSettingsWhereInput[]
+    OR?: PricingSettingsWhereInput[]
+    NOT?: PricingSettingsWhereInput | PricingSettingsWhereInput[]
+    pricingEnabled?: BoolFilter<"PricingSettings"> | boolean
+    annualDiscount?: IntFilter<"PricingSettings"> | number
+    trialDays?: IntFilter<"PricingSettings"> | number
+    trialPlan?: StringFilter<"PricingSettings"> | string
+    gracePeriodDays?: IntFilter<"PricingSettings"> | number
+    refundEnabled?: BoolFilter<"PricingSettings"> | boolean
+    refundWindowDays?: IntFilter<"PricingSettings"> | number
+    taxEnabled?: BoolFilter<"PricingSettings"> | boolean
+    taxRate?: FloatFilter<"PricingSettings"> | number
+    promoCodesAtCheckout?: BoolFilter<"PricingSettings"> | boolean
+    freeSignupEnabled?: BoolFilter<"PricingSettings"> | boolean
+    updatedAt?: DateTimeFilter<"PricingSettings"> | Date | string
+  }, "id">
+
+  export type PricingSettingsOrderByWithAggregationInput = {
+    id?: SortOrder
+    pricingEnabled?: SortOrder
+    annualDiscount?: SortOrder
+    trialDays?: SortOrder
+    trialPlan?: SortOrder
+    gracePeriodDays?: SortOrder
+    refundEnabled?: SortOrder
+    refundWindowDays?: SortOrder
+    taxEnabled?: SortOrder
+    taxRate?: SortOrder
+    promoCodesAtCheckout?: SortOrder
+    freeSignupEnabled?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PricingSettingsCountOrderByAggregateInput
+    _avg?: PricingSettingsAvgOrderByAggregateInput
+    _max?: PricingSettingsMaxOrderByAggregateInput
+    _min?: PricingSettingsMinOrderByAggregateInput
+    _sum?: PricingSettingsSumOrderByAggregateInput
+  }
+
+  export type PricingSettingsScalarWhereWithAggregatesInput = {
+    AND?: PricingSettingsScalarWhereWithAggregatesInput | PricingSettingsScalarWhereWithAggregatesInput[]
+    OR?: PricingSettingsScalarWhereWithAggregatesInput[]
+    NOT?: PricingSettingsScalarWhereWithAggregatesInput | PricingSettingsScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PricingSettings"> | string
+    pricingEnabled?: BoolWithAggregatesFilter<"PricingSettings"> | boolean
+    annualDiscount?: IntWithAggregatesFilter<"PricingSettings"> | number
+    trialDays?: IntWithAggregatesFilter<"PricingSettings"> | number
+    trialPlan?: StringWithAggregatesFilter<"PricingSettings"> | string
+    gracePeriodDays?: IntWithAggregatesFilter<"PricingSettings"> | number
+    refundEnabled?: BoolWithAggregatesFilter<"PricingSettings"> | boolean
+    refundWindowDays?: IntWithAggregatesFilter<"PricingSettings"> | number
+    taxEnabled?: BoolWithAggregatesFilter<"PricingSettings"> | boolean
+    taxRate?: FloatWithAggregatesFilter<"PricingSettings"> | number
+    promoCodesAtCheckout?: BoolWithAggregatesFilter<"PricingSettings"> | boolean
+    freeSignupEnabled?: BoolWithAggregatesFilter<"PricingSettings"> | boolean
+    updatedAt?: DateTimeWithAggregatesFilter<"PricingSettings"> | Date | string
   }
 
   export type UserCreateInput = {
@@ -46255,6 +52918,524 @@ export namespace Prisma {
     assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DiscountCreateInput = {
+    id?: string
+    code: string
+    description?: string | null
+    type: $Enums.DiscountType
+    value: number
+    planId?: string | null
+    maxUses?: number | null
+    usedCount?: number
+    active?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DiscountUncheckedCreateInput = {
+    id?: string
+    code: string
+    description?: string | null
+    type: $Enums.DiscountType
+    value: number
+    planId?: string | null
+    maxUses?: number | null
+    usedCount?: number
+    active?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DiscountUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
+    value?: FloatFieldUpdateOperationsInput | number
+    planId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxUses?: NullableIntFieldUpdateOperationsInput | number | null
+    usedCount?: IntFieldUpdateOperationsInput | number
+    active?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DiscountUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
+    value?: FloatFieldUpdateOperationsInput | number
+    planId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxUses?: NullableIntFieldUpdateOperationsInput | number | null
+    usedCount?: IntFieldUpdateOperationsInput | number
+    active?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DiscountCreateManyInput = {
+    id?: string
+    code: string
+    description?: string | null
+    type: $Enums.DiscountType
+    value: number
+    planId?: string | null
+    maxUses?: number | null
+    usedCount?: number
+    active?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DiscountUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
+    value?: FloatFieldUpdateOperationsInput | number
+    planId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxUses?: NullableIntFieldUpdateOperationsInput | number | null
+    usedCount?: IntFieldUpdateOperationsInput | number
+    active?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DiscountUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
+    value?: FloatFieldUpdateOperationsInput | number
+    planId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxUses?: NullableIntFieldUpdateOperationsInput | number | null
+    usedCount?: IntFieldUpdateOperationsInput | number
+    active?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserPriceOverrideCreateInput = {
+    id?: string
+    email: string
+    planId: string
+    overrideMonthlyPrice?: number | null
+    overrideYearlyPrice?: number | null
+    reason?: string | null
+    active?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserPriceOverrideUncheckedCreateInput = {
+    id?: string
+    email: string
+    planId: string
+    overrideMonthlyPrice?: number | null
+    overrideYearlyPrice?: number | null
+    reason?: string | null
+    active?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserPriceOverrideUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    planId?: StringFieldUpdateOperationsInput | string
+    overrideMonthlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    overrideYearlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserPriceOverrideUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    planId?: StringFieldUpdateOperationsInput | string
+    overrideMonthlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    overrideYearlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserPriceOverrideCreateManyInput = {
+    id?: string
+    email: string
+    planId: string
+    overrideMonthlyPrice?: number | null
+    overrideYearlyPrice?: number | null
+    reason?: string | null
+    active?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserPriceOverrideUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    planId?: StringFieldUpdateOperationsInput | string
+    overrideMonthlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    overrideYearlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserPriceOverrideUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    planId?: StringFieldUpdateOperationsInput | string
+    overrideMonthlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    overrideYearlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PartnerDomainCreateInput = {
+    id?: string
+    domain: string
+    companyName: string
+    planId: string
+    overrideMonthlyPrice?: number | null
+    overrideYearlyPrice?: number | null
+    note?: string | null
+    active?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PartnerDomainUncheckedCreateInput = {
+    id?: string
+    domain: string
+    companyName: string
+    planId: string
+    overrideMonthlyPrice?: number | null
+    overrideYearlyPrice?: number | null
+    note?: string | null
+    active?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PartnerDomainUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    domain?: StringFieldUpdateOperationsInput | string
+    companyName?: StringFieldUpdateOperationsInput | string
+    planId?: StringFieldUpdateOperationsInput | string
+    overrideMonthlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    overrideYearlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PartnerDomainUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    domain?: StringFieldUpdateOperationsInput | string
+    companyName?: StringFieldUpdateOperationsInput | string
+    planId?: StringFieldUpdateOperationsInput | string
+    overrideMonthlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    overrideYearlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PartnerDomainCreateManyInput = {
+    id?: string
+    domain: string
+    companyName: string
+    planId: string
+    overrideMonthlyPrice?: number | null
+    overrideYearlyPrice?: number | null
+    note?: string | null
+    active?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PartnerDomainUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    domain?: StringFieldUpdateOperationsInput | string
+    companyName?: StringFieldUpdateOperationsInput | string
+    planId?: StringFieldUpdateOperationsInput | string
+    overrideMonthlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    overrideYearlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PartnerDomainUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    domain?: StringFieldUpdateOperationsInput | string
+    companyName?: StringFieldUpdateOperationsInput | string
+    planId?: StringFieldUpdateOperationsInput | string
+    overrideMonthlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    overrideYearlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PricingPlanCreateInput = {
+    id: string
+    name: string
+    tagline: string
+    monthlyPrice: number
+    visible?: boolean
+    highlight?: boolean
+    features?: PricingPlanCreatefeaturesInput | string[]
+    reposLimit?: number | null
+    reviewsLimit?: number | null
+    seatsLimit?: number | null
+    privateRepos?: boolean
+    sortOrder?: number
+    updatedAt?: Date | string
+  }
+
+  export type PricingPlanUncheckedCreateInput = {
+    id: string
+    name: string
+    tagline: string
+    monthlyPrice: number
+    visible?: boolean
+    highlight?: boolean
+    features?: PricingPlanCreatefeaturesInput | string[]
+    reposLimit?: number | null
+    reviewsLimit?: number | null
+    seatsLimit?: number | null
+    privateRepos?: boolean
+    sortOrder?: number
+    updatedAt?: Date | string
+  }
+
+  export type PricingPlanUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    tagline?: StringFieldUpdateOperationsInput | string
+    monthlyPrice?: FloatFieldUpdateOperationsInput | number
+    visible?: BoolFieldUpdateOperationsInput | boolean
+    highlight?: BoolFieldUpdateOperationsInput | boolean
+    features?: PricingPlanUpdatefeaturesInput | string[]
+    reposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    reviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    seatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    privateRepos?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PricingPlanUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    tagline?: StringFieldUpdateOperationsInput | string
+    monthlyPrice?: FloatFieldUpdateOperationsInput | number
+    visible?: BoolFieldUpdateOperationsInput | boolean
+    highlight?: BoolFieldUpdateOperationsInput | boolean
+    features?: PricingPlanUpdatefeaturesInput | string[]
+    reposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    reviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    seatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    privateRepos?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PricingPlanCreateManyInput = {
+    id: string
+    name: string
+    tagline: string
+    monthlyPrice: number
+    visible?: boolean
+    highlight?: boolean
+    features?: PricingPlanCreatefeaturesInput | string[]
+    reposLimit?: number | null
+    reviewsLimit?: number | null
+    seatsLimit?: number | null
+    privateRepos?: boolean
+    sortOrder?: number
+    updatedAt?: Date | string
+  }
+
+  export type PricingPlanUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    tagline?: StringFieldUpdateOperationsInput | string
+    monthlyPrice?: FloatFieldUpdateOperationsInput | number
+    visible?: BoolFieldUpdateOperationsInput | boolean
+    highlight?: BoolFieldUpdateOperationsInput | boolean
+    features?: PricingPlanUpdatefeaturesInput | string[]
+    reposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    reviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    seatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    privateRepos?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PricingPlanUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    tagline?: StringFieldUpdateOperationsInput | string
+    monthlyPrice?: FloatFieldUpdateOperationsInput | number
+    visible?: BoolFieldUpdateOperationsInput | boolean
+    highlight?: BoolFieldUpdateOperationsInput | boolean
+    features?: PricingPlanUpdatefeaturesInput | string[]
+    reposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    reviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    seatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    privateRepos?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PricingSettingsCreateInput = {
+    id?: string
+    pricingEnabled?: boolean
+    annualDiscount?: number
+    trialDays?: number
+    trialPlan?: string
+    gracePeriodDays?: number
+    refundEnabled?: boolean
+    refundWindowDays?: number
+    taxEnabled?: boolean
+    taxRate?: number
+    promoCodesAtCheckout?: boolean
+    freeSignupEnabled?: boolean
+    updatedAt?: Date | string
+  }
+
+  export type PricingSettingsUncheckedCreateInput = {
+    id?: string
+    pricingEnabled?: boolean
+    annualDiscount?: number
+    trialDays?: number
+    trialPlan?: string
+    gracePeriodDays?: number
+    refundEnabled?: boolean
+    refundWindowDays?: number
+    taxEnabled?: boolean
+    taxRate?: number
+    promoCodesAtCheckout?: boolean
+    freeSignupEnabled?: boolean
+    updatedAt?: Date | string
+  }
+
+  export type PricingSettingsUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    pricingEnabled?: BoolFieldUpdateOperationsInput | boolean
+    annualDiscount?: IntFieldUpdateOperationsInput | number
+    trialDays?: IntFieldUpdateOperationsInput | number
+    trialPlan?: StringFieldUpdateOperationsInput | string
+    gracePeriodDays?: IntFieldUpdateOperationsInput | number
+    refundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    refundWindowDays?: IntFieldUpdateOperationsInput | number
+    taxEnabled?: BoolFieldUpdateOperationsInput | boolean
+    taxRate?: FloatFieldUpdateOperationsInput | number
+    promoCodesAtCheckout?: BoolFieldUpdateOperationsInput | boolean
+    freeSignupEnabled?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PricingSettingsUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    pricingEnabled?: BoolFieldUpdateOperationsInput | boolean
+    annualDiscount?: IntFieldUpdateOperationsInput | number
+    trialDays?: IntFieldUpdateOperationsInput | number
+    trialPlan?: StringFieldUpdateOperationsInput | string
+    gracePeriodDays?: IntFieldUpdateOperationsInput | number
+    refundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    refundWindowDays?: IntFieldUpdateOperationsInput | number
+    taxEnabled?: BoolFieldUpdateOperationsInput | boolean
+    taxRate?: FloatFieldUpdateOperationsInput | number
+    promoCodesAtCheckout?: BoolFieldUpdateOperationsInput | boolean
+    freeSignupEnabled?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PricingSettingsCreateManyInput = {
+    id?: string
+    pricingEnabled?: boolean
+    annualDiscount?: number
+    trialDays?: number
+    trialPlan?: string
+    gracePeriodDays?: number
+    refundEnabled?: boolean
+    refundWindowDays?: number
+    taxEnabled?: boolean
+    taxRate?: number
+    promoCodesAtCheckout?: boolean
+    freeSignupEnabled?: boolean
+    updatedAt?: Date | string
+  }
+
+  export type PricingSettingsUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    pricingEnabled?: BoolFieldUpdateOperationsInput | boolean
+    annualDiscount?: IntFieldUpdateOperationsInput | number
+    trialDays?: IntFieldUpdateOperationsInput | number
+    trialPlan?: StringFieldUpdateOperationsInput | string
+    gracePeriodDays?: IntFieldUpdateOperationsInput | number
+    refundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    refundWindowDays?: IntFieldUpdateOperationsInput | number
+    taxEnabled?: BoolFieldUpdateOperationsInput | boolean
+    taxRate?: FloatFieldUpdateOperationsInput | number
+    promoCodesAtCheckout?: BoolFieldUpdateOperationsInput | boolean
+    freeSignupEnabled?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PricingSettingsUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    pricingEnabled?: BoolFieldUpdateOperationsInput | boolean
+    annualDiscount?: IntFieldUpdateOperationsInput | number
+    trialDays?: IntFieldUpdateOperationsInput | number
+    trialPlan?: StringFieldUpdateOperationsInput | string
+    gracePeriodDays?: IntFieldUpdateOperationsInput | number
+    refundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    refundWindowDays?: IntFieldUpdateOperationsInput | number
+    taxEnabled?: BoolFieldUpdateOperationsInput | boolean
+    taxRate?: FloatFieldUpdateOperationsInput | number
+    promoCodesAtCheckout?: BoolFieldUpdateOperationsInput | boolean
+    freeSignupEnabled?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -48411,6 +55592,366 @@ export namespace Prisma {
     userId?: SortOrder
     roleId?: SortOrder
     assignedAt?: SortOrder
+  }
+
+  export type EnumDiscountTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.DiscountType | EnumDiscountTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DiscountType[] | ListEnumDiscountTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DiscountType[] | ListEnumDiscountTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDiscountTypeFilter<$PrismaModel> | $Enums.DiscountType
+  }
+
+  export type FloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type DiscountCountOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    description?: SortOrder
+    type?: SortOrder
+    value?: SortOrder
+    planId?: SortOrder
+    maxUses?: SortOrder
+    usedCount?: SortOrder
+    active?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DiscountAvgOrderByAggregateInput = {
+    value?: SortOrder
+    maxUses?: SortOrder
+    usedCount?: SortOrder
+  }
+
+  export type DiscountMaxOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    description?: SortOrder
+    type?: SortOrder
+    value?: SortOrder
+    planId?: SortOrder
+    maxUses?: SortOrder
+    usedCount?: SortOrder
+    active?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DiscountMinOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    description?: SortOrder
+    type?: SortOrder
+    value?: SortOrder
+    planId?: SortOrder
+    maxUses?: SortOrder
+    usedCount?: SortOrder
+    active?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DiscountSumOrderByAggregateInput = {
+    value?: SortOrder
+    maxUses?: SortOrder
+    usedCount?: SortOrder
+  }
+
+  export type EnumDiscountTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DiscountType | EnumDiscountTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DiscountType[] | ListEnumDiscountTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DiscountType[] | ListEnumDiscountTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDiscountTypeWithAggregatesFilter<$PrismaModel> | $Enums.DiscountType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDiscountTypeFilter<$PrismaModel>
+    _max?: NestedEnumDiscountTypeFilter<$PrismaModel>
+  }
+
+  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type UserPriceOverrideEmailPlanIdCompoundUniqueInput = {
+    email: string
+    planId: string
+  }
+
+  export type UserPriceOverrideCountOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    planId?: SortOrder
+    overrideMonthlyPrice?: SortOrder
+    overrideYearlyPrice?: SortOrder
+    reason?: SortOrder
+    active?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserPriceOverrideAvgOrderByAggregateInput = {
+    overrideMonthlyPrice?: SortOrder
+    overrideYearlyPrice?: SortOrder
+  }
+
+  export type UserPriceOverrideMaxOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    planId?: SortOrder
+    overrideMonthlyPrice?: SortOrder
+    overrideYearlyPrice?: SortOrder
+    reason?: SortOrder
+    active?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserPriceOverrideMinOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    planId?: SortOrder
+    overrideMonthlyPrice?: SortOrder
+    overrideYearlyPrice?: SortOrder
+    reason?: SortOrder
+    active?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserPriceOverrideSumOrderByAggregateInput = {
+    overrideMonthlyPrice?: SortOrder
+    overrideYearlyPrice?: SortOrder
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type PartnerDomainCountOrderByAggregateInput = {
+    id?: SortOrder
+    domain?: SortOrder
+    companyName?: SortOrder
+    planId?: SortOrder
+    overrideMonthlyPrice?: SortOrder
+    overrideYearlyPrice?: SortOrder
+    note?: SortOrder
+    active?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PartnerDomainAvgOrderByAggregateInput = {
+    overrideMonthlyPrice?: SortOrder
+    overrideYearlyPrice?: SortOrder
+  }
+
+  export type PartnerDomainMaxOrderByAggregateInput = {
+    id?: SortOrder
+    domain?: SortOrder
+    companyName?: SortOrder
+    planId?: SortOrder
+    overrideMonthlyPrice?: SortOrder
+    overrideYearlyPrice?: SortOrder
+    note?: SortOrder
+    active?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PartnerDomainMinOrderByAggregateInput = {
+    id?: SortOrder
+    domain?: SortOrder
+    companyName?: SortOrder
+    planId?: SortOrder
+    overrideMonthlyPrice?: SortOrder
+    overrideYearlyPrice?: SortOrder
+    note?: SortOrder
+    active?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PartnerDomainSumOrderByAggregateInput = {
+    overrideMonthlyPrice?: SortOrder
+    overrideYearlyPrice?: SortOrder
+  }
+
+  export type PricingPlanCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    tagline?: SortOrder
+    monthlyPrice?: SortOrder
+    visible?: SortOrder
+    highlight?: SortOrder
+    features?: SortOrder
+    reposLimit?: SortOrder
+    reviewsLimit?: SortOrder
+    seatsLimit?: SortOrder
+    privateRepos?: SortOrder
+    sortOrder?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PricingPlanAvgOrderByAggregateInput = {
+    monthlyPrice?: SortOrder
+    reposLimit?: SortOrder
+    reviewsLimit?: SortOrder
+    seatsLimit?: SortOrder
+    sortOrder?: SortOrder
+  }
+
+  export type PricingPlanMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    tagline?: SortOrder
+    monthlyPrice?: SortOrder
+    visible?: SortOrder
+    highlight?: SortOrder
+    reposLimit?: SortOrder
+    reviewsLimit?: SortOrder
+    seatsLimit?: SortOrder
+    privateRepos?: SortOrder
+    sortOrder?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PricingPlanMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    tagline?: SortOrder
+    monthlyPrice?: SortOrder
+    visible?: SortOrder
+    highlight?: SortOrder
+    reposLimit?: SortOrder
+    reviewsLimit?: SortOrder
+    seatsLimit?: SortOrder
+    privateRepos?: SortOrder
+    sortOrder?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PricingPlanSumOrderByAggregateInput = {
+    monthlyPrice?: SortOrder
+    reposLimit?: SortOrder
+    reviewsLimit?: SortOrder
+    seatsLimit?: SortOrder
+    sortOrder?: SortOrder
+  }
+
+  export type PricingSettingsCountOrderByAggregateInput = {
+    id?: SortOrder
+    pricingEnabled?: SortOrder
+    annualDiscount?: SortOrder
+    trialDays?: SortOrder
+    trialPlan?: SortOrder
+    gracePeriodDays?: SortOrder
+    refundEnabled?: SortOrder
+    refundWindowDays?: SortOrder
+    taxEnabled?: SortOrder
+    taxRate?: SortOrder
+    promoCodesAtCheckout?: SortOrder
+    freeSignupEnabled?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PricingSettingsAvgOrderByAggregateInput = {
+    annualDiscount?: SortOrder
+    trialDays?: SortOrder
+    gracePeriodDays?: SortOrder
+    refundWindowDays?: SortOrder
+    taxRate?: SortOrder
+  }
+
+  export type PricingSettingsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    pricingEnabled?: SortOrder
+    annualDiscount?: SortOrder
+    trialDays?: SortOrder
+    trialPlan?: SortOrder
+    gracePeriodDays?: SortOrder
+    refundEnabled?: SortOrder
+    refundWindowDays?: SortOrder
+    taxEnabled?: SortOrder
+    taxRate?: SortOrder
+    promoCodesAtCheckout?: SortOrder
+    freeSignupEnabled?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PricingSettingsMinOrderByAggregateInput = {
+    id?: SortOrder
+    pricingEnabled?: SortOrder
+    annualDiscount?: SortOrder
+    trialDays?: SortOrder
+    trialPlan?: SortOrder
+    gracePeriodDays?: SortOrder
+    refundEnabled?: SortOrder
+    refundWindowDays?: SortOrder
+    taxEnabled?: SortOrder
+    taxRate?: SortOrder
+    promoCodesAtCheckout?: SortOrder
+    freeSignupEnabled?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PricingSettingsSumOrderByAggregateInput = {
+    annualDiscount?: SortOrder
+    trialDays?: SortOrder
+    gracePeriodDays?: SortOrder
+    refundWindowDays?: SortOrder
+    taxRate?: SortOrder
   }
 
   export type SessionCreateNestedManyWithoutUserInput = {
@@ -50636,6 +58177,35 @@ export namespace Prisma {
     update?: XOR<XOR<CustomRoleUpdateToOneWithWhereWithoutUserRolesInput, CustomRoleUpdateWithoutUserRolesInput>, CustomRoleUncheckedUpdateWithoutUserRolesInput>
   }
 
+  export type EnumDiscountTypeFieldUpdateOperationsInput = {
+    set?: $Enums.DiscountType
+  }
+
+  export type FloatFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type PricingPlanCreatefeaturesInput = {
+    set: string[]
+  }
+
+  export type PricingPlanUpdatefeaturesInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -51214,6 +58784,55 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumRuleSeverityFilter<$PrismaModel>
     _max?: NestedEnumRuleSeverityFilter<$PrismaModel>
+  }
+
+  export type NestedEnumDiscountTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.DiscountType | EnumDiscountTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DiscountType[] | ListEnumDiscountTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DiscountType[] | ListEnumDiscountTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDiscountTypeFilter<$PrismaModel> | $Enums.DiscountType
+  }
+
+  export type NestedEnumDiscountTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DiscountType | EnumDiscountTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DiscountType[] | ListEnumDiscountTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DiscountType[] | ListEnumDiscountTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDiscountTypeWithAggregatesFilter<$PrismaModel> | $Enums.DiscountType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDiscountTypeFilter<$PrismaModel>
+    _max?: NestedEnumDiscountTypeFilter<$PrismaModel>
+  }
+
+  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type SessionCreateWithoutUserInput = {

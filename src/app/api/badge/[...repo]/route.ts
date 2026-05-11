@@ -7,11 +7,11 @@
  * pass/fail status for the given GitHub repository, so owners can embed it
  * directly in their README:
  *
- *   [![DevReview AI](https://your-app.com/api/badge/owner/repo)](https://your-app.com)
+ *   [![Code Catch](https://your-app.com/api/badge/owner/repo)](https://your-app.com)
  *
  * Query params (all optional):
  *   style          – badge-maker style (flat-square*, flat, plastic, …)
- *   label          – override the left-hand label (default "DevReview AI")
+ *   label          – override the left-hand label (default "Code Catch")
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -86,7 +86,7 @@ export async function GET(
   const style = ALLOWED_STYLES.has(rawStyle)
     ? (rawStyle as Format["style"])
     : "flat-square";
-  const customLabel = searchParams.get("label") ?? "DevReview AI";
+  const customLabel = searchParams.get("label") ?? "Code Catch";
 
   // ── Fetch latest completed review for this repo ──────────────────────────
   const repository = await db.repository.findFirst({
@@ -160,7 +160,7 @@ function svgBadge(
 
 function svgError(reason: string): NextResponse {
   const svg = makeBadge({
-    label: "DevReview AI",
+    label: "Code Catch",
     message: reason,
     color: "#e05d44",
     style: "flat-square",

@@ -116,7 +116,7 @@ export function NotificationPreferencesCard() {
     if (permission === "granted") {
       toast.success("Desktop notifications enabled");
       // Show a test notification
-      new Notification("DevReview AI", {
+      new Notification("Code Catch", {
         body: "You'll now receive desktop notifications for important events",
         icon: "/favicon.ico",
       });

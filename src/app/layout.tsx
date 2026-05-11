@@ -33,8 +33,8 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Mohamed Reda" }],
   creator: "Mohamed Reda",
-  publisher: "DevReview AI",
-  applicationName: "DevReview AI",
+  publisher: "Code Catch",
+  applicationName: "Code Catch",
   formatDetection: {
     email: false,
     address: false,
@@ -73,7 +73,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "DevReview AI | Smart Automated Code Reviews",
+    title: "Code Catch | Smart Automated Code Reviews",
     description:
       "Automated code reviews powered by AI. Catch bugs, security issues, and code quality problems instantly.",
     images: ["/og-image.png"],

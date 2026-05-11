@@ -6,18 +6,15 @@ import Image from "next/image";
 import { ArrowRight, Sparkles, Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/lib/auth-client";
+import { trpc } from "@/lib/trpc/client";
 
-interface CtaSectionProps {
-  recentUsers?: { id: string; image: string | null; name: string }[];
-  totalUsers?: number;
-}
-
-export function CtaSection({
-  recentUsers = [],
-  totalUsers = 15,
-}: CtaSectionProps) {
+export function CtaSection() {
   const { data: session } = useSession();
   const [mounted, setMounted] = useState(false);
+  const [data] = trpc.home.getRecentUsers.useSuspenseQuery();
+
+  const recentUsers = data.recentUsers;
+  const totalUsers = data.totalUsers;
 
   useEffect(() => {
     const timer = setTimeout(() => setMounted(true), 0);

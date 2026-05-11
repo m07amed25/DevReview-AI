@@ -10,8 +10,10 @@ import { analyticsRouter } from "./routers/analytics";
 import { automationRouter } from "./routers/automation";
 import { diagramRouter } from "./routers/diagram";
 import { adminRouter } from "./routers/admin";
+import { adminPricingRouter } from "./routers/admin-pricing";
 import { rulesRouter } from "./routers/rules";
 import { securityRouter } from "./routers/security";
+import { homeRouter } from "./routers/home";
 import { createCallerFactory, createTRPCRouter, publicProcedure } from "./trpc";
 
 export const appRouter = createTRPCRouter({
@@ -21,6 +23,7 @@ export const appRouter = createTRPCRouter({
       timestamp: new Date(),
     };
   }),
+  home: homeRouter,
   profile: profileRouter,
   repository: repositoryRouter,
   pullRequest: pullRequestRouter,
@@ -33,6 +36,7 @@ export const appRouter = createTRPCRouter({
   automation: automationRouter,
   diagram: diagramRouter,
   admin: adminRouter,
+  adminPricing: adminPricingRouter,
   rules: rulesRouter,
   security: securityRouter,
 });

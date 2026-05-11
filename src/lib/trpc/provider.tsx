@@ -1,15 +1,11 @@
 "use client";
 
-import {
-  QueryClient,
-  QueryClientProvider,
-  QueryCache,
-  MutationCache,
-} from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/react-query";
 import { useState } from "react";
 import superjson from "superjson";
 import { trpc } from "./client";
+import { makeQueryClient } from "./query-client";
 import { toast } from "sonner";
 
 function getBaseUrl() {
@@ -39,23 +35,13 @@ function handleGlobalError(error: unknown) {
 }
 
 export function TRPCProvider({ children }: { children: React.ReactNode }) {
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        queryCache: new QueryCache({
-          onError: handleGlobalError,
-        }),
-        mutationCache: new MutationCache({
-          onError: handleGlobalError,
-        }),
-        defaultOptions: {
-          queries: {
-            staleTime: 5 * 1000,
-            refetchOnWindowFocus: false,
-          },
-        },
-      }),
-  );
+  const [queryClient] = useState(() => {
+    const client = makeQueryClient();
+    // Wire global error handlers onto the caches
+    client.getQueryCache().config.onError = handleGlobalError;
+    client.getMutationCache().config.onError = handleGlobalError;
+    return client;
+  });
 
   const [trpcClient] = useState(() =>
     trpc.createClient({

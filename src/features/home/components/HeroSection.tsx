@@ -117,7 +117,7 @@ export function HeroSection() {
                 >
                   <Link
                     href="/sign-in"
-                    title="Sign in to your DevReview AI account"
+                    title="Sign in to your Code Catch account"
                     aria-label="Sign In"
                   >
                     <Command

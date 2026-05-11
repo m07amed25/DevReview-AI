@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { AdminSidebar } from "@/features/admin/components/admin-sidebar";
 
 export const metadata = {
-  title: "Admin — DevReview AI",
+  title: "Admin — Code Catch",
   robots: { index: false, follow: false },
 };
 
@@ -39,7 +39,7 @@ export default async function AdminLayout({
         }}
       />
       <div className="flex flex-1 flex-col overflow-hidden">
-        <main className="flex-1 overflow-y-auto p-6 lg:p-8">{children}</main>
+        <main className="flex-1 overflow-y-auto p-6 pt-20 lg:p-8">{children}</main>
       </div>
     </div>
   );

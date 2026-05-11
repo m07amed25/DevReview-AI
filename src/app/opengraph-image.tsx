@@ -2,7 +2,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "DevReview AI – Smart Automated Code Reviews";
+export const alt = "Code Catch – Smart Automated Code Reviews";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

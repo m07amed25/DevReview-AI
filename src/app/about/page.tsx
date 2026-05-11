@@ -1,16 +1,25 @@
 import type { Metadata } from "next";
-import { ComingSoonPage } from "@/features/home/components/ComingSoonPage";
+import { HomeHeader } from "@/features/home/components/HomeHeader";
+import { HomeFooter } from "@/features/home/components/HomeFooter";
+import { AboutContent } from "@/features/home/components/AboutContent";
+import { api, HydrateClient } from "@/lib/trpc/server";
 
 export const metadata: Metadata = {
-  title: "About",
-  description: "Our story and mission — coming soon.",
+  title: "About Us - Code Catch",
+  description:
+    "Learn about the team behind Code Catch, our mission, and why we built AI-powered code review for GitHub pull requests.",
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  void api.home.getAboutStats.prefetch();
+
   return (
-    <ComingSoonPage
-      title="About Us"
-      description="Learn about the team behind Code Catch, our mission, and why we built AI-powered code review."
-    />
+    <HydrateClient>
+      <div className="dark min-h-screen bg-zinc-950 text-zinc-50">
+        <HomeHeader />
+        <AboutContent />
+        <HomeFooter />
+      </div>
+    </HydrateClient>
   );
 }

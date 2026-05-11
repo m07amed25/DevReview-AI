@@ -66,7 +66,7 @@ export function AutoReviewToggle({
   const appBase = typeof window !== "undefined" ? window.location.origin : "";
   const badgeUrl = repoFullName ? `${appBase}/api/badge/${repoFullName}` : null;
   const badgeMarkdown = badgeUrl
-    ? `[![DevReview AI](${badgeUrl})](${appBase})`
+    ? `[![Code Catch](${badgeUrl})](${appBase})`
     : null;
 
   const handleCopyBadge = async () => {
@@ -81,7 +81,7 @@ export function AutoReviewToggle({
       <CardHeader>
         <CardTitle>Automatic Pull Request Reviews</CardTitle>
         <CardDescription>
-          When enabled, DevReview AI will review every pull request and post
+          When enabled, Code Catch will review every pull request and post
           results as a PR comment and a commit status check.
         </CardDescription>
       </CardHeader>

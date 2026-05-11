@@ -218,7 +218,7 @@ export async function POST(request: NextRequest) {
         "pending",
         repository.id,
         livePr.number,
-        "DevReview AI — review in progress",
+        "Code Catch — review in progress",
       );
 
       await db.gitHubStatusCheck.upsert({

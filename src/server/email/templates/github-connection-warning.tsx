@@ -22,7 +22,7 @@ export interface GithubConnectionWarningEmailParams {
 
 export function GithubConnectionWarningEmail({ params }: { params: GithubConnectionWarningEmailParams }) {
   const { userName } = params;
-  const previewText = "Action Required: Connect your GitHub account to DevReview AI";
+  const previewText = "Action Required: Connect your GitHub account to Code Catch";
 
   return (
     <Html>

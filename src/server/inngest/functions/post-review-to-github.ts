@@ -251,7 +251,7 @@ export function mapFindingsToReviewPayload(
       // Shields.io badges for inline comments
       const sevBadge = badge(
         severity,
-        "DevReview AI",
+        "Code Catch",
         severityBadgeColor(severity),
         { style: "flat-square" },
       );
@@ -317,7 +317,7 @@ export function mapFindingsToReviewPayload(
   const lines: string[] = [];
 
   //  Title 
-  lines.push(`## 🤖 DevReview AI — Automated Code Review`);
+  lines.push(`## 🤖 Code Catch — Automated Code Review`);
   lines.push("");
 
   //  Meta quote (PR title + commit) 
@@ -569,7 +569,7 @@ export function mapFindingsToReviewPayload(
   }
 
   // ── Footer ────────────────────────────────────────────────────────────────
-  const footerBadge = badge("DevReview AI", "Automated Review", "#24292e", {
+  const footerBadge = badge("Code Catch", "Automated Review", "#24292e", {
     style: "flat-square",
     labelColor: "#586069",
     link: reviewUrl,
@@ -670,7 +670,7 @@ export async function runPostReviewToGitHub(
         "error",
         review.repositoryId,
         review.prNumber,
-        "DevReview AI — review processing failed",
+        "Code Catch — review processing failed",
       );
 
       await dbClient.gitHubStatusCheck.upsert({
@@ -707,7 +707,7 @@ export async function runPostReviewToGitHub(
         review.repository.fullName,
         review.prNumber,
         Number(previous.githubReviewId),
-        `Superseded by a new DevReview AI review after commit ${completedEvent.data.commitSha}`,
+        `Superseded by a new Code Catch review after commit ${completedEvent.data.commitSha}`,
       );
     } catch (err) {
       // GitHub returns 422 for COMMENT-type reviews which cannot be dismissed.
@@ -781,13 +781,13 @@ export async function runPostReviewToGitHub(
     const description =
       state === "success"
         ? scoreThreshold !== null && scoreThreshold !== undefined
-          ? `DevReview AI — risk score ${review.riskScore ?? 0}/100 (threshold ${scoreThreshold})`
-          : "DevReview AI — no critical issues"
+          ? `Code Catch — risk score ${review.riskScore ?? 0}/100 (threshold ${scoreThreshold})`
+          : "Code Catch — no critical issues"
         : state === "failure"
           ? scoreThreshold !== null && scoreThreshold !== undefined
-            ? `DevReview AI — risk score ${review.riskScore ?? 0}/100 exceeds threshold ${scoreThreshold}`
-            : "DevReview AI — critical issues found"
-          : "DevReview AI — review processing failed";
+            ? `Code Catch — risk score ${review.riskScore ?? 0}/100 exceeds threshold ${scoreThreshold}`
+            : "Code Catch — critical issues found"
+          : "Code Catch — review processing failed";
 
     await postCommitStatusFn(
       accessToken,

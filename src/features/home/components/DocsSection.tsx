@@ -77,7 +77,7 @@ export function DocsSection() {
               What Gets Reviewed
             </h3>
             <p className="text-zinc-400 mb-4">
-              Learn about code quality checks, security vulnerabilities, best practices, and performance optimizations that DevReview AI analyzes in your pull requests.
+              Learn about code quality checks, security vulnerabilities, best practices, and performance optimizations that Code Catch analyzes in your pull requests.
             </p>
             <Button
               variant="ghost"
