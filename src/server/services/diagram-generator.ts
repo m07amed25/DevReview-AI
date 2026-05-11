@@ -81,8 +81,16 @@ interface TableColumn {
   isForeignKey: boolean;
 }
 
+interface RelationField {
+  name: string;
+  targetModel: string;
+  isArray: boolean;
+  isOptional: boolean;
+}
+
 interface ERDResult {
   models: Map<string, TableColumn[]>;
+  modelRelations: Map<string, RelationField[]>;
   edges: DiagramEdge[];
 }
 
@@ -90,6 +98,7 @@ interface ERDResult {
 
 function parsePrismaSchema(content: string): ERDResult {
   const models = new Map<string, TableColumn[]>();
+  const modelRelations = new Map<string, RelationField[]>();
   const edges: DiagramEdge[] = [];
 
   function extractModelBlocks(
@@ -116,31 +125,56 @@ function parsePrismaSchema(content: string): ERDResult {
 
   const modelBlocks = extractModelBlocks(content);
 
+  // Collect all model names first so we can identify relation fields
+  const allModelNames = new Set(modelBlocks.map((b) => b.name));
+
   for (const { name: modelName, body: modelBody } of modelBlocks) {
     const columns: TableColumn[] = [];
+    const relations: RelationField[] = [];
+    const attributes: string[] = [];
 
     const lines = modelBody.split("\n");
     for (const line of lines) {
       const trimmed = line.trim();
-      if (!trimmed || trimmed.startsWith("@@") || trimmed.startsWith("//")) {
+      if (!trimmed || trimmed.startsWith("//")) continue;
+
+      // Capture @@-level directives as attributes
+      if (trimmed.startsWith("@@")) {
+        const attrMatch = /^@@(\w+)\s*\((.*)\)$/.exec(trimmed);
+        if (attrMatch) attributes.push(`@@${attrMatch[1]}(${attrMatch[2]})`);
+        else attributes.push(trimmed);
         continue;
       }
+
       const fieldMatch = /^(\w+)\s+([\w?[\]]+)/.exec(trimmed);
       if (fieldMatch) {
         const fieldName = fieldMatch[1]!;
         const fieldType = fieldMatch[2]!;
+        const baseType = fieldType.replace(/[?[\]]/g, "");
         const isPrimitive =
           /^(String|Int|Float|Boolean|DateTime|Json|BigInt|Decimal|Bytes)/.test(
             fieldType,
           );
-        if (!isPrimitive) continue;
+
+        if (!isPrimitive) {
+          // Relation field — skip columns but record for the info panel
+          if (allModelNames.has(baseType)) {
+            relations.push({
+              name: fieldName,
+              targetModel: baseType,
+              isArray: fieldType.includes("[]"),
+              isOptional: fieldType.endsWith("?"),
+            });
+          }
+          continue;
+        }
 
         const isPrimaryKey = trimmed.includes("@id");
         const isForeignKey = fieldName.endsWith("Id") && !isPrimaryKey;
 
         columns.push({
           name: fieldName,
-          type: fieldType.replace(/[?[\]]/g, ""),
+          type: baseType,
           isPrimaryKey,
           isForeignKey,
         });
@@ -148,6 +182,7 @@ function parsePrismaSchema(content: string): ERDResult {
     }
 
     models.set(modelName, columns);
+    if (relations.length > 0) modelRelations.set(modelName, relations);
   }
 
   // Extract relations
@@ -203,13 +238,14 @@ function parsePrismaSchema(content: string): ERDResult {
     }
   }
 
-  return { models, edges };
+  return { models, modelRelations, edges };
 }
 
 // ─── SQL DDL Parser ───────────────────────────────────────────────────────────
 
 function parseSQLDDL(content: string): ERDResult {
   const models = new Map<string, TableColumn[]>();
+  const modelRelations = new Map<string, RelationField[]>();
   const edges: DiagramEdge[] = [];
 
   // Match CREATE TABLE statements
@@ -279,13 +315,14 @@ function parseSQLDDL(content: string): ERDResult {
     }
   }
 
-  return { models, edges };
+  return { models, modelRelations, edges };
 }
 
 // ─── TypeORM Parser ───────────────────────────────────────────────────────────
 
 function parseTypeORM(content: string): ERDResult {
   const models = new Map<string, TableColumn[]>();
+  const modelRelations = new Map<string, RelationField[]>();
   const edges: DiagramEdge[] = [];
 
   // Extract @Entity classes
@@ -381,13 +418,12 @@ function parseTypeORM(content: string): ERDResult {
     models.set(entityName, columns);
   }
 
-  return { models, edges };
+  return { models, modelRelations, edges };
 }
-
-// ─── Sequelize Parser ─────────────────────────────────────────────────────────
 
 function parseSequelize(content: string): ERDResult {
   const models = new Map<string, TableColumn[]>();
+  const modelRelations = new Map<string, RelationField[]>();
   const edges: DiagramEdge[] = [];
 
   // Match sequelize.define or Model.init
@@ -478,13 +514,14 @@ function parseSequelize(content: string): ERDResult {
     }
   }
 
-  return { models, edges };
+  return { models, modelRelations, edges };
 }
 
 // ─── Drizzle ORM Parser ───────────────────────────────────────────────────────
 
 function parseDrizzleORM(content: string): ERDResult {
   const models = new Map<string, TableColumn[]>();
+  const modelRelations = new Map<string, RelationField[]>();
   const edges: DiagramEdge[] = [];
 
   // Match table definitions: export const tableName = pgTable(...) or mysqlTable(...)
@@ -561,13 +598,14 @@ function parseDrizzleORM(content: string): ERDResult {
     }
   }
 
-  return { models, edges };
+  return { models, modelRelations, edges };
 }
 
 // ─── Mongoose Parser ──────────────────────────────────────────────────────────
 
 function parseMongoose(content: string): ERDResult {
   const models = new Map<string, TableColumn[]>();
+  const modelRelations = new Map<string, RelationField[]>();
   const edges: DiagramEdge[] = [];
 
   // Match mongoose.model or new Schema
@@ -662,13 +700,14 @@ function parseMongoose(content: string): ERDResult {
     }
   }
 
-  return { models, edges };
+  return { models, modelRelations, edges };
 }
 
 // ─── Knex Parser ──────────────────────────────────────────────────────────────
 
 function parseKnex(content: string): ERDResult {
   const models = new Map<string, TableColumn[]>();
+  const modelRelations = new Map<string, RelationField[]>();
   const edges: DiagramEdge[] = [];
 
   // Match table.create or createTable
@@ -735,10 +774,9 @@ function parseKnex(content: string): ERDResult {
     models.set(tableName, columns);
   }
 
-  return { models, edges };
+  return { models, modelRelations, edges };
 }
 
-// ─── Main ERD Generator with Format Detection ─────────────────────────────────
 
 function generateERD(fileContents: Record<string, string>): {
   definition: string;
@@ -794,7 +832,11 @@ function generateERD(fileContents: Record<string, string>): {
 
   // Convert to nodes
   for (const [modelName, columns] of result.models) {
-    const detail: DiagramNodeDetailTable = { columns };
+    const relations = result.modelRelations.get(modelName);
+    const detail: DiagramNodeDetailTable = {
+      columns,
+      ...(relations && relations.length > 0 ? { relations } : {}),
+    };
     nodes.push({
       id: `table_${modelName}`,
       label: modelName,

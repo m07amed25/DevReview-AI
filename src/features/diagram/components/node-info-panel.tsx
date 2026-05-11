@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { X, Database, Code2, User, Layers, GripHorizontal } from "lucide-react";
+import { X, Database, Code2, User, Layers, GripHorizontal, ArrowRightLeft, Tag } from "lucide-react";
 
 interface NodeInfoPanelProps {
   node: DiagramNode | null;
@@ -48,28 +48,84 @@ const TYPE_CONFIG: Record<
 
 function TableDetail({ detail }: { detail: DiagramNodeDetailTable }) {
   return (
-    <div className="space-y-1.5">
-      {detail.columns?.map((col) => (
-        <div
-          key={col.name}
-          className="flex items-center justify-between text-xs gap-2"
-        >
-          <span className="font-mono text-muted-foreground">{col.name}</span>
-          <div className="flex items-center gap-1">
-            {col.isPrimaryKey && (
-              <Badge variant="outline" className="text-[10px] px-1 py-0">
-                PK
-              </Badge>
-            )}
-            {col.isForeignKey && (
-              <Badge variant="outline" className="text-[10px] px-1 py-0">
-                FK
-              </Badge>
-            )}
-            <span className="text-muted-foreground/70">{col.type}</span>
-          </div>
+    <div className="space-y-3">
+      {/* Scalar columns */}
+      {detail.columns?.length > 0 && (
+        <div className="space-y-1.5">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">
+            Columns
+          </p>
+          {detail.columns.map((col) => (
+            <div
+              key={col.name}
+              className="flex items-center justify-between text-xs gap-2"
+            >
+              <span className="font-mono text-muted-foreground">{col.name}</span>
+              <div className="flex items-center gap-1">
+                {col.isPrimaryKey && (
+                  <Badge variant="outline" className="text-[10px] px-1 py-0">
+                    PK
+                  </Badge>
+                )}
+                {col.isForeignKey && (
+                  <Badge variant="outline" className="text-[10px] px-1 py-0">
+                    FK
+                  </Badge>
+                )}
+                <span className="text-muted-foreground/70">{col.type}</span>
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+      )}
+
+      {/* Relation fields */}
+      {detail.relations && detail.relations.length > 0 && (
+        <>
+          <Separator />
+          <div className="space-y-1.5">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60 flex items-center gap-1">
+              <ArrowRightLeft className="size-3" />
+              Relations
+            </p>
+            {detail.relations.map((rel) => (
+              <div
+                key={rel.name}
+                className="flex items-center justify-between text-xs gap-2"
+              >
+                <span className="font-mono text-muted-foreground">{rel.name}</span>
+                <div className="flex items-center gap-1">
+                  <Badge
+                    variant="secondary"
+                    className="text-[10px] px-1 py-0 font-normal"
+                  >
+                    {rel.isArray ? "[]" : rel.isOptional ? "?" : "1"}
+                  </Badge>
+                  <span className="text-muted-foreground/70">{rel.targetModel}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {/* Model-level attributes (@@unique, @@index, etc.) */}
+      {detail.attributes && detail.attributes.length > 0 && (
+        <>
+          <Separator />
+          <div className="space-y-1">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60 flex items-center gap-1">
+              <Tag className="size-3" />
+              Attributes
+            </p>
+            {detail.attributes.map((attr, i) => (
+              <div key={i} className="text-[11px] font-mono text-muted-foreground/70 break-all">
+                {attr}
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }

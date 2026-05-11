@@ -9,6 +9,15 @@ export interface DiagramNodeDetailTable {
     isPrimaryKey: boolean;
     isForeignKey: boolean;
   }>;
+  /** Relation / association fields (not shown as columns in the ERD but shown in the detail panel) */
+  relations?: Array<{
+    name: string;
+    targetModel: string;
+    isArray: boolean;
+    isOptional: boolean;
+  }>;
+  /** Optional extra metadata (indexes, uniques, etc.) */
+  attributes?: string[];
 }
 
 export interface DiagramNodeDetailClass {

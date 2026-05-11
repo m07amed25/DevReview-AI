@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import {
   Check,
   Minus,
@@ -12,6 +12,10 @@ import {
   Sparkles,
   HelpCircle,
   Star,
+  Flame,
+  TrendingUp,
+  Shield,
+  Clock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -33,7 +37,7 @@ const PLANS = [
     id: "free",
     name: "Free",
     icon: Zap,
-    tagline: "Get started for nothing",
+    tagline: "Zero cost. Real results. Ship today.",
     monthlyPrice: 0,
     yearlyPrice: 0,
     color: "from-slate-500 to-slate-600",
@@ -56,13 +60,13 @@ const PLANS = [
     id: "pro",
     name: "Pro",
     icon: Rocket,
-    tagline: "For serious developers",
+    tagline: "10× faster reviews. Zero blind spots.",
     monthlyPrice: 24,
     yearlyPrice: 19,
     color: "from-indigo-500 to-violet-600",
     borderColor: "border-indigo-500/50",
     badge: "Most Popular",
-    badgeColor: "bg-indigo-500 text-white",
+    badgeColor: "bg-linear-to-r from-indigo-500 to-violet-600 text-white",
     cta: "Start Pro Trial",
     ctaVariant: "default" as const,
     highlight: true,
@@ -82,7 +86,7 @@ const PLANS = [
     id: "ultra",
     name: "Ultra",
     icon: Crown,
-    tagline: "Enterprise-grade power",
+    tagline: "Unlimited scale. Total confidence.",
     monthlyPrice: 59,
     yearlyPrice: 49,
     color: "from-amber-500 to-orange-600",
@@ -164,38 +168,68 @@ function PlanCard({
 }) {
   const price = yearly ? plan.yearlyPrice : plan.monthlyPrice;
   const Icon = plan.icon;
+  const savings =
+    !yearly && plan.monthlyPrice > 0
+      ? (plan.monthlyPrice - plan.yearlyPrice) * 12
+      : 0;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 32 }}
+      initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
+      transition={{ duration: 0.6, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ y: plan.highlight ? -6 : -4, transition: { duration: 0.2 } }}
       className={cn(
-        "relative flex flex-col rounded-2xl border bg-card p-8 shadow-sm transition-shadow hover:shadow-xl",
-        plan.borderColor,
-        plan.highlight &&
-          "ring-2 ring-indigo-500 shadow-indigo-500/10 shadow-xl scale-[1.025] z-10",
+        "group relative flex flex-col rounded-3xl border bg-card p-8 transition-all duration-300",
+        plan.highlight
+          ? "border-transparent shadow-2xl shadow-indigo-500/25 scale-[1.03] z-10"
+          : "border-border/60 hover:border-border hover:shadow-xl",
       )}
     >
-      {plan.badge && (
-        <span
-          className={cn(
-            "absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full px-4 py-1 text-xs font-bold tracking-wide",
-            plan.badgeColor,
-          )}
-        >
-          {plan.badge}
-        </span>
+      {/* Gradient border for highlighted card */}
+      {plan.highlight && (
+        <div className="absolute inset-0 rounded-3xl bg-linear-to-br from-indigo-500 via-violet-500 to-purple-600 p-px -z-10">
+          <div className="h-full w-full rounded-3xl bg-card" />
+        </div>
       )}
 
-      <div className="mb-6">
+      {/* Ambient glow */}
+      {plan.highlight && (
+        <div className="pointer-events-none absolute -inset-px rounded-3xl bg-linear-to-br from-indigo-500/10 via-violet-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      )}
+      {plan.id === "ultra" && (
+        <div className="pointer-events-none absolute -inset-px rounded-3xl bg-linear-to-br from-amber-500/8 via-orange-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      )}
+
+      {/* Badge */}
+      {plan.badge && (
+        <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20">
+          <motion.span
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: index * 0.12 + 0.3, type: "spring", stiffness: 200 }}
+            className={cn(
+              "relative inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-bold tracking-wide shadow-lg",
+              plan.badgeColor,
+            )}
+          >
+            {plan.highlight && <Flame className="h-3 w-3" />}
+            {plan.id === "ultra" && <Crown className="h-3 w-3" />}
+            {plan.badge}
+          </motion.span>
+        </div>
+      )}
+
+      <div className="mb-6 mt-2">
         <div
           className={cn(
-            "mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br",
+            "mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br shadow-lg",
             plan.color,
+            plan.highlight && "shadow-indigo-500/40",
+            plan.id === "ultra" && "shadow-amber-500/30",
           )}
         >
-          <Icon className="h-6 w-6 text-white" />
+          <Icon className="h-7 w-7 text-white" />
         </div>
         <h3 className="text-2xl font-bold">{plan.name}</h3>
         <p className="mt-1 text-sm text-muted-foreground">{plan.tagline}</p>
@@ -203,7 +237,24 @@ function PlanCard({
 
       <div className="mb-6">
         <div className="flex items-end gap-1">
-          <span className="text-5xl font-extrabold tracking-tight">${price}</span>
+          <AnimatePresence mode="wait">
+            <motion.span
+              key={price}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              transition={{ duration: 0.25 }}
+              className={cn(
+                "text-5xl font-extrabold tracking-tight",
+                plan.highlight &&
+                  "bg-linear-to-r from-indigo-500 to-violet-500 bg-clip-text text-transparent",
+                plan.id === "ultra" &&
+                  "bg-linear-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent",
+              )}
+            >
+              ${price}
+            </motion.span>
+          </AnimatePresence>
           {price > 0 && (
             <span className="mb-1.5 text-muted-foreground">
               / mo{yearly ? "*" : ""}
@@ -218,44 +269,55 @@ function PlanCard({
             Billed annually (${plan.yearlyPrice * 12}/yr)
           </p>
         )}
-        {!yearly && plan.monthlyPrice > 0 && (
-          <p className="mt-1 text-xs text-green-600 dark:text-green-400">
-            Save ${(plan.monthlyPrice - plan.yearlyPrice) * 12}/yr with annual
-            billing
-          </p>
+        {savings > 0 && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-green-100 px-3 py-1 dark:bg-green-900/30"
+          >
+            <TrendingUp className="h-3 w-3 text-green-600 dark:text-green-400" />
+            <span className="text-xs font-bold text-green-700 dark:text-green-400">
+              Save ${savings}/yr switching to annual
+            </span>
+          </motion.div>
         )}
       </div>
 
       <Button
         variant={plan.highlight ? "default" : plan.ctaVariant}
         className={cn(
-          "mb-8 w-full gap-2 font-semibold",
+          "mb-8 w-full gap-2 font-bold text-base h-12 transition-all duration-200",
           plan.highlight &&
-            "bg-linear-to-r from-indigo-500 to-violet-600 hover:from-indigo-600 hover:to-violet-700 border-0 text-white shadow-md shadow-indigo-500/30",
+            "bg-linear-to-r from-indigo-500 to-violet-600 hover:from-indigo-600 hover:to-violet-700 border-0 text-white shadow-lg shadow-indigo-500/40 hover:shadow-indigo-500/60 hover:scale-[1.02]",
+          plan.id === "ultra" &&
+            "border-amber-500/50 hover:bg-amber-500/10 hover:border-amber-500 hover:scale-[1.02]",
         )}
         size="lg"
         asChild
       >
         <Link href="/sign-up">
           {plan.cta}
-          <ArrowRight className="h-4 w-4" />
+          <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
         </Link>
       </Button>
+
+      {/* Divider */}
+      <div className={cn("mb-6 h-px w-full", plan.highlight ? "bg-linear-to-r from-transparent via-indigo-500/30 to-transparent" : "bg-border/50")} />
 
       <ul className="flex-1 space-y-3">
         {plan.features.map((feature) => (
           <li key={feature} className="flex items-start gap-3 text-sm">
             <span
               className={cn(
-                "mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full",
+                "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full shadow-sm",
                 plan.highlight
-                  ? "bg-indigo-500 text-white"
+                  ? "bg-linear-to-br from-indigo-500 to-violet-600 text-white"
                   : plan.id === "ultra"
-                    ? "bg-amber-500 text-white"
+                    ? "bg-linear-to-br from-amber-500 to-orange-500 text-white"
                     : "bg-muted text-muted-foreground",
               )}
             >
-              <Check className="h-2.5 w-2.5" />
+              <Check className="h-3 w-3" />
             </span>
             <span className="text-foreground/80">{feature}</span>
           </li>
@@ -315,7 +377,6 @@ function FaqItem({ q, a, index }: { q: string; a: string; index: number }) {
   );
 }
 
-/* -- Main client content -- */
 export function PricingContent() {
   const [yearly, setYearly] = useState(true);
 
@@ -323,8 +384,11 @@ export function PricingContent() {
     <>
       {/* -- Hero -- */}
       <section className="relative overflow-hidden py-24 sm:py-32">
+        {/* Multi-layered background glows */}
         <div className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute left-1/2 top-0 h-150 w-225 -translate-x-1/2 rounded-full bg-indigo-500/5 blur-3xl" />
+          <div className="absolute left-1/4 top-0 h-125 w-150 -translate-x-1/2 rounded-full bg-indigo-500/8 blur-[120px]" />
+          <div className="absolute right-1/4 top-20 h-100 w-125 translate-x-1/2 rounded-full bg-violet-500/8 blur-[120px]" />
+          <div className="absolute left-1/2 bottom-0 h-75 w-100 -translate-x-1/2 rounded-full bg-purple-500/6 blur-[80px]" />
         </div>
 
         <div className="mx-auto max-w-4xl px-6 text-center">
@@ -338,19 +402,27 @@ export function PricingContent() {
               className="mb-6 gap-1.5 border border-indigo-200 bg-indigo-50 px-4 py-1.5 text-indigo-700 dark:border-indigo-800 dark:bg-indigo-950/50 dark:text-indigo-300"
             >
               <Sparkles className="h-3.5 w-3.5" />
-              Simple, transparent pricing
+              No surprises. No hidden fees. Just results.
             </Badge>
           </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
             className="text-5xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl"
           >
             Pricing that{" "}
-            <span className="bg-linear-to-r from-indigo-500 to-violet-600 bg-clip-text text-transparent">
-              scales with you
+            <span className="relative inline-block">
+              <span className="bg-linear-to-r from-indigo-500 via-violet-500 to-purple-600 bg-clip-text text-transparent">
+                scales with you
+              </span>
+              <motion.span
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 0.6, delay: 0.7, ease: "easeOut" }}
+                className="absolute bottom-1 left-0 h-1 w-full origin-left rounded-full bg-linear-to-r from-indigo-500 to-violet-500 opacity-40"
+              />
             </span>
           </motion.h1>
 
@@ -360,15 +432,35 @@ export function PricingContent() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground"
           >
-            From solo developers shipping side projects to enterprise teams
-            demanding reliability — there&apos;s a plan built for you.
+            Whether you&apos;re a solo dev catching bugs before they ship or a
+            50-person team demanding zero-defect merges — there&apos;s a plan
+            engineered exactly for you.
           </motion.p>
+
+          {/* Trust indicators */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="mx-auto mt-8 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground"
+          >
+            {[
+              { icon: Shield, text: "No credit card required" },
+              { icon: Clock, text: "14-day free trial" },
+              { icon: Zap, text: "Cancel anytime" },
+            ].map(({ icon: Icon, text }) => (
+              <div key={text} className="flex items-center gap-1.5">
+                <Icon className="h-3.5 w-3.5 text-indigo-500" />
+                <span>{text}</span>
+              </div>
+            ))}
+          </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="mt-10 inline-flex items-center gap-4 rounded-full border bg-muted/50 px-6 py-3"
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="mt-10 inline-flex items-center gap-4 rounded-full border border-border/60 bg-card/80 px-6 py-3 shadow-sm backdrop-blur-sm"
           >
             <span
               className={cn(
@@ -390,9 +482,13 @@ export function PricingContent() {
               )}
             >
               Annual
-              <span className="ml-2 rounded-full bg-green-100 px-2 py-0.5 text-xs font-bold text-green-700 dark:bg-green-900/40 dark:text-green-400">
+              <motion.span
+                animate={{ scale: [1, 1.05, 1] }}
+                transition={{ repeat: Infinity, duration: 2.5, delay: 1 }}
+                className="ml-2 inline-block rounded-full bg-linear-to-r from-green-500 to-emerald-500 px-2.5 py-0.5 text-xs font-bold text-white shadow-sm shadow-green-500/30"
+              >
                 Save 20%
-              </span>
+              </motion.span>
             </span>
           </motion.div>
         </div>
@@ -473,8 +569,16 @@ export function PricingContent() {
       </section>
 
       {/* -- Social Proof -- */}
-      <section className="border-y bg-muted/30 py-16">
+      <section className="border-y bg-linear-to-br from-muted/20 via-muted/40 to-muted/20 py-16">
         <div className="mx-auto max-w-5xl px-6">
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="mb-8 text-center text-sm font-semibold uppercase tracking-widest text-muted-foreground"
+          >
+            Trusted by developers at
+          </motion.p>
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -500,10 +604,14 @@ export function PricingContent() {
                 author: "Priya N.",
                 role: "VP Engineering",
               },
-            ].map(({ quote, author, role }) => (
-              <div
+            ].map(({ quote, author, role }, i) => (
+              <motion.div
                 key={author}
-                className="flex flex-col gap-4 rounded-2xl border bg-card p-6"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="group flex flex-col gap-4 rounded-2xl border bg-card p-6 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1"
               >
                 <div className="flex gap-0.5">
                   {Array.from({ length: 5 }).map((_, i) => (
@@ -513,19 +621,23 @@ export function PricingContent() {
                     />
                   ))}
                 </div>
-                <p className="flex-1 text-sm text-muted-foreground">
+                <p className="flex-1 text-sm text-muted-foreground leading-relaxed">
                   &ldquo;{quote}&rdquo;
                 </p>
-                <div>
-                  <p className="text-sm font-semibold">{author}</p>
-                  <p className="text-xs text-muted-foreground">{role}</p>
+                <div className="flex items-center gap-3">
+                  <div className="h-8 w-8 rounded-full bg-linear-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white text-xs font-bold">
+                    {author[0]}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold">{author}</p>
+                    <p className="text-xs text-muted-foreground">{role}</p>
+                  </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </motion.div>
         </div>
       </section>
-
       {/* -- FAQ -- */}
       <section className="mx-auto max-w-3xl px-6 py-24">
         <div className="mb-12 text-center">
@@ -550,38 +662,77 @@ export function PricingContent() {
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="rounded-3xl bg-linear-to-br from-indigo-500 to-violet-600 p-px shadow-2xl shadow-indigo-500/20"
+            className="relative overflow-hidden rounded-3xl shadow-2xl shadow-indigo-500/20"
           >
-            <div className="rounded-3xl bg-linear-to-br from-indigo-500/10 via-background to-violet-600/10 px-10 py-16">
-              <Sparkles className="mx-auto mb-4 h-10 w-10 text-indigo-500" />
+            {/* Gradient border via wrapper */}
+            <div className="absolute inset-0 bg-linear-to-br from-indigo-500 via-violet-500 to-purple-600" />
+            <div className="relative m-px rounded-3xl bg-linear-to-br from-indigo-500/10 via-background to-violet-600/10 px-10 py-16">
+              {/* floating sparkles */}
+              {[...Array(6)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="pointer-events-none absolute"
+                  style={{
+                    left: `${15 + i * 15}%`,
+                    top: `${10 + (i % 3) * 30}%`,
+                  }}
+                  animate={{
+                    y: [0, -12, 0],
+                    opacity: [0.3, 0.8, 0.3],
+                  }}
+                  transition={{
+                    duration: 2 + i * 0.4,
+                    repeat: Infinity,
+                    delay: i * 0.3,
+                  }}
+                >
+                  <Sparkles className="h-3 w-3 text-indigo-400/60" />
+                </motion.div>
+              ))}
+
+              <motion.div
+                animate={{ rotate: [0, 10, -10, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-indigo-500 to-violet-600 shadow-lg shadow-indigo-500/40"
+              >
+                <Rocket className="h-8 w-8 text-white" />
+              </motion.div>
+
               <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
-                Ready to ship better code?
+                Ready to ship{" "}
+                <span className="bg-linear-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">
+                  better code?
+                </span>
               </h2>
               <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
                 Join thousands of developers using AI-powered code reviews to
                 catch bugs earlier and merge with confidence.
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-4">
-                <Button
-                  size="lg"
-                  className="gap-2 bg-linear-to-r from-indigo-500 to-violet-600 px-8 font-bold text-white shadow-lg shadow-indigo-500/30 hover:from-indigo-600 hover:to-violet-700 border-0"
-                  asChild
-                >
-                  <Link href="/sign-up">
-                    Start for free
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="gap-2 px-8 font-semibold"
-                  asChild
-                >
-                  <Link href="/contact">Talk to sales</Link>
-                </Button>
+                <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
+                  <Button
+                    size="lg"
+                    className="gap-2 bg-linear-to-r from-indigo-500 to-violet-600 px-10 font-bold text-white shadow-lg shadow-indigo-500/40 hover:from-indigo-600 hover:to-violet-700 border-0 h-13 text-base"
+                    asChild
+                  >
+                    <Link href="/sign-up">
+                      Start for free
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="gap-2 px-10 font-semibold h-13 text-base"
+                    asChild
+                  >
+                    <Link href="/contact">Talk to sales</Link>
+                  </Button>
+                </motion.div>
               </div>
-              <p className="mt-4 text-xs text-muted-foreground">
+              <p className="mt-6 text-xs text-muted-foreground">
                 No credit card required · 14-day Pro trial · Cancel anytime
               </p>
             </div>

@@ -493,6 +493,7 @@ function DiagramViewer({
           svgEl.style.textRendering = "geometricPrecision";
 
           if (nodesRef.current.length > 0) {
+            // ── Flowchart / class diagram nodes ──────────────────────────────
             svgEl
               .querySelectorAll<SVGElement>(".node, [data-id]")
               .forEach((el) => {
@@ -511,6 +512,55 @@ function DiagramViewer({
                   );
                 }
               });
+
+            // ── ERD entity groups ─────────────────────────────────────────────
+            // Mermaid renders ERD entities as <g id="entity-ModelName"> or
+            // <g id="entity-ModelName-N">. We also fall back to matching by
+            // the first <text> child so it works across Mermaid versions.
+            const bindERDEntity = (el: SVGElement, rawId: string, text: string) => {
+              const entityName = rawId.replace(/^entity-/, "").replace(/-\d+$/, "");
+              const matchedNode = nodesRef.current.find(
+                (n) =>
+                  n.label === entityName ||
+                  n.id === `table_${entityName}` ||
+                  n.label === text,
+              );
+              if (matchedNode) {
+                el.style.cursor = "pointer";
+                el.addEventListener("click", (evt) => {
+                  evt.stopPropagation();
+                  handleNodeClickRef.current(matchedNode, el);
+                });
+              }
+            };
+
+            svgEl
+              .querySelectorAll<SVGGElement>('g[id^="entity-"]')
+              .forEach((el) => {
+                const rawId = el.getAttribute("id") ?? "";
+                const firstText = el.querySelector("text")?.textContent?.trim() ?? "";
+                bindERDEntity(el, rawId, firstText);
+              });
+
+            // If no id-based matches were found, try matching entity boxes by
+            // the label text inside any <rect> + <text> group (handles older
+            // Mermaid versions that don't assign entity IDs).
+            if (!svgEl.querySelector('g[id^="entity-"]')) {
+              svgEl.querySelectorAll<SVGGElement>("g").forEach((g) => {
+                const rect = g.querySelector("rect");
+                const text = g.querySelector("text");
+                if (!rect || !text) return;
+                const label = text.textContent?.trim() ?? "";
+                const matched = nodesRef.current.find((n) => n.label === label);
+                if (matched) {
+                  g.style.cursor = "pointer";
+                  g.addEventListener("click", (evt) => {
+                    evt.stopPropagation();
+                    handleNodeClickRef.current(matched, g);
+                  });
+                }
+              });
+            }
           }
         }
       } catch (err) {
