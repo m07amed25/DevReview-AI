@@ -1,16 +1,19 @@
-import type { Metadata } from "next";
-import { ComingSoonPage } from "@/features/home/components/ComingSoonPage";
+import { HomeHeader } from "@/features/home/components/HomeHeader";
+import { HomeFooter } from "@/features/home/components/HomeFooter";
+import { PricingContent } from "@/features/home/components/PricingContent";
 
-export const metadata: Metadata = {
-  title: "Pricing",
-  description: "Flexible pricing plans for teams of all sizes — coming soon.",
+export const metadata = {
+  title: "Pricing – DevReview AI",
+  description:
+    "Simple, transparent pricing for every team. Free, Pro, and Ultra plans.",
 };
 
 export default function PricingPage() {
   return (
-    <ComingSoonPage
-      title="Pricing"
-      description="Flexible plans for solo developers and growing teams. Fair, transparent pricing is on its way."
-    />
+    <div className="min-h-screen bg-background">
+      <HomeHeader />
+      <PricingContent />
+      <HomeFooter />
+    </div>
   );
 }

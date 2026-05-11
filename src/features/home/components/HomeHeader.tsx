@@ -2,16 +2,17 @@
 
 import { useState, useEffect, useSyncExternalStore } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   ArrowRight,
-  Code2,
   Github,
   Menu,
   X,
-  Sparkles,
-  Zap,
-  BookOpen,
   Star,
+  Info,
+  FileText,
+  CreditCard,
+  Briefcase,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/lib/auth-client";
@@ -26,16 +27,16 @@ import {
 } from "@/components/ui/dialog";
 
 const navigationLinks = [
-  { href: "#features", label: "Features", icon: Sparkles },
-  { href: "#how-it-works", label: "How It Works", icon: Zap },
-  { href: "#languages", label: "Languages", icon: Code2 },
-  { href: "#docs", label: "Docs", icon: BookOpen },
+  { href: "/about", label: "About", icon: Info },
+  { href: "/blog", label: "Blog", icon: FileText },
+  { href: "/pricing", label: "Pricing", icon: CreditCard },
+  { href: "/pricing", label: "Pro", icon: Briefcase, highlight: true },
 ];
 
 export function HomeHeader() {
   const { data: session } = useSession();
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const isClient = useSyncExternalStore(
@@ -45,41 +46,10 @@ export function HomeHeader() {
   );
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-
-
-
-      // Detect active section
-      const sections = navigationLinks.map((link) =>
-        link.href.replace("#", ""),
-      );
-      const currentSection = sections.find((section) => {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          return rect.top <= 100 && rect.bottom >= 100;
-        }
-        return false;
-      });
-      if (currentSection) {
-        setActiveSection(`#${currentSection}`);
-      }
-    };
-
+    const handleScroll = () => setIsScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const scrollToSection = (href: string) => {
-    if (href.startsWith("#")) {
-      const element = document.getElementById(href.replace("#", ""));
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "start" });
-        setMobileMenuOpen(false);
-      }
-    }
-  };
 
   return (
     <>
@@ -119,11 +89,21 @@ export function HomeHeader() {
           >
             {navigationLinks.map((link) => {
               const Icon = link.icon;
-              const isActive = activeSection === link.href;
-              return (
-                <button
-                  key={link.href}
-                  onClick={() => scrollToSection(link.href)}
+              const isActive = pathname === link.href;
+              return link.highlight ? (
+                <Link
+                  key={link.href + link.label}
+                  href={link.href}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 hover:bg-indigo-500/25 hover:text-indigo-200 transition-all duration-200 hover:scale-105"
+                >
+                  <Icon className="h-3.5 w-3.5" />
+                  {link.label}
+                  <span className="text-[9px] font-bold bg-indigo-500 text-white px-1.5 py-px rounded-full leading-none">NEW</span>
+                </Link>
+              ) : (
+                <Link
+                  key={link.href + link.label}
+                  href={link.href}
                   className={cn(
                     "flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105",
                     isActive
@@ -133,7 +113,7 @@ export function HomeHeader() {
                 >
                   <Icon className="h-4 w-4" />
                   {link.label}
-                </button>
+                </Link>
               );
             })}
 
@@ -156,7 +136,7 @@ export function HomeHeader() {
               <Button
                 size="sm"
                 asChild
-                className="bg-gradient-to-r from-indigo-500 to-blue-600 text-white hover:from-indigo-600 hover:to-blue-700 rounded-full font-semibold shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 px-5 group transition-all duration-200"
+                className="bg-linear-to-r from-indigo-500 to-blue-600 text-white hover:from-indigo-600 hover:to-blue-700 rounded-full font-semibold shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 px-5 group transition-all duration-200"
               >
                 <Link
                   href="/repo"
@@ -189,7 +169,7 @@ export function HomeHeader() {
                 <Button
                   size="sm"
                   asChild
-                  className="bg-gradient-to-r from-indigo-500 to-blue-600 text-white hover:from-indigo-600 hover:to-blue-700 rounded-full font-semibold shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 px-5 group transition-all duration-200"
+                  className="bg-linear-to-r from-indigo-500 to-blue-600 text-white hover:from-indigo-600 hover:to-blue-700 rounded-full font-semibold shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 px-5 group transition-all duration-200"
                 >
                   <Link
                     href="/sign-up"
@@ -222,28 +202,34 @@ export function HomeHeader() {
                   )}
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px] bg-zinc-900 border-zinc-800">
+              <DialogContent className="sm:max-w-106 bg-zinc-900 border-zinc-800">
                 <DialogHeader>
                   <DialogTitle className="text-white">Navigation</DialogTitle>
                 </DialogHeader>
                 <nav className="flex flex-col gap-2 mt-4">
                   {navigationLinks.map((link) => {
                     const Icon = link.icon;
-                    const isActive = activeSection === link.href;
+                    const isActive = pathname === link.href;
                     return (
-                      <button
-                        key={link.href}
-                        onClick={() => scrollToSection(link.href)}
+                      <Link
+                        key={link.href + link.label}
+                        href={link.href}
+                        onClick={() => setMobileMenuOpen(false)}
                         className={cn(
-                          "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 text-left",
-                          isActive
-                            ? "text-white bg-indigo-500/20 border border-indigo-500/30"
-                            : "text-zinc-400 hover:text-white hover:bg-white/5",
+                          "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200",
+                          link.highlight
+                            ? "text-indigo-300 bg-indigo-500/10 border border-indigo-500/20 hover:bg-indigo-500/20"
+                            : isActive
+                              ? "text-white bg-indigo-500/20 border border-indigo-500/30"
+                              : "text-zinc-400 hover:text-white hover:bg-white/5",
                         )}
                       >
                         <Icon className="h-5 w-5" />
                         {link.label}
-                      </button>
+                        {link.highlight && (
+                          <span className="ml-auto text-[9px] font-bold bg-indigo-500 text-white px-1.5 py-px rounded-full leading-none">NEW</span>
+                        )}
+                      </Link>
                     );
                   })}
                   <div className="border-t border-zinc-800 my-2" />
@@ -267,7 +253,7 @@ export function HomeHeader() {
                       </Link>
                       <Link
                         href="/sign-up"
-                        className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-semibold bg-gradient-to-r from-indigo-500 to-blue-600 text-white hover:from-indigo-600 hover:to-blue-700 transition-all duration-200"
+                        className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-semibold bg-linear-to-r from-indigo-500 to-blue-600 text-white hover:from-indigo-600 hover:to-blue-700 transition-all duration-200"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         Get Started
