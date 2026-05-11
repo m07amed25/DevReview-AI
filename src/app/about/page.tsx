@@ -10,6 +10,8 @@ export const metadata: Metadata = {
     "Learn about the team behind Code Catch, our mission, and why we built AI-powered code review for GitHub pull requests.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function AboutPage() {
   void api.home.getAboutStats.prefetch();
 
