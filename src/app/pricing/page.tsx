@@ -5,6 +5,8 @@ import { PricingContent } from "@/features/home/components/PricingContent";
 import { api, HydrateClient } from "@/lib/trpc/server";
 import { db } from "@/server/db";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Pricing - Code Catch",
   description:
