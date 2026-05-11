@@ -3,7 +3,7 @@ import { APIError } from "better-auth/api";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { sso } from "@better-auth/sso";
 import { db } from "../db";
-import { sendGithubConnectionWarningEmail } from "../email";
+import { sendGithubConnectionWarningEmail, sendPasswordResetEmail } from "../email";
 
 const getTrustedOrigins = () => {
   const origins = ["http://localhost:3000"];
@@ -25,6 +25,14 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
+    resetPasswordTokenExpiresIn: 300, // 5 minutes
+    sendResetPassword: async ({ user, url }) => {
+      await sendPasswordResetEmail({
+        to: user.email,
+        userName: user.name || "User",
+        resetUrl: url,
+      });
+    },
   },
   socialProviders: {
     github: {

@@ -21,6 +21,10 @@ import {
   Rocket,
   Globe,
   Lock,
+  Twitter,
+  Instagram,
+  Facebook,
+  Linkedin,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -194,6 +198,10 @@ interface TeamMember {
   github: string;
   githubPhoto: string;
   description: string;
+  twitter?: string;
+  instagram?: string;
+  facebook?: string;
+  linkedin?: string;
 }
 
 const team: TeamMember[] = [
@@ -204,22 +212,10 @@ const team: TeamMember[] = [
     githubPhoto: "https://avatars.githubusercontent.com/m07amed25",
     description:
       "Architects the platform end-to-end — from backend APIs and AI pipelines to the interfaces developers interact with every day.",
-  },
-  {
-    name: "Shahd Arman",
-    role: "Flutter dev & Video Editor",
-    github: "https://github.com/shahdarman",
-    githubPhoto: "https://avatars.githubusercontent.com/shahdarman",
-    description:
-      "Crafts smooth cross-platform mobile experiences and produces the visual content that brings Code Catch's story to life.",
-  },
-  {
-    name: "Mostafa Galal",
-    role: "Cross Platform Mobile Developer",
-    github: "https://github.com/MG-B17",
-    githubPhoto: "https://avatars.githubusercontent.com/MG-B17",
-    description:
-      "Builds native-quality apps for iOS and Android from a single codebase, keeping performance tight on every device.",
+    twitter: "https://x.com/m07hamed25",
+    instagram: "https://www.instagram.com/m07amedr",
+    facebook: "https://www.facebook.com/Mohamed.reda.lll/",
+    linkedin: "https://www.linkedin.com/in/mhmd-reda-ali/",
   },
   {
     name: "Mohamed Ramy",
@@ -228,6 +224,34 @@ const team: TeamMember[] = [
     githubPhoto: "https://avatars.githubusercontent.com/ramymod",
     description:
       "Designs and fine-tunes the AI models that power Code Catch's code analysis, making reviews smarter with every PR.",
+    // twitter: "https://twitter.com/placeholder",
+    // instagram: "https://instagram.com/placeholder",
+    // facebook: "https://facebook.com/placeholder",
+    // linkedin: "https://linkedin.com/in/placeholder",
+  },
+  {
+    name: "Mostafa Galal",
+    role: "Cross Platform Mobile Developer",
+    github: "https://github.com/MG-B17",
+    githubPhoto: "https://avatars.githubusercontent.com/MG-B17",
+    description:
+      "Builds native-quality apps for iOS and Android from a single codebase, keeping performance tight on every device.",
+    // twitter: "https://twitter.com/placeholder",
+    // instagram: "https://instagram.com/placeholder",
+    // facebook: "https://facebook.com/placeholder",
+    // linkedin: "https://linkedin.com/in/mohamedreda",
+  },
+  {
+    name: "Shahd Arman",
+    role: "Flutter dev & Video Editor",
+    github: "https://github.com/shahdarman",
+    githubPhoto: "https://avatars.githubusercontent.com/shahdarman",
+    description:
+      "Crafts smooth cross-platform mobile experiences and produces the visual content that brings Code Catch's story to life.",
+    // twitter: "https://twitter.com/placeholder",
+    // instagram: "https://instagram.com/placeholder",
+    // facebook: "https://facebook.com/placeholder",
+    linkedin: "https://www.linkedin.com/in/shahdarman",
   },
   {
     name: "Salma Tarek",
@@ -236,6 +260,10 @@ const team: TeamMember[] = [
     githubPhoto: "https://avatars.githubusercontent.com/Salma935",
     description:
       "Translates complex workflows into clean, intuitive interfaces — ensuring every interaction feels effortless and intentional.",
+    // twitter: "https://twitter.com/placeholder",
+    // instagram: "https://instagram.com/placeholder",
+    // facebook: "https://facebook.com/placeholder",
+    // linkedin: "https://linkedin.com/in/placeholder",
   },
   {
     name: "Yassmin Ghaly",
@@ -244,6 +272,10 @@ const team: TeamMember[] = [
     githubPhoto: "https://avatars.githubusercontent.com/Yassmin-Ghaly001",
     description:
       "Keeps the platform secure from threats while shaping the visual identity that makes Code Catch recognizable and trustworthy.",
+    // twitter: "https://twitter.com/placeholder",
+    // instagram: "https://instagram.com/placeholder",
+    // facebook: "https://facebook.com/placeholder",
+    // linkedin: "https://linkedin.com/in/placeholder",
   },
   // Add team members below — fill in name, role, github, githubPhoto, description
   // {
@@ -565,14 +597,14 @@ export function AboutContent() {
                   </div>
                   <h3 className="text-lg font-bold text-white">{member.name}</h3>
                   <div className="mt-2 space-y-1">
-                    <p className="text-sm text-indigo-400 font-medium">
+                    <p className="text-sm text-indigo-400 font-medium truncate">
                       {member.role}
                     </p>
                     <p className="text-xs text-zinc-500 leading-relaxed">
                       {member.description}
                     </p>
                   </div>
-                  {/* GitHub link */}
+                  {/* Social links */}
                   <div className="flex items-center justify-center gap-3 mt-5">
                     <a
                       href={member.github}
@@ -583,6 +615,50 @@ export function AboutContent() {
                     >
                       <Github className="h-4 w-4" />
                     </a>
+                    {member.twitter && (
+                      <a
+                        href={member.twitter}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-zinc-500 hover:text-sky-400 transition-colors"
+                        aria-label={`${member.name} Twitter profile`}
+                      >
+                        <Twitter className="h-4 w-4" />
+                      </a>
+                    )}
+                    {member.instagram && (
+                      <a
+                        href={member.instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-zinc-500 hover:text-pink-400 transition-colors"
+                        aria-label={`${member.name} Instagram profile`}
+                      >
+                        <Instagram className="h-4 w-4" />
+                      </a>
+                    )}
+                    {member.facebook && (
+                      <a
+                        href={member.facebook}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-zinc-500 hover:text-blue-400 transition-colors"
+                        aria-label={`${member.name} Facebook profile`}
+                      >
+                        <Facebook className="h-4 w-4" />
+                      </a>
+                    )}
+                    {member.linkedin && (
+                      <a
+                        href={member.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-zinc-500 hover:text-blue-500 transition-colors"
+                        aria-label={`${member.name} LinkedIn profile`}
+                      >
+                        <Linkedin className="h-4 w-4" />
+                      </a>
+                    )}
                   </div>
                 </div>
               </RevealSection>

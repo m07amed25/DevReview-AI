@@ -51,6 +51,7 @@ import {
   ArrowUp,
   ArrowDown,
   Github,
+  KeyRound,
 } from "lucide-react";
 
 export default function AdminUsersPage() {
@@ -90,6 +91,8 @@ export default function AdminUsersPage() {
   const unbanUser = trpc.admin.unbanUser.useMutation({
     onSuccess: () => void refetch(),
   });
+
+  const resetPassword = trpc.admin.adminResetUserPassword.useMutation();
 
   // Debounce search input
   useEffect(() => {
@@ -382,6 +385,45 @@ export default function AdminUsersPage() {
                         <ShieldBan className="h-4 w-4" />
                       </Button>
                     )}
+
+                    {/* Reset Password */}
+                    <AlertDialog>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="shrink-0 text-muted-foreground hover:bg-orange-100 hover:text-orange-600 dark:hover:bg-orange-950/50 dark:hover:text-orange-400"
+                              disabled={resetPassword.isPending || user.isOwner}
+                            >
+                              <KeyRound className="h-4 w-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                        </TooltipTrigger>
+                        <TooltipContent>Send password reset email</TooltipContent>
+                      </Tooltip>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Reset password?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            A password reset link will be sent to{" "}
+                            <strong>{user.email}</strong>. The user will need to
+                            follow the link to set a new password.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() =>
+                              resetPassword.mutate({ userId: user.id })
+                            }
+                          >
+                            Send Reset Link
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
 
                     {/* Delete */}
                     <AlertDialog>

@@ -12,6 +12,7 @@ export {
   sendTestEmail,
   sendGithubConnectionWarningEmail,
   sendSecurityAlertEmail,
+  sendPasswordResetEmail,
 } from "./service";
 
 export { sendTeamInviteEmailNotification } from "./integrations/team";

@@ -353,6 +353,16 @@ export default function SignUpPage() {
           </form>
 
           <p className="text-center text-sm text-muted-foreground">
+            Already have a password reset link?{" "}
+            <Link
+              href="/reset-password"
+              className="text-indigo-500 font-medium hover:text-indigo-400 underline-offset-4 hover:underline"
+            >
+              Reset password
+            </Link>
+          </p>
+
+          <p className="text-center text-sm text-muted-foreground">
             Already have an account?{" "}
             <Link
               href="/sign-in"

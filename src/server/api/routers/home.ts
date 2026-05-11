@@ -1,4 +1,9 @@
+import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
+import { auth } from "../../auth";
+import { checkRateLimit, getRateLimitRemaining } from "@/lib/rate-limiter";
+
+const RESET_WINDOW_MS = 5 * 60 * 1000; // 5 minutes
 
 export const homeRouter = createTRPCRouter({
   getAboutStats: publicProcedure.query(async ({ ctx }) => {
@@ -62,4 +67,37 @@ export const homeRouter = createTRPCRouter({
       recentUsers,
     };
   }),
+
+  requestPasswordReset: publicProcedure
+    .input(
+      z.object({
+        email: z.string().email().max(255),
+        redirectTo: z.string().url().max(500).optional(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const key = `pwd-reset:${input.email.toLowerCase()}`;
+
+      if (!checkRateLimit(key, RESET_WINDOW_MS)) {
+        const remainingSec = Math.ceil(
+          getRateLimitRemaining(key, RESET_WINDOW_MS) / 1000,
+        );
+        throw new Error(
+          `Please wait ${remainingSec} seconds before requesting another reset.`,
+        );
+      }
+
+      const baseUrl =
+        process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
+
+      await auth.api.requestPasswordReset({
+        body: {
+          email: input.email,
+          redirectTo: input.redirectTo ?? `${baseUrl}/reset-password`,
+        },
+        headers: new Headers(),
+      });
+
+      return { success: true };
+    }),
 });

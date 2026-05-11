@@ -6,6 +6,7 @@ import { renderSupportReplyEmail } from "./templates/support-reply";
 import { renderAdminPromotedEmail } from "./templates/admin-promoted";
 import { renderAdminDemotedEmail } from "./templates/admin-demoted";
 import { renderSecurityAlertEmail } from "./templates/security-alert";
+import { renderPasswordResetEmail } from "./templates/password-reset";
 import type {
   TeamMemberAddedEmailParams,
   ReviewCompletionEmailParams,
@@ -16,6 +17,12 @@ import type {
   SecurityAlertEmailParams,
   EmailSendResult,
 } from "@/types/email";
+
+export interface PasswordResetEmailParams {
+  to: string;
+  userName: string;
+  resetUrl: string;
+}
 
 /**
  * Send an email using nodemailer
@@ -250,6 +257,27 @@ export async function sendSecurityAlertEmail(
     return await sendEmail(to, subject, html);
   } catch (error) {
     console.error("❌ Error generating security alert email:", error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "Failed to generate email",
+    };
+  }
+}
+
+/**
+ * Send password reset email
+ */
+export async function sendPasswordResetEmail(
+  params: PasswordResetEmailParams,
+): Promise<EmailSendResult> {
+  const { to, userName, resetUrl } = params;
+
+  try {
+    const html = await renderPasswordResetEmail(userName, resetUrl);
+    return await sendEmail(to, "Reset your DevReview AI password", html);
+  } catch (error) {
+    console.error("❌ Error generating password reset email:", error);
     return {
       success: false,
       error:

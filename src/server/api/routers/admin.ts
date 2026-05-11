@@ -11,7 +11,11 @@ import {
   sendAdminPromotedEmail,
   sendAdminDemotedEmail,
 } from "../../email/service";
+import { auth } from "../../auth";
 import { logAudit } from "../../services/audit";
+import { checkRateLimit, getRateLimitRemaining } from "@/lib/rate-limiter";
+
+const RESET_WINDOW_MS = 5 * 60 * 1000; // 5 minutes
 
 export const adminRouter = createTRPCRouter({
   getStats: adminProcedure.query(async ({ ctx }) => {
@@ -1280,5 +1284,54 @@ export const adminRouter = createTRPCRouter({
         metadata: input as Record<string, unknown>,
       });
       return result;
+    }),
+
+  adminResetUserPassword: adminProcedure
+    .input(z.object({ userId: z.string().max(255) }))
+    .mutation(async ({ ctx, input }) => {
+      const targetUser = await ctx.db.user.findUnique({
+        where: { id: input.userId },
+        select: { email: true, name: true },
+      });
+
+      if (!targetUser) {
+        throw new Error("User not found.");
+      }
+
+      if (targetUser.email === process.env.OWNER_MAIL) {
+        throw new Error("Cannot reset the owner's password.");
+      }
+
+      const key = `pwd-reset:${targetUser.email.toLowerCase()}`;
+      if (!checkRateLimit(key, RESET_WINDOW_MS)) {
+        const remainingSec = Math.ceil(
+          getRateLimitRemaining(key, RESET_WINDOW_MS) / 1000,
+        );
+        throw new Error(
+          `A reset email was already sent recently. Please wait ${remainingSec} seconds before trying again.`,
+        );
+      }
+
+      const baseUrl =
+        process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
+
+      await auth.api.requestPasswordReset({
+        body: {
+          email: targetUser.email,
+          redirectTo: `${baseUrl}/reset-password`,
+        },
+        headers: new Headers(),
+      });
+
+      void logAudit({
+        actorId: ctx.user.id,
+        action: "USER_PASSWORD_RESET_REQUESTED",
+        resource: "USER",
+        resourceId: input.userId,
+        ipAddress: ctx.ip,
+        userAgent: ctx.userAgent,
+      });
+
+      return { success: true };
     }),
 });

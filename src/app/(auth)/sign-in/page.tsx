@@ -295,6 +295,15 @@ function SignInContent() {
               )}
             </div>
 
+            <div className="flex justify-end">
+              <Link
+                href="/forgot-password"
+                className="text-sm font-medium text-indigo-500 hover:text-indigo-400 underline-offset-4 hover:underline"
+              >
+                Forgot password?
+              </Link>
+            </div>
+
             <Button type="submit" disabled={loading} className="w-full">
               {loading ? (
                 <>
