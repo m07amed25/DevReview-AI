@@ -18,7 +18,7 @@ const footerLinks = {
     { label: "Features", href: "#features" },
     { label: "How It Works", href: "#how-it-works" },
     { label: "Languages", href: "#languages" },
-    { label: "Pricing", href: "/pricing", soon: true },
+    { label: "Pricing", href: "/pricing"},
     { label: "Changelog", href: "/changelog", soon: true },
   ],
   resources: [
@@ -28,7 +28,7 @@ const footerLinks = {
     { label: "Blog", href: "/blog", soon: true },
   ],
   company: [
-    { label: "About", href: "/about", soon: true },
+    { label: "About", href: "/about"},
     { label: "Privacy Policy", href: "/privacy", soon: true },
     { label: "Terms of Service", href: "/terms", soon: true },
     { label: "Security", href: "/security", soon: true },
