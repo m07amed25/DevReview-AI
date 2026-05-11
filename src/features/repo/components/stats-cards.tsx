@@ -1,13 +1,12 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   FolderGit2,
-  GitPullRequest,
   Globe,
-  CheckCircle,
-  Star,
-  Check,
+  Lock,
+  CheckCircle2,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface StatsCardsProps {
   connectedCount: number;
@@ -17,6 +16,49 @@ interface StatsCardsProps {
   totalGithubCount: number;
   selectedCount: number;
   isLoading: boolean;
+}
+
+interface StatCardProps {
+  label: string;
+  value: number | string;
+  description: string;
+  icon: React.ElementType;
+  iconClass: string;
+  iconBg: string;
+  extra?: React.ReactNode;
+}
+
+function StatCard({
+  label,
+  value,
+  description,
+  icon: Icon,
+  iconClass,
+  iconBg,
+  extra,
+}: StatCardProps) {
+  return (
+    <div className="flex items-start gap-4 rounded-xl border border-border/60 bg-card px-5 py-4 shadow-sm hover:shadow-md hover:border-border transition-all duration-200">
+      <div
+        className={cn(
+          "mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border",
+          iconBg,
+        )}
+      >
+        <Icon className={cn("size-4.5", iconClass)} />
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
+          {label}
+        </p>
+        <p className="text-2xl font-bold tracking-tight leading-none mb-1">
+          {value}
+        </p>
+        <p className="text-xs text-muted-foreground">{description}</p>
+        {extra && <div className="mt-3">{extra}</div>}
+      </div>
+    </div>
+  );
 }
 
 export function StatsCards({
@@ -30,109 +72,94 @@ export function StatsCards({
 }: StatsCardsProps) {
   if (isLoading) {
     return (
-      <div className="grid gap-4 md:grid-cols-3 mb-4">
+      <div className="grid gap-4 sm:grid-cols-3">
         {[...Array(3)].map((_, i) => (
-          <Card key={i} className="bg-card">
-            <CardHeader className="pb-2">
-              <Skeleton className="h-4 w-24" />
-            </CardHeader>
-            <CardContent>
-              <Skeleton className="h-9 w-16 mb-2" />
-              <Skeleton className="h-3 w-28" />
-            </CardContent>
-          </Card>
+          <Skeleton key={i} className="h-28 rounded-xl" />
         ))}
       </div>
     );
   }
 
+  const connectedPct =
+    totalGithubCount > 0
+      ? Math.round((connectedCount / totalGithubCount) * 100)
+      : 0;
+
   return (
-    <div className="grid gap-4 md:grid-cols-3">
-      {/* Connected */}
-      <Card className="bg-card shadow-sm border-border">
-        <CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
-          <CardTitle className="text-sm font-medium text-muted-foreground">
-            Connected
-          </CardTitle>
-          <FolderGit2 className="size-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{connectedCount}</div>
-          <p className="text-xs text-muted-foreground mt-1">
-            Repositories linked to your account
-          </p>
-          {connectedCount > 0 && (
-            <div className="mt-4 flex items-center gap-3 text-xs text-muted-foreground">
+    <div className="grid gap-4 sm:grid-cols-3">
+      <StatCard
+        label="Connected"
+        value={connectedCount}
+        description="Repositories linked to your account"
+        icon={FolderGit2}
+        iconClass="text-violet-500"
+        iconBg="bg-violet-500/10 border-violet-500/20"
+        extra={
+          connectedCount > 0 ? (
+            <div className="flex items-center gap-3 text-xs text-muted-foreground">
               <span className="flex items-center gap-1.5">
-                <span className="size-1.5 rounded-full bg-muted-foreground/50" />
+                <Lock className="size-3" />
                 {connectedPrivate} private
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="size-1.5 rounded-full bg-emerald-500" />
+                <Globe className="size-3 text-emerald-500" />
                 {connectedPublic} public
               </span>
             </div>
-          )}
-        </CardContent>
-      </Card>
+          ) : null
+        }
+      />
 
-      {/* Available */}
-      <Card className="bg-card shadow-sm border-border">
-        <CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
-          <CardTitle className="text-sm font-medium text-muted-foreground">
-            Available
-          </CardTitle>
-          <Globe className="size-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{availableCount}</div>
-          <p className="text-xs text-muted-foreground mt-1">
-            GitHub repositories not yet connected
-          </p>
-          {totalGithubCount > 0 && (
-            <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
-              <span>Not connected</span>
-              <span className="font-medium">
-                {Math.round((availableCount / totalGithubCount) * 100)}%
-              </span>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Selection */}
-      <Card className="bg-card shadow-sm border-border">
-        <CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
-          <CardTitle className="text-sm font-medium text-muted-foreground">
-            Selection
-          </CardTitle>
-          <Star className="size-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{selectedCount}</div>
-          <p className="text-xs text-muted-foreground mt-1">
-            Selected for connection
-          </p>
-          {availableCount > 0 && (
-            <div className="mt-4 space-y-1.5">
-              <div className="flex justify-between items-center text-xs text-muted-foreground">
-                <span>Capacity</span>
-                <span className="font-medium text-foreground">
-                  {Math.round((selectedCount / availableCount) * 100)}%
-                </span>
-              </div>
-              <div className="w-full bg-muted rounded-full h-1 overflow-hidden">
+      <StatCard
+        label="Available"
+        value={availableCount}
+        description="GitHub repos not yet connected"
+        icon={Globe}
+        iconClass="text-sky-500"
+        iconBg="bg-sky-500/10 border-sky-500/20"
+        extra={
+          totalGithubCount > 0 ? (
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <div className="h-1.5 flex-1 rounded-full bg-muted overflow-hidden">
+                {/* eslint-disable-next-line react/forbid-component-props */}
                 <div
-                  className="bg-foreground h-full rounded-full transition-all duration-500 ease-out"
-                  style={{
-                    width: `${Math.round((selectedCount / availableCount) * 100)}%`,
-                  }}
+                  className="h-full rounded-full bg-sky-500/60 transition-all duration-500"
+                  style={{ width: `${100 - connectedPct}%` } as React.CSSProperties}
                 />
               </div>
+              <span>{100 - connectedPct}% not linked</span>
             </div>
-          )}
-        </CardContent>
-      </Card>
+          ) : null
+        }
+      />
+
+      <StatCard
+        label="Ready to Import"
+        value={selectedCount > 0 ? selectedCount : availableCount}
+        description={
+          selectedCount > 0
+            ? `${selectedCount} selected for import`
+            : "Repositories ready to connect"
+        }
+        icon={CheckCircle2}
+        iconClass="text-emerald-500"
+        iconBg="bg-emerald-500/10 border-emerald-500/20"
+        extra={
+          totalGithubCount > 0 ? (
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <div className="h-1.5 flex-1 rounded-full bg-muted overflow-hidden">
+                {/* eslint-disable-next-line react/forbid-component-props */}
+                <div
+                  className="h-full rounded-full bg-emerald-500/60 transition-all duration-500"
+                  style={{ width: `${connectedPct}%` } as React.CSSProperties}
+                />
+              </div>
+              <span>{connectedPct}% connected</span>
+            </div>
+          ) : null
+        }
+      />
     </div>
   );
 }
+

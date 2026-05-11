@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -18,6 +18,7 @@ import { trpc } from "@/lib/trpc/client";
 import { StatsCards } from "@/features/repo/components/stats-cards";
 import { ConnectedRepoCard } from "@/features/repo/components/connected-repo-card";
 import { GithubReposPanel } from "@/features/repo/components/github-repos-panel";
+import { cn } from "@/lib/utils";
 
 export default function ReposPage() {
   const [selectedRepos, setSelectedRepos] = useState<Set<number>>(new Set());
@@ -81,44 +82,74 @@ export default function ReposPage() {
     connectMutation.mutate({ repos: reposToConnect });
   };
 
+  const repoCount = connectedRepos.data?.length ?? 0;
+
   return (
-    <div className="space-y-6 pb-10">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-semibold tracking-tight">
-            Repositories
-          </h1>
-          <p className="text-muted-foreground">
+    <div className="max-w-6xl mx-auto space-y-8 pb-12">
+
+      {/* ── Page header ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 pt-2"
+      >
+        <div className="space-y-1.5">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
+              <FolderGit2 className="size-4.5 text-primary" />
+            </div>
+            <h1 className="text-2xl font-semibold tracking-tight">Repositories</h1>
+            {repoCount > 0 && (
+              <Badge
+                variant="secondary"
+                className="rounded-full px-2.5 py-0.5 text-xs font-medium"
+              >
+                {repoCount}
+              </Badge>
+            )}
+          </div>
+          <p className="text-sm text-muted-foreground pl-11.5">
             Connect and manage your GitHub repositories to track pull requests.
           </p>
         </div>
+
         <Button
+          size="sm"
           onClick={() => {
             setShowGitHubRepos((v) => !v);
             setSearchQuery("");
             setSelectedRepos(new Set());
           }}
           variant={showGitHubRepos ? "outline" : "default"}
+          className={cn(
+            "h-9 rounded-lg gap-2 font-medium transition-all",
+            !showGitHubRepos &&
+              "bg-primary hover:bg-primary/90 shadow-sm shadow-primary/20",
+          )}
         >
           {showGitHubRepos ? (
             <>
-              <X className="size-4 mr-2" />
-              Cancel Import
+              <X className="size-3.5" />
+              Cancel
             </>
           ) : (
             <>
-              <Github className="size-4 mr-2" />
+              <Github className="size-3.5" />
               Connect Repository
             </>
           )}
         </Button>
-      </div>
+      </motion.div>
 
-      {/* Stats */}
-      {(connectedRepos.data || connectedRepos.isLoading) && (
+      {/* ── Stats row ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.08, ease: "easeOut" }}
+      >
         <StatsCards
-          connectedCount={connectedRepos.data?.length ?? 0}
+          connectedCount={repoCount}
           connectedPrivate={
             connectedRepos.data?.filter((r) => r.private).length ?? 0
           }
@@ -130,133 +161,166 @@ export default function ReposPage() {
           selectedCount={selectedRepos.size}
           isLoading={connectedRepos.isLoading}
         />
-      )}
+      </motion.div>
 
-      {/* Connected Repositories */}
-      <Card className="overflow-hidden">
-        <div className="border-b border-border bg-muted/30 px-6 py-4 flex items-center justify-between">
+      {/* ── Connected repos ── */}
+      <motion.section
+        initial={{ opacity: 0, y: 18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.15, ease: "easeOut" }}
+        className="rounded-xl border border-border/70 bg-card overflow-hidden shadow-sm"
+      >
+        {/* Section header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border/60 bg-muted/20">
           <div>
-            <h2 className="font-semibold">Your Connected Repositories</h2>
-            <p className="text-sm text-muted-foreground mt-0.5">
-              Repositories linked to your account.
+            <h2 className="text-sm font-semibold text-foreground">Connected Repositories</h2>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Linked to your account and ready for review.
             </p>
           </div>
-          {connectedRepos.data && connectedRepos.data.length > 0 && (
-            <Badge variant="secondary" className="gap-1.5">
-              <FolderGit2 className="size-3.5" />
-              {connectedRepos.data.length}
+          {repoCount > 0 && (
+            <Badge variant="outline" className="rounded-full text-xs gap-1 px-2.5 border-border/60">
+              <span className="size-1.5 rounded-full bg-emerald-500 inline-block" />
+              {repoCount} active
             </Badge>
           )}
         </div>
 
+        {/* Body */}
         {connectedRepos.isLoading ? (
-          <CardContent className="p-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {[...Array(2)].map((_, i) => (
-                <Skeleton key={i} className="h-40 rounded-xl" />
-              ))}
-            </div>
-          </CardContent>
-        ) : connectedRepos.data && connectedRepos.data.length > 0 ? (
-          <CardContent className="p-4 sm:p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {connectedRepos.data.map((repo) => (
-                <ConnectedRepoCard
+          <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[...Array(3)].map((_, i) => (
+              <Skeleton key={i} className="h-44 rounded-lg" />
+            ))}
+          </div>
+        ) : repoCount > 0 ? (
+          <div className="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <AnimatePresence mode="popLayout">
+              {connectedRepos.data!.map((repo, i) => (
+                <motion.div
                   key={repo.id}
-                  repo={repo}
-                  isDeleting={disconnectMutation.isPending}
-                  onDelete={setRepoToDelete}
-                />
+                  initial={{ opacity: 0, scale: 0.97 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.25, delay: i * 0.04, ease: "easeOut" }}
+                >
+                  <ConnectedRepoCard
+                    repo={repo}
+                    isDeleting={disconnectMutation.isPending}
+                    onDelete={setRepoToDelete}
+                  />
+                </motion.div>
               ))}
-            </div>
-          </CardContent>
+            </AnimatePresence>
+          </div>
         ) : (
-          <CardContent className="py-20 text-center">
-            <div className="flex flex-col items-center max-w-sm mx-auto">
-              <div className="flex items-center justify-center w-16 h-16 rounded-full bg-muted/50 border border-border mb-6">
-                <FolderGit2 className="w-8 h-8 text-muted-foreground" />
-              </div>
-              <h3 className="text-lg font-medium mb-2 text-foreground">
-                No repositories connected
-              </h3>
-              <p className="text-sm text-muted-foreground mb-8">
-                Connect your GitHub repositories to start tracking pull requests and managing your development workflow.
-              </p>
-              {githubRepos.error?.data?.code === "PRECONDITION_FAILED" ? (
-                <Button
-                  onClick={async () => {
-                    const { linkSocial } = await import("@/lib/auth-client");
-                    await linkSocial({
-                      provider: "github",
-                      callbackURL: window.location.href,
-                    });
-                  }}
-                >
-                  <Github className="size-4 mr-2" />
-                  Connect GitHub Account
-                </Button>
-              ) : (
-                <Button
-                  onClick={() => {
-                    setShowGitHubRepos(true);
-                    setSearchQuery("");
-                    setSelectedRepos(new Set());
-                  }}
-                >
-                  <Plus className="size-4 mr-2" />
-                  Import from GitHub
-                </Button>
-              )}
+          /* Empty state */
+          <div className="py-20 flex flex-col items-center text-center px-6">
+            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-xl border border-dashed border-border bg-muted/40">
+              <FolderGit2 className="size-7 text-muted-foreground/60" />
             </div>
-          </CardContent>
+            <h3 className="text-base font-semibold mb-1">No repositories connected</h3>
+            <p className="text-sm text-muted-foreground max-w-xs mb-7 leading-relaxed">
+              Connect your GitHub repositories to start tracking pull requests
+              and get AI-powered code reviews.
+            </p>
+            {githubRepos.error?.data?.code === "PRECONDITION_FAILED" ? (
+              <Button
+                size="sm"
+                className="rounded-lg gap-2 h-9"
+                onClick={async () => {
+                  const { linkSocial } = await import("@/lib/auth-client");
+                  await linkSocial({
+                    provider: "github",
+                    callbackURL: window.location.href,
+                  });
+                }}
+              >
+                <Github className="size-3.5" />
+                Connect GitHub Account
+              </Button>
+            ) : (
+              <Button
+                size="sm"
+                className="rounded-lg gap-2 h-9"
+                onClick={() => {
+                  setShowGitHubRepos(true);
+                  setSearchQuery("");
+                  setSelectedRepos(new Set());
+                }}
+              >
+                <Plus className="size-3.5" />
+                Import from GitHub
+              </Button>
+            )}
+          </div>
         )}
-      </Card>
+      </motion.section>
 
-      {/* GitHub Import Panel */}
-      {showGitHubRepos && (
-        <GithubReposPanel
-          availableRepos={availableRepos}
-          filteredRepos={filteredRepos}
-          selectedRepos={selectedRepos}
-          searchQuery={searchQuery}
-          isLoading={githubRepos.isLoading}
-          isFetching={githubRepos.isFetching}
-          error={
-            githubRepos.error as {
-              message?: string;
-              data?: { code?: string };
-            } | null
-          }
-          isConnecting={connectMutation.isPending}
-          onToggle={toggleRepo}
-          onSelectAll={() =>
-            setSelectedRepos(new Set(availableRepos.map((r) => r.githubId)))
-          }
-          onClearSelection={() => setSelectedRepos(new Set())}
-          onConnect={handleConnect}
-          onRefresh={() => githubRepos.refetch()}
-          onSearchChange={setSearchQuery}
-        />
-      )}
+      {/* ── GitHub import panel ── */}
+      <AnimatePresence>
+        {showGitHubRepos && (
+          <motion.div
+            key="import-panel"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 14 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+          >
+            <GithubReposPanel
+              availableRepos={availableRepos}
+              filteredRepos={filteredRepos}
+              selectedRepos={selectedRepos}
+              searchQuery={searchQuery}
+              isLoading={githubRepos.isLoading}
+              isFetching={githubRepos.isFetching}
+              error={
+                githubRepos.error as {
+                  message?: string;
+                  data?: { code?: string };
+                } | null
+              }
+              isConnecting={connectMutation.isPending}
+              onToggle={toggleRepo}
+              onSelectAll={() =>
+                setSelectedRepos(new Set(availableRepos.map((r) => r.githubId)))
+              }
+              onClearSelection={() => setSelectedRepos(new Set())}
+              onConnect={handleConnect}
+              onRefresh={() => githubRepos.refetch()}
+              onSearchChange={setSearchQuery}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* Disconnect confirmation */}
+      {/* ── Disconnect confirmation ── */}
       <AlertDialog
         open={!!repoToDelete}
         onOpenChange={() => setRepoToDelete(null)}
       >
-        <AlertDialogContent>
+        <AlertDialogContent className="rounded-xl">
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Repository</AlertDialogTitle>
+            <AlertDialogTitle>Disconnect repository?</AlertDialogTitle>
             <AlertDialogDescription>
-              {`Are you sure you want to disconnect "${repoToDelete?.name}"? This will remove the repository from your connected list.`}
+              This will remove{" "}
+              <span className="font-medium text-foreground">
+                {repoToDelete?.name}
+              </span>{" "}
+              from your connected repositories. You can reconnect it at any time.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <Button variant="outline" onClick={() => setRepoToDelete(null)}>
+            <Button
+              variant="outline"
+              className="rounded-lg"
+              onClick={() => setRepoToDelete(null)}
+            >
               Cancel
             </Button>
             <Button
               variant="destructive"
+              className="rounded-lg"
               onClick={() => {
                 if (repoToDelete) {
                   disconnectMutation.mutate({ id: repoToDelete.id });
@@ -266,9 +330,9 @@ export default function ReposPage() {
               disabled={disconnectMutation.isPending}
             >
               {disconnectMutation.isPending ? (
-                <RefreshCw className="h-4 w-4 animate-spin" />
+                <RefreshCw className="size-3.5 animate-spin" />
               ) : (
-                "Delete"
+                "Disconnect"
               )}
             </Button>
           </AlertDialogFooter>

@@ -432,6 +432,7 @@
 
 html {
   scroll-behavior: smooth;
+  zoom: 0.9;
 }
 
 /* Reduced motion preference */
