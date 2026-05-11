@@ -20,6 +20,7 @@ import {
   ShieldCheck,
   KeyRound,
   Shield,
+  CreditCard,
 } from "lucide-react";
 
 const NAV_GROUPS = [
@@ -42,6 +43,7 @@ const NAV_GROUPS = [
         label: "Support Messages",
         icon: MessageSquareText,
       },
+      { href: "/admin/pricing", label: "Pricing", icon: CreditCard },
     ],
   },
   {
