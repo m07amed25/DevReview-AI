@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useSyncExternalStore } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -26,18 +27,13 @@ import {
   FolderGit2,
   GitMerge,
   LayoutDashboard,
+  LogOut,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useSession } from "@/lib/auth-client";
+import { useSession, signOut } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/ui/logo";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -78,8 +74,25 @@ const workspaceLinks = [
 export function HomeHeader() {
   const { data: session } = useSession();
   const pathname = usePathname();
+  const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
+
+  const handleSignOut = async () => {
+    setIsSigningOut(true);
+    try {
+      await signOut();
+      setMobileMenuOpen(false);
+      router.push("/");
+    } catch {
+      setIsSigningOut(false);
+    }
+  };
+
+  const userInitials = session?.user?.name
+    ? session.user.name.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2)
+    : session?.user?.email?.[0]?.toUpperCase() ?? "U";
 
   const isClient = useSyncExternalStore(
     () => () => {},
@@ -332,7 +345,7 @@ export function HomeHeader() {
                   variant="ghost"
                   size="sm"
                   asChild
-                  className="hidden sm:inline-flex text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200"
+                  className="hidden md:inline-flex text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200"
                 >
                   <Link href="/sign-in" title="Sign in to your account" aria-label="Sign In">
                     Sign In
@@ -341,7 +354,7 @@ export function HomeHeader() {
                 <Button
                   size="sm"
                   asChild
-                  className="bg-linear-to-r from-indigo-500 to-blue-600 text-white hover:from-indigo-600 hover:to-blue-700 rounded-full font-semibold shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 px-5 group transition-all duration-200"
+                  className="hidden md:inline-flex bg-linear-to-r from-indigo-500 to-blue-600 text-white hover:from-indigo-600 hover:to-blue-700 rounded-full font-semibold shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 px-5 group transition-all duration-200"
                 >
                   <Link href="/sign-up" title="Create a new account" aria-label="Get Started">
                     Get Started
@@ -351,135 +364,260 @@ export function HomeHeader() {
               </>
             )}
 
-            {/* Mobile Menu Button */}
-            <Dialog open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-              <DialogTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="md:hidden text-zinc-300 hover:text-white hover:bg-white/5 p-2"
-                  aria-label="Toggle menu"
-                >
-                  {mobileMenuOpen ? (
-                    <X className="h-5 w-5" />
-                  ) : (
-                    <Menu className="h-5 w-5" />
-                  )}
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-106 bg-zinc-900 border-zinc-800">
-                <DialogHeader>
-                  <DialogTitle className="text-white">Navigation</DialogTitle>
-                </DialogHeader>
-                <nav className="flex flex-col gap-1.5 mt-2">
-                  {/* Workspace — only when logged in */}
-                  {session && (
-                    <>
-                      <p className="text-[10px] uppercase tracking-wider text-zinc-600 font-semibold px-2 py-1 mt-1">Workspace</p>
-                      {workspaceLinks.map((link) => {
-                        const Icon = link.icon;
-                        return (
-                          <Link
-                            key={link.href}
-                            href={link.href}
-                            onClick={() => setMobileMenuOpen(false)}
-                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-all duration-200"
-                          >
-                            <Icon className="h-4 w-4 shrink-0" />
-                            {link.label}
-                          </Link>
-                        );
-                      })}
-                      <div className="border-t border-zinc-800 my-1" />
-                    </>
-                  )}
+            {/* Mobile Hamburger Button */}
+            <button
+              className="md:hidden flex items-center justify-center h-9 w-9 rounded-lg text-zinc-300 hover:text-white hover:bg-white/5 transition-all duration-200"
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileMenuOpen}
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          </div>
+        </div>
+      </header>
 
-                  {/* Product section */}
-                  <p className="text-[10px] uppercase tracking-wider text-zinc-600 font-semibold px-2 py-1 mt-1">Product</p>
-                  {productLinks.map((link) => {
-                    const Icon = link.icon;
-                    return (
-                      <Link
-                        key={link.href + link.label}
-                        href={link.href}
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-all duration-200"
-                      >
-                        <Icon className="h-4 w-4 shrink-0" />
-                        {link.label}
-                      </Link>
-                    );
-                  })}
+      {/* ── Mobile Full-Screen Menu ── */}
+      <div
+        className={cn(
+          "fixed inset-0 z-50 flex flex-col md:hidden overflow-hidden",
+          "transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]",
+          mobileMenuOpen
+            ? "opacity-100 translate-y-0 pointer-events-auto"
+            : "opacity-0 -translate-y-4 pointer-events-none",
+        )}
+        aria-label="Mobile navigation"
+      >
+        {/* Background layers */}
+        <div className="absolute inset-0 bg-zinc-950" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(99,102,241,0.12),transparent)]" />
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-500/40 to-transparent" />
 
-                  <div className="border-t border-zinc-800 my-1" />
-                  <p className="text-[10px] uppercase tracking-wider text-zinc-600 font-semibold px-2 py-1">Resources</p>
-                  {resourceLinks.map((link) => {
+        {/* Content wrapper (above bg layers) */}
+        <div className="relative flex flex-col h-full">
+
+          {/* Top bar */}
+          <div className="flex items-center justify-between px-5 h-16 shrink-0">
+            <Link
+              href="/"
+              className="flex items-center gap-2.5"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <Logo className="h-8" />
+              <span className="text-lg text-white font-bold tracking-tight">
+                Code{" "}
+                <span className="bg-linear-to-r from-indigo-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                  Catch
+                </span>
+              </span>
+            </Link>
+            <button
+              className="flex items-center justify-center h-9 w-9 rounded-xl text-zinc-400 hover:text-white bg-white/5 hover:bg-white/10 transition-all"
+              onClick={() => setMobileMenuOpen(false)}
+              aria-label="Close menu"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          {/* Scrollable body */}
+          <nav className="flex-1 overflow-y-auto px-5 pt-4 pb-6 space-y-8">
+
+            {/* Workspace — logged in only */}
+            {session && (
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-indigo-400/80 mb-3 flex items-center gap-2">
+                  <span className="inline-block w-3 h-px bg-indigo-500/60" />
+                  Workspace
+                </p>
+                <div className="space-y-1">
+                  {workspaceLinks.map((link) => {
                     const Icon = link.icon;
+                    const isActive = pathname.startsWith(link.href.split("?")[0]);
                     return (
                       <Link
                         key={link.href}
                         href={link.href}
                         onClick={() => setMobileMenuOpen(false)}
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-all duration-200"
+                        className={cn(
+                          "flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-200 group",
+                          isActive
+                            ? "bg-indigo-500/10 border border-indigo-500/20"
+                            : "hover:bg-white/4",
+                        )}
                       >
-                        <Icon className="h-4 w-4 shrink-0" />
-                        {link.label}
+                        <div className={cn(
+                          "flex items-center justify-center h-9 w-9 rounded-xl shrink-0 transition-all",
+                          isActive ? "bg-indigo-500/20 text-indigo-300" : "bg-zinc-800/80 text-zinc-400 group-hover:bg-zinc-700/80 group-hover:text-zinc-200",
+                        )}>
+                          <Icon className="h-4 w-4" />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className={cn("text-sm font-semibold", isActive ? "text-white" : "text-zinc-300 group-hover:text-white")}>
+                            {link.label}
+                          </span>
+                          <span className="text-[11px] text-zinc-600">{link.description}</span>
+                        </div>
+                        {isActive && (
+                          <div className="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-400 shrink-0" />
+                        )}
                       </Link>
                     );
                   })}
+                </div>
+              </div>
+            )}
 
-                  <div className="border-t border-zinc-800 my-1" />
-                  {simpleLinks.map((link) => {
-                    const Icon = link.icon;
-                    return (
-                      <Link
-                        key={link.href + link.label}
-                        href={link.href}
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-all duration-200"
-                      >
-                        <Icon className="h-4 w-4 shrink-0" />
-                        {link.label}
-                      </Link>
-                    );
-                  })}
+            {/* Product */}
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-500 mb-3 flex items-center gap-2">
+                <span className="inline-block w-3 h-px bg-zinc-600" />
+                Product
+              </p>
+              <div className="space-y-1">
+                {productLinks.map((link) => {
+                  const Icon = link.icon;
+                  const isActive = pathname.startsWith(link.href.split("#")[0]);
+                  return (
+                    <Link
+                      key={link.href + link.label}
+                      href={link.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={cn(
+                        "flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-200 group",
+                        isActive ? "bg-white/5" : "hover:bg-white/4",
+                      )}
+                    >
+                      <div className="flex items-center justify-center h-9 w-9 rounded-xl bg-zinc-800/80 text-zinc-400 group-hover:bg-zinc-700/80 group-hover:text-zinc-200 shrink-0 transition-all">
+                        <Icon className="h-4 w-4" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-semibold text-zinc-300 group-hover:text-white">{link.label}</span>
+                        <span className="text-[11px] text-zinc-600">{link.description}</span>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
 
-                  <div className="border-t border-zinc-800 my-1" />
-                  <a
-                    href="https://github.com/m07amed25/DevReview-AI"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-all duration-200"
+            {/* Resources */}
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-500 mb-3 flex items-center gap-2">
+                <span className="inline-block w-3 h-px bg-zinc-600" />
+                Resources
+              </p>
+              <div className="space-y-1">
+                {resourceLinks.map((link) => {
+                  const Icon = link.icon;
+                  const isActive = pathname.startsWith(link.href);
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={cn(
+                        "flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-200 group",
+                        isActive ? "bg-white/5" : "hover:bg-white/4",
+                      )}
+                    >
+                      <div className="flex items-center justify-center h-9 w-9 rounded-xl bg-zinc-800/80 text-zinc-400 group-hover:bg-zinc-700/80 group-hover:text-zinc-200 shrink-0 transition-all">
+                        <Icon className="h-4 w-4" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-semibold text-zinc-300 group-hover:text-white">{link.label}</span>
+                        <span className="text-[11px] text-zinc-600">{link.description}</span>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Extra links row */}
+            <div className="flex flex-wrap gap-2">
+              {simpleLinks.map((link) => {
+                const Icon = link.icon;
+                return (
+                  <Link
+                    key={link.href + link.label}
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium text-zinc-500 hover:text-zinc-200 bg-white/4 hover:bg-white/8 border border-zinc-800/70 transition-all"
                   >
-                    <Github className="h-4 w-4" />
-                    View on GitHub
-                  </a>
+                    <Icon className="h-3.5 w-3.5" />
+                    {link.label}
+                  </Link>
+                );
+              })}
+              <Link
+                href="/pricing"
+                onClick={() => setMobileMenuOpen(false)}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium text-zinc-500 hover:text-zinc-200 bg-white/4 hover:bg-white/8 border border-zinc-800/70 transition-all"
+              >
+                <CreditCard className="h-3.5 w-3.5" />
+                Pricing
+              </Link>
+              <a
+                href="https://github.com/m07amed25/DevReview-AI"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMobileMenuOpen(false)}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium text-zinc-500 hover:text-zinc-200 bg-white/4 hover:bg-white/8 border border-zinc-800/70 transition-all"
+              >
+                <Github className="h-3.5 w-3.5" />
+                GitHub
+                <Star className="h-3 w-3 fill-zinc-500" />
+              </a>
+            </div>
+          </nav>
 
-                  {!session && (
-                    <>
-                      <Link
-                        href="/sign-in"
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-all duration-200"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        Sign In
-                      </Link>
-                      <Link
-                        href="/sign-up"
-                        className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-semibold bg-linear-to-r from-indigo-500 to-blue-600 text-white hover:from-indigo-600 hover:to-blue-700 transition-all duration-200"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        Get Started
-                        <ArrowRight className="h-4 w-4" />
-                      </Link>
-                    </>
-                  )}
-                </nav>
-              </DialogContent>
-            </Dialog>
+          {/* Footer */}
+          <div className="shrink-0 px-5 pb-8 pt-4 border-t border-zinc-800/60">
+            {session ? (
+              <div className="flex items-center gap-3">
+                <Avatar className="h-10 w-10 shrink-0 ring-2 ring-indigo-500/30">
+                  <AvatarImage src={session.user?.image ?? undefined} alt={session.user?.name ?? "User"} />
+                  <AvatarFallback className="text-sm font-bold bg-indigo-500/20 text-indigo-300">
+                    {userInitials}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col min-w-0 flex-1">
+                  <span className="text-sm font-semibold text-white truncate">{session.user?.name ?? "User"}</span>
+                  <span className="text-xs text-zinc-500 truncate">{session.user?.email}</span>
+                </div>
+                <button
+                  onClick={handleSignOut}
+                  disabled={isSigningOut}
+                  title="Sign out"
+                  className="flex items-center justify-center h-9 w-9 rounded-xl text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-all disabled:opacity-40 shrink-0"
+                >
+                  <LogOut className="h-4 w-4" />
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-3">
+                <Link
+                  href="/sign-up"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-center gap-2 w-full px-4 py-3.5 rounded-2xl text-sm font-bold bg-linear-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white shadow-lg shadow-indigo-500/25 transition-all duration-200 active:scale-[0.98]"
+                >
+                  Get Started Free
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  href="/sign-in"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-center w-full px-4 py-3 rounded-2xl text-sm font-medium text-zinc-400 hover:text-white bg-white/4 hover:bg-white/8 border border-zinc-800/70 transition-all duration-200"
+                >
+                  Already have an account? Sign in
+                </Link>
+              </div>
+            )}
           </div>
         </div>
-      </header>
+      </div>
     </>
   );
 }
+
