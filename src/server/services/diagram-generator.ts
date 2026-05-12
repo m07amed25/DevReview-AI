@@ -1689,8 +1689,6 @@ function generateSequenceDiagram(fileContents: Record<string, string>): {
   };
 }
 
-// ─── Public API ───────────────────────────────────────────────────────────────
-
 /**
  * Generates a Mermaid diagram definition from the given file contents.
  * Throws on unrecoverable parse failure so the Inngest `onFailure` handler

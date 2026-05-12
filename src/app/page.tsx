@@ -8,6 +8,7 @@ import { LanguagesSection } from "@/features/home/components/LanguagesSection";
 import { DocsSection } from "@/features/home/components/DocsSection";
 import { CtaSection } from "@/features/home/components/CtaSection";
 import { HomeFooter } from "@/features/home/components/HomeFooter";
+import { AnnouncementBanner } from "@/features/home/components/AnnouncementBanner";
 import { api, HydrateClient } from "@/lib/trpc/server";
 import { Suspense } from "react";
 
@@ -33,6 +34,7 @@ export const revalidate = 0;
 export default async function HomePage() {
   void api.home.getStats.prefetch();
   void api.home.getRecentUsers.prefetch();
+  const banner = await api.admin.getBannerSettings();
 
   return (
     <HydrateClient>
@@ -49,6 +51,15 @@ export default async function HomePage() {
         >
           Skip to main content
         </a>
+
+        {banner.enabled && (
+          <AnnouncementBanner
+            text={banner.text}
+            link={banner.link}
+            linkText={banner.linkText}
+            color={banner.color}
+          />
+        )}
 
         <HomeHeader />
 

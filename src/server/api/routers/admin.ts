@@ -717,6 +717,53 @@ export const adminRouter = createTRPCRouter({
       });
     }),
 
+  getBannerSettings: publicProcedure.query(async ({ ctx }) => {
+    const settings = await ctx.db.systemSettings.upsert({
+      where: { id: "global" },
+      update: {},
+      create: { id: "global", maintenanceMode: false },
+    });
+    return {
+      enabled: settings.bannerEnabled,
+      text: settings.bannerText,
+      link: settings.bannerLink,
+      linkText: settings.bannerLinkText,
+      color: settings.bannerColor,
+    };
+  }),
+
+  updateBannerSettings: adminProcedure
+    .input(
+      z.object({
+        enabled: z.boolean(),
+        text: z.string().max(500),
+        link: z.string().max(500).optional().default(""),
+        linkText: z.string().max(100).optional().default(""),
+        color: z.enum(["indigo", "emerald", "amber", "rose", "violet"]).default("indigo"),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.systemSettings.upsert({
+        where: { id: "global" },
+        update: {
+          bannerEnabled: input.enabled,
+          bannerText: input.text,
+          bannerLink: input.link,
+          bannerLinkText: input.linkText,
+          bannerColor: input.color,
+        },
+        create: {
+          id: "global",
+          maintenanceMode: false,
+          bannerEnabled: input.enabled,
+          bannerText: input.text,
+          bannerLink: input.link,
+          bannerLinkText: input.linkText,
+          bannerColor: input.color,
+        },
+      });
+    }),
+
   getSupportMessages: adminProcedure.query(async ({ ctx }) => {
     return ctx.db.supportMessage.findMany({
       orderBy: { createdAt: "desc" },

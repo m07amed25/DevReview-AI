@@ -34021,6 +34021,11 @@ export namespace Prisma {
     reviewRetentionDays: number | null
     auditLogRetentionDays: number | null
     sessionRetentionDays: number | null
+    bannerEnabled: boolean | null
+    bannerText: string | null
+    bannerLink: string | null
+    bannerLinkText: string | null
+    bannerColor: string | null
     updatedAt: Date | null
   }
 
@@ -34030,6 +34035,11 @@ export namespace Prisma {
     reviewRetentionDays: number | null
     auditLogRetentionDays: number | null
     sessionRetentionDays: number | null
+    bannerEnabled: boolean | null
+    bannerText: string | null
+    bannerLink: string | null
+    bannerLinkText: string | null
+    bannerColor: string | null
     updatedAt: Date | null
   }
 
@@ -34039,6 +34049,11 @@ export namespace Prisma {
     reviewRetentionDays: number
     auditLogRetentionDays: number
     sessionRetentionDays: number
+    bannerEnabled: number
+    bannerText: number
+    bannerLink: number
+    bannerLinkText: number
+    bannerColor: number
     updatedAt: number
     _all: number
   }
@@ -34062,6 +34077,11 @@ export namespace Prisma {
     reviewRetentionDays?: true
     auditLogRetentionDays?: true
     sessionRetentionDays?: true
+    bannerEnabled?: true
+    bannerText?: true
+    bannerLink?: true
+    bannerLinkText?: true
+    bannerColor?: true
     updatedAt?: true
   }
 
@@ -34071,6 +34091,11 @@ export namespace Prisma {
     reviewRetentionDays?: true
     auditLogRetentionDays?: true
     sessionRetentionDays?: true
+    bannerEnabled?: true
+    bannerText?: true
+    bannerLink?: true
+    bannerLinkText?: true
+    bannerColor?: true
     updatedAt?: true
   }
 
@@ -34080,6 +34105,11 @@ export namespace Prisma {
     reviewRetentionDays?: true
     auditLogRetentionDays?: true
     sessionRetentionDays?: true
+    bannerEnabled?: true
+    bannerText?: true
+    bannerLink?: true
+    bannerLinkText?: true
+    bannerColor?: true
     updatedAt?: true
     _all?: true
   }
@@ -34176,6 +34206,11 @@ export namespace Prisma {
     reviewRetentionDays: number
     auditLogRetentionDays: number
     sessionRetentionDays: number
+    bannerEnabled: boolean
+    bannerText: string
+    bannerLink: string
+    bannerLinkText: string
+    bannerColor: string
     updatedAt: Date
     _count: SystemSettingsCountAggregateOutputType | null
     _avg: SystemSettingsAvgAggregateOutputType | null
@@ -34204,6 +34239,11 @@ export namespace Prisma {
     reviewRetentionDays?: boolean
     auditLogRetentionDays?: boolean
     sessionRetentionDays?: boolean
+    bannerEnabled?: boolean
+    bannerText?: boolean
+    bannerLink?: boolean
+    bannerLinkText?: boolean
+    bannerColor?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["systemSettings"]>
 
@@ -34213,6 +34253,11 @@ export namespace Prisma {
     reviewRetentionDays?: boolean
     auditLogRetentionDays?: boolean
     sessionRetentionDays?: boolean
+    bannerEnabled?: boolean
+    bannerText?: boolean
+    bannerLink?: boolean
+    bannerLinkText?: boolean
+    bannerColor?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["systemSettings"]>
 
@@ -34222,6 +34267,11 @@ export namespace Prisma {
     reviewRetentionDays?: boolean
     auditLogRetentionDays?: boolean
     sessionRetentionDays?: boolean
+    bannerEnabled?: boolean
+    bannerText?: boolean
+    bannerLink?: boolean
+    bannerLinkText?: boolean
+    bannerColor?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["systemSettings"]>
 
@@ -34231,10 +34281,15 @@ export namespace Prisma {
     reviewRetentionDays?: boolean
     auditLogRetentionDays?: boolean
     sessionRetentionDays?: boolean
+    bannerEnabled?: boolean
+    bannerText?: boolean
+    bannerLink?: boolean
+    bannerLinkText?: boolean
+    bannerColor?: boolean
     updatedAt?: boolean
   }
 
-  export type SystemSettingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "maintenanceMode" | "reviewRetentionDays" | "auditLogRetentionDays" | "sessionRetentionDays" | "updatedAt", ExtArgs["result"]["systemSettings"]>
+  export type SystemSettingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "maintenanceMode" | "reviewRetentionDays" | "auditLogRetentionDays" | "sessionRetentionDays" | "bannerEnabled" | "bannerText" | "bannerLink" | "bannerLinkText" | "bannerColor" | "updatedAt", ExtArgs["result"]["systemSettings"]>
 
   export type $SystemSettingsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SystemSettings"
@@ -34245,6 +34300,11 @@ export namespace Prisma {
       reviewRetentionDays: number
       auditLogRetentionDays: number
       sessionRetentionDays: number
+      bannerEnabled: boolean
+      bannerText: string
+      bannerLink: string
+      bannerLinkText: string
+      bannerColor: string
       updatedAt: Date
     }, ExtArgs["result"]["systemSettings"]>
     composites: {}
@@ -34674,6 +34734,11 @@ export namespace Prisma {
     readonly reviewRetentionDays: FieldRef<"SystemSettings", 'Int'>
     readonly auditLogRetentionDays: FieldRef<"SystemSettings", 'Int'>
     readonly sessionRetentionDays: FieldRef<"SystemSettings", 'Int'>
+    readonly bannerEnabled: FieldRef<"SystemSettings", 'Boolean'>
+    readonly bannerText: FieldRef<"SystemSettings", 'String'>
+    readonly bannerLink: FieldRef<"SystemSettings", 'String'>
+    readonly bannerLinkText: FieldRef<"SystemSettings", 'String'>
+    readonly bannerColor: FieldRef<"SystemSettings", 'String'>
     readonly updatedAt: FieldRef<"SystemSettings", 'DateTime'>
   }
     
@@ -46594,6 +46659,11 @@ export namespace Prisma {
     reviewRetentionDays: 'reviewRetentionDays',
     auditLogRetentionDays: 'auditLogRetentionDays',
     sessionRetentionDays: 'sessionRetentionDays',
+    bannerEnabled: 'bannerEnabled',
+    bannerText: 'bannerText',
+    bannerLink: 'bannerLink',
+    bannerLinkText: 'bannerLinkText',
+    bannerColor: 'bannerColor',
     updatedAt: 'updatedAt'
   };
 
@@ -49266,6 +49336,11 @@ export namespace Prisma {
     reviewRetentionDays?: IntFilter<"SystemSettings"> | number
     auditLogRetentionDays?: IntFilter<"SystemSettings"> | number
     sessionRetentionDays?: IntFilter<"SystemSettings"> | number
+    bannerEnabled?: BoolFilter<"SystemSettings"> | boolean
+    bannerText?: StringFilter<"SystemSettings"> | string
+    bannerLink?: StringFilter<"SystemSettings"> | string
+    bannerLinkText?: StringFilter<"SystemSettings"> | string
+    bannerColor?: StringFilter<"SystemSettings"> | string
     updatedAt?: DateTimeFilter<"SystemSettings"> | Date | string
   }
 
@@ -49275,6 +49350,11 @@ export namespace Prisma {
     reviewRetentionDays?: SortOrder
     auditLogRetentionDays?: SortOrder
     sessionRetentionDays?: SortOrder
+    bannerEnabled?: SortOrder
+    bannerText?: SortOrder
+    bannerLink?: SortOrder
+    bannerLinkText?: SortOrder
+    bannerColor?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -49287,6 +49367,11 @@ export namespace Prisma {
     reviewRetentionDays?: IntFilter<"SystemSettings"> | number
     auditLogRetentionDays?: IntFilter<"SystemSettings"> | number
     sessionRetentionDays?: IntFilter<"SystemSettings"> | number
+    bannerEnabled?: BoolFilter<"SystemSettings"> | boolean
+    bannerText?: StringFilter<"SystemSettings"> | string
+    bannerLink?: StringFilter<"SystemSettings"> | string
+    bannerLinkText?: StringFilter<"SystemSettings"> | string
+    bannerColor?: StringFilter<"SystemSettings"> | string
     updatedAt?: DateTimeFilter<"SystemSettings"> | Date | string
   }, "id">
 
@@ -49296,6 +49381,11 @@ export namespace Prisma {
     reviewRetentionDays?: SortOrder
     auditLogRetentionDays?: SortOrder
     sessionRetentionDays?: SortOrder
+    bannerEnabled?: SortOrder
+    bannerText?: SortOrder
+    bannerLink?: SortOrder
+    bannerLinkText?: SortOrder
+    bannerColor?: SortOrder
     updatedAt?: SortOrder
     _count?: SystemSettingsCountOrderByAggregateInput
     _avg?: SystemSettingsAvgOrderByAggregateInput
@@ -49313,6 +49403,11 @@ export namespace Prisma {
     reviewRetentionDays?: IntWithAggregatesFilter<"SystemSettings"> | number
     auditLogRetentionDays?: IntWithAggregatesFilter<"SystemSettings"> | number
     sessionRetentionDays?: IntWithAggregatesFilter<"SystemSettings"> | number
+    bannerEnabled?: BoolWithAggregatesFilter<"SystemSettings"> | boolean
+    bannerText?: StringWithAggregatesFilter<"SystemSettings"> | string
+    bannerLink?: StringWithAggregatesFilter<"SystemSettings"> | string
+    bannerLinkText?: StringWithAggregatesFilter<"SystemSettings"> | string
+    bannerColor?: StringWithAggregatesFilter<"SystemSettings"> | string
     updatedAt?: DateTimeWithAggregatesFilter<"SystemSettings"> | Date | string
   }
 
@@ -52420,6 +52515,11 @@ export namespace Prisma {
     reviewRetentionDays?: number
     auditLogRetentionDays?: number
     sessionRetentionDays?: number
+    bannerEnabled?: boolean
+    bannerText?: string
+    bannerLink?: string
+    bannerLinkText?: string
+    bannerColor?: string
     updatedAt?: Date | string
   }
 
@@ -52429,6 +52529,11 @@ export namespace Prisma {
     reviewRetentionDays?: number
     auditLogRetentionDays?: number
     sessionRetentionDays?: number
+    bannerEnabled?: boolean
+    bannerText?: string
+    bannerLink?: string
+    bannerLinkText?: string
+    bannerColor?: string
     updatedAt?: Date | string
   }
 
@@ -52438,6 +52543,11 @@ export namespace Prisma {
     reviewRetentionDays?: IntFieldUpdateOperationsInput | number
     auditLogRetentionDays?: IntFieldUpdateOperationsInput | number
     sessionRetentionDays?: IntFieldUpdateOperationsInput | number
+    bannerEnabled?: BoolFieldUpdateOperationsInput | boolean
+    bannerText?: StringFieldUpdateOperationsInput | string
+    bannerLink?: StringFieldUpdateOperationsInput | string
+    bannerLinkText?: StringFieldUpdateOperationsInput | string
+    bannerColor?: StringFieldUpdateOperationsInput | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -52447,6 +52557,11 @@ export namespace Prisma {
     reviewRetentionDays?: IntFieldUpdateOperationsInput | number
     auditLogRetentionDays?: IntFieldUpdateOperationsInput | number
     sessionRetentionDays?: IntFieldUpdateOperationsInput | number
+    bannerEnabled?: BoolFieldUpdateOperationsInput | boolean
+    bannerText?: StringFieldUpdateOperationsInput | string
+    bannerLink?: StringFieldUpdateOperationsInput | string
+    bannerLinkText?: StringFieldUpdateOperationsInput | string
+    bannerColor?: StringFieldUpdateOperationsInput | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -52456,6 +52571,11 @@ export namespace Prisma {
     reviewRetentionDays?: number
     auditLogRetentionDays?: number
     sessionRetentionDays?: number
+    bannerEnabled?: boolean
+    bannerText?: string
+    bannerLink?: string
+    bannerLinkText?: string
+    bannerColor?: string
     updatedAt?: Date | string
   }
 
@@ -52465,6 +52585,11 @@ export namespace Prisma {
     reviewRetentionDays?: IntFieldUpdateOperationsInput | number
     auditLogRetentionDays?: IntFieldUpdateOperationsInput | number
     sessionRetentionDays?: IntFieldUpdateOperationsInput | number
+    bannerEnabled?: BoolFieldUpdateOperationsInput | boolean
+    bannerText?: StringFieldUpdateOperationsInput | string
+    bannerLink?: StringFieldUpdateOperationsInput | string
+    bannerLinkText?: StringFieldUpdateOperationsInput | string
+    bannerColor?: StringFieldUpdateOperationsInput | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -52474,6 +52599,11 @@ export namespace Prisma {
     reviewRetentionDays?: IntFieldUpdateOperationsInput | number
     auditLogRetentionDays?: IntFieldUpdateOperationsInput | number
     sessionRetentionDays?: IntFieldUpdateOperationsInput | number
+    bannerEnabled?: BoolFieldUpdateOperationsInput | boolean
+    bannerText?: StringFieldUpdateOperationsInput | string
+    bannerLink?: StringFieldUpdateOperationsInput | string
+    bannerLinkText?: StringFieldUpdateOperationsInput | string
+    bannerColor?: StringFieldUpdateOperationsInput | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -55360,6 +55490,11 @@ export namespace Prisma {
     reviewRetentionDays?: SortOrder
     auditLogRetentionDays?: SortOrder
     sessionRetentionDays?: SortOrder
+    bannerEnabled?: SortOrder
+    bannerText?: SortOrder
+    bannerLink?: SortOrder
+    bannerLinkText?: SortOrder
+    bannerColor?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -55375,6 +55510,11 @@ export namespace Prisma {
     reviewRetentionDays?: SortOrder
     auditLogRetentionDays?: SortOrder
     sessionRetentionDays?: SortOrder
+    bannerEnabled?: SortOrder
+    bannerText?: SortOrder
+    bannerLink?: SortOrder
+    bannerLinkText?: SortOrder
+    bannerColor?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -55384,6 +55524,11 @@ export namespace Prisma {
     reviewRetentionDays?: SortOrder
     auditLogRetentionDays?: SortOrder
     sessionRetentionDays?: SortOrder
+    bannerEnabled?: SortOrder
+    bannerText?: SortOrder
+    bannerLink?: SortOrder
+    bannerLinkText?: SortOrder
+    bannerColor?: SortOrder
     updatedAt?: SortOrder
   }
 

@@ -435,6 +435,11 @@ exports.Prisma.SystemSettingsScalarFieldEnum = {
   reviewRetentionDays: 'reviewRetentionDays',
   auditLogRetentionDays: 'auditLogRetentionDays',
   sessionRetentionDays: 'sessionRetentionDays',
+  bannerEnabled: 'bannerEnabled',
+  bannerText: 'bannerText',
+  bannerLink: 'bannerLink',
+  bannerLinkText: 'bannerLinkText',
+  bannerColor: 'bannerColor',
   updatedAt: 'updatedAt'
 };
 

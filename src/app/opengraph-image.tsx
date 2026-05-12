@@ -1,12 +1,17 @@
 /* eslint-disable react/forbid-dom-props */
 import { ImageResponse } from "next/og";
+import { readFile } from "fs/promises";
+import path from "path";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 export const alt = "Code Catch – Smart Automated Code Reviews";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default function OGImage() {
+export default async function OGImage() {
+  const logoData = await readFile(path.join(process.cwd(), "public/logo-noback.png"));
+  const logoSrc = `data:image/png;base64,${logoData.toString("base64")}`;
+
   return new ImageResponse(
     (
       <div
@@ -22,6 +27,14 @@ export default function OGImage() {
           padding: "60px",
         }}
       >
+        {/* Logo */}
+        <img
+          src={logoSrc}
+          width={80}
+          height={80}
+          style={{ marginBottom: "20px", borderRadius: "16px" }}
+        />
+
         {/* Badge */}
         <div
           style={{

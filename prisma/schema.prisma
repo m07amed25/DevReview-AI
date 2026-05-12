@@ -650,6 +650,12 @@ model SystemSettings {
   reviewRetentionDays   Int @default(0)
   auditLogRetentionDays Int @default(0)
   sessionRetentionDays  Int @default(0)
+  // Announcement banner shown at the top of the landing page
+  bannerEnabled   Boolean  @default(false)
+  bannerText      String   @default("") @db.Text
+  bannerLink      String   @default("")
+  bannerLinkText  String   @default("")
+  bannerColor     String   @default("indigo")
   updatedAt       DateTime @updatedAt
 
   @@map("system_settings")

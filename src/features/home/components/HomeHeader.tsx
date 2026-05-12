@@ -97,7 +97,7 @@ export function HomeHeader() {
     <>
       <header
         className={cn(
-          "fixed top-0 w-full z-50 transition-all duration-300",
+          "fixed top-banner-offset w-full z-50 transition-all duration-300",
           isScrolled
             ? "border-b border-white/10 bg-zinc-950/80 backdrop-blur-xl shadow-lg shadow-black/10"
             : "border-b border-white/5 bg-zinc-950/50 backdrop-blur-xl",

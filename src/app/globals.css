@@ -50,7 +50,13 @@
   --spacing-xs: 20rem;
 }
 
+/* Utility: offset a fixed element below the announcement banner */
+.top-banner-offset {
+  top: var(--banner-h, 0px);
+}
+
 :root {
+  --banner-h: 0px;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -198,7 +204,7 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
@@ -224,6 +230,25 @@
   button[aria-busy="true"] {
     cursor: progress;
   }
+
+  /* Focus visible for accessibility */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  [data-slot="dropdown-menu-content"]:focus-visible,
+  [data-radix-popper-content-wrapper]:focus-visible,
+  [data-radix-popper-content-wrapper] *:focus-visible,
+  [data-radix-focus-guard],
+  [data-radix-focus-guard]:focus,
+  [data-radix-focus-guard]:focus-visible,
+  [data-radix-menu-content]:focus-visible,
+  [role="menu"]:focus-visible,
+  [role="listbox"]:focus-visible,
+  [role="dialog"]:focus-visible {
+    outline: none;
+  }
 }
 
 /* View Transition API — circular reveal for theme toggle */
@@ -236,6 +261,13 @@
 }
 
 /* Custom Scrollbar Styling */
+::-webkit-scrollbar,
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-corner {
+  outline: none;
+}
+
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -444,12 +476,6 @@ html {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-}
-
-/* Focus visible for accessibility */
-:focus-visible {
-  outline: 2px solid var(--ring);
-  outline-offset: 2px;
 }
 
 /* Enhanced Diff Viewer Styles */
