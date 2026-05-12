@@ -1,4 +1,4 @@
-export type DiagramType = "ERD" | "CLASS" | "USE_CASE";
+export type DiagramType = "ERD" | "CLASS" | "USE_CASE" | "SEQUENCE";
 
 export type DiagramStatus = "PENDING" | "COMPLETED" | "FAILED";
 
