@@ -7,7 +7,7 @@
   <img src="https://img.shields.io/badge/tRPC-11-10.0-black?style=for-the-badge" alt="tRPC">
 </p>
 
-[![Code Catch](https://dev-review-ai-chi.vercel.app/api/badge/m07amed25/DevReview-AI)](https://dev-review-ai-chi.vercel.app)
+[![Code Catch](https://code-catch-psi.vercel.app/api/badge/m07amed25/DevReview-AI)](https://code-catch-psi.vercel.app)
 
 > AI-powered code reviews that catch bugs, security issues, and maintainability problems before they reach production.
 
