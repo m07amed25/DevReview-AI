@@ -14,19 +14,21 @@ import { Button } from "@/components/ui/button";
 interface DiagramPanelProps {
   diagrams: Diagram[];
   repositoryId: string;
-  onRequestDiagram?: (type: "ERD" | "CLASS" | "USE_CASE") => void;
+  onRequestDiagram?: (type: "ERD" | "CLASS" | "USE_CASE" | "SEQUENCE") => void;
 }
 
-const DIAGRAM_LABELS: Record<"ERD" | "CLASS" | "USE_CASE", string> = {
+const DIAGRAM_LABELS: Record<"ERD" | "CLASS" | "USE_CASE" | "SEQUENCE", string> = {
   ERD: "Entity Diagram",
   CLASS: "Class Diagram",
   USE_CASE: "Use Case",
+  SEQUENCE: "Sequence",
 };
 
-const ALL_DIAGRAM_TYPES: Array<"ERD" | "CLASS" | "USE_CASE"> = [
+const ALL_DIAGRAM_TYPES: Array<"ERD" | "CLASS" | "USE_CASE" | "SEQUENCE"> = [
   "ERD",
   "CLASS",
   "USE_CASE",
+  "SEQUENCE",
 ];
 
 function DiagramTabButton({
@@ -76,8 +78,8 @@ export function DiagramPanel({
   repositoryId,
   onRequestDiagram,
 }: DiagramPanelProps) {
-  const [activeType, setActiveType] = useState<"ERD" | "CLASS" | "USE_CASE">(
-    (diagrams[0]?.type as "ERD" | "CLASS" | "USE_CASE") ?? "ERD",
+  const [activeType, setActiveType] = useState<"ERD" | "CLASS" | "USE_CASE" | "SEQUENCE">(
+    (diagrams[0]?.type as "ERD" | "CLASS" | "USE_CASE" | "SEQUENCE") ?? "ERD",
   );
   const [requestingType, setRequestingType] = useState<string | null>(null);
 
@@ -93,7 +95,7 @@ export function DiagramPanel({
   // No diagrams and no way to create them → show nothing
   if (diagrams.length === 0 && !onRequestDiagram) return null;
 
-  const handleRequest = (type: "ERD" | "CLASS" | "USE_CASE") => {
+  const handleRequest = (type: "ERD" | "CLASS" | "USE_CASE" | "SEQUENCE") => {
     setRequestingType(type);
     setActiveType(type);
     onRequestDiagram?.(type);
@@ -152,10 +154,10 @@ export function DiagramPanel({
           <div className="ml-auto shrink-0 pb-1">
             <DiagramTriggerButton
               repositoryId={repositoryId}
-              type={activeDiagram.type as "ERD" | "CLASS" | "USE_CASE"}
+              type={activeDiagram.type as "ERD" | "CLASS" | "USE_CASE" | "SEQUENCE"}
               onRequest={() =>
                 handleRequest(
-                  activeDiagram.type as "ERD" | "CLASS" | "USE_CASE",
+                  activeDiagram.type as "ERD" | "CLASS" | "USE_CASE" | "SEQUENCE",
                 )
               }
               isLoading={isRequesting(activeDiagram.type)}
@@ -239,7 +241,7 @@ export function DiagramPanel({
                   className="mt-4"
                   onClick={() =>
                     handleRequest(
-                      activeDiagram.type as "ERD" | "CLASS" | "USE_CASE",
+                      activeDiagram.type as "ERD" | "CLASS" | "USE_CASE" | "SEQUENCE",
                     )
                   }
                 >
@@ -270,7 +272,7 @@ export function DiagramPanel({
                 onRequestDiagram
                   ? () =>
                       handleRequest(
-                        activeDiagram.type as "ERD" | "CLASS" | "USE_CASE",
+                        activeDiagram.type as "ERD" | "CLASS" | "USE_CASE" | "SEQUENCE",
                       )
                   : undefined
               }
@@ -303,7 +305,7 @@ export function DiagramPanel({
                     className="mt-4"
                     onClick={() =>
                       handleRequest(
-                        activeDiagram.type as "ERD" | "CLASS" | "USE_CASE",
+                        activeDiagram.type as "ERD" | "CLASS" | "USE_CASE" | "SEQUENCE",
                       )
                     }
                   >

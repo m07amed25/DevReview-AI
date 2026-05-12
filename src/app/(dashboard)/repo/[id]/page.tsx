@@ -58,7 +58,15 @@ export default function RepositoryDetailPage({ params }: PageProps) {
   const utils = trpc.useUtils();
   const diagrams = trpc.diagram.listForRepository.useQuery(
     { repositoryId: id },
-    { enabled: !!id },
+    {
+      enabled: !!id,
+      // Poll while any diagram is still generating (Pusher fallback)
+      refetchInterval: (query) => {
+        const { data } = query.state;
+        if (data?.some((d) => d.status === "PENDING")) return 3000;
+        return false;
+      },
+    },
   );
 
   const requestDiagram = trpc.diagram.requestDiagram.useMutation({

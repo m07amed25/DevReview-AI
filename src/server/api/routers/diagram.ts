@@ -44,7 +44,7 @@ export const diagramRouter = createTRPCRouter({
       z.object({
         repositoryId: z.string().max(255).cuid(),
         prNumber: z.number().int().optional(), // optional since we might trigger manually without a PR
-        type: z.enum(["ERD", "CLASS", "USE_CASE"]),
+        type: z.enum(["ERD", "CLASS", "USE_CASE", "SEQUENCE"]),
       }),
     )
     .mutation(async ({ ctx, input }) => {
