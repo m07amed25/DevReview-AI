@@ -24,7 +24,7 @@ import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { trpc } from "@/lib/trpc/client";
-import { Plan } from "@/server/db/client";
+import { Plan } from "@/lib/plan";
 
 export interface PricingSettings {
   annualDiscount: number;

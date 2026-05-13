@@ -1,4 +1,5 @@
-import { Plan } from "@prisma/client";
+import type { Plan } from "@/lib/plan";
+
 
 export interface BaseEmailParams {
   to: string;

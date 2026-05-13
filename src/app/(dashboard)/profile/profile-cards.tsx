@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback } from "react";
 import { trpc } from "@/lib/trpc/client";
-import { Plan } from "@/server/db/client";
+import { Plan } from "@/lib/plan";
 import { motion, AnimatePresence } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";

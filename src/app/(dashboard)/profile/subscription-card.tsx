@@ -23,7 +23,7 @@ import { LimitProgress } from "@/components/ui/limit-progress";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { Plan } from "@/server/db/client";
+import { Plan } from "@/lib/plan";
 
 interface SubscriptionCardProps {
   plan: {

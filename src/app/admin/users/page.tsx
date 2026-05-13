@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
-import { Plan } from "@/server/db/client";
+import { Plan } from "@/lib/plan";
 import { motion, AnimatePresence } from "framer-motion";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -844,12 +844,12 @@ export default function AdminUsersPage() {
                 <Label>Subscription Plan</Label>
                 <DropdownSelect
                   value={newPlan}
-                  onValueChange={(val) => setNewPlan(val)}
+                  onValueChange={(val) => setNewPlan(val as Plan)}
                   placeholder="Select a plan"
                 >
                   <SelectItem value="free">Free Plan</SelectItem>
                   <SelectItem value="pro">Pro Plan</SelectItem>
-                  <SelectItem value="ultra">Ultra Plan</SelectItem>
+                  <SelectItem value="enterprise">Enterprise Plan</SelectItem>
                 </DropdownSelect>
               </div>
 
@@ -964,7 +964,7 @@ export default function AdminUsersPage() {
                   <Label className="text-sm font-semibold">
                     New Subscription Plan
                   </Label>
-                  <DropdownSelect value={newPlan} onValueChange={setNewPlan}>
+                  <DropdownSelect value={newPlan} onValueChange={(val) => setNewPlan(val as Plan)}>
                     <SelectItem value="free">
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-neutral-400" />
@@ -977,10 +977,10 @@ export default function AdminUsersPage() {
                         <span>Pro Plan</span>
                       </div>
                     </SelectItem>
-                    <SelectItem value="ultra">
+                    <SelectItem value="enterprise">
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-violet-600" />
-                        <span>Ultra Plan</span>
+                        <span>Enterprise Plan</span>
                       </div>
                     </SelectItem>
                   </DropdownSelect>

@@ -56,7 +56,7 @@ import { Select } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc/client";
-import { Plan } from "@/server/db/client";
+import { Plan } from "@/lib/plan";
 
 interface PricingPlan {
   id: Plan;
@@ -1169,7 +1169,7 @@ export default function AdminPricingPage() {
   });
 
   const plans: PricingPlan[] = dbPlans.map((p) => ({
-    id: p.id,
+    id: p.id as Plan,
     name: p.name,
     tagline: p.tagline,
     monthlyPrice: p.monthlyPrice,
@@ -1604,11 +1604,11 @@ export default function AdminPricingPage() {
                     <select
                       aria-label="Trial plan"
                       value={trialPlan}
-                      onChange={(e) => setTrialPlan(e.target.value as "pro" | "ultra")}
+                      onChange={(e) => setTrialPlan(e.target.value as Plan)}
                       className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring"
                     >
                       <option value="pro">Pro</option>
-                      <option value="ultra">Ultra</option>
+                      <option value="enterprise">Enterprise</option>
                     </select>
                     <p className="text-xs text-muted-foreground">
                       Only <strong className="capitalize">{trialPlan}</strong> plan subscribers get the free trial.

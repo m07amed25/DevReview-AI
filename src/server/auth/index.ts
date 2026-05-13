@@ -2,7 +2,7 @@ import { betterAuth } from "better-auth";
 import { APIError } from "better-auth/api";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { sso } from "@better-auth/sso";
-import { db, Plan } from "../db";
+import { db } from "../db";
 import {
   sendGithubConnectionWarningEmail,
   sendPasswordResetEmail,
@@ -110,7 +110,7 @@ export const auth = betterAuth({
       planId: {
         type: "string",
         required: false,
-        defaultValue: Plan.FREE,
+        defaultValue: "free",
         input: false,
       },
     },

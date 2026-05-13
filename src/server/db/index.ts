@@ -1,6 +1,4 @@
-import { PrismaClient, Plan } from "./client";
-
-export { Plan };
+import { PrismaClient } from "./client";
 
 const createPrismaClient = () => {
   let url = process.env.DATABASE_URL;
