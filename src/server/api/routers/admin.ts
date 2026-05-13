@@ -10,6 +10,7 @@ import {
   sendSupportReplyEmail,
   sendAdminPromotedEmail,
   sendAdminDemotedEmail,
+  sendPlanChangedEmail,
 } from "../../email/service";
 import { auth } from "../../auth";
 import { logAudit } from "../../services/audit";
@@ -143,6 +144,11 @@ export const adminRouter = createTRPCRouter({
             banned: true,
             bannedReason: true,
             createdAt: true,
+            planId: true,
+            planExpiresAt: true,
+            overrideReposLimit: true,
+            overrideReviewsLimit: true,
+            overrideSeatsLimit: true,
             accounts: {
               where: { providerId: "github" },
               select: { id: true },
@@ -168,6 +174,26 @@ export const adminRouter = createTRPCRouter({
         total,
         pages: Math.ceil(total / limit),
       };
+    }),
+
+  getAllUserIds: adminProcedure
+    .input(z.object({ search: z.string().optional() }))
+    .query(async ({ ctx, input }) => {
+      const where = input.search
+        ? {
+            OR: [
+              { name: { contains: input.search, mode: "insensitive" as const } },
+              { email: { contains: input.search, mode: "insensitive" as const } },
+            ],
+          }
+        : {};
+
+      const users = await ctx.db.user.findMany({
+        where,
+        select: { id: true },
+      });
+
+      return users.map((u) => u.id);
     }),
 
   getUser: adminProcedure
@@ -227,13 +253,13 @@ export const adminRouter = createTRPCRouter({
         throw new Error("User not found.");
       }
 
-      // 1. Protect the owner from any role changes
-      if (targetUser.email === process.env.OWNER_MAIL) {
-        throw new Error("The owner's role cannot be changed.");
+      // 1. Protect the owner from any role changes by others
+      if (targetUser.email === process.env.OWNER_MAIL && ctx.user.email !== process.env.OWNER_MAIL) {
+        throw new Error("The owner's role cannot be changed by others.");
       }
 
-      // 2. Prevent users from changing their own role (except the owner, but we handled that above)
-      if (input.userId === ctx.user.id) {
+      // 2. Prevent users from changing their own role (except the owner)
+      if (input.userId === ctx.user.id && ctx.user.email !== process.env.OWNER_MAIL) {
         throw new Error("You cannot change your own role.");
       }
 
@@ -271,6 +297,152 @@ export const adminRouter = createTRPCRouter({
       return { success: true };
     }),
 
+  updateUserPlan: adminProcedure
+    .input(
+      z.object({
+        userId: z.string().max(255),
+        planId: z.enum(["free", "pro", "ultra"]),
+        expiresAt: z.date().nullable().optional(),
+        overrideReposLimit: z.number().int().min(0).nullable().optional(),
+        overrideReviewsLimit: z.number().int().min(0).nullable().optional(),
+        overrideSeatsLimit: z.number().int().min(0).nullable().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const targetUser = await ctx.db.user.findUnique({
+        where: { id: input.userId },
+        select: {
+          email: true,
+          name: true,
+          planId: true,
+        },
+      });
+
+      if (!targetUser) {
+        throw new Error("User not found.");
+      }
+
+      await ctx.db.user.update({
+        where: { id: input.userId },
+        data: {
+          planId: input.planId,
+          planExpiresAt: input.expiresAt ?? null,
+          overrideReposLimit: input.overrideReposLimit ?? null,
+          overrideReviewsLimit: input.overrideReviewsLimit ?? null,
+          overrideSeatsLimit: input.overrideSeatsLimit ?? null,
+        },
+      });
+
+      // Audit log
+      void logAudit({
+        actorId: ctx.user.id,
+        action: "USER_PLAN_UPDATED",
+        resource: "USER",
+        resourceId: input.userId,
+        ipAddress: ctx.ip,
+        userAgent: ctx.userAgent,
+        metadata: {
+          oldPlan: targetUser.planId,
+          newPlan: input.planId,
+          expiresAt: input.expiresAt,
+          overrides: {
+            repos: input.overrideReposLimit,
+            reviews: input.overrideReviewsLimit,
+            seats: input.overrideSeatsLimit,
+          },
+        },
+      });
+
+      // Send email notification
+      if (targetUser.email) {
+        await sendPlanChangedEmail({
+          to: targetUser.email,
+          userName: targetUser.name || targetUser.email,
+          oldPlan: targetUser.planId,
+          newPlan: input.planId,
+          expiresAt: input.expiresAt ?? null,
+          changedBy: ctx.user.name ?? ctx.user.email,
+          overrides: {
+            repos: input.overrideReposLimit,
+            reviews: input.overrideReviewsLimit,
+            seats: input.overrideSeatsLimit,
+          },
+        }).catch((err) => console.error("Failed to send plan update email:", err));
+      }
+
+      return { success: true };
+    }),
+
+  bulkUpdateUserPlans: adminProcedure
+    .input(
+      z.object({
+        userIds: z.array(z.string().max(255)),
+        planId: z.enum(["free", "pro", "ultra"]),
+        expiresAt: z.date().nullable().optional(),
+        overrideReposLimit: z.number().int().min(0).nullable().optional(),
+        overrideReviewsLimit: z.number().int().min(0).nullable().optional(),
+        overrideSeatsLimit: z.number().int().min(0).nullable().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const users = await ctx.db.user.findMany({
+        where: { id: { in: input.userIds } },
+        select: { id: true, email: true, name: true, planId: true },
+      });
+
+      await ctx.db.user.updateMany({
+        where: { id: { in: input.userIds } },
+        data: {
+          planId: input.planId,
+          planExpiresAt: input.expiresAt ?? null,
+          overrideReposLimit: input.overrideReposLimit ?? null,
+          overrideReviewsLimit: input.overrideReviewsLimit ?? null,
+          overrideSeatsLimit: input.overrideSeatsLimit ?? null,
+        },
+      });
+
+      // Audit log for bulk action
+      void logAudit({
+        actorId: ctx.user.id,
+        action: "BULK_USER_PLAN_UPDATED",
+        resource: "USER",
+        resourceId: "BULK",
+        ipAddress: ctx.ip,
+        userAgent: ctx.userAgent,
+        metadata: {
+          count: input.userIds.length,
+          newPlan: input.planId,
+          expiresAt: input.expiresAt,
+        },
+      });
+
+      // Send emails
+      for (const user of users) {
+        try {
+          await sendPlanChangedEmail({
+            to: user.email,
+            userName: user.name ?? user.email,
+            oldPlan: user.planId,
+            newPlan: input.planId,
+            expiresAt: input.expiresAt ?? null,
+            changedBy: ctx.user.name ?? ctx.user.email,
+            overrides: {
+              repos: input.overrideReposLimit,
+              reviews: input.overrideReviewsLimit,
+              seats: input.overrideSeatsLimit,
+            },
+          });
+        } catch (error) {
+          console.error(
+            `Failed to send plan changed email to ${user.email}:`,
+            error,
+          );
+        }
+      }
+
+      return { success: true, count: users.length };
+    }),
+
   deleteUser: adminProcedure
     .input(z.object({ userId: z.string().max(255) }))
     .mutation(async ({ ctx, input }) => {
@@ -283,9 +455,9 @@ export const adminRouter = createTRPCRouter({
         throw new Error("User not found.");
       }
 
-      // 1. Protect the owner from deletion
-      if (targetUser.email === process.env.OWNER_MAIL) {
-        throw new Error("The owner's account cannot be deleted.");
+      // 1. Protect the owner from deletion by others
+      if (targetUser.email === process.env.OWNER_MAIL && ctx.user.email !== process.env.OWNER_MAIL) {
+        throw new Error("The owner's account cannot be deleted by others.");
       }
 
       // 2. Prevent deleting the admin account itself
@@ -322,9 +494,9 @@ export const adminRouter = createTRPCRouter({
         throw new Error("User not found.");
       }
 
-      // 1. Protect the owner from being banned
-      if (targetUser.email === process.env.OWNER_MAIL) {
-        throw new Error("The owner's account cannot be banned.");
+      // 1. Protect the owner from being banned by others
+      if (targetUser.email === process.env.OWNER_MAIL && ctx.user.email !== process.env.OWNER_MAIL) {
+        throw new Error("The owner's account cannot be banned by others.");
       }
 
       // 2. Prevent banning self
@@ -739,7 +911,9 @@ export const adminRouter = createTRPCRouter({
         text: z.string().max(500),
         link: z.string().max(500).optional().default(""),
         linkText: z.string().max(100).optional().default(""),
-        color: z.enum(["indigo", "emerald", "amber", "rose", "violet"]).default("indigo"),
+        color: z
+          .enum(["indigo", "emerald", "amber", "rose", "violet"])
+          .default("indigo"),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -1126,11 +1300,17 @@ export const adminRouter = createTRPCRouter({
 
       const oidcConfig =
         type === "OIDC"
-          ? JSON.stringify({ clientId: clientId ?? "", clientSecret: clientSecret ?? "" })
+          ? JSON.stringify({
+              clientId: clientId ?? "",
+              clientSecret: clientSecret ?? "",
+            })
           : null;
       const samlConfig =
         type === "SAML"
-          ? JSON.stringify({ entryPoint: entryPoint ?? "", certificate: certificate ?? "" })
+          ? JSON.stringify({
+              entryPoint: entryPoint ?? "",
+              certificate: certificate ?? "",
+            })
           : null;
 
       // Auto-generate providerId slug from name when creating
@@ -1359,8 +1539,7 @@ export const adminRouter = createTRPCRouter({
         );
       }
 
-      const baseUrl =
-        process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
+      const baseUrl = process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
 
       await auth.api.requestPasswordReset({
         body: {

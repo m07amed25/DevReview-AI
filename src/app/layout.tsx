@@ -6,6 +6,7 @@ import { TRPCProvider } from "@/lib/trpc/provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { PageTransitionProvider } from "@/components/animations/page-transition";
 import { ErrorBoundary } from "@/components/error-boundary";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -66,7 +67,7 @@ export const metadata: Metadata = {
       {
         url: "/og-image.png",
         width: 1200,
-        height: 630,
+         height: 630,
         alt: "Code Catch | Smart Automated Code Reviews",
       },
     ],
@@ -111,6 +112,7 @@ export default function RootLayout({
             </PageTransitionProvider>
           </TRPCProvider>
         </ThemeProvider>
+        <Toaster position="top-right" richColors closeButton />
       </body>
     </html>
   );

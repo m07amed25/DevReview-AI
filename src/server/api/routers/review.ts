@@ -3,6 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { computeReviewDiff, Finding } from "@/lib/review-diff";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { getAccessibleRepository } from "@/lib/repository";
+import { checkUserLimit } from "@/lib/limits";
 import { inngest } from "@/server/inngest";
 import {
   fetchPullRequestByFullName,
@@ -20,6 +21,9 @@ export const reviewRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      // Check review limit
+      await checkUserLimit(ctx.db, ctx.user.id, "reviewsLimit");
+
       const repository = await getAccessibleRepository(
         ctx.db,
         ctx.user.id,

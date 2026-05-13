@@ -4801,8 +4801,22 @@ export namespace Prisma {
 
   export type AggregateUser = {
     _count: UserCountAggregateOutputType | null
+    _avg: UserAvgAggregateOutputType | null
+    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
+  }
+
+  export type UserAvgAggregateOutputType = {
+    overrideReposLimit: number | null
+    overrideReviewsLimit: number | null
+    overrideSeatsLimit: number | null
+  }
+
+  export type UserSumAggregateOutputType = {
+    overrideReposLimit: number | null
+    overrideReviewsLimit: number | null
+    overrideSeatsLimit: number | null
   }
 
   export type UserMinAggregateOutputType = {
@@ -4814,6 +4828,11 @@ export namespace Prisma {
     role: $Enums.UserRole | null
     banned: boolean | null
     bannedReason: string | null
+    planId: string | null
+    planExpiresAt: Date | null
+    overrideReposLimit: number | null
+    overrideReviewsLimit: number | null
+    overrideSeatsLimit: number | null
     createdAt: Date | null
     updatedAt: Date | null
     reviewDepth: string | null
@@ -4843,6 +4862,11 @@ export namespace Prisma {
     role: $Enums.UserRole | null
     banned: boolean | null
     bannedReason: string | null
+    planId: string | null
+    planExpiresAt: Date | null
+    overrideReposLimit: number | null
+    overrideReviewsLimit: number | null
+    overrideSeatsLimit: number | null
     createdAt: Date | null
     updatedAt: Date | null
     reviewDepth: string | null
@@ -4872,6 +4896,11 @@ export namespace Prisma {
     role: number
     banned: number
     bannedReason: number
+    planId: number
+    planExpiresAt: number
+    overrideReposLimit: number
+    overrideReviewsLimit: number
+    overrideSeatsLimit: number
     createdAt: number
     updatedAt: number
     reviewDepth: number
@@ -4894,6 +4923,18 @@ export namespace Prisma {
   }
 
 
+  export type UserAvgAggregateInputType = {
+    overrideReposLimit?: true
+    overrideReviewsLimit?: true
+    overrideSeatsLimit?: true
+  }
+
+  export type UserSumAggregateInputType = {
+    overrideReposLimit?: true
+    overrideReviewsLimit?: true
+    overrideSeatsLimit?: true
+  }
+
   export type UserMinAggregateInputType = {
     id?: true
     name?: true
@@ -4903,6 +4944,11 @@ export namespace Prisma {
     role?: true
     banned?: true
     bannedReason?: true
+    planId?: true
+    planExpiresAt?: true
+    overrideReposLimit?: true
+    overrideReviewsLimit?: true
+    overrideSeatsLimit?: true
     createdAt?: true
     updatedAt?: true
     reviewDepth?: true
@@ -4932,6 +4978,11 @@ export namespace Prisma {
     role?: true
     banned?: true
     bannedReason?: true
+    planId?: true
+    planExpiresAt?: true
+    overrideReposLimit?: true
+    overrideReviewsLimit?: true
+    overrideSeatsLimit?: true
     createdAt?: true
     updatedAt?: true
     reviewDepth?: true
@@ -4961,6 +5012,11 @@ export namespace Prisma {
     role?: true
     banned?: true
     bannedReason?: true
+    planId?: true
+    planExpiresAt?: true
+    overrideReposLimit?: true
+    overrideReviewsLimit?: true
+    overrideSeatsLimit?: true
     createdAt?: true
     updatedAt?: true
     reviewDepth?: true
@@ -5020,6 +5076,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: UserAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: UserMinAggregateInputType
@@ -5050,6 +5118,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: UserCountAggregateInputType | true
+    _avg?: UserAvgAggregateInputType
+    _sum?: UserSumAggregateInputType
     _min?: UserMinAggregateInputType
     _max?: UserMaxAggregateInputType
   }
@@ -5063,6 +5133,11 @@ export namespace Prisma {
     role: $Enums.UserRole
     banned: boolean
     bannedReason: string | null
+    planId: string
+    planExpiresAt: Date | null
+    overrideReposLimit: number | null
+    overrideReviewsLimit: number | null
+    overrideSeatsLimit: number | null
     createdAt: Date
     updatedAt: Date
     reviewDepth: string
@@ -5082,6 +5157,8 @@ export namespace Prisma {
     notificationSoundEnabled: boolean
     desktopNotifications: boolean
     _count: UserCountAggregateOutputType | null
+    _avg: UserAvgAggregateOutputType | null
+    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
   }
@@ -5109,6 +5186,11 @@ export namespace Prisma {
     role?: boolean
     banned?: boolean
     bannedReason?: boolean
+    planId?: boolean
+    planExpiresAt?: boolean
+    overrideReposLimit?: boolean
+    overrideReviewsLimit?: boolean
+    overrideSeatsLimit?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     reviewDepth?: boolean
@@ -5154,6 +5236,11 @@ export namespace Prisma {
     role?: boolean
     banned?: boolean
     bannedReason?: boolean
+    planId?: boolean
+    planExpiresAt?: boolean
+    overrideReposLimit?: boolean
+    overrideReviewsLimit?: boolean
+    overrideSeatsLimit?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     reviewDepth?: boolean
@@ -5183,6 +5270,11 @@ export namespace Prisma {
     role?: boolean
     banned?: boolean
     bannedReason?: boolean
+    planId?: boolean
+    planExpiresAt?: boolean
+    overrideReposLimit?: boolean
+    overrideReviewsLimit?: boolean
+    overrideSeatsLimit?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     reviewDepth?: boolean
@@ -5212,6 +5304,11 @@ export namespace Prisma {
     role?: boolean
     banned?: boolean
     bannedReason?: boolean
+    planId?: boolean
+    planExpiresAt?: boolean
+    overrideReposLimit?: boolean
+    overrideReviewsLimit?: boolean
+    overrideSeatsLimit?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     reviewDepth?: boolean
@@ -5232,7 +5329,7 @@ export namespace Prisma {
     desktopNotifications?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "banned" | "bannedReason" | "createdAt" | "updatedAt" | "reviewDepth" | "defaultLanguage" | "autoReview" | "includeSecurityChecks" | "includePerfSuggestions" | "emailNotifications" | "notifyTeamInvites" | "notifyTeamMemberAdded" | "notifyReviewCompleted" | "notifyReviewFailed" | "notifyScheduledScanCompleted" | "notifyReviewAssigned" | "notifyReviewApproved" | "notifyReviewChangesRequested" | "notificationSoundEnabled" | "desktopNotifications", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "banned" | "bannedReason" | "planId" | "planExpiresAt" | "overrideReposLimit" | "overrideReviewsLimit" | "overrideSeatsLimit" | "createdAt" | "updatedAt" | "reviewDepth" | "defaultLanguage" | "autoReview" | "includeSecurityChecks" | "includePerfSuggestions" | "emailNotifications" | "notifyTeamInvites" | "notifyTeamMemberAdded" | "notifyReviewCompleted" | "notifyReviewFailed" | "notifyScheduledScanCompleted" | "notifyReviewAssigned" | "notifyReviewApproved" | "notifyReviewChangesRequested" | "notificationSoundEnabled" | "desktopNotifications", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     accounts?: boolean | User$accountsArgs<ExtArgs>
@@ -5282,6 +5379,11 @@ export namespace Prisma {
       role: $Enums.UserRole
       banned: boolean
       bannedReason: string | null
+      planId: string
+      planExpiresAt: Date | null
+      overrideReposLimit: number | null
+      overrideReviewsLimit: number | null
+      overrideSeatsLimit: number | null
       createdAt: Date
       updatedAt: Date
       reviewDepth: string
@@ -5746,6 +5848,11 @@ export namespace Prisma {
     readonly role: FieldRef<"User", 'UserRole'>
     readonly banned: FieldRef<"User", 'Boolean'>
     readonly bannedReason: FieldRef<"User", 'String'>
+    readonly planId: FieldRef<"User", 'String'>
+    readonly planExpiresAt: FieldRef<"User", 'DateTime'>
+    readonly overrideReposLimit: FieldRef<"User", 'Int'>
+    readonly overrideReviewsLimit: FieldRef<"User", 'Int'>
+    readonly overrideSeatsLimit: FieldRef<"User", 'Int'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
     readonly reviewDepth: FieldRef<"User", 'String'>
@@ -46279,6 +46386,11 @@ export namespace Prisma {
     role: 'role',
     banned: 'banned',
     bannedReason: 'bannedReason',
+    planId: 'planId',
+    planExpiresAt: 'planExpiresAt',
+    overrideReposLimit: 'overrideReposLimit',
+    overrideReviewsLimit: 'overrideReviewsLimit',
+    overrideSeatsLimit: 'overrideSeatsLimit',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     reviewDepth: 'reviewDepth',
@@ -47262,6 +47374,11 @@ export namespace Prisma {
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
     banned?: BoolFilter<"User"> | boolean
     bannedReason?: StringNullableFilter<"User"> | string | null
+    planId?: StringFilter<"User"> | string
+    planExpiresAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    overrideReposLimit?: IntNullableFilter<"User"> | number | null
+    overrideReviewsLimit?: IntNullableFilter<"User"> | number | null
+    overrideSeatsLimit?: IntNullableFilter<"User"> | number | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     reviewDepth?: StringFilter<"User"> | string
@@ -47306,6 +47423,11 @@ export namespace Prisma {
     role?: SortOrder
     banned?: SortOrder
     bannedReason?: SortOrderInput | SortOrder
+    planId?: SortOrder
+    planExpiresAt?: SortOrderInput | SortOrder
+    overrideReposLimit?: SortOrderInput | SortOrder
+    overrideReviewsLimit?: SortOrderInput | SortOrder
+    overrideSeatsLimit?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     reviewDepth?: SortOrder
@@ -47353,6 +47475,11 @@ export namespace Prisma {
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
     banned?: BoolFilter<"User"> | boolean
     bannedReason?: StringNullableFilter<"User"> | string | null
+    planId?: StringFilter<"User"> | string
+    planExpiresAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    overrideReposLimit?: IntNullableFilter<"User"> | number | null
+    overrideReviewsLimit?: IntNullableFilter<"User"> | number | null
+    overrideSeatsLimit?: IntNullableFilter<"User"> | number | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     reviewDepth?: StringFilter<"User"> | string
@@ -47397,6 +47524,11 @@ export namespace Prisma {
     role?: SortOrder
     banned?: SortOrder
     bannedReason?: SortOrderInput | SortOrder
+    planId?: SortOrder
+    planExpiresAt?: SortOrderInput | SortOrder
+    overrideReposLimit?: SortOrderInput | SortOrder
+    overrideReviewsLimit?: SortOrderInput | SortOrder
+    overrideSeatsLimit?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     reviewDepth?: SortOrder
@@ -47416,8 +47548,10 @@ export namespace Prisma {
     notificationSoundEnabled?: SortOrder
     desktopNotifications?: SortOrder
     _count?: UserCountOrderByAggregateInput
+    _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
+    _sum?: UserSumOrderByAggregateInput
   }
 
   export type UserScalarWhereWithAggregatesInput = {
@@ -47432,6 +47566,11 @@ export namespace Prisma {
     role?: EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
     banned?: BoolWithAggregatesFilter<"User"> | boolean
     bannedReason?: StringNullableWithAggregatesFilter<"User"> | string | null
+    planId?: StringWithAggregatesFilter<"User"> | string
+    planExpiresAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    overrideReposLimit?: IntNullableWithAggregatesFilter<"User"> | number | null
+    overrideReviewsLimit?: IntNullableWithAggregatesFilter<"User"> | number | null
+    overrideSeatsLimit?: IntNullableWithAggregatesFilter<"User"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     reviewDepth?: StringWithAggregatesFilter<"User"> | string
@@ -50249,6 +50388,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -50293,6 +50437,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -50337,6 +50486,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -50381,6 +50535,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -50425,6 +50584,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -50454,6 +50618,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -50483,6 +50652,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -53609,6 +53783,28 @@ export namespace Prisma {
     not?: NestedEnumUserRoleFilter<$PrismaModel> | $Enums.UserRole
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -53774,6 +53970,11 @@ export namespace Prisma {
     role?: SortOrder
     banned?: SortOrder
     bannedReason?: SortOrder
+    planId?: SortOrder
+    planExpiresAt?: SortOrder
+    overrideReposLimit?: SortOrder
+    overrideReviewsLimit?: SortOrder
+    overrideSeatsLimit?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     reviewDepth?: SortOrder
@@ -53794,6 +53995,12 @@ export namespace Prisma {
     desktopNotifications?: SortOrder
   }
 
+  export type UserAvgOrderByAggregateInput = {
+    overrideReposLimit?: SortOrder
+    overrideReviewsLimit?: SortOrder
+    overrideSeatsLimit?: SortOrder
+  }
+
   export type UserMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -53803,6 +54010,11 @@ export namespace Prisma {
     role?: SortOrder
     banned?: SortOrder
     bannedReason?: SortOrder
+    planId?: SortOrder
+    planExpiresAt?: SortOrder
+    overrideReposLimit?: SortOrder
+    overrideReviewsLimit?: SortOrder
+    overrideSeatsLimit?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     reviewDepth?: SortOrder
@@ -53832,6 +54044,11 @@ export namespace Prisma {
     role?: SortOrder
     banned?: SortOrder
     bannedReason?: SortOrder
+    planId?: SortOrder
+    planExpiresAt?: SortOrder
+    overrideReposLimit?: SortOrder
+    overrideReviewsLimit?: SortOrder
+    overrideSeatsLimit?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     reviewDepth?: SortOrder
@@ -53850,6 +54067,12 @@ export namespace Prisma {
     notifyReviewChangesRequested?: SortOrder
     notificationSoundEnabled?: SortOrder
     desktopNotifications?: SortOrder
+  }
+
+  export type UserSumOrderByAggregateInput = {
+    overrideReposLimit?: SortOrder
+    overrideReviewsLimit?: SortOrder
+    overrideSeatsLimit?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -53906,6 +54129,36 @@ export namespace Prisma {
     _max?: NestedEnumUserRoleFilter<$PrismaModel>
   }
 
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -53958,17 +54211,6 @@ export namespace Prisma {
     userId?: SortOrder
   }
 
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type AccountCountOrderByAggregateInput = {
     id?: SortOrder
     accountId?: SortOrder
@@ -54015,20 +54257,6 @@ export namespace Prisma {
     password?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type VerificationCountOrderByAggregateInput = {
@@ -54188,17 +54416,6 @@ export namespace Prisma {
     notIn?: $Enums.ReviewStatus[] | ListEnumReviewStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumReviewStatusFilter<$PrismaModel> | $Enums.ReviewStatus
   }
-
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
   export type JsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
         Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
@@ -54340,22 +54557,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumReviewStatusFilter<$PrismaModel>
     _max?: NestedEnumReviewStatusFilter<$PrismaModel>
-  }
-
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
   }
   export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -56326,6 +56527,18 @@ export namespace Prisma {
     set?: $Enums.UserRole
   }
 
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
   }
@@ -56768,10 +56981,6 @@ export namespace Prisma {
     create?: XOR<UserCreateWithoutAccountsInput, UserUncheckedCreateWithoutAccountsInput>
     connectOrCreate?: UserCreateOrConnectWithoutAccountsInput
     connect?: UserWhereUniqueInput
-  }
-
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
   }
 
   export type UserUpdateOneRequiredWithoutAccountsNestedInput = {
@@ -57226,14 +57435,6 @@ export namespace Prisma {
 
   export type EnumReviewStatusFieldUpdateOperationsInput = {
     set?: $Enums.ReviewStatus
-  }
-
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type ReviewUpdateresolvedCommentsInput = {
@@ -58392,6 +58593,28 @@ export namespace Prisma {
     not?: NestedEnumUserRoleFilter<$PrismaModel> | $Enums.UserRole
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -58456,17 +58679,6 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type NestedEnumUserRoleWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel>
     in?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
@@ -58475,31 +58687,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumUserRoleFilter<$PrismaModel>
     _max?: NestedEnumUserRoleFilter<$PrismaModel>
-  }
-
-  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -58514,6 +58701,47 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -58558,33 +58786,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumReviewStatusFilter<$PrismaModel>
     _max?: NestedEnumReviewStatusFilter<$PrismaModel>
-  }
-
-  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
   export type NestedJsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -59936,6 +60137,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -59979,6 +60185,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -60038,6 +60249,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -60081,6 +60297,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -60124,6 +60345,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -60167,6 +60393,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -60226,6 +60457,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -60269,6 +60505,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -60312,6 +60553,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -60355,6 +60601,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -60683,6 +60934,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -60726,6 +60982,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -61030,6 +61291,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -61073,6 +61339,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -61514,6 +61785,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -61557,6 +61833,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -61911,6 +62192,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -61954,6 +62240,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -62076,6 +62367,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -62119,6 +62415,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -62471,6 +62772,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -62514,6 +62820,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -62628,6 +62939,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -62671,6 +62987,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -62753,6 +63074,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -62796,6 +63122,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -62884,6 +63215,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -62927,6 +63263,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -63027,6 +63368,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -63070,6 +63416,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -63192,6 +63543,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -63235,6 +63591,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -63335,6 +63696,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -63378,6 +63744,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -63426,6 +63797,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -63469,6 +63845,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -63591,6 +63972,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -63634,6 +64020,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -63688,6 +64079,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -63731,6 +64127,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -64031,6 +64432,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -64074,6 +64480,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -64168,6 +64579,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -64211,6 +64627,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -64318,6 +64739,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -64361,6 +64787,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -64420,6 +64851,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -64463,6 +64899,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -65315,6 +65756,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -65358,6 +65804,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -65489,6 +65940,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -65532,6 +65988,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -65659,6 +66120,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -65702,6 +66168,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -65761,6 +66232,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -65804,6 +66280,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -65885,6 +66366,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -65928,6 +66414,11 @@ export namespace Prisma {
     role?: $Enums.UserRole
     banned?: boolean
     bannedReason?: string | null
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -66022,6 +66513,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -66065,6 +66561,11 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     banned?: BoolFieldUpdateOperationsInput | boolean
     bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string

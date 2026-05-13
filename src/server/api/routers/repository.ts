@@ -13,6 +13,7 @@ import {
   deleteWebhook,
 } from "@/server/services/github";
 import { getAccessibleRepository } from "@/lib/repository";
+import { checkUserLimit } from "@/lib/limits";
 
 const sortOptions = ["name", "updatedAt", "createdAt"] as const;
 export type SortOption = (typeof sortOptions)[number];
@@ -89,6 +90,9 @@ export const repositoryRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      // Check repository limit
+      await checkUserLimit(ctx.db, ctx.user.id, "reposLimit", input.repos.length);
+
       const result = await Promise.all(
         input.repos.map(async (repo) => {
           return ctx.db.repository.upsert({

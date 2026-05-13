@@ -21,11 +21,11 @@ import {
 } from "@/features/teams/components/team-card";
 import { useTeamList } from "@/features/teams/hooks/use-team";
 import type { TeamData } from "@/features/teams/types";
+import { toast } from "sonner";
 
 export default function TeamsPage() {
   const [creating, setCreating] = useState(false);
   const [teamName, setTeamName] = useState("");
-  const [error, setError] = useState<string | null>(null);
 
   const {
     searchQuery,
@@ -42,9 +42,12 @@ export default function TeamsPage() {
     onSuccess: () => {
       setCreating(false);
       setTeamName("");
+      toast.success("Team created successfully");
       utils.team.list.invalidate();
     },
-    onError: (err) => setError(err.message),
+    onError: (err) => {
+      toast.error(err.message || "Failed to create team");
+    },
   });
 
   const filteredTeams = filterTeams(teams.data as TeamData[] | undefined);
@@ -97,19 +100,7 @@ export default function TeamsPage() {
           </div>
         )}
 
-        <AlertDialog open={!!error} onOpenChange={() => setError(null)}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Error</AlertDialogTitle>
-              <AlertDialogDescription>{error}</AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogAction onClick={() => setError(null)}>
-                OK
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+
 
         <AlertDialog open={creating} onOpenChange={setCreating}>
           <AlertDialogContent className="sm:max-w-md">

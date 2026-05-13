@@ -45,6 +45,7 @@ import {
   PRStatusBadge,
   ReviewStatusBadge,
 } from "@/features/repo/utils/pr-helpers";
+import { toast } from "sonner";
 
 type PageProps = { params: Promise<{ id: string; prNumber: string }> };
 
@@ -130,6 +131,10 @@ export default function PullRequestPage({ params }: PageProps) {
       latestReview.refetch();
       reviewHistory.refetch();
       pr.refetch();
+      toast.success("Review triggered successfully");
+    },
+    onError: (err) => {
+      toast.error(err.message || "Failed to trigger review");
     },
   });
 

@@ -76,7 +76,7 @@ export function TeamMemberAddedEmail({ params }: TeamMemberAddedEmailProps) {
                 src={`${baseUrl}/file.svg`}
                 width="56"
                 height="56"
-                alt="DEPI Code Review"
+                alt="Code Catch"
                 className="mx-auto"
               />
             </Section>
@@ -87,7 +87,7 @@ export function TeamMemberAddedEmail({ params }: TeamMemberAddedEmailProps) {
             </Heading>
 
             <Text className="mb-6 text-center text-gray-500">
-              You&apos;ve been invited to join a team on DEPI Code Review
+              You&apos;ve been invited to join a team on Code Catch
             </Text>
 
             {/* Greeting */}
@@ -115,7 +115,7 @@ export function TeamMemberAddedEmail({ params }: TeamMemberAddedEmailProps) {
                 </Text>
                 <Text className="m-0 mb-4 text-sm text-amber-700">
                   You haven&apos;t connected a GitHub account to your profile
-                  yet. DEPI Code Review requires a GitHub connection to analyze
+                  yet. Code Catch requires a GitHub connection to analyze
                   code and pull requests.
                 </Text>
                 <Button
@@ -211,7 +211,7 @@ export function TeamMemberAddedEmail({ params }: TeamMemberAddedEmailProps) {
           {/* Footer Links */}
           <Container className="mx-auto max-w-[560px] py-4 text-center">
             <Text className="text-xs text-gray-400">
-              © 2024 DEPI Code Review. All rights reserved.
+              © 2024 Code Catch. All rights reserved.
             </Text>
             <Text className="mt-1 text-xs text-gray-400">
               <Link href={baseUrl} className="text-gray-500 underline">

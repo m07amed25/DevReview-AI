@@ -15,22 +15,15 @@ function getBaseUrl() {
 }
 
 function handleGlobalError(error: unknown) {
-  if (error && typeof error === "object" && "data" in error) {
-    const errData = (error as { data?: { code?: string; retryAfter?: number } })
-      .data;
-    if (errData && errData.code === "TOO_MANY_REQUESTS") {
-      const retryAfter = errData.retryAfter;
-      if (retryAfter) {
-        toast.error(
-          `Too many requests. Please try again in ${retryAfter} seconds.`,
-          { id: "rate-limit-error" },
-        );
-      } else {
-        toast.error("Too many requests. Please try again later.", {
-          id: "rate-limit-error",
-        });
-      }
-    }
+  if (typeof error === "object" && error !== null && "data" in error) {
+    const err = error as { message?: string; data?: { code?: string } };
+    if (err.data?.code === "UNAUTHORIZED") return; // Let auth handle it or ignore
+    
+    toast.error(err.message || "An unexpected error occurred", {
+      id: "trpc-error",
+    });
+  } else if (error instanceof Error) {
+    toast.error(error.message, { id: "trpc-error" });
   }
 }
 

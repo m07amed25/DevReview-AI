@@ -24,7 +24,7 @@ export function AdminPromotedEmail({
 }) {
   const { userName, promotedByName } = params;
   const previewText =
-    "You've been promoted to Administrator on DEPI Code Review";
+    "You've been promoted to Administrator on Code Catch";
 
   return (
     <Html>
@@ -39,7 +39,7 @@ export function AdminPromotedEmail({
                 src={`${baseUrl}/file.svg`}
                 width="40"
                 height="40"
-                alt="DEPI Code Review"
+                alt="Code Catch"
                 className="mx-auto"
               />
             </Section>
@@ -55,7 +55,7 @@ export function AdminPromotedEmail({
 
             <Text className="mb-6 text-base leading-7 text-gray-700">
               Congratulations! You have been promoted to an **Administrator** on
-              the **DEPI Code Review** platform by **{promotedByName}**.
+              the **Code Catch** platform by **{promotedByName}**.
             </Text>
 
             <Section className="mb-8 p-6 bg-violet-50 rounded-xl border border-violet-100">
@@ -85,7 +85,7 @@ export function AdminPromotedEmail({
               This is an automated notification. If you believe this was done in
               error, please contact the system owner.
               <br />
-              &copy; {new Date().getFullYear()} DEPI Code Review. All rights
+              &copy; {new Date().getFullYear()} Code Catch. All rights
               reserved.
             </Text>
           </Container>

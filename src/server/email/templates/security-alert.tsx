@@ -52,7 +52,7 @@ export function SecurityAlertEmail({ params }: SecurityAlertEmailProps) {
                 src={`${baseUrl}/file.svg`}
                 width="56"
                 height="56"
-                alt="DEPI Code Review"
+                alt="Code Catch"
                 className="mx-auto"
               />
             </Section>

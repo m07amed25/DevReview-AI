@@ -29,6 +29,14 @@ model User {
   role          UserRole  @default(USER)
   banned        Boolean   @default(false)
   bannedReason  String?
+  planId        String    @default("free")
+  planExpiresAt DateTime?
+  
+  // Plan Overrides (manual control)
+  overrideReposLimit   Int?
+  overrideReviewsLimit Int?
+  overrideSeatsLimit   Int?
+
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   sessions      Session[]

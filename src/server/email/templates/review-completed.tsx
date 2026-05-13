@@ -86,7 +86,7 @@ export function ReviewCompletedEmail({ params }: ReviewCompletedEmailProps) {
                 src={`${baseUrl}/file.svg`}
                 width="56"
                 height="56"
-                alt="DEPI Code Review"
+                alt="Code Catch"
                 className="mx-auto"
               />
             </Section>
@@ -301,7 +301,7 @@ export function ReviewCompletedEmail({ params }: ReviewCompletedEmailProps) {
           {/* Footer Links */}
           <Container className="mx-auto max-w-[560px] py-4 text-center">
             <Text className="text-xs text-gray-400">
-              © 2024 DEPI Code Review. All rights reserved.
+              © 2024 Code Catch. All rights reserved.
             </Text>
             <Text className="mt-1 text-xs text-gray-400">
               <Link href={baseUrl} className="text-gray-500 underline">

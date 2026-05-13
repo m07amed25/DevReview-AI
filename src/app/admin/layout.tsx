@@ -22,11 +22,13 @@ export default async function AdminLayout({
 
   const dbUser = await db.user.findUnique({
     where: { id: session.user.id },
-    select: { role: true },
+    select: { role: true, email: true },
   });
 
-  if (dbUser?.role !== "ADMIN") {
-    redirect("/sign-in");
+  const isOwner = dbUser?.email === process.env.OWNER_MAIL;
+
+  if (!isOwner && dbUser?.role !== "ADMIN") {
+    redirect("/");
   }
 
   return (
@@ -39,7 +41,9 @@ export default async function AdminLayout({
         }}
       />
       <div className="flex flex-1 flex-col overflow-hidden">
-        <main className="flex-1 overflow-y-auto p-6 pt-20 lg:p-8">{children}</main>
+        <main className="flex-1 overflow-y-auto p-6 pt-20 lg:p-8">
+          {children}
+        </main>
       </div>
     </div>
   );
