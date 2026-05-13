@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, adminProcedure } from "../trpc";
-import { DiscountType } from "../../db/client";
+import { DiscountType, Plan } from "../../db/client";
 
 
 const discountCreateSchema = z.object({
@@ -12,7 +12,7 @@ const discountCreateSchema = z.object({
   description: z.string().max(200).optional(),
   type: z.nativeEnum(DiscountType),
   value: z.number().min(0).max(100),
-  planId: z.enum(["free", "pro", "ultra"]).nullable().optional(),
+  planId: z.nativeEnum(Plan).nullable().optional(),
   maxUses: z.number().int().min(1).nullable().optional(),
   active: z.boolean().default(true),
   expiresAt: z.date().nullable().optional(),
@@ -24,7 +24,7 @@ const discountUpdateSchema = discountCreateSchema.partial().extend({
 
 const overrideCreateSchema = z.object({
   email: z.string().email(),
-  planId: z.enum(["free", "pro", "ultra"]),
+  planId: z.nativeEnum(Plan),
   overrideMonthlyPrice: z.number().min(0).nullable().optional(),
   overrideYearlyPrice: z.number().min(0).nullable().optional(),
   reason: z.string().max(300).optional(),
@@ -43,7 +43,7 @@ const partnerCreateSchema = z.object({
     .max(253)
     .regex(/^[a-z0-9.-]+\.[a-z]{2,}$/, "Enter a valid domain, e.g. acme.com"),
   companyName: z.string().min(1).max(200),
-  planId: z.enum(["free", "pro", "ultra"]),
+  planId: z.nativeEnum(Plan),
   overrideMonthlyPrice: z.number().min(0).nullable().optional(),
   overrideYearlyPrice: z.number().min(0).nullable().optional(),
   note: z.string().max(500).optional(),
@@ -59,7 +59,7 @@ const pricingSettingsSchema = z.object({
   pricingEnabled:       z.boolean(),
   annualDiscount:       z.number().int().min(0).max(80),
   trialDays:            z.number().int().min(0).max(90),
-  trialPlan:            z.enum(["pro", "ultra"]),
+  trialPlan:            z.nativeEnum(Plan),
   gracePeriodDays:      z.number().int().min(0).max(14),
   refundEnabled:        z.boolean(),
   refundWindowDays:     z.number().int().min(1).max(60),
@@ -70,7 +70,7 @@ const pricingSettingsSchema = z.object({
 });
 
 const planSaveSchema = z.object({
-  id:           z.enum(["free", "pro", "ultra"]),
+  id:           z.nativeEnum(Plan),
   name:         z.string().min(1).max(50),
   tagline:      z.string().max(200),
   monthlyPrice: z.number().min(0),
@@ -292,7 +292,7 @@ export const adminPricingRouter = createTRPCRouter({
     .input(planSaveSchema)
     .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input;
-      const sortOrder = id === "free" ? 0 : id === "pro" ? 1 : 2;
+      const sortOrder = id === Plan.FREE ? 0 : id === Plan.PRO ? 1 : 2;
       return ctx.db.pricingPlan.upsert({
         where: { id },
         create: { id, sortOrder, ...data },

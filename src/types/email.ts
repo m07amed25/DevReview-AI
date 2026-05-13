@@ -1,3 +1,5 @@
+import { Plan } from "@prisma/client";
+
 export interface BaseEmailParams {
   to: string;
   subject: string;
@@ -43,8 +45,8 @@ export interface AdminDemotedEmailParams {
 export interface PlanChangedEmailParams {
   to: string;
   userName: string;
-  oldPlan: string;
-  newPlan: string;
+  oldPlan: Plan;
+  newPlan: Plan;
   expiresAt: Date | null;
   changedBy: string;
   overrides?: {

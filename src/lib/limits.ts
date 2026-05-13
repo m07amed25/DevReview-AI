@@ -46,21 +46,21 @@ export async function checkUserLimit(
 
   const effectivePlan = plan ?? defaultPlan;
 
-  let limit = 0;
+  let limit: number | null = 0;
   let currentUsage = 0;
 
   switch (limitType) {
     case "reposLimit":
-      limit = user.overrideReposLimit ?? (effectivePlan as any).reposLimit ?? 0;
+      limit = user.overrideReposLimit ?? (effectivePlan as any).reposLimit ?? null;
       currentUsage = user._count.repositories;
       break;
     case "reviewsLimit":
       limit =
-        user.overrideReviewsLimit ?? (effectivePlan as any).reviewsLimit ?? 0;
+        user.overrideReviewsLimit ?? (effectivePlan as any).reviewsLimit ?? null;
       currentUsage = user._count.reviews;
       break;
     case "seatsLimit": {
-      limit = user.overrideSeatsLimit ?? (effectivePlan as any).seatsLimit ?? 0;
+      limit = user.overrideSeatsLimit ?? (effectivePlan as any).seatsLimit ?? null;
 
       // Count total members across all teams where this user is an OWNER
       const ownedTeams = await db.team.findMany({
@@ -87,7 +87,7 @@ export async function checkUserLimit(
     }
   }
 
-  if (currentUsage + additionalCount > limit) {
+  if (limit !== null && limit !== 0 && currentUsage + additionalCount > limit) {
     const resourceMap: Record<LimitType, string> = {
       reposLimit: "repository",
       reviewsLimit: "review",

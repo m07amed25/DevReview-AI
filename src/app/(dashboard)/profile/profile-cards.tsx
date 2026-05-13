@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback } from "react";
 import { trpc } from "@/lib/trpc/client";
+import { Plan } from "@/server/db/client";
 import { motion, AnimatePresence } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -171,9 +172,11 @@ export function ProfileHeaderCard({
               <Badge
                 className={cn(
                   "w-fit mx-auto sm:mx-0 text-[10px] px-2 py-0.5 h-5 font-semibold uppercase tracking-widest border-none",
-                  profile.plan.id === "ultra" && "bg-linear-to-r from-violet-600 to-fuchsia-600 text-white",
-                  profile.plan.id === "pro" && "bg-indigo-600 text-white",
-                  profile.plan.id === "free" && "bg-neutral-200 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400"
+                {
+                  "bg-linear-to-r from-violet-600 to-fuchsia-600 text-white": profile.plan.id === Plan.ENTERPRISE,
+                  "bg-indigo-600 text-white": profile.plan.id === Plan.PRO,
+                  "bg-neutral-200 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400": profile.plan.id === Plan.FREE
+                }
                 )}
               >
                 {profile.plan.name} Plan

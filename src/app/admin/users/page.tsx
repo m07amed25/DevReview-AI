@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
+import { Plan } from "@/server/db/client";
 import { motion, AnimatePresence } from "framer-motion";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -64,6 +65,7 @@ import {
 import { DropdownSelect, SelectItem } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 export default function AdminUsersPage() {
   const [search, setSearch] = useState("");
@@ -84,7 +86,7 @@ export default function AdminUsersPage() {
     planId: string;
     expiresAt: string | null;
   } | null>(null);
-  const [newPlan, setNewPlan] = useState<string>("free");
+  const [newPlan, setNewPlan] = useState<Plan>(Plan.FREE);
   const [newExpiresAt, setNewExpiresAt] = useState<string>("");
   const [overrideRepos, setOverrideRepos] = useState<string>("");
   const [overrideReviews, setOverrideReviews] = useState<string>("");
@@ -309,7 +311,7 @@ export default function AdminUsersPage() {
                               onClick={() => {
                                 const ids =
                                   data?.users
-                                    .filter((u) => u.planId === "free")
+                                    .filter((u) => u.planId === Plan.FREE)
                                     .map((u) => u.id) ?? [];
                                 setSelectedUsers(ids);
                                 setIsSelectAllMenuOpen(false);
@@ -323,7 +325,7 @@ export default function AdminUsersPage() {
                               onClick={() => {
                                 const ids =
                                   data?.users
-                                    .filter((u) => u.planId === "pro")
+                                    .filter((u) => u.planId === Plan.PRO)
                                     .map((u) => u.id) ?? [];
                                 setSelectedUsers(ids);
                                 setIsSelectAllMenuOpen(false);
@@ -337,14 +339,14 @@ export default function AdminUsersPage() {
                               onClick={() => {
                                 const ids =
                                   data?.users
-                                    .filter((u) => u.planId === "ultra")
+                                    .filter((u) => u.planId === Plan.ENTERPRISE)
                                     .map((u) => u.id) ?? [];
                                 setSelectedUsers(ids);
                                 setIsSelectAllMenuOpen(false);
                               }}
                             >
                               <div className="w-2 h-2 rounded-full bg-violet-600" />
-                              Select all Ultra users
+                              Select all Enterprise users
                             </button>
 
                             <div className="h-px bg-neutral-100 dark:bg-neutral-800 my-1" />
@@ -460,15 +462,16 @@ export default function AdminUsersPage() {
 
                         <Badge
                           variant="secondary"
-                          className={`text-[10px] h-5 px-1.5 font-normal ${
-                            user.planId === "ultra"
+                          className={cn(
+                            "text-[10px] h-5 px-1.5 font-normal",
+                            user.planId === Plan.ENTERPRISE
                               ? "bg-purple-500/10 text-purple-500 border-purple-500/20"
-                              : user.planId === "pro"
+                              : user.planId === Plan.PRO
                                 ? "bg-indigo-500/10 text-indigo-500 border-indigo-500/20"
                                 : "bg-neutral-500/10 text-neutral-500 border-neutral-500/20"
-                          }`}
+                          )}
                         >
-                          {user.planId.toUpperCase()}
+                          {user.planId === Plan.ENTERPRISE ? "ENTERPRISE" : user.planId.toUpperCase()}
                         </Badge>
                       </div>
                       <p className="truncate text-sm text-muted-foreground">
@@ -639,7 +642,7 @@ export default function AdminUsersPage() {
                                 .split("T")[0]
                             : null,
                         });
-                        setNewPlan(user.planId);
+                        setNewPlan(user.planId as Plan);
                         setNewExpiresAt(
                           user.planExpiresAt
                             ? new Date(user.planExpiresAt)

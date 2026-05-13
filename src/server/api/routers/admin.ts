@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { UserRole } from "../../db/client";
+import { UserRole, Plan } from "../../db/client";
 import {
   createTRPCRouter,
   adminProcedure,
@@ -301,7 +301,7 @@ export const adminRouter = createTRPCRouter({
     .input(
       z.object({
         userId: z.string().max(255),
-        planId: z.enum(["free", "pro", "ultra"]),
+        planId: z.nativeEnum(Plan),
         expiresAt: z.date().nullable().optional(),
         overrideReposLimit: z.number().int().min(0).nullable().optional(),
         overrideReviewsLimit: z.number().int().min(0).nullable().optional(),
@@ -342,7 +342,7 @@ export const adminRouter = createTRPCRouter({
         ipAddress: ctx.ip,
         userAgent: ctx.userAgent,
         metadata: {
-          oldPlan: targetUser.planId,
+          oldPlan: targetUser.planId as Plan,
           newPlan: input.planId,
           expiresAt: input.expiresAt,
           overrides: {
@@ -358,7 +358,7 @@ export const adminRouter = createTRPCRouter({
         await sendPlanChangedEmail({
           to: targetUser.email,
           userName: targetUser.name || targetUser.email,
-          oldPlan: targetUser.planId,
+          oldPlan: targetUser.planId as Plan,
           newPlan: input.planId,
           expiresAt: input.expiresAt ?? null,
           changedBy: ctx.user.name ?? ctx.user.email,
@@ -377,7 +377,7 @@ export const adminRouter = createTRPCRouter({
     .input(
       z.object({
         userIds: z.array(z.string().max(255)),
-        planId: z.enum(["free", "pro", "ultra"]),
+        planId: z.nativeEnum(Plan),
         expiresAt: z.date().nullable().optional(),
         overrideReposLimit: z.number().int().min(0).nullable().optional(),
         overrideReviewsLimit: z.number().int().min(0).nullable().optional(),
@@ -422,7 +422,7 @@ export const adminRouter = createTRPCRouter({
           await sendPlanChangedEmail({
             to: user.email,
             userName: user.name ?? user.email,
-            oldPlan: user.planId,
+            oldPlan: user.planId as Plan,
             newPlan: input.planId,
             expiresAt: input.expiresAt ?? null,
             changedBy: ctx.user.name ?? ctx.user.email,

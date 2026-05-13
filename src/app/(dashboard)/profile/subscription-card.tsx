@@ -23,6 +23,7 @@ import { LimitProgress } from "@/components/ui/limit-progress";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { Plan } from "@/server/db/client";
 
 interface SubscriptionCardProps {
   plan: {
@@ -49,8 +50,8 @@ export function SubscriptionCard({
   stats,
   planExpiresAt,
 }: SubscriptionCardProps) {
-  const isFree = plan.id === "free";
-  const isUltra = plan.id === "ultra";
+  const isFree = plan.id === Plan.FREE;
+  const isEnterprise = plan.id === Plan.ENTERPRISE;
 
   return (
     <Card className="overflow-hidden border-none shadow-2xl bg-neutral-900/40 backdrop-blur-2xl relative group h-full">
@@ -60,7 +61,7 @@ export function SubscriptionCard({
           "absolute inset-0 opacity-20 pointer-events-none transition-opacity duration-500 group-hover:opacity-30",
           isFree
             ? "bg-linear-to-br from-neutral-600 to-transparent"
-            : isUltra
+            : isEnterprise
               ? "bg-linear-to-br from-violet-600 via-fuchsia-600 to-transparent"
               : "bg-linear-to-br from-indigo-600 to-transparent",
         )}
@@ -72,7 +73,7 @@ export function SubscriptionCard({
           <div className="space-y-1.5">
             <Badge className={cn(
               "border-none text-[10px] font-semibold uppercase tracking-[0.2em] px-2 py-0.5",
-              isUltra ? "bg-violet-500 text-white" : "bg-indigo-500 text-white"
+              isEnterprise ? "bg-violet-500 text-white" : "bg-indigo-500 text-white"
             )}>
               Current Plan
             </Badge>
@@ -104,7 +105,7 @@ export function SubscriptionCard({
               label="Repositories"
               usage={stats.repositories}
               limit={limits.reposLimit}
-              color={isUltra ? "bg-violet-500" : "bg-indigo-500"}
+              color={isEnterprise ? "bg-violet-500" : "bg-indigo-500"}
               icon={<FolderGit2 className="size-4" />}
               className="bg-black/20 border-white/5"
             />
@@ -112,7 +113,7 @@ export function SubscriptionCard({
               label="AI Reviews"
               usage={stats.reviews}
               limit={limits.reviewsLimit}
-              color={isUltra ? "bg-fuchsia-500" : "bg-violet-500"}
+              color={isEnterprise ? "bg-fuchsia-500" : "bg-violet-500"}
               icon={<CheckCircle2 className="size-4" />}
               className="bg-black/20 border-white/5"
             />

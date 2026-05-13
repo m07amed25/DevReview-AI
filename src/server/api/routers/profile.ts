@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
+import { Plan } from "../../db/client";
 
 export const profileRouter = createTRPCRouter({
   availableProviders: publicProcedure.query(() => {
@@ -55,7 +56,7 @@ export const profileRouter = createTRPCRouter({
     });
 
     const defaultPlan = {
-      id: "free",
+      id: Plan.FREE,
       name: "Free",
       tagline: "Perfect for individuals and small side projects.",
       monthlyPrice: 0,

@@ -56,9 +56,10 @@ import { Select } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc/client";
+import { Plan } from "@/server/db/client";
 
 interface PricingPlan {
-  id: string;
+  id: Plan;
   name: string;
   tagline: string;
   monthlyPrice: number;
@@ -73,21 +74,21 @@ interface PricingPlan {
 }
 
 /* Per-plan display constants (not stored in DB) */
-const PLAN_DISPLAY: Record<string, {
+const PLAN_DISPLAY: Record<Plan, {
   icon: React.ElementType;
   iconColor: string;
 }> = {
-  free:  { icon: Zap,    iconColor: "text-slate-500" },
-  pro:   { icon: Rocket, iconColor: "text-indigo-500" },
-  ultra: { icon: Crown,  iconColor: "text-amber-500" },
+  [Plan.FREE]:       { icon: Zap,    iconColor: "text-slate-500" },
+  [Plan.PRO]:        { icon: Rocket, iconColor: "text-indigo-500" },
+  [Plan.ENTERPRISE]: { icon: Crown,  iconColor: "text-amber-500" },
 };
 
 /* ─── Helpers ────────────────────────────────────────────── */
 const PLAN_OPTIONS = [
   { value: "all", label: "All plans" },
-  { value: "free", label: "Free" },
-  { value: "pro", label: "Pro" },
-  { value: "ultra", label: "Ultra" },
+  { value: Plan.FREE, label: "Free" },
+  { value: Plan.PRO, label: "Pro" },
+  { value: Plan.ENTERPRISE, label: "Enterprise" },
 ];
 
 function fmtDate(d: Date | null | undefined) {
@@ -216,9 +217,9 @@ function PlanEditorCard({
             <div
               className={cn(
                 "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border",
-                plan.id === "free" && "bg-slate-50 dark:bg-slate-900",
-                plan.id === "pro" && "bg-indigo-50 dark:bg-indigo-950/40",
-                plan.id === "ultra" && "bg-amber-50 dark:bg-amber-950/40",
+                plan.id === Plan.FREE && "bg-slate-50 dark:bg-slate-900",
+                plan.id === Plan.PRO && "bg-indigo-50 dark:bg-indigo-950/40",
+                plan.id === Plan.ENTERPRISE && "bg-amber-50 dark:bg-amber-950/40",
               )}
             >
               <Icon className={cn("h-5 w-5", iconColor)} />
@@ -486,7 +487,7 @@ function DiscountsTab() {
       description: description || undefined,
       type,
       value: numValue,
-      planId: planId === "all" ? null : (planId as "free" | "pro" | "ultra"),
+      planId: planId === "all" ? null : (planId as Plan),
       maxUses: maxUses ? parseInt(maxUses, 10) : null,
       expiresAt: expiresAt ? new Date(expiresAt) : null,
     });
@@ -709,7 +710,7 @@ function OverridesTab() {
   });
 
   const [email, setEmail] = useState("");
-  const [planId, setPlanId] = useState<"free" | "pro" | "ultra">("pro");
+  const [planId, setPlanId] = useState<Plan>(Plan.PRO);
   const [monthlyPrice, setMonthlyPrice] = useState("");
   const [yearlyPrice, setYearlyPrice] = useState("");
   const [reason, setReason] = useState("");
@@ -717,7 +718,7 @@ function OverridesTab() {
   const [showForm, setShowForm] = useState(false);
 
   const resetForm = () => {
-    setEmail(""); setPlanId("pro"); setMonthlyPrice(""); setYearlyPrice("");
+    setEmail(""); setPlanId(Plan.PRO); setMonthlyPrice(""); setYearlyPrice("");
     setReason(""); setExpiresAt(""); setShowForm(false);
   };
 
@@ -774,12 +775,12 @@ function OverridesTab() {
                 </Label>
                 <Select
                   value={planId}
-                  onChange={(e) => setPlanId(e.target.value as "free" | "pro" | "ultra")}
+                  onChange={(e) => setPlanId(e.target.value as Plan)}
                   className="h-8 text-sm"
                 >
-                  <option value="free">Free</option>
-                  <option value="pro">Pro</option>
-                  <option value="ultra">Ultra</option>
+                  <option value={Plan.FREE}>Free</option>
+                  <option value={Plan.PRO}>Pro</option>
+                  <option value={Plan.ENTERPRISE}>Enterprise</option>
                 </Select>
               </div>
               <div className="space-y-1.5">
@@ -864,9 +865,9 @@ function OverridesTab() {
                   </td>
                   <td className="px-4 py-3">
                     <Badge variant="outline" className={cn("text-xs capitalize",
-                      o.planId === "free" && "border-slate-500/30 text-muted-foreground",
-                      o.planId === "pro" && "border-indigo-500/40 bg-indigo-50 text-indigo-700 dark:bg-indigo-900/20 dark:text-indigo-400",
-                      o.planId === "ultra" && "border-amber-500/40 bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400",
+                      o.planId === Plan.FREE && "border-slate-500/30 text-muted-foreground",
+                      o.planId === Plan.PRO && "border-indigo-500/40 bg-indigo-50 text-indigo-700 dark:bg-indigo-900/20 dark:text-indigo-400",
+                      o.planId === Plan.ENTERPRISE && "border-amber-500/40 bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400",
                     )}>{o.planId}</Badge>
                   </td>
                   <td className="px-4 py-3 text-xs text-muted-foreground">
@@ -930,7 +931,7 @@ function PartnersTab() {
 
   const [domain, setDomain] = useState("");
   const [companyName, setCompanyName] = useState("");
-  const [planId, setPlanId] = useState<"free" | "pro" | "ultra">("pro");
+  const [planId, setPlanId] = useState<Plan>(Plan.PRO);
   const [monthlyPrice, setMonthlyPrice] = useState("");
   const [yearlyPrice, setYearlyPrice] = useState("");
   const [note, setNote] = useState("");
@@ -938,7 +939,7 @@ function PartnersTab() {
   const [showForm, setShowForm] = useState(false);
 
   const resetForm = () => {
-    setDomain(""); setCompanyName(""); setPlanId("pro");
+    setDomain(""); setCompanyName(""); setPlanId(Plan.PRO);
     setMonthlyPrice(""); setYearlyPrice(""); setNote("");
     setExpiresAt(""); setShowForm(false);
   };
@@ -1014,12 +1015,12 @@ function PartnersTab() {
                 <select
                   aria-label="Plan"
                   value={planId}
-                  onChange={(e) => setPlanId(e.target.value as "free" | "pro" | "ultra")}
+                  onChange={(e) => setPlanId(e.target.value as Plan)}
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring"
                 >
-                  <option value="free">Free</option>
-                  <option value="pro">Pro</option>
-                  <option value="ultra">Ultra</option>
+                  <option value={Plan.FREE}>Free</option>
+                  <option value={Plan.PRO}>Pro</option>
+                  <option value={Plan.ENTERPRISE}>Enterprise</option>
                 </select>
               </div>
               <div className="space-y-1.5">
@@ -1113,9 +1114,9 @@ function PartnersTab() {
                   </td>
                   <td className="px-4 py-3">
                     <Badge variant="outline" className={cn("text-xs capitalize",
-                      p.planId === "free" && "border-slate-500/30 text-muted-foreground",
-                      p.planId === "pro" && "border-indigo-500/40 bg-indigo-50 text-indigo-700 dark:bg-indigo-900/20 dark:text-indigo-400",
-                      p.planId === "ultra" && "border-amber-500/40 bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400",
+                      p.planId === Plan.FREE && "border-slate-500/30 text-muted-foreground",
+                      p.planId === Plan.PRO && "border-indigo-500/40 bg-indigo-50 text-indigo-700 dark:bg-indigo-900/20 dark:text-indigo-400",
+                      p.planId === Plan.ENTERPRISE && "border-amber-500/40 bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400",
                     )}>{p.planId}</Badge>
                   </td>
                   <td className="px-4 py-3 text-xs text-muted-foreground">
@@ -1184,7 +1185,7 @@ export default function AdminPricingPage() {
 
   const handleSavePlan = (updated: PricingPlan) => {
     savePlanMutation.mutate({
-      id: updated.id as "free" | "pro" | "ultra",
+      id: updated.id as Plan,
       name: updated.name,
       tagline: updated.tagline,
       monthlyPrice: updated.monthlyPrice,
@@ -1211,7 +1212,7 @@ export default function AdminPricingPage() {
   const [annualDiscount, setAnnualDiscount] = useState(settings.annualDiscount);
   const [trialDays, setTrialDays] = useState(settings.trialDays);
   const [pricingEnabled, setPricingEnabled] = useState(settings.pricingEnabled);
-  const [trialPlan, setTrialPlan] = useState<"pro" | "ultra">(settings.trialPlan as "pro" | "ultra");
+  const [trialPlan, setTrialPlan] = useState<Plan>(settings.trialPlan as Plan);
   const [gracePeriodDays, setGracePeriodDays] = useState(settings.gracePeriodDays);
   const [refundEnabled, setRefundEnabled] = useState(settings.refundEnabled);
   const [refundWindowDays, setRefundWindowDays] = useState(settings.refundWindowDays);
