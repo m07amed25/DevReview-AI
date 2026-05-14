@@ -384,7 +384,6 @@ export default function AdminRepositoriesPage() {
                           </div>
                         </div>
 
-                        <div className="hidden gap-6 text-center text-sm sm:flex items-center">
                         <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto pt-2 sm:pt-0 mt-2 sm:mt-0 border-t sm:border-t-0">
                           <div className="flex items-center gap-6 text-sm">
                             <div className="hidden sm:block">
