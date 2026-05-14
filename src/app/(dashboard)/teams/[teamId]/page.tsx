@@ -23,6 +23,10 @@ import {
   RequestActionDialog,
 } from "./team-dialogs";
 import {
+  PendingApprovalsCard,
+  MyRequestsCard,
+  MembersCard,
+  SharedReposCard,
   PendingInvitesCard,
 } from "./team-cards";
 import { toast } from "sonner";
