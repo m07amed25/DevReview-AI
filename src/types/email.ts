@@ -46,8 +46,8 @@ export interface AdminDemotedEmailParams {
 export interface PlanChangedEmailParams {
   to: string;
   userName: string;
-  oldPlan: Plan;
-  newPlan: Plan;
+  oldPlan: string;
+  newPlan: string;
   expiresAt: Date | null;
   changedBy: string;
   overrides?: {

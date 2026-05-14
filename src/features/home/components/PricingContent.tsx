@@ -29,13 +29,13 @@ import { Plan } from "@/lib/plan";
 export interface PricingSettings {
   annualDiscount: number;
   trialDays: number;
-  trialPlan: Plan;
+  trialPlan: string;
   freeSignupEnabled: boolean;
   promoCodesAtCheckout: boolean;
 }
 
 export interface DbPricingPlan {
-  id: Plan;
+  id: string;
   name: string;
   tagline: string;
   monthlyPrice: number;
@@ -438,7 +438,7 @@ export function PricingContent({
 
   const mergedPlans: MergedPlan[] = dbPlans.map((p) => ({
     ...p,
-    ...(PLAN_DISPLAY_MAP[p.id] ?? PLAN_DISPLAY_MAP.FREE!),
+    ...(PLAN_DISPLAY_MAP[p.id as Plan] ?? PLAN_DISPLAY_MAP[Plan.FREE]!),
   }));
   const COMPARISON = buildComparison(mergedPlans);
 
