@@ -128,8 +128,6 @@ exports.Prisma.UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   image: 'image',
   role: 'role',
-  banned: 'banned',
-  bannedReason: 'bannedReason',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   reviewDepth: 'reviewDepth',
@@ -137,17 +135,24 @@ exports.Prisma.UserScalarFieldEnum = {
   autoReview: 'autoReview',
   includeSecurityChecks: 'includeSecurityChecks',
   includePerfSuggestions: 'includePerfSuggestions',
+  banned: 'banned',
+  bannedReason: 'bannedReason',
+  desktopNotifications: 'desktopNotifications',
   emailNotifications: 'emailNotifications',
-  notifyTeamInvites: 'notifyTeamInvites',
-  notifyTeamMemberAdded: 'notifyTeamMemberAdded',
+  notificationSoundEnabled: 'notificationSoundEnabled',
+  notifyReviewApproved: 'notifyReviewApproved',
+  notifyReviewAssigned: 'notifyReviewAssigned',
+  notifyReviewChangesRequested: 'notifyReviewChangesRequested',
   notifyReviewCompleted: 'notifyReviewCompleted',
   notifyReviewFailed: 'notifyReviewFailed',
   notifyScheduledScanCompleted: 'notifyScheduledScanCompleted',
-  notifyReviewAssigned: 'notifyReviewAssigned',
-  notifyReviewApproved: 'notifyReviewApproved',
-  notifyReviewChangesRequested: 'notifyReviewChangesRequested',
-  notificationSoundEnabled: 'notificationSoundEnabled',
-  desktopNotifications: 'desktopNotifications'
+  notifyTeamInvites: 'notifyTeamInvites',
+  notifyTeamMemberAdded: 'notifyTeamMemberAdded',
+  planId: 'planId',
+  planExpiresAt: 'planExpiresAt',
+  overrideReposLimit: 'overrideReposLimit',
+  overrideReviewsLimit: 'overrideReviewsLimit',
+  overrideSeatsLimit: 'overrideSeatsLimit'
 };
 
 exports.Prisma.SessionScalarFieldEnum = {
@@ -212,10 +217,10 @@ exports.Prisma.ReviewScalarFieldEnum = {
   comments: 'comments',
   qualityMetrics: 'qualityMetrics',
   error: 'error',
-  parentReviewId: 'parentReviewId',
-  resolvedComments: 'resolvedComments',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  parentReviewId: 'parentReviewId',
+  resolvedComments: 'resolvedComments'
 };
 
 exports.Prisma.ReviewFeedbackScalarFieldEnum = {
@@ -346,9 +351,9 @@ exports.Prisma.WebhookConfigScalarFieldEnum = {
   repositoryId: 'repositoryId',
   enabled: 'enabled',
   githubWebhookId: 'githubWebhookId',
-  scoreThreshold: 'scoreThreshold',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  scoreThreshold: 'scoreThreshold'
 };
 
 exports.Prisma.ScheduledScanConfigScalarFieldEnum = {
@@ -432,27 +437,27 @@ exports.Prisma.ReviewRuleScalarFieldEnum = {
 exports.Prisma.SystemSettingsScalarFieldEnum = {
   id: 'id',
   maintenanceMode: 'maintenanceMode',
-  reviewRetentionDays: 'reviewRetentionDays',
+  updatedAt: 'updatedAt',
   auditLogRetentionDays: 'auditLogRetentionDays',
+  reviewRetentionDays: 'reviewRetentionDays',
   sessionRetentionDays: 'sessionRetentionDays',
+  bannerColor: 'bannerColor',
   bannerEnabled: 'bannerEnabled',
-  bannerText: 'bannerText',
   bannerLink: 'bannerLink',
   bannerLinkText: 'bannerLinkText',
-  bannerColor: 'bannerColor',
-  updatedAt: 'updatedAt'
+  bannerText: 'bannerText'
 };
 
 exports.Prisma.SupportMessageScalarFieldEnum = {
   id: 'id',
-  userId: 'userId',
-  name: 'name',
   email: 'email',
-  subject: 'subject',
   message: 'message',
-  type: 'type',
   status: 'status',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  name: 'name',
+  subject: 'subject',
+  type: 'type',
+  userId: 'userId'
 };
 
 exports.Prisma.AuditLogScalarFieldEnum = {

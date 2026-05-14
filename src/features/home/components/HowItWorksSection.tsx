@@ -13,7 +13,7 @@ const steps = [
     icon: Terminal,
     title: "Open a PR",
     description:
-      "DEPI AI automatically triggers on every pull request, analyzing your code in real-time.",
+      "Code Catch AI automatically triggers on every pull request, analyzing your code in real-time.",
   },
   {
     step: "03",

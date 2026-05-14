@@ -185,7 +185,7 @@ export type UserPriceOverride = $Result.DefaultSelection<Prisma.$UserPriceOverri
 export type PartnerDomain = $Result.DefaultSelection<Prisma.$PartnerDomainPayload>
 /**
  * Model PricingPlan
- * Editable plan definitions — prices, features, limits (id is "free" | "pro" | "ultra").
+ * Editable plan definitions — prices, features, limits (id is "FREE" | "PRO" | "ENTERPRISE").
  */
 export type PricingPlan = $Result.DefaultSelection<Prisma.$PricingPlanPayload>
 /**
@@ -4314,39 +4314,39 @@ export namespace Prisma {
    */
 
   export type UserCountOutputType = {
-    sessions: number
-    accounts: number
+    notifications: number
     repositories: number
     reviews: number
+    reviewFeedbacks: number
     threadComments: number
     teamMembers: number
-    notifications: number
-    reviewFeedbacks: number
-    reviewRules: number
+    accounts: number
     auditLogs: number
-    customRoles: number
-    commentReactions: number
     reviewApprovals: number
-    assignedReviews: number
     assignedByMe: number
+    assignedReviews: number
+    reviewRules: number
+    commentReactions: number
+    sessions: number
+    customRoles: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    sessions?: boolean | UserCountOutputTypeCountSessionsArgs
-    accounts?: boolean | UserCountOutputTypeCountAccountsArgs
+    notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
     repositories?: boolean | UserCountOutputTypeCountRepositoriesArgs
     reviews?: boolean | UserCountOutputTypeCountReviewsArgs
+    reviewFeedbacks?: boolean | UserCountOutputTypeCountReviewFeedbacksArgs
     threadComments?: boolean | UserCountOutputTypeCountThreadCommentsArgs
     teamMembers?: boolean | UserCountOutputTypeCountTeamMembersArgs
-    notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
-    reviewFeedbacks?: boolean | UserCountOutputTypeCountReviewFeedbacksArgs
-    reviewRules?: boolean | UserCountOutputTypeCountReviewRulesArgs
+    accounts?: boolean | UserCountOutputTypeCountAccountsArgs
     auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
-    customRoles?: boolean | UserCountOutputTypeCountCustomRolesArgs
-    commentReactions?: boolean | UserCountOutputTypeCountCommentReactionsArgs
     reviewApprovals?: boolean | UserCountOutputTypeCountReviewApprovalsArgs
-    assignedReviews?: boolean | UserCountOutputTypeCountAssignedReviewsArgs
     assignedByMe?: boolean | UserCountOutputTypeCountAssignedByMeArgs
+    assignedReviews?: boolean | UserCountOutputTypeCountAssignedReviewsArgs
+    reviewRules?: boolean | UserCountOutputTypeCountReviewRulesArgs
+    commentReactions?: boolean | UserCountOutputTypeCountCommentReactionsArgs
+    sessions?: boolean | UserCountOutputTypeCountSessionsArgs
+    customRoles?: boolean | UserCountOutputTypeCountCustomRolesArgs
   }
 
   // Custom InputTypes
@@ -4363,15 +4363,8 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: SessionWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountAccountsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: AccountWhereInput
+  export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NotificationWhereInput
   }
 
   /**
@@ -4391,6 +4384,13 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
+  export type UserCountOutputTypeCountReviewFeedbacksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReviewFeedbackWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
   export type UserCountOutputTypeCountThreadCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReviewThreadCommentWhereInput
   }
@@ -4405,22 +4405,8 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: NotificationWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountReviewFeedbacksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ReviewFeedbackWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountReviewRulesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ReviewRuleWhereInput
+  export type UserCountOutputTypeCountAccountsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AccountWhereInput
   }
 
   /**
@@ -4433,22 +4419,15 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountCustomRolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: UserCustomRoleWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountCommentReactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ReviewThreadCommentReactionWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
   export type UserCountOutputTypeCountReviewApprovalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReviewApprovalWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountAssignedByMeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReviewAssignmentWhereInput
   }
 
   /**
@@ -4461,8 +4440,29 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountAssignedByMeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ReviewAssignmentWhereInput
+  export type UserCountOutputTypeCountReviewRulesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReviewRuleWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountCommentReactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReviewThreadCommentReactionWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SessionWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountCustomRolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserCustomRoleWhereInput
   }
 
 
@@ -4471,18 +4471,18 @@ export namespace Prisma {
    */
 
   export type RepositoryCountOutputType = {
-    reviews: number
-    githubComments: number
-    branchProtectionRecs: number
     diagrams: number
+    reviews: number
+    branchProtectionRecs: number
+    githubComments: number
     reviewRules: number
   }
 
   export type RepositoryCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    reviews?: boolean | RepositoryCountOutputTypeCountReviewsArgs
-    githubComments?: boolean | RepositoryCountOutputTypeCountGithubCommentsArgs
-    branchProtectionRecs?: boolean | RepositoryCountOutputTypeCountBranchProtectionRecsArgs
     diagrams?: boolean | RepositoryCountOutputTypeCountDiagramsArgs
+    reviews?: boolean | RepositoryCountOutputTypeCountReviewsArgs
+    branchProtectionRecs?: boolean | RepositoryCountOutputTypeCountBranchProtectionRecsArgs
+    githubComments?: boolean | RepositoryCountOutputTypeCountGithubCommentsArgs
     reviewRules?: boolean | RepositoryCountOutputTypeCountReviewRulesArgs
   }
 
@@ -4500,15 +4500,15 @@ export namespace Prisma {
   /**
    * RepositoryCountOutputType without action
    */
-  export type RepositoryCountOutputTypeCountReviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ReviewWhereInput
+  export type RepositoryCountOutputTypeCountDiagramsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DiagramWhereInput
   }
 
   /**
    * RepositoryCountOutputType without action
    */
-  export type RepositoryCountOutputTypeCountGithubCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: GitHubCommentWhereInput
+  export type RepositoryCountOutputTypeCountReviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReviewWhereInput
   }
 
   /**
@@ -4521,8 +4521,8 @@ export namespace Prisma {
   /**
    * RepositoryCountOutputType without action
    */
-  export type RepositoryCountOutputTypeCountDiagramsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: DiagramWhereInput
+  export type RepositoryCountOutputTypeCountGithubCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GitHubCommentWhereInput
   }
 
   /**
@@ -4539,8 +4539,8 @@ export namespace Prisma {
 
   export type ReviewCountOutputType = {
     childReviews: number
-    threads: number
     feedbacks: number
+    threads: number
     approvals: number
     assignments: number
     securityIssues: number
@@ -4548,8 +4548,8 @@ export namespace Prisma {
 
   export type ReviewCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     childReviews?: boolean | ReviewCountOutputTypeCountChildReviewsArgs
-    threads?: boolean | ReviewCountOutputTypeCountThreadsArgs
     feedbacks?: boolean | ReviewCountOutputTypeCountFeedbacksArgs
+    threads?: boolean | ReviewCountOutputTypeCountThreadsArgs
     approvals?: boolean | ReviewCountOutputTypeCountApprovalsArgs
     assignments?: boolean | ReviewCountOutputTypeCountAssignmentsArgs
     securityIssues?: boolean | ReviewCountOutputTypeCountSecurityIssuesArgs
@@ -4576,15 +4576,15 @@ export namespace Prisma {
   /**
    * ReviewCountOutputType without action
    */
-  export type ReviewCountOutputTypeCountThreadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ReviewThreadWhereInput
+  export type ReviewCountOutputTypeCountFeedbacksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReviewFeedbackWhereInput
   }
 
   /**
    * ReviewCountOutputType without action
    */
-  export type ReviewCountOutputTypeCountFeedbacksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ReviewFeedbackWhereInput
+  export type ReviewCountOutputTypeCountThreadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReviewThreadWhereInput
   }
 
   /**
@@ -4676,16 +4676,16 @@ export namespace Prisma {
    */
 
   export type TeamCountOutputType = {
-    members: number
     repositories: number
     actions: number
+    members: number
     reviewRules: number
   }
 
   export type TeamCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    members?: boolean | TeamCountOutputTypeCountMembersArgs
     repositories?: boolean | TeamCountOutputTypeCountRepositoriesArgs
     actions?: boolean | TeamCountOutputTypeCountActionsArgs
+    members?: boolean | TeamCountOutputTypeCountMembersArgs
     reviewRules?: boolean | TeamCountOutputTypeCountReviewRulesArgs
   }
 
@@ -4703,13 +4703,6 @@ export namespace Prisma {
   /**
    * TeamCountOutputType without action
    */
-  export type TeamCountOutputTypeCountMembersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: TeamMemberWhereInput
-  }
-
-  /**
-   * TeamCountOutputType without action
-   */
   export type TeamCountOutputTypeCountRepositoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RepositoryWhereInput
   }
@@ -4719,6 +4712,13 @@ export namespace Prisma {
    */
   export type TeamCountOutputTypeCountActionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TeamActionWhereInput
+  }
+
+  /**
+   * TeamCountOutputType without action
+   */
+  export type TeamCountOutputTypeCountMembersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TeamMemberWhereInput
   }
 
   /**
@@ -4801,8 +4801,22 @@ export namespace Prisma {
 
   export type AggregateUser = {
     _count: UserCountAggregateOutputType | null
+    _avg: UserAvgAggregateOutputType | null
+    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
+  }
+
+  export type UserAvgAggregateOutputType = {
+    overrideReposLimit: number | null
+    overrideReviewsLimit: number | null
+    overrideSeatsLimit: number | null
+  }
+
+  export type UserSumAggregateOutputType = {
+    overrideReposLimit: number | null
+    overrideReviewsLimit: number | null
+    overrideSeatsLimit: number | null
   }
 
   export type UserMinAggregateOutputType = {
@@ -4812,8 +4826,6 @@ export namespace Prisma {
     emailVerified: boolean | null
     image: string | null
     role: $Enums.UserRole | null
-    banned: boolean | null
-    bannedReason: string | null
     createdAt: Date | null
     updatedAt: Date | null
     reviewDepth: string | null
@@ -4821,17 +4833,24 @@ export namespace Prisma {
     autoReview: boolean | null
     includeSecurityChecks: boolean | null
     includePerfSuggestions: boolean | null
+    banned: boolean | null
+    bannedReason: string | null
+    desktopNotifications: boolean | null
     emailNotifications: boolean | null
-    notifyTeamInvites: boolean | null
-    notifyTeamMemberAdded: boolean | null
+    notificationSoundEnabled: boolean | null
+    notifyReviewApproved: boolean | null
+    notifyReviewAssigned: boolean | null
+    notifyReviewChangesRequested: boolean | null
     notifyReviewCompleted: boolean | null
     notifyReviewFailed: boolean | null
     notifyScheduledScanCompleted: boolean | null
-    notifyReviewAssigned: boolean | null
-    notifyReviewApproved: boolean | null
-    notifyReviewChangesRequested: boolean | null
-    notificationSoundEnabled: boolean | null
-    desktopNotifications: boolean | null
+    notifyTeamInvites: boolean | null
+    notifyTeamMemberAdded: boolean | null
+    planId: string | null
+    planExpiresAt: Date | null
+    overrideReposLimit: number | null
+    overrideReviewsLimit: number | null
+    overrideSeatsLimit: number | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -4841,8 +4860,6 @@ export namespace Prisma {
     emailVerified: boolean | null
     image: string | null
     role: $Enums.UserRole | null
-    banned: boolean | null
-    bannedReason: string | null
     createdAt: Date | null
     updatedAt: Date | null
     reviewDepth: string | null
@@ -4850,17 +4867,24 @@ export namespace Prisma {
     autoReview: boolean | null
     includeSecurityChecks: boolean | null
     includePerfSuggestions: boolean | null
+    banned: boolean | null
+    bannedReason: string | null
+    desktopNotifications: boolean | null
     emailNotifications: boolean | null
-    notifyTeamInvites: boolean | null
-    notifyTeamMemberAdded: boolean | null
+    notificationSoundEnabled: boolean | null
+    notifyReviewApproved: boolean | null
+    notifyReviewAssigned: boolean | null
+    notifyReviewChangesRequested: boolean | null
     notifyReviewCompleted: boolean | null
     notifyReviewFailed: boolean | null
     notifyScheduledScanCompleted: boolean | null
-    notifyReviewAssigned: boolean | null
-    notifyReviewApproved: boolean | null
-    notifyReviewChangesRequested: boolean | null
-    notificationSoundEnabled: boolean | null
-    desktopNotifications: boolean | null
+    notifyTeamInvites: boolean | null
+    notifyTeamMemberAdded: boolean | null
+    planId: string | null
+    planExpiresAt: Date | null
+    overrideReposLimit: number | null
+    overrideReviewsLimit: number | null
+    overrideSeatsLimit: number | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -4870,8 +4894,6 @@ export namespace Prisma {
     emailVerified: number
     image: number
     role: number
-    banned: number
-    bannedReason: number
     createdAt: number
     updatedAt: number
     reviewDepth: number
@@ -4879,20 +4901,39 @@ export namespace Prisma {
     autoReview: number
     includeSecurityChecks: number
     includePerfSuggestions: number
+    banned: number
+    bannedReason: number
+    desktopNotifications: number
     emailNotifications: number
-    notifyTeamInvites: number
-    notifyTeamMemberAdded: number
+    notificationSoundEnabled: number
+    notifyReviewApproved: number
+    notifyReviewAssigned: number
+    notifyReviewChangesRequested: number
     notifyReviewCompleted: number
     notifyReviewFailed: number
     notifyScheduledScanCompleted: number
-    notifyReviewAssigned: number
-    notifyReviewApproved: number
-    notifyReviewChangesRequested: number
-    notificationSoundEnabled: number
-    desktopNotifications: number
+    notifyTeamInvites: number
+    notifyTeamMemberAdded: number
+    planId: number
+    planExpiresAt: number
+    overrideReposLimit: number
+    overrideReviewsLimit: number
+    overrideSeatsLimit: number
     _all: number
   }
 
+
+  export type UserAvgAggregateInputType = {
+    overrideReposLimit?: true
+    overrideReviewsLimit?: true
+    overrideSeatsLimit?: true
+  }
+
+  export type UserSumAggregateInputType = {
+    overrideReposLimit?: true
+    overrideReviewsLimit?: true
+    overrideSeatsLimit?: true
+  }
 
   export type UserMinAggregateInputType = {
     id?: true
@@ -4901,8 +4942,6 @@ export namespace Prisma {
     emailVerified?: true
     image?: true
     role?: true
-    banned?: true
-    bannedReason?: true
     createdAt?: true
     updatedAt?: true
     reviewDepth?: true
@@ -4910,17 +4949,24 @@ export namespace Prisma {
     autoReview?: true
     includeSecurityChecks?: true
     includePerfSuggestions?: true
+    banned?: true
+    bannedReason?: true
+    desktopNotifications?: true
     emailNotifications?: true
-    notifyTeamInvites?: true
-    notifyTeamMemberAdded?: true
+    notificationSoundEnabled?: true
+    notifyReviewApproved?: true
+    notifyReviewAssigned?: true
+    notifyReviewChangesRequested?: true
     notifyReviewCompleted?: true
     notifyReviewFailed?: true
     notifyScheduledScanCompleted?: true
-    notifyReviewAssigned?: true
-    notifyReviewApproved?: true
-    notifyReviewChangesRequested?: true
-    notificationSoundEnabled?: true
-    desktopNotifications?: true
+    notifyTeamInvites?: true
+    notifyTeamMemberAdded?: true
+    planId?: true
+    planExpiresAt?: true
+    overrideReposLimit?: true
+    overrideReviewsLimit?: true
+    overrideSeatsLimit?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -4930,8 +4976,6 @@ export namespace Prisma {
     emailVerified?: true
     image?: true
     role?: true
-    banned?: true
-    bannedReason?: true
     createdAt?: true
     updatedAt?: true
     reviewDepth?: true
@@ -4939,17 +4983,24 @@ export namespace Prisma {
     autoReview?: true
     includeSecurityChecks?: true
     includePerfSuggestions?: true
+    banned?: true
+    bannedReason?: true
+    desktopNotifications?: true
     emailNotifications?: true
-    notifyTeamInvites?: true
-    notifyTeamMemberAdded?: true
+    notificationSoundEnabled?: true
+    notifyReviewApproved?: true
+    notifyReviewAssigned?: true
+    notifyReviewChangesRequested?: true
     notifyReviewCompleted?: true
     notifyReviewFailed?: true
     notifyScheduledScanCompleted?: true
-    notifyReviewAssigned?: true
-    notifyReviewApproved?: true
-    notifyReviewChangesRequested?: true
-    notificationSoundEnabled?: true
-    desktopNotifications?: true
+    notifyTeamInvites?: true
+    notifyTeamMemberAdded?: true
+    planId?: true
+    planExpiresAt?: true
+    overrideReposLimit?: true
+    overrideReviewsLimit?: true
+    overrideSeatsLimit?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -4959,8 +5010,6 @@ export namespace Prisma {
     emailVerified?: true
     image?: true
     role?: true
-    banned?: true
-    bannedReason?: true
     createdAt?: true
     updatedAt?: true
     reviewDepth?: true
@@ -4968,17 +5017,24 @@ export namespace Prisma {
     autoReview?: true
     includeSecurityChecks?: true
     includePerfSuggestions?: true
+    banned?: true
+    bannedReason?: true
+    desktopNotifications?: true
     emailNotifications?: true
-    notifyTeamInvites?: true
-    notifyTeamMemberAdded?: true
+    notificationSoundEnabled?: true
+    notifyReviewApproved?: true
+    notifyReviewAssigned?: true
+    notifyReviewChangesRequested?: true
     notifyReviewCompleted?: true
     notifyReviewFailed?: true
     notifyScheduledScanCompleted?: true
-    notifyReviewAssigned?: true
-    notifyReviewApproved?: true
-    notifyReviewChangesRequested?: true
-    notificationSoundEnabled?: true
-    desktopNotifications?: true
+    notifyTeamInvites?: true
+    notifyTeamMemberAdded?: true
+    planId?: true
+    planExpiresAt?: true
+    overrideReposLimit?: true
+    overrideReviewsLimit?: true
+    overrideSeatsLimit?: true
     _all?: true
   }
 
@@ -5020,6 +5076,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: UserAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: UserMinAggregateInputType
@@ -5050,6 +5118,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: UserCountAggregateInputType | true
+    _avg?: UserAvgAggregateInputType
+    _sum?: UserSumAggregateInputType
     _min?: UserMinAggregateInputType
     _max?: UserMaxAggregateInputType
   }
@@ -5061,8 +5131,6 @@ export namespace Prisma {
     emailVerified: boolean
     image: string | null
     role: $Enums.UserRole
-    banned: boolean
-    bannedReason: string | null
     createdAt: Date
     updatedAt: Date
     reviewDepth: string
@@ -5070,18 +5138,27 @@ export namespace Prisma {
     autoReview: boolean
     includeSecurityChecks: boolean
     includePerfSuggestions: boolean
+    banned: boolean
+    bannedReason: string | null
+    desktopNotifications: boolean
     emailNotifications: boolean
-    notifyTeamInvites: boolean
-    notifyTeamMemberAdded: boolean
+    notificationSoundEnabled: boolean
+    notifyReviewApproved: boolean
+    notifyReviewAssigned: boolean
+    notifyReviewChangesRequested: boolean
     notifyReviewCompleted: boolean
     notifyReviewFailed: boolean
     notifyScheduledScanCompleted: boolean
-    notifyReviewAssigned: boolean
-    notifyReviewApproved: boolean
-    notifyReviewChangesRequested: boolean
-    notificationSoundEnabled: boolean
-    desktopNotifications: boolean
+    notifyTeamInvites: boolean
+    notifyTeamMemberAdded: boolean
+    planId: string
+    planExpiresAt: Date | null
+    overrideReposLimit: number | null
+    overrideReviewsLimit: number | null
+    overrideSeatsLimit: number | null
     _count: UserCountAggregateOutputType | null
+    _avg: UserAvgAggregateOutputType | null
+    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
   }
@@ -5107,8 +5184,6 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: boolean
     role?: boolean
-    banned?: boolean
-    bannedReason?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     reviewDepth?: boolean
@@ -5116,32 +5191,39 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: boolean
+    desktopNotifications?: boolean
     emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
     notifyReviewCompleted?: boolean
     notifyReviewFailed?: boolean
     notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: boolean | User$sessionsArgs<ExtArgs>
-    accounts?: boolean | User$accountsArgs<ExtArgs>
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: boolean
+    planExpiresAt?: boolean
+    overrideReposLimit?: boolean
+    overrideReviewsLimit?: boolean
+    overrideSeatsLimit?: boolean
+    notifications?: boolean | User$notificationsArgs<ExtArgs>
     repositories?: boolean | User$repositoriesArgs<ExtArgs>
     reviews?: boolean | User$reviewsArgs<ExtArgs>
+    reviewFeedbacks?: boolean | User$reviewFeedbacksArgs<ExtArgs>
     threadComments?: boolean | User$threadCommentsArgs<ExtArgs>
     teamMembers?: boolean | User$teamMembersArgs<ExtArgs>
-    notifications?: boolean | User$notificationsArgs<ExtArgs>
-    reviewFeedbacks?: boolean | User$reviewFeedbacksArgs<ExtArgs>
-    reviewRules?: boolean | User$reviewRulesArgs<ExtArgs>
+    accounts?: boolean | User$accountsArgs<ExtArgs>
     auditLogs?: boolean | User$auditLogsArgs<ExtArgs>
-    customRoles?: boolean | User$customRolesArgs<ExtArgs>
-    commentReactions?: boolean | User$commentReactionsArgs<ExtArgs>
     reviewApprovals?: boolean | User$reviewApprovalsArgs<ExtArgs>
-    assignedReviews?: boolean | User$assignedReviewsArgs<ExtArgs>
     assignedByMe?: boolean | User$assignedByMeArgs<ExtArgs>
+    assignedReviews?: boolean | User$assignedReviewsArgs<ExtArgs>
+    reviewRules?: boolean | User$reviewRulesArgs<ExtArgs>
+    commentReactions?: boolean | User$commentReactionsArgs<ExtArgs>
+    sessions?: boolean | User$sessionsArgs<ExtArgs>
+    customRoles?: boolean | User$customRolesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -5152,8 +5234,6 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: boolean
     role?: boolean
-    banned?: boolean
-    bannedReason?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     reviewDepth?: boolean
@@ -5161,17 +5241,24 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: boolean
+    desktopNotifications?: boolean
     emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
     notifyReviewCompleted?: boolean
     notifyReviewFailed?: boolean
     notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: boolean
+    planExpiresAt?: boolean
+    overrideReposLimit?: boolean
+    overrideReviewsLimit?: boolean
+    overrideSeatsLimit?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -5181,8 +5268,6 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: boolean
     role?: boolean
-    banned?: boolean
-    bannedReason?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     reviewDepth?: boolean
@@ -5190,17 +5275,24 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: boolean
+    desktopNotifications?: boolean
     emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
     notifyReviewCompleted?: boolean
     notifyReviewFailed?: boolean
     notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: boolean
+    planExpiresAt?: boolean
+    overrideReposLimit?: boolean
+    overrideReviewsLimit?: boolean
+    overrideSeatsLimit?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -5210,8 +5302,6 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: boolean
     role?: boolean
-    banned?: boolean
-    bannedReason?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     reviewDepth?: boolean
@@ -5219,36 +5309,43 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: boolean
+    desktopNotifications?: boolean
     emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
     notifyReviewCompleted?: boolean
     notifyReviewFailed?: boolean
     notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: boolean
+    planExpiresAt?: boolean
+    overrideReposLimit?: boolean
+    overrideReviewsLimit?: boolean
+    overrideSeatsLimit?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "banned" | "bannedReason" | "createdAt" | "updatedAt" | "reviewDepth" | "defaultLanguage" | "autoReview" | "includeSecurityChecks" | "includePerfSuggestions" | "emailNotifications" | "notifyTeamInvites" | "notifyTeamMemberAdded" | "notifyReviewCompleted" | "notifyReviewFailed" | "notifyScheduledScanCompleted" | "notifyReviewAssigned" | "notifyReviewApproved" | "notifyReviewChangesRequested" | "notificationSoundEnabled" | "desktopNotifications", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "createdAt" | "updatedAt" | "reviewDepth" | "defaultLanguage" | "autoReview" | "includeSecurityChecks" | "includePerfSuggestions" | "banned" | "bannedReason" | "desktopNotifications" | "emailNotifications" | "notificationSoundEnabled" | "notifyReviewApproved" | "notifyReviewAssigned" | "notifyReviewChangesRequested" | "notifyReviewCompleted" | "notifyReviewFailed" | "notifyScheduledScanCompleted" | "notifyTeamInvites" | "notifyTeamMemberAdded" | "planId" | "planExpiresAt" | "overrideReposLimit" | "overrideReviewsLimit" | "overrideSeatsLimit", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    sessions?: boolean | User$sessionsArgs<ExtArgs>
-    accounts?: boolean | User$accountsArgs<ExtArgs>
+    notifications?: boolean | User$notificationsArgs<ExtArgs>
     repositories?: boolean | User$repositoriesArgs<ExtArgs>
     reviews?: boolean | User$reviewsArgs<ExtArgs>
+    reviewFeedbacks?: boolean | User$reviewFeedbacksArgs<ExtArgs>
     threadComments?: boolean | User$threadCommentsArgs<ExtArgs>
     teamMembers?: boolean | User$teamMembersArgs<ExtArgs>
-    notifications?: boolean | User$notificationsArgs<ExtArgs>
-    reviewFeedbacks?: boolean | User$reviewFeedbacksArgs<ExtArgs>
-    reviewRules?: boolean | User$reviewRulesArgs<ExtArgs>
+    accounts?: boolean | User$accountsArgs<ExtArgs>
     auditLogs?: boolean | User$auditLogsArgs<ExtArgs>
-    customRoles?: boolean | User$customRolesArgs<ExtArgs>
-    commentReactions?: boolean | User$commentReactionsArgs<ExtArgs>
     reviewApprovals?: boolean | User$reviewApprovalsArgs<ExtArgs>
-    assignedReviews?: boolean | User$assignedReviewsArgs<ExtArgs>
     assignedByMe?: boolean | User$assignedByMeArgs<ExtArgs>
+    assignedReviews?: boolean | User$assignedReviewsArgs<ExtArgs>
+    reviewRules?: boolean | User$reviewRulesArgs<ExtArgs>
+    commentReactions?: boolean | User$commentReactionsArgs<ExtArgs>
+    sessions?: boolean | User$sessionsArgs<ExtArgs>
+    customRoles?: boolean | User$customRolesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -5257,21 +5354,21 @@ export namespace Prisma {
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
-      sessions: Prisma.$SessionPayload<ExtArgs>[]
-      accounts: Prisma.$AccountPayload<ExtArgs>[]
+      notifications: Prisma.$NotificationPayload<ExtArgs>[]
       repositories: Prisma.$RepositoryPayload<ExtArgs>[]
       reviews: Prisma.$ReviewPayload<ExtArgs>[]
+      reviewFeedbacks: Prisma.$ReviewFeedbackPayload<ExtArgs>[]
       threadComments: Prisma.$ReviewThreadCommentPayload<ExtArgs>[]
       teamMembers: Prisma.$TeamMemberPayload<ExtArgs>[]
-      notifications: Prisma.$NotificationPayload<ExtArgs>[]
-      reviewFeedbacks: Prisma.$ReviewFeedbackPayload<ExtArgs>[]
-      reviewRules: Prisma.$ReviewRulePayload<ExtArgs>[]
+      accounts: Prisma.$AccountPayload<ExtArgs>[]
       auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
-      customRoles: Prisma.$UserCustomRolePayload<ExtArgs>[]
-      commentReactions: Prisma.$ReviewThreadCommentReactionPayload<ExtArgs>[]
       reviewApprovals: Prisma.$ReviewApprovalPayload<ExtArgs>[]
-      assignedReviews: Prisma.$ReviewAssignmentPayload<ExtArgs>[]
       assignedByMe: Prisma.$ReviewAssignmentPayload<ExtArgs>[]
+      assignedReviews: Prisma.$ReviewAssignmentPayload<ExtArgs>[]
+      reviewRules: Prisma.$ReviewRulePayload<ExtArgs>[]
+      commentReactions: Prisma.$ReviewThreadCommentReactionPayload<ExtArgs>[]
+      sessions: Prisma.$SessionPayload<ExtArgs>[]
+      customRoles: Prisma.$UserCustomRolePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5280,8 +5377,6 @@ export namespace Prisma {
       emailVerified: boolean
       image: string | null
       role: $Enums.UserRole
-      banned: boolean
-      bannedReason: string | null
       createdAt: Date
       updatedAt: Date
       reviewDepth: string
@@ -5289,17 +5384,24 @@ export namespace Prisma {
       autoReview: boolean
       includeSecurityChecks: boolean
       includePerfSuggestions: boolean
+      banned: boolean
+      bannedReason: string | null
+      desktopNotifications: boolean
       emailNotifications: boolean
-      notifyTeamInvites: boolean
-      notifyTeamMemberAdded: boolean
+      notificationSoundEnabled: boolean
+      notifyReviewApproved: boolean
+      notifyReviewAssigned: boolean
+      notifyReviewChangesRequested: boolean
       notifyReviewCompleted: boolean
       notifyReviewFailed: boolean
       notifyScheduledScanCompleted: boolean
-      notifyReviewAssigned: boolean
-      notifyReviewApproved: boolean
-      notifyReviewChangesRequested: boolean
-      notificationSoundEnabled: boolean
-      desktopNotifications: boolean
+      notifyTeamInvites: boolean
+      notifyTeamMemberAdded: boolean
+      planId: string
+      planExpiresAt: Date | null
+      overrideReposLimit: number | null
+      overrideReviewsLimit: number | null
+      overrideSeatsLimit: number | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -5694,21 +5796,21 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    sessions<T extends User$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    accounts<T extends User$accountsArgs<ExtArgs> = {}>(args?: Subset<T, User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    notifications<T extends User$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     repositories<T extends User$repositoriesArgs<ExtArgs> = {}>(args?: Subset<T, User$repositoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RepositoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reviews<T extends User$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, User$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    reviewFeedbacks<T extends User$reviewFeedbacksArgs<ExtArgs> = {}>(args?: Subset<T, User$reviewFeedbacksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     threadComments<T extends User$threadCommentsArgs<ExtArgs> = {}>(args?: Subset<T, User$threadCommentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewThreadCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     teamMembers<T extends User$teamMembersArgs<ExtArgs> = {}>(args?: Subset<T, User$teamMembersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeamMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    notifications<T extends User$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    reviewFeedbacks<T extends User$reviewFeedbacksArgs<ExtArgs> = {}>(args?: Subset<T, User$reviewFeedbacksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    reviewRules<T extends User$reviewRulesArgs<ExtArgs> = {}>(args?: Subset<T, User$reviewRulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    accounts<T extends User$accountsArgs<ExtArgs> = {}>(args?: Subset<T, User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     auditLogs<T extends User$auditLogsArgs<ExtArgs> = {}>(args?: Subset<T, User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    customRoles<T extends User$customRolesArgs<ExtArgs> = {}>(args?: Subset<T, User$customRolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserCustomRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    commentReactions<T extends User$commentReactionsArgs<ExtArgs> = {}>(args?: Subset<T, User$commentReactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewThreadCommentReactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reviewApprovals<T extends User$reviewApprovalsArgs<ExtArgs> = {}>(args?: Subset<T, User$reviewApprovalsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewApprovalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    assignedReviews<T extends User$assignedReviewsArgs<ExtArgs> = {}>(args?: Subset<T, User$assignedReviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     assignedByMe<T extends User$assignedByMeArgs<ExtArgs> = {}>(args?: Subset<T, User$assignedByMeArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    assignedReviews<T extends User$assignedReviewsArgs<ExtArgs> = {}>(args?: Subset<T, User$assignedReviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    reviewRules<T extends User$reviewRulesArgs<ExtArgs> = {}>(args?: Subset<T, User$reviewRulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    commentReactions<T extends User$commentReactionsArgs<ExtArgs> = {}>(args?: Subset<T, User$commentReactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewThreadCommentReactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    sessions<T extends User$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    customRoles<T extends User$customRolesArgs<ExtArgs> = {}>(args?: Subset<T, User$customRolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserCustomRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5744,8 +5846,6 @@ export namespace Prisma {
     readonly emailVerified: FieldRef<"User", 'Boolean'>
     readonly image: FieldRef<"User", 'String'>
     readonly role: FieldRef<"User", 'UserRole'>
-    readonly banned: FieldRef<"User", 'Boolean'>
-    readonly bannedReason: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
     readonly reviewDepth: FieldRef<"User", 'String'>
@@ -5753,17 +5853,24 @@ export namespace Prisma {
     readonly autoReview: FieldRef<"User", 'Boolean'>
     readonly includeSecurityChecks: FieldRef<"User", 'Boolean'>
     readonly includePerfSuggestions: FieldRef<"User", 'Boolean'>
+    readonly banned: FieldRef<"User", 'Boolean'>
+    readonly bannedReason: FieldRef<"User", 'String'>
+    readonly desktopNotifications: FieldRef<"User", 'Boolean'>
     readonly emailNotifications: FieldRef<"User", 'Boolean'>
-    readonly notifyTeamInvites: FieldRef<"User", 'Boolean'>
-    readonly notifyTeamMemberAdded: FieldRef<"User", 'Boolean'>
+    readonly notificationSoundEnabled: FieldRef<"User", 'Boolean'>
+    readonly notifyReviewApproved: FieldRef<"User", 'Boolean'>
+    readonly notifyReviewAssigned: FieldRef<"User", 'Boolean'>
+    readonly notifyReviewChangesRequested: FieldRef<"User", 'Boolean'>
     readonly notifyReviewCompleted: FieldRef<"User", 'Boolean'>
     readonly notifyReviewFailed: FieldRef<"User", 'Boolean'>
     readonly notifyScheduledScanCompleted: FieldRef<"User", 'Boolean'>
-    readonly notifyReviewAssigned: FieldRef<"User", 'Boolean'>
-    readonly notifyReviewApproved: FieldRef<"User", 'Boolean'>
-    readonly notifyReviewChangesRequested: FieldRef<"User", 'Boolean'>
-    readonly notificationSoundEnabled: FieldRef<"User", 'Boolean'>
-    readonly desktopNotifications: FieldRef<"User", 'Boolean'>
+    readonly notifyTeamInvites: FieldRef<"User", 'Boolean'>
+    readonly notifyTeamMemberAdded: FieldRef<"User", 'Boolean'>
+    readonly planId: FieldRef<"User", 'String'>
+    readonly planExpiresAt: FieldRef<"User", 'DateTime'>
+    readonly overrideReposLimit: FieldRef<"User", 'Int'>
+    readonly overrideReviewsLimit: FieldRef<"User", 'Int'>
+    readonly overrideSeatsLimit: FieldRef<"User", 'Int'>
   }
     
 
@@ -6152,51 +6259,27 @@ export namespace Prisma {
   }
 
   /**
-   * User.sessions
+   * User.notifications
    */
-  export type User$sessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$notificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Session
+     * Select specific fields to fetch from the Notification
      */
-    select?: SessionSelect<ExtArgs> | null
+    select?: NotificationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Session
+     * Omit specific fields from the Notification
      */
-    omit?: SessionOmit<ExtArgs> | null
+    omit?: NotificationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: SessionInclude<ExtArgs> | null
-    where?: SessionWhereInput
-    orderBy?: SessionOrderByWithRelationInput | SessionOrderByWithRelationInput[]
-    cursor?: SessionWhereUniqueInput
+    include?: NotificationInclude<ExtArgs> | null
+    where?: NotificationWhereInput
+    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
+    cursor?: NotificationWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: SessionScalarFieldEnum | SessionScalarFieldEnum[]
-  }
-
-  /**
-   * User.accounts
-   */
-  export type User$accountsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Account
-     */
-    select?: AccountSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Account
-     */
-    omit?: AccountOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AccountInclude<ExtArgs> | null
-    where?: AccountWhereInput
-    orderBy?: AccountOrderByWithRelationInput | AccountOrderByWithRelationInput[]
-    cursor?: AccountWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: AccountScalarFieldEnum | AccountScalarFieldEnum[]
+    distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
   }
 
   /**
@@ -6248,6 +6331,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.reviewFeedbacks
+   */
+  export type User$reviewFeedbacksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewFeedback
+     */
+    select?: ReviewFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewFeedback
+     */
+    omit?: ReviewFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewFeedbackInclude<ExtArgs> | null
+    where?: ReviewFeedbackWhereInput
+    orderBy?: ReviewFeedbackOrderByWithRelationInput | ReviewFeedbackOrderByWithRelationInput[]
+    cursor?: ReviewFeedbackWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ReviewFeedbackScalarFieldEnum | ReviewFeedbackScalarFieldEnum[]
+  }
+
+  /**
    * User.threadComments
    */
   export type User$threadCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6296,75 +6403,27 @@ export namespace Prisma {
   }
 
   /**
-   * User.notifications
+   * User.accounts
    */
-  export type User$notificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$accountsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Notification
+     * Select specific fields to fetch from the Account
      */
-    select?: NotificationSelect<ExtArgs> | null
+    select?: AccountSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Notification
+     * Omit specific fields from the Account
      */
-    omit?: NotificationOmit<ExtArgs> | null
+    omit?: AccountOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: NotificationInclude<ExtArgs> | null
-    where?: NotificationWhereInput
-    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
-    cursor?: NotificationWhereUniqueInput
+    include?: AccountInclude<ExtArgs> | null
+    where?: AccountWhereInput
+    orderBy?: AccountOrderByWithRelationInput | AccountOrderByWithRelationInput[]
+    cursor?: AccountWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
-  }
-
-  /**
-   * User.reviewFeedbacks
-   */
-  export type User$reviewFeedbacksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ReviewFeedback
-     */
-    select?: ReviewFeedbackSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ReviewFeedback
-     */
-    omit?: ReviewFeedbackOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ReviewFeedbackInclude<ExtArgs> | null
-    where?: ReviewFeedbackWhereInput
-    orderBy?: ReviewFeedbackOrderByWithRelationInput | ReviewFeedbackOrderByWithRelationInput[]
-    cursor?: ReviewFeedbackWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ReviewFeedbackScalarFieldEnum | ReviewFeedbackScalarFieldEnum[]
-  }
-
-  /**
-   * User.reviewRules
-   */
-  export type User$reviewRulesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ReviewRule
-     */
-    select?: ReviewRuleSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ReviewRule
-     */
-    omit?: ReviewRuleOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ReviewRuleInclude<ExtArgs> | null
-    where?: ReviewRuleWhereInput
-    orderBy?: ReviewRuleOrderByWithRelationInput | ReviewRuleOrderByWithRelationInput[]
-    cursor?: ReviewRuleWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ReviewRuleScalarFieldEnum | ReviewRuleScalarFieldEnum[]
+    distinct?: AccountScalarFieldEnum | AccountScalarFieldEnum[]
   }
 
   /**
@@ -6392,54 +6451,6 @@ export namespace Prisma {
   }
 
   /**
-   * User.customRoles
-   */
-  export type User$customRolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserCustomRole
-     */
-    select?: UserCustomRoleSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserCustomRole
-     */
-    omit?: UserCustomRoleOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserCustomRoleInclude<ExtArgs> | null
-    where?: UserCustomRoleWhereInput
-    orderBy?: UserCustomRoleOrderByWithRelationInput | UserCustomRoleOrderByWithRelationInput[]
-    cursor?: UserCustomRoleWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: UserCustomRoleScalarFieldEnum | UserCustomRoleScalarFieldEnum[]
-  }
-
-  /**
-   * User.commentReactions
-   */
-  export type User$commentReactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ReviewThreadCommentReaction
-     */
-    select?: ReviewThreadCommentReactionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ReviewThreadCommentReaction
-     */
-    omit?: ReviewThreadCommentReactionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ReviewThreadCommentReactionInclude<ExtArgs> | null
-    where?: ReviewThreadCommentReactionWhereInput
-    orderBy?: ReviewThreadCommentReactionOrderByWithRelationInput | ReviewThreadCommentReactionOrderByWithRelationInput[]
-    cursor?: ReviewThreadCommentReactionWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ReviewThreadCommentReactionScalarFieldEnum | ReviewThreadCommentReactionScalarFieldEnum[]
-  }
-
-  /**
    * User.reviewApprovals
    */
   export type User$reviewApprovalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6461,6 +6472,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ReviewApprovalScalarFieldEnum | ReviewApprovalScalarFieldEnum[]
+  }
+
+  /**
+   * User.assignedByMe
+   */
+  export type User$assignedByMeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewAssignment
+     */
+    select?: ReviewAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewAssignment
+     */
+    omit?: ReviewAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewAssignmentInclude<ExtArgs> | null
+    where?: ReviewAssignmentWhereInput
+    orderBy?: ReviewAssignmentOrderByWithRelationInput | ReviewAssignmentOrderByWithRelationInput[]
+    cursor?: ReviewAssignmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ReviewAssignmentScalarFieldEnum | ReviewAssignmentScalarFieldEnum[]
   }
 
   /**
@@ -6488,27 +6523,99 @@ export namespace Prisma {
   }
 
   /**
-   * User.assignedByMe
+   * User.reviewRules
    */
-  export type User$assignedByMeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$reviewRulesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ReviewAssignment
+     * Select specific fields to fetch from the ReviewRule
      */
-    select?: ReviewAssignmentSelect<ExtArgs> | null
+    select?: ReviewRuleSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ReviewAssignment
+     * Omit specific fields from the ReviewRule
      */
-    omit?: ReviewAssignmentOmit<ExtArgs> | null
+    omit?: ReviewRuleOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ReviewAssignmentInclude<ExtArgs> | null
-    where?: ReviewAssignmentWhereInput
-    orderBy?: ReviewAssignmentOrderByWithRelationInput | ReviewAssignmentOrderByWithRelationInput[]
-    cursor?: ReviewAssignmentWhereUniqueInput
+    include?: ReviewRuleInclude<ExtArgs> | null
+    where?: ReviewRuleWhereInput
+    orderBy?: ReviewRuleOrderByWithRelationInput | ReviewRuleOrderByWithRelationInput[]
+    cursor?: ReviewRuleWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: ReviewAssignmentScalarFieldEnum | ReviewAssignmentScalarFieldEnum[]
+    distinct?: ReviewRuleScalarFieldEnum | ReviewRuleScalarFieldEnum[]
+  }
+
+  /**
+   * User.commentReactions
+   */
+  export type User$commentReactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewThreadCommentReaction
+     */
+    select?: ReviewThreadCommentReactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewThreadCommentReaction
+     */
+    omit?: ReviewThreadCommentReactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewThreadCommentReactionInclude<ExtArgs> | null
+    where?: ReviewThreadCommentReactionWhereInput
+    orderBy?: ReviewThreadCommentReactionOrderByWithRelationInput | ReviewThreadCommentReactionOrderByWithRelationInput[]
+    cursor?: ReviewThreadCommentReactionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ReviewThreadCommentReactionScalarFieldEnum | ReviewThreadCommentReactionScalarFieldEnum[]
+  }
+
+  /**
+   * User.sessions
+   */
+  export type User$sessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Session
+     */
+    select?: SessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Session
+     */
+    omit?: SessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SessionInclude<ExtArgs> | null
+    where?: SessionWhereInput
+    orderBy?: SessionOrderByWithRelationInput | SessionOrderByWithRelationInput[]
+    cursor?: SessionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SessionScalarFieldEnum | SessionScalarFieldEnum[]
+  }
+
+  /**
+   * User.customRoles
+   */
+  export type User$customRolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserCustomRole
+     */
+    select?: UserCustomRoleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserCustomRole
+     */
+    omit?: UserCustomRoleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserCustomRoleInclude<ExtArgs> | null
+    where?: UserCustomRoleWhereInput
+    orderBy?: UserCustomRoleOrderByWithRelationInput | UserCustomRoleOrderByWithRelationInput[]
+    cursor?: UserCustomRoleWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserCustomRoleScalarFieldEnum | UserCustomRoleScalarFieldEnum[]
   }
 
   /**
@@ -10035,15 +10142,15 @@ export namespace Prisma {
     htmlUrl?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    team?: boolean | Repository$teamArgs<ExtArgs>
-    reviews?: boolean | Repository$reviewsArgs<ExtArgs>
-    webhookConfig?: boolean | Repository$webhookConfigArgs<ExtArgs>
-    scheduledScanConfig?: boolean | Repository$scheduledScanConfigArgs<ExtArgs>
-    githubComments?: boolean | Repository$githubCommentsArgs<ExtArgs>
-    branchProtectionRecs?: boolean | Repository$branchProtectionRecsArgs<ExtArgs>
     diagrams?: boolean | Repository$diagramsArgs<ExtArgs>
+    team?: boolean | Repository$teamArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    reviews?: boolean | Repository$reviewsArgs<ExtArgs>
+    branchProtectionRecs?: boolean | Repository$branchProtectionRecsArgs<ExtArgs>
+    githubComments?: boolean | Repository$githubCommentsArgs<ExtArgs>
     reviewRules?: boolean | Repository$reviewRulesArgs<ExtArgs>
+    scheduledScanConfig?: boolean | Repository$scheduledScanConfigArgs<ExtArgs>
+    webhookConfig?: boolean | Repository$webhookConfigArgs<ExtArgs>
     _count?: boolean | RepositoryCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["repository"]>
 
@@ -10058,8 +10165,8 @@ export namespace Prisma {
     htmlUrl?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     team?: boolean | Repository$teamArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["repository"]>
 
   export type RepositorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -10073,8 +10180,8 @@ export namespace Prisma {
     htmlUrl?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     team?: boolean | Repository$teamArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["repository"]>
 
   export type RepositorySelectScalar = {
@@ -10092,38 +10199,38 @@ export namespace Prisma {
 
   export type RepositoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "teamId" | "githubId" | "name" | "fullName" | "private" | "htmlUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["repository"]>
   export type RepositoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    team?: boolean | Repository$teamArgs<ExtArgs>
-    reviews?: boolean | Repository$reviewsArgs<ExtArgs>
-    webhookConfig?: boolean | Repository$webhookConfigArgs<ExtArgs>
-    scheduledScanConfig?: boolean | Repository$scheduledScanConfigArgs<ExtArgs>
-    githubComments?: boolean | Repository$githubCommentsArgs<ExtArgs>
-    branchProtectionRecs?: boolean | Repository$branchProtectionRecsArgs<ExtArgs>
     diagrams?: boolean | Repository$diagramsArgs<ExtArgs>
+    team?: boolean | Repository$teamArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    reviews?: boolean | Repository$reviewsArgs<ExtArgs>
+    branchProtectionRecs?: boolean | Repository$branchProtectionRecsArgs<ExtArgs>
+    githubComments?: boolean | Repository$githubCommentsArgs<ExtArgs>
     reviewRules?: boolean | Repository$reviewRulesArgs<ExtArgs>
+    scheduledScanConfig?: boolean | Repository$scheduledScanConfigArgs<ExtArgs>
+    webhookConfig?: boolean | Repository$webhookConfigArgs<ExtArgs>
     _count?: boolean | RepositoryCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type RepositoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     team?: boolean | Repository$teamArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type RepositoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     team?: boolean | Repository$teamArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $RepositoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Repository"
     objects: {
-      user: Prisma.$UserPayload<ExtArgs>
-      team: Prisma.$TeamPayload<ExtArgs> | null
-      reviews: Prisma.$ReviewPayload<ExtArgs>[]
-      webhookConfig: Prisma.$WebhookConfigPayload<ExtArgs> | null
-      scheduledScanConfig: Prisma.$ScheduledScanConfigPayload<ExtArgs> | null
-      githubComments: Prisma.$GitHubCommentPayload<ExtArgs>[]
-      branchProtectionRecs: Prisma.$BranchProtectionRecommendationPayload<ExtArgs>[]
       diagrams: Prisma.$DiagramPayload<ExtArgs>[]
+      team: Prisma.$TeamPayload<ExtArgs> | null
+      user: Prisma.$UserPayload<ExtArgs>
+      reviews: Prisma.$ReviewPayload<ExtArgs>[]
+      branchProtectionRecs: Prisma.$BranchProtectionRecommendationPayload<ExtArgs>[]
+      githubComments: Prisma.$GitHubCommentPayload<ExtArgs>[]
       reviewRules: Prisma.$ReviewRulePayload<ExtArgs>[]
+      scheduledScanConfig: Prisma.$ScheduledScanConfigPayload<ExtArgs> | null
+      webhookConfig: Prisma.$WebhookConfigPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -10530,15 +10637,15 @@ export namespace Prisma {
    */
   export interface Prisma__RepositoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    team<T extends Repository$teamArgs<ExtArgs> = {}>(args?: Subset<T, Repository$teamArgs<ExtArgs>>): Prisma__TeamClient<$Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    reviews<T extends Repository$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, Repository$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    webhookConfig<T extends Repository$webhookConfigArgs<ExtArgs> = {}>(args?: Subset<T, Repository$webhookConfigArgs<ExtArgs>>): Prisma__WebhookConfigClient<$Result.GetResult<Prisma.$WebhookConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    scheduledScanConfig<T extends Repository$scheduledScanConfigArgs<ExtArgs> = {}>(args?: Subset<T, Repository$scheduledScanConfigArgs<ExtArgs>>): Prisma__ScheduledScanConfigClient<$Result.GetResult<Prisma.$ScheduledScanConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    githubComments<T extends Repository$githubCommentsArgs<ExtArgs> = {}>(args?: Subset<T, Repository$githubCommentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GitHubCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    branchProtectionRecs<T extends Repository$branchProtectionRecsArgs<ExtArgs> = {}>(args?: Subset<T, Repository$branchProtectionRecsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BranchProtectionRecommendationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     diagrams<T extends Repository$diagramsArgs<ExtArgs> = {}>(args?: Subset<T, Repository$diagramsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DiagramPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    team<T extends Repository$teamArgs<ExtArgs> = {}>(args?: Subset<T, Repository$teamArgs<ExtArgs>>): Prisma__TeamClient<$Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    reviews<T extends Repository$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, Repository$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    branchProtectionRecs<T extends Repository$branchProtectionRecsArgs<ExtArgs> = {}>(args?: Subset<T, Repository$branchProtectionRecsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BranchProtectionRecommendationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    githubComments<T extends Repository$githubCommentsArgs<ExtArgs> = {}>(args?: Subset<T, Repository$githubCommentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GitHubCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reviewRules<T extends Repository$reviewRulesArgs<ExtArgs> = {}>(args?: Subset<T, Repository$reviewRulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    scheduledScanConfig<T extends Repository$scheduledScanConfigArgs<ExtArgs> = {}>(args?: Subset<T, Repository$scheduledScanConfigArgs<ExtArgs>>): Prisma__ScheduledScanConfigClient<$Result.GetResult<Prisma.$ScheduledScanConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    webhookConfig<T extends Repository$webhookConfigArgs<ExtArgs> = {}>(args?: Subset<T, Repository$webhookConfigArgs<ExtArgs>>): Prisma__WebhookConfigClient<$Result.GetResult<Prisma.$WebhookConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10974,6 +11081,30 @@ export namespace Prisma {
   }
 
   /**
+   * Repository.diagrams
+   */
+  export type Repository$diagramsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Diagram
+     */
+    select?: DiagramSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Diagram
+     */
+    omit?: DiagramOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DiagramInclude<ExtArgs> | null
+    where?: DiagramWhereInput
+    orderBy?: DiagramOrderByWithRelationInput | DiagramOrderByWithRelationInput[]
+    cursor?: DiagramWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DiagramScalarFieldEnum | DiagramScalarFieldEnum[]
+  }
+
+  /**
    * Repository.team
    */
   export type Repository$teamArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11017,41 +11148,27 @@ export namespace Prisma {
   }
 
   /**
-   * Repository.webhookConfig
+   * Repository.branchProtectionRecs
    */
-  export type Repository$webhookConfigArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Repository$branchProtectionRecsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the WebhookConfig
+     * Select specific fields to fetch from the BranchProtectionRecommendation
      */
-    select?: WebhookConfigSelect<ExtArgs> | null
+    select?: BranchProtectionRecommendationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the WebhookConfig
+     * Omit specific fields from the BranchProtectionRecommendation
      */
-    omit?: WebhookConfigOmit<ExtArgs> | null
+    omit?: BranchProtectionRecommendationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: WebhookConfigInclude<ExtArgs> | null
-    where?: WebhookConfigWhereInput
-  }
-
-  /**
-   * Repository.scheduledScanConfig
-   */
-  export type Repository$scheduledScanConfigArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ScheduledScanConfig
-     */
-    select?: ScheduledScanConfigSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ScheduledScanConfig
-     */
-    omit?: ScheduledScanConfigOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ScheduledScanConfigInclude<ExtArgs> | null
-    where?: ScheduledScanConfigWhereInput
+    include?: BranchProtectionRecommendationInclude<ExtArgs> | null
+    where?: BranchProtectionRecommendationWhereInput
+    orderBy?: BranchProtectionRecommendationOrderByWithRelationInput | BranchProtectionRecommendationOrderByWithRelationInput[]
+    cursor?: BranchProtectionRecommendationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BranchProtectionRecommendationScalarFieldEnum | BranchProtectionRecommendationScalarFieldEnum[]
   }
 
   /**
@@ -11079,54 +11196,6 @@ export namespace Prisma {
   }
 
   /**
-   * Repository.branchProtectionRecs
-   */
-  export type Repository$branchProtectionRecsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BranchProtectionRecommendation
-     */
-    select?: BranchProtectionRecommendationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BranchProtectionRecommendation
-     */
-    omit?: BranchProtectionRecommendationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BranchProtectionRecommendationInclude<ExtArgs> | null
-    where?: BranchProtectionRecommendationWhereInput
-    orderBy?: BranchProtectionRecommendationOrderByWithRelationInput | BranchProtectionRecommendationOrderByWithRelationInput[]
-    cursor?: BranchProtectionRecommendationWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: BranchProtectionRecommendationScalarFieldEnum | BranchProtectionRecommendationScalarFieldEnum[]
-  }
-
-  /**
-   * Repository.diagrams
-   */
-  export type Repository$diagramsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Diagram
-     */
-    select?: DiagramSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Diagram
-     */
-    omit?: DiagramOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DiagramInclude<ExtArgs> | null
-    where?: DiagramWhereInput
-    orderBy?: DiagramOrderByWithRelationInput | DiagramOrderByWithRelationInput[]
-    cursor?: DiagramWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: DiagramScalarFieldEnum | DiagramScalarFieldEnum[]
-  }
-
-  /**
    * Repository.reviewRules
    */
   export type Repository$reviewRulesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11148,6 +11217,44 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ReviewRuleScalarFieldEnum | ReviewRuleScalarFieldEnum[]
+  }
+
+  /**
+   * Repository.scheduledScanConfig
+   */
+  export type Repository$scheduledScanConfigArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledScanConfig
+     */
+    select?: ScheduledScanConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduledScanConfig
+     */
+    omit?: ScheduledScanConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledScanConfigInclude<ExtArgs> | null
+    where?: ScheduledScanConfigWhereInput
+  }
+
+  /**
+   * Repository.webhookConfig
+   */
+  export type Repository$webhookConfigArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebhookConfig
+     */
+    select?: WebhookConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebhookConfig
+     */
+    omit?: WebhookConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WebhookConfigInclude<ExtArgs> | null
+    where?: WebhookConfigWhereInput
   }
 
   /**
@@ -11202,9 +11309,9 @@ export namespace Prisma {
     summary: string | null
     riskScore: number | null
     error: string | null
-    parentReviewId: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    parentReviewId: string | null
   }
 
   export type ReviewMaxAggregateOutputType = {
@@ -11218,9 +11325,9 @@ export namespace Prisma {
     summary: string | null
     riskScore: number | null
     error: string | null
-    parentReviewId: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    parentReviewId: string | null
   }
 
   export type ReviewCountAggregateOutputType = {
@@ -11236,10 +11343,10 @@ export namespace Prisma {
     comments: number
     qualityMetrics: number
     error: number
-    parentReviewId: number
-    resolvedComments: number
     createdAt: number
     updatedAt: number
+    parentReviewId: number
+    resolvedComments: number
     _all: number
   }
 
@@ -11265,9 +11372,9 @@ export namespace Prisma {
     summary?: true
     riskScore?: true
     error?: true
-    parentReviewId?: true
     createdAt?: true
     updatedAt?: true
+    parentReviewId?: true
   }
 
   export type ReviewMaxAggregateInputType = {
@@ -11281,9 +11388,9 @@ export namespace Prisma {
     summary?: true
     riskScore?: true
     error?: true
-    parentReviewId?: true
     createdAt?: true
     updatedAt?: true
+    parentReviewId?: true
   }
 
   export type ReviewCountAggregateInputType = {
@@ -11299,10 +11406,10 @@ export namespace Prisma {
     comments?: true
     qualityMetrics?: true
     error?: true
-    parentReviewId?: true
-    resolvedComments?: true
     createdAt?: true
     updatedAt?: true
+    parentReviewId?: true
+    resolvedComments?: true
     _all?: true
   }
 
@@ -11405,10 +11512,10 @@ export namespace Prisma {
     comments: JsonValue | null
     qualityMetrics: JsonValue | null
     error: string | null
-    parentReviewId: string | null
-    resolvedComments: string[]
     createdAt: Date
     updatedAt: Date
+    parentReviewId: string | null
+    resolvedComments: string[]
     _count: ReviewCountAggregateOutputType | null
     _avg: ReviewAvgAggregateOutputType | null
     _sum: ReviewSumAggregateOutputType | null
@@ -11443,18 +11550,18 @@ export namespace Prisma {
     comments?: boolean
     qualityMetrics?: boolean
     error?: boolean
-    parentReviewId?: boolean
-    resolvedComments?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    parentReviewId?: boolean
+    resolvedComments?: boolean
     parentReview?: boolean | Review$parentReviewArgs<ExtArgs>
     childReviews?: boolean | Review$childReviewsArgs<ExtArgs>
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    feedbacks?: boolean | Review$feedbacksArgs<ExtArgs>
     threads?: boolean | Review$threadsArgs<ExtArgs>
     githubComment?: boolean | Review$githubCommentArgs<ExtArgs>
     githubStatusCheck?: boolean | Review$githubStatusCheckArgs<ExtArgs>
-    feedbacks?: boolean | Review$feedbacksArgs<ExtArgs>
     approvals?: boolean | Review$approvalsArgs<ExtArgs>
     assignments?: boolean | Review$assignmentsArgs<ExtArgs>
     securityIssues?: boolean | Review$securityIssuesArgs<ExtArgs>
@@ -11474,13 +11581,13 @@ export namespace Prisma {
     comments?: boolean
     qualityMetrics?: boolean
     error?: boolean
-    parentReviewId?: boolean
-    resolvedComments?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    parentReviewId?: boolean
+    resolvedComments?: boolean
+    parentReview?: boolean | Review$parentReviewArgs<ExtArgs>
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
-    parentReview?: boolean | Review$parentReviewArgs<ExtArgs>
   }, ExtArgs["result"]["review"]>
 
   export type ReviewSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -11496,13 +11603,13 @@ export namespace Prisma {
     comments?: boolean
     qualityMetrics?: boolean
     error?: boolean
-    parentReviewId?: boolean
-    resolvedComments?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    parentReviewId?: boolean
+    resolvedComments?: boolean
+    parentReview?: boolean | Review$parentReviewArgs<ExtArgs>
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
-    parentReview?: boolean | Review$parentReviewArgs<ExtArgs>
   }, ExtArgs["result"]["review"]>
 
   export type ReviewSelectScalar = {
@@ -11518,49 +11625,49 @@ export namespace Prisma {
     comments?: boolean
     qualityMetrics?: boolean
     error?: boolean
-    parentReviewId?: boolean
-    resolvedComments?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    parentReviewId?: boolean
+    resolvedComments?: boolean
   }
 
-  export type ReviewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "repositoryId" | "userId" | "prNumber" | "prTitle" | "prUrl" | "status" | "summary" | "riskScore" | "comments" | "qualityMetrics" | "error" | "parentReviewId" | "resolvedComments" | "createdAt" | "updatedAt", ExtArgs["result"]["review"]>
+  export type ReviewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "repositoryId" | "userId" | "prNumber" | "prTitle" | "prUrl" | "status" | "summary" | "riskScore" | "comments" | "qualityMetrics" | "error" | "createdAt" | "updatedAt" | "parentReviewId" | "resolvedComments", ExtArgs["result"]["review"]>
   export type ReviewInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
     parentReview?: boolean | Review$parentReviewArgs<ExtArgs>
     childReviews?: boolean | Review$childReviewsArgs<ExtArgs>
+    repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    feedbacks?: boolean | Review$feedbacksArgs<ExtArgs>
     threads?: boolean | Review$threadsArgs<ExtArgs>
     githubComment?: boolean | Review$githubCommentArgs<ExtArgs>
     githubStatusCheck?: boolean | Review$githubStatusCheckArgs<ExtArgs>
-    feedbacks?: boolean | Review$feedbacksArgs<ExtArgs>
     approvals?: boolean | Review$approvalsArgs<ExtArgs>
     assignments?: boolean | Review$assignmentsArgs<ExtArgs>
     securityIssues?: boolean | Review$securityIssuesArgs<ExtArgs>
     _count?: boolean | ReviewCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ReviewIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    parentReview?: boolean | Review$parentReviewArgs<ExtArgs>
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
-    parentReview?: boolean | Review$parentReviewArgs<ExtArgs>
   }
   export type ReviewIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    parentReview?: boolean | Review$parentReviewArgs<ExtArgs>
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
-    parentReview?: boolean | Review$parentReviewArgs<ExtArgs>
   }
 
   export type $ReviewPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Review"
     objects: {
-      repository: Prisma.$RepositoryPayload<ExtArgs>
-      user: Prisma.$UserPayload<ExtArgs>
       parentReview: Prisma.$ReviewPayload<ExtArgs> | null
       childReviews: Prisma.$ReviewPayload<ExtArgs>[]
+      repository: Prisma.$RepositoryPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
+      feedbacks: Prisma.$ReviewFeedbackPayload<ExtArgs>[]
       threads: Prisma.$ReviewThreadPayload<ExtArgs>[]
       githubComment: Prisma.$GitHubCommentPayload<ExtArgs> | null
       githubStatusCheck: Prisma.$GitHubStatusCheckPayload<ExtArgs> | null
-      feedbacks: Prisma.$ReviewFeedbackPayload<ExtArgs>[]
       approvals: Prisma.$ReviewApprovalPayload<ExtArgs>[]
       assignments: Prisma.$ReviewAssignmentPayload<ExtArgs>[]
       securityIssues: Prisma.$SecurityIssuePayload<ExtArgs>[]
@@ -11578,10 +11685,10 @@ export namespace Prisma {
       comments: Prisma.JsonValue | null
       qualityMetrics: Prisma.JsonValue | null
       error: string | null
-      parentReviewId: string | null
-      resolvedComments: string[]
       createdAt: Date
       updatedAt: Date
+      parentReviewId: string | null
+      resolvedComments: string[]
     }, ExtArgs["result"]["review"]>
     composites: {}
   }
@@ -11976,14 +12083,14 @@ export namespace Prisma {
    */
   export interface Prisma__ReviewClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    repository<T extends RepositoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RepositoryDefaultArgs<ExtArgs>>): Prisma__RepositoryClient<$Result.GetResult<Prisma.$RepositoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     parentReview<T extends Review$parentReviewArgs<ExtArgs> = {}>(args?: Subset<T, Review$parentReviewArgs<ExtArgs>>): Prisma__ReviewClient<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     childReviews<T extends Review$childReviewsArgs<ExtArgs> = {}>(args?: Subset<T, Review$childReviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    repository<T extends RepositoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RepositoryDefaultArgs<ExtArgs>>): Prisma__RepositoryClient<$Result.GetResult<Prisma.$RepositoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    feedbacks<T extends Review$feedbacksArgs<ExtArgs> = {}>(args?: Subset<T, Review$feedbacksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     threads<T extends Review$threadsArgs<ExtArgs> = {}>(args?: Subset<T, Review$threadsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewThreadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     githubComment<T extends Review$githubCommentArgs<ExtArgs> = {}>(args?: Subset<T, Review$githubCommentArgs<ExtArgs>>): Prisma__GitHubCommentClient<$Result.GetResult<Prisma.$GitHubCommentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     githubStatusCheck<T extends Review$githubStatusCheckArgs<ExtArgs> = {}>(args?: Subset<T, Review$githubStatusCheckArgs<ExtArgs>>): Prisma__GitHubStatusCheckClient<$Result.GetResult<Prisma.$GitHubStatusCheckPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    feedbacks<T extends Review$feedbacksArgs<ExtArgs> = {}>(args?: Subset<T, Review$feedbacksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     approvals<T extends Review$approvalsArgs<ExtArgs> = {}>(args?: Subset<T, Review$approvalsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewApprovalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     assignments<T extends Review$assignmentsArgs<ExtArgs> = {}>(args?: Subset<T, Review$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     securityIssues<T extends Review$securityIssuesArgs<ExtArgs> = {}>(args?: Subset<T, Review$securityIssuesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SecurityIssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -12028,10 +12135,10 @@ export namespace Prisma {
     readonly comments: FieldRef<"Review", 'Json'>
     readonly qualityMetrics: FieldRef<"Review", 'Json'>
     readonly error: FieldRef<"Review", 'String'>
-    readonly parentReviewId: FieldRef<"Review", 'String'>
-    readonly resolvedComments: FieldRef<"Review", 'String[]'>
     readonly createdAt: FieldRef<"Review", 'DateTime'>
     readonly updatedAt: FieldRef<"Review", 'DateTime'>
+    readonly parentReviewId: FieldRef<"Review", 'String'>
+    readonly resolvedComments: FieldRef<"Review", 'String[]'>
   }
     
 
@@ -12471,6 +12578,30 @@ export namespace Prisma {
   }
 
   /**
+   * Review.feedbacks
+   */
+  export type Review$feedbacksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReviewFeedback
+     */
+    select?: ReviewFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReviewFeedback
+     */
+    omit?: ReviewFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReviewFeedbackInclude<ExtArgs> | null
+    where?: ReviewFeedbackWhereInput
+    orderBy?: ReviewFeedbackOrderByWithRelationInput | ReviewFeedbackOrderByWithRelationInput[]
+    cursor?: ReviewFeedbackWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ReviewFeedbackScalarFieldEnum | ReviewFeedbackScalarFieldEnum[]
+  }
+
+  /**
    * Review.threads
    */
   export type Review$threadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12530,30 +12661,6 @@ export namespace Prisma {
      */
     include?: GitHubStatusCheckInclude<ExtArgs> | null
     where?: GitHubStatusCheckWhereInput
-  }
-
-  /**
-   * Review.feedbacks
-   */
-  export type Review$feedbacksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ReviewFeedback
-     */
-    select?: ReviewFeedbackSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ReviewFeedback
-     */
-    omit?: ReviewFeedbackOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ReviewFeedbackInclude<ExtArgs> | null
-    where?: ReviewFeedbackWhereInput
-    orderBy?: ReviewFeedbackOrderByWithRelationInput | ReviewFeedbackOrderByWithRelationInput[]
-    cursor?: ReviewFeedbackWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ReviewFeedbackScalarFieldEnum | ReviewFeedbackScalarFieldEnum[]
   }
 
   /**
@@ -19602,9 +19709,9 @@ export namespace Prisma {
     note?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    review?: boolean | ReviewDefaultArgs<ExtArgs>
-    assignee?: boolean | UserDefaultArgs<ExtArgs>
     assigner?: boolean | UserDefaultArgs<ExtArgs>
+    assignee?: boolean | UserDefaultArgs<ExtArgs>
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["reviewAssignment"]>
 
   export type ReviewAssignmentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -19618,9 +19725,9 @@ export namespace Prisma {
     note?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    review?: boolean | ReviewDefaultArgs<ExtArgs>
-    assignee?: boolean | UserDefaultArgs<ExtArgs>
     assigner?: boolean | UserDefaultArgs<ExtArgs>
+    assignee?: boolean | UserDefaultArgs<ExtArgs>
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["reviewAssignment"]>
 
   export type ReviewAssignmentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -19634,9 +19741,9 @@ export namespace Prisma {
     note?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    review?: boolean | ReviewDefaultArgs<ExtArgs>
-    assignee?: boolean | UserDefaultArgs<ExtArgs>
     assigner?: boolean | UserDefaultArgs<ExtArgs>
+    assignee?: boolean | UserDefaultArgs<ExtArgs>
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["reviewAssignment"]>
 
   export type ReviewAssignmentSelectScalar = {
@@ -19654,27 +19761,27 @@ export namespace Prisma {
 
   export type ReviewAssignmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "reviewId" | "assigneeId" | "assignedBy" | "dueDate" | "priority" | "status" | "note" | "createdAt" | "updatedAt", ExtArgs["result"]["reviewAssignment"]>
   export type ReviewAssignmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    review?: boolean | ReviewDefaultArgs<ExtArgs>
-    assignee?: boolean | UserDefaultArgs<ExtArgs>
     assigner?: boolean | UserDefaultArgs<ExtArgs>
+    assignee?: boolean | UserDefaultArgs<ExtArgs>
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
   }
   export type ReviewAssignmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    review?: boolean | ReviewDefaultArgs<ExtArgs>
-    assignee?: boolean | UserDefaultArgs<ExtArgs>
     assigner?: boolean | UserDefaultArgs<ExtArgs>
+    assignee?: boolean | UserDefaultArgs<ExtArgs>
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
   }
   export type ReviewAssignmentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    review?: boolean | ReviewDefaultArgs<ExtArgs>
-    assignee?: boolean | UserDefaultArgs<ExtArgs>
     assigner?: boolean | UserDefaultArgs<ExtArgs>
+    assignee?: boolean | UserDefaultArgs<ExtArgs>
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
   }
 
   export type $ReviewAssignmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ReviewAssignment"
     objects: {
-      review: Prisma.$ReviewPayload<ExtArgs>
-      assignee: Prisma.$UserPayload<ExtArgs>
       assigner: Prisma.$UserPayload<ExtArgs>
+      assignee: Prisma.$UserPayload<ExtArgs>
+      review: Prisma.$ReviewPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -20081,9 +20188,9 @@ export namespace Prisma {
    */
   export interface Prisma__ReviewAssignmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    review<T extends ReviewDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ReviewDefaultArgs<ExtArgs>>): Prisma__ReviewClient<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    assignee<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     assigner<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    assignee<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    review<T extends ReviewDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ReviewDefaultArgs<ExtArgs>>): Prisma__ReviewClient<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -20709,9 +20816,9 @@ export namespace Prisma {
     image?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    members?: boolean | Team$membersArgs<ExtArgs>
     repositories?: boolean | Team$repositoriesArgs<ExtArgs>
     actions?: boolean | Team$actionsArgs<ExtArgs>
+    members?: boolean | Team$membersArgs<ExtArgs>
     reviewRules?: boolean | Team$reviewRulesArgs<ExtArgs>
     _count?: boolean | TeamCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["team"]>
@@ -20745,9 +20852,9 @@ export namespace Prisma {
 
   export type TeamOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "image" | "createdAt" | "updatedAt", ExtArgs["result"]["team"]>
   export type TeamInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    members?: boolean | Team$membersArgs<ExtArgs>
     repositories?: boolean | Team$repositoriesArgs<ExtArgs>
     actions?: boolean | Team$actionsArgs<ExtArgs>
+    members?: boolean | Team$membersArgs<ExtArgs>
     reviewRules?: boolean | Team$reviewRulesArgs<ExtArgs>
     _count?: boolean | TeamCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -20757,9 +20864,9 @@ export namespace Prisma {
   export type $TeamPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Team"
     objects: {
-      members: Prisma.$TeamMemberPayload<ExtArgs>[]
       repositories: Prisma.$RepositoryPayload<ExtArgs>[]
       actions: Prisma.$TeamActionPayload<ExtArgs>[]
+      members: Prisma.$TeamMemberPayload<ExtArgs>[]
       reviewRules: Prisma.$ReviewRulePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -21163,9 +21270,9 @@ export namespace Prisma {
    */
   export interface Prisma__TeamClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    members<T extends Team$membersArgs<ExtArgs> = {}>(args?: Subset<T, Team$membersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeamMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     repositories<T extends Team$repositoriesArgs<ExtArgs> = {}>(args?: Subset<T, Team$repositoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RepositoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     actions<T extends Team$actionsArgs<ExtArgs> = {}>(args?: Subset<T, Team$actionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeamActionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    members<T extends Team$membersArgs<ExtArgs> = {}>(args?: Subset<T, Team$membersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeamMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reviewRules<T extends Team$reviewRulesArgs<ExtArgs> = {}>(args?: Subset<T, Team$reviewRulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -21590,30 +21697,6 @@ export namespace Prisma {
   }
 
   /**
-   * Team.members
-   */
-  export type Team$membersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the TeamMember
-     */
-    select?: TeamMemberSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the TeamMember
-     */
-    omit?: TeamMemberOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TeamMemberInclude<ExtArgs> | null
-    where?: TeamMemberWhereInput
-    orderBy?: TeamMemberOrderByWithRelationInput | TeamMemberOrderByWithRelationInput[]
-    cursor?: TeamMemberWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: TeamMemberScalarFieldEnum | TeamMemberScalarFieldEnum[]
-  }
-
-  /**
    * Team.repositories
    */
   export type Team$repositoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -21659,6 +21742,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TeamActionScalarFieldEnum | TeamActionScalarFieldEnum[]
+  }
+
+  /**
+   * Team.members
+   */
+  export type Team$membersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamMember
+     */
+    select?: TeamMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeamMember
+     */
+    omit?: TeamMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeamMemberInclude<ExtArgs> | null
+    where?: TeamMemberWhereInput
+    orderBy?: TeamMemberOrderByWithRelationInput | TeamMemberOrderByWithRelationInput[]
+    cursor?: TeamMemberWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TeamMemberScalarFieldEnum | TeamMemberScalarFieldEnum[]
   }
 
   /**
@@ -25039,9 +25146,9 @@ export namespace Prisma {
     repositoryId: string | null
     enabled: boolean | null
     githubWebhookId: number | null
-    scoreThreshold: number | null
     createdAt: Date | null
     updatedAt: Date | null
+    scoreThreshold: number | null
   }
 
   export type WebhookConfigMaxAggregateOutputType = {
@@ -25049,9 +25156,9 @@ export namespace Prisma {
     repositoryId: string | null
     enabled: boolean | null
     githubWebhookId: number | null
-    scoreThreshold: number | null
     createdAt: Date | null
     updatedAt: Date | null
+    scoreThreshold: number | null
   }
 
   export type WebhookConfigCountAggregateOutputType = {
@@ -25059,9 +25166,9 @@ export namespace Prisma {
     repositoryId: number
     enabled: number
     githubWebhookId: number
-    scoreThreshold: number
     createdAt: number
     updatedAt: number
+    scoreThreshold: number
     _all: number
   }
 
@@ -25081,9 +25188,9 @@ export namespace Prisma {
     repositoryId?: true
     enabled?: true
     githubWebhookId?: true
-    scoreThreshold?: true
     createdAt?: true
     updatedAt?: true
+    scoreThreshold?: true
   }
 
   export type WebhookConfigMaxAggregateInputType = {
@@ -25091,9 +25198,9 @@ export namespace Prisma {
     repositoryId?: true
     enabled?: true
     githubWebhookId?: true
-    scoreThreshold?: true
     createdAt?: true
     updatedAt?: true
+    scoreThreshold?: true
   }
 
   export type WebhookConfigCountAggregateInputType = {
@@ -25101,9 +25208,9 @@ export namespace Prisma {
     repositoryId?: true
     enabled?: true
     githubWebhookId?: true
-    scoreThreshold?: true
     createdAt?: true
     updatedAt?: true
+    scoreThreshold?: true
     _all?: true
   }
 
@@ -25198,9 +25305,9 @@ export namespace Prisma {
     repositoryId: string
     enabled: boolean
     githubWebhookId: number | null
-    scoreThreshold: number | null
     createdAt: Date
     updatedAt: Date
+    scoreThreshold: number | null
     _count: WebhookConfigCountAggregateOutputType | null
     _avg: WebhookConfigAvgAggregateOutputType | null
     _sum: WebhookConfigSumAggregateOutputType | null
@@ -25227,9 +25334,9 @@ export namespace Prisma {
     repositoryId?: boolean
     enabled?: boolean
     githubWebhookId?: boolean
-    scoreThreshold?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    scoreThreshold?: boolean
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["webhookConfig"]>
 
@@ -25238,9 +25345,9 @@ export namespace Prisma {
     repositoryId?: boolean
     enabled?: boolean
     githubWebhookId?: boolean
-    scoreThreshold?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    scoreThreshold?: boolean
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["webhookConfig"]>
 
@@ -25249,9 +25356,9 @@ export namespace Prisma {
     repositoryId?: boolean
     enabled?: boolean
     githubWebhookId?: boolean
-    scoreThreshold?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    scoreThreshold?: boolean
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["webhookConfig"]>
 
@@ -25260,12 +25367,12 @@ export namespace Prisma {
     repositoryId?: boolean
     enabled?: boolean
     githubWebhookId?: boolean
-    scoreThreshold?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    scoreThreshold?: boolean
   }
 
-  export type WebhookConfigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "repositoryId" | "enabled" | "githubWebhookId" | "scoreThreshold" | "createdAt" | "updatedAt", ExtArgs["result"]["webhookConfig"]>
+  export type WebhookConfigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "repositoryId" | "enabled" | "githubWebhookId" | "createdAt" | "updatedAt" | "scoreThreshold", ExtArgs["result"]["webhookConfig"]>
   export type WebhookConfigInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
   }
@@ -25286,14 +25393,14 @@ export namespace Prisma {
       repositoryId: string
       enabled: boolean
       githubWebhookId: number | null
+      createdAt: Date
+      updatedAt: Date
       /**
        * Optional numeric risk-score threshold (0–100). Reviews with riskScore >= this
        * value fail the GitHub branch-protection status check. NULL = use the default
        * heuristic (fail on any critical/high severity finding).
        */
       scoreThreshold: number | null
-      createdAt: Date
-      updatedAt: Date
     }, ExtArgs["result"]["webhookConfig"]>
     composites: {}
   }
@@ -25722,9 +25829,9 @@ export namespace Prisma {
     readonly repositoryId: FieldRef<"WebhookConfig", 'String'>
     readonly enabled: FieldRef<"WebhookConfig", 'Boolean'>
     readonly githubWebhookId: FieldRef<"WebhookConfig", 'Int'>
-    readonly scoreThreshold: FieldRef<"WebhookConfig", 'Int'>
     readonly createdAt: FieldRef<"WebhookConfig", 'DateTime'>
     readonly updatedAt: FieldRef<"WebhookConfig", 'DateTime'>
+    readonly scoreThreshold: FieldRef<"WebhookConfig", 'Int'>
   }
     
 
@@ -28588,8 +28695,8 @@ export namespace Prisma {
     commitSha?: boolean
     findingCount?: boolean
     createdAt?: boolean
-    review?: boolean | ReviewDefaultArgs<ExtArgs>
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["gitHubComment"]>
 
   export type GitHubCommentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -28601,8 +28708,8 @@ export namespace Prisma {
     commitSha?: boolean
     findingCount?: boolean
     createdAt?: boolean
-    review?: boolean | ReviewDefaultArgs<ExtArgs>
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["gitHubComment"]>
 
   export type GitHubCommentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -28614,8 +28721,8 @@ export namespace Prisma {
     commitSha?: boolean
     findingCount?: boolean
     createdAt?: boolean
-    review?: boolean | ReviewDefaultArgs<ExtArgs>
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["gitHubComment"]>
 
   export type GitHubCommentSelectScalar = {
@@ -28631,23 +28738,23 @@ export namespace Prisma {
 
   export type GitHubCommentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "reviewId" | "githubReviewId" | "prNumber" | "repositoryId" | "commitSha" | "findingCount" | "createdAt", ExtArgs["result"]["gitHubComment"]>
   export type GitHubCommentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    review?: boolean | ReviewDefaultArgs<ExtArgs>
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
   }
   export type GitHubCommentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    review?: boolean | ReviewDefaultArgs<ExtArgs>
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
   }
   export type GitHubCommentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    review?: boolean | ReviewDefaultArgs<ExtArgs>
     repository?: boolean | RepositoryDefaultArgs<ExtArgs>
+    review?: boolean | ReviewDefaultArgs<ExtArgs>
   }
 
   export type $GitHubCommentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "GitHubComment"
     objects: {
-      review: Prisma.$ReviewPayload<ExtArgs>
       repository: Prisma.$RepositoryPayload<ExtArgs>
+      review: Prisma.$ReviewPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -29052,8 +29159,8 @@ export namespace Prisma {
    */
   export interface Prisma__GitHubCommentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    review<T extends ReviewDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ReviewDefaultArgs<ExtArgs>>): Prisma__ReviewClient<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     repository<T extends RepositoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RepositoryDefaultArgs<ExtArgs>>): Prisma__RepositoryClient<$Result.GetResult<Prisma.$RepositoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    review<T extends ReviewDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ReviewDefaultArgs<ExtArgs>>): Prisma__ReviewClient<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -33013,9 +33120,9 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     userId?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     repository?: boolean | ReviewRule$repositoryArgs<ExtArgs>
     team?: boolean | ReviewRule$teamArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["reviewRule"]>
 
   export type ReviewRuleSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -33030,9 +33137,9 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     userId?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     repository?: boolean | ReviewRule$repositoryArgs<ExtArgs>
     team?: boolean | ReviewRule$teamArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["reviewRule"]>
 
   export type ReviewRuleSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -33047,9 +33154,9 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     userId?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     repository?: boolean | ReviewRule$repositoryArgs<ExtArgs>
     team?: boolean | ReviewRule$teamArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["reviewRule"]>
 
   export type ReviewRuleSelectScalar = {
@@ -33068,27 +33175,27 @@ export namespace Prisma {
 
   export type ReviewRuleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "pattern" | "severity" | "repositoryId" | "teamId" | "enabled" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["reviewRule"]>
   export type ReviewRuleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     repository?: boolean | ReviewRule$repositoryArgs<ExtArgs>
     team?: boolean | ReviewRule$teamArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type ReviewRuleIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     repository?: boolean | ReviewRule$repositoryArgs<ExtArgs>
     team?: boolean | ReviewRule$teamArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type ReviewRuleIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     repository?: boolean | ReviewRule$repositoryArgs<ExtArgs>
     team?: boolean | ReviewRule$teamArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $ReviewRulePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ReviewRule"
     objects: {
-      user: Prisma.$UserPayload<ExtArgs>
       repository: Prisma.$RepositoryPayload<ExtArgs> | null
       team: Prisma.$TeamPayload<ExtArgs> | null
+      user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -33496,9 +33603,9 @@ export namespace Prisma {
    */
   export interface Prisma__ReviewRuleClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     repository<T extends ReviewRule$repositoryArgs<ExtArgs> = {}>(args?: Subset<T, ReviewRule$repositoryArgs<ExtArgs>>): Prisma__RepositoryClient<$Result.GetResult<Prisma.$RepositoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     team<T extends ReviewRule$teamArgs<ExtArgs> = {}>(args?: Subset<T, ReviewRule$teamArgs<ExtArgs>>): Prisma__TeamClient<$Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -34004,113 +34111,113 @@ export namespace Prisma {
   }
 
   export type SystemSettingsAvgAggregateOutputType = {
-    reviewRetentionDays: number | null
     auditLogRetentionDays: number | null
+    reviewRetentionDays: number | null
     sessionRetentionDays: number | null
   }
 
   export type SystemSettingsSumAggregateOutputType = {
-    reviewRetentionDays: number | null
     auditLogRetentionDays: number | null
+    reviewRetentionDays: number | null
     sessionRetentionDays: number | null
   }
 
   export type SystemSettingsMinAggregateOutputType = {
     id: string | null
     maintenanceMode: boolean | null
-    reviewRetentionDays: number | null
+    updatedAt: Date | null
     auditLogRetentionDays: number | null
+    reviewRetentionDays: number | null
     sessionRetentionDays: number | null
+    bannerColor: string | null
     bannerEnabled: boolean | null
-    bannerText: string | null
     bannerLink: string | null
     bannerLinkText: string | null
-    bannerColor: string | null
-    updatedAt: Date | null
+    bannerText: string | null
   }
 
   export type SystemSettingsMaxAggregateOutputType = {
     id: string | null
     maintenanceMode: boolean | null
-    reviewRetentionDays: number | null
+    updatedAt: Date | null
     auditLogRetentionDays: number | null
+    reviewRetentionDays: number | null
     sessionRetentionDays: number | null
+    bannerColor: string | null
     bannerEnabled: boolean | null
-    bannerText: string | null
     bannerLink: string | null
     bannerLinkText: string | null
-    bannerColor: string | null
-    updatedAt: Date | null
+    bannerText: string | null
   }
 
   export type SystemSettingsCountAggregateOutputType = {
     id: number
     maintenanceMode: number
-    reviewRetentionDays: number
+    updatedAt: number
     auditLogRetentionDays: number
+    reviewRetentionDays: number
     sessionRetentionDays: number
+    bannerColor: number
     bannerEnabled: number
-    bannerText: number
     bannerLink: number
     bannerLinkText: number
-    bannerColor: number
-    updatedAt: number
+    bannerText: number
     _all: number
   }
 
 
   export type SystemSettingsAvgAggregateInputType = {
-    reviewRetentionDays?: true
     auditLogRetentionDays?: true
+    reviewRetentionDays?: true
     sessionRetentionDays?: true
   }
 
   export type SystemSettingsSumAggregateInputType = {
-    reviewRetentionDays?: true
     auditLogRetentionDays?: true
+    reviewRetentionDays?: true
     sessionRetentionDays?: true
   }
 
   export type SystemSettingsMinAggregateInputType = {
     id?: true
     maintenanceMode?: true
-    reviewRetentionDays?: true
+    updatedAt?: true
     auditLogRetentionDays?: true
+    reviewRetentionDays?: true
     sessionRetentionDays?: true
+    bannerColor?: true
     bannerEnabled?: true
-    bannerText?: true
     bannerLink?: true
     bannerLinkText?: true
-    bannerColor?: true
-    updatedAt?: true
+    bannerText?: true
   }
 
   export type SystemSettingsMaxAggregateInputType = {
     id?: true
     maintenanceMode?: true
-    reviewRetentionDays?: true
+    updatedAt?: true
     auditLogRetentionDays?: true
+    reviewRetentionDays?: true
     sessionRetentionDays?: true
+    bannerColor?: true
     bannerEnabled?: true
-    bannerText?: true
     bannerLink?: true
     bannerLinkText?: true
-    bannerColor?: true
-    updatedAt?: true
+    bannerText?: true
   }
 
   export type SystemSettingsCountAggregateInputType = {
     id?: true
     maintenanceMode?: true
-    reviewRetentionDays?: true
+    updatedAt?: true
     auditLogRetentionDays?: true
+    reviewRetentionDays?: true
     sessionRetentionDays?: true
+    bannerColor?: true
     bannerEnabled?: true
-    bannerText?: true
     bannerLink?: true
     bannerLinkText?: true
-    bannerColor?: true
-    updatedAt?: true
+    bannerText?: true
     _all?: true
   }
 
@@ -34203,15 +34310,15 @@ export namespace Prisma {
   export type SystemSettingsGroupByOutputType = {
     id: string
     maintenanceMode: boolean
-    reviewRetentionDays: number
+    updatedAt: Date
     auditLogRetentionDays: number
+    reviewRetentionDays: number
     sessionRetentionDays: number
+    bannerColor: string
     bannerEnabled: boolean
-    bannerText: string
     bannerLink: string
     bannerLinkText: string
-    bannerColor: string
-    updatedAt: Date
+    bannerText: string
     _count: SystemSettingsCountAggregateOutputType | null
     _avg: SystemSettingsAvgAggregateOutputType | null
     _sum: SystemSettingsSumAggregateOutputType | null
@@ -34236,60 +34343,60 @@ export namespace Prisma {
   export type SystemSettingsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     maintenanceMode?: boolean
-    reviewRetentionDays?: boolean
+    updatedAt?: boolean
     auditLogRetentionDays?: boolean
+    reviewRetentionDays?: boolean
     sessionRetentionDays?: boolean
+    bannerColor?: boolean
     bannerEnabled?: boolean
-    bannerText?: boolean
     bannerLink?: boolean
     bannerLinkText?: boolean
-    bannerColor?: boolean
-    updatedAt?: boolean
+    bannerText?: boolean
   }, ExtArgs["result"]["systemSettings"]>
 
   export type SystemSettingsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     maintenanceMode?: boolean
-    reviewRetentionDays?: boolean
+    updatedAt?: boolean
     auditLogRetentionDays?: boolean
+    reviewRetentionDays?: boolean
     sessionRetentionDays?: boolean
+    bannerColor?: boolean
     bannerEnabled?: boolean
-    bannerText?: boolean
     bannerLink?: boolean
     bannerLinkText?: boolean
-    bannerColor?: boolean
-    updatedAt?: boolean
+    bannerText?: boolean
   }, ExtArgs["result"]["systemSettings"]>
 
   export type SystemSettingsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     maintenanceMode?: boolean
-    reviewRetentionDays?: boolean
+    updatedAt?: boolean
     auditLogRetentionDays?: boolean
+    reviewRetentionDays?: boolean
     sessionRetentionDays?: boolean
+    bannerColor?: boolean
     bannerEnabled?: boolean
-    bannerText?: boolean
     bannerLink?: boolean
     bannerLinkText?: boolean
-    bannerColor?: boolean
-    updatedAt?: boolean
+    bannerText?: boolean
   }, ExtArgs["result"]["systemSettings"]>
 
   export type SystemSettingsSelectScalar = {
     id?: boolean
     maintenanceMode?: boolean
-    reviewRetentionDays?: boolean
+    updatedAt?: boolean
     auditLogRetentionDays?: boolean
+    reviewRetentionDays?: boolean
     sessionRetentionDays?: boolean
+    bannerColor?: boolean
     bannerEnabled?: boolean
-    bannerText?: boolean
     bannerLink?: boolean
     bannerLinkText?: boolean
-    bannerColor?: boolean
-    updatedAt?: boolean
+    bannerText?: boolean
   }
 
-  export type SystemSettingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "maintenanceMode" | "reviewRetentionDays" | "auditLogRetentionDays" | "sessionRetentionDays" | "bannerEnabled" | "bannerText" | "bannerLink" | "bannerLinkText" | "bannerColor" | "updatedAt", ExtArgs["result"]["systemSettings"]>
+  export type SystemSettingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "maintenanceMode" | "updatedAt" | "auditLogRetentionDays" | "reviewRetentionDays" | "sessionRetentionDays" | "bannerColor" | "bannerEnabled" | "bannerLink" | "bannerLinkText" | "bannerText", ExtArgs["result"]["systemSettings"]>
 
   export type $SystemSettingsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SystemSettings"
@@ -34297,15 +34404,15 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       maintenanceMode: boolean
-      reviewRetentionDays: number
+      updatedAt: Date
       auditLogRetentionDays: number
+      reviewRetentionDays: number
       sessionRetentionDays: number
+      bannerColor: string
       bannerEnabled: boolean
-      bannerText: string
       bannerLink: string
       bannerLinkText: string
-      bannerColor: string
-      updatedAt: Date
+      bannerText: string
     }, ExtArgs["result"]["systemSettings"]>
     composites: {}
   }
@@ -34731,15 +34838,15 @@ export namespace Prisma {
   interface SystemSettingsFieldRefs {
     readonly id: FieldRef<"SystemSettings", 'String'>
     readonly maintenanceMode: FieldRef<"SystemSettings", 'Boolean'>
-    readonly reviewRetentionDays: FieldRef<"SystemSettings", 'Int'>
+    readonly updatedAt: FieldRef<"SystemSettings", 'DateTime'>
     readonly auditLogRetentionDays: FieldRef<"SystemSettings", 'Int'>
+    readonly reviewRetentionDays: FieldRef<"SystemSettings", 'Int'>
     readonly sessionRetentionDays: FieldRef<"SystemSettings", 'Int'>
+    readonly bannerColor: FieldRef<"SystemSettings", 'String'>
     readonly bannerEnabled: FieldRef<"SystemSettings", 'Boolean'>
-    readonly bannerText: FieldRef<"SystemSettings", 'String'>
     readonly bannerLink: FieldRef<"SystemSettings", 'String'>
     readonly bannerLinkText: FieldRef<"SystemSettings", 'String'>
-    readonly bannerColor: FieldRef<"SystemSettings", 'String'>
-    readonly updatedAt: FieldRef<"SystemSettings", 'DateTime'>
+    readonly bannerText: FieldRef<"SystemSettings", 'String'>
   }
     
 
@@ -35118,76 +35225,76 @@ export namespace Prisma {
 
   export type SupportMessageMinAggregateOutputType = {
     id: string | null
-    userId: string | null
-    name: string | null
     email: string | null
-    subject: string | null
     message: string | null
-    type: string | null
     status: string | null
     createdAt: Date | null
+    name: string | null
+    subject: string | null
+    type: string | null
+    userId: string | null
   }
 
   export type SupportMessageMaxAggregateOutputType = {
     id: string | null
-    userId: string | null
-    name: string | null
     email: string | null
-    subject: string | null
     message: string | null
-    type: string | null
     status: string | null
     createdAt: Date | null
+    name: string | null
+    subject: string | null
+    type: string | null
+    userId: string | null
   }
 
   export type SupportMessageCountAggregateOutputType = {
     id: number
-    userId: number
-    name: number
     email: number
-    subject: number
     message: number
-    type: number
     status: number
     createdAt: number
+    name: number
+    subject: number
+    type: number
+    userId: number
     _all: number
   }
 
 
   export type SupportMessageMinAggregateInputType = {
     id?: true
-    userId?: true
-    name?: true
     email?: true
-    subject?: true
     message?: true
-    type?: true
     status?: true
     createdAt?: true
+    name?: true
+    subject?: true
+    type?: true
+    userId?: true
   }
 
   export type SupportMessageMaxAggregateInputType = {
     id?: true
-    userId?: true
-    name?: true
     email?: true
-    subject?: true
     message?: true
-    type?: true
     status?: true
     createdAt?: true
+    name?: true
+    subject?: true
+    type?: true
+    userId?: true
   }
 
   export type SupportMessageCountAggregateInputType = {
     id?: true
-    userId?: true
-    name?: true
     email?: true
-    subject?: true
     message?: true
-    type?: true
     status?: true
     createdAt?: true
+    name?: true
+    subject?: true
+    type?: true
+    userId?: true
     _all?: true
   }
 
@@ -35265,14 +35372,14 @@ export namespace Prisma {
 
   export type SupportMessageGroupByOutputType = {
     id: string
-    userId: string | null
-    name: string | null
     email: string | null
-    subject: string | null
     message: string
-    type: string
     status: string
     createdAt: Date
+    name: string | null
+    subject: string | null
+    type: string
+    userId: string | null
     _count: SupportMessageCountAggregateOutputType | null
     _min: SupportMessageMinAggregateOutputType | null
     _max: SupportMessageMaxAggregateOutputType | null
@@ -35294,67 +35401,67 @@ export namespace Prisma {
 
   export type SupportMessageSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    userId?: boolean
-    name?: boolean
     email?: boolean
-    subject?: boolean
     message?: boolean
-    type?: boolean
     status?: boolean
     createdAt?: boolean
+    name?: boolean
+    subject?: boolean
+    type?: boolean
+    userId?: boolean
   }, ExtArgs["result"]["supportMessage"]>
 
   export type SupportMessageSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    userId?: boolean
-    name?: boolean
     email?: boolean
-    subject?: boolean
     message?: boolean
-    type?: boolean
     status?: boolean
     createdAt?: boolean
+    name?: boolean
+    subject?: boolean
+    type?: boolean
+    userId?: boolean
   }, ExtArgs["result"]["supportMessage"]>
 
   export type SupportMessageSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    userId?: boolean
-    name?: boolean
     email?: boolean
-    subject?: boolean
     message?: boolean
-    type?: boolean
     status?: boolean
     createdAt?: boolean
+    name?: boolean
+    subject?: boolean
+    type?: boolean
+    userId?: boolean
   }, ExtArgs["result"]["supportMessage"]>
 
   export type SupportMessageSelectScalar = {
     id?: boolean
-    userId?: boolean
-    name?: boolean
     email?: boolean
-    subject?: boolean
     message?: boolean
-    type?: boolean
     status?: boolean
     createdAt?: boolean
+    name?: boolean
+    subject?: boolean
+    type?: boolean
+    userId?: boolean
   }
 
-  export type SupportMessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "name" | "email" | "subject" | "message" | "type" | "status" | "createdAt", ExtArgs["result"]["supportMessage"]>
+  export type SupportMessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "message" | "status" | "createdAt" | "name" | "subject" | "type" | "userId", ExtArgs["result"]["supportMessage"]>
 
   export type $SupportMessagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SupportMessage"
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      userId: string | null
-      name: string | null
       email: string | null
-      subject: string | null
       message: string
-      type: string
       status: string
       createdAt: Date
+      name: string | null
+      subject: string | null
+      type: string
+      userId: string | null
     }, ExtArgs["result"]["supportMessage"]>
     composites: {}
   }
@@ -35779,14 +35886,14 @@ export namespace Prisma {
    */
   interface SupportMessageFieldRefs {
     readonly id: FieldRef<"SupportMessage", 'String'>
-    readonly userId: FieldRef<"SupportMessage", 'String'>
-    readonly name: FieldRef<"SupportMessage", 'String'>
     readonly email: FieldRef<"SupportMessage", 'String'>
-    readonly subject: FieldRef<"SupportMessage", 'String'>
     readonly message: FieldRef<"SupportMessage", 'String'>
-    readonly type: FieldRef<"SupportMessage", 'String'>
     readonly status: FieldRef<"SupportMessage", 'String'>
     readonly createdAt: FieldRef<"SupportMessage", 'DateTime'>
+    readonly name: FieldRef<"SupportMessage", 'String'>
+    readonly subject: FieldRef<"SupportMessage", 'String'>
+    readonly type: FieldRef<"SupportMessage", 'String'>
+    readonly userId: FieldRef<"SupportMessage", 'String'>
   }
     
 
@@ -39707,8 +39814,8 @@ export namespace Prisma {
     userId?: boolean
     roleId?: boolean
     assignedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     role?: boolean | CustomRoleDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["userCustomRole"]>
 
   export type UserCustomRoleSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -39716,8 +39823,8 @@ export namespace Prisma {
     userId?: boolean
     roleId?: boolean
     assignedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     role?: boolean | CustomRoleDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["userCustomRole"]>
 
   export type UserCustomRoleSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -39725,8 +39832,8 @@ export namespace Prisma {
     userId?: boolean
     roleId?: boolean
     assignedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     role?: boolean | CustomRoleDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["userCustomRole"]>
 
   export type UserCustomRoleSelectScalar = {
@@ -39738,23 +39845,23 @@ export namespace Prisma {
 
   export type UserCustomRoleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "roleId" | "assignedAt", ExtArgs["result"]["userCustomRole"]>
   export type UserCustomRoleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     role?: boolean | CustomRoleDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type UserCustomRoleIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     role?: boolean | CustomRoleDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type UserCustomRoleIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     role?: boolean | CustomRoleDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $UserCustomRolePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "UserCustomRole"
     objects: {
-      user: Prisma.$UserPayload<ExtArgs>
       role: Prisma.$CustomRolePayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -40155,8 +40262,8 @@ export namespace Prisma {
    */
   export interface Prisma__UserCustomRoleClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     role<T extends CustomRoleDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CustomRoleDefaultArgs<ExtArgs>>): Prisma__CustomRoleClient<$Result.GetResult<Prisma.$CustomRolePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -40928,7 +41035,7 @@ export namespace Prisma {
        */
       value: number
       /**
-       * Null = applies to all plans; "free" | "pro" | "ultra" = specific plan.
+       * Null = applies to all plans; "FREE" | "PRO" | "ENTERPRISE" = specific plan.
        */
       planId: string | null
       /**
@@ -42033,7 +42140,7 @@ export namespace Prisma {
       id: string
       email: string
       /**
-       * "free" | "pro" | "ultra"
+       * "FREE" | "PRO" | "ENTERPRISE"
        */
       planId: string
       overrideMonthlyPrice: number | null
@@ -43149,7 +43256,7 @@ export namespace Prisma {
       domain: string
       companyName: string
       /**
-       * "free" | "pro" | "ultra"
+       * "FREE" | "PRO" | "ENTERPRISE"
        */
       planId: string
       overrideMonthlyPrice: number | null
@@ -46277,8 +46384,6 @@ export namespace Prisma {
     emailVerified: 'emailVerified',
     image: 'image',
     role: 'role',
-    banned: 'banned',
-    bannedReason: 'bannedReason',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     reviewDepth: 'reviewDepth',
@@ -46286,17 +46391,24 @@ export namespace Prisma {
     autoReview: 'autoReview',
     includeSecurityChecks: 'includeSecurityChecks',
     includePerfSuggestions: 'includePerfSuggestions',
+    banned: 'banned',
+    bannedReason: 'bannedReason',
+    desktopNotifications: 'desktopNotifications',
     emailNotifications: 'emailNotifications',
-    notifyTeamInvites: 'notifyTeamInvites',
-    notifyTeamMemberAdded: 'notifyTeamMemberAdded',
+    notificationSoundEnabled: 'notificationSoundEnabled',
+    notifyReviewApproved: 'notifyReviewApproved',
+    notifyReviewAssigned: 'notifyReviewAssigned',
+    notifyReviewChangesRequested: 'notifyReviewChangesRequested',
     notifyReviewCompleted: 'notifyReviewCompleted',
     notifyReviewFailed: 'notifyReviewFailed',
     notifyScheduledScanCompleted: 'notifyScheduledScanCompleted',
-    notifyReviewAssigned: 'notifyReviewAssigned',
-    notifyReviewApproved: 'notifyReviewApproved',
-    notifyReviewChangesRequested: 'notifyReviewChangesRequested',
-    notificationSoundEnabled: 'notificationSoundEnabled',
-    desktopNotifications: 'desktopNotifications'
+    notifyTeamInvites: 'notifyTeamInvites',
+    notifyTeamMemberAdded: 'notifyTeamMemberAdded',
+    planId: 'planId',
+    planExpiresAt: 'planExpiresAt',
+    overrideReposLimit: 'overrideReposLimit',
+    overrideReviewsLimit: 'overrideReviewsLimit',
+    overrideSeatsLimit: 'overrideSeatsLimit'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -46376,10 +46488,10 @@ export namespace Prisma {
     comments: 'comments',
     qualityMetrics: 'qualityMetrics',
     error: 'error',
-    parentReviewId: 'parentReviewId',
-    resolvedComments: 'resolvedComments',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    parentReviewId: 'parentReviewId',
+    resolvedComments: 'resolvedComments'
   };
 
   export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
@@ -46546,9 +46658,9 @@ export namespace Prisma {
     repositoryId: 'repositoryId',
     enabled: 'enabled',
     githubWebhookId: 'githubWebhookId',
-    scoreThreshold: 'scoreThreshold',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    scoreThreshold: 'scoreThreshold'
   };
 
   export type WebhookConfigScalarFieldEnum = (typeof WebhookConfigScalarFieldEnum)[keyof typeof WebhookConfigScalarFieldEnum]
@@ -46656,15 +46768,15 @@ export namespace Prisma {
   export const SystemSettingsScalarFieldEnum: {
     id: 'id',
     maintenanceMode: 'maintenanceMode',
-    reviewRetentionDays: 'reviewRetentionDays',
+    updatedAt: 'updatedAt',
     auditLogRetentionDays: 'auditLogRetentionDays',
+    reviewRetentionDays: 'reviewRetentionDays',
     sessionRetentionDays: 'sessionRetentionDays',
+    bannerColor: 'bannerColor',
     bannerEnabled: 'bannerEnabled',
-    bannerText: 'bannerText',
     bannerLink: 'bannerLink',
     bannerLinkText: 'bannerLinkText',
-    bannerColor: 'bannerColor',
-    updatedAt: 'updatedAt'
+    bannerText: 'bannerText'
   };
 
   export type SystemSettingsScalarFieldEnum = (typeof SystemSettingsScalarFieldEnum)[keyof typeof SystemSettingsScalarFieldEnum]
@@ -46672,14 +46784,14 @@ export namespace Prisma {
 
   export const SupportMessageScalarFieldEnum: {
     id: 'id',
-    userId: 'userId',
-    name: 'name',
     email: 'email',
-    subject: 'subject',
     message: 'message',
-    type: 'type',
     status: 'status',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    name: 'name',
+    subject: 'subject',
+    type: 'type',
+    userId: 'userId'
   };
 
   export type SupportMessageScalarFieldEnum = (typeof SupportMessageScalarFieldEnum)[keyof typeof SupportMessageScalarFieldEnum]
@@ -47260,8 +47372,6 @@ export namespace Prisma {
     emailVerified?: BoolFilter<"User"> | boolean
     image?: StringNullableFilter<"User"> | string | null
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
-    banned?: BoolFilter<"User"> | boolean
-    bannedReason?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     reviewDepth?: StringFilter<"User"> | string
@@ -47269,32 +47379,39 @@ export namespace Prisma {
     autoReview?: BoolFilter<"User"> | boolean
     includeSecurityChecks?: BoolFilter<"User"> | boolean
     includePerfSuggestions?: BoolFilter<"User"> | boolean
+    banned?: BoolFilter<"User"> | boolean
+    bannedReason?: StringNullableFilter<"User"> | string | null
+    desktopNotifications?: BoolFilter<"User"> | boolean
     emailNotifications?: BoolFilter<"User"> | boolean
-    notifyTeamInvites?: BoolFilter<"User"> | boolean
-    notifyTeamMemberAdded?: BoolFilter<"User"> | boolean
+    notificationSoundEnabled?: BoolFilter<"User"> | boolean
+    notifyReviewApproved?: BoolFilter<"User"> | boolean
+    notifyReviewAssigned?: BoolFilter<"User"> | boolean
+    notifyReviewChangesRequested?: BoolFilter<"User"> | boolean
     notifyReviewCompleted?: BoolFilter<"User"> | boolean
     notifyReviewFailed?: BoolFilter<"User"> | boolean
     notifyScheduledScanCompleted?: BoolFilter<"User"> | boolean
-    notifyReviewAssigned?: BoolFilter<"User"> | boolean
-    notifyReviewApproved?: BoolFilter<"User"> | boolean
-    notifyReviewChangesRequested?: BoolFilter<"User"> | boolean
-    notificationSoundEnabled?: BoolFilter<"User"> | boolean
-    desktopNotifications?: BoolFilter<"User"> | boolean
-    sessions?: SessionListRelationFilter
-    accounts?: AccountListRelationFilter
+    notifyTeamInvites?: BoolFilter<"User"> | boolean
+    notifyTeamMemberAdded?: BoolFilter<"User"> | boolean
+    planId?: StringFilter<"User"> | string
+    planExpiresAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    overrideReposLimit?: IntNullableFilter<"User"> | number | null
+    overrideReviewsLimit?: IntNullableFilter<"User"> | number | null
+    overrideSeatsLimit?: IntNullableFilter<"User"> | number | null
+    notifications?: NotificationListRelationFilter
     repositories?: RepositoryListRelationFilter
     reviews?: ReviewListRelationFilter
+    reviewFeedbacks?: ReviewFeedbackListRelationFilter
     threadComments?: ReviewThreadCommentListRelationFilter
     teamMembers?: TeamMemberListRelationFilter
-    notifications?: NotificationListRelationFilter
-    reviewFeedbacks?: ReviewFeedbackListRelationFilter
-    reviewRules?: ReviewRuleListRelationFilter
+    accounts?: AccountListRelationFilter
     auditLogs?: AuditLogListRelationFilter
-    customRoles?: UserCustomRoleListRelationFilter
-    commentReactions?: ReviewThreadCommentReactionListRelationFilter
     reviewApprovals?: ReviewApprovalListRelationFilter
-    assignedReviews?: ReviewAssignmentListRelationFilter
     assignedByMe?: ReviewAssignmentListRelationFilter
+    assignedReviews?: ReviewAssignmentListRelationFilter
+    reviewRules?: ReviewRuleListRelationFilter
+    commentReactions?: ReviewThreadCommentReactionListRelationFilter
+    sessions?: SessionListRelationFilter
+    customRoles?: UserCustomRoleListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -47304,8 +47421,6 @@ export namespace Prisma {
     emailVerified?: SortOrder
     image?: SortOrderInput | SortOrder
     role?: SortOrder
-    banned?: SortOrder
-    bannedReason?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     reviewDepth?: SortOrder
@@ -47313,32 +47428,39 @@ export namespace Prisma {
     autoReview?: SortOrder
     includeSecurityChecks?: SortOrder
     includePerfSuggestions?: SortOrder
+    banned?: SortOrder
+    bannedReason?: SortOrderInput | SortOrder
+    desktopNotifications?: SortOrder
     emailNotifications?: SortOrder
-    notifyTeamInvites?: SortOrder
-    notifyTeamMemberAdded?: SortOrder
+    notificationSoundEnabled?: SortOrder
+    notifyReviewApproved?: SortOrder
+    notifyReviewAssigned?: SortOrder
+    notifyReviewChangesRequested?: SortOrder
     notifyReviewCompleted?: SortOrder
     notifyReviewFailed?: SortOrder
     notifyScheduledScanCompleted?: SortOrder
-    notifyReviewAssigned?: SortOrder
-    notifyReviewApproved?: SortOrder
-    notifyReviewChangesRequested?: SortOrder
-    notificationSoundEnabled?: SortOrder
-    desktopNotifications?: SortOrder
-    sessions?: SessionOrderByRelationAggregateInput
-    accounts?: AccountOrderByRelationAggregateInput
+    notifyTeamInvites?: SortOrder
+    notifyTeamMemberAdded?: SortOrder
+    planId?: SortOrder
+    planExpiresAt?: SortOrderInput | SortOrder
+    overrideReposLimit?: SortOrderInput | SortOrder
+    overrideReviewsLimit?: SortOrderInput | SortOrder
+    overrideSeatsLimit?: SortOrderInput | SortOrder
+    notifications?: NotificationOrderByRelationAggregateInput
     repositories?: RepositoryOrderByRelationAggregateInput
     reviews?: ReviewOrderByRelationAggregateInput
+    reviewFeedbacks?: ReviewFeedbackOrderByRelationAggregateInput
     threadComments?: ReviewThreadCommentOrderByRelationAggregateInput
     teamMembers?: TeamMemberOrderByRelationAggregateInput
-    notifications?: NotificationOrderByRelationAggregateInput
-    reviewFeedbacks?: ReviewFeedbackOrderByRelationAggregateInput
-    reviewRules?: ReviewRuleOrderByRelationAggregateInput
+    accounts?: AccountOrderByRelationAggregateInput
     auditLogs?: AuditLogOrderByRelationAggregateInput
-    customRoles?: UserCustomRoleOrderByRelationAggregateInput
-    commentReactions?: ReviewThreadCommentReactionOrderByRelationAggregateInput
     reviewApprovals?: ReviewApprovalOrderByRelationAggregateInput
-    assignedReviews?: ReviewAssignmentOrderByRelationAggregateInput
     assignedByMe?: ReviewAssignmentOrderByRelationAggregateInput
+    assignedReviews?: ReviewAssignmentOrderByRelationAggregateInput
+    reviewRules?: ReviewRuleOrderByRelationAggregateInput
+    commentReactions?: ReviewThreadCommentReactionOrderByRelationAggregateInput
+    sessions?: SessionOrderByRelationAggregateInput
+    customRoles?: UserCustomRoleOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -47351,8 +47473,6 @@ export namespace Prisma {
     emailVerified?: BoolFilter<"User"> | boolean
     image?: StringNullableFilter<"User"> | string | null
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
-    banned?: BoolFilter<"User"> | boolean
-    bannedReason?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     reviewDepth?: StringFilter<"User"> | string
@@ -47360,32 +47480,39 @@ export namespace Prisma {
     autoReview?: BoolFilter<"User"> | boolean
     includeSecurityChecks?: BoolFilter<"User"> | boolean
     includePerfSuggestions?: BoolFilter<"User"> | boolean
+    banned?: BoolFilter<"User"> | boolean
+    bannedReason?: StringNullableFilter<"User"> | string | null
+    desktopNotifications?: BoolFilter<"User"> | boolean
     emailNotifications?: BoolFilter<"User"> | boolean
-    notifyTeamInvites?: BoolFilter<"User"> | boolean
-    notifyTeamMemberAdded?: BoolFilter<"User"> | boolean
+    notificationSoundEnabled?: BoolFilter<"User"> | boolean
+    notifyReviewApproved?: BoolFilter<"User"> | boolean
+    notifyReviewAssigned?: BoolFilter<"User"> | boolean
+    notifyReviewChangesRequested?: BoolFilter<"User"> | boolean
     notifyReviewCompleted?: BoolFilter<"User"> | boolean
     notifyReviewFailed?: BoolFilter<"User"> | boolean
     notifyScheduledScanCompleted?: BoolFilter<"User"> | boolean
-    notifyReviewAssigned?: BoolFilter<"User"> | boolean
-    notifyReviewApproved?: BoolFilter<"User"> | boolean
-    notifyReviewChangesRequested?: BoolFilter<"User"> | boolean
-    notificationSoundEnabled?: BoolFilter<"User"> | boolean
-    desktopNotifications?: BoolFilter<"User"> | boolean
-    sessions?: SessionListRelationFilter
-    accounts?: AccountListRelationFilter
+    notifyTeamInvites?: BoolFilter<"User"> | boolean
+    notifyTeamMemberAdded?: BoolFilter<"User"> | boolean
+    planId?: StringFilter<"User"> | string
+    planExpiresAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    overrideReposLimit?: IntNullableFilter<"User"> | number | null
+    overrideReviewsLimit?: IntNullableFilter<"User"> | number | null
+    overrideSeatsLimit?: IntNullableFilter<"User"> | number | null
+    notifications?: NotificationListRelationFilter
     repositories?: RepositoryListRelationFilter
     reviews?: ReviewListRelationFilter
+    reviewFeedbacks?: ReviewFeedbackListRelationFilter
     threadComments?: ReviewThreadCommentListRelationFilter
     teamMembers?: TeamMemberListRelationFilter
-    notifications?: NotificationListRelationFilter
-    reviewFeedbacks?: ReviewFeedbackListRelationFilter
-    reviewRules?: ReviewRuleListRelationFilter
+    accounts?: AccountListRelationFilter
     auditLogs?: AuditLogListRelationFilter
-    customRoles?: UserCustomRoleListRelationFilter
-    commentReactions?: ReviewThreadCommentReactionListRelationFilter
     reviewApprovals?: ReviewApprovalListRelationFilter
-    assignedReviews?: ReviewAssignmentListRelationFilter
     assignedByMe?: ReviewAssignmentListRelationFilter
+    assignedReviews?: ReviewAssignmentListRelationFilter
+    reviewRules?: ReviewRuleListRelationFilter
+    commentReactions?: ReviewThreadCommentReactionListRelationFilter
+    sessions?: SessionListRelationFilter
+    customRoles?: UserCustomRoleListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -47395,8 +47522,6 @@ export namespace Prisma {
     emailVerified?: SortOrder
     image?: SortOrderInput | SortOrder
     role?: SortOrder
-    banned?: SortOrder
-    bannedReason?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     reviewDepth?: SortOrder
@@ -47404,20 +47529,29 @@ export namespace Prisma {
     autoReview?: SortOrder
     includeSecurityChecks?: SortOrder
     includePerfSuggestions?: SortOrder
+    banned?: SortOrder
+    bannedReason?: SortOrderInput | SortOrder
+    desktopNotifications?: SortOrder
     emailNotifications?: SortOrder
-    notifyTeamInvites?: SortOrder
-    notifyTeamMemberAdded?: SortOrder
+    notificationSoundEnabled?: SortOrder
+    notifyReviewApproved?: SortOrder
+    notifyReviewAssigned?: SortOrder
+    notifyReviewChangesRequested?: SortOrder
     notifyReviewCompleted?: SortOrder
     notifyReviewFailed?: SortOrder
     notifyScheduledScanCompleted?: SortOrder
-    notifyReviewAssigned?: SortOrder
-    notifyReviewApproved?: SortOrder
-    notifyReviewChangesRequested?: SortOrder
-    notificationSoundEnabled?: SortOrder
-    desktopNotifications?: SortOrder
+    notifyTeamInvites?: SortOrder
+    notifyTeamMemberAdded?: SortOrder
+    planId?: SortOrder
+    planExpiresAt?: SortOrderInput | SortOrder
+    overrideReposLimit?: SortOrderInput | SortOrder
+    overrideReviewsLimit?: SortOrderInput | SortOrder
+    overrideSeatsLimit?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
+    _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
+    _sum?: UserSumOrderByAggregateInput
   }
 
   export type UserScalarWhereWithAggregatesInput = {
@@ -47430,8 +47564,6 @@ export namespace Prisma {
     emailVerified?: BoolWithAggregatesFilter<"User"> | boolean
     image?: StringNullableWithAggregatesFilter<"User"> | string | null
     role?: EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
-    banned?: BoolWithAggregatesFilter<"User"> | boolean
-    bannedReason?: StringNullableWithAggregatesFilter<"User"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     reviewDepth?: StringWithAggregatesFilter<"User"> | string
@@ -47439,17 +47571,24 @@ export namespace Prisma {
     autoReview?: BoolWithAggregatesFilter<"User"> | boolean
     includeSecurityChecks?: BoolWithAggregatesFilter<"User"> | boolean
     includePerfSuggestions?: BoolWithAggregatesFilter<"User"> | boolean
+    banned?: BoolWithAggregatesFilter<"User"> | boolean
+    bannedReason?: StringNullableWithAggregatesFilter<"User"> | string | null
+    desktopNotifications?: BoolWithAggregatesFilter<"User"> | boolean
     emailNotifications?: BoolWithAggregatesFilter<"User"> | boolean
-    notifyTeamInvites?: BoolWithAggregatesFilter<"User"> | boolean
-    notifyTeamMemberAdded?: BoolWithAggregatesFilter<"User"> | boolean
+    notificationSoundEnabled?: BoolWithAggregatesFilter<"User"> | boolean
+    notifyReviewApproved?: BoolWithAggregatesFilter<"User"> | boolean
+    notifyReviewAssigned?: BoolWithAggregatesFilter<"User"> | boolean
+    notifyReviewChangesRequested?: BoolWithAggregatesFilter<"User"> | boolean
     notifyReviewCompleted?: BoolWithAggregatesFilter<"User"> | boolean
     notifyReviewFailed?: BoolWithAggregatesFilter<"User"> | boolean
     notifyScheduledScanCompleted?: BoolWithAggregatesFilter<"User"> | boolean
-    notifyReviewAssigned?: BoolWithAggregatesFilter<"User"> | boolean
-    notifyReviewApproved?: BoolWithAggregatesFilter<"User"> | boolean
-    notifyReviewChangesRequested?: BoolWithAggregatesFilter<"User"> | boolean
-    notificationSoundEnabled?: BoolWithAggregatesFilter<"User"> | boolean
-    desktopNotifications?: BoolWithAggregatesFilter<"User"> | boolean
+    notifyTeamInvites?: BoolWithAggregatesFilter<"User"> | boolean
+    notifyTeamMemberAdded?: BoolWithAggregatesFilter<"User"> | boolean
+    planId?: StringWithAggregatesFilter<"User"> | string
+    planExpiresAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    overrideReposLimit?: IntNullableWithAggregatesFilter<"User"> | number | null
+    overrideReviewsLimit?: IntNullableWithAggregatesFilter<"User"> | number | null
+    overrideSeatsLimit?: IntNullableWithAggregatesFilter<"User"> | number | null
   }
 
   export type SessionWhereInput = {
@@ -47688,15 +47827,15 @@ export namespace Prisma {
     htmlUrl?: StringFilter<"Repository"> | string
     createdAt?: DateTimeFilter<"Repository"> | Date | string
     updatedAt?: DateTimeFilter<"Repository"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    team?: XOR<TeamNullableScalarRelationFilter, TeamWhereInput> | null
-    reviews?: ReviewListRelationFilter
-    webhookConfig?: XOR<WebhookConfigNullableScalarRelationFilter, WebhookConfigWhereInput> | null
-    scheduledScanConfig?: XOR<ScheduledScanConfigNullableScalarRelationFilter, ScheduledScanConfigWhereInput> | null
-    githubComments?: GitHubCommentListRelationFilter
-    branchProtectionRecs?: BranchProtectionRecommendationListRelationFilter
     diagrams?: DiagramListRelationFilter
+    team?: XOR<TeamNullableScalarRelationFilter, TeamWhereInput> | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    reviews?: ReviewListRelationFilter
+    branchProtectionRecs?: BranchProtectionRecommendationListRelationFilter
+    githubComments?: GitHubCommentListRelationFilter
     reviewRules?: ReviewRuleListRelationFilter
+    scheduledScanConfig?: XOR<ScheduledScanConfigNullableScalarRelationFilter, ScheduledScanConfigWhereInput> | null
+    webhookConfig?: XOR<WebhookConfigNullableScalarRelationFilter, WebhookConfigWhereInput> | null
   }
 
   export type RepositoryOrderByWithRelationInput = {
@@ -47710,15 +47849,15 @@ export namespace Prisma {
     htmlUrl?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    user?: UserOrderByWithRelationInput
-    team?: TeamOrderByWithRelationInput
-    reviews?: ReviewOrderByRelationAggregateInput
-    webhookConfig?: WebhookConfigOrderByWithRelationInput
-    scheduledScanConfig?: ScheduledScanConfigOrderByWithRelationInput
-    githubComments?: GitHubCommentOrderByRelationAggregateInput
-    branchProtectionRecs?: BranchProtectionRecommendationOrderByRelationAggregateInput
     diagrams?: DiagramOrderByRelationAggregateInput
+    team?: TeamOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
+    reviews?: ReviewOrderByRelationAggregateInput
+    branchProtectionRecs?: BranchProtectionRecommendationOrderByRelationAggregateInput
+    githubComments?: GitHubCommentOrderByRelationAggregateInput
     reviewRules?: ReviewRuleOrderByRelationAggregateInput
+    scheduledScanConfig?: ScheduledScanConfigOrderByWithRelationInput
+    webhookConfig?: WebhookConfigOrderByWithRelationInput
   }
 
   export type RepositoryWhereUniqueInput = Prisma.AtLeast<{
@@ -47736,15 +47875,15 @@ export namespace Prisma {
     htmlUrl?: StringFilter<"Repository"> | string
     createdAt?: DateTimeFilter<"Repository"> | Date | string
     updatedAt?: DateTimeFilter<"Repository"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    team?: XOR<TeamNullableScalarRelationFilter, TeamWhereInput> | null
-    reviews?: ReviewListRelationFilter
-    webhookConfig?: XOR<WebhookConfigNullableScalarRelationFilter, WebhookConfigWhereInput> | null
-    scheduledScanConfig?: XOR<ScheduledScanConfigNullableScalarRelationFilter, ScheduledScanConfigWhereInput> | null
-    githubComments?: GitHubCommentListRelationFilter
-    branchProtectionRecs?: BranchProtectionRecommendationListRelationFilter
     diagrams?: DiagramListRelationFilter
+    team?: XOR<TeamNullableScalarRelationFilter, TeamWhereInput> | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    reviews?: ReviewListRelationFilter
+    branchProtectionRecs?: BranchProtectionRecommendationListRelationFilter
+    githubComments?: GitHubCommentListRelationFilter
     reviewRules?: ReviewRuleListRelationFilter
+    scheduledScanConfig?: XOR<ScheduledScanConfigNullableScalarRelationFilter, ScheduledScanConfigWhereInput> | null
+    webhookConfig?: XOR<WebhookConfigNullableScalarRelationFilter, WebhookConfigWhereInput> | null
   }, "id" | "userId_githubId">
 
   export type RepositoryOrderByWithAggregationInput = {
@@ -47797,18 +47936,18 @@ export namespace Prisma {
     comments?: JsonNullableFilter<"Review">
     qualityMetrics?: JsonNullableFilter<"Review">
     error?: StringNullableFilter<"Review"> | string | null
-    parentReviewId?: StringNullableFilter<"Review"> | string | null
-    resolvedComments?: StringNullableListFilter<"Review">
     createdAt?: DateTimeFilter<"Review"> | Date | string
     updatedAt?: DateTimeFilter<"Review"> | Date | string
-    repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    parentReviewId?: StringNullableFilter<"Review"> | string | null
+    resolvedComments?: StringNullableListFilter<"Review">
     parentReview?: XOR<ReviewNullableScalarRelationFilter, ReviewWhereInput> | null
     childReviews?: ReviewListRelationFilter
+    repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    feedbacks?: ReviewFeedbackListRelationFilter
     threads?: ReviewThreadListRelationFilter
     githubComment?: XOR<GitHubCommentNullableScalarRelationFilter, GitHubCommentWhereInput> | null
     githubStatusCheck?: XOR<GitHubStatusCheckNullableScalarRelationFilter, GitHubStatusCheckWhereInput> | null
-    feedbacks?: ReviewFeedbackListRelationFilter
     approvals?: ReviewApprovalListRelationFilter
     assignments?: ReviewAssignmentListRelationFilter
     securityIssues?: SecurityIssueListRelationFilter
@@ -47827,18 +47966,18 @@ export namespace Prisma {
     comments?: SortOrderInput | SortOrder
     qualityMetrics?: SortOrderInput | SortOrder
     error?: SortOrderInput | SortOrder
-    parentReviewId?: SortOrderInput | SortOrder
-    resolvedComments?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    repository?: RepositoryOrderByWithRelationInput
-    user?: UserOrderByWithRelationInput
+    parentReviewId?: SortOrderInput | SortOrder
+    resolvedComments?: SortOrder
     parentReview?: ReviewOrderByWithRelationInput
     childReviews?: ReviewOrderByRelationAggregateInput
+    repository?: RepositoryOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
+    feedbacks?: ReviewFeedbackOrderByRelationAggregateInput
     threads?: ReviewThreadOrderByRelationAggregateInput
     githubComment?: GitHubCommentOrderByWithRelationInput
     githubStatusCheck?: GitHubStatusCheckOrderByWithRelationInput
-    feedbacks?: ReviewFeedbackOrderByRelationAggregateInput
     approvals?: ReviewApprovalOrderByRelationAggregateInput
     assignments?: ReviewAssignmentOrderByRelationAggregateInput
     securityIssues?: SecurityIssueOrderByRelationAggregateInput
@@ -47860,18 +47999,18 @@ export namespace Prisma {
     comments?: JsonNullableFilter<"Review">
     qualityMetrics?: JsonNullableFilter<"Review">
     error?: StringNullableFilter<"Review"> | string | null
-    parentReviewId?: StringNullableFilter<"Review"> | string | null
-    resolvedComments?: StringNullableListFilter<"Review">
     createdAt?: DateTimeFilter<"Review"> | Date | string
     updatedAt?: DateTimeFilter<"Review"> | Date | string
-    repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    parentReviewId?: StringNullableFilter<"Review"> | string | null
+    resolvedComments?: StringNullableListFilter<"Review">
     parentReview?: XOR<ReviewNullableScalarRelationFilter, ReviewWhereInput> | null
     childReviews?: ReviewListRelationFilter
+    repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    feedbacks?: ReviewFeedbackListRelationFilter
     threads?: ReviewThreadListRelationFilter
     githubComment?: XOR<GitHubCommentNullableScalarRelationFilter, GitHubCommentWhereInput> | null
     githubStatusCheck?: XOR<GitHubStatusCheckNullableScalarRelationFilter, GitHubStatusCheckWhereInput> | null
-    feedbacks?: ReviewFeedbackListRelationFilter
     approvals?: ReviewApprovalListRelationFilter
     assignments?: ReviewAssignmentListRelationFilter
     securityIssues?: SecurityIssueListRelationFilter
@@ -47890,10 +48029,10 @@ export namespace Prisma {
     comments?: SortOrderInput | SortOrder
     qualityMetrics?: SortOrderInput | SortOrder
     error?: SortOrderInput | SortOrder
-    parentReviewId?: SortOrderInput | SortOrder
-    resolvedComments?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    parentReviewId?: SortOrderInput | SortOrder
+    resolvedComments?: SortOrder
     _count?: ReviewCountOrderByAggregateInput
     _avg?: ReviewAvgOrderByAggregateInput
     _max?: ReviewMaxOrderByAggregateInput
@@ -47917,10 +48056,10 @@ export namespace Prisma {
     comments?: JsonNullableWithAggregatesFilter<"Review">
     qualityMetrics?: JsonNullableWithAggregatesFilter<"Review">
     error?: StringNullableWithAggregatesFilter<"Review"> | string | null
-    parentReviewId?: StringNullableWithAggregatesFilter<"Review"> | string | null
-    resolvedComments?: StringNullableListFilter<"Review">
     createdAt?: DateTimeWithAggregatesFilter<"Review"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Review"> | Date | string
+    parentReviewId?: StringNullableWithAggregatesFilter<"Review"> | string | null
+    resolvedComments?: StringNullableListFilter<"Review">
   }
 
   export type ReviewFeedbackWhereInput = {
@@ -48387,9 +48526,9 @@ export namespace Prisma {
     note?: StringNullableFilter<"ReviewAssignment"> | string | null
     createdAt?: DateTimeFilter<"ReviewAssignment"> | Date | string
     updatedAt?: DateTimeFilter<"ReviewAssignment"> | Date | string
-    review?: XOR<ReviewScalarRelationFilter, ReviewWhereInput>
-    assignee?: XOR<UserScalarRelationFilter, UserWhereInput>
     assigner?: XOR<UserScalarRelationFilter, UserWhereInput>
+    assignee?: XOR<UserScalarRelationFilter, UserWhereInput>
+    review?: XOR<ReviewScalarRelationFilter, ReviewWhereInput>
   }
 
   export type ReviewAssignmentOrderByWithRelationInput = {
@@ -48403,9 +48542,9 @@ export namespace Prisma {
     note?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    review?: ReviewOrderByWithRelationInput
-    assignee?: UserOrderByWithRelationInput
     assigner?: UserOrderByWithRelationInput
+    assignee?: UserOrderByWithRelationInput
+    review?: ReviewOrderByWithRelationInput
   }
 
   export type ReviewAssignmentWhereUniqueInput = Prisma.AtLeast<{
@@ -48423,9 +48562,9 @@ export namespace Prisma {
     note?: StringNullableFilter<"ReviewAssignment"> | string | null
     createdAt?: DateTimeFilter<"ReviewAssignment"> | Date | string
     updatedAt?: DateTimeFilter<"ReviewAssignment"> | Date | string
-    review?: XOR<ReviewScalarRelationFilter, ReviewWhereInput>
-    assignee?: XOR<UserScalarRelationFilter, UserWhereInput>
     assigner?: XOR<UserScalarRelationFilter, UserWhereInput>
+    assignee?: XOR<UserScalarRelationFilter, UserWhereInput>
+    review?: XOR<ReviewScalarRelationFilter, ReviewWhereInput>
   }, "id" | "reviewId_assigneeId">
 
   export type ReviewAssignmentOrderByWithAggregationInput = {
@@ -48470,9 +48609,9 @@ export namespace Prisma {
     image?: StringNullableFilter<"Team"> | string | null
     createdAt?: DateTimeFilter<"Team"> | Date | string
     updatedAt?: DateTimeFilter<"Team"> | Date | string
-    members?: TeamMemberListRelationFilter
     repositories?: RepositoryListRelationFilter
     actions?: TeamActionListRelationFilter
+    members?: TeamMemberListRelationFilter
     reviewRules?: ReviewRuleListRelationFilter
   }
 
@@ -48483,9 +48622,9 @@ export namespace Prisma {
     image?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    members?: TeamMemberOrderByRelationAggregateInput
     repositories?: RepositoryOrderByRelationAggregateInput
     actions?: TeamActionOrderByRelationAggregateInput
+    members?: TeamMemberOrderByRelationAggregateInput
     reviewRules?: ReviewRuleOrderByRelationAggregateInput
   }
 
@@ -48499,9 +48638,9 @@ export namespace Prisma {
     image?: StringNullableFilter<"Team"> | string | null
     createdAt?: DateTimeFilter<"Team"> | Date | string
     updatedAt?: DateTimeFilter<"Team"> | Date | string
-    members?: TeamMemberListRelationFilter
     repositories?: RepositoryListRelationFilter
     actions?: TeamActionListRelationFilter
+    members?: TeamMemberListRelationFilter
     reviewRules?: ReviewRuleListRelationFilter
   }, "id" | "slug">
 
@@ -48756,9 +48895,9 @@ export namespace Prisma {
     repositoryId?: StringFilter<"WebhookConfig"> | string
     enabled?: BoolFilter<"WebhookConfig"> | boolean
     githubWebhookId?: IntNullableFilter<"WebhookConfig"> | number | null
-    scoreThreshold?: IntNullableFilter<"WebhookConfig"> | number | null
     createdAt?: DateTimeFilter<"WebhookConfig"> | Date | string
     updatedAt?: DateTimeFilter<"WebhookConfig"> | Date | string
+    scoreThreshold?: IntNullableFilter<"WebhookConfig"> | number | null
     repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
   }
 
@@ -48767,9 +48906,9 @@ export namespace Prisma {
     repositoryId?: SortOrder
     enabled?: SortOrder
     githubWebhookId?: SortOrderInput | SortOrder
-    scoreThreshold?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    scoreThreshold?: SortOrderInput | SortOrder
     repository?: RepositoryOrderByWithRelationInput
   }
 
@@ -48781,9 +48920,9 @@ export namespace Prisma {
     NOT?: WebhookConfigWhereInput | WebhookConfigWhereInput[]
     enabled?: BoolFilter<"WebhookConfig"> | boolean
     githubWebhookId?: IntNullableFilter<"WebhookConfig"> | number | null
-    scoreThreshold?: IntNullableFilter<"WebhookConfig"> | number | null
     createdAt?: DateTimeFilter<"WebhookConfig"> | Date | string
     updatedAt?: DateTimeFilter<"WebhookConfig"> | Date | string
+    scoreThreshold?: IntNullableFilter<"WebhookConfig"> | number | null
     repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
   }, "id" | "repositoryId">
 
@@ -48792,9 +48931,9 @@ export namespace Prisma {
     repositoryId?: SortOrder
     enabled?: SortOrder
     githubWebhookId?: SortOrderInput | SortOrder
-    scoreThreshold?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    scoreThreshold?: SortOrderInput | SortOrder
     _count?: WebhookConfigCountOrderByAggregateInput
     _avg?: WebhookConfigAvgOrderByAggregateInput
     _max?: WebhookConfigMaxOrderByAggregateInput
@@ -48810,9 +48949,9 @@ export namespace Prisma {
     repositoryId?: StringWithAggregatesFilter<"WebhookConfig"> | string
     enabled?: BoolWithAggregatesFilter<"WebhookConfig"> | boolean
     githubWebhookId?: IntNullableWithAggregatesFilter<"WebhookConfig"> | number | null
-    scoreThreshold?: IntNullableWithAggregatesFilter<"WebhookConfig"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"WebhookConfig"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"WebhookConfig"> | Date | string
+    scoreThreshold?: IntNullableWithAggregatesFilter<"WebhookConfig"> | number | null
   }
 
   export type ScheduledScanConfigWhereInput = {
@@ -48957,8 +49096,8 @@ export namespace Prisma {
     commitSha?: StringFilter<"GitHubComment"> | string
     findingCount?: IntFilter<"GitHubComment"> | number
     createdAt?: DateTimeFilter<"GitHubComment"> | Date | string
-    review?: XOR<ReviewScalarRelationFilter, ReviewWhereInput>
     repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
+    review?: XOR<ReviewScalarRelationFilter, ReviewWhereInput>
   }
 
   export type GitHubCommentOrderByWithRelationInput = {
@@ -48970,8 +49109,8 @@ export namespace Prisma {
     commitSha?: SortOrder
     findingCount?: SortOrder
     createdAt?: SortOrder
-    review?: ReviewOrderByWithRelationInput
     repository?: RepositoryOrderByWithRelationInput
+    review?: ReviewOrderByWithRelationInput
   }
 
   export type GitHubCommentWhereUniqueInput = Prisma.AtLeast<{
@@ -48986,8 +49125,8 @@ export namespace Prisma {
     commitSha?: StringFilter<"GitHubComment"> | string
     findingCount?: IntFilter<"GitHubComment"> | number
     createdAt?: DateTimeFilter<"GitHubComment"> | Date | string
-    review?: XOR<ReviewScalarRelationFilter, ReviewWhereInput>
     repository?: XOR<RepositoryScalarRelationFilter, RepositoryWhereInput>
+    review?: XOR<ReviewScalarRelationFilter, ReviewWhereInput>
   }, "id" | "reviewId">
 
   export type GitHubCommentOrderByWithAggregationInput = {
@@ -49251,9 +49390,9 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ReviewRule"> | Date | string
     updatedAt?: DateTimeFilter<"ReviewRule"> | Date | string
     userId?: StringFilter<"ReviewRule"> | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     repository?: XOR<RepositoryNullableScalarRelationFilter, RepositoryWhereInput> | null
     team?: XOR<TeamNullableScalarRelationFilter, TeamWhereInput> | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
   export type ReviewRuleOrderByWithRelationInput = {
@@ -49268,9 +49407,9 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     userId?: SortOrder
-    user?: UserOrderByWithRelationInput
     repository?: RepositoryOrderByWithRelationInput
     team?: TeamOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
   }
 
   export type ReviewRuleWhereUniqueInput = Prisma.AtLeast<{
@@ -49288,9 +49427,9 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ReviewRule"> | Date | string
     updatedAt?: DateTimeFilter<"ReviewRule"> | Date | string
     userId?: StringFilter<"ReviewRule"> | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     repository?: XOR<RepositoryNullableScalarRelationFilter, RepositoryWhereInput> | null
     team?: XOR<TeamNullableScalarRelationFilter, TeamWhereInput> | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
 
   export type ReviewRuleOrderByWithAggregationInput = {
@@ -49333,29 +49472,29 @@ export namespace Prisma {
     NOT?: SystemSettingsWhereInput | SystemSettingsWhereInput[]
     id?: StringFilter<"SystemSettings"> | string
     maintenanceMode?: BoolFilter<"SystemSettings"> | boolean
-    reviewRetentionDays?: IntFilter<"SystemSettings"> | number
+    updatedAt?: DateTimeFilter<"SystemSettings"> | Date | string
     auditLogRetentionDays?: IntFilter<"SystemSettings"> | number
+    reviewRetentionDays?: IntFilter<"SystemSettings"> | number
     sessionRetentionDays?: IntFilter<"SystemSettings"> | number
+    bannerColor?: StringFilter<"SystemSettings"> | string
     bannerEnabled?: BoolFilter<"SystemSettings"> | boolean
-    bannerText?: StringFilter<"SystemSettings"> | string
     bannerLink?: StringFilter<"SystemSettings"> | string
     bannerLinkText?: StringFilter<"SystemSettings"> | string
-    bannerColor?: StringFilter<"SystemSettings"> | string
-    updatedAt?: DateTimeFilter<"SystemSettings"> | Date | string
+    bannerText?: StringFilter<"SystemSettings"> | string
   }
 
   export type SystemSettingsOrderByWithRelationInput = {
     id?: SortOrder
     maintenanceMode?: SortOrder
-    reviewRetentionDays?: SortOrder
+    updatedAt?: SortOrder
     auditLogRetentionDays?: SortOrder
+    reviewRetentionDays?: SortOrder
     sessionRetentionDays?: SortOrder
+    bannerColor?: SortOrder
     bannerEnabled?: SortOrder
-    bannerText?: SortOrder
     bannerLink?: SortOrder
     bannerLinkText?: SortOrder
-    bannerColor?: SortOrder
-    updatedAt?: SortOrder
+    bannerText?: SortOrder
   }
 
   export type SystemSettingsWhereUniqueInput = Prisma.AtLeast<{
@@ -49364,29 +49503,29 @@ export namespace Prisma {
     OR?: SystemSettingsWhereInput[]
     NOT?: SystemSettingsWhereInput | SystemSettingsWhereInput[]
     maintenanceMode?: BoolFilter<"SystemSettings"> | boolean
-    reviewRetentionDays?: IntFilter<"SystemSettings"> | number
+    updatedAt?: DateTimeFilter<"SystemSettings"> | Date | string
     auditLogRetentionDays?: IntFilter<"SystemSettings"> | number
+    reviewRetentionDays?: IntFilter<"SystemSettings"> | number
     sessionRetentionDays?: IntFilter<"SystemSettings"> | number
+    bannerColor?: StringFilter<"SystemSettings"> | string
     bannerEnabled?: BoolFilter<"SystemSettings"> | boolean
-    bannerText?: StringFilter<"SystemSettings"> | string
     bannerLink?: StringFilter<"SystemSettings"> | string
     bannerLinkText?: StringFilter<"SystemSettings"> | string
-    bannerColor?: StringFilter<"SystemSettings"> | string
-    updatedAt?: DateTimeFilter<"SystemSettings"> | Date | string
+    bannerText?: StringFilter<"SystemSettings"> | string
   }, "id">
 
   export type SystemSettingsOrderByWithAggregationInput = {
     id?: SortOrder
     maintenanceMode?: SortOrder
-    reviewRetentionDays?: SortOrder
+    updatedAt?: SortOrder
     auditLogRetentionDays?: SortOrder
+    reviewRetentionDays?: SortOrder
     sessionRetentionDays?: SortOrder
+    bannerColor?: SortOrder
     bannerEnabled?: SortOrder
-    bannerText?: SortOrder
     bannerLink?: SortOrder
     bannerLinkText?: SortOrder
-    bannerColor?: SortOrder
-    updatedAt?: SortOrder
+    bannerText?: SortOrder
     _count?: SystemSettingsCountOrderByAggregateInput
     _avg?: SystemSettingsAvgOrderByAggregateInput
     _max?: SystemSettingsMaxOrderByAggregateInput
@@ -49400,15 +49539,15 @@ export namespace Prisma {
     NOT?: SystemSettingsScalarWhereWithAggregatesInput | SystemSettingsScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"SystemSettings"> | string
     maintenanceMode?: BoolWithAggregatesFilter<"SystemSettings"> | boolean
-    reviewRetentionDays?: IntWithAggregatesFilter<"SystemSettings"> | number
+    updatedAt?: DateTimeWithAggregatesFilter<"SystemSettings"> | Date | string
     auditLogRetentionDays?: IntWithAggregatesFilter<"SystemSettings"> | number
+    reviewRetentionDays?: IntWithAggregatesFilter<"SystemSettings"> | number
     sessionRetentionDays?: IntWithAggregatesFilter<"SystemSettings"> | number
+    bannerColor?: StringWithAggregatesFilter<"SystemSettings"> | string
     bannerEnabled?: BoolWithAggregatesFilter<"SystemSettings"> | boolean
-    bannerText?: StringWithAggregatesFilter<"SystemSettings"> | string
     bannerLink?: StringWithAggregatesFilter<"SystemSettings"> | string
     bannerLinkText?: StringWithAggregatesFilter<"SystemSettings"> | string
-    bannerColor?: StringWithAggregatesFilter<"SystemSettings"> | string
-    updatedAt?: DateTimeWithAggregatesFilter<"SystemSettings"> | Date | string
+    bannerText?: StringWithAggregatesFilter<"SystemSettings"> | string
   }
 
   export type SupportMessageWhereInput = {
@@ -49416,26 +49555,26 @@ export namespace Prisma {
     OR?: SupportMessageWhereInput[]
     NOT?: SupportMessageWhereInput | SupportMessageWhereInput[]
     id?: StringFilter<"SupportMessage"> | string
-    userId?: StringNullableFilter<"SupportMessage"> | string | null
-    name?: StringNullableFilter<"SupportMessage"> | string | null
     email?: StringNullableFilter<"SupportMessage"> | string | null
-    subject?: StringNullableFilter<"SupportMessage"> | string | null
     message?: StringFilter<"SupportMessage"> | string
-    type?: StringFilter<"SupportMessage"> | string
     status?: StringFilter<"SupportMessage"> | string
     createdAt?: DateTimeFilter<"SupportMessage"> | Date | string
+    name?: StringNullableFilter<"SupportMessage"> | string | null
+    subject?: StringNullableFilter<"SupportMessage"> | string | null
+    type?: StringFilter<"SupportMessage"> | string
+    userId?: StringNullableFilter<"SupportMessage"> | string | null
   }
 
   export type SupportMessageOrderByWithRelationInput = {
     id?: SortOrder
-    userId?: SortOrderInput | SortOrder
-    name?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
-    subject?: SortOrderInput | SortOrder
     message?: SortOrder
-    type?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
+    name?: SortOrderInput | SortOrder
+    subject?: SortOrderInput | SortOrder
+    type?: SortOrder
+    userId?: SortOrderInput | SortOrder
   }
 
   export type SupportMessageWhereUniqueInput = Prisma.AtLeast<{
@@ -49443,26 +49582,26 @@ export namespace Prisma {
     AND?: SupportMessageWhereInput | SupportMessageWhereInput[]
     OR?: SupportMessageWhereInput[]
     NOT?: SupportMessageWhereInput | SupportMessageWhereInput[]
-    userId?: StringNullableFilter<"SupportMessage"> | string | null
-    name?: StringNullableFilter<"SupportMessage"> | string | null
     email?: StringNullableFilter<"SupportMessage"> | string | null
-    subject?: StringNullableFilter<"SupportMessage"> | string | null
     message?: StringFilter<"SupportMessage"> | string
-    type?: StringFilter<"SupportMessage"> | string
     status?: StringFilter<"SupportMessage"> | string
     createdAt?: DateTimeFilter<"SupportMessage"> | Date | string
+    name?: StringNullableFilter<"SupportMessage"> | string | null
+    subject?: StringNullableFilter<"SupportMessage"> | string | null
+    type?: StringFilter<"SupportMessage"> | string
+    userId?: StringNullableFilter<"SupportMessage"> | string | null
   }, "id">
 
   export type SupportMessageOrderByWithAggregationInput = {
     id?: SortOrder
-    userId?: SortOrderInput | SortOrder
-    name?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
-    subject?: SortOrderInput | SortOrder
     message?: SortOrder
-    type?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
+    name?: SortOrderInput | SortOrder
+    subject?: SortOrderInput | SortOrder
+    type?: SortOrder
+    userId?: SortOrderInput | SortOrder
     _count?: SupportMessageCountOrderByAggregateInput
     _max?: SupportMessageMaxOrderByAggregateInput
     _min?: SupportMessageMinOrderByAggregateInput
@@ -49473,14 +49612,14 @@ export namespace Prisma {
     OR?: SupportMessageScalarWhereWithAggregatesInput[]
     NOT?: SupportMessageScalarWhereWithAggregatesInput | SupportMessageScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"SupportMessage"> | string
-    userId?: StringNullableWithAggregatesFilter<"SupportMessage"> | string | null
-    name?: StringNullableWithAggregatesFilter<"SupportMessage"> | string | null
     email?: StringNullableWithAggregatesFilter<"SupportMessage"> | string | null
-    subject?: StringNullableWithAggregatesFilter<"SupportMessage"> | string | null
     message?: StringWithAggregatesFilter<"SupportMessage"> | string
-    type?: StringWithAggregatesFilter<"SupportMessage"> | string
     status?: StringWithAggregatesFilter<"SupportMessage"> | string
     createdAt?: DateTimeWithAggregatesFilter<"SupportMessage"> | Date | string
+    name?: StringNullableWithAggregatesFilter<"SupportMessage"> | string | null
+    subject?: StringNullableWithAggregatesFilter<"SupportMessage"> | string | null
+    type?: StringWithAggregatesFilter<"SupportMessage"> | string
+    userId?: StringNullableWithAggregatesFilter<"SupportMessage"> | string | null
   }
 
   export type AuditLogWhereInput = {
@@ -49753,8 +49892,8 @@ export namespace Prisma {
     userId?: StringFilter<"UserCustomRole"> | string
     roleId?: StringFilter<"UserCustomRole"> | string
     assignedAt?: DateTimeFilter<"UserCustomRole"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     role?: XOR<CustomRoleScalarRelationFilter, CustomRoleWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
   export type UserCustomRoleOrderByWithRelationInput = {
@@ -49762,8 +49901,8 @@ export namespace Prisma {
     userId?: SortOrder
     roleId?: SortOrder
     assignedAt?: SortOrder
-    user?: UserOrderByWithRelationInput
     role?: CustomRoleOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
   }
 
   export type UserCustomRoleWhereUniqueInput = Prisma.AtLeast<{
@@ -49775,8 +49914,8 @@ export namespace Prisma {
     userId?: StringFilter<"UserCustomRole"> | string
     roleId?: StringFilter<"UserCustomRole"> | string
     assignedAt?: DateTimeFilter<"UserCustomRole"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     role?: XOR<CustomRoleScalarRelationFilter, CustomRoleWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id" | "userId_roleId">
 
   export type UserCustomRoleOrderByWithAggregationInput = {
@@ -50247,8 +50386,6 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -50256,32 +50393,39 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
     emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
     notifyReviewCompleted?: boolean
     notifyReviewFailed?: boolean
     notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionCreateNestedManyWithoutUserInput
-    accounts?: AccountCreateNestedManyWithoutUserInput
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     repositories?: RepositoryCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    reviewFeedbacks?: ReviewFeedbackCreateNestedManyWithoutUserInput
     threadComments?: ReviewThreadCommentCreateNestedManyWithoutUserInput
     teamMembers?: TeamMemberCreateNestedManyWithoutUserInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    reviewFeedbacks?: ReviewFeedbackCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutActorInput
-    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
-    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
     reviewApprovals?: ReviewApprovalCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
     assignedByMe?: ReviewAssignmentCreateNestedManyWithoutAssignerInput
+    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
+    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
+    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -50291,8 +50435,6 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -50300,32 +50442,39 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
     emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
     notifyReviewCompleted?: boolean
     notifyReviewFailed?: boolean
     notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
-    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    reviewFeedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput
     threadComments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput
     teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutUserInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    reviewFeedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
-    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
     reviewApprovals?: ReviewApprovalUncheckedCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     assignedByMe?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssignerInput
+    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -50335,8 +50484,6 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -50344,32 +50491,39 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
     notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUpdateManyWithoutUserNestedInput
-    accounts?: AccountUpdateManyWithoutUserNestedInput
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    reviewFeedbacks?: ReviewFeedbackUpdateManyWithoutUserNestedInput
     threadComments?: ReviewThreadCommentUpdateManyWithoutUserNestedInput
     teamMembers?: TeamMemberUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    reviewFeedbacks?: ReviewFeedbackUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
-    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
-    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
     reviewApprovals?: ReviewApprovalUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
     assignedByMe?: ReviewAssignmentUpdateManyWithoutAssignerNestedInput
+    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
+    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
+    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -50379,8 +50533,6 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -50388,32 +50540,39 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
     notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
-    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    reviewFeedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput
     threadComments?: ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput
     teamMembers?: TeamMemberUncheckedUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    reviewFeedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
-    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
     reviewApprovals?: ReviewApprovalUncheckedUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     assignedByMe?: ReviewAssignmentUncheckedUpdateManyWithoutAssignerNestedInput
+    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -50423,8 +50582,6 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -50432,17 +50589,24 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
     emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
     notifyReviewCompleted?: boolean
     notifyReviewFailed?: boolean
     notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -50452,8 +50616,6 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -50461,17 +50623,24 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
     notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -50481,8 +50650,6 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -50490,17 +50657,24 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
     notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type SessionCreateInput = {
@@ -50762,15 +50936,15 @@ export namespace Prisma {
     htmlUrl: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutRepositoriesInput
-    team?: TeamCreateNestedOneWithoutRepositoriesInput
-    reviews?: ReviewCreateNestedManyWithoutRepositoryInput
-    webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
-    scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
-    githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
-    branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
     diagrams?: DiagramCreateNestedManyWithoutRepositoryInput
+    team?: TeamCreateNestedOneWithoutRepositoriesInput
+    user: UserCreateNestedOneWithoutRepositoriesInput
+    reviews?: ReviewCreateNestedManyWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
+    githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
     reviewRules?: ReviewRuleCreateNestedManyWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
+    webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
   }
 
   export type RepositoryUncheckedCreateInput = {
@@ -50784,13 +50958,13 @@ export namespace Prisma {
     htmlUrl: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    reviews?: ReviewUncheckedCreateNestedManyWithoutRepositoryInput
-    webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
-    scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
-    githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
-    branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
     diagrams?: DiagramUncheckedCreateNestedManyWithoutRepositoryInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
+    githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
     reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
+    webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
   }
 
   export type RepositoryUpdateInput = {
@@ -50802,15 +50976,15 @@ export namespace Prisma {
     htmlUrl?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutRepositoriesNestedInput
-    team?: TeamUpdateOneWithoutRepositoriesNestedInput
-    reviews?: ReviewUpdateManyWithoutRepositoryNestedInput
-    webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
-    scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
-    githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
-    branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
     diagrams?: DiagramUpdateManyWithoutRepositoryNestedInput
+    team?: TeamUpdateOneWithoutRepositoriesNestedInput
+    user?: UserUpdateOneRequiredWithoutRepositoriesNestedInput
+    reviews?: ReviewUpdateManyWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
     reviewRules?: ReviewRuleUpdateManyWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
   }
 
   export type RepositoryUncheckedUpdateInput = {
@@ -50824,13 +50998,13 @@ export namespace Prisma {
     htmlUrl?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviews?: ReviewUncheckedUpdateManyWithoutRepositoryNestedInput
-    webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
-    scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
-    githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
-    branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
     diagrams?: DiagramUncheckedUpdateManyWithoutRepositoryNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
     reviewRules?: ReviewRuleUncheckedUpdateManyWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
   }
 
   export type RepositoryCreateManyInput = {
@@ -50881,17 +51055,17 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
-    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
-    repository: RepositoryCreateNestedOneWithoutReviewsInput
-    user: UserCreateNestedOneWithoutReviewsInput
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     parentReview?: ReviewCreateNestedOneWithoutChildReviewsInput
     childReviews?: ReviewCreateNestedManyWithoutParentReviewInput
+    repository: RepositoryCreateNestedOneWithoutReviewsInput
+    user: UserCreateNestedOneWithoutReviewsInput
+    feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
-    feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentCreateNestedManyWithoutReviewInput
     securityIssues?: SecurityIssueCreateNestedManyWithoutReviewInput
@@ -50910,15 +51084,15 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
-    parentReviewId?: string | null
-    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
+    parentReviewId?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
+    feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
-    feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalUncheckedCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentUncheckedCreateNestedManyWithoutReviewInput
     securityIssues?: SecurityIssueUncheckedCreateNestedManyWithoutReviewInput
@@ -50935,17 +51109,17 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
-    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     parentReview?: ReviewUpdateOneWithoutChildReviewsNestedInput
     childReviews?: ReviewUpdateManyWithoutParentReviewNestedInput
+    repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
+    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
-    feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUpdateManyWithoutReviewNestedInput
     securityIssues?: SecurityIssueUpdateManyWithoutReviewNestedInput
@@ -50964,15 +51138,15 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
-    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
+    feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
-    feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUncheckedUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUncheckedUpdateManyWithoutReviewNestedInput
     securityIssues?: SecurityIssueUncheckedUpdateManyWithoutReviewNestedInput
@@ -50991,10 +51165,10 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
-    parentReviewId?: string | null
-    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
+    parentReviewId?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
   }
 
   export type ReviewUpdateManyMutationInput = {
@@ -51008,9 +51182,9 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
   }
 
   export type ReviewUncheckedUpdateManyInput = {
@@ -51026,10 +51200,10 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
-    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
   }
 
   export type ReviewFeedbackCreateInput = {
@@ -51507,9 +51681,9 @@ export namespace Prisma {
     note?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    review: ReviewCreateNestedOneWithoutAssignmentsInput
-    assignee: UserCreateNestedOneWithoutAssignedReviewsInput
     assigner: UserCreateNestedOneWithoutAssignedByMeInput
+    assignee: UserCreateNestedOneWithoutAssignedReviewsInput
+    review: ReviewCreateNestedOneWithoutAssignmentsInput
   }
 
   export type ReviewAssignmentUncheckedCreateInput = {
@@ -51533,9 +51707,9 @@ export namespace Prisma {
     note?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    review?: ReviewUpdateOneRequiredWithoutAssignmentsNestedInput
-    assignee?: UserUpdateOneRequiredWithoutAssignedReviewsNestedInput
     assigner?: UserUpdateOneRequiredWithoutAssignedByMeNestedInput
+    assignee?: UserUpdateOneRequiredWithoutAssignedReviewsNestedInput
+    review?: ReviewUpdateOneRequiredWithoutAssignmentsNestedInput
   }
 
   export type ReviewAssignmentUncheckedUpdateInput = {
@@ -51594,9 +51768,9 @@ export namespace Prisma {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    members?: TeamMemberCreateNestedManyWithoutTeamInput
     repositories?: RepositoryCreateNestedManyWithoutTeamInput
     actions?: TeamActionCreateNestedManyWithoutTeamInput
+    members?: TeamMemberCreateNestedManyWithoutTeamInput
     reviewRules?: ReviewRuleCreateNestedManyWithoutTeamInput
   }
 
@@ -51607,9 +51781,9 @@ export namespace Prisma {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    members?: TeamMemberUncheckedCreateNestedManyWithoutTeamInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutTeamInput
     actions?: TeamActionUncheckedCreateNestedManyWithoutTeamInput
+    members?: TeamMemberUncheckedCreateNestedManyWithoutTeamInput
     reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutTeamInput
   }
 
@@ -51620,9 +51794,9 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    members?: TeamMemberUpdateManyWithoutTeamNestedInput
     repositories?: RepositoryUpdateManyWithoutTeamNestedInput
     actions?: TeamActionUpdateManyWithoutTeamNestedInput
+    members?: TeamMemberUpdateManyWithoutTeamNestedInput
     reviewRules?: ReviewRuleUpdateManyWithoutTeamNestedInput
   }
 
@@ -51633,9 +51807,9 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    members?: TeamMemberUncheckedUpdateManyWithoutTeamNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutTeamNestedInput
     actions?: TeamActionUncheckedUpdateManyWithoutTeamNestedInput
+    members?: TeamMemberUncheckedUpdateManyWithoutTeamNestedInput
     reviewRules?: ReviewRuleUncheckedUpdateManyWithoutTeamNestedInput
   }
 
@@ -51904,9 +52078,9 @@ export namespace Prisma {
     id?: string
     enabled?: boolean
     githubWebhookId?: number | null
-    scoreThreshold?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    scoreThreshold?: number | null
     repository: RepositoryCreateNestedOneWithoutWebhookConfigInput
   }
 
@@ -51915,18 +52089,18 @@ export namespace Prisma {
     repositoryId: string
     enabled?: boolean
     githubWebhookId?: number | null
-    scoreThreshold?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    scoreThreshold?: number | null
   }
 
   export type WebhookConfigUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     enabled?: BoolFieldUpdateOperationsInput | boolean
     githubWebhookId?: NullableIntFieldUpdateOperationsInput | number | null
-    scoreThreshold?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scoreThreshold?: NullableIntFieldUpdateOperationsInput | number | null
     repository?: RepositoryUpdateOneRequiredWithoutWebhookConfigNestedInput
   }
 
@@ -51935,9 +52109,9 @@ export namespace Prisma {
     repositoryId?: StringFieldUpdateOperationsInput | string
     enabled?: BoolFieldUpdateOperationsInput | boolean
     githubWebhookId?: NullableIntFieldUpdateOperationsInput | number | null
-    scoreThreshold?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scoreThreshold?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type WebhookConfigCreateManyInput = {
@@ -51945,18 +52119,18 @@ export namespace Prisma {
     repositoryId: string
     enabled?: boolean
     githubWebhookId?: number | null
-    scoreThreshold?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    scoreThreshold?: number | null
   }
 
   export type WebhookConfigUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     enabled?: BoolFieldUpdateOperationsInput | boolean
     githubWebhookId?: NullableIntFieldUpdateOperationsInput | number | null
-    scoreThreshold?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scoreThreshold?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type WebhookConfigUncheckedUpdateManyInput = {
@@ -51964,9 +52138,9 @@ export namespace Prisma {
     repositoryId?: StringFieldUpdateOperationsInput | string
     enabled?: BoolFieldUpdateOperationsInput | boolean
     githubWebhookId?: NullableIntFieldUpdateOperationsInput | number | null
-    scoreThreshold?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scoreThreshold?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type ScheduledScanConfigCreateInput = {
@@ -52111,8 +52285,8 @@ export namespace Prisma {
     commitSha: string
     findingCount?: number
     createdAt?: Date | string
-    review: ReviewCreateNestedOneWithoutGithubCommentInput
     repository: RepositoryCreateNestedOneWithoutGithubCommentsInput
+    review: ReviewCreateNestedOneWithoutGithubCommentInput
   }
 
   export type GitHubCommentUncheckedCreateInput = {
@@ -52133,8 +52307,8 @@ export namespace Prisma {
     commitSha?: StringFieldUpdateOperationsInput | string
     findingCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    review?: ReviewUpdateOneRequiredWithoutGithubCommentNestedInput
     repository?: RepositoryUpdateOneRequiredWithoutGithubCommentsNestedInput
+    review?: ReviewUpdateOneRequiredWithoutGithubCommentNestedInput
   }
 
   export type GitHubCommentUncheckedUpdateInput = {
@@ -52423,9 +52597,9 @@ export namespace Prisma {
     enabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutReviewRulesInput
     repository?: RepositoryCreateNestedOneWithoutReviewRulesInput
     team?: TeamCreateNestedOneWithoutReviewRulesInput
+    user: UserCreateNestedOneWithoutReviewRulesInput
   }
 
   export type ReviewRuleUncheckedCreateInput = {
@@ -52451,9 +52625,9 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutReviewRulesNestedInput
     repository?: RepositoryUpdateOneWithoutReviewRulesNestedInput
     team?: TeamUpdateOneWithoutReviewRulesNestedInput
+    user?: UserUpdateOneRequiredWithoutReviewRulesNestedInput
   }
 
   export type ReviewRuleUncheckedUpdateInput = {
@@ -52512,183 +52686,183 @@ export namespace Prisma {
   export type SystemSettingsCreateInput = {
     id?: string
     maintenanceMode?: boolean
-    reviewRetentionDays?: number
+    updatedAt?: Date | string
     auditLogRetentionDays?: number
+    reviewRetentionDays?: number
     sessionRetentionDays?: number
+    bannerColor?: string
     bannerEnabled?: boolean
-    bannerText?: string
     bannerLink?: string
     bannerLinkText?: string
-    bannerColor?: string
-    updatedAt?: Date | string
+    bannerText?: string
   }
 
   export type SystemSettingsUncheckedCreateInput = {
     id?: string
     maintenanceMode?: boolean
-    reviewRetentionDays?: number
+    updatedAt?: Date | string
     auditLogRetentionDays?: number
+    reviewRetentionDays?: number
     sessionRetentionDays?: number
+    bannerColor?: string
     bannerEnabled?: boolean
-    bannerText?: string
     bannerLink?: string
     bannerLinkText?: string
-    bannerColor?: string
-    updatedAt?: Date | string
+    bannerText?: string
   }
 
   export type SystemSettingsUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     maintenanceMode?: BoolFieldUpdateOperationsInput | boolean
-    reviewRetentionDays?: IntFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     auditLogRetentionDays?: IntFieldUpdateOperationsInput | number
+    reviewRetentionDays?: IntFieldUpdateOperationsInput | number
     sessionRetentionDays?: IntFieldUpdateOperationsInput | number
+    bannerColor?: StringFieldUpdateOperationsInput | string
     bannerEnabled?: BoolFieldUpdateOperationsInput | boolean
-    bannerText?: StringFieldUpdateOperationsInput | string
     bannerLink?: StringFieldUpdateOperationsInput | string
     bannerLinkText?: StringFieldUpdateOperationsInput | string
-    bannerColor?: StringFieldUpdateOperationsInput | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bannerText?: StringFieldUpdateOperationsInput | string
   }
 
   export type SystemSettingsUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     maintenanceMode?: BoolFieldUpdateOperationsInput | boolean
-    reviewRetentionDays?: IntFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     auditLogRetentionDays?: IntFieldUpdateOperationsInput | number
+    reviewRetentionDays?: IntFieldUpdateOperationsInput | number
     sessionRetentionDays?: IntFieldUpdateOperationsInput | number
+    bannerColor?: StringFieldUpdateOperationsInput | string
     bannerEnabled?: BoolFieldUpdateOperationsInput | boolean
-    bannerText?: StringFieldUpdateOperationsInput | string
     bannerLink?: StringFieldUpdateOperationsInput | string
     bannerLinkText?: StringFieldUpdateOperationsInput | string
-    bannerColor?: StringFieldUpdateOperationsInput | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bannerText?: StringFieldUpdateOperationsInput | string
   }
 
   export type SystemSettingsCreateManyInput = {
     id?: string
     maintenanceMode?: boolean
-    reviewRetentionDays?: number
+    updatedAt?: Date | string
     auditLogRetentionDays?: number
+    reviewRetentionDays?: number
     sessionRetentionDays?: number
+    bannerColor?: string
     bannerEnabled?: boolean
-    bannerText?: string
     bannerLink?: string
     bannerLinkText?: string
-    bannerColor?: string
-    updatedAt?: Date | string
+    bannerText?: string
   }
 
   export type SystemSettingsUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     maintenanceMode?: BoolFieldUpdateOperationsInput | boolean
-    reviewRetentionDays?: IntFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     auditLogRetentionDays?: IntFieldUpdateOperationsInput | number
+    reviewRetentionDays?: IntFieldUpdateOperationsInput | number
     sessionRetentionDays?: IntFieldUpdateOperationsInput | number
+    bannerColor?: StringFieldUpdateOperationsInput | string
     bannerEnabled?: BoolFieldUpdateOperationsInput | boolean
-    bannerText?: StringFieldUpdateOperationsInput | string
     bannerLink?: StringFieldUpdateOperationsInput | string
     bannerLinkText?: StringFieldUpdateOperationsInput | string
-    bannerColor?: StringFieldUpdateOperationsInput | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bannerText?: StringFieldUpdateOperationsInput | string
   }
 
   export type SystemSettingsUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     maintenanceMode?: BoolFieldUpdateOperationsInput | boolean
-    reviewRetentionDays?: IntFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     auditLogRetentionDays?: IntFieldUpdateOperationsInput | number
+    reviewRetentionDays?: IntFieldUpdateOperationsInput | number
     sessionRetentionDays?: IntFieldUpdateOperationsInput | number
+    bannerColor?: StringFieldUpdateOperationsInput | string
     bannerEnabled?: BoolFieldUpdateOperationsInput | boolean
-    bannerText?: StringFieldUpdateOperationsInput | string
     bannerLink?: StringFieldUpdateOperationsInput | string
     bannerLinkText?: StringFieldUpdateOperationsInput | string
-    bannerColor?: StringFieldUpdateOperationsInput | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bannerText?: StringFieldUpdateOperationsInput | string
   }
 
   export type SupportMessageCreateInput = {
     id?: string
-    userId?: string | null
-    name?: string | null
     email?: string | null
-    subject?: string | null
     message: string
-    type?: string
     status?: string
     createdAt?: Date | string
+    name?: string | null
+    subject?: string | null
+    type?: string
+    userId?: string | null
   }
 
   export type SupportMessageUncheckedCreateInput = {
     id?: string
-    userId?: string | null
-    name?: string | null
     email?: string | null
-    subject?: string | null
     message: string
-    type?: string
     status?: string
     createdAt?: Date | string
+    name?: string | null
+    subject?: string | null
+    type?: string
+    userId?: string | null
   }
 
   export type SupportMessageUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: NullableStringFieldUpdateOperationsInput | string | null
     message?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type SupportMessageUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: NullableStringFieldUpdateOperationsInput | string | null
     message?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type SupportMessageCreateManyInput = {
     id?: string
-    userId?: string | null
-    name?: string | null
     email?: string | null
-    subject?: string | null
     message: string
-    type?: string
     status?: string
     createdAt?: Date | string
+    name?: string | null
+    subject?: string | null
+    type?: string
+    userId?: string | null
   }
 
   export type SupportMessageUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: NullableStringFieldUpdateOperationsInput | string | null
     message?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type SupportMessageUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: NullableStringFieldUpdateOperationsInput | string | null
     message?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AuditLogCreateInput = {
@@ -53005,8 +53179,8 @@ export namespace Prisma {
   export type UserCustomRoleCreateInput = {
     id?: string
     assignedAt?: Date | string
-    user: UserCreateNestedOneWithoutCustomRolesInput
     role: CustomRoleCreateNestedOneWithoutUserRolesInput
+    user: UserCreateNestedOneWithoutCustomRolesInput
   }
 
   export type UserCustomRoleUncheckedCreateInput = {
@@ -53019,8 +53193,8 @@ export namespace Prisma {
   export type UserCustomRoleUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutCustomRolesNestedInput
     role?: CustomRoleUpdateOneRequiredWithoutUserRolesNestedInput
+    user?: UserUpdateOneRequiredWithoutCustomRolesNestedInput
   }
 
   export type UserCustomRoleUncheckedUpdateInput = {
@@ -53620,16 +53794,32 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
-  export type SessionListRelationFilter = {
-    every?: SessionWhereInput
-    some?: SessionWhereInput
-    none?: SessionWhereInput
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
-  export type AccountListRelationFilter = {
-    every?: AccountWhereInput
-    some?: AccountWhereInput
-    none?: AccountWhereInput
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NotificationListRelationFilter = {
+    every?: NotificationWhereInput
+    some?: NotificationWhereInput
+    none?: NotificationWhereInput
   }
 
   export type RepositoryListRelationFilter = {
@@ -53644,6 +53834,12 @@ export namespace Prisma {
     none?: ReviewWhereInput
   }
 
+  export type ReviewFeedbackListRelationFilter = {
+    every?: ReviewFeedbackWhereInput
+    some?: ReviewFeedbackWhereInput
+    none?: ReviewFeedbackWhereInput
+  }
+
   export type ReviewThreadCommentListRelationFilter = {
     every?: ReviewThreadCommentWhereInput
     some?: ReviewThreadCommentWhereInput
@@ -53656,40 +53852,16 @@ export namespace Prisma {
     none?: TeamMemberWhereInput
   }
 
-  export type NotificationListRelationFilter = {
-    every?: NotificationWhereInput
-    some?: NotificationWhereInput
-    none?: NotificationWhereInput
-  }
-
-  export type ReviewFeedbackListRelationFilter = {
-    every?: ReviewFeedbackWhereInput
-    some?: ReviewFeedbackWhereInput
-    none?: ReviewFeedbackWhereInput
-  }
-
-  export type ReviewRuleListRelationFilter = {
-    every?: ReviewRuleWhereInput
-    some?: ReviewRuleWhereInput
-    none?: ReviewRuleWhereInput
+  export type AccountListRelationFilter = {
+    every?: AccountWhereInput
+    some?: AccountWhereInput
+    none?: AccountWhereInput
   }
 
   export type AuditLogListRelationFilter = {
     every?: AuditLogWhereInput
     some?: AuditLogWhereInput
     none?: AuditLogWhereInput
-  }
-
-  export type UserCustomRoleListRelationFilter = {
-    every?: UserCustomRoleWhereInput
-    some?: UserCustomRoleWhereInput
-    none?: UserCustomRoleWhereInput
-  }
-
-  export type ReviewThreadCommentReactionListRelationFilter = {
-    every?: ReviewThreadCommentReactionWhereInput
-    some?: ReviewThreadCommentReactionWhereInput
-    none?: ReviewThreadCommentReactionWhereInput
   }
 
   export type ReviewApprovalListRelationFilter = {
@@ -53704,16 +53876,36 @@ export namespace Prisma {
     none?: ReviewAssignmentWhereInput
   }
 
+  export type ReviewRuleListRelationFilter = {
+    every?: ReviewRuleWhereInput
+    some?: ReviewRuleWhereInput
+    none?: ReviewRuleWhereInput
+  }
+
+  export type ReviewThreadCommentReactionListRelationFilter = {
+    every?: ReviewThreadCommentReactionWhereInput
+    some?: ReviewThreadCommentReactionWhereInput
+    none?: ReviewThreadCommentReactionWhereInput
+  }
+
+  export type SessionListRelationFilter = {
+    every?: SessionWhereInput
+    some?: SessionWhereInput
+    none?: SessionWhereInput
+  }
+
+  export type UserCustomRoleListRelationFilter = {
+    every?: UserCustomRoleWhereInput
+    some?: UserCustomRoleWhereInput
+    none?: UserCustomRoleWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
   }
 
-  export type SessionOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type AccountOrderByRelationAggregateInput = {
+  export type NotificationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -53725,6 +53917,10 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type ReviewFeedbackOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type ReviewThreadCommentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -53733,27 +53929,11 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type NotificationOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type ReviewFeedbackOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type ReviewRuleOrderByRelationAggregateInput = {
+  export type AccountOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type AuditLogOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type UserCustomRoleOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type ReviewThreadCommentReactionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -53765,6 +53945,22 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type ReviewRuleOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ReviewThreadCommentReactionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SessionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UserCustomRoleOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type UserCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -53772,8 +53968,6 @@ export namespace Prisma {
     emailVerified?: SortOrder
     image?: SortOrder
     role?: SortOrder
-    banned?: SortOrder
-    bannedReason?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     reviewDepth?: SortOrder
@@ -53781,17 +53975,30 @@ export namespace Prisma {
     autoReview?: SortOrder
     includeSecurityChecks?: SortOrder
     includePerfSuggestions?: SortOrder
+    banned?: SortOrder
+    bannedReason?: SortOrder
+    desktopNotifications?: SortOrder
     emailNotifications?: SortOrder
-    notifyTeamInvites?: SortOrder
-    notifyTeamMemberAdded?: SortOrder
+    notificationSoundEnabled?: SortOrder
+    notifyReviewApproved?: SortOrder
+    notifyReviewAssigned?: SortOrder
+    notifyReviewChangesRequested?: SortOrder
     notifyReviewCompleted?: SortOrder
     notifyReviewFailed?: SortOrder
     notifyScheduledScanCompleted?: SortOrder
-    notifyReviewAssigned?: SortOrder
-    notifyReviewApproved?: SortOrder
-    notifyReviewChangesRequested?: SortOrder
-    notificationSoundEnabled?: SortOrder
-    desktopNotifications?: SortOrder
+    notifyTeamInvites?: SortOrder
+    notifyTeamMemberAdded?: SortOrder
+    planId?: SortOrder
+    planExpiresAt?: SortOrder
+    overrideReposLimit?: SortOrder
+    overrideReviewsLimit?: SortOrder
+    overrideSeatsLimit?: SortOrder
+  }
+
+  export type UserAvgOrderByAggregateInput = {
+    overrideReposLimit?: SortOrder
+    overrideReviewsLimit?: SortOrder
+    overrideSeatsLimit?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -53801,8 +54008,6 @@ export namespace Prisma {
     emailVerified?: SortOrder
     image?: SortOrder
     role?: SortOrder
-    banned?: SortOrder
-    bannedReason?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     reviewDepth?: SortOrder
@@ -53810,17 +54015,24 @@ export namespace Prisma {
     autoReview?: SortOrder
     includeSecurityChecks?: SortOrder
     includePerfSuggestions?: SortOrder
+    banned?: SortOrder
+    bannedReason?: SortOrder
+    desktopNotifications?: SortOrder
     emailNotifications?: SortOrder
-    notifyTeamInvites?: SortOrder
-    notifyTeamMemberAdded?: SortOrder
+    notificationSoundEnabled?: SortOrder
+    notifyReviewApproved?: SortOrder
+    notifyReviewAssigned?: SortOrder
+    notifyReviewChangesRequested?: SortOrder
     notifyReviewCompleted?: SortOrder
     notifyReviewFailed?: SortOrder
     notifyScheduledScanCompleted?: SortOrder
-    notifyReviewAssigned?: SortOrder
-    notifyReviewApproved?: SortOrder
-    notifyReviewChangesRequested?: SortOrder
-    notificationSoundEnabled?: SortOrder
-    desktopNotifications?: SortOrder
+    notifyTeamInvites?: SortOrder
+    notifyTeamMemberAdded?: SortOrder
+    planId?: SortOrder
+    planExpiresAt?: SortOrder
+    overrideReposLimit?: SortOrder
+    overrideReviewsLimit?: SortOrder
+    overrideSeatsLimit?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -53830,8 +54042,6 @@ export namespace Prisma {
     emailVerified?: SortOrder
     image?: SortOrder
     role?: SortOrder
-    banned?: SortOrder
-    bannedReason?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     reviewDepth?: SortOrder
@@ -53839,17 +54049,30 @@ export namespace Prisma {
     autoReview?: SortOrder
     includeSecurityChecks?: SortOrder
     includePerfSuggestions?: SortOrder
+    banned?: SortOrder
+    bannedReason?: SortOrder
+    desktopNotifications?: SortOrder
     emailNotifications?: SortOrder
-    notifyTeamInvites?: SortOrder
-    notifyTeamMemberAdded?: SortOrder
+    notificationSoundEnabled?: SortOrder
+    notifyReviewApproved?: SortOrder
+    notifyReviewAssigned?: SortOrder
+    notifyReviewChangesRequested?: SortOrder
     notifyReviewCompleted?: SortOrder
     notifyReviewFailed?: SortOrder
     notifyScheduledScanCompleted?: SortOrder
-    notifyReviewAssigned?: SortOrder
-    notifyReviewApproved?: SortOrder
-    notifyReviewChangesRequested?: SortOrder
-    notificationSoundEnabled?: SortOrder
-    desktopNotifications?: SortOrder
+    notifyTeamInvites?: SortOrder
+    notifyTeamMemberAdded?: SortOrder
+    planId?: SortOrder
+    planExpiresAt?: SortOrder
+    overrideReposLimit?: SortOrder
+    overrideReviewsLimit?: SortOrder
+    overrideSeatsLimit?: SortOrder
+  }
+
+  export type UserSumOrderByAggregateInput = {
+    overrideReposLimit?: SortOrder
+    overrideReviewsLimit?: SortOrder
+    overrideSeatsLimit?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -53920,6 +54143,36 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
@@ -53956,17 +54209,6 @@ export namespace Prisma {
     ipAddress?: SortOrder
     userAgent?: SortOrder
     userId?: SortOrder
-  }
-
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type AccountCountOrderByAggregateInput = {
@@ -54017,20 +54259,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
   export type VerificationCountOrderByAggregateInput = {
     id?: SortOrder
     identifier?: SortOrder
@@ -54069,25 +54297,15 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
+  export type DiagramListRelationFilter = {
+    every?: DiagramWhereInput
+    some?: DiagramWhereInput
+    none?: DiagramWhereInput
+  }
+
   export type TeamNullableScalarRelationFilter = {
     is?: TeamWhereInput | null
     isNot?: TeamWhereInput | null
-  }
-
-  export type WebhookConfigNullableScalarRelationFilter = {
-    is?: WebhookConfigWhereInput | null
-    isNot?: WebhookConfigWhereInput | null
-  }
-
-  export type ScheduledScanConfigNullableScalarRelationFilter = {
-    is?: ScheduledScanConfigWhereInput | null
-    isNot?: ScheduledScanConfigWhereInput | null
-  }
-
-  export type GitHubCommentListRelationFilter = {
-    every?: GitHubCommentWhereInput
-    some?: GitHubCommentWhereInput
-    none?: GitHubCommentWhereInput
   }
 
   export type BranchProtectionRecommendationListRelationFilter = {
@@ -54096,13 +54314,23 @@ export namespace Prisma {
     none?: BranchProtectionRecommendationWhereInput
   }
 
-  export type DiagramListRelationFilter = {
-    every?: DiagramWhereInput
-    some?: DiagramWhereInput
-    none?: DiagramWhereInput
+  export type GitHubCommentListRelationFilter = {
+    every?: GitHubCommentWhereInput
+    some?: GitHubCommentWhereInput
+    none?: GitHubCommentWhereInput
   }
 
-  export type GitHubCommentOrderByRelationAggregateInput = {
+  export type ScheduledScanConfigNullableScalarRelationFilter = {
+    is?: ScheduledScanConfigWhereInput | null
+    isNot?: ScheduledScanConfigWhereInput | null
+  }
+
+  export type WebhookConfigNullableScalarRelationFilter = {
+    is?: WebhookConfigWhereInput | null
+    isNot?: WebhookConfigWhereInput | null
+  }
+
+  export type DiagramOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -54110,7 +54338,7 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type DiagramOrderByRelationAggregateInput = {
+  export type GitHubCommentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -54188,17 +54416,6 @@ export namespace Prisma {
     notIn?: $Enums.ReviewStatus[] | ListEnumReviewStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumReviewStatusFilter<$PrismaModel> | $Enums.ReviewStatus
   }
-
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
   export type JsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
         Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
@@ -54231,14 +54448,14 @@ export namespace Prisma {
     isEmpty?: boolean
   }
 
-  export type RepositoryScalarRelationFilter = {
-    is?: RepositoryWhereInput
-    isNot?: RepositoryWhereInput
-  }
-
   export type ReviewNullableScalarRelationFilter = {
     is?: ReviewWhereInput | null
     isNot?: ReviewWhereInput | null
+  }
+
+  export type RepositoryScalarRelationFilter = {
+    is?: RepositoryWhereInput
+    isNot?: RepositoryWhereInput
   }
 
   export type ReviewThreadListRelationFilter = {
@@ -54284,10 +54501,10 @@ export namespace Prisma {
     comments?: SortOrder
     qualityMetrics?: SortOrder
     error?: SortOrder
-    parentReviewId?: SortOrder
-    resolvedComments?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    parentReviewId?: SortOrder
+    resolvedComments?: SortOrder
   }
 
   export type ReviewAvgOrderByAggregateInput = {
@@ -54306,9 +54523,9 @@ export namespace Prisma {
     summary?: SortOrder
     riskScore?: SortOrder
     error?: SortOrder
-    parentReviewId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    parentReviewId?: SortOrder
   }
 
   export type ReviewMinOrderByAggregateInput = {
@@ -54322,9 +54539,9 @@ export namespace Prisma {
     summary?: SortOrder
     riskScore?: SortOrder
     error?: SortOrder
-    parentReviewId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    parentReviewId?: SortOrder
   }
 
   export type ReviewSumOrderByAggregateInput = {
@@ -54340,22 +54557,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumReviewStatusFilter<$PrismaModel>
     _max?: NestedEnumReviewStatusFilter<$PrismaModel>
-  }
-
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
   }
   export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -55028,9 +55229,9 @@ export namespace Prisma {
     repositoryId?: SortOrder
     enabled?: SortOrder
     githubWebhookId?: SortOrder
-    scoreThreshold?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    scoreThreshold?: SortOrder
   }
 
   export type WebhookConfigAvgOrderByAggregateInput = {
@@ -55043,9 +55244,9 @@ export namespace Prisma {
     repositoryId?: SortOrder
     enabled?: SortOrder
     githubWebhookId?: SortOrder
-    scoreThreshold?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    scoreThreshold?: SortOrder
   }
 
   export type WebhookConfigMinOrderByAggregateInput = {
@@ -55053,9 +55254,9 @@ export namespace Prisma {
     repositoryId?: SortOrder
     enabled?: SortOrder
     githubWebhookId?: SortOrder
-    scoreThreshold?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    scoreThreshold?: SortOrder
   }
 
   export type WebhookConfigSumOrderByAggregateInput = {
@@ -55487,91 +55688,91 @@ export namespace Prisma {
   export type SystemSettingsCountOrderByAggregateInput = {
     id?: SortOrder
     maintenanceMode?: SortOrder
-    reviewRetentionDays?: SortOrder
+    updatedAt?: SortOrder
     auditLogRetentionDays?: SortOrder
+    reviewRetentionDays?: SortOrder
     sessionRetentionDays?: SortOrder
+    bannerColor?: SortOrder
     bannerEnabled?: SortOrder
-    bannerText?: SortOrder
     bannerLink?: SortOrder
     bannerLinkText?: SortOrder
-    bannerColor?: SortOrder
-    updatedAt?: SortOrder
+    bannerText?: SortOrder
   }
 
   export type SystemSettingsAvgOrderByAggregateInput = {
-    reviewRetentionDays?: SortOrder
     auditLogRetentionDays?: SortOrder
+    reviewRetentionDays?: SortOrder
     sessionRetentionDays?: SortOrder
   }
 
   export type SystemSettingsMaxOrderByAggregateInput = {
     id?: SortOrder
     maintenanceMode?: SortOrder
-    reviewRetentionDays?: SortOrder
+    updatedAt?: SortOrder
     auditLogRetentionDays?: SortOrder
+    reviewRetentionDays?: SortOrder
     sessionRetentionDays?: SortOrder
+    bannerColor?: SortOrder
     bannerEnabled?: SortOrder
-    bannerText?: SortOrder
     bannerLink?: SortOrder
     bannerLinkText?: SortOrder
-    bannerColor?: SortOrder
-    updatedAt?: SortOrder
+    bannerText?: SortOrder
   }
 
   export type SystemSettingsMinOrderByAggregateInput = {
     id?: SortOrder
     maintenanceMode?: SortOrder
-    reviewRetentionDays?: SortOrder
+    updatedAt?: SortOrder
     auditLogRetentionDays?: SortOrder
+    reviewRetentionDays?: SortOrder
     sessionRetentionDays?: SortOrder
+    bannerColor?: SortOrder
     bannerEnabled?: SortOrder
-    bannerText?: SortOrder
     bannerLink?: SortOrder
     bannerLinkText?: SortOrder
-    bannerColor?: SortOrder
-    updatedAt?: SortOrder
+    bannerText?: SortOrder
   }
 
   export type SystemSettingsSumOrderByAggregateInput = {
-    reviewRetentionDays?: SortOrder
     auditLogRetentionDays?: SortOrder
+    reviewRetentionDays?: SortOrder
     sessionRetentionDays?: SortOrder
   }
 
   export type SupportMessageCountOrderByAggregateInput = {
     id?: SortOrder
-    userId?: SortOrder
-    name?: SortOrder
     email?: SortOrder
-    subject?: SortOrder
     message?: SortOrder
-    type?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
+    name?: SortOrder
+    subject?: SortOrder
+    type?: SortOrder
+    userId?: SortOrder
   }
 
   export type SupportMessageMaxOrderByAggregateInput = {
     id?: SortOrder
-    userId?: SortOrder
-    name?: SortOrder
     email?: SortOrder
-    subject?: SortOrder
     message?: SortOrder
-    type?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
+    name?: SortOrder
+    subject?: SortOrder
+    type?: SortOrder
+    userId?: SortOrder
   }
 
   export type SupportMessageMinOrderByAggregateInput = {
     id?: SortOrder
-    userId?: SortOrder
-    name?: SortOrder
     email?: SortOrder
-    subject?: SortOrder
     message?: SortOrder
-    type?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
+    name?: SortOrder
+    subject?: SortOrder
+    type?: SortOrder
+    userId?: SortOrder
   }
 
   export type UserNullableScalarRelationFilter = {
@@ -56100,18 +56301,11 @@ export namespace Prisma {
     taxRate?: SortOrder
   }
 
-  export type SessionCreateNestedManyWithoutUserInput = {
-    create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
-    createMany?: SessionCreateManyUserInputEnvelope
-    connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-  }
-
-  export type AccountCreateNestedManyWithoutUserInput = {
-    create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
-    createMany?: AccountCreateManyUserInputEnvelope
-    connect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
+  export type NotificationCreateNestedManyWithoutUserInput = {
+    create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
+    createMany?: NotificationCreateManyUserInputEnvelope
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
   }
 
   export type RepositoryCreateNestedManyWithoutUserInput = {
@@ -56128,6 +56322,13 @@ export namespace Prisma {
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
   }
 
+  export type ReviewFeedbackCreateNestedManyWithoutUserInput = {
+    create?: XOR<ReviewFeedbackCreateWithoutUserInput, ReviewFeedbackUncheckedCreateWithoutUserInput> | ReviewFeedbackCreateWithoutUserInput[] | ReviewFeedbackUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReviewFeedbackCreateOrConnectWithoutUserInput | ReviewFeedbackCreateOrConnectWithoutUserInput[]
+    createMany?: ReviewFeedbackCreateManyUserInputEnvelope
+    connect?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
+  }
+
   export type ReviewThreadCommentCreateNestedManyWithoutUserInput = {
     create?: XOR<ReviewThreadCommentCreateWithoutUserInput, ReviewThreadCommentUncheckedCreateWithoutUserInput> | ReviewThreadCommentCreateWithoutUserInput[] | ReviewThreadCommentUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ReviewThreadCommentCreateOrConnectWithoutUserInput | ReviewThreadCommentCreateOrConnectWithoutUserInput[]
@@ -56142,25 +56343,11 @@ export namespace Prisma {
     connect?: TeamMemberWhereUniqueInput | TeamMemberWhereUniqueInput[]
   }
 
-  export type NotificationCreateNestedManyWithoutUserInput = {
-    create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
-    createMany?: NotificationCreateManyUserInputEnvelope
-    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
-  }
-
-  export type ReviewFeedbackCreateNestedManyWithoutUserInput = {
-    create?: XOR<ReviewFeedbackCreateWithoutUserInput, ReviewFeedbackUncheckedCreateWithoutUserInput> | ReviewFeedbackCreateWithoutUserInput[] | ReviewFeedbackUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: ReviewFeedbackCreateOrConnectWithoutUserInput | ReviewFeedbackCreateOrConnectWithoutUserInput[]
-    createMany?: ReviewFeedbackCreateManyUserInputEnvelope
-    connect?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
-  }
-
-  export type ReviewRuleCreateNestedManyWithoutUserInput = {
-    create?: XOR<ReviewRuleCreateWithoutUserInput, ReviewRuleUncheckedCreateWithoutUserInput> | ReviewRuleCreateWithoutUserInput[] | ReviewRuleUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: ReviewRuleCreateOrConnectWithoutUserInput | ReviewRuleCreateOrConnectWithoutUserInput[]
-    createMany?: ReviewRuleCreateManyUserInputEnvelope
-    connect?: ReviewRuleWhereUniqueInput | ReviewRuleWhereUniqueInput[]
+  export type AccountCreateNestedManyWithoutUserInput = {
+    create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
+    createMany?: AccountCreateManyUserInputEnvelope
+    connect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
   }
 
   export type AuditLogCreateNestedManyWithoutActorInput = {
@@ -56170,32 +56357,11 @@ export namespace Prisma {
     connect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
   }
 
-  export type UserCustomRoleCreateNestedManyWithoutUserInput = {
-    create?: XOR<UserCustomRoleCreateWithoutUserInput, UserCustomRoleUncheckedCreateWithoutUserInput> | UserCustomRoleCreateWithoutUserInput[] | UserCustomRoleUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: UserCustomRoleCreateOrConnectWithoutUserInput | UserCustomRoleCreateOrConnectWithoutUserInput[]
-    createMany?: UserCustomRoleCreateManyUserInputEnvelope
-    connect?: UserCustomRoleWhereUniqueInput | UserCustomRoleWhereUniqueInput[]
-  }
-
-  export type ReviewThreadCommentReactionCreateNestedManyWithoutUserInput = {
-    create?: XOR<ReviewThreadCommentReactionCreateWithoutUserInput, ReviewThreadCommentReactionUncheckedCreateWithoutUserInput> | ReviewThreadCommentReactionCreateWithoutUserInput[] | ReviewThreadCommentReactionUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: ReviewThreadCommentReactionCreateOrConnectWithoutUserInput | ReviewThreadCommentReactionCreateOrConnectWithoutUserInput[]
-    createMany?: ReviewThreadCommentReactionCreateManyUserInputEnvelope
-    connect?: ReviewThreadCommentReactionWhereUniqueInput | ReviewThreadCommentReactionWhereUniqueInput[]
-  }
-
   export type ReviewApprovalCreateNestedManyWithoutUserInput = {
     create?: XOR<ReviewApprovalCreateWithoutUserInput, ReviewApprovalUncheckedCreateWithoutUserInput> | ReviewApprovalCreateWithoutUserInput[] | ReviewApprovalUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ReviewApprovalCreateOrConnectWithoutUserInput | ReviewApprovalCreateOrConnectWithoutUserInput[]
     createMany?: ReviewApprovalCreateManyUserInputEnvelope
     connect?: ReviewApprovalWhereUniqueInput | ReviewApprovalWhereUniqueInput[]
-  }
-
-  export type ReviewAssignmentCreateNestedManyWithoutAssigneeInput = {
-    create?: XOR<ReviewAssignmentCreateWithoutAssigneeInput, ReviewAssignmentUncheckedCreateWithoutAssigneeInput> | ReviewAssignmentCreateWithoutAssigneeInput[] | ReviewAssignmentUncheckedCreateWithoutAssigneeInput[]
-    connectOrCreate?: ReviewAssignmentCreateOrConnectWithoutAssigneeInput | ReviewAssignmentCreateOrConnectWithoutAssigneeInput[]
-    createMany?: ReviewAssignmentCreateManyAssigneeInputEnvelope
-    connect?: ReviewAssignmentWhereUniqueInput | ReviewAssignmentWhereUniqueInput[]
   }
 
   export type ReviewAssignmentCreateNestedManyWithoutAssignerInput = {
@@ -56205,18 +56371,46 @@ export namespace Prisma {
     connect?: ReviewAssignmentWhereUniqueInput | ReviewAssignmentWhereUniqueInput[]
   }
 
-  export type SessionUncheckedCreateNestedManyWithoutUserInput = {
+  export type ReviewAssignmentCreateNestedManyWithoutAssigneeInput = {
+    create?: XOR<ReviewAssignmentCreateWithoutAssigneeInput, ReviewAssignmentUncheckedCreateWithoutAssigneeInput> | ReviewAssignmentCreateWithoutAssigneeInput[] | ReviewAssignmentUncheckedCreateWithoutAssigneeInput[]
+    connectOrCreate?: ReviewAssignmentCreateOrConnectWithoutAssigneeInput | ReviewAssignmentCreateOrConnectWithoutAssigneeInput[]
+    createMany?: ReviewAssignmentCreateManyAssigneeInputEnvelope
+    connect?: ReviewAssignmentWhereUniqueInput | ReviewAssignmentWhereUniqueInput[]
+  }
+
+  export type ReviewRuleCreateNestedManyWithoutUserInput = {
+    create?: XOR<ReviewRuleCreateWithoutUserInput, ReviewRuleUncheckedCreateWithoutUserInput> | ReviewRuleCreateWithoutUserInput[] | ReviewRuleUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReviewRuleCreateOrConnectWithoutUserInput | ReviewRuleCreateOrConnectWithoutUserInput[]
+    createMany?: ReviewRuleCreateManyUserInputEnvelope
+    connect?: ReviewRuleWhereUniqueInput | ReviewRuleWhereUniqueInput[]
+  }
+
+  export type ReviewThreadCommentReactionCreateNestedManyWithoutUserInput = {
+    create?: XOR<ReviewThreadCommentReactionCreateWithoutUserInput, ReviewThreadCommentReactionUncheckedCreateWithoutUserInput> | ReviewThreadCommentReactionCreateWithoutUserInput[] | ReviewThreadCommentReactionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReviewThreadCommentReactionCreateOrConnectWithoutUserInput | ReviewThreadCommentReactionCreateOrConnectWithoutUserInput[]
+    createMany?: ReviewThreadCommentReactionCreateManyUserInputEnvelope
+    connect?: ReviewThreadCommentReactionWhereUniqueInput | ReviewThreadCommentReactionWhereUniqueInput[]
+  }
+
+  export type SessionCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
     createMany?: SessionCreateManyUserInputEnvelope
     connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
   }
 
-  export type AccountUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
-    createMany?: AccountCreateManyUserInputEnvelope
-    connect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
+  export type UserCustomRoleCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserCustomRoleCreateWithoutUserInput, UserCustomRoleUncheckedCreateWithoutUserInput> | UserCustomRoleCreateWithoutUserInput[] | UserCustomRoleUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserCustomRoleCreateOrConnectWithoutUserInput | UserCustomRoleCreateOrConnectWithoutUserInput[]
+    createMany?: UserCustomRoleCreateManyUserInputEnvelope
+    connect?: UserCustomRoleWhereUniqueInput | UserCustomRoleWhereUniqueInput[]
+  }
+
+  export type NotificationUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
+    createMany?: NotificationCreateManyUserInputEnvelope
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
   }
 
   export type RepositoryUncheckedCreateNestedManyWithoutUserInput = {
@@ -56233,6 +56427,13 @@ export namespace Prisma {
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
   }
 
+  export type ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ReviewFeedbackCreateWithoutUserInput, ReviewFeedbackUncheckedCreateWithoutUserInput> | ReviewFeedbackCreateWithoutUserInput[] | ReviewFeedbackUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReviewFeedbackCreateOrConnectWithoutUserInput | ReviewFeedbackCreateOrConnectWithoutUserInput[]
+    createMany?: ReviewFeedbackCreateManyUserInputEnvelope
+    connect?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
+  }
+
   export type ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<ReviewThreadCommentCreateWithoutUserInput, ReviewThreadCommentUncheckedCreateWithoutUserInput> | ReviewThreadCommentCreateWithoutUserInput[] | ReviewThreadCommentUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ReviewThreadCommentCreateOrConnectWithoutUserInput | ReviewThreadCommentCreateOrConnectWithoutUserInput[]
@@ -56247,25 +56448,11 @@ export namespace Prisma {
     connect?: TeamMemberWhereUniqueInput | TeamMemberWhereUniqueInput[]
   }
 
-  export type NotificationUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
-    createMany?: NotificationCreateManyUserInputEnvelope
-    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
-  }
-
-  export type ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<ReviewFeedbackCreateWithoutUserInput, ReviewFeedbackUncheckedCreateWithoutUserInput> | ReviewFeedbackCreateWithoutUserInput[] | ReviewFeedbackUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: ReviewFeedbackCreateOrConnectWithoutUserInput | ReviewFeedbackCreateOrConnectWithoutUserInput[]
-    createMany?: ReviewFeedbackCreateManyUserInputEnvelope
-    connect?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
-  }
-
-  export type ReviewRuleUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<ReviewRuleCreateWithoutUserInput, ReviewRuleUncheckedCreateWithoutUserInput> | ReviewRuleCreateWithoutUserInput[] | ReviewRuleUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: ReviewRuleCreateOrConnectWithoutUserInput | ReviewRuleCreateOrConnectWithoutUserInput[]
-    createMany?: ReviewRuleCreateManyUserInputEnvelope
-    connect?: ReviewRuleWhereUniqueInput | ReviewRuleWhereUniqueInput[]
+  export type AccountUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
+    createMany?: AccountCreateManyUserInputEnvelope
+    connect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
   }
 
   export type AuditLogUncheckedCreateNestedManyWithoutActorInput = {
@@ -56275,25 +56462,18 @@ export namespace Prisma {
     connect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
   }
 
-  export type UserCustomRoleUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<UserCustomRoleCreateWithoutUserInput, UserCustomRoleUncheckedCreateWithoutUserInput> | UserCustomRoleCreateWithoutUserInput[] | UserCustomRoleUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: UserCustomRoleCreateOrConnectWithoutUserInput | UserCustomRoleCreateOrConnectWithoutUserInput[]
-    createMany?: UserCustomRoleCreateManyUserInputEnvelope
-    connect?: UserCustomRoleWhereUniqueInput | UserCustomRoleWhereUniqueInput[]
-  }
-
-  export type ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<ReviewThreadCommentReactionCreateWithoutUserInput, ReviewThreadCommentReactionUncheckedCreateWithoutUserInput> | ReviewThreadCommentReactionCreateWithoutUserInput[] | ReviewThreadCommentReactionUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: ReviewThreadCommentReactionCreateOrConnectWithoutUserInput | ReviewThreadCommentReactionCreateOrConnectWithoutUserInput[]
-    createMany?: ReviewThreadCommentReactionCreateManyUserInputEnvelope
-    connect?: ReviewThreadCommentReactionWhereUniqueInput | ReviewThreadCommentReactionWhereUniqueInput[]
-  }
-
   export type ReviewApprovalUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<ReviewApprovalCreateWithoutUserInput, ReviewApprovalUncheckedCreateWithoutUserInput> | ReviewApprovalCreateWithoutUserInput[] | ReviewApprovalUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ReviewApprovalCreateOrConnectWithoutUserInput | ReviewApprovalCreateOrConnectWithoutUserInput[]
     createMany?: ReviewApprovalCreateManyUserInputEnvelope
     connect?: ReviewApprovalWhereUniqueInput | ReviewApprovalWhereUniqueInput[]
+  }
+
+  export type ReviewAssignmentUncheckedCreateNestedManyWithoutAssignerInput = {
+    create?: XOR<ReviewAssignmentCreateWithoutAssignerInput, ReviewAssignmentUncheckedCreateWithoutAssignerInput> | ReviewAssignmentCreateWithoutAssignerInput[] | ReviewAssignmentUncheckedCreateWithoutAssignerInput[]
+    connectOrCreate?: ReviewAssignmentCreateOrConnectWithoutAssignerInput | ReviewAssignmentCreateOrConnectWithoutAssignerInput[]
+    createMany?: ReviewAssignmentCreateManyAssignerInputEnvelope
+    connect?: ReviewAssignmentWhereUniqueInput | ReviewAssignmentWhereUniqueInput[]
   }
 
   export type ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput = {
@@ -56303,11 +56483,32 @@ export namespace Prisma {
     connect?: ReviewAssignmentWhereUniqueInput | ReviewAssignmentWhereUniqueInput[]
   }
 
-  export type ReviewAssignmentUncheckedCreateNestedManyWithoutAssignerInput = {
-    create?: XOR<ReviewAssignmentCreateWithoutAssignerInput, ReviewAssignmentUncheckedCreateWithoutAssignerInput> | ReviewAssignmentCreateWithoutAssignerInput[] | ReviewAssignmentUncheckedCreateWithoutAssignerInput[]
-    connectOrCreate?: ReviewAssignmentCreateOrConnectWithoutAssignerInput | ReviewAssignmentCreateOrConnectWithoutAssignerInput[]
-    createMany?: ReviewAssignmentCreateManyAssignerInputEnvelope
-    connect?: ReviewAssignmentWhereUniqueInput | ReviewAssignmentWhereUniqueInput[]
+  export type ReviewRuleUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ReviewRuleCreateWithoutUserInput, ReviewRuleUncheckedCreateWithoutUserInput> | ReviewRuleCreateWithoutUserInput[] | ReviewRuleUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReviewRuleCreateOrConnectWithoutUserInput | ReviewRuleCreateOrConnectWithoutUserInput[]
+    createMany?: ReviewRuleCreateManyUserInputEnvelope
+    connect?: ReviewRuleWhereUniqueInput | ReviewRuleWhereUniqueInput[]
+  }
+
+  export type ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ReviewThreadCommentReactionCreateWithoutUserInput, ReviewThreadCommentReactionUncheckedCreateWithoutUserInput> | ReviewThreadCommentReactionCreateWithoutUserInput[] | ReviewThreadCommentReactionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReviewThreadCommentReactionCreateOrConnectWithoutUserInput | ReviewThreadCommentReactionCreateOrConnectWithoutUserInput[]
+    createMany?: ReviewThreadCommentReactionCreateManyUserInputEnvelope
+    connect?: ReviewThreadCommentReactionWhereUniqueInput | ReviewThreadCommentReactionWhereUniqueInput[]
+  }
+
+  export type SessionUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
+    createMany?: SessionCreateManyUserInputEnvelope
+    connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+  }
+
+  export type UserCustomRoleUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserCustomRoleCreateWithoutUserInput, UserCustomRoleUncheckedCreateWithoutUserInput> | UserCustomRoleCreateWithoutUserInput[] | UserCustomRoleUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserCustomRoleCreateOrConnectWithoutUserInput | UserCustomRoleCreateOrConnectWithoutUserInput[]
+    createMany?: UserCustomRoleCreateManyUserInputEnvelope
+    connect?: UserCustomRoleWhereUniqueInput | UserCustomRoleWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -56330,32 +56531,30 @@ export namespace Prisma {
     set?: Date | string
   }
 
-  export type SessionUpdateManyWithoutUserNestedInput = {
-    create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
-    upsert?: SessionUpsertWithWhereUniqueWithoutUserInput | SessionUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: SessionCreateManyUserInputEnvelope
-    set?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-    disconnect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-    delete?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-    connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-    update?: SessionUpdateWithWhereUniqueWithoutUserInput | SessionUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: SessionUpdateManyWithWhereWithoutUserInput | SessionUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: SessionScalarWhereInput | SessionScalarWhereInput[]
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
   }
 
-  export type AccountUpdateManyWithoutUserNestedInput = {
-    create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
-    upsert?: AccountUpsertWithWhereUniqueWithoutUserInput | AccountUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: AccountCreateManyUserInputEnvelope
-    set?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
-    disconnect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
-    delete?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
-    connect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
-    update?: AccountUpdateWithWhereUniqueWithoutUserInput | AccountUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: AccountUpdateManyWithWhereWithoutUserInput | AccountUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: AccountScalarWhereInput | AccountScalarWhereInput[]
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type NotificationUpdateManyWithoutUserNestedInput = {
+    create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
+    upsert?: NotificationUpsertWithWhereUniqueWithoutUserInput | NotificationUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: NotificationCreateManyUserInputEnvelope
+    set?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    disconnect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    delete?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    update?: NotificationUpdateWithWhereUniqueWithoutUserInput | NotificationUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: NotificationUpdateManyWithWhereWithoutUserInput | NotificationUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
   }
 
   export type RepositoryUpdateManyWithoutUserNestedInput = {
@@ -56386,6 +56585,20 @@ export namespace Prisma {
     deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
   }
 
+  export type ReviewFeedbackUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ReviewFeedbackCreateWithoutUserInput, ReviewFeedbackUncheckedCreateWithoutUserInput> | ReviewFeedbackCreateWithoutUserInput[] | ReviewFeedbackUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReviewFeedbackCreateOrConnectWithoutUserInput | ReviewFeedbackCreateOrConnectWithoutUserInput[]
+    upsert?: ReviewFeedbackUpsertWithWhereUniqueWithoutUserInput | ReviewFeedbackUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ReviewFeedbackCreateManyUserInputEnvelope
+    set?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
+    disconnect?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
+    delete?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
+    connect?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
+    update?: ReviewFeedbackUpdateWithWhereUniqueWithoutUserInput | ReviewFeedbackUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ReviewFeedbackUpdateManyWithWhereWithoutUserInput | ReviewFeedbackUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ReviewFeedbackScalarWhereInput | ReviewFeedbackScalarWhereInput[]
+  }
+
   export type ReviewThreadCommentUpdateManyWithoutUserNestedInput = {
     create?: XOR<ReviewThreadCommentCreateWithoutUserInput, ReviewThreadCommentUncheckedCreateWithoutUserInput> | ReviewThreadCommentCreateWithoutUserInput[] | ReviewThreadCommentUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ReviewThreadCommentCreateOrConnectWithoutUserInput | ReviewThreadCommentCreateOrConnectWithoutUserInput[]
@@ -56414,46 +56627,18 @@ export namespace Prisma {
     deleteMany?: TeamMemberScalarWhereInput | TeamMemberScalarWhereInput[]
   }
 
-  export type NotificationUpdateManyWithoutUserNestedInput = {
-    create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
-    upsert?: NotificationUpsertWithWhereUniqueWithoutUserInput | NotificationUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: NotificationCreateManyUserInputEnvelope
-    set?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
-    disconnect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
-    delete?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
-    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
-    update?: NotificationUpdateWithWhereUniqueWithoutUserInput | NotificationUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: NotificationUpdateManyWithWhereWithoutUserInput | NotificationUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
-  }
-
-  export type ReviewFeedbackUpdateManyWithoutUserNestedInput = {
-    create?: XOR<ReviewFeedbackCreateWithoutUserInput, ReviewFeedbackUncheckedCreateWithoutUserInput> | ReviewFeedbackCreateWithoutUserInput[] | ReviewFeedbackUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: ReviewFeedbackCreateOrConnectWithoutUserInput | ReviewFeedbackCreateOrConnectWithoutUserInput[]
-    upsert?: ReviewFeedbackUpsertWithWhereUniqueWithoutUserInput | ReviewFeedbackUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: ReviewFeedbackCreateManyUserInputEnvelope
-    set?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
-    disconnect?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
-    delete?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
-    connect?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
-    update?: ReviewFeedbackUpdateWithWhereUniqueWithoutUserInput | ReviewFeedbackUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: ReviewFeedbackUpdateManyWithWhereWithoutUserInput | ReviewFeedbackUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: ReviewFeedbackScalarWhereInput | ReviewFeedbackScalarWhereInput[]
-  }
-
-  export type ReviewRuleUpdateManyWithoutUserNestedInput = {
-    create?: XOR<ReviewRuleCreateWithoutUserInput, ReviewRuleUncheckedCreateWithoutUserInput> | ReviewRuleCreateWithoutUserInput[] | ReviewRuleUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: ReviewRuleCreateOrConnectWithoutUserInput | ReviewRuleCreateOrConnectWithoutUserInput[]
-    upsert?: ReviewRuleUpsertWithWhereUniqueWithoutUserInput | ReviewRuleUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: ReviewRuleCreateManyUserInputEnvelope
-    set?: ReviewRuleWhereUniqueInput | ReviewRuleWhereUniqueInput[]
-    disconnect?: ReviewRuleWhereUniqueInput | ReviewRuleWhereUniqueInput[]
-    delete?: ReviewRuleWhereUniqueInput | ReviewRuleWhereUniqueInput[]
-    connect?: ReviewRuleWhereUniqueInput | ReviewRuleWhereUniqueInput[]
-    update?: ReviewRuleUpdateWithWhereUniqueWithoutUserInput | ReviewRuleUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: ReviewRuleUpdateManyWithWhereWithoutUserInput | ReviewRuleUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: ReviewRuleScalarWhereInput | ReviewRuleScalarWhereInput[]
+  export type AccountUpdateManyWithoutUserNestedInput = {
+    create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
+    upsert?: AccountUpsertWithWhereUniqueWithoutUserInput | AccountUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: AccountCreateManyUserInputEnvelope
+    set?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
+    disconnect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
+    delete?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
+    connect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
+    update?: AccountUpdateWithWhereUniqueWithoutUserInput | AccountUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: AccountUpdateManyWithWhereWithoutUserInput | AccountUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: AccountScalarWhereInput | AccountScalarWhereInput[]
   }
 
   export type AuditLogUpdateManyWithoutActorNestedInput = {
@@ -56470,34 +56655,6 @@ export namespace Prisma {
     deleteMany?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
   }
 
-  export type UserCustomRoleUpdateManyWithoutUserNestedInput = {
-    create?: XOR<UserCustomRoleCreateWithoutUserInput, UserCustomRoleUncheckedCreateWithoutUserInput> | UserCustomRoleCreateWithoutUserInput[] | UserCustomRoleUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: UserCustomRoleCreateOrConnectWithoutUserInput | UserCustomRoleCreateOrConnectWithoutUserInput[]
-    upsert?: UserCustomRoleUpsertWithWhereUniqueWithoutUserInput | UserCustomRoleUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: UserCustomRoleCreateManyUserInputEnvelope
-    set?: UserCustomRoleWhereUniqueInput | UserCustomRoleWhereUniqueInput[]
-    disconnect?: UserCustomRoleWhereUniqueInput | UserCustomRoleWhereUniqueInput[]
-    delete?: UserCustomRoleWhereUniqueInput | UserCustomRoleWhereUniqueInput[]
-    connect?: UserCustomRoleWhereUniqueInput | UserCustomRoleWhereUniqueInput[]
-    update?: UserCustomRoleUpdateWithWhereUniqueWithoutUserInput | UserCustomRoleUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: UserCustomRoleUpdateManyWithWhereWithoutUserInput | UserCustomRoleUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: UserCustomRoleScalarWhereInput | UserCustomRoleScalarWhereInput[]
-  }
-
-  export type ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput = {
-    create?: XOR<ReviewThreadCommentReactionCreateWithoutUserInput, ReviewThreadCommentReactionUncheckedCreateWithoutUserInput> | ReviewThreadCommentReactionCreateWithoutUserInput[] | ReviewThreadCommentReactionUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: ReviewThreadCommentReactionCreateOrConnectWithoutUserInput | ReviewThreadCommentReactionCreateOrConnectWithoutUserInput[]
-    upsert?: ReviewThreadCommentReactionUpsertWithWhereUniqueWithoutUserInput | ReviewThreadCommentReactionUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: ReviewThreadCommentReactionCreateManyUserInputEnvelope
-    set?: ReviewThreadCommentReactionWhereUniqueInput | ReviewThreadCommentReactionWhereUniqueInput[]
-    disconnect?: ReviewThreadCommentReactionWhereUniqueInput | ReviewThreadCommentReactionWhereUniqueInput[]
-    delete?: ReviewThreadCommentReactionWhereUniqueInput | ReviewThreadCommentReactionWhereUniqueInput[]
-    connect?: ReviewThreadCommentReactionWhereUniqueInput | ReviewThreadCommentReactionWhereUniqueInput[]
-    update?: ReviewThreadCommentReactionUpdateWithWhereUniqueWithoutUserInput | ReviewThreadCommentReactionUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: ReviewThreadCommentReactionUpdateManyWithWhereWithoutUserInput | ReviewThreadCommentReactionUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: ReviewThreadCommentReactionScalarWhereInput | ReviewThreadCommentReactionScalarWhereInput[]
-  }
-
   export type ReviewApprovalUpdateManyWithoutUserNestedInput = {
     create?: XOR<ReviewApprovalCreateWithoutUserInput, ReviewApprovalUncheckedCreateWithoutUserInput> | ReviewApprovalCreateWithoutUserInput[] | ReviewApprovalUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ReviewApprovalCreateOrConnectWithoutUserInput | ReviewApprovalCreateOrConnectWithoutUserInput[]
@@ -56510,20 +56667,6 @@ export namespace Prisma {
     update?: ReviewApprovalUpdateWithWhereUniqueWithoutUserInput | ReviewApprovalUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: ReviewApprovalUpdateManyWithWhereWithoutUserInput | ReviewApprovalUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: ReviewApprovalScalarWhereInput | ReviewApprovalScalarWhereInput[]
-  }
-
-  export type ReviewAssignmentUpdateManyWithoutAssigneeNestedInput = {
-    create?: XOR<ReviewAssignmentCreateWithoutAssigneeInput, ReviewAssignmentUncheckedCreateWithoutAssigneeInput> | ReviewAssignmentCreateWithoutAssigneeInput[] | ReviewAssignmentUncheckedCreateWithoutAssigneeInput[]
-    connectOrCreate?: ReviewAssignmentCreateOrConnectWithoutAssigneeInput | ReviewAssignmentCreateOrConnectWithoutAssigneeInput[]
-    upsert?: ReviewAssignmentUpsertWithWhereUniqueWithoutAssigneeInput | ReviewAssignmentUpsertWithWhereUniqueWithoutAssigneeInput[]
-    createMany?: ReviewAssignmentCreateManyAssigneeInputEnvelope
-    set?: ReviewAssignmentWhereUniqueInput | ReviewAssignmentWhereUniqueInput[]
-    disconnect?: ReviewAssignmentWhereUniqueInput | ReviewAssignmentWhereUniqueInput[]
-    delete?: ReviewAssignmentWhereUniqueInput | ReviewAssignmentWhereUniqueInput[]
-    connect?: ReviewAssignmentWhereUniqueInput | ReviewAssignmentWhereUniqueInput[]
-    update?: ReviewAssignmentUpdateWithWhereUniqueWithoutAssigneeInput | ReviewAssignmentUpdateWithWhereUniqueWithoutAssigneeInput[]
-    updateMany?: ReviewAssignmentUpdateManyWithWhereWithoutAssigneeInput | ReviewAssignmentUpdateManyWithWhereWithoutAssigneeInput[]
-    deleteMany?: ReviewAssignmentScalarWhereInput | ReviewAssignmentScalarWhereInput[]
   }
 
   export type ReviewAssignmentUpdateManyWithoutAssignerNestedInput = {
@@ -56540,7 +56683,49 @@ export namespace Prisma {
     deleteMany?: ReviewAssignmentScalarWhereInput | ReviewAssignmentScalarWhereInput[]
   }
 
-  export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
+  export type ReviewAssignmentUpdateManyWithoutAssigneeNestedInput = {
+    create?: XOR<ReviewAssignmentCreateWithoutAssigneeInput, ReviewAssignmentUncheckedCreateWithoutAssigneeInput> | ReviewAssignmentCreateWithoutAssigneeInput[] | ReviewAssignmentUncheckedCreateWithoutAssigneeInput[]
+    connectOrCreate?: ReviewAssignmentCreateOrConnectWithoutAssigneeInput | ReviewAssignmentCreateOrConnectWithoutAssigneeInput[]
+    upsert?: ReviewAssignmentUpsertWithWhereUniqueWithoutAssigneeInput | ReviewAssignmentUpsertWithWhereUniqueWithoutAssigneeInput[]
+    createMany?: ReviewAssignmentCreateManyAssigneeInputEnvelope
+    set?: ReviewAssignmentWhereUniqueInput | ReviewAssignmentWhereUniqueInput[]
+    disconnect?: ReviewAssignmentWhereUniqueInput | ReviewAssignmentWhereUniqueInput[]
+    delete?: ReviewAssignmentWhereUniqueInput | ReviewAssignmentWhereUniqueInput[]
+    connect?: ReviewAssignmentWhereUniqueInput | ReviewAssignmentWhereUniqueInput[]
+    update?: ReviewAssignmentUpdateWithWhereUniqueWithoutAssigneeInput | ReviewAssignmentUpdateWithWhereUniqueWithoutAssigneeInput[]
+    updateMany?: ReviewAssignmentUpdateManyWithWhereWithoutAssigneeInput | ReviewAssignmentUpdateManyWithWhereWithoutAssigneeInput[]
+    deleteMany?: ReviewAssignmentScalarWhereInput | ReviewAssignmentScalarWhereInput[]
+  }
+
+  export type ReviewRuleUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ReviewRuleCreateWithoutUserInput, ReviewRuleUncheckedCreateWithoutUserInput> | ReviewRuleCreateWithoutUserInput[] | ReviewRuleUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReviewRuleCreateOrConnectWithoutUserInput | ReviewRuleCreateOrConnectWithoutUserInput[]
+    upsert?: ReviewRuleUpsertWithWhereUniqueWithoutUserInput | ReviewRuleUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ReviewRuleCreateManyUserInputEnvelope
+    set?: ReviewRuleWhereUniqueInput | ReviewRuleWhereUniqueInput[]
+    disconnect?: ReviewRuleWhereUniqueInput | ReviewRuleWhereUniqueInput[]
+    delete?: ReviewRuleWhereUniqueInput | ReviewRuleWhereUniqueInput[]
+    connect?: ReviewRuleWhereUniqueInput | ReviewRuleWhereUniqueInput[]
+    update?: ReviewRuleUpdateWithWhereUniqueWithoutUserInput | ReviewRuleUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ReviewRuleUpdateManyWithWhereWithoutUserInput | ReviewRuleUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ReviewRuleScalarWhereInput | ReviewRuleScalarWhereInput[]
+  }
+
+  export type ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ReviewThreadCommentReactionCreateWithoutUserInput, ReviewThreadCommentReactionUncheckedCreateWithoutUserInput> | ReviewThreadCommentReactionCreateWithoutUserInput[] | ReviewThreadCommentReactionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReviewThreadCommentReactionCreateOrConnectWithoutUserInput | ReviewThreadCommentReactionCreateOrConnectWithoutUserInput[]
+    upsert?: ReviewThreadCommentReactionUpsertWithWhereUniqueWithoutUserInput | ReviewThreadCommentReactionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ReviewThreadCommentReactionCreateManyUserInputEnvelope
+    set?: ReviewThreadCommentReactionWhereUniqueInput | ReviewThreadCommentReactionWhereUniqueInput[]
+    disconnect?: ReviewThreadCommentReactionWhereUniqueInput | ReviewThreadCommentReactionWhereUniqueInput[]
+    delete?: ReviewThreadCommentReactionWhereUniqueInput | ReviewThreadCommentReactionWhereUniqueInput[]
+    connect?: ReviewThreadCommentReactionWhereUniqueInput | ReviewThreadCommentReactionWhereUniqueInput[]
+    update?: ReviewThreadCommentReactionUpdateWithWhereUniqueWithoutUserInput | ReviewThreadCommentReactionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ReviewThreadCommentReactionUpdateManyWithWhereWithoutUserInput | ReviewThreadCommentReactionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ReviewThreadCommentReactionScalarWhereInput | ReviewThreadCommentReactionScalarWhereInput[]
+  }
+
+  export type SessionUpdateManyWithoutUserNestedInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
     upsert?: SessionUpsertWithWhereUniqueWithoutUserInput | SessionUpsertWithWhereUniqueWithoutUserInput[]
@@ -56554,18 +56739,32 @@ export namespace Prisma {
     deleteMany?: SessionScalarWhereInput | SessionScalarWhereInput[]
   }
 
-  export type AccountUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
-    upsert?: AccountUpsertWithWhereUniqueWithoutUserInput | AccountUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: AccountCreateManyUserInputEnvelope
-    set?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
-    disconnect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
-    delete?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
-    connect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
-    update?: AccountUpdateWithWhereUniqueWithoutUserInput | AccountUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: AccountUpdateManyWithWhereWithoutUserInput | AccountUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: AccountScalarWhereInput | AccountScalarWhereInput[]
+  export type UserCustomRoleUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserCustomRoleCreateWithoutUserInput, UserCustomRoleUncheckedCreateWithoutUserInput> | UserCustomRoleCreateWithoutUserInput[] | UserCustomRoleUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserCustomRoleCreateOrConnectWithoutUserInput | UserCustomRoleCreateOrConnectWithoutUserInput[]
+    upsert?: UserCustomRoleUpsertWithWhereUniqueWithoutUserInput | UserCustomRoleUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserCustomRoleCreateManyUserInputEnvelope
+    set?: UserCustomRoleWhereUniqueInput | UserCustomRoleWhereUniqueInput[]
+    disconnect?: UserCustomRoleWhereUniqueInput | UserCustomRoleWhereUniqueInput[]
+    delete?: UserCustomRoleWhereUniqueInput | UserCustomRoleWhereUniqueInput[]
+    connect?: UserCustomRoleWhereUniqueInput | UserCustomRoleWhereUniqueInput[]
+    update?: UserCustomRoleUpdateWithWhereUniqueWithoutUserInput | UserCustomRoleUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserCustomRoleUpdateManyWithWhereWithoutUserInput | UserCustomRoleUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserCustomRoleScalarWhereInput | UserCustomRoleScalarWhereInput[]
+  }
+
+  export type NotificationUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
+    upsert?: NotificationUpsertWithWhereUniqueWithoutUserInput | NotificationUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: NotificationCreateManyUserInputEnvelope
+    set?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    disconnect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    delete?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    update?: NotificationUpdateWithWhereUniqueWithoutUserInput | NotificationUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: NotificationUpdateManyWithWhereWithoutUserInput | NotificationUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
   }
 
   export type RepositoryUncheckedUpdateManyWithoutUserNestedInput = {
@@ -56596,6 +56795,20 @@ export namespace Prisma {
     deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
   }
 
+  export type ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ReviewFeedbackCreateWithoutUserInput, ReviewFeedbackUncheckedCreateWithoutUserInput> | ReviewFeedbackCreateWithoutUserInput[] | ReviewFeedbackUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReviewFeedbackCreateOrConnectWithoutUserInput | ReviewFeedbackCreateOrConnectWithoutUserInput[]
+    upsert?: ReviewFeedbackUpsertWithWhereUniqueWithoutUserInput | ReviewFeedbackUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ReviewFeedbackCreateManyUserInputEnvelope
+    set?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
+    disconnect?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
+    delete?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
+    connect?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
+    update?: ReviewFeedbackUpdateWithWhereUniqueWithoutUserInput | ReviewFeedbackUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ReviewFeedbackUpdateManyWithWhereWithoutUserInput | ReviewFeedbackUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ReviewFeedbackScalarWhereInput | ReviewFeedbackScalarWhereInput[]
+  }
+
   export type ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<ReviewThreadCommentCreateWithoutUserInput, ReviewThreadCommentUncheckedCreateWithoutUserInput> | ReviewThreadCommentCreateWithoutUserInput[] | ReviewThreadCommentUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ReviewThreadCommentCreateOrConnectWithoutUserInput | ReviewThreadCommentCreateOrConnectWithoutUserInput[]
@@ -56624,46 +56837,18 @@ export namespace Prisma {
     deleteMany?: TeamMemberScalarWhereInput | TeamMemberScalarWhereInput[]
   }
 
-  export type NotificationUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
-    upsert?: NotificationUpsertWithWhereUniqueWithoutUserInput | NotificationUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: NotificationCreateManyUserInputEnvelope
-    set?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
-    disconnect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
-    delete?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
-    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
-    update?: NotificationUpdateWithWhereUniqueWithoutUserInput | NotificationUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: NotificationUpdateManyWithWhereWithoutUserInput | NotificationUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
-  }
-
-  export type ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<ReviewFeedbackCreateWithoutUserInput, ReviewFeedbackUncheckedCreateWithoutUserInput> | ReviewFeedbackCreateWithoutUserInput[] | ReviewFeedbackUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: ReviewFeedbackCreateOrConnectWithoutUserInput | ReviewFeedbackCreateOrConnectWithoutUserInput[]
-    upsert?: ReviewFeedbackUpsertWithWhereUniqueWithoutUserInput | ReviewFeedbackUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: ReviewFeedbackCreateManyUserInputEnvelope
-    set?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
-    disconnect?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
-    delete?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
-    connect?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
-    update?: ReviewFeedbackUpdateWithWhereUniqueWithoutUserInput | ReviewFeedbackUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: ReviewFeedbackUpdateManyWithWhereWithoutUserInput | ReviewFeedbackUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: ReviewFeedbackScalarWhereInput | ReviewFeedbackScalarWhereInput[]
-  }
-
-  export type ReviewRuleUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<ReviewRuleCreateWithoutUserInput, ReviewRuleUncheckedCreateWithoutUserInput> | ReviewRuleCreateWithoutUserInput[] | ReviewRuleUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: ReviewRuleCreateOrConnectWithoutUserInput | ReviewRuleCreateOrConnectWithoutUserInput[]
-    upsert?: ReviewRuleUpsertWithWhereUniqueWithoutUserInput | ReviewRuleUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: ReviewRuleCreateManyUserInputEnvelope
-    set?: ReviewRuleWhereUniqueInput | ReviewRuleWhereUniqueInput[]
-    disconnect?: ReviewRuleWhereUniqueInput | ReviewRuleWhereUniqueInput[]
-    delete?: ReviewRuleWhereUniqueInput | ReviewRuleWhereUniqueInput[]
-    connect?: ReviewRuleWhereUniqueInput | ReviewRuleWhereUniqueInput[]
-    update?: ReviewRuleUpdateWithWhereUniqueWithoutUserInput | ReviewRuleUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: ReviewRuleUpdateManyWithWhereWithoutUserInput | ReviewRuleUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: ReviewRuleScalarWhereInput | ReviewRuleScalarWhereInput[]
+  export type AccountUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
+    upsert?: AccountUpsertWithWhereUniqueWithoutUserInput | AccountUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: AccountCreateManyUserInputEnvelope
+    set?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
+    disconnect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
+    delete?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
+    connect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
+    update?: AccountUpdateWithWhereUniqueWithoutUserInput | AccountUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: AccountUpdateManyWithWhereWithoutUserInput | AccountUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: AccountScalarWhereInput | AccountScalarWhereInput[]
   }
 
   export type AuditLogUncheckedUpdateManyWithoutActorNestedInput = {
@@ -56680,34 +56865,6 @@ export namespace Prisma {
     deleteMany?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
   }
 
-  export type UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<UserCustomRoleCreateWithoutUserInput, UserCustomRoleUncheckedCreateWithoutUserInput> | UserCustomRoleCreateWithoutUserInput[] | UserCustomRoleUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: UserCustomRoleCreateOrConnectWithoutUserInput | UserCustomRoleCreateOrConnectWithoutUserInput[]
-    upsert?: UserCustomRoleUpsertWithWhereUniqueWithoutUserInput | UserCustomRoleUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: UserCustomRoleCreateManyUserInputEnvelope
-    set?: UserCustomRoleWhereUniqueInput | UserCustomRoleWhereUniqueInput[]
-    disconnect?: UserCustomRoleWhereUniqueInput | UserCustomRoleWhereUniqueInput[]
-    delete?: UserCustomRoleWhereUniqueInput | UserCustomRoleWhereUniqueInput[]
-    connect?: UserCustomRoleWhereUniqueInput | UserCustomRoleWhereUniqueInput[]
-    update?: UserCustomRoleUpdateWithWhereUniqueWithoutUserInput | UserCustomRoleUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: UserCustomRoleUpdateManyWithWhereWithoutUserInput | UserCustomRoleUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: UserCustomRoleScalarWhereInput | UserCustomRoleScalarWhereInput[]
-  }
-
-  export type ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<ReviewThreadCommentReactionCreateWithoutUserInput, ReviewThreadCommentReactionUncheckedCreateWithoutUserInput> | ReviewThreadCommentReactionCreateWithoutUserInput[] | ReviewThreadCommentReactionUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: ReviewThreadCommentReactionCreateOrConnectWithoutUserInput | ReviewThreadCommentReactionCreateOrConnectWithoutUserInput[]
-    upsert?: ReviewThreadCommentReactionUpsertWithWhereUniqueWithoutUserInput | ReviewThreadCommentReactionUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: ReviewThreadCommentReactionCreateManyUserInputEnvelope
-    set?: ReviewThreadCommentReactionWhereUniqueInput | ReviewThreadCommentReactionWhereUniqueInput[]
-    disconnect?: ReviewThreadCommentReactionWhereUniqueInput | ReviewThreadCommentReactionWhereUniqueInput[]
-    delete?: ReviewThreadCommentReactionWhereUniqueInput | ReviewThreadCommentReactionWhereUniqueInput[]
-    connect?: ReviewThreadCommentReactionWhereUniqueInput | ReviewThreadCommentReactionWhereUniqueInput[]
-    update?: ReviewThreadCommentReactionUpdateWithWhereUniqueWithoutUserInput | ReviewThreadCommentReactionUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: ReviewThreadCommentReactionUpdateManyWithWhereWithoutUserInput | ReviewThreadCommentReactionUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: ReviewThreadCommentReactionScalarWhereInput | ReviewThreadCommentReactionScalarWhereInput[]
-  }
-
   export type ReviewApprovalUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<ReviewApprovalCreateWithoutUserInput, ReviewApprovalUncheckedCreateWithoutUserInput> | ReviewApprovalCreateWithoutUserInput[] | ReviewApprovalUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ReviewApprovalCreateOrConnectWithoutUserInput | ReviewApprovalCreateOrConnectWithoutUserInput[]
@@ -56720,6 +56877,20 @@ export namespace Prisma {
     update?: ReviewApprovalUpdateWithWhereUniqueWithoutUserInput | ReviewApprovalUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: ReviewApprovalUpdateManyWithWhereWithoutUserInput | ReviewApprovalUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: ReviewApprovalScalarWhereInput | ReviewApprovalScalarWhereInput[]
+  }
+
+  export type ReviewAssignmentUncheckedUpdateManyWithoutAssignerNestedInput = {
+    create?: XOR<ReviewAssignmentCreateWithoutAssignerInput, ReviewAssignmentUncheckedCreateWithoutAssignerInput> | ReviewAssignmentCreateWithoutAssignerInput[] | ReviewAssignmentUncheckedCreateWithoutAssignerInput[]
+    connectOrCreate?: ReviewAssignmentCreateOrConnectWithoutAssignerInput | ReviewAssignmentCreateOrConnectWithoutAssignerInput[]
+    upsert?: ReviewAssignmentUpsertWithWhereUniqueWithoutAssignerInput | ReviewAssignmentUpsertWithWhereUniqueWithoutAssignerInput[]
+    createMany?: ReviewAssignmentCreateManyAssignerInputEnvelope
+    set?: ReviewAssignmentWhereUniqueInput | ReviewAssignmentWhereUniqueInput[]
+    disconnect?: ReviewAssignmentWhereUniqueInput | ReviewAssignmentWhereUniqueInput[]
+    delete?: ReviewAssignmentWhereUniqueInput | ReviewAssignmentWhereUniqueInput[]
+    connect?: ReviewAssignmentWhereUniqueInput | ReviewAssignmentWhereUniqueInput[]
+    update?: ReviewAssignmentUpdateWithWhereUniqueWithoutAssignerInput | ReviewAssignmentUpdateWithWhereUniqueWithoutAssignerInput[]
+    updateMany?: ReviewAssignmentUpdateManyWithWhereWithoutAssignerInput | ReviewAssignmentUpdateManyWithWhereWithoutAssignerInput[]
+    deleteMany?: ReviewAssignmentScalarWhereInput | ReviewAssignmentScalarWhereInput[]
   }
 
   export type ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput = {
@@ -56736,18 +56907,60 @@ export namespace Prisma {
     deleteMany?: ReviewAssignmentScalarWhereInput | ReviewAssignmentScalarWhereInput[]
   }
 
-  export type ReviewAssignmentUncheckedUpdateManyWithoutAssignerNestedInput = {
-    create?: XOR<ReviewAssignmentCreateWithoutAssignerInput, ReviewAssignmentUncheckedCreateWithoutAssignerInput> | ReviewAssignmentCreateWithoutAssignerInput[] | ReviewAssignmentUncheckedCreateWithoutAssignerInput[]
-    connectOrCreate?: ReviewAssignmentCreateOrConnectWithoutAssignerInput | ReviewAssignmentCreateOrConnectWithoutAssignerInput[]
-    upsert?: ReviewAssignmentUpsertWithWhereUniqueWithoutAssignerInput | ReviewAssignmentUpsertWithWhereUniqueWithoutAssignerInput[]
-    createMany?: ReviewAssignmentCreateManyAssignerInputEnvelope
-    set?: ReviewAssignmentWhereUniqueInput | ReviewAssignmentWhereUniqueInput[]
-    disconnect?: ReviewAssignmentWhereUniqueInput | ReviewAssignmentWhereUniqueInput[]
-    delete?: ReviewAssignmentWhereUniqueInput | ReviewAssignmentWhereUniqueInput[]
-    connect?: ReviewAssignmentWhereUniqueInput | ReviewAssignmentWhereUniqueInput[]
-    update?: ReviewAssignmentUpdateWithWhereUniqueWithoutAssignerInput | ReviewAssignmentUpdateWithWhereUniqueWithoutAssignerInput[]
-    updateMany?: ReviewAssignmentUpdateManyWithWhereWithoutAssignerInput | ReviewAssignmentUpdateManyWithWhereWithoutAssignerInput[]
-    deleteMany?: ReviewAssignmentScalarWhereInput | ReviewAssignmentScalarWhereInput[]
+  export type ReviewRuleUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ReviewRuleCreateWithoutUserInput, ReviewRuleUncheckedCreateWithoutUserInput> | ReviewRuleCreateWithoutUserInput[] | ReviewRuleUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReviewRuleCreateOrConnectWithoutUserInput | ReviewRuleCreateOrConnectWithoutUserInput[]
+    upsert?: ReviewRuleUpsertWithWhereUniqueWithoutUserInput | ReviewRuleUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ReviewRuleCreateManyUserInputEnvelope
+    set?: ReviewRuleWhereUniqueInput | ReviewRuleWhereUniqueInput[]
+    disconnect?: ReviewRuleWhereUniqueInput | ReviewRuleWhereUniqueInput[]
+    delete?: ReviewRuleWhereUniqueInput | ReviewRuleWhereUniqueInput[]
+    connect?: ReviewRuleWhereUniqueInput | ReviewRuleWhereUniqueInput[]
+    update?: ReviewRuleUpdateWithWhereUniqueWithoutUserInput | ReviewRuleUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ReviewRuleUpdateManyWithWhereWithoutUserInput | ReviewRuleUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ReviewRuleScalarWhereInput | ReviewRuleScalarWhereInput[]
+  }
+
+  export type ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ReviewThreadCommentReactionCreateWithoutUserInput, ReviewThreadCommentReactionUncheckedCreateWithoutUserInput> | ReviewThreadCommentReactionCreateWithoutUserInput[] | ReviewThreadCommentReactionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReviewThreadCommentReactionCreateOrConnectWithoutUserInput | ReviewThreadCommentReactionCreateOrConnectWithoutUserInput[]
+    upsert?: ReviewThreadCommentReactionUpsertWithWhereUniqueWithoutUserInput | ReviewThreadCommentReactionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ReviewThreadCommentReactionCreateManyUserInputEnvelope
+    set?: ReviewThreadCommentReactionWhereUniqueInput | ReviewThreadCommentReactionWhereUniqueInput[]
+    disconnect?: ReviewThreadCommentReactionWhereUniqueInput | ReviewThreadCommentReactionWhereUniqueInput[]
+    delete?: ReviewThreadCommentReactionWhereUniqueInput | ReviewThreadCommentReactionWhereUniqueInput[]
+    connect?: ReviewThreadCommentReactionWhereUniqueInput | ReviewThreadCommentReactionWhereUniqueInput[]
+    update?: ReviewThreadCommentReactionUpdateWithWhereUniqueWithoutUserInput | ReviewThreadCommentReactionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ReviewThreadCommentReactionUpdateManyWithWhereWithoutUserInput | ReviewThreadCommentReactionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ReviewThreadCommentReactionScalarWhereInput | ReviewThreadCommentReactionScalarWhereInput[]
+  }
+
+  export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
+    upsert?: SessionUpsertWithWhereUniqueWithoutUserInput | SessionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SessionCreateManyUserInputEnvelope
+    set?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+    disconnect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+    delete?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+    connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+    update?: SessionUpdateWithWhereUniqueWithoutUserInput | SessionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SessionUpdateManyWithWhereWithoutUserInput | SessionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SessionScalarWhereInput | SessionScalarWhereInput[]
+  }
+
+  export type UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserCustomRoleCreateWithoutUserInput, UserCustomRoleUncheckedCreateWithoutUserInput> | UserCustomRoleCreateWithoutUserInput[] | UserCustomRoleUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserCustomRoleCreateOrConnectWithoutUserInput | UserCustomRoleCreateOrConnectWithoutUserInput[]
+    upsert?: UserCustomRoleUpsertWithWhereUniqueWithoutUserInput | UserCustomRoleUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserCustomRoleCreateManyUserInputEnvelope
+    set?: UserCustomRoleWhereUniqueInput | UserCustomRoleWhereUniqueInput[]
+    disconnect?: UserCustomRoleWhereUniqueInput | UserCustomRoleWhereUniqueInput[]
+    delete?: UserCustomRoleWhereUniqueInput | UserCustomRoleWhereUniqueInput[]
+    connect?: UserCustomRoleWhereUniqueInput | UserCustomRoleWhereUniqueInput[]
+    update?: UserCustomRoleUpdateWithWhereUniqueWithoutUserInput | UserCustomRoleUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserCustomRoleUpdateManyWithWhereWithoutUserInput | UserCustomRoleUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserCustomRoleScalarWhereInput | UserCustomRoleScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutSessionsInput = {
@@ -56770,61 +56983,12 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
-  }
-
   export type UserUpdateOneRequiredWithoutAccountsNestedInput = {
     create?: XOR<UserCreateWithoutAccountsInput, UserUncheckedCreateWithoutAccountsInput>
     connectOrCreate?: UserCreateOrConnectWithoutAccountsInput
     upsert?: UserUpsertWithoutAccountsInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAccountsInput, UserUpdateWithoutAccountsInput>, UserUncheckedUpdateWithoutAccountsInput>
-  }
-
-  export type UserCreateNestedOneWithoutRepositoriesInput = {
-    create?: XOR<UserCreateWithoutRepositoriesInput, UserUncheckedCreateWithoutRepositoriesInput>
-    connectOrCreate?: UserCreateOrConnectWithoutRepositoriesInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type TeamCreateNestedOneWithoutRepositoriesInput = {
-    create?: XOR<TeamCreateWithoutRepositoriesInput, TeamUncheckedCreateWithoutRepositoriesInput>
-    connectOrCreate?: TeamCreateOrConnectWithoutRepositoriesInput
-    connect?: TeamWhereUniqueInput
-  }
-
-  export type ReviewCreateNestedManyWithoutRepositoryInput = {
-    create?: XOR<ReviewCreateWithoutRepositoryInput, ReviewUncheckedCreateWithoutRepositoryInput> | ReviewCreateWithoutRepositoryInput[] | ReviewUncheckedCreateWithoutRepositoryInput[]
-    connectOrCreate?: ReviewCreateOrConnectWithoutRepositoryInput | ReviewCreateOrConnectWithoutRepositoryInput[]
-    createMany?: ReviewCreateManyRepositoryInputEnvelope
-    connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
-  }
-
-  export type WebhookConfigCreateNestedOneWithoutRepositoryInput = {
-    create?: XOR<WebhookConfigCreateWithoutRepositoryInput, WebhookConfigUncheckedCreateWithoutRepositoryInput>
-    connectOrCreate?: WebhookConfigCreateOrConnectWithoutRepositoryInput
-    connect?: WebhookConfigWhereUniqueInput
-  }
-
-  export type ScheduledScanConfigCreateNestedOneWithoutRepositoryInput = {
-    create?: XOR<ScheduledScanConfigCreateWithoutRepositoryInput, ScheduledScanConfigUncheckedCreateWithoutRepositoryInput>
-    connectOrCreate?: ScheduledScanConfigCreateOrConnectWithoutRepositoryInput
-    connect?: ScheduledScanConfigWhereUniqueInput
-  }
-
-  export type GitHubCommentCreateNestedManyWithoutRepositoryInput = {
-    create?: XOR<GitHubCommentCreateWithoutRepositoryInput, GitHubCommentUncheckedCreateWithoutRepositoryInput> | GitHubCommentCreateWithoutRepositoryInput[] | GitHubCommentUncheckedCreateWithoutRepositoryInput[]
-    connectOrCreate?: GitHubCommentCreateOrConnectWithoutRepositoryInput | GitHubCommentCreateOrConnectWithoutRepositoryInput[]
-    createMany?: GitHubCommentCreateManyRepositoryInputEnvelope
-    connect?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
-  }
-
-  export type BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput = {
-    create?: XOR<BranchProtectionRecommendationCreateWithoutRepositoryInput, BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput> | BranchProtectionRecommendationCreateWithoutRepositoryInput[] | BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput[]
-    connectOrCreate?: BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput | BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput[]
-    createMany?: BranchProtectionRecommendationCreateManyRepositoryInputEnvelope
-    connect?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
   }
 
   export type DiagramCreateNestedManyWithoutRepositoryInput = {
@@ -56834,6 +56998,39 @@ export namespace Prisma {
     connect?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
   }
 
+  export type TeamCreateNestedOneWithoutRepositoriesInput = {
+    create?: XOR<TeamCreateWithoutRepositoriesInput, TeamUncheckedCreateWithoutRepositoriesInput>
+    connectOrCreate?: TeamCreateOrConnectWithoutRepositoriesInput
+    connect?: TeamWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutRepositoriesInput = {
+    create?: XOR<UserCreateWithoutRepositoriesInput, UserUncheckedCreateWithoutRepositoriesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutRepositoriesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ReviewCreateNestedManyWithoutRepositoryInput = {
+    create?: XOR<ReviewCreateWithoutRepositoryInput, ReviewUncheckedCreateWithoutRepositoryInput> | ReviewCreateWithoutRepositoryInput[] | ReviewUncheckedCreateWithoutRepositoryInput[]
+    connectOrCreate?: ReviewCreateOrConnectWithoutRepositoryInput | ReviewCreateOrConnectWithoutRepositoryInput[]
+    createMany?: ReviewCreateManyRepositoryInputEnvelope
+    connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+  }
+
+  export type BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput = {
+    create?: XOR<BranchProtectionRecommendationCreateWithoutRepositoryInput, BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput> | BranchProtectionRecommendationCreateWithoutRepositoryInput[] | BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput[]
+    connectOrCreate?: BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput | BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput[]
+    createMany?: BranchProtectionRecommendationCreateManyRepositoryInputEnvelope
+    connect?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
+  }
+
+  export type GitHubCommentCreateNestedManyWithoutRepositoryInput = {
+    create?: XOR<GitHubCommentCreateWithoutRepositoryInput, GitHubCommentUncheckedCreateWithoutRepositoryInput> | GitHubCommentCreateWithoutRepositoryInput[] | GitHubCommentUncheckedCreateWithoutRepositoryInput[]
+    connectOrCreate?: GitHubCommentCreateOrConnectWithoutRepositoryInput | GitHubCommentCreateOrConnectWithoutRepositoryInput[]
+    createMany?: GitHubCommentCreateManyRepositoryInputEnvelope
+    connect?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
+  }
+
   export type ReviewRuleCreateNestedManyWithoutRepositoryInput = {
     create?: XOR<ReviewRuleCreateWithoutRepositoryInput, ReviewRuleUncheckedCreateWithoutRepositoryInput> | ReviewRuleCreateWithoutRepositoryInput[] | ReviewRuleUncheckedCreateWithoutRepositoryInput[]
     connectOrCreate?: ReviewRuleCreateOrConnectWithoutRepositoryInput | ReviewRuleCreateOrConnectWithoutRepositoryInput[]
@@ -56841,37 +57038,16 @@ export namespace Prisma {
     connect?: ReviewRuleWhereUniqueInput | ReviewRuleWhereUniqueInput[]
   }
 
-  export type ReviewUncheckedCreateNestedManyWithoutRepositoryInput = {
-    create?: XOR<ReviewCreateWithoutRepositoryInput, ReviewUncheckedCreateWithoutRepositoryInput> | ReviewCreateWithoutRepositoryInput[] | ReviewUncheckedCreateWithoutRepositoryInput[]
-    connectOrCreate?: ReviewCreateOrConnectWithoutRepositoryInput | ReviewCreateOrConnectWithoutRepositoryInput[]
-    createMany?: ReviewCreateManyRepositoryInputEnvelope
-    connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
-  }
-
-  export type WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput = {
-    create?: XOR<WebhookConfigCreateWithoutRepositoryInput, WebhookConfigUncheckedCreateWithoutRepositoryInput>
-    connectOrCreate?: WebhookConfigCreateOrConnectWithoutRepositoryInput
-    connect?: WebhookConfigWhereUniqueInput
-  }
-
-  export type ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput = {
+  export type ScheduledScanConfigCreateNestedOneWithoutRepositoryInput = {
     create?: XOR<ScheduledScanConfigCreateWithoutRepositoryInput, ScheduledScanConfigUncheckedCreateWithoutRepositoryInput>
     connectOrCreate?: ScheduledScanConfigCreateOrConnectWithoutRepositoryInput
     connect?: ScheduledScanConfigWhereUniqueInput
   }
 
-  export type GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput = {
-    create?: XOR<GitHubCommentCreateWithoutRepositoryInput, GitHubCommentUncheckedCreateWithoutRepositoryInput> | GitHubCommentCreateWithoutRepositoryInput[] | GitHubCommentUncheckedCreateWithoutRepositoryInput[]
-    connectOrCreate?: GitHubCommentCreateOrConnectWithoutRepositoryInput | GitHubCommentCreateOrConnectWithoutRepositoryInput[]
-    createMany?: GitHubCommentCreateManyRepositoryInputEnvelope
-    connect?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
-  }
-
-  export type BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput = {
-    create?: XOR<BranchProtectionRecommendationCreateWithoutRepositoryInput, BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput> | BranchProtectionRecommendationCreateWithoutRepositoryInput[] | BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput[]
-    connectOrCreate?: BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput | BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput[]
-    createMany?: BranchProtectionRecommendationCreateManyRepositoryInputEnvelope
-    connect?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
+  export type WebhookConfigCreateNestedOneWithoutRepositoryInput = {
+    create?: XOR<WebhookConfigCreateWithoutRepositoryInput, WebhookConfigUncheckedCreateWithoutRepositoryInput>
+    connectOrCreate?: WebhookConfigCreateOrConnectWithoutRepositoryInput
+    connect?: WebhookConfigWhereUniqueInput
   }
 
   export type DiagramUncheckedCreateNestedManyWithoutRepositoryInput = {
@@ -56881,11 +57057,44 @@ export namespace Prisma {
     connect?: DiagramWhereUniqueInput | DiagramWhereUniqueInput[]
   }
 
+  export type ReviewUncheckedCreateNestedManyWithoutRepositoryInput = {
+    create?: XOR<ReviewCreateWithoutRepositoryInput, ReviewUncheckedCreateWithoutRepositoryInput> | ReviewCreateWithoutRepositoryInput[] | ReviewUncheckedCreateWithoutRepositoryInput[]
+    connectOrCreate?: ReviewCreateOrConnectWithoutRepositoryInput | ReviewCreateOrConnectWithoutRepositoryInput[]
+    createMany?: ReviewCreateManyRepositoryInputEnvelope
+    connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+  }
+
+  export type BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput = {
+    create?: XOR<BranchProtectionRecommendationCreateWithoutRepositoryInput, BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput> | BranchProtectionRecommendationCreateWithoutRepositoryInput[] | BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput[]
+    connectOrCreate?: BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput | BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput[]
+    createMany?: BranchProtectionRecommendationCreateManyRepositoryInputEnvelope
+    connect?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
+  }
+
+  export type GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput = {
+    create?: XOR<GitHubCommentCreateWithoutRepositoryInput, GitHubCommentUncheckedCreateWithoutRepositoryInput> | GitHubCommentCreateWithoutRepositoryInput[] | GitHubCommentUncheckedCreateWithoutRepositoryInput[]
+    connectOrCreate?: GitHubCommentCreateOrConnectWithoutRepositoryInput | GitHubCommentCreateOrConnectWithoutRepositoryInput[]
+    createMany?: GitHubCommentCreateManyRepositoryInputEnvelope
+    connect?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
+  }
+
   export type ReviewRuleUncheckedCreateNestedManyWithoutRepositoryInput = {
     create?: XOR<ReviewRuleCreateWithoutRepositoryInput, ReviewRuleUncheckedCreateWithoutRepositoryInput> | ReviewRuleCreateWithoutRepositoryInput[] | ReviewRuleUncheckedCreateWithoutRepositoryInput[]
     connectOrCreate?: ReviewRuleCreateOrConnectWithoutRepositoryInput | ReviewRuleCreateOrConnectWithoutRepositoryInput[]
     createMany?: ReviewRuleCreateManyRepositoryInputEnvelope
     connect?: ReviewRuleWhereUniqueInput | ReviewRuleWhereUniqueInput[]
+  }
+
+  export type ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput = {
+    create?: XOR<ScheduledScanConfigCreateWithoutRepositoryInput, ScheduledScanConfigUncheckedCreateWithoutRepositoryInput>
+    connectOrCreate?: ScheduledScanConfigCreateOrConnectWithoutRepositoryInput
+    connect?: ScheduledScanConfigWhereUniqueInput
+  }
+
+  export type WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput = {
+    create?: XOR<WebhookConfigCreateWithoutRepositoryInput, WebhookConfigUncheckedCreateWithoutRepositoryInput>
+    connectOrCreate?: WebhookConfigCreateOrConnectWithoutRepositoryInput
+    connect?: WebhookConfigWhereUniqueInput
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -56894,86 +57103,6 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
-  }
-
-  export type UserUpdateOneRequiredWithoutRepositoriesNestedInput = {
-    create?: XOR<UserCreateWithoutRepositoriesInput, UserUncheckedCreateWithoutRepositoriesInput>
-    connectOrCreate?: UserCreateOrConnectWithoutRepositoriesInput
-    upsert?: UserUpsertWithoutRepositoriesInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutRepositoriesInput, UserUpdateWithoutRepositoriesInput>, UserUncheckedUpdateWithoutRepositoriesInput>
-  }
-
-  export type TeamUpdateOneWithoutRepositoriesNestedInput = {
-    create?: XOR<TeamCreateWithoutRepositoriesInput, TeamUncheckedCreateWithoutRepositoriesInput>
-    connectOrCreate?: TeamCreateOrConnectWithoutRepositoriesInput
-    upsert?: TeamUpsertWithoutRepositoriesInput
-    disconnect?: TeamWhereInput | boolean
-    delete?: TeamWhereInput | boolean
-    connect?: TeamWhereUniqueInput
-    update?: XOR<XOR<TeamUpdateToOneWithWhereWithoutRepositoriesInput, TeamUpdateWithoutRepositoriesInput>, TeamUncheckedUpdateWithoutRepositoriesInput>
-  }
-
-  export type ReviewUpdateManyWithoutRepositoryNestedInput = {
-    create?: XOR<ReviewCreateWithoutRepositoryInput, ReviewUncheckedCreateWithoutRepositoryInput> | ReviewCreateWithoutRepositoryInput[] | ReviewUncheckedCreateWithoutRepositoryInput[]
-    connectOrCreate?: ReviewCreateOrConnectWithoutRepositoryInput | ReviewCreateOrConnectWithoutRepositoryInput[]
-    upsert?: ReviewUpsertWithWhereUniqueWithoutRepositoryInput | ReviewUpsertWithWhereUniqueWithoutRepositoryInput[]
-    createMany?: ReviewCreateManyRepositoryInputEnvelope
-    set?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
-    disconnect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
-    delete?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
-    connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
-    update?: ReviewUpdateWithWhereUniqueWithoutRepositoryInput | ReviewUpdateWithWhereUniqueWithoutRepositoryInput[]
-    updateMany?: ReviewUpdateManyWithWhereWithoutRepositoryInput | ReviewUpdateManyWithWhereWithoutRepositoryInput[]
-    deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
-  }
-
-  export type WebhookConfigUpdateOneWithoutRepositoryNestedInput = {
-    create?: XOR<WebhookConfigCreateWithoutRepositoryInput, WebhookConfigUncheckedCreateWithoutRepositoryInput>
-    connectOrCreate?: WebhookConfigCreateOrConnectWithoutRepositoryInput
-    upsert?: WebhookConfigUpsertWithoutRepositoryInput
-    disconnect?: WebhookConfigWhereInput | boolean
-    delete?: WebhookConfigWhereInput | boolean
-    connect?: WebhookConfigWhereUniqueInput
-    update?: XOR<XOR<WebhookConfigUpdateToOneWithWhereWithoutRepositoryInput, WebhookConfigUpdateWithoutRepositoryInput>, WebhookConfigUncheckedUpdateWithoutRepositoryInput>
-  }
-
-  export type ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput = {
-    create?: XOR<ScheduledScanConfigCreateWithoutRepositoryInput, ScheduledScanConfigUncheckedCreateWithoutRepositoryInput>
-    connectOrCreate?: ScheduledScanConfigCreateOrConnectWithoutRepositoryInput
-    upsert?: ScheduledScanConfigUpsertWithoutRepositoryInput
-    disconnect?: ScheduledScanConfigWhereInput | boolean
-    delete?: ScheduledScanConfigWhereInput | boolean
-    connect?: ScheduledScanConfigWhereUniqueInput
-    update?: XOR<XOR<ScheduledScanConfigUpdateToOneWithWhereWithoutRepositoryInput, ScheduledScanConfigUpdateWithoutRepositoryInput>, ScheduledScanConfigUncheckedUpdateWithoutRepositoryInput>
-  }
-
-  export type GitHubCommentUpdateManyWithoutRepositoryNestedInput = {
-    create?: XOR<GitHubCommentCreateWithoutRepositoryInput, GitHubCommentUncheckedCreateWithoutRepositoryInput> | GitHubCommentCreateWithoutRepositoryInput[] | GitHubCommentUncheckedCreateWithoutRepositoryInput[]
-    connectOrCreate?: GitHubCommentCreateOrConnectWithoutRepositoryInput | GitHubCommentCreateOrConnectWithoutRepositoryInput[]
-    upsert?: GitHubCommentUpsertWithWhereUniqueWithoutRepositoryInput | GitHubCommentUpsertWithWhereUniqueWithoutRepositoryInput[]
-    createMany?: GitHubCommentCreateManyRepositoryInputEnvelope
-    set?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
-    disconnect?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
-    delete?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
-    connect?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
-    update?: GitHubCommentUpdateWithWhereUniqueWithoutRepositoryInput | GitHubCommentUpdateWithWhereUniqueWithoutRepositoryInput[]
-    updateMany?: GitHubCommentUpdateManyWithWhereWithoutRepositoryInput | GitHubCommentUpdateManyWithWhereWithoutRepositoryInput[]
-    deleteMany?: GitHubCommentScalarWhereInput | GitHubCommentScalarWhereInput[]
-  }
-
-  export type BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput = {
-    create?: XOR<BranchProtectionRecommendationCreateWithoutRepositoryInput, BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput> | BranchProtectionRecommendationCreateWithoutRepositoryInput[] | BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput[]
-    connectOrCreate?: BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput | BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput[]
-    upsert?: BranchProtectionRecommendationUpsertWithWhereUniqueWithoutRepositoryInput | BranchProtectionRecommendationUpsertWithWhereUniqueWithoutRepositoryInput[]
-    createMany?: BranchProtectionRecommendationCreateManyRepositoryInputEnvelope
-    set?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
-    disconnect?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
-    delete?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
-    connect?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
-    update?: BranchProtectionRecommendationUpdateWithWhereUniqueWithoutRepositoryInput | BranchProtectionRecommendationUpdateWithWhereUniqueWithoutRepositoryInput[]
-    updateMany?: BranchProtectionRecommendationUpdateManyWithWhereWithoutRepositoryInput | BranchProtectionRecommendationUpdateManyWithWhereWithoutRepositoryInput[]
-    deleteMany?: BranchProtectionRecommendationScalarWhereInput | BranchProtectionRecommendationScalarWhereInput[]
   }
 
   export type DiagramUpdateManyWithoutRepositoryNestedInput = {
@@ -56990,6 +57119,66 @@ export namespace Prisma {
     deleteMany?: DiagramScalarWhereInput | DiagramScalarWhereInput[]
   }
 
+  export type TeamUpdateOneWithoutRepositoriesNestedInput = {
+    create?: XOR<TeamCreateWithoutRepositoriesInput, TeamUncheckedCreateWithoutRepositoriesInput>
+    connectOrCreate?: TeamCreateOrConnectWithoutRepositoriesInput
+    upsert?: TeamUpsertWithoutRepositoriesInput
+    disconnect?: TeamWhereInput | boolean
+    delete?: TeamWhereInput | boolean
+    connect?: TeamWhereUniqueInput
+    update?: XOR<XOR<TeamUpdateToOneWithWhereWithoutRepositoriesInput, TeamUpdateWithoutRepositoriesInput>, TeamUncheckedUpdateWithoutRepositoriesInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutRepositoriesNestedInput = {
+    create?: XOR<UserCreateWithoutRepositoriesInput, UserUncheckedCreateWithoutRepositoriesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutRepositoriesInput
+    upsert?: UserUpsertWithoutRepositoriesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutRepositoriesInput, UserUpdateWithoutRepositoriesInput>, UserUncheckedUpdateWithoutRepositoriesInput>
+  }
+
+  export type ReviewUpdateManyWithoutRepositoryNestedInput = {
+    create?: XOR<ReviewCreateWithoutRepositoryInput, ReviewUncheckedCreateWithoutRepositoryInput> | ReviewCreateWithoutRepositoryInput[] | ReviewUncheckedCreateWithoutRepositoryInput[]
+    connectOrCreate?: ReviewCreateOrConnectWithoutRepositoryInput | ReviewCreateOrConnectWithoutRepositoryInput[]
+    upsert?: ReviewUpsertWithWhereUniqueWithoutRepositoryInput | ReviewUpsertWithWhereUniqueWithoutRepositoryInput[]
+    createMany?: ReviewCreateManyRepositoryInputEnvelope
+    set?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+    disconnect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+    delete?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+    connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+    update?: ReviewUpdateWithWhereUniqueWithoutRepositoryInput | ReviewUpdateWithWhereUniqueWithoutRepositoryInput[]
+    updateMany?: ReviewUpdateManyWithWhereWithoutRepositoryInput | ReviewUpdateManyWithWhereWithoutRepositoryInput[]
+    deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
+  }
+
+  export type BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput = {
+    create?: XOR<BranchProtectionRecommendationCreateWithoutRepositoryInput, BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput> | BranchProtectionRecommendationCreateWithoutRepositoryInput[] | BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput[]
+    connectOrCreate?: BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput | BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput[]
+    upsert?: BranchProtectionRecommendationUpsertWithWhereUniqueWithoutRepositoryInput | BranchProtectionRecommendationUpsertWithWhereUniqueWithoutRepositoryInput[]
+    createMany?: BranchProtectionRecommendationCreateManyRepositoryInputEnvelope
+    set?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
+    disconnect?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
+    delete?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
+    connect?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
+    update?: BranchProtectionRecommendationUpdateWithWhereUniqueWithoutRepositoryInput | BranchProtectionRecommendationUpdateWithWhereUniqueWithoutRepositoryInput[]
+    updateMany?: BranchProtectionRecommendationUpdateManyWithWhereWithoutRepositoryInput | BranchProtectionRecommendationUpdateManyWithWhereWithoutRepositoryInput[]
+    deleteMany?: BranchProtectionRecommendationScalarWhereInput | BranchProtectionRecommendationScalarWhereInput[]
+  }
+
+  export type GitHubCommentUpdateManyWithoutRepositoryNestedInput = {
+    create?: XOR<GitHubCommentCreateWithoutRepositoryInput, GitHubCommentUncheckedCreateWithoutRepositoryInput> | GitHubCommentCreateWithoutRepositoryInput[] | GitHubCommentUncheckedCreateWithoutRepositoryInput[]
+    connectOrCreate?: GitHubCommentCreateOrConnectWithoutRepositoryInput | GitHubCommentCreateOrConnectWithoutRepositoryInput[]
+    upsert?: GitHubCommentUpsertWithWhereUniqueWithoutRepositoryInput | GitHubCommentUpsertWithWhereUniqueWithoutRepositoryInput[]
+    createMany?: GitHubCommentCreateManyRepositoryInputEnvelope
+    set?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
+    disconnect?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
+    delete?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
+    connect?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
+    update?: GitHubCommentUpdateWithWhereUniqueWithoutRepositoryInput | GitHubCommentUpdateWithWhereUniqueWithoutRepositoryInput[]
+    updateMany?: GitHubCommentUpdateManyWithWhereWithoutRepositoryInput | GitHubCommentUpdateManyWithWhereWithoutRepositoryInput[]
+    deleteMany?: GitHubCommentScalarWhereInput | GitHubCommentScalarWhereInput[]
+  }
+
   export type ReviewRuleUpdateManyWithoutRepositoryNestedInput = {
     create?: XOR<ReviewRuleCreateWithoutRepositoryInput, ReviewRuleUncheckedCreateWithoutRepositoryInput> | ReviewRuleCreateWithoutRepositoryInput[] | ReviewRuleUncheckedCreateWithoutRepositoryInput[]
     connectOrCreate?: ReviewRuleCreateOrConnectWithoutRepositoryInput | ReviewRuleCreateOrConnectWithoutRepositoryInput[]
@@ -57004,31 +57193,7 @@ export namespace Prisma {
     deleteMany?: ReviewRuleScalarWhereInput | ReviewRuleScalarWhereInput[]
   }
 
-  export type ReviewUncheckedUpdateManyWithoutRepositoryNestedInput = {
-    create?: XOR<ReviewCreateWithoutRepositoryInput, ReviewUncheckedCreateWithoutRepositoryInput> | ReviewCreateWithoutRepositoryInput[] | ReviewUncheckedCreateWithoutRepositoryInput[]
-    connectOrCreate?: ReviewCreateOrConnectWithoutRepositoryInput | ReviewCreateOrConnectWithoutRepositoryInput[]
-    upsert?: ReviewUpsertWithWhereUniqueWithoutRepositoryInput | ReviewUpsertWithWhereUniqueWithoutRepositoryInput[]
-    createMany?: ReviewCreateManyRepositoryInputEnvelope
-    set?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
-    disconnect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
-    delete?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
-    connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
-    update?: ReviewUpdateWithWhereUniqueWithoutRepositoryInput | ReviewUpdateWithWhereUniqueWithoutRepositoryInput[]
-    updateMany?: ReviewUpdateManyWithWhereWithoutRepositoryInput | ReviewUpdateManyWithWhereWithoutRepositoryInput[]
-    deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
-  }
-
-  export type WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput = {
-    create?: XOR<WebhookConfigCreateWithoutRepositoryInput, WebhookConfigUncheckedCreateWithoutRepositoryInput>
-    connectOrCreate?: WebhookConfigCreateOrConnectWithoutRepositoryInput
-    upsert?: WebhookConfigUpsertWithoutRepositoryInput
-    disconnect?: WebhookConfigWhereInput | boolean
-    delete?: WebhookConfigWhereInput | boolean
-    connect?: WebhookConfigWhereUniqueInput
-    update?: XOR<XOR<WebhookConfigUpdateToOneWithWhereWithoutRepositoryInput, WebhookConfigUpdateWithoutRepositoryInput>, WebhookConfigUncheckedUpdateWithoutRepositoryInput>
-  }
-
-  export type ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput = {
+  export type ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput = {
     create?: XOR<ScheduledScanConfigCreateWithoutRepositoryInput, ScheduledScanConfigUncheckedCreateWithoutRepositoryInput>
     connectOrCreate?: ScheduledScanConfigCreateOrConnectWithoutRepositoryInput
     upsert?: ScheduledScanConfigUpsertWithoutRepositoryInput
@@ -57038,32 +57203,14 @@ export namespace Prisma {
     update?: XOR<XOR<ScheduledScanConfigUpdateToOneWithWhereWithoutRepositoryInput, ScheduledScanConfigUpdateWithoutRepositoryInput>, ScheduledScanConfigUncheckedUpdateWithoutRepositoryInput>
   }
 
-  export type GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput = {
-    create?: XOR<GitHubCommentCreateWithoutRepositoryInput, GitHubCommentUncheckedCreateWithoutRepositoryInput> | GitHubCommentCreateWithoutRepositoryInput[] | GitHubCommentUncheckedCreateWithoutRepositoryInput[]
-    connectOrCreate?: GitHubCommentCreateOrConnectWithoutRepositoryInput | GitHubCommentCreateOrConnectWithoutRepositoryInput[]
-    upsert?: GitHubCommentUpsertWithWhereUniqueWithoutRepositoryInput | GitHubCommentUpsertWithWhereUniqueWithoutRepositoryInput[]
-    createMany?: GitHubCommentCreateManyRepositoryInputEnvelope
-    set?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
-    disconnect?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
-    delete?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
-    connect?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
-    update?: GitHubCommentUpdateWithWhereUniqueWithoutRepositoryInput | GitHubCommentUpdateWithWhereUniqueWithoutRepositoryInput[]
-    updateMany?: GitHubCommentUpdateManyWithWhereWithoutRepositoryInput | GitHubCommentUpdateManyWithWhereWithoutRepositoryInput[]
-    deleteMany?: GitHubCommentScalarWhereInput | GitHubCommentScalarWhereInput[]
-  }
-
-  export type BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput = {
-    create?: XOR<BranchProtectionRecommendationCreateWithoutRepositoryInput, BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput> | BranchProtectionRecommendationCreateWithoutRepositoryInput[] | BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput[]
-    connectOrCreate?: BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput | BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput[]
-    upsert?: BranchProtectionRecommendationUpsertWithWhereUniqueWithoutRepositoryInput | BranchProtectionRecommendationUpsertWithWhereUniqueWithoutRepositoryInput[]
-    createMany?: BranchProtectionRecommendationCreateManyRepositoryInputEnvelope
-    set?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
-    disconnect?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
-    delete?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
-    connect?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
-    update?: BranchProtectionRecommendationUpdateWithWhereUniqueWithoutRepositoryInput | BranchProtectionRecommendationUpdateWithWhereUniqueWithoutRepositoryInput[]
-    updateMany?: BranchProtectionRecommendationUpdateManyWithWhereWithoutRepositoryInput | BranchProtectionRecommendationUpdateManyWithWhereWithoutRepositoryInput[]
-    deleteMany?: BranchProtectionRecommendationScalarWhereInput | BranchProtectionRecommendationScalarWhereInput[]
+  export type WebhookConfigUpdateOneWithoutRepositoryNestedInput = {
+    create?: XOR<WebhookConfigCreateWithoutRepositoryInput, WebhookConfigUncheckedCreateWithoutRepositoryInput>
+    connectOrCreate?: WebhookConfigCreateOrConnectWithoutRepositoryInput
+    upsert?: WebhookConfigUpsertWithoutRepositoryInput
+    disconnect?: WebhookConfigWhereInput | boolean
+    delete?: WebhookConfigWhereInput | boolean
+    connect?: WebhookConfigWhereUniqueInput
+    update?: XOR<XOR<WebhookConfigUpdateToOneWithWhereWithoutRepositoryInput, WebhookConfigUpdateWithoutRepositoryInput>, WebhookConfigUncheckedUpdateWithoutRepositoryInput>
   }
 
   export type DiagramUncheckedUpdateManyWithoutRepositoryNestedInput = {
@@ -57080,6 +57227,48 @@ export namespace Prisma {
     deleteMany?: DiagramScalarWhereInput | DiagramScalarWhereInput[]
   }
 
+  export type ReviewUncheckedUpdateManyWithoutRepositoryNestedInput = {
+    create?: XOR<ReviewCreateWithoutRepositoryInput, ReviewUncheckedCreateWithoutRepositoryInput> | ReviewCreateWithoutRepositoryInput[] | ReviewUncheckedCreateWithoutRepositoryInput[]
+    connectOrCreate?: ReviewCreateOrConnectWithoutRepositoryInput | ReviewCreateOrConnectWithoutRepositoryInput[]
+    upsert?: ReviewUpsertWithWhereUniqueWithoutRepositoryInput | ReviewUpsertWithWhereUniqueWithoutRepositoryInput[]
+    createMany?: ReviewCreateManyRepositoryInputEnvelope
+    set?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+    disconnect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+    delete?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+    connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+    update?: ReviewUpdateWithWhereUniqueWithoutRepositoryInput | ReviewUpdateWithWhereUniqueWithoutRepositoryInput[]
+    updateMany?: ReviewUpdateManyWithWhereWithoutRepositoryInput | ReviewUpdateManyWithWhereWithoutRepositoryInput[]
+    deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
+  }
+
+  export type BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput = {
+    create?: XOR<BranchProtectionRecommendationCreateWithoutRepositoryInput, BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput> | BranchProtectionRecommendationCreateWithoutRepositoryInput[] | BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput[]
+    connectOrCreate?: BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput | BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput[]
+    upsert?: BranchProtectionRecommendationUpsertWithWhereUniqueWithoutRepositoryInput | BranchProtectionRecommendationUpsertWithWhereUniqueWithoutRepositoryInput[]
+    createMany?: BranchProtectionRecommendationCreateManyRepositoryInputEnvelope
+    set?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
+    disconnect?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
+    delete?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
+    connect?: BranchProtectionRecommendationWhereUniqueInput | BranchProtectionRecommendationWhereUniqueInput[]
+    update?: BranchProtectionRecommendationUpdateWithWhereUniqueWithoutRepositoryInput | BranchProtectionRecommendationUpdateWithWhereUniqueWithoutRepositoryInput[]
+    updateMany?: BranchProtectionRecommendationUpdateManyWithWhereWithoutRepositoryInput | BranchProtectionRecommendationUpdateManyWithWhereWithoutRepositoryInput[]
+    deleteMany?: BranchProtectionRecommendationScalarWhereInput | BranchProtectionRecommendationScalarWhereInput[]
+  }
+
+  export type GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput = {
+    create?: XOR<GitHubCommentCreateWithoutRepositoryInput, GitHubCommentUncheckedCreateWithoutRepositoryInput> | GitHubCommentCreateWithoutRepositoryInput[] | GitHubCommentUncheckedCreateWithoutRepositoryInput[]
+    connectOrCreate?: GitHubCommentCreateOrConnectWithoutRepositoryInput | GitHubCommentCreateOrConnectWithoutRepositoryInput[]
+    upsert?: GitHubCommentUpsertWithWhereUniqueWithoutRepositoryInput | GitHubCommentUpsertWithWhereUniqueWithoutRepositoryInput[]
+    createMany?: GitHubCommentCreateManyRepositoryInputEnvelope
+    set?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
+    disconnect?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
+    delete?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
+    connect?: GitHubCommentWhereUniqueInput | GitHubCommentWhereUniqueInput[]
+    update?: GitHubCommentUpdateWithWhereUniqueWithoutRepositoryInput | GitHubCommentUpdateWithWhereUniqueWithoutRepositoryInput[]
+    updateMany?: GitHubCommentUpdateManyWithWhereWithoutRepositoryInput | GitHubCommentUpdateManyWithWhereWithoutRepositoryInput[]
+    deleteMany?: GitHubCommentScalarWhereInput | GitHubCommentScalarWhereInput[]
+  }
+
   export type ReviewRuleUncheckedUpdateManyWithoutRepositoryNestedInput = {
     create?: XOR<ReviewRuleCreateWithoutRepositoryInput, ReviewRuleUncheckedCreateWithoutRepositoryInput> | ReviewRuleCreateWithoutRepositoryInput[] | ReviewRuleUncheckedCreateWithoutRepositoryInput[]
     connectOrCreate?: ReviewRuleCreateOrConnectWithoutRepositoryInput | ReviewRuleCreateOrConnectWithoutRepositoryInput[]
@@ -57094,8 +57283,41 @@ export namespace Prisma {
     deleteMany?: ReviewRuleScalarWhereInput | ReviewRuleScalarWhereInput[]
   }
 
+  export type ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput = {
+    create?: XOR<ScheduledScanConfigCreateWithoutRepositoryInput, ScheduledScanConfigUncheckedCreateWithoutRepositoryInput>
+    connectOrCreate?: ScheduledScanConfigCreateOrConnectWithoutRepositoryInput
+    upsert?: ScheduledScanConfigUpsertWithoutRepositoryInput
+    disconnect?: ScheduledScanConfigWhereInput | boolean
+    delete?: ScheduledScanConfigWhereInput | boolean
+    connect?: ScheduledScanConfigWhereUniqueInput
+    update?: XOR<XOR<ScheduledScanConfigUpdateToOneWithWhereWithoutRepositoryInput, ScheduledScanConfigUpdateWithoutRepositoryInput>, ScheduledScanConfigUncheckedUpdateWithoutRepositoryInput>
+  }
+
+  export type WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput = {
+    create?: XOR<WebhookConfigCreateWithoutRepositoryInput, WebhookConfigUncheckedCreateWithoutRepositoryInput>
+    connectOrCreate?: WebhookConfigCreateOrConnectWithoutRepositoryInput
+    upsert?: WebhookConfigUpsertWithoutRepositoryInput
+    disconnect?: WebhookConfigWhereInput | boolean
+    delete?: WebhookConfigWhereInput | boolean
+    connect?: WebhookConfigWhereUniqueInput
+    update?: XOR<XOR<WebhookConfigUpdateToOneWithWhereWithoutRepositoryInput, WebhookConfigUpdateWithoutRepositoryInput>, WebhookConfigUncheckedUpdateWithoutRepositoryInput>
+  }
+
   export type ReviewCreateresolvedCommentsInput = {
     set: string[]
+  }
+
+  export type ReviewCreateNestedOneWithoutChildReviewsInput = {
+    create?: XOR<ReviewCreateWithoutChildReviewsInput, ReviewUncheckedCreateWithoutChildReviewsInput>
+    connectOrCreate?: ReviewCreateOrConnectWithoutChildReviewsInput
+    connect?: ReviewWhereUniqueInput
+  }
+
+  export type ReviewCreateNestedManyWithoutParentReviewInput = {
+    create?: XOR<ReviewCreateWithoutParentReviewInput, ReviewUncheckedCreateWithoutParentReviewInput> | ReviewCreateWithoutParentReviewInput[] | ReviewUncheckedCreateWithoutParentReviewInput[]
+    connectOrCreate?: ReviewCreateOrConnectWithoutParentReviewInput | ReviewCreateOrConnectWithoutParentReviewInput[]
+    createMany?: ReviewCreateManyParentReviewInputEnvelope
+    connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
   }
 
   export type RepositoryCreateNestedOneWithoutReviewsInput = {
@@ -57110,17 +57332,11 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
-  export type ReviewCreateNestedOneWithoutChildReviewsInput = {
-    create?: XOR<ReviewCreateWithoutChildReviewsInput, ReviewUncheckedCreateWithoutChildReviewsInput>
-    connectOrCreate?: ReviewCreateOrConnectWithoutChildReviewsInput
-    connect?: ReviewWhereUniqueInput
-  }
-
-  export type ReviewCreateNestedManyWithoutParentReviewInput = {
-    create?: XOR<ReviewCreateWithoutParentReviewInput, ReviewUncheckedCreateWithoutParentReviewInput> | ReviewCreateWithoutParentReviewInput[] | ReviewUncheckedCreateWithoutParentReviewInput[]
-    connectOrCreate?: ReviewCreateOrConnectWithoutParentReviewInput | ReviewCreateOrConnectWithoutParentReviewInput[]
-    createMany?: ReviewCreateManyParentReviewInputEnvelope
-    connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+  export type ReviewFeedbackCreateNestedManyWithoutReviewInput = {
+    create?: XOR<ReviewFeedbackCreateWithoutReviewInput, ReviewFeedbackUncheckedCreateWithoutReviewInput> | ReviewFeedbackCreateWithoutReviewInput[] | ReviewFeedbackUncheckedCreateWithoutReviewInput[]
+    connectOrCreate?: ReviewFeedbackCreateOrConnectWithoutReviewInput | ReviewFeedbackCreateOrConnectWithoutReviewInput[]
+    createMany?: ReviewFeedbackCreateManyReviewInputEnvelope
+    connect?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
   }
 
   export type ReviewThreadCreateNestedManyWithoutReviewInput = {
@@ -57140,13 +57356,6 @@ export namespace Prisma {
     create?: XOR<GitHubStatusCheckCreateWithoutReviewInput, GitHubStatusCheckUncheckedCreateWithoutReviewInput>
     connectOrCreate?: GitHubStatusCheckCreateOrConnectWithoutReviewInput
     connect?: GitHubStatusCheckWhereUniqueInput
-  }
-
-  export type ReviewFeedbackCreateNestedManyWithoutReviewInput = {
-    create?: XOR<ReviewFeedbackCreateWithoutReviewInput, ReviewFeedbackUncheckedCreateWithoutReviewInput> | ReviewFeedbackCreateWithoutReviewInput[] | ReviewFeedbackUncheckedCreateWithoutReviewInput[]
-    connectOrCreate?: ReviewFeedbackCreateOrConnectWithoutReviewInput | ReviewFeedbackCreateOrConnectWithoutReviewInput[]
-    createMany?: ReviewFeedbackCreateManyReviewInputEnvelope
-    connect?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
   }
 
   export type ReviewApprovalCreateNestedManyWithoutReviewInput = {
@@ -57177,6 +57386,13 @@ export namespace Prisma {
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
   }
 
+  export type ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput = {
+    create?: XOR<ReviewFeedbackCreateWithoutReviewInput, ReviewFeedbackUncheckedCreateWithoutReviewInput> | ReviewFeedbackCreateWithoutReviewInput[] | ReviewFeedbackUncheckedCreateWithoutReviewInput[]
+    connectOrCreate?: ReviewFeedbackCreateOrConnectWithoutReviewInput | ReviewFeedbackCreateOrConnectWithoutReviewInput[]
+    createMany?: ReviewFeedbackCreateManyReviewInputEnvelope
+    connect?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
+  }
+
   export type ReviewThreadUncheckedCreateNestedManyWithoutReviewInput = {
     create?: XOR<ReviewThreadCreateWithoutReviewInput, ReviewThreadUncheckedCreateWithoutReviewInput> | ReviewThreadCreateWithoutReviewInput[] | ReviewThreadUncheckedCreateWithoutReviewInput[]
     connectOrCreate?: ReviewThreadCreateOrConnectWithoutReviewInput | ReviewThreadCreateOrConnectWithoutReviewInput[]
@@ -57194,13 +57410,6 @@ export namespace Prisma {
     create?: XOR<GitHubStatusCheckCreateWithoutReviewInput, GitHubStatusCheckUncheckedCreateWithoutReviewInput>
     connectOrCreate?: GitHubStatusCheckCreateOrConnectWithoutReviewInput
     connect?: GitHubStatusCheckWhereUniqueInput
-  }
-
-  export type ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput = {
-    create?: XOR<ReviewFeedbackCreateWithoutReviewInput, ReviewFeedbackUncheckedCreateWithoutReviewInput> | ReviewFeedbackCreateWithoutReviewInput[] | ReviewFeedbackUncheckedCreateWithoutReviewInput[]
-    connectOrCreate?: ReviewFeedbackCreateOrConnectWithoutReviewInput | ReviewFeedbackCreateOrConnectWithoutReviewInput[]
-    createMany?: ReviewFeedbackCreateManyReviewInputEnvelope
-    connect?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
   }
 
   export type ReviewApprovalUncheckedCreateNestedManyWithoutReviewInput = {
@@ -57228,33 +57437,9 @@ export namespace Prisma {
     set?: $Enums.ReviewStatus
   }
 
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type ReviewUpdateresolvedCommentsInput = {
     set?: string[]
     push?: string | string[]
-  }
-
-  export type RepositoryUpdateOneRequiredWithoutReviewsNestedInput = {
-    create?: XOR<RepositoryCreateWithoutReviewsInput, RepositoryUncheckedCreateWithoutReviewsInput>
-    connectOrCreate?: RepositoryCreateOrConnectWithoutReviewsInput
-    upsert?: RepositoryUpsertWithoutReviewsInput
-    connect?: RepositoryWhereUniqueInput
-    update?: XOR<XOR<RepositoryUpdateToOneWithWhereWithoutReviewsInput, RepositoryUpdateWithoutReviewsInput>, RepositoryUncheckedUpdateWithoutReviewsInput>
-  }
-
-  export type UserUpdateOneRequiredWithoutReviewsNestedInput = {
-    create?: XOR<UserCreateWithoutReviewsInput, UserUncheckedCreateWithoutReviewsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutReviewsInput
-    upsert?: UserUpsertWithoutReviewsInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReviewsInput, UserUpdateWithoutReviewsInput>, UserUncheckedUpdateWithoutReviewsInput>
   }
 
   export type ReviewUpdateOneWithoutChildReviewsNestedInput = {
@@ -57279,6 +57464,36 @@ export namespace Prisma {
     update?: ReviewUpdateWithWhereUniqueWithoutParentReviewInput | ReviewUpdateWithWhereUniqueWithoutParentReviewInput[]
     updateMany?: ReviewUpdateManyWithWhereWithoutParentReviewInput | ReviewUpdateManyWithWhereWithoutParentReviewInput[]
     deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
+  }
+
+  export type RepositoryUpdateOneRequiredWithoutReviewsNestedInput = {
+    create?: XOR<RepositoryCreateWithoutReviewsInput, RepositoryUncheckedCreateWithoutReviewsInput>
+    connectOrCreate?: RepositoryCreateOrConnectWithoutReviewsInput
+    upsert?: RepositoryUpsertWithoutReviewsInput
+    connect?: RepositoryWhereUniqueInput
+    update?: XOR<XOR<RepositoryUpdateToOneWithWhereWithoutReviewsInput, RepositoryUpdateWithoutReviewsInput>, RepositoryUncheckedUpdateWithoutReviewsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutReviewsNestedInput = {
+    create?: XOR<UserCreateWithoutReviewsInput, UserUncheckedCreateWithoutReviewsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReviewsInput
+    upsert?: UserUpsertWithoutReviewsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReviewsInput, UserUpdateWithoutReviewsInput>, UserUncheckedUpdateWithoutReviewsInput>
+  }
+
+  export type ReviewFeedbackUpdateManyWithoutReviewNestedInput = {
+    create?: XOR<ReviewFeedbackCreateWithoutReviewInput, ReviewFeedbackUncheckedCreateWithoutReviewInput> | ReviewFeedbackCreateWithoutReviewInput[] | ReviewFeedbackUncheckedCreateWithoutReviewInput[]
+    connectOrCreate?: ReviewFeedbackCreateOrConnectWithoutReviewInput | ReviewFeedbackCreateOrConnectWithoutReviewInput[]
+    upsert?: ReviewFeedbackUpsertWithWhereUniqueWithoutReviewInput | ReviewFeedbackUpsertWithWhereUniqueWithoutReviewInput[]
+    createMany?: ReviewFeedbackCreateManyReviewInputEnvelope
+    set?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
+    disconnect?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
+    delete?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
+    connect?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
+    update?: ReviewFeedbackUpdateWithWhereUniqueWithoutReviewInput | ReviewFeedbackUpdateWithWhereUniqueWithoutReviewInput[]
+    updateMany?: ReviewFeedbackUpdateManyWithWhereWithoutReviewInput | ReviewFeedbackUpdateManyWithWhereWithoutReviewInput[]
+    deleteMany?: ReviewFeedbackScalarWhereInput | ReviewFeedbackScalarWhereInput[]
   }
 
   export type ReviewThreadUpdateManyWithoutReviewNestedInput = {
@@ -57313,20 +57528,6 @@ export namespace Prisma {
     delete?: GitHubStatusCheckWhereInput | boolean
     connect?: GitHubStatusCheckWhereUniqueInput
     update?: XOR<XOR<GitHubStatusCheckUpdateToOneWithWhereWithoutReviewInput, GitHubStatusCheckUpdateWithoutReviewInput>, GitHubStatusCheckUncheckedUpdateWithoutReviewInput>
-  }
-
-  export type ReviewFeedbackUpdateManyWithoutReviewNestedInput = {
-    create?: XOR<ReviewFeedbackCreateWithoutReviewInput, ReviewFeedbackUncheckedCreateWithoutReviewInput> | ReviewFeedbackCreateWithoutReviewInput[] | ReviewFeedbackUncheckedCreateWithoutReviewInput[]
-    connectOrCreate?: ReviewFeedbackCreateOrConnectWithoutReviewInput | ReviewFeedbackCreateOrConnectWithoutReviewInput[]
-    upsert?: ReviewFeedbackUpsertWithWhereUniqueWithoutReviewInput | ReviewFeedbackUpsertWithWhereUniqueWithoutReviewInput[]
-    createMany?: ReviewFeedbackCreateManyReviewInputEnvelope
-    set?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
-    disconnect?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
-    delete?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
-    connect?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
-    update?: ReviewFeedbackUpdateWithWhereUniqueWithoutReviewInput | ReviewFeedbackUpdateWithWhereUniqueWithoutReviewInput[]
-    updateMany?: ReviewFeedbackUpdateManyWithWhereWithoutReviewInput | ReviewFeedbackUpdateManyWithWhereWithoutReviewInput[]
-    deleteMany?: ReviewFeedbackScalarWhereInput | ReviewFeedbackScalarWhereInput[]
   }
 
   export type ReviewApprovalUpdateManyWithoutReviewNestedInput = {
@@ -57385,6 +57586,20 @@ export namespace Prisma {
     deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
   }
 
+  export type ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput = {
+    create?: XOR<ReviewFeedbackCreateWithoutReviewInput, ReviewFeedbackUncheckedCreateWithoutReviewInput> | ReviewFeedbackCreateWithoutReviewInput[] | ReviewFeedbackUncheckedCreateWithoutReviewInput[]
+    connectOrCreate?: ReviewFeedbackCreateOrConnectWithoutReviewInput | ReviewFeedbackCreateOrConnectWithoutReviewInput[]
+    upsert?: ReviewFeedbackUpsertWithWhereUniqueWithoutReviewInput | ReviewFeedbackUpsertWithWhereUniqueWithoutReviewInput[]
+    createMany?: ReviewFeedbackCreateManyReviewInputEnvelope
+    set?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
+    disconnect?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
+    delete?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
+    connect?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
+    update?: ReviewFeedbackUpdateWithWhereUniqueWithoutReviewInput | ReviewFeedbackUpdateWithWhereUniqueWithoutReviewInput[]
+    updateMany?: ReviewFeedbackUpdateManyWithWhereWithoutReviewInput | ReviewFeedbackUpdateManyWithWhereWithoutReviewInput[]
+    deleteMany?: ReviewFeedbackScalarWhereInput | ReviewFeedbackScalarWhereInput[]
+  }
+
   export type ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput = {
     create?: XOR<ReviewThreadCreateWithoutReviewInput, ReviewThreadUncheckedCreateWithoutReviewInput> | ReviewThreadCreateWithoutReviewInput[] | ReviewThreadUncheckedCreateWithoutReviewInput[]
     connectOrCreate?: ReviewThreadCreateOrConnectWithoutReviewInput | ReviewThreadCreateOrConnectWithoutReviewInput[]
@@ -57417,20 +57632,6 @@ export namespace Prisma {
     delete?: GitHubStatusCheckWhereInput | boolean
     connect?: GitHubStatusCheckWhereUniqueInput
     update?: XOR<XOR<GitHubStatusCheckUpdateToOneWithWhereWithoutReviewInput, GitHubStatusCheckUpdateWithoutReviewInput>, GitHubStatusCheckUncheckedUpdateWithoutReviewInput>
-  }
-
-  export type ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput = {
-    create?: XOR<ReviewFeedbackCreateWithoutReviewInput, ReviewFeedbackUncheckedCreateWithoutReviewInput> | ReviewFeedbackCreateWithoutReviewInput[] | ReviewFeedbackUncheckedCreateWithoutReviewInput[]
-    connectOrCreate?: ReviewFeedbackCreateOrConnectWithoutReviewInput | ReviewFeedbackCreateOrConnectWithoutReviewInput[]
-    upsert?: ReviewFeedbackUpsertWithWhereUniqueWithoutReviewInput | ReviewFeedbackUpsertWithWhereUniqueWithoutReviewInput[]
-    createMany?: ReviewFeedbackCreateManyReviewInputEnvelope
-    set?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
-    disconnect?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
-    delete?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
-    connect?: ReviewFeedbackWhereUniqueInput | ReviewFeedbackWhereUniqueInput[]
-    update?: ReviewFeedbackUpdateWithWhereUniqueWithoutReviewInput | ReviewFeedbackUpdateWithWhereUniqueWithoutReviewInput[]
-    updateMany?: ReviewFeedbackUpdateManyWithWhereWithoutReviewInput | ReviewFeedbackUpdateManyWithWhereWithoutReviewInput[]
-    deleteMany?: ReviewFeedbackScalarWhereInput | ReviewFeedbackScalarWhereInput[]
   }
 
   export type ReviewApprovalUncheckedUpdateManyWithoutReviewNestedInput = {
@@ -57711,10 +57912,10 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReviewApprovalsInput, UserUpdateWithoutReviewApprovalsInput>, UserUncheckedUpdateWithoutReviewApprovalsInput>
   }
 
-  export type ReviewCreateNestedOneWithoutAssignmentsInput = {
-    create?: XOR<ReviewCreateWithoutAssignmentsInput, ReviewUncheckedCreateWithoutAssignmentsInput>
-    connectOrCreate?: ReviewCreateOrConnectWithoutAssignmentsInput
-    connect?: ReviewWhereUniqueInput
+  export type UserCreateNestedOneWithoutAssignedByMeInput = {
+    create?: XOR<UserCreateWithoutAssignedByMeInput, UserUncheckedCreateWithoutAssignedByMeInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAssignedByMeInput
+    connect?: UserWhereUniqueInput
   }
 
   export type UserCreateNestedOneWithoutAssignedReviewsInput = {
@@ -57723,10 +57924,10 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
-  export type UserCreateNestedOneWithoutAssignedByMeInput = {
-    create?: XOR<UserCreateWithoutAssignedByMeInput, UserUncheckedCreateWithoutAssignedByMeInput>
-    connectOrCreate?: UserCreateOrConnectWithoutAssignedByMeInput
-    connect?: UserWhereUniqueInput
+  export type ReviewCreateNestedOneWithoutAssignmentsInput = {
+    create?: XOR<ReviewCreateWithoutAssignmentsInput, ReviewUncheckedCreateWithoutAssignmentsInput>
+    connectOrCreate?: ReviewCreateOrConnectWithoutAssignmentsInput
+    connect?: ReviewWhereUniqueInput
   }
 
   export type EnumAssignmentPriorityFieldUpdateOperationsInput = {
@@ -57737,12 +57938,12 @@ export namespace Prisma {
     set?: $Enums.AssignmentStatus
   }
 
-  export type ReviewUpdateOneRequiredWithoutAssignmentsNestedInput = {
-    create?: XOR<ReviewCreateWithoutAssignmentsInput, ReviewUncheckedCreateWithoutAssignmentsInput>
-    connectOrCreate?: ReviewCreateOrConnectWithoutAssignmentsInput
-    upsert?: ReviewUpsertWithoutAssignmentsInput
-    connect?: ReviewWhereUniqueInput
-    update?: XOR<XOR<ReviewUpdateToOneWithWhereWithoutAssignmentsInput, ReviewUpdateWithoutAssignmentsInput>, ReviewUncheckedUpdateWithoutAssignmentsInput>
+  export type UserUpdateOneRequiredWithoutAssignedByMeNestedInput = {
+    create?: XOR<UserCreateWithoutAssignedByMeInput, UserUncheckedCreateWithoutAssignedByMeInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAssignedByMeInput
+    upsert?: UserUpsertWithoutAssignedByMeInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAssignedByMeInput, UserUpdateWithoutAssignedByMeInput>, UserUncheckedUpdateWithoutAssignedByMeInput>
   }
 
   export type UserUpdateOneRequiredWithoutAssignedReviewsNestedInput = {
@@ -57753,19 +57954,12 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAssignedReviewsInput, UserUpdateWithoutAssignedReviewsInput>, UserUncheckedUpdateWithoutAssignedReviewsInput>
   }
 
-  export type UserUpdateOneRequiredWithoutAssignedByMeNestedInput = {
-    create?: XOR<UserCreateWithoutAssignedByMeInput, UserUncheckedCreateWithoutAssignedByMeInput>
-    connectOrCreate?: UserCreateOrConnectWithoutAssignedByMeInput
-    upsert?: UserUpsertWithoutAssignedByMeInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAssignedByMeInput, UserUpdateWithoutAssignedByMeInput>, UserUncheckedUpdateWithoutAssignedByMeInput>
-  }
-
-  export type TeamMemberCreateNestedManyWithoutTeamInput = {
-    create?: XOR<TeamMemberCreateWithoutTeamInput, TeamMemberUncheckedCreateWithoutTeamInput> | TeamMemberCreateWithoutTeamInput[] | TeamMemberUncheckedCreateWithoutTeamInput[]
-    connectOrCreate?: TeamMemberCreateOrConnectWithoutTeamInput | TeamMemberCreateOrConnectWithoutTeamInput[]
-    createMany?: TeamMemberCreateManyTeamInputEnvelope
-    connect?: TeamMemberWhereUniqueInput | TeamMemberWhereUniqueInput[]
+  export type ReviewUpdateOneRequiredWithoutAssignmentsNestedInput = {
+    create?: XOR<ReviewCreateWithoutAssignmentsInput, ReviewUncheckedCreateWithoutAssignmentsInput>
+    connectOrCreate?: ReviewCreateOrConnectWithoutAssignmentsInput
+    upsert?: ReviewUpsertWithoutAssignmentsInput
+    connect?: ReviewWhereUniqueInput
+    update?: XOR<XOR<ReviewUpdateToOneWithWhereWithoutAssignmentsInput, ReviewUpdateWithoutAssignmentsInput>, ReviewUncheckedUpdateWithoutAssignmentsInput>
   }
 
   export type RepositoryCreateNestedManyWithoutTeamInput = {
@@ -57782,18 +57976,18 @@ export namespace Prisma {
     connect?: TeamActionWhereUniqueInput | TeamActionWhereUniqueInput[]
   }
 
+  export type TeamMemberCreateNestedManyWithoutTeamInput = {
+    create?: XOR<TeamMemberCreateWithoutTeamInput, TeamMemberUncheckedCreateWithoutTeamInput> | TeamMemberCreateWithoutTeamInput[] | TeamMemberUncheckedCreateWithoutTeamInput[]
+    connectOrCreate?: TeamMemberCreateOrConnectWithoutTeamInput | TeamMemberCreateOrConnectWithoutTeamInput[]
+    createMany?: TeamMemberCreateManyTeamInputEnvelope
+    connect?: TeamMemberWhereUniqueInput | TeamMemberWhereUniqueInput[]
+  }
+
   export type ReviewRuleCreateNestedManyWithoutTeamInput = {
     create?: XOR<ReviewRuleCreateWithoutTeamInput, ReviewRuleUncheckedCreateWithoutTeamInput> | ReviewRuleCreateWithoutTeamInput[] | ReviewRuleUncheckedCreateWithoutTeamInput[]
     connectOrCreate?: ReviewRuleCreateOrConnectWithoutTeamInput | ReviewRuleCreateOrConnectWithoutTeamInput[]
     createMany?: ReviewRuleCreateManyTeamInputEnvelope
     connect?: ReviewRuleWhereUniqueInput | ReviewRuleWhereUniqueInput[]
-  }
-
-  export type TeamMemberUncheckedCreateNestedManyWithoutTeamInput = {
-    create?: XOR<TeamMemberCreateWithoutTeamInput, TeamMemberUncheckedCreateWithoutTeamInput> | TeamMemberCreateWithoutTeamInput[] | TeamMemberUncheckedCreateWithoutTeamInput[]
-    connectOrCreate?: TeamMemberCreateOrConnectWithoutTeamInput | TeamMemberCreateOrConnectWithoutTeamInput[]
-    createMany?: TeamMemberCreateManyTeamInputEnvelope
-    connect?: TeamMemberWhereUniqueInput | TeamMemberWhereUniqueInput[]
   }
 
   export type RepositoryUncheckedCreateNestedManyWithoutTeamInput = {
@@ -57810,25 +58004,18 @@ export namespace Prisma {
     connect?: TeamActionWhereUniqueInput | TeamActionWhereUniqueInput[]
   }
 
+  export type TeamMemberUncheckedCreateNestedManyWithoutTeamInput = {
+    create?: XOR<TeamMemberCreateWithoutTeamInput, TeamMemberUncheckedCreateWithoutTeamInput> | TeamMemberCreateWithoutTeamInput[] | TeamMemberUncheckedCreateWithoutTeamInput[]
+    connectOrCreate?: TeamMemberCreateOrConnectWithoutTeamInput | TeamMemberCreateOrConnectWithoutTeamInput[]
+    createMany?: TeamMemberCreateManyTeamInputEnvelope
+    connect?: TeamMemberWhereUniqueInput | TeamMemberWhereUniqueInput[]
+  }
+
   export type ReviewRuleUncheckedCreateNestedManyWithoutTeamInput = {
     create?: XOR<ReviewRuleCreateWithoutTeamInput, ReviewRuleUncheckedCreateWithoutTeamInput> | ReviewRuleCreateWithoutTeamInput[] | ReviewRuleUncheckedCreateWithoutTeamInput[]
     connectOrCreate?: ReviewRuleCreateOrConnectWithoutTeamInput | ReviewRuleCreateOrConnectWithoutTeamInput[]
     createMany?: ReviewRuleCreateManyTeamInputEnvelope
     connect?: ReviewRuleWhereUniqueInput | ReviewRuleWhereUniqueInput[]
-  }
-
-  export type TeamMemberUpdateManyWithoutTeamNestedInput = {
-    create?: XOR<TeamMemberCreateWithoutTeamInput, TeamMemberUncheckedCreateWithoutTeamInput> | TeamMemberCreateWithoutTeamInput[] | TeamMemberUncheckedCreateWithoutTeamInput[]
-    connectOrCreate?: TeamMemberCreateOrConnectWithoutTeamInput | TeamMemberCreateOrConnectWithoutTeamInput[]
-    upsert?: TeamMemberUpsertWithWhereUniqueWithoutTeamInput | TeamMemberUpsertWithWhereUniqueWithoutTeamInput[]
-    createMany?: TeamMemberCreateManyTeamInputEnvelope
-    set?: TeamMemberWhereUniqueInput | TeamMemberWhereUniqueInput[]
-    disconnect?: TeamMemberWhereUniqueInput | TeamMemberWhereUniqueInput[]
-    delete?: TeamMemberWhereUniqueInput | TeamMemberWhereUniqueInput[]
-    connect?: TeamMemberWhereUniqueInput | TeamMemberWhereUniqueInput[]
-    update?: TeamMemberUpdateWithWhereUniqueWithoutTeamInput | TeamMemberUpdateWithWhereUniqueWithoutTeamInput[]
-    updateMany?: TeamMemberUpdateManyWithWhereWithoutTeamInput | TeamMemberUpdateManyWithWhereWithoutTeamInput[]
-    deleteMany?: TeamMemberScalarWhereInput | TeamMemberScalarWhereInput[]
   }
 
   export type RepositoryUpdateManyWithoutTeamNestedInput = {
@@ -57859,6 +58046,20 @@ export namespace Prisma {
     deleteMany?: TeamActionScalarWhereInput | TeamActionScalarWhereInput[]
   }
 
+  export type TeamMemberUpdateManyWithoutTeamNestedInput = {
+    create?: XOR<TeamMemberCreateWithoutTeamInput, TeamMemberUncheckedCreateWithoutTeamInput> | TeamMemberCreateWithoutTeamInput[] | TeamMemberUncheckedCreateWithoutTeamInput[]
+    connectOrCreate?: TeamMemberCreateOrConnectWithoutTeamInput | TeamMemberCreateOrConnectWithoutTeamInput[]
+    upsert?: TeamMemberUpsertWithWhereUniqueWithoutTeamInput | TeamMemberUpsertWithWhereUniqueWithoutTeamInput[]
+    createMany?: TeamMemberCreateManyTeamInputEnvelope
+    set?: TeamMemberWhereUniqueInput | TeamMemberWhereUniqueInput[]
+    disconnect?: TeamMemberWhereUniqueInput | TeamMemberWhereUniqueInput[]
+    delete?: TeamMemberWhereUniqueInput | TeamMemberWhereUniqueInput[]
+    connect?: TeamMemberWhereUniqueInput | TeamMemberWhereUniqueInput[]
+    update?: TeamMemberUpdateWithWhereUniqueWithoutTeamInput | TeamMemberUpdateWithWhereUniqueWithoutTeamInput[]
+    updateMany?: TeamMemberUpdateManyWithWhereWithoutTeamInput | TeamMemberUpdateManyWithWhereWithoutTeamInput[]
+    deleteMany?: TeamMemberScalarWhereInput | TeamMemberScalarWhereInput[]
+  }
+
   export type ReviewRuleUpdateManyWithoutTeamNestedInput = {
     create?: XOR<ReviewRuleCreateWithoutTeamInput, ReviewRuleUncheckedCreateWithoutTeamInput> | ReviewRuleCreateWithoutTeamInput[] | ReviewRuleUncheckedCreateWithoutTeamInput[]
     connectOrCreate?: ReviewRuleCreateOrConnectWithoutTeamInput | ReviewRuleCreateOrConnectWithoutTeamInput[]
@@ -57871,20 +58072,6 @@ export namespace Prisma {
     update?: ReviewRuleUpdateWithWhereUniqueWithoutTeamInput | ReviewRuleUpdateWithWhereUniqueWithoutTeamInput[]
     updateMany?: ReviewRuleUpdateManyWithWhereWithoutTeamInput | ReviewRuleUpdateManyWithWhereWithoutTeamInput[]
     deleteMany?: ReviewRuleScalarWhereInput | ReviewRuleScalarWhereInput[]
-  }
-
-  export type TeamMemberUncheckedUpdateManyWithoutTeamNestedInput = {
-    create?: XOR<TeamMemberCreateWithoutTeamInput, TeamMemberUncheckedCreateWithoutTeamInput> | TeamMemberCreateWithoutTeamInput[] | TeamMemberUncheckedCreateWithoutTeamInput[]
-    connectOrCreate?: TeamMemberCreateOrConnectWithoutTeamInput | TeamMemberCreateOrConnectWithoutTeamInput[]
-    upsert?: TeamMemberUpsertWithWhereUniqueWithoutTeamInput | TeamMemberUpsertWithWhereUniqueWithoutTeamInput[]
-    createMany?: TeamMemberCreateManyTeamInputEnvelope
-    set?: TeamMemberWhereUniqueInput | TeamMemberWhereUniqueInput[]
-    disconnect?: TeamMemberWhereUniqueInput | TeamMemberWhereUniqueInput[]
-    delete?: TeamMemberWhereUniqueInput | TeamMemberWhereUniqueInput[]
-    connect?: TeamMemberWhereUniqueInput | TeamMemberWhereUniqueInput[]
-    update?: TeamMemberUpdateWithWhereUniqueWithoutTeamInput | TeamMemberUpdateWithWhereUniqueWithoutTeamInput[]
-    updateMany?: TeamMemberUpdateManyWithWhereWithoutTeamInput | TeamMemberUpdateManyWithWhereWithoutTeamInput[]
-    deleteMany?: TeamMemberScalarWhereInput | TeamMemberScalarWhereInput[]
   }
 
   export type RepositoryUncheckedUpdateManyWithoutTeamNestedInput = {
@@ -57913,6 +58100,20 @@ export namespace Prisma {
     update?: TeamActionUpdateWithWhereUniqueWithoutTeamInput | TeamActionUpdateWithWhereUniqueWithoutTeamInput[]
     updateMany?: TeamActionUpdateManyWithWhereWithoutTeamInput | TeamActionUpdateManyWithWhereWithoutTeamInput[]
     deleteMany?: TeamActionScalarWhereInput | TeamActionScalarWhereInput[]
+  }
+
+  export type TeamMemberUncheckedUpdateManyWithoutTeamNestedInput = {
+    create?: XOR<TeamMemberCreateWithoutTeamInput, TeamMemberUncheckedCreateWithoutTeamInput> | TeamMemberCreateWithoutTeamInput[] | TeamMemberUncheckedCreateWithoutTeamInput[]
+    connectOrCreate?: TeamMemberCreateOrConnectWithoutTeamInput | TeamMemberCreateOrConnectWithoutTeamInput[]
+    upsert?: TeamMemberUpsertWithWhereUniqueWithoutTeamInput | TeamMemberUpsertWithWhereUniqueWithoutTeamInput[]
+    createMany?: TeamMemberCreateManyTeamInputEnvelope
+    set?: TeamMemberWhereUniqueInput | TeamMemberWhereUniqueInput[]
+    disconnect?: TeamMemberWhereUniqueInput | TeamMemberWhereUniqueInput[]
+    delete?: TeamMemberWhereUniqueInput | TeamMemberWhereUniqueInput[]
+    connect?: TeamMemberWhereUniqueInput | TeamMemberWhereUniqueInput[]
+    update?: TeamMemberUpdateWithWhereUniqueWithoutTeamInput | TeamMemberUpdateWithWhereUniqueWithoutTeamInput[]
+    updateMany?: TeamMemberUpdateManyWithWhereWithoutTeamInput | TeamMemberUpdateManyWithWhereWithoutTeamInput[]
+    deleteMany?: TeamMemberScalarWhereInput | TeamMemberScalarWhereInput[]
   }
 
   export type ReviewRuleUncheckedUpdateManyWithoutTeamNestedInput = {
@@ -58093,16 +58294,16 @@ export namespace Prisma {
     update?: XOR<XOR<ScheduledScanConfigUpdateToOneWithWhereWithoutRunsInput, ScheduledScanConfigUpdateWithoutRunsInput>, ScheduledScanConfigUncheckedUpdateWithoutRunsInput>
   }
 
-  export type ReviewCreateNestedOneWithoutGithubCommentInput = {
-    create?: XOR<ReviewCreateWithoutGithubCommentInput, ReviewUncheckedCreateWithoutGithubCommentInput>
-    connectOrCreate?: ReviewCreateOrConnectWithoutGithubCommentInput
-    connect?: ReviewWhereUniqueInput
-  }
-
   export type RepositoryCreateNestedOneWithoutGithubCommentsInput = {
     create?: XOR<RepositoryCreateWithoutGithubCommentsInput, RepositoryUncheckedCreateWithoutGithubCommentsInput>
     connectOrCreate?: RepositoryCreateOrConnectWithoutGithubCommentsInput
     connect?: RepositoryWhereUniqueInput
+  }
+
+  export type ReviewCreateNestedOneWithoutGithubCommentInput = {
+    create?: XOR<ReviewCreateWithoutGithubCommentInput, ReviewUncheckedCreateWithoutGithubCommentInput>
+    connectOrCreate?: ReviewCreateOrConnectWithoutGithubCommentInput
+    connect?: ReviewWhereUniqueInput
   }
 
   export type BigIntFieldUpdateOperationsInput = {
@@ -58113,20 +58314,20 @@ export namespace Prisma {
     divide?: bigint | number
   }
 
-  export type ReviewUpdateOneRequiredWithoutGithubCommentNestedInput = {
-    create?: XOR<ReviewCreateWithoutGithubCommentInput, ReviewUncheckedCreateWithoutGithubCommentInput>
-    connectOrCreate?: ReviewCreateOrConnectWithoutGithubCommentInput
-    upsert?: ReviewUpsertWithoutGithubCommentInput
-    connect?: ReviewWhereUniqueInput
-    update?: XOR<XOR<ReviewUpdateToOneWithWhereWithoutGithubCommentInput, ReviewUpdateWithoutGithubCommentInput>, ReviewUncheckedUpdateWithoutGithubCommentInput>
-  }
-
   export type RepositoryUpdateOneRequiredWithoutGithubCommentsNestedInput = {
     create?: XOR<RepositoryCreateWithoutGithubCommentsInput, RepositoryUncheckedCreateWithoutGithubCommentsInput>
     connectOrCreate?: RepositoryCreateOrConnectWithoutGithubCommentsInput
     upsert?: RepositoryUpsertWithoutGithubCommentsInput
     connect?: RepositoryWhereUniqueInput
     update?: XOR<XOR<RepositoryUpdateToOneWithWhereWithoutGithubCommentsInput, RepositoryUpdateWithoutGithubCommentsInput>, RepositoryUncheckedUpdateWithoutGithubCommentsInput>
+  }
+
+  export type ReviewUpdateOneRequiredWithoutGithubCommentNestedInput = {
+    create?: XOR<ReviewCreateWithoutGithubCommentInput, ReviewUncheckedCreateWithoutGithubCommentInput>
+    connectOrCreate?: ReviewCreateOrConnectWithoutGithubCommentInput
+    upsert?: ReviewUpsertWithoutGithubCommentInput
+    connect?: ReviewWhereUniqueInput
+    update?: XOR<XOR<ReviewUpdateToOneWithWhereWithoutGithubCommentInput, ReviewUpdateWithoutGithubCommentInput>, ReviewUncheckedUpdateWithoutGithubCommentInput>
   }
 
   export type ReviewCreateNestedOneWithoutGithubStatusCheckInput = {
@@ -58187,12 +58388,6 @@ export namespace Prisma {
     update?: XOR<XOR<RepositoryUpdateToOneWithWhereWithoutDiagramsInput, RepositoryUpdateWithoutDiagramsInput>, RepositoryUncheckedUpdateWithoutDiagramsInput>
   }
 
-  export type UserCreateNestedOneWithoutReviewRulesInput = {
-    create?: XOR<UserCreateWithoutReviewRulesInput, UserUncheckedCreateWithoutReviewRulesInput>
-    connectOrCreate?: UserCreateOrConnectWithoutReviewRulesInput
-    connect?: UserWhereUniqueInput
-  }
-
   export type RepositoryCreateNestedOneWithoutReviewRulesInput = {
     create?: XOR<RepositoryCreateWithoutReviewRulesInput, RepositoryUncheckedCreateWithoutReviewRulesInput>
     connectOrCreate?: RepositoryCreateOrConnectWithoutReviewRulesInput
@@ -58205,16 +58400,14 @@ export namespace Prisma {
     connect?: TeamWhereUniqueInput
   }
 
-  export type EnumRuleSeverityFieldUpdateOperationsInput = {
-    set?: $Enums.RuleSeverity
-  }
-
-  export type UserUpdateOneRequiredWithoutReviewRulesNestedInput = {
+  export type UserCreateNestedOneWithoutReviewRulesInput = {
     create?: XOR<UserCreateWithoutReviewRulesInput, UserUncheckedCreateWithoutReviewRulesInput>
     connectOrCreate?: UserCreateOrConnectWithoutReviewRulesInput
-    upsert?: UserUpsertWithoutReviewRulesInput
     connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReviewRulesInput, UserUpdateWithoutReviewRulesInput>, UserUncheckedUpdateWithoutReviewRulesInput>
+  }
+
+  export type EnumRuleSeverityFieldUpdateOperationsInput = {
+    set?: $Enums.RuleSeverity
   }
 
   export type RepositoryUpdateOneWithoutReviewRulesNestedInput = {
@@ -58235,6 +58428,14 @@ export namespace Prisma {
     delete?: TeamWhereInput | boolean
     connect?: TeamWhereUniqueInput
     update?: XOR<XOR<TeamUpdateToOneWithWhereWithoutReviewRulesInput, TeamUpdateWithoutReviewRulesInput>, TeamUncheckedUpdateWithoutReviewRulesInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutReviewRulesNestedInput = {
+    create?: XOR<UserCreateWithoutReviewRulesInput, UserUncheckedCreateWithoutReviewRulesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReviewRulesInput
+    upsert?: UserUpsertWithoutReviewRulesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReviewRulesInput, UserUpdateWithoutReviewRulesInput>, UserUncheckedUpdateWithoutReviewRulesInput>
   }
 
   export type UserCreateNestedOneWithoutAuditLogsInput = {
@@ -58295,24 +58496,16 @@ export namespace Prisma {
     deleteMany?: UserCustomRoleScalarWhereInput | UserCustomRoleScalarWhereInput[]
   }
 
-  export type UserCreateNestedOneWithoutCustomRolesInput = {
-    create?: XOR<UserCreateWithoutCustomRolesInput, UserUncheckedCreateWithoutCustomRolesInput>
-    connectOrCreate?: UserCreateOrConnectWithoutCustomRolesInput
-    connect?: UserWhereUniqueInput
-  }
-
   export type CustomRoleCreateNestedOneWithoutUserRolesInput = {
     create?: XOR<CustomRoleCreateWithoutUserRolesInput, CustomRoleUncheckedCreateWithoutUserRolesInput>
     connectOrCreate?: CustomRoleCreateOrConnectWithoutUserRolesInput
     connect?: CustomRoleWhereUniqueInput
   }
 
-  export type UserUpdateOneRequiredWithoutCustomRolesNestedInput = {
+  export type UserCreateNestedOneWithoutCustomRolesInput = {
     create?: XOR<UserCreateWithoutCustomRolesInput, UserUncheckedCreateWithoutCustomRolesInput>
     connectOrCreate?: UserCreateOrConnectWithoutCustomRolesInput
-    upsert?: UserUpsertWithoutCustomRolesInput
     connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCustomRolesInput, UserUpdateWithoutCustomRolesInput>, UserUncheckedUpdateWithoutCustomRolesInput>
   }
 
   export type CustomRoleUpdateOneRequiredWithoutUserRolesNestedInput = {
@@ -58321,6 +58514,14 @@ export namespace Prisma {
     upsert?: CustomRoleUpsertWithoutUserRolesInput
     connect?: CustomRoleWhereUniqueInput
     update?: XOR<XOR<CustomRoleUpdateToOneWithWhereWithoutUserRolesInput, CustomRoleUpdateWithoutUserRolesInput>, CustomRoleUncheckedUpdateWithoutUserRolesInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutCustomRolesNestedInput = {
+    create?: XOR<UserCreateWithoutCustomRolesInput, UserUncheckedCreateWithoutCustomRolesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCustomRolesInput
+    upsert?: UserUpsertWithoutCustomRolesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCustomRolesInput, UserUpdateWithoutCustomRolesInput>, UserUncheckedUpdateWithoutCustomRolesInput>
   }
 
   export type EnumDiscountTypeFieldUpdateOperationsInput = {
@@ -58403,6 +58604,28 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -58456,17 +58679,6 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type NestedEnumUserRoleWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel>
     in?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
@@ -58491,17 +58703,6 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -58514,6 +58715,33 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -58558,33 +58786,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumReviewStatusFilter<$PrismaModel>
     _max?: NestedEnumReviewStatusFilter<$PrismaModel>
-  }
-
-  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
   export type NestedJsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -58981,73 +59182,33 @@ export namespace Prisma {
     _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
-  export type SessionCreateWithoutUserInput = {
-    id: string
-    expiresAt: Date | string
-    token: string
+  export type NotificationCreateWithoutUserInput = {
+    id?: string
+    type: $Enums.NotificationType
+    title: string
+    message: string
+    link?: string | null
+    read?: boolean
     createdAt?: Date | string
-    updatedAt?: Date | string
-    ipAddress?: string | null
-    userAgent?: string | null
   }
 
-  export type SessionUncheckedCreateWithoutUserInput = {
-    id: string
-    expiresAt: Date | string
-    token: string
+  export type NotificationUncheckedCreateWithoutUserInput = {
+    id?: string
+    type: $Enums.NotificationType
+    title: string
+    message: string
+    link?: string | null
+    read?: boolean
     createdAt?: Date | string
-    updatedAt?: Date | string
-    ipAddress?: string | null
-    userAgent?: string | null
   }
 
-  export type SessionCreateOrConnectWithoutUserInput = {
-    where: SessionWhereUniqueInput
-    create: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput>
+  export type NotificationCreateOrConnectWithoutUserInput = {
+    where: NotificationWhereUniqueInput
+    create: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput>
   }
 
-  export type SessionCreateManyUserInputEnvelope = {
-    data: SessionCreateManyUserInput | SessionCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type AccountCreateWithoutUserInput = {
-    id: string
-    accountId: string
-    providerId: string
-    accessToken?: string | null
-    refreshToken?: string | null
-    idToken?: string | null
-    accessTokenExpiresAt?: Date | string | null
-    refreshTokenExpiresAt?: Date | string | null
-    scope?: string | null
-    password?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type AccountUncheckedCreateWithoutUserInput = {
-    id: string
-    accountId: string
-    providerId: string
-    accessToken?: string | null
-    refreshToken?: string | null
-    idToken?: string | null
-    accessTokenExpiresAt?: Date | string | null
-    refreshTokenExpiresAt?: Date | string | null
-    scope?: string | null
-    password?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type AccountCreateOrConnectWithoutUserInput = {
-    where: AccountWhereUniqueInput
-    create: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput>
-  }
-
-  export type AccountCreateManyUserInputEnvelope = {
-    data: AccountCreateManyUserInput | AccountCreateManyUserInput[]
+  export type NotificationCreateManyUserInputEnvelope = {
+    data: NotificationCreateManyUserInput | NotificationCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -59060,14 +59221,14 @@ export namespace Prisma {
     htmlUrl: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    diagrams?: DiagramCreateNestedManyWithoutRepositoryInput
     team?: TeamCreateNestedOneWithoutRepositoriesInput
     reviews?: ReviewCreateNestedManyWithoutRepositoryInput
-    webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
-    scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
-    githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
     branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
-    diagrams?: DiagramCreateNestedManyWithoutRepositoryInput
+    githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
     reviewRules?: ReviewRuleCreateNestedManyWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
+    webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
   }
 
   export type RepositoryUncheckedCreateWithoutUserInput = {
@@ -59080,13 +59241,13 @@ export namespace Prisma {
     htmlUrl: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    reviews?: ReviewUncheckedCreateNestedManyWithoutRepositoryInput
-    webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
-    scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
-    githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
-    branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
     diagrams?: DiagramUncheckedCreateNestedManyWithoutRepositoryInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
+    githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
     reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
+    webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
   }
 
   export type RepositoryCreateOrConnectWithoutUserInput = {
@@ -59110,16 +59271,16 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
-    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
-    repository: RepositoryCreateNestedOneWithoutReviewsInput
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     parentReview?: ReviewCreateNestedOneWithoutChildReviewsInput
     childReviews?: ReviewCreateNestedManyWithoutParentReviewInput
+    repository: RepositoryCreateNestedOneWithoutReviewsInput
+    feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
-    feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentCreateNestedManyWithoutReviewInput
     securityIssues?: SecurityIssueCreateNestedManyWithoutReviewInput
@@ -59137,15 +59298,15 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
-    parentReviewId?: string | null
-    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
+    parentReviewId?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
+    feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
-    feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalUncheckedCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentUncheckedCreateNestedManyWithoutReviewInput
     securityIssues?: SecurityIssueUncheckedCreateNestedManyWithoutReviewInput
@@ -59158,6 +59319,32 @@ export namespace Prisma {
 
   export type ReviewCreateManyUserInputEnvelope = {
     data: ReviewCreateManyUserInput | ReviewCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ReviewFeedbackCreateWithoutUserInput = {
+    id?: string
+    rating: number
+    comment?: string | null
+    createdAt?: Date | string
+    review: ReviewCreateNestedOneWithoutFeedbacksInput
+  }
+
+  export type ReviewFeedbackUncheckedCreateWithoutUserInput = {
+    id?: string
+    reviewId: string
+    rating: number
+    comment?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ReviewFeedbackCreateOrConnectWithoutUserInput = {
+    where: ReviewFeedbackWhereUniqueInput
+    create: XOR<ReviewFeedbackCreateWithoutUserInput, ReviewFeedbackUncheckedCreateWithoutUserInput>
+  }
+
+  export type ReviewFeedbackCreateManyUserInputEnvelope = {
+    data: ReviewFeedbackCreateManyUserInput | ReviewFeedbackCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -59213,95 +59400,43 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type NotificationCreateWithoutUserInput = {
-    id?: string
-    type: $Enums.NotificationType
-    title: string
-    message: string
-    link?: string | null
-    read?: boolean
-    createdAt?: Date | string
-  }
-
-  export type NotificationUncheckedCreateWithoutUserInput = {
-    id?: string
-    type: $Enums.NotificationType
-    title: string
-    message: string
-    link?: string | null
-    read?: boolean
-    createdAt?: Date | string
-  }
-
-  export type NotificationCreateOrConnectWithoutUserInput = {
-    where: NotificationWhereUniqueInput
-    create: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput>
-  }
-
-  export type NotificationCreateManyUserInputEnvelope = {
-    data: NotificationCreateManyUserInput | NotificationCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type ReviewFeedbackCreateWithoutUserInput = {
-    id?: string
-    rating: number
-    comment?: string | null
-    createdAt?: Date | string
-    review: ReviewCreateNestedOneWithoutFeedbacksInput
-  }
-
-  export type ReviewFeedbackUncheckedCreateWithoutUserInput = {
-    id?: string
-    reviewId: string
-    rating: number
-    comment?: string | null
-    createdAt?: Date | string
-  }
-
-  export type ReviewFeedbackCreateOrConnectWithoutUserInput = {
-    where: ReviewFeedbackWhereUniqueInput
-    create: XOR<ReviewFeedbackCreateWithoutUserInput, ReviewFeedbackUncheckedCreateWithoutUserInput>
-  }
-
-  export type ReviewFeedbackCreateManyUserInputEnvelope = {
-    data: ReviewFeedbackCreateManyUserInput | ReviewFeedbackCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type ReviewRuleCreateWithoutUserInput = {
-    id?: string
-    name: string
-    description: string
-    pattern?: string | null
-    severity?: $Enums.RuleSeverity
-    enabled?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    repository?: RepositoryCreateNestedOneWithoutReviewRulesInput
-    team?: TeamCreateNestedOneWithoutReviewRulesInput
-  }
-
-  export type ReviewRuleUncheckedCreateWithoutUserInput = {
-    id?: string
-    name: string
-    description: string
-    pattern?: string | null
-    severity?: $Enums.RuleSeverity
-    repositoryId?: string | null
-    teamId?: string | null
-    enabled?: boolean
+  export type AccountCreateWithoutUserInput = {
+    id: string
+    accountId: string
+    providerId: string
+    accessToken?: string | null
+    refreshToken?: string | null
+    idToken?: string | null
+    accessTokenExpiresAt?: Date | string | null
+    refreshTokenExpiresAt?: Date | string | null
+    scope?: string | null
+    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
-  export type ReviewRuleCreateOrConnectWithoutUserInput = {
-    where: ReviewRuleWhereUniqueInput
-    create: XOR<ReviewRuleCreateWithoutUserInput, ReviewRuleUncheckedCreateWithoutUserInput>
+  export type AccountUncheckedCreateWithoutUserInput = {
+    id: string
+    accountId: string
+    providerId: string
+    accessToken?: string | null
+    refreshToken?: string | null
+    idToken?: string | null
+    accessTokenExpiresAt?: Date | string | null
+    refreshTokenExpiresAt?: Date | string | null
+    scope?: string | null
+    password?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
-  export type ReviewRuleCreateManyUserInputEnvelope = {
-    data: ReviewRuleCreateManyUserInput | ReviewRuleCreateManyUserInput[]
+  export type AccountCreateOrConnectWithoutUserInput = {
+    where: AccountWhereUniqueInput
+    create: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput>
+  }
+
+  export type AccountCreateManyUserInputEnvelope = {
+    data: AccountCreateManyUserInput | AccountCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -59341,52 +59476,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type UserCustomRoleCreateWithoutUserInput = {
-    id?: string
-    assignedAt?: Date | string
-    role: CustomRoleCreateNestedOneWithoutUserRolesInput
-  }
-
-  export type UserCustomRoleUncheckedCreateWithoutUserInput = {
-    id?: string
-    roleId: string
-    assignedAt?: Date | string
-  }
-
-  export type UserCustomRoleCreateOrConnectWithoutUserInput = {
-    where: UserCustomRoleWhereUniqueInput
-    create: XOR<UserCustomRoleCreateWithoutUserInput, UserCustomRoleUncheckedCreateWithoutUserInput>
-  }
-
-  export type UserCustomRoleCreateManyUserInputEnvelope = {
-    data: UserCustomRoleCreateManyUserInput | UserCustomRoleCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type ReviewThreadCommentReactionCreateWithoutUserInput = {
-    id?: string
-    emoji: string
-    createdAt?: Date | string
-    comment: ReviewThreadCommentCreateNestedOneWithoutReactionsInput
-  }
-
-  export type ReviewThreadCommentReactionUncheckedCreateWithoutUserInput = {
-    id?: string
-    commentId: string
-    emoji: string
-    createdAt?: Date | string
-  }
-
-  export type ReviewThreadCommentReactionCreateOrConnectWithoutUserInput = {
-    where: ReviewThreadCommentReactionWhereUniqueInput
-    create: XOR<ReviewThreadCommentReactionCreateWithoutUserInput, ReviewThreadCommentReactionUncheckedCreateWithoutUserInput>
-  }
-
-  export type ReviewThreadCommentReactionCreateManyUserInputEnvelope = {
-    data: ReviewThreadCommentReactionCreateManyUserInput | ReviewThreadCommentReactionCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
   export type ReviewApprovalCreateWithoutUserInput = {
     id?: string
     state: $Enums.ReviewApprovalState
@@ -59415,40 +59504,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type ReviewAssignmentCreateWithoutAssigneeInput = {
-    id?: string
-    dueDate?: Date | string | null
-    priority?: $Enums.AssignmentPriority
-    status?: $Enums.AssignmentStatus
-    note?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    review: ReviewCreateNestedOneWithoutAssignmentsInput
-    assigner: UserCreateNestedOneWithoutAssignedByMeInput
-  }
-
-  export type ReviewAssignmentUncheckedCreateWithoutAssigneeInput = {
-    id?: string
-    reviewId: string
-    assignedBy: string
-    dueDate?: Date | string | null
-    priority?: $Enums.AssignmentPriority
-    status?: $Enums.AssignmentStatus
-    note?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type ReviewAssignmentCreateOrConnectWithoutAssigneeInput = {
-    where: ReviewAssignmentWhereUniqueInput
-    create: XOR<ReviewAssignmentCreateWithoutAssigneeInput, ReviewAssignmentUncheckedCreateWithoutAssigneeInput>
-  }
-
-  export type ReviewAssignmentCreateManyAssigneeInputEnvelope = {
-    data: ReviewAssignmentCreateManyAssigneeInput | ReviewAssignmentCreateManyAssigneeInput[]
-    skipDuplicates?: boolean
-  }
-
   export type ReviewAssignmentCreateWithoutAssignerInput = {
     id?: string
     dueDate?: Date | string | null
@@ -59457,8 +59512,8 @@ export namespace Prisma {
     note?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    review: ReviewCreateNestedOneWithoutAssignmentsInput
     assignee: UserCreateNestedOneWithoutAssignedReviewsInput
+    review: ReviewCreateNestedOneWithoutAssignmentsInput
   }
 
   export type ReviewAssignmentUncheckedCreateWithoutAssignerInput = {
@@ -59483,69 +59538,180 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type SessionUpsertWithWhereUniqueWithoutUserInput = {
+  export type ReviewAssignmentCreateWithoutAssigneeInput = {
+    id?: string
+    dueDate?: Date | string | null
+    priority?: $Enums.AssignmentPriority
+    status?: $Enums.AssignmentStatus
+    note?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assigner: UserCreateNestedOneWithoutAssignedByMeInput
+    review: ReviewCreateNestedOneWithoutAssignmentsInput
+  }
+
+  export type ReviewAssignmentUncheckedCreateWithoutAssigneeInput = {
+    id?: string
+    reviewId: string
+    assignedBy: string
+    dueDate?: Date | string | null
+    priority?: $Enums.AssignmentPriority
+    status?: $Enums.AssignmentStatus
+    note?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ReviewAssignmentCreateOrConnectWithoutAssigneeInput = {
+    where: ReviewAssignmentWhereUniqueInput
+    create: XOR<ReviewAssignmentCreateWithoutAssigneeInput, ReviewAssignmentUncheckedCreateWithoutAssigneeInput>
+  }
+
+  export type ReviewAssignmentCreateManyAssigneeInputEnvelope = {
+    data: ReviewAssignmentCreateManyAssigneeInput | ReviewAssignmentCreateManyAssigneeInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ReviewRuleCreateWithoutUserInput = {
+    id?: string
+    name: string
+    description: string
+    pattern?: string | null
+    severity?: $Enums.RuleSeverity
+    enabled?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    repository?: RepositoryCreateNestedOneWithoutReviewRulesInput
+    team?: TeamCreateNestedOneWithoutReviewRulesInput
+  }
+
+  export type ReviewRuleUncheckedCreateWithoutUserInput = {
+    id?: string
+    name: string
+    description: string
+    pattern?: string | null
+    severity?: $Enums.RuleSeverity
+    repositoryId?: string | null
+    teamId?: string | null
+    enabled?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ReviewRuleCreateOrConnectWithoutUserInput = {
+    where: ReviewRuleWhereUniqueInput
+    create: XOR<ReviewRuleCreateWithoutUserInput, ReviewRuleUncheckedCreateWithoutUserInput>
+  }
+
+  export type ReviewRuleCreateManyUserInputEnvelope = {
+    data: ReviewRuleCreateManyUserInput | ReviewRuleCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ReviewThreadCommentReactionCreateWithoutUserInput = {
+    id?: string
+    emoji: string
+    createdAt?: Date | string
+    comment: ReviewThreadCommentCreateNestedOneWithoutReactionsInput
+  }
+
+  export type ReviewThreadCommentReactionUncheckedCreateWithoutUserInput = {
+    id?: string
+    commentId: string
+    emoji: string
+    createdAt?: Date | string
+  }
+
+  export type ReviewThreadCommentReactionCreateOrConnectWithoutUserInput = {
+    where: ReviewThreadCommentReactionWhereUniqueInput
+    create: XOR<ReviewThreadCommentReactionCreateWithoutUserInput, ReviewThreadCommentReactionUncheckedCreateWithoutUserInput>
+  }
+
+  export type ReviewThreadCommentReactionCreateManyUserInputEnvelope = {
+    data: ReviewThreadCommentReactionCreateManyUserInput | ReviewThreadCommentReactionCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SessionCreateWithoutUserInput = {
+    id: string
+    expiresAt: Date | string
+    token: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ipAddress?: string | null
+    userAgent?: string | null
+  }
+
+  export type SessionUncheckedCreateWithoutUserInput = {
+    id: string
+    expiresAt: Date | string
+    token: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ipAddress?: string | null
+    userAgent?: string | null
+  }
+
+  export type SessionCreateOrConnectWithoutUserInput = {
     where: SessionWhereUniqueInput
-    update: XOR<SessionUpdateWithoutUserInput, SessionUncheckedUpdateWithoutUserInput>
     create: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput>
   }
 
-  export type SessionUpdateWithWhereUniqueWithoutUserInput = {
-    where: SessionWhereUniqueInput
-    data: XOR<SessionUpdateWithoutUserInput, SessionUncheckedUpdateWithoutUserInput>
+  export type SessionCreateManyUserInputEnvelope = {
+    data: SessionCreateManyUserInput | SessionCreateManyUserInput[]
+    skipDuplicates?: boolean
   }
 
-  export type SessionUpdateManyWithWhereWithoutUserInput = {
-    where: SessionScalarWhereInput
-    data: XOR<SessionUpdateManyMutationInput, SessionUncheckedUpdateManyWithoutUserInput>
+  export type UserCustomRoleCreateWithoutUserInput = {
+    id?: string
+    assignedAt?: Date | string
+    role: CustomRoleCreateNestedOneWithoutUserRolesInput
   }
 
-  export type SessionScalarWhereInput = {
-    AND?: SessionScalarWhereInput | SessionScalarWhereInput[]
-    OR?: SessionScalarWhereInput[]
-    NOT?: SessionScalarWhereInput | SessionScalarWhereInput[]
-    id?: StringFilter<"Session"> | string
-    expiresAt?: DateTimeFilter<"Session"> | Date | string
-    token?: StringFilter<"Session"> | string
-    createdAt?: DateTimeFilter<"Session"> | Date | string
-    updatedAt?: DateTimeFilter<"Session"> | Date | string
-    ipAddress?: StringNullableFilter<"Session"> | string | null
-    userAgent?: StringNullableFilter<"Session"> | string | null
-    userId?: StringFilter<"Session"> | string
+  export type UserCustomRoleUncheckedCreateWithoutUserInput = {
+    id?: string
+    roleId: string
+    assignedAt?: Date | string
   }
 
-  export type AccountUpsertWithWhereUniqueWithoutUserInput = {
-    where: AccountWhereUniqueInput
-    update: XOR<AccountUpdateWithoutUserInput, AccountUncheckedUpdateWithoutUserInput>
-    create: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput>
+  export type UserCustomRoleCreateOrConnectWithoutUserInput = {
+    where: UserCustomRoleWhereUniqueInput
+    create: XOR<UserCustomRoleCreateWithoutUserInput, UserCustomRoleUncheckedCreateWithoutUserInput>
   }
 
-  export type AccountUpdateWithWhereUniqueWithoutUserInput = {
-    where: AccountWhereUniqueInput
-    data: XOR<AccountUpdateWithoutUserInput, AccountUncheckedUpdateWithoutUserInput>
+  export type UserCustomRoleCreateManyUserInputEnvelope = {
+    data: UserCustomRoleCreateManyUserInput | UserCustomRoleCreateManyUserInput[]
+    skipDuplicates?: boolean
   }
 
-  export type AccountUpdateManyWithWhereWithoutUserInput = {
-    where: AccountScalarWhereInput
-    data: XOR<AccountUpdateManyMutationInput, AccountUncheckedUpdateManyWithoutUserInput>
+  export type NotificationUpsertWithWhereUniqueWithoutUserInput = {
+    where: NotificationWhereUniqueInput
+    update: XOR<NotificationUpdateWithoutUserInput, NotificationUncheckedUpdateWithoutUserInput>
+    create: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput>
   }
 
-  export type AccountScalarWhereInput = {
-    AND?: AccountScalarWhereInput | AccountScalarWhereInput[]
-    OR?: AccountScalarWhereInput[]
-    NOT?: AccountScalarWhereInput | AccountScalarWhereInput[]
-    id?: StringFilter<"Account"> | string
-    accountId?: StringFilter<"Account"> | string
-    providerId?: StringFilter<"Account"> | string
-    userId?: StringFilter<"Account"> | string
-    accessToken?: StringNullableFilter<"Account"> | string | null
-    refreshToken?: StringNullableFilter<"Account"> | string | null
-    idToken?: StringNullableFilter<"Account"> | string | null
-    accessTokenExpiresAt?: DateTimeNullableFilter<"Account"> | Date | string | null
-    refreshTokenExpiresAt?: DateTimeNullableFilter<"Account"> | Date | string | null
-    scope?: StringNullableFilter<"Account"> | string | null
-    password?: StringNullableFilter<"Account"> | string | null
-    createdAt?: DateTimeFilter<"Account"> | Date | string
-    updatedAt?: DateTimeFilter<"Account"> | Date | string
+  export type NotificationUpdateWithWhereUniqueWithoutUserInput = {
+    where: NotificationWhereUniqueInput
+    data: XOR<NotificationUpdateWithoutUserInput, NotificationUncheckedUpdateWithoutUserInput>
+  }
+
+  export type NotificationUpdateManyWithWhereWithoutUserInput = {
+    where: NotificationScalarWhereInput
+    data: XOR<NotificationUpdateManyMutationInput, NotificationUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type NotificationScalarWhereInput = {
+    AND?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+    OR?: NotificationScalarWhereInput[]
+    NOT?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+    id?: StringFilter<"Notification"> | string
+    userId?: StringFilter<"Notification"> | string
+    type?: EnumNotificationTypeFilter<"Notification"> | $Enums.NotificationType
+    title?: StringFilter<"Notification"> | string
+    message?: StringFilter<"Notification"> | string
+    link?: StringNullableFilter<"Notification"> | string | null
+    read?: BoolFilter<"Notification"> | boolean
+    createdAt?: DateTimeFilter<"Notification"> | Date | string
   }
 
   export type RepositoryUpsertWithWhereUniqueWithoutUserInput = {
@@ -59612,10 +59778,38 @@ export namespace Prisma {
     comments?: JsonNullableFilter<"Review">
     qualityMetrics?: JsonNullableFilter<"Review">
     error?: StringNullableFilter<"Review"> | string | null
-    parentReviewId?: StringNullableFilter<"Review"> | string | null
-    resolvedComments?: StringNullableListFilter<"Review">
     createdAt?: DateTimeFilter<"Review"> | Date | string
     updatedAt?: DateTimeFilter<"Review"> | Date | string
+    parentReviewId?: StringNullableFilter<"Review"> | string | null
+    resolvedComments?: StringNullableListFilter<"Review">
+  }
+
+  export type ReviewFeedbackUpsertWithWhereUniqueWithoutUserInput = {
+    where: ReviewFeedbackWhereUniqueInput
+    update: XOR<ReviewFeedbackUpdateWithoutUserInput, ReviewFeedbackUncheckedUpdateWithoutUserInput>
+    create: XOR<ReviewFeedbackCreateWithoutUserInput, ReviewFeedbackUncheckedCreateWithoutUserInput>
+  }
+
+  export type ReviewFeedbackUpdateWithWhereUniqueWithoutUserInput = {
+    where: ReviewFeedbackWhereUniqueInput
+    data: XOR<ReviewFeedbackUpdateWithoutUserInput, ReviewFeedbackUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ReviewFeedbackUpdateManyWithWhereWithoutUserInput = {
+    where: ReviewFeedbackScalarWhereInput
+    data: XOR<ReviewFeedbackUpdateManyMutationInput, ReviewFeedbackUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ReviewFeedbackScalarWhereInput = {
+    AND?: ReviewFeedbackScalarWhereInput | ReviewFeedbackScalarWhereInput[]
+    OR?: ReviewFeedbackScalarWhereInput[]
+    NOT?: ReviewFeedbackScalarWhereInput | ReviewFeedbackScalarWhereInput[]
+    id?: StringFilter<"ReviewFeedback"> | string
+    reviewId?: StringFilter<"ReviewFeedback"> | string
+    userId?: StringFilter<"ReviewFeedback"> | string
+    rating?: IntFilter<"ReviewFeedback"> | number
+    comment?: StringNullableFilter<"ReviewFeedback"> | string | null
+    createdAt?: DateTimeFilter<"ReviewFeedback"> | Date | string
   }
 
   export type ReviewThreadCommentUpsertWithWhereUniqueWithoutUserInput = {
@@ -59673,95 +59867,39 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"TeamMember"> | Date | string
   }
 
-  export type NotificationUpsertWithWhereUniqueWithoutUserInput = {
-    where: NotificationWhereUniqueInput
-    update: XOR<NotificationUpdateWithoutUserInput, NotificationUncheckedUpdateWithoutUserInput>
-    create: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput>
+  export type AccountUpsertWithWhereUniqueWithoutUserInput = {
+    where: AccountWhereUniqueInput
+    update: XOR<AccountUpdateWithoutUserInput, AccountUncheckedUpdateWithoutUserInput>
+    create: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput>
   }
 
-  export type NotificationUpdateWithWhereUniqueWithoutUserInput = {
-    where: NotificationWhereUniqueInput
-    data: XOR<NotificationUpdateWithoutUserInput, NotificationUncheckedUpdateWithoutUserInput>
+  export type AccountUpdateWithWhereUniqueWithoutUserInput = {
+    where: AccountWhereUniqueInput
+    data: XOR<AccountUpdateWithoutUserInput, AccountUncheckedUpdateWithoutUserInput>
   }
 
-  export type NotificationUpdateManyWithWhereWithoutUserInput = {
-    where: NotificationScalarWhereInput
-    data: XOR<NotificationUpdateManyMutationInput, NotificationUncheckedUpdateManyWithoutUserInput>
+  export type AccountUpdateManyWithWhereWithoutUserInput = {
+    where: AccountScalarWhereInput
+    data: XOR<AccountUpdateManyMutationInput, AccountUncheckedUpdateManyWithoutUserInput>
   }
 
-  export type NotificationScalarWhereInput = {
-    AND?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
-    OR?: NotificationScalarWhereInput[]
-    NOT?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
-    id?: StringFilter<"Notification"> | string
-    userId?: StringFilter<"Notification"> | string
-    type?: EnumNotificationTypeFilter<"Notification"> | $Enums.NotificationType
-    title?: StringFilter<"Notification"> | string
-    message?: StringFilter<"Notification"> | string
-    link?: StringNullableFilter<"Notification"> | string | null
-    read?: BoolFilter<"Notification"> | boolean
-    createdAt?: DateTimeFilter<"Notification"> | Date | string
-  }
-
-  export type ReviewFeedbackUpsertWithWhereUniqueWithoutUserInput = {
-    where: ReviewFeedbackWhereUniqueInput
-    update: XOR<ReviewFeedbackUpdateWithoutUserInput, ReviewFeedbackUncheckedUpdateWithoutUserInput>
-    create: XOR<ReviewFeedbackCreateWithoutUserInput, ReviewFeedbackUncheckedCreateWithoutUserInput>
-  }
-
-  export type ReviewFeedbackUpdateWithWhereUniqueWithoutUserInput = {
-    where: ReviewFeedbackWhereUniqueInput
-    data: XOR<ReviewFeedbackUpdateWithoutUserInput, ReviewFeedbackUncheckedUpdateWithoutUserInput>
-  }
-
-  export type ReviewFeedbackUpdateManyWithWhereWithoutUserInput = {
-    where: ReviewFeedbackScalarWhereInput
-    data: XOR<ReviewFeedbackUpdateManyMutationInput, ReviewFeedbackUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type ReviewFeedbackScalarWhereInput = {
-    AND?: ReviewFeedbackScalarWhereInput | ReviewFeedbackScalarWhereInput[]
-    OR?: ReviewFeedbackScalarWhereInput[]
-    NOT?: ReviewFeedbackScalarWhereInput | ReviewFeedbackScalarWhereInput[]
-    id?: StringFilter<"ReviewFeedback"> | string
-    reviewId?: StringFilter<"ReviewFeedback"> | string
-    userId?: StringFilter<"ReviewFeedback"> | string
-    rating?: IntFilter<"ReviewFeedback"> | number
-    comment?: StringNullableFilter<"ReviewFeedback"> | string | null
-    createdAt?: DateTimeFilter<"ReviewFeedback"> | Date | string
-  }
-
-  export type ReviewRuleUpsertWithWhereUniqueWithoutUserInput = {
-    where: ReviewRuleWhereUniqueInput
-    update: XOR<ReviewRuleUpdateWithoutUserInput, ReviewRuleUncheckedUpdateWithoutUserInput>
-    create: XOR<ReviewRuleCreateWithoutUserInput, ReviewRuleUncheckedCreateWithoutUserInput>
-  }
-
-  export type ReviewRuleUpdateWithWhereUniqueWithoutUserInput = {
-    where: ReviewRuleWhereUniqueInput
-    data: XOR<ReviewRuleUpdateWithoutUserInput, ReviewRuleUncheckedUpdateWithoutUserInput>
-  }
-
-  export type ReviewRuleUpdateManyWithWhereWithoutUserInput = {
-    where: ReviewRuleScalarWhereInput
-    data: XOR<ReviewRuleUpdateManyMutationInput, ReviewRuleUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type ReviewRuleScalarWhereInput = {
-    AND?: ReviewRuleScalarWhereInput | ReviewRuleScalarWhereInput[]
-    OR?: ReviewRuleScalarWhereInput[]
-    NOT?: ReviewRuleScalarWhereInput | ReviewRuleScalarWhereInput[]
-    id?: StringFilter<"ReviewRule"> | string
-    name?: StringFilter<"ReviewRule"> | string
-    description?: StringFilter<"ReviewRule"> | string
-    pattern?: StringNullableFilter<"ReviewRule"> | string | null
-    severity?: EnumRuleSeverityFilter<"ReviewRule"> | $Enums.RuleSeverity
-    repositoryId?: StringNullableFilter<"ReviewRule"> | string | null
-    teamId?: StringNullableFilter<"ReviewRule"> | string | null
-    enabled?: BoolFilter<"ReviewRule"> | boolean
-    createdAt?: DateTimeFilter<"ReviewRule"> | Date | string
-    updatedAt?: DateTimeFilter<"ReviewRule"> | Date | string
-    userId?: StringFilter<"ReviewRule"> | string
+  export type AccountScalarWhereInput = {
+    AND?: AccountScalarWhereInput | AccountScalarWhereInput[]
+    OR?: AccountScalarWhereInput[]
+    NOT?: AccountScalarWhereInput | AccountScalarWhereInput[]
+    id?: StringFilter<"Account"> | string
+    accountId?: StringFilter<"Account"> | string
+    providerId?: StringFilter<"Account"> | string
+    userId?: StringFilter<"Account"> | string
+    accessToken?: StringNullableFilter<"Account"> | string | null
+    refreshToken?: StringNullableFilter<"Account"> | string | null
+    idToken?: StringNullableFilter<"Account"> | string | null
+    accessTokenExpiresAt?: DateTimeNullableFilter<"Account"> | Date | string | null
+    refreshTokenExpiresAt?: DateTimeNullableFilter<"Account"> | Date | string | null
+    scope?: StringNullableFilter<"Account"> | string | null
+    password?: StringNullableFilter<"Account"> | string | null
+    createdAt?: DateTimeFilter<"Account"> | Date | string
+    updatedAt?: DateTimeFilter<"Account"> | Date | string
   }
 
   export type AuditLogUpsertWithWhereUniqueWithoutActorInput = {
@@ -59797,59 +59935,6 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"AuditLog"> | Date | string
   }
 
-  export type UserCustomRoleUpsertWithWhereUniqueWithoutUserInput = {
-    where: UserCustomRoleWhereUniqueInput
-    update: XOR<UserCustomRoleUpdateWithoutUserInput, UserCustomRoleUncheckedUpdateWithoutUserInput>
-    create: XOR<UserCustomRoleCreateWithoutUserInput, UserCustomRoleUncheckedCreateWithoutUserInput>
-  }
-
-  export type UserCustomRoleUpdateWithWhereUniqueWithoutUserInput = {
-    where: UserCustomRoleWhereUniqueInput
-    data: XOR<UserCustomRoleUpdateWithoutUserInput, UserCustomRoleUncheckedUpdateWithoutUserInput>
-  }
-
-  export type UserCustomRoleUpdateManyWithWhereWithoutUserInput = {
-    where: UserCustomRoleScalarWhereInput
-    data: XOR<UserCustomRoleUpdateManyMutationInput, UserCustomRoleUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type UserCustomRoleScalarWhereInput = {
-    AND?: UserCustomRoleScalarWhereInput | UserCustomRoleScalarWhereInput[]
-    OR?: UserCustomRoleScalarWhereInput[]
-    NOT?: UserCustomRoleScalarWhereInput | UserCustomRoleScalarWhereInput[]
-    id?: StringFilter<"UserCustomRole"> | string
-    userId?: StringFilter<"UserCustomRole"> | string
-    roleId?: StringFilter<"UserCustomRole"> | string
-    assignedAt?: DateTimeFilter<"UserCustomRole"> | Date | string
-  }
-
-  export type ReviewThreadCommentReactionUpsertWithWhereUniqueWithoutUserInput = {
-    where: ReviewThreadCommentReactionWhereUniqueInput
-    update: XOR<ReviewThreadCommentReactionUpdateWithoutUserInput, ReviewThreadCommentReactionUncheckedUpdateWithoutUserInput>
-    create: XOR<ReviewThreadCommentReactionCreateWithoutUserInput, ReviewThreadCommentReactionUncheckedCreateWithoutUserInput>
-  }
-
-  export type ReviewThreadCommentReactionUpdateWithWhereUniqueWithoutUserInput = {
-    where: ReviewThreadCommentReactionWhereUniqueInput
-    data: XOR<ReviewThreadCommentReactionUpdateWithoutUserInput, ReviewThreadCommentReactionUncheckedUpdateWithoutUserInput>
-  }
-
-  export type ReviewThreadCommentReactionUpdateManyWithWhereWithoutUserInput = {
-    where: ReviewThreadCommentReactionScalarWhereInput
-    data: XOR<ReviewThreadCommentReactionUpdateManyMutationInput, ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type ReviewThreadCommentReactionScalarWhereInput = {
-    AND?: ReviewThreadCommentReactionScalarWhereInput | ReviewThreadCommentReactionScalarWhereInput[]
-    OR?: ReviewThreadCommentReactionScalarWhereInput[]
-    NOT?: ReviewThreadCommentReactionScalarWhereInput | ReviewThreadCommentReactionScalarWhereInput[]
-    id?: StringFilter<"ReviewThreadCommentReaction"> | string
-    commentId?: StringFilter<"ReviewThreadCommentReaction"> | string
-    userId?: StringFilter<"ReviewThreadCommentReaction"> | string
-    emoji?: StringFilter<"ReviewThreadCommentReaction"> | string
-    createdAt?: DateTimeFilter<"ReviewThreadCommentReaction"> | Date | string
-  }
-
   export type ReviewApprovalUpsertWithWhereUniqueWithoutUserInput = {
     where: ReviewApprovalWhereUniqueInput
     update: XOR<ReviewApprovalUpdateWithoutUserInput, ReviewApprovalUncheckedUpdateWithoutUserInput>
@@ -59879,20 +59964,20 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"ReviewApproval"> | Date | string
   }
 
-  export type ReviewAssignmentUpsertWithWhereUniqueWithoutAssigneeInput = {
+  export type ReviewAssignmentUpsertWithWhereUniqueWithoutAssignerInput = {
     where: ReviewAssignmentWhereUniqueInput
-    update: XOR<ReviewAssignmentUpdateWithoutAssigneeInput, ReviewAssignmentUncheckedUpdateWithoutAssigneeInput>
-    create: XOR<ReviewAssignmentCreateWithoutAssigneeInput, ReviewAssignmentUncheckedCreateWithoutAssigneeInput>
+    update: XOR<ReviewAssignmentUpdateWithoutAssignerInput, ReviewAssignmentUncheckedUpdateWithoutAssignerInput>
+    create: XOR<ReviewAssignmentCreateWithoutAssignerInput, ReviewAssignmentUncheckedCreateWithoutAssignerInput>
   }
 
-  export type ReviewAssignmentUpdateWithWhereUniqueWithoutAssigneeInput = {
+  export type ReviewAssignmentUpdateWithWhereUniqueWithoutAssignerInput = {
     where: ReviewAssignmentWhereUniqueInput
-    data: XOR<ReviewAssignmentUpdateWithoutAssigneeInput, ReviewAssignmentUncheckedUpdateWithoutAssigneeInput>
+    data: XOR<ReviewAssignmentUpdateWithoutAssignerInput, ReviewAssignmentUncheckedUpdateWithoutAssignerInput>
   }
 
-  export type ReviewAssignmentUpdateManyWithWhereWithoutAssigneeInput = {
+  export type ReviewAssignmentUpdateManyWithWhereWithoutAssignerInput = {
     where: ReviewAssignmentScalarWhereInput
-    data: XOR<ReviewAssignmentUpdateManyMutationInput, ReviewAssignmentUncheckedUpdateManyWithoutAssigneeInput>
+    data: XOR<ReviewAssignmentUpdateManyMutationInput, ReviewAssignmentUncheckedUpdateManyWithoutAssignerInput>
   }
 
   export type ReviewAssignmentScalarWhereInput = {
@@ -59911,20 +59996,136 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"ReviewAssignment"> | Date | string
   }
 
-  export type ReviewAssignmentUpsertWithWhereUniqueWithoutAssignerInput = {
+  export type ReviewAssignmentUpsertWithWhereUniqueWithoutAssigneeInput = {
     where: ReviewAssignmentWhereUniqueInput
-    update: XOR<ReviewAssignmentUpdateWithoutAssignerInput, ReviewAssignmentUncheckedUpdateWithoutAssignerInput>
-    create: XOR<ReviewAssignmentCreateWithoutAssignerInput, ReviewAssignmentUncheckedCreateWithoutAssignerInput>
+    update: XOR<ReviewAssignmentUpdateWithoutAssigneeInput, ReviewAssignmentUncheckedUpdateWithoutAssigneeInput>
+    create: XOR<ReviewAssignmentCreateWithoutAssigneeInput, ReviewAssignmentUncheckedCreateWithoutAssigneeInput>
   }
 
-  export type ReviewAssignmentUpdateWithWhereUniqueWithoutAssignerInput = {
+  export type ReviewAssignmentUpdateWithWhereUniqueWithoutAssigneeInput = {
     where: ReviewAssignmentWhereUniqueInput
-    data: XOR<ReviewAssignmentUpdateWithoutAssignerInput, ReviewAssignmentUncheckedUpdateWithoutAssignerInput>
+    data: XOR<ReviewAssignmentUpdateWithoutAssigneeInput, ReviewAssignmentUncheckedUpdateWithoutAssigneeInput>
   }
 
-  export type ReviewAssignmentUpdateManyWithWhereWithoutAssignerInput = {
+  export type ReviewAssignmentUpdateManyWithWhereWithoutAssigneeInput = {
     where: ReviewAssignmentScalarWhereInput
-    data: XOR<ReviewAssignmentUpdateManyMutationInput, ReviewAssignmentUncheckedUpdateManyWithoutAssignerInput>
+    data: XOR<ReviewAssignmentUpdateManyMutationInput, ReviewAssignmentUncheckedUpdateManyWithoutAssigneeInput>
+  }
+
+  export type ReviewRuleUpsertWithWhereUniqueWithoutUserInput = {
+    where: ReviewRuleWhereUniqueInput
+    update: XOR<ReviewRuleUpdateWithoutUserInput, ReviewRuleUncheckedUpdateWithoutUserInput>
+    create: XOR<ReviewRuleCreateWithoutUserInput, ReviewRuleUncheckedCreateWithoutUserInput>
+  }
+
+  export type ReviewRuleUpdateWithWhereUniqueWithoutUserInput = {
+    where: ReviewRuleWhereUniqueInput
+    data: XOR<ReviewRuleUpdateWithoutUserInput, ReviewRuleUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ReviewRuleUpdateManyWithWhereWithoutUserInput = {
+    where: ReviewRuleScalarWhereInput
+    data: XOR<ReviewRuleUpdateManyMutationInput, ReviewRuleUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ReviewRuleScalarWhereInput = {
+    AND?: ReviewRuleScalarWhereInput | ReviewRuleScalarWhereInput[]
+    OR?: ReviewRuleScalarWhereInput[]
+    NOT?: ReviewRuleScalarWhereInput | ReviewRuleScalarWhereInput[]
+    id?: StringFilter<"ReviewRule"> | string
+    name?: StringFilter<"ReviewRule"> | string
+    description?: StringFilter<"ReviewRule"> | string
+    pattern?: StringNullableFilter<"ReviewRule"> | string | null
+    severity?: EnumRuleSeverityFilter<"ReviewRule"> | $Enums.RuleSeverity
+    repositoryId?: StringNullableFilter<"ReviewRule"> | string | null
+    teamId?: StringNullableFilter<"ReviewRule"> | string | null
+    enabled?: BoolFilter<"ReviewRule"> | boolean
+    createdAt?: DateTimeFilter<"ReviewRule"> | Date | string
+    updatedAt?: DateTimeFilter<"ReviewRule"> | Date | string
+    userId?: StringFilter<"ReviewRule"> | string
+  }
+
+  export type ReviewThreadCommentReactionUpsertWithWhereUniqueWithoutUserInput = {
+    where: ReviewThreadCommentReactionWhereUniqueInput
+    update: XOR<ReviewThreadCommentReactionUpdateWithoutUserInput, ReviewThreadCommentReactionUncheckedUpdateWithoutUserInput>
+    create: XOR<ReviewThreadCommentReactionCreateWithoutUserInput, ReviewThreadCommentReactionUncheckedCreateWithoutUserInput>
+  }
+
+  export type ReviewThreadCommentReactionUpdateWithWhereUniqueWithoutUserInput = {
+    where: ReviewThreadCommentReactionWhereUniqueInput
+    data: XOR<ReviewThreadCommentReactionUpdateWithoutUserInput, ReviewThreadCommentReactionUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ReviewThreadCommentReactionUpdateManyWithWhereWithoutUserInput = {
+    where: ReviewThreadCommentReactionScalarWhereInput
+    data: XOR<ReviewThreadCommentReactionUpdateManyMutationInput, ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ReviewThreadCommentReactionScalarWhereInput = {
+    AND?: ReviewThreadCommentReactionScalarWhereInput | ReviewThreadCommentReactionScalarWhereInput[]
+    OR?: ReviewThreadCommentReactionScalarWhereInput[]
+    NOT?: ReviewThreadCommentReactionScalarWhereInput | ReviewThreadCommentReactionScalarWhereInput[]
+    id?: StringFilter<"ReviewThreadCommentReaction"> | string
+    commentId?: StringFilter<"ReviewThreadCommentReaction"> | string
+    userId?: StringFilter<"ReviewThreadCommentReaction"> | string
+    emoji?: StringFilter<"ReviewThreadCommentReaction"> | string
+    createdAt?: DateTimeFilter<"ReviewThreadCommentReaction"> | Date | string
+  }
+
+  export type SessionUpsertWithWhereUniqueWithoutUserInput = {
+    where: SessionWhereUniqueInput
+    update: XOR<SessionUpdateWithoutUserInput, SessionUncheckedUpdateWithoutUserInput>
+    create: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput>
+  }
+
+  export type SessionUpdateWithWhereUniqueWithoutUserInput = {
+    where: SessionWhereUniqueInput
+    data: XOR<SessionUpdateWithoutUserInput, SessionUncheckedUpdateWithoutUserInput>
+  }
+
+  export type SessionUpdateManyWithWhereWithoutUserInput = {
+    where: SessionScalarWhereInput
+    data: XOR<SessionUpdateManyMutationInput, SessionUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type SessionScalarWhereInput = {
+    AND?: SessionScalarWhereInput | SessionScalarWhereInput[]
+    OR?: SessionScalarWhereInput[]
+    NOT?: SessionScalarWhereInput | SessionScalarWhereInput[]
+    id?: StringFilter<"Session"> | string
+    expiresAt?: DateTimeFilter<"Session"> | Date | string
+    token?: StringFilter<"Session"> | string
+    createdAt?: DateTimeFilter<"Session"> | Date | string
+    updatedAt?: DateTimeFilter<"Session"> | Date | string
+    ipAddress?: StringNullableFilter<"Session"> | string | null
+    userAgent?: StringNullableFilter<"Session"> | string | null
+    userId?: StringFilter<"Session"> | string
+  }
+
+  export type UserCustomRoleUpsertWithWhereUniqueWithoutUserInput = {
+    where: UserCustomRoleWhereUniqueInput
+    update: XOR<UserCustomRoleUpdateWithoutUserInput, UserCustomRoleUncheckedUpdateWithoutUserInput>
+    create: XOR<UserCustomRoleCreateWithoutUserInput, UserCustomRoleUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserCustomRoleUpdateWithWhereUniqueWithoutUserInput = {
+    where: UserCustomRoleWhereUniqueInput
+    data: XOR<UserCustomRoleUpdateWithoutUserInput, UserCustomRoleUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserCustomRoleUpdateManyWithWhereWithoutUserInput = {
+    where: UserCustomRoleScalarWhereInput
+    data: XOR<UserCustomRoleUpdateManyMutationInput, UserCustomRoleUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type UserCustomRoleScalarWhereInput = {
+    AND?: UserCustomRoleScalarWhereInput | UserCustomRoleScalarWhereInput[]
+    OR?: UserCustomRoleScalarWhereInput[]
+    NOT?: UserCustomRoleScalarWhereInput | UserCustomRoleScalarWhereInput[]
+    id?: StringFilter<"UserCustomRole"> | string
+    userId?: StringFilter<"UserCustomRole"> | string
+    roleId?: StringFilter<"UserCustomRole"> | string
+    assignedAt?: DateTimeFilter<"UserCustomRole"> | Date | string
   }
 
   export type UserCreateWithoutSessionsInput = {
@@ -59934,8 +60135,6 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -59943,31 +60142,38 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
     emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
     notifyReviewCompleted?: boolean
     notifyReviewFailed?: boolean
     notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    accounts?: AccountCreateNestedManyWithoutUserInput
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     repositories?: RepositoryCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    reviewFeedbacks?: ReviewFeedbackCreateNestedManyWithoutUserInput
     threadComments?: ReviewThreadCommentCreateNestedManyWithoutUserInput
     teamMembers?: TeamMemberCreateNestedManyWithoutUserInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    reviewFeedbacks?: ReviewFeedbackCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutActorInput
-    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
-    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
     reviewApprovals?: ReviewApprovalCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
     assignedByMe?: ReviewAssignmentCreateNestedManyWithoutAssignerInput
+    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
+    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
+    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -59977,8 +60183,6 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -59986,31 +60190,38 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
     emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
     notifyReviewCompleted?: boolean
     notifyReviewFailed?: boolean
     notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    reviewFeedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput
     threadComments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput
     teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutUserInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    reviewFeedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
-    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
     reviewApprovals?: ReviewApprovalUncheckedCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     assignedByMe?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssignerInput
+    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -60036,8 +60247,6 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -60045,31 +60254,38 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
     notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    accounts?: AccountUpdateManyWithoutUserNestedInput
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    reviewFeedbacks?: ReviewFeedbackUpdateManyWithoutUserNestedInput
     threadComments?: ReviewThreadCommentUpdateManyWithoutUserNestedInput
     teamMembers?: TeamMemberUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    reviewFeedbacks?: ReviewFeedbackUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
-    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
-    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
     reviewApprovals?: ReviewApprovalUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
     assignedByMe?: ReviewAssignmentUpdateManyWithoutAssignerNestedInput
+    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
+    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
+    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -60079,8 +60295,6 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -60088,31 +60302,38 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
     notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    reviewFeedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput
     threadComments?: ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput
     teamMembers?: TeamMemberUncheckedUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    reviewFeedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
-    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
     reviewApprovals?: ReviewApprovalUncheckedUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     assignedByMe?: ReviewAssignmentUncheckedUpdateManyWithoutAssignerNestedInput
+    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAccountsInput = {
@@ -60122,8 +60343,6 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -60131,31 +60350,38 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
     emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
     notifyReviewCompleted?: boolean
     notifyReviewFailed?: boolean
     notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionCreateNestedManyWithoutUserInput
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     repositories?: RepositoryCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    reviewFeedbacks?: ReviewFeedbackCreateNestedManyWithoutUserInput
     threadComments?: ReviewThreadCommentCreateNestedManyWithoutUserInput
     teamMembers?: TeamMemberCreateNestedManyWithoutUserInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    reviewFeedbacks?: ReviewFeedbackCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutActorInput
-    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
-    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
     reviewApprovals?: ReviewApprovalCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
     assignedByMe?: ReviewAssignmentCreateNestedManyWithoutAssignerInput
+    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
+    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
+    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -60165,8 +60391,6 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -60174,31 +60398,38 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
     emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
     notifyReviewCompleted?: boolean
     notifyReviewFailed?: boolean
     notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    reviewFeedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput
     threadComments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput
     teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutUserInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    reviewFeedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
-    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
     reviewApprovals?: ReviewApprovalUncheckedCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     assignedByMe?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssignerInput
+    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -60224,8 +60455,6 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -60233,31 +60462,38 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
     notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUpdateManyWithoutUserNestedInput
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    reviewFeedbacks?: ReviewFeedbackUpdateManyWithoutUserNestedInput
     threadComments?: ReviewThreadCommentUpdateManyWithoutUserNestedInput
     teamMembers?: TeamMemberUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    reviewFeedbacks?: ReviewFeedbackUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
-    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
-    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
     reviewApprovals?: ReviewApprovalUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
     assignedByMe?: ReviewAssignmentUpdateManyWithoutAssignerNestedInput
+    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
+    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
+    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -60267,8 +60503,6 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -60276,319 +60510,38 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
     notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    reviewFeedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput
     threadComments?: ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput
     teamMembers?: TeamMemberUncheckedUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    reviewFeedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
-    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
     reviewApprovals?: ReviewApprovalUncheckedUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     assignedByMe?: ReviewAssignmentUncheckedUpdateManyWithoutAssignerNestedInput
-  }
-
-  export type UserCreateWithoutRepositoriesInput = {
-    id: string
-    name: string
-    email: string
-    emailVerified?: boolean
-    image?: string | null
-    role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    reviewDepth?: string
-    defaultLanguage?: string
-    autoReview?: boolean
-    includeSecurityChecks?: boolean
-    includePerfSuggestions?: boolean
-    emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
-    notifyReviewCompleted?: boolean
-    notifyReviewFailed?: boolean
-    notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionCreateNestedManyWithoutUserInput
-    accounts?: AccountCreateNestedManyWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutUserInput
-    threadComments?: ReviewThreadCommentCreateNestedManyWithoutUserInput
-    teamMembers?: TeamMemberCreateNestedManyWithoutUserInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    reviewFeedbacks?: ReviewFeedbackCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
-    auditLogs?: AuditLogCreateNestedManyWithoutActorInput
-    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
-    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
-    reviewApprovals?: ReviewApprovalCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
-    assignedByMe?: ReviewAssignmentCreateNestedManyWithoutAssignerInput
-  }
-
-  export type UserUncheckedCreateWithoutRepositoriesInput = {
-    id: string
-    name: string
-    email: string
-    emailVerified?: boolean
-    image?: string | null
-    role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    reviewDepth?: string
-    defaultLanguage?: string
-    autoReview?: boolean
-    includeSecurityChecks?: boolean
-    includePerfSuggestions?: boolean
-    emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
-    notifyReviewCompleted?: boolean
-    notifyReviewFailed?: boolean
-    notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
-    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
-    threadComments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput
-    teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutUserInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    reviewFeedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
-    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
-    reviewApprovals?: ReviewApprovalUncheckedCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
-    assignedByMe?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssignerInput
-  }
-
-  export type UserCreateOrConnectWithoutRepositoriesInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutRepositoriesInput, UserUncheckedCreateWithoutRepositoriesInput>
-  }
-
-  export type TeamCreateWithoutRepositoriesInput = {
-    id?: string
-    name: string
-    slug: string
-    image?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    members?: TeamMemberCreateNestedManyWithoutTeamInput
-    actions?: TeamActionCreateNestedManyWithoutTeamInput
-    reviewRules?: ReviewRuleCreateNestedManyWithoutTeamInput
-  }
-
-  export type TeamUncheckedCreateWithoutRepositoriesInput = {
-    id?: string
-    name: string
-    slug: string
-    image?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    members?: TeamMemberUncheckedCreateNestedManyWithoutTeamInput
-    actions?: TeamActionUncheckedCreateNestedManyWithoutTeamInput
-    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutTeamInput
-  }
-
-  export type TeamCreateOrConnectWithoutRepositoriesInput = {
-    where: TeamWhereUniqueInput
-    create: XOR<TeamCreateWithoutRepositoriesInput, TeamUncheckedCreateWithoutRepositoriesInput>
-  }
-
-  export type ReviewCreateWithoutRepositoryInput = {
-    id?: string
-    prNumber: number
-    prTitle: string
-    prUrl: string
-    status?: $Enums.ReviewStatus
-    summary?: string | null
-    riskScore?: number | null
-    comments?: NullableJsonNullValueInput | InputJsonValue
-    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
-    error?: string | null
-    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutReviewsInput
-    parentReview?: ReviewCreateNestedOneWithoutChildReviewsInput
-    childReviews?: ReviewCreateNestedManyWithoutParentReviewInput
-    threads?: ReviewThreadCreateNestedManyWithoutReviewInput
-    githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
-    githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
-    feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
-    approvals?: ReviewApprovalCreateNestedManyWithoutReviewInput
-    assignments?: ReviewAssignmentCreateNestedManyWithoutReviewInput
-    securityIssues?: SecurityIssueCreateNestedManyWithoutReviewInput
-  }
-
-  export type ReviewUncheckedCreateWithoutRepositoryInput = {
-    id?: string
-    userId: string
-    prNumber: number
-    prTitle: string
-    prUrl: string
-    status?: $Enums.ReviewStatus
-    summary?: string | null
-    riskScore?: number | null
-    comments?: NullableJsonNullValueInput | InputJsonValue
-    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
-    error?: string | null
-    parentReviewId?: string | null
-    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
-    threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
-    githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
-    githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
-    feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
-    approvals?: ReviewApprovalUncheckedCreateNestedManyWithoutReviewInput
-    assignments?: ReviewAssignmentUncheckedCreateNestedManyWithoutReviewInput
-    securityIssues?: SecurityIssueUncheckedCreateNestedManyWithoutReviewInput
-  }
-
-  export type ReviewCreateOrConnectWithoutRepositoryInput = {
-    where: ReviewWhereUniqueInput
-    create: XOR<ReviewCreateWithoutRepositoryInput, ReviewUncheckedCreateWithoutRepositoryInput>
-  }
-
-  export type ReviewCreateManyRepositoryInputEnvelope = {
-    data: ReviewCreateManyRepositoryInput | ReviewCreateManyRepositoryInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type WebhookConfigCreateWithoutRepositoryInput = {
-    id?: string
-    enabled?: boolean
-    githubWebhookId?: number | null
-    scoreThreshold?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type WebhookConfigUncheckedCreateWithoutRepositoryInput = {
-    id?: string
-    enabled?: boolean
-    githubWebhookId?: number | null
-    scoreThreshold?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type WebhookConfigCreateOrConnectWithoutRepositoryInput = {
-    where: WebhookConfigWhereUniqueInput
-    create: XOR<WebhookConfigCreateWithoutRepositoryInput, WebhookConfigUncheckedCreateWithoutRepositoryInput>
-  }
-
-  export type ScheduledScanConfigCreateWithoutRepositoryInput = {
-    id?: string
-    enabled?: boolean
-    cadence?: $Enums.ScanCadence
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    runs?: ScheduledScanRunCreateNestedManyWithoutConfigInput
-  }
-
-  export type ScheduledScanConfigUncheckedCreateWithoutRepositoryInput = {
-    id?: string
-    enabled?: boolean
-    cadence?: $Enums.ScanCadence
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    runs?: ScheduledScanRunUncheckedCreateNestedManyWithoutConfigInput
-  }
-
-  export type ScheduledScanConfigCreateOrConnectWithoutRepositoryInput = {
-    where: ScheduledScanConfigWhereUniqueInput
-    create: XOR<ScheduledScanConfigCreateWithoutRepositoryInput, ScheduledScanConfigUncheckedCreateWithoutRepositoryInput>
-  }
-
-  export type GitHubCommentCreateWithoutRepositoryInput = {
-    id?: string
-    githubReviewId: bigint | number
-    prNumber: number
-    commitSha: string
-    findingCount?: number
-    createdAt?: Date | string
-    review: ReviewCreateNestedOneWithoutGithubCommentInput
-  }
-
-  export type GitHubCommentUncheckedCreateWithoutRepositoryInput = {
-    id?: string
-    reviewId: string
-    githubReviewId: bigint | number
-    prNumber: number
-    commitSha: string
-    findingCount?: number
-    createdAt?: Date | string
-  }
-
-  export type GitHubCommentCreateOrConnectWithoutRepositoryInput = {
-    where: GitHubCommentWhereUniqueInput
-    create: XOR<GitHubCommentCreateWithoutRepositoryInput, GitHubCommentUncheckedCreateWithoutRepositoryInput>
-  }
-
-  export type GitHubCommentCreateManyRepositoryInputEnvelope = {
-    data: GitHubCommentCreateManyRepositoryInput | GitHubCommentCreateManyRepositoryInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type BranchProtectionRecommendationCreateWithoutRepositoryInput = {
-    id?: string
-    rule: string
-    rationale: string
-    priority: $Enums.RecommendationPriority
-    dismissed?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput = {
-    id?: string
-    rule: string
-    rationale: string
-    priority: $Enums.RecommendationPriority
-    dismissed?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput = {
-    where: BranchProtectionRecommendationWhereUniqueInput
-    create: XOR<BranchProtectionRecommendationCreateWithoutRepositoryInput, BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput>
-  }
-
-  export type BranchProtectionRecommendationCreateManyRepositoryInputEnvelope = {
-    data: BranchProtectionRecommendationCreateManyRepositoryInput | BranchProtectionRecommendationCreateManyRepositoryInput[]
-    skipDuplicates?: boolean
+    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type DiagramCreateWithoutRepositoryInput = {
@@ -60627,6 +60580,258 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type TeamCreateWithoutRepositoriesInput = {
+    id?: string
+    name: string
+    slug: string
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    actions?: TeamActionCreateNestedManyWithoutTeamInput
+    members?: TeamMemberCreateNestedManyWithoutTeamInput
+    reviewRules?: ReviewRuleCreateNestedManyWithoutTeamInput
+  }
+
+  export type TeamUncheckedCreateWithoutRepositoriesInput = {
+    id?: string
+    name: string
+    slug: string
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    actions?: TeamActionUncheckedCreateNestedManyWithoutTeamInput
+    members?: TeamMemberUncheckedCreateNestedManyWithoutTeamInput
+    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutTeamInput
+  }
+
+  export type TeamCreateOrConnectWithoutRepositoriesInput = {
+    where: TeamWhereUniqueInput
+    create: XOR<TeamCreateWithoutRepositoriesInput, TeamUncheckedCreateWithoutRepositoriesInput>
+  }
+
+  export type UserCreateWithoutRepositoriesInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reviewDepth?: string
+    defaultLanguage?: string
+    autoReview?: boolean
+    includeSecurityChecks?: boolean
+    includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
+    emailNotifications?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
+    reviewFeedbacks?: ReviewFeedbackCreateNestedManyWithoutUserInput
+    threadComments?: ReviewThreadCommentCreateNestedManyWithoutUserInput
+    teamMembers?: TeamMemberCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutActorInput
+    reviewApprovals?: ReviewApprovalCreateNestedManyWithoutUserInput
+    assignedByMe?: ReviewAssignmentCreateNestedManyWithoutAssignerInput
+    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
+    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
+    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutRepositoriesInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reviewDepth?: string
+    defaultLanguage?: string
+    autoReview?: boolean
+    includeSecurityChecks?: boolean
+    includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
+    emailNotifications?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    reviewFeedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput
+    threadComments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput
+    teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
+    reviewApprovals?: ReviewApprovalUncheckedCreateNestedManyWithoutUserInput
+    assignedByMe?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssignerInput
+    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutRepositoriesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutRepositoriesInput, UserUncheckedCreateWithoutRepositoriesInput>
+  }
+
+  export type ReviewCreateWithoutRepositoryInput = {
+    id?: string
+    prNumber: number
+    prTitle: string
+    prUrl: string
+    status?: $Enums.ReviewStatus
+    summary?: string | null
+    riskScore?: number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
+    parentReview?: ReviewCreateNestedOneWithoutChildReviewsInput
+    childReviews?: ReviewCreateNestedManyWithoutParentReviewInput
+    user: UserCreateNestedOneWithoutReviewsInput
+    feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
+    threads?: ReviewThreadCreateNestedManyWithoutReviewInput
+    githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
+    githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
+    approvals?: ReviewApprovalCreateNestedManyWithoutReviewInput
+    assignments?: ReviewAssignmentCreateNestedManyWithoutReviewInput
+    securityIssues?: SecurityIssueCreateNestedManyWithoutReviewInput
+  }
+
+  export type ReviewUncheckedCreateWithoutRepositoryInput = {
+    id?: string
+    userId: string
+    prNumber: number
+    prTitle: string
+    prUrl: string
+    status?: $Enums.ReviewStatus
+    summary?: string | null
+    riskScore?: number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    parentReviewId?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
+    childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
+    feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
+    threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
+    githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
+    githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
+    approvals?: ReviewApprovalUncheckedCreateNestedManyWithoutReviewInput
+    assignments?: ReviewAssignmentUncheckedCreateNestedManyWithoutReviewInput
+    securityIssues?: SecurityIssueUncheckedCreateNestedManyWithoutReviewInput
+  }
+
+  export type ReviewCreateOrConnectWithoutRepositoryInput = {
+    where: ReviewWhereUniqueInput
+    create: XOR<ReviewCreateWithoutRepositoryInput, ReviewUncheckedCreateWithoutRepositoryInput>
+  }
+
+  export type ReviewCreateManyRepositoryInputEnvelope = {
+    data: ReviewCreateManyRepositoryInput | ReviewCreateManyRepositoryInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type BranchProtectionRecommendationCreateWithoutRepositoryInput = {
+    id?: string
+    rule: string
+    rationale: string
+    priority: $Enums.RecommendationPriority
+    dismissed?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput = {
+    id?: string
+    rule: string
+    rationale: string
+    priority: $Enums.RecommendationPriority
+    dismissed?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BranchProtectionRecommendationCreateOrConnectWithoutRepositoryInput = {
+    where: BranchProtectionRecommendationWhereUniqueInput
+    create: XOR<BranchProtectionRecommendationCreateWithoutRepositoryInput, BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput>
+  }
+
+  export type BranchProtectionRecommendationCreateManyRepositoryInputEnvelope = {
+    data: BranchProtectionRecommendationCreateManyRepositoryInput | BranchProtectionRecommendationCreateManyRepositoryInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type GitHubCommentCreateWithoutRepositoryInput = {
+    id?: string
+    githubReviewId: bigint | number
+    prNumber: number
+    commitSha: string
+    findingCount?: number
+    createdAt?: Date | string
+    review: ReviewCreateNestedOneWithoutGithubCommentInput
+  }
+
+  export type GitHubCommentUncheckedCreateWithoutRepositoryInput = {
+    id?: string
+    reviewId: string
+    githubReviewId: bigint | number
+    prNumber: number
+    commitSha: string
+    findingCount?: number
+    createdAt?: Date | string
+  }
+
+  export type GitHubCommentCreateOrConnectWithoutRepositoryInput = {
+    where: GitHubCommentWhereUniqueInput
+    create: XOR<GitHubCommentCreateWithoutRepositoryInput, GitHubCommentUncheckedCreateWithoutRepositoryInput>
+  }
+
+  export type GitHubCommentCreateManyRepositoryInputEnvelope = {
+    data: GitHubCommentCreateManyRepositoryInput | GitHubCommentCreateManyRepositoryInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ReviewRuleCreateWithoutRepositoryInput = {
     id?: string
     name: string
@@ -60636,8 +60841,8 @@ export namespace Prisma {
     enabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutReviewRulesInput
     team?: TeamCreateNestedOneWithoutReviewRulesInput
+    user: UserCreateNestedOneWithoutReviewRulesInput
   }
 
   export type ReviewRuleUncheckedCreateWithoutRepositoryInput = {
@@ -60663,270 +60868,50 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type UserUpsertWithoutRepositoriesInput = {
-    update: XOR<UserUpdateWithoutRepositoriesInput, UserUncheckedUpdateWithoutRepositoriesInput>
-    create: XOR<UserCreateWithoutRepositoriesInput, UserUncheckedCreateWithoutRepositoriesInput>
-    where?: UserWhereInput
+  export type ScheduledScanConfigCreateWithoutRepositoryInput = {
+    id?: string
+    enabled?: boolean
+    cadence?: $Enums.ScanCadence
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    runs?: ScheduledScanRunCreateNestedManyWithoutConfigInput
   }
 
-  export type UserUpdateToOneWithWhereWithoutRepositoriesInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutRepositoriesInput, UserUncheckedUpdateWithoutRepositoriesInput>
+  export type ScheduledScanConfigUncheckedCreateWithoutRepositoryInput = {
+    id?: string
+    enabled?: boolean
+    cadence?: $Enums.ScanCadence
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    runs?: ScheduledScanRunUncheckedCreateNestedManyWithoutConfigInput
   }
 
-  export type UserUpdateWithoutRepositoriesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    emailVerified?: BoolFieldUpdateOperationsInput | boolean
-    image?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewDepth?: StringFieldUpdateOperationsInput | string
-    defaultLanguage?: StringFieldUpdateOperationsInput | string
-    autoReview?: BoolFieldUpdateOperationsInput | boolean
-    includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
-    includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
-    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
-    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUpdateManyWithoutUserNestedInput
-    accounts?: AccountUpdateManyWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutUserNestedInput
-    threadComments?: ReviewThreadCommentUpdateManyWithoutUserNestedInput
-    teamMembers?: TeamMemberUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    reviewFeedbacks?: ReviewFeedbackUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
-    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
-    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
-    reviewApprovals?: ReviewApprovalUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
-    assignedByMe?: ReviewAssignmentUpdateManyWithoutAssignerNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutRepositoriesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    emailVerified?: BoolFieldUpdateOperationsInput | boolean
-    image?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewDepth?: StringFieldUpdateOperationsInput | string
-    defaultLanguage?: StringFieldUpdateOperationsInput | string
-    autoReview?: BoolFieldUpdateOperationsInput | boolean
-    includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
-    includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
-    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
-    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
-    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
-    threadComments?: ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput
-    teamMembers?: TeamMemberUncheckedUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    reviewFeedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
-    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
-    reviewApprovals?: ReviewApprovalUncheckedUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
-    assignedByMe?: ReviewAssignmentUncheckedUpdateManyWithoutAssignerNestedInput
-  }
-
-  export type TeamUpsertWithoutRepositoriesInput = {
-    update: XOR<TeamUpdateWithoutRepositoriesInput, TeamUncheckedUpdateWithoutRepositoriesInput>
-    create: XOR<TeamCreateWithoutRepositoriesInput, TeamUncheckedCreateWithoutRepositoriesInput>
-    where?: TeamWhereInput
-  }
-
-  export type TeamUpdateToOneWithWhereWithoutRepositoriesInput = {
-    where?: TeamWhereInput
-    data: XOR<TeamUpdateWithoutRepositoriesInput, TeamUncheckedUpdateWithoutRepositoriesInput>
-  }
-
-  export type TeamUpdateWithoutRepositoriesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    image?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    members?: TeamMemberUpdateManyWithoutTeamNestedInput
-    actions?: TeamActionUpdateManyWithoutTeamNestedInput
-    reviewRules?: ReviewRuleUpdateManyWithoutTeamNestedInput
-  }
-
-  export type TeamUncheckedUpdateWithoutRepositoriesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    image?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    members?: TeamMemberUncheckedUpdateManyWithoutTeamNestedInput
-    actions?: TeamActionUncheckedUpdateManyWithoutTeamNestedInput
-    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutTeamNestedInput
-  }
-
-  export type ReviewUpsertWithWhereUniqueWithoutRepositoryInput = {
-    where: ReviewWhereUniqueInput
-    update: XOR<ReviewUpdateWithoutRepositoryInput, ReviewUncheckedUpdateWithoutRepositoryInput>
-    create: XOR<ReviewCreateWithoutRepositoryInput, ReviewUncheckedCreateWithoutRepositoryInput>
-  }
-
-  export type ReviewUpdateWithWhereUniqueWithoutRepositoryInput = {
-    where: ReviewWhereUniqueInput
-    data: XOR<ReviewUpdateWithoutRepositoryInput, ReviewUncheckedUpdateWithoutRepositoryInput>
-  }
-
-  export type ReviewUpdateManyWithWhereWithoutRepositoryInput = {
-    where: ReviewScalarWhereInput
-    data: XOR<ReviewUpdateManyMutationInput, ReviewUncheckedUpdateManyWithoutRepositoryInput>
-  }
-
-  export type WebhookConfigUpsertWithoutRepositoryInput = {
-    update: XOR<WebhookConfigUpdateWithoutRepositoryInput, WebhookConfigUncheckedUpdateWithoutRepositoryInput>
-    create: XOR<WebhookConfigCreateWithoutRepositoryInput, WebhookConfigUncheckedCreateWithoutRepositoryInput>
-    where?: WebhookConfigWhereInput
-  }
-
-  export type WebhookConfigUpdateToOneWithWhereWithoutRepositoryInput = {
-    where?: WebhookConfigWhereInput
-    data: XOR<WebhookConfigUpdateWithoutRepositoryInput, WebhookConfigUncheckedUpdateWithoutRepositoryInput>
-  }
-
-  export type WebhookConfigUpdateWithoutRepositoryInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    enabled?: BoolFieldUpdateOperationsInput | boolean
-    githubWebhookId?: NullableIntFieldUpdateOperationsInput | number | null
-    scoreThreshold?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type WebhookConfigUncheckedUpdateWithoutRepositoryInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    enabled?: BoolFieldUpdateOperationsInput | boolean
-    githubWebhookId?: NullableIntFieldUpdateOperationsInput | number | null
-    scoreThreshold?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ScheduledScanConfigUpsertWithoutRepositoryInput = {
-    update: XOR<ScheduledScanConfigUpdateWithoutRepositoryInput, ScheduledScanConfigUncheckedUpdateWithoutRepositoryInput>
+  export type ScheduledScanConfigCreateOrConnectWithoutRepositoryInput = {
+    where: ScheduledScanConfigWhereUniqueInput
     create: XOR<ScheduledScanConfigCreateWithoutRepositoryInput, ScheduledScanConfigUncheckedCreateWithoutRepositoryInput>
-    where?: ScheduledScanConfigWhereInput
   }
 
-  export type ScheduledScanConfigUpdateToOneWithWhereWithoutRepositoryInput = {
-    where?: ScheduledScanConfigWhereInput
-    data: XOR<ScheduledScanConfigUpdateWithoutRepositoryInput, ScheduledScanConfigUncheckedUpdateWithoutRepositoryInput>
+  export type WebhookConfigCreateWithoutRepositoryInput = {
+    id?: string
+    enabled?: boolean
+    githubWebhookId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    scoreThreshold?: number | null
   }
 
-  export type ScheduledScanConfigUpdateWithoutRepositoryInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    enabled?: BoolFieldUpdateOperationsInput | boolean
-    cadence?: EnumScanCadenceFieldUpdateOperationsInput | $Enums.ScanCadence
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    runs?: ScheduledScanRunUpdateManyWithoutConfigNestedInput
+  export type WebhookConfigUncheckedCreateWithoutRepositoryInput = {
+    id?: string
+    enabled?: boolean
+    githubWebhookId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    scoreThreshold?: number | null
   }
 
-  export type ScheduledScanConfigUncheckedUpdateWithoutRepositoryInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    enabled?: BoolFieldUpdateOperationsInput | boolean
-    cadence?: EnumScanCadenceFieldUpdateOperationsInput | $Enums.ScanCadence
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    runs?: ScheduledScanRunUncheckedUpdateManyWithoutConfigNestedInput
-  }
-
-  export type GitHubCommentUpsertWithWhereUniqueWithoutRepositoryInput = {
-    where: GitHubCommentWhereUniqueInput
-    update: XOR<GitHubCommentUpdateWithoutRepositoryInput, GitHubCommentUncheckedUpdateWithoutRepositoryInput>
-    create: XOR<GitHubCommentCreateWithoutRepositoryInput, GitHubCommentUncheckedCreateWithoutRepositoryInput>
-  }
-
-  export type GitHubCommentUpdateWithWhereUniqueWithoutRepositoryInput = {
-    where: GitHubCommentWhereUniqueInput
-    data: XOR<GitHubCommentUpdateWithoutRepositoryInput, GitHubCommentUncheckedUpdateWithoutRepositoryInput>
-  }
-
-  export type GitHubCommentUpdateManyWithWhereWithoutRepositoryInput = {
-    where: GitHubCommentScalarWhereInput
-    data: XOR<GitHubCommentUpdateManyMutationInput, GitHubCommentUncheckedUpdateManyWithoutRepositoryInput>
-  }
-
-  export type GitHubCommentScalarWhereInput = {
-    AND?: GitHubCommentScalarWhereInput | GitHubCommentScalarWhereInput[]
-    OR?: GitHubCommentScalarWhereInput[]
-    NOT?: GitHubCommentScalarWhereInput | GitHubCommentScalarWhereInput[]
-    id?: StringFilter<"GitHubComment"> | string
-    reviewId?: StringFilter<"GitHubComment"> | string
-    githubReviewId?: BigIntFilter<"GitHubComment"> | bigint | number
-    prNumber?: IntFilter<"GitHubComment"> | number
-    repositoryId?: StringFilter<"GitHubComment"> | string
-    commitSha?: StringFilter<"GitHubComment"> | string
-    findingCount?: IntFilter<"GitHubComment"> | number
-    createdAt?: DateTimeFilter<"GitHubComment"> | Date | string
-  }
-
-  export type BranchProtectionRecommendationUpsertWithWhereUniqueWithoutRepositoryInput = {
-    where: BranchProtectionRecommendationWhereUniqueInput
-    update: XOR<BranchProtectionRecommendationUpdateWithoutRepositoryInput, BranchProtectionRecommendationUncheckedUpdateWithoutRepositoryInput>
-    create: XOR<BranchProtectionRecommendationCreateWithoutRepositoryInput, BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput>
-  }
-
-  export type BranchProtectionRecommendationUpdateWithWhereUniqueWithoutRepositoryInput = {
-    where: BranchProtectionRecommendationWhereUniqueInput
-    data: XOR<BranchProtectionRecommendationUpdateWithoutRepositoryInput, BranchProtectionRecommendationUncheckedUpdateWithoutRepositoryInput>
-  }
-
-  export type BranchProtectionRecommendationUpdateManyWithWhereWithoutRepositoryInput = {
-    where: BranchProtectionRecommendationScalarWhereInput
-    data: XOR<BranchProtectionRecommendationUpdateManyMutationInput, BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryInput>
-  }
-
-  export type BranchProtectionRecommendationScalarWhereInput = {
-    AND?: BranchProtectionRecommendationScalarWhereInput | BranchProtectionRecommendationScalarWhereInput[]
-    OR?: BranchProtectionRecommendationScalarWhereInput[]
-    NOT?: BranchProtectionRecommendationScalarWhereInput | BranchProtectionRecommendationScalarWhereInput[]
-    id?: StringFilter<"BranchProtectionRecommendation"> | string
-    repositoryId?: StringFilter<"BranchProtectionRecommendation"> | string
-    rule?: StringFilter<"BranchProtectionRecommendation"> | string
-    rationale?: StringFilter<"BranchProtectionRecommendation"> | string
-    priority?: EnumRecommendationPriorityFilter<"BranchProtectionRecommendation"> | $Enums.RecommendationPriority
-    dismissed?: BoolFilter<"BranchProtectionRecommendation"> | boolean
-    createdAt?: DateTimeFilter<"BranchProtectionRecommendation"> | Date | string
-    updatedAt?: DateTimeFilter<"BranchProtectionRecommendation"> | Date | string
+  export type WebhookConfigCreateOrConnectWithoutRepositoryInput = {
+    where: WebhookConfigWhereUniqueInput
+    create: XOR<WebhookConfigCreateWithoutRepositoryInput, WebhookConfigUncheckedCreateWithoutRepositoryInput>
   }
 
   export type DiagramUpsertWithWhereUniqueWithoutRepositoryInput = {
@@ -60962,6 +60947,224 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Diagram"> | Date | string
   }
 
+  export type TeamUpsertWithoutRepositoriesInput = {
+    update: XOR<TeamUpdateWithoutRepositoriesInput, TeamUncheckedUpdateWithoutRepositoriesInput>
+    create: XOR<TeamCreateWithoutRepositoriesInput, TeamUncheckedCreateWithoutRepositoriesInput>
+    where?: TeamWhereInput
+  }
+
+  export type TeamUpdateToOneWithWhereWithoutRepositoriesInput = {
+    where?: TeamWhereInput
+    data: XOR<TeamUpdateWithoutRepositoriesInput, TeamUncheckedUpdateWithoutRepositoriesInput>
+  }
+
+  export type TeamUpdateWithoutRepositoriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    actions?: TeamActionUpdateManyWithoutTeamNestedInput
+    members?: TeamMemberUpdateManyWithoutTeamNestedInput
+    reviewRules?: ReviewRuleUpdateManyWithoutTeamNestedInput
+  }
+
+  export type TeamUncheckedUpdateWithoutRepositoriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    actions?: TeamActionUncheckedUpdateManyWithoutTeamNestedInput
+    members?: TeamMemberUncheckedUpdateManyWithoutTeamNestedInput
+    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutTeamNestedInput
+  }
+
+  export type UserUpsertWithoutRepositoriesInput = {
+    update: XOR<UserUpdateWithoutRepositoriesInput, UserUncheckedUpdateWithoutRepositoriesInput>
+    create: XOR<UserCreateWithoutRepositoriesInput, UserUncheckedCreateWithoutRepositoriesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutRepositoriesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutRepositoriesInput, UserUncheckedUpdateWithoutRepositoriesInput>
+  }
+
+  export type UserUpdateWithoutRepositoriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDepth?: StringFieldUpdateOperationsInput | string
+    defaultLanguage?: StringFieldUpdateOperationsInput | string
+    autoReview?: BoolFieldUpdateOperationsInput | boolean
+    includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
+    includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
+    reviewFeedbacks?: ReviewFeedbackUpdateManyWithoutUserNestedInput
+    threadComments?: ReviewThreadCommentUpdateManyWithoutUserNestedInput
+    teamMembers?: TeamMemberUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
+    reviewApprovals?: ReviewApprovalUpdateManyWithoutUserNestedInput
+    assignedByMe?: ReviewAssignmentUpdateManyWithoutAssignerNestedInput
+    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
+    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
+    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutRepositoriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDepth?: StringFieldUpdateOperationsInput | string
+    defaultLanguage?: StringFieldUpdateOperationsInput | string
+    autoReview?: BoolFieldUpdateOperationsInput | boolean
+    includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
+    includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    reviewFeedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput
+    threadComments?: ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput
+    teamMembers?: TeamMemberUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
+    reviewApprovals?: ReviewApprovalUncheckedUpdateManyWithoutUserNestedInput
+    assignedByMe?: ReviewAssignmentUncheckedUpdateManyWithoutAssignerNestedInput
+    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type ReviewUpsertWithWhereUniqueWithoutRepositoryInput = {
+    where: ReviewWhereUniqueInput
+    update: XOR<ReviewUpdateWithoutRepositoryInput, ReviewUncheckedUpdateWithoutRepositoryInput>
+    create: XOR<ReviewCreateWithoutRepositoryInput, ReviewUncheckedCreateWithoutRepositoryInput>
+  }
+
+  export type ReviewUpdateWithWhereUniqueWithoutRepositoryInput = {
+    where: ReviewWhereUniqueInput
+    data: XOR<ReviewUpdateWithoutRepositoryInput, ReviewUncheckedUpdateWithoutRepositoryInput>
+  }
+
+  export type ReviewUpdateManyWithWhereWithoutRepositoryInput = {
+    where: ReviewScalarWhereInput
+    data: XOR<ReviewUpdateManyMutationInput, ReviewUncheckedUpdateManyWithoutRepositoryInput>
+  }
+
+  export type BranchProtectionRecommendationUpsertWithWhereUniqueWithoutRepositoryInput = {
+    where: BranchProtectionRecommendationWhereUniqueInput
+    update: XOR<BranchProtectionRecommendationUpdateWithoutRepositoryInput, BranchProtectionRecommendationUncheckedUpdateWithoutRepositoryInput>
+    create: XOR<BranchProtectionRecommendationCreateWithoutRepositoryInput, BranchProtectionRecommendationUncheckedCreateWithoutRepositoryInput>
+  }
+
+  export type BranchProtectionRecommendationUpdateWithWhereUniqueWithoutRepositoryInput = {
+    where: BranchProtectionRecommendationWhereUniqueInput
+    data: XOR<BranchProtectionRecommendationUpdateWithoutRepositoryInput, BranchProtectionRecommendationUncheckedUpdateWithoutRepositoryInput>
+  }
+
+  export type BranchProtectionRecommendationUpdateManyWithWhereWithoutRepositoryInput = {
+    where: BranchProtectionRecommendationScalarWhereInput
+    data: XOR<BranchProtectionRecommendationUpdateManyMutationInput, BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryInput>
+  }
+
+  export type BranchProtectionRecommendationScalarWhereInput = {
+    AND?: BranchProtectionRecommendationScalarWhereInput | BranchProtectionRecommendationScalarWhereInput[]
+    OR?: BranchProtectionRecommendationScalarWhereInput[]
+    NOT?: BranchProtectionRecommendationScalarWhereInput | BranchProtectionRecommendationScalarWhereInput[]
+    id?: StringFilter<"BranchProtectionRecommendation"> | string
+    repositoryId?: StringFilter<"BranchProtectionRecommendation"> | string
+    rule?: StringFilter<"BranchProtectionRecommendation"> | string
+    rationale?: StringFilter<"BranchProtectionRecommendation"> | string
+    priority?: EnumRecommendationPriorityFilter<"BranchProtectionRecommendation"> | $Enums.RecommendationPriority
+    dismissed?: BoolFilter<"BranchProtectionRecommendation"> | boolean
+    createdAt?: DateTimeFilter<"BranchProtectionRecommendation"> | Date | string
+    updatedAt?: DateTimeFilter<"BranchProtectionRecommendation"> | Date | string
+  }
+
+  export type GitHubCommentUpsertWithWhereUniqueWithoutRepositoryInput = {
+    where: GitHubCommentWhereUniqueInput
+    update: XOR<GitHubCommentUpdateWithoutRepositoryInput, GitHubCommentUncheckedUpdateWithoutRepositoryInput>
+    create: XOR<GitHubCommentCreateWithoutRepositoryInput, GitHubCommentUncheckedCreateWithoutRepositoryInput>
+  }
+
+  export type GitHubCommentUpdateWithWhereUniqueWithoutRepositoryInput = {
+    where: GitHubCommentWhereUniqueInput
+    data: XOR<GitHubCommentUpdateWithoutRepositoryInput, GitHubCommentUncheckedUpdateWithoutRepositoryInput>
+  }
+
+  export type GitHubCommentUpdateManyWithWhereWithoutRepositoryInput = {
+    where: GitHubCommentScalarWhereInput
+    data: XOR<GitHubCommentUpdateManyMutationInput, GitHubCommentUncheckedUpdateManyWithoutRepositoryInput>
+  }
+
+  export type GitHubCommentScalarWhereInput = {
+    AND?: GitHubCommentScalarWhereInput | GitHubCommentScalarWhereInput[]
+    OR?: GitHubCommentScalarWhereInput[]
+    NOT?: GitHubCommentScalarWhereInput | GitHubCommentScalarWhereInput[]
+    id?: StringFilter<"GitHubComment"> | string
+    reviewId?: StringFilter<"GitHubComment"> | string
+    githubReviewId?: BigIntFilter<"GitHubComment"> | bigint | number
+    prNumber?: IntFilter<"GitHubComment"> | number
+    repositoryId?: StringFilter<"GitHubComment"> | string
+    commitSha?: StringFilter<"GitHubComment"> | string
+    findingCount?: IntFilter<"GitHubComment"> | number
+    createdAt?: DateTimeFilter<"GitHubComment"> | Date | string
+  }
+
   export type ReviewRuleUpsertWithWhereUniqueWithoutRepositoryInput = {
     where: ReviewRuleWhereUniqueInput
     update: XOR<ReviewRuleUpdateWithoutRepositoryInput, ReviewRuleUncheckedUpdateWithoutRepositoryInput>
@@ -60978,138 +61181,62 @@ export namespace Prisma {
     data: XOR<ReviewRuleUpdateManyMutationInput, ReviewRuleUncheckedUpdateManyWithoutRepositoryInput>
   }
 
-  export type RepositoryCreateWithoutReviewsInput = {
-    id?: string
-    githubId: number
-    name: string
-    fullName: string
-    private?: boolean
-    htmlUrl: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutRepositoriesInput
-    team?: TeamCreateNestedOneWithoutRepositoriesInput
-    webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
-    scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
-    githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
-    branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
-    diagrams?: DiagramCreateNestedManyWithoutRepositoryInput
-    reviewRules?: ReviewRuleCreateNestedManyWithoutRepositoryInput
+  export type ScheduledScanConfigUpsertWithoutRepositoryInput = {
+    update: XOR<ScheduledScanConfigUpdateWithoutRepositoryInput, ScheduledScanConfigUncheckedUpdateWithoutRepositoryInput>
+    create: XOR<ScheduledScanConfigCreateWithoutRepositoryInput, ScheduledScanConfigUncheckedCreateWithoutRepositoryInput>
+    where?: ScheduledScanConfigWhereInput
   }
 
-  export type RepositoryUncheckedCreateWithoutReviewsInput = {
-    id?: string
-    userId: string
-    teamId?: string | null
-    githubId: number
-    name: string
-    fullName: string
-    private?: boolean
-    htmlUrl: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
-    scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
-    githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
-    branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
-    diagrams?: DiagramUncheckedCreateNestedManyWithoutRepositoryInput
-    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutRepositoryInput
+  export type ScheduledScanConfigUpdateToOneWithWhereWithoutRepositoryInput = {
+    where?: ScheduledScanConfigWhereInput
+    data: XOR<ScheduledScanConfigUpdateWithoutRepositoryInput, ScheduledScanConfigUncheckedUpdateWithoutRepositoryInput>
   }
 
-  export type RepositoryCreateOrConnectWithoutReviewsInput = {
-    where: RepositoryWhereUniqueInput
-    create: XOR<RepositoryCreateWithoutReviewsInput, RepositoryUncheckedCreateWithoutReviewsInput>
+  export type ScheduledScanConfigUpdateWithoutRepositoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    cadence?: EnumScanCadenceFieldUpdateOperationsInput | $Enums.ScanCadence
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    runs?: ScheduledScanRunUpdateManyWithoutConfigNestedInput
   }
 
-  export type UserCreateWithoutReviewsInput = {
-    id: string
-    name: string
-    email: string
-    emailVerified?: boolean
-    image?: string | null
-    role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    reviewDepth?: string
-    defaultLanguage?: string
-    autoReview?: boolean
-    includeSecurityChecks?: boolean
-    includePerfSuggestions?: boolean
-    emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
-    notifyReviewCompleted?: boolean
-    notifyReviewFailed?: boolean
-    notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionCreateNestedManyWithoutUserInput
-    accounts?: AccountCreateNestedManyWithoutUserInput
-    repositories?: RepositoryCreateNestedManyWithoutUserInput
-    threadComments?: ReviewThreadCommentCreateNestedManyWithoutUserInput
-    teamMembers?: TeamMemberCreateNestedManyWithoutUserInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    reviewFeedbacks?: ReviewFeedbackCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
-    auditLogs?: AuditLogCreateNestedManyWithoutActorInput
-    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
-    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
-    reviewApprovals?: ReviewApprovalCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
-    assignedByMe?: ReviewAssignmentCreateNestedManyWithoutAssignerInput
+  export type ScheduledScanConfigUncheckedUpdateWithoutRepositoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    cadence?: EnumScanCadenceFieldUpdateOperationsInput | $Enums.ScanCadence
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    runs?: ScheduledScanRunUncheckedUpdateManyWithoutConfigNestedInput
   }
 
-  export type UserUncheckedCreateWithoutReviewsInput = {
-    id: string
-    name: string
-    email: string
-    emailVerified?: boolean
-    image?: string | null
-    role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    reviewDepth?: string
-    defaultLanguage?: string
-    autoReview?: boolean
-    includeSecurityChecks?: boolean
-    includePerfSuggestions?: boolean
-    emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
-    notifyReviewCompleted?: boolean
-    notifyReviewFailed?: boolean
-    notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
-    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
-    repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
-    threadComments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput
-    teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutUserInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    reviewFeedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
-    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
-    reviewApprovals?: ReviewApprovalUncheckedCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
-    assignedByMe?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssignerInput
+  export type WebhookConfigUpsertWithoutRepositoryInput = {
+    update: XOR<WebhookConfigUpdateWithoutRepositoryInput, WebhookConfigUncheckedUpdateWithoutRepositoryInput>
+    create: XOR<WebhookConfigCreateWithoutRepositoryInput, WebhookConfigUncheckedCreateWithoutRepositoryInput>
+    where?: WebhookConfigWhereInput
   }
 
-  export type UserCreateOrConnectWithoutReviewsInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutReviewsInput, UserUncheckedCreateWithoutReviewsInput>
+  export type WebhookConfigUpdateToOneWithWhereWithoutRepositoryInput = {
+    where?: WebhookConfigWhereInput
+    data: XOR<WebhookConfigUpdateWithoutRepositoryInput, WebhookConfigUncheckedUpdateWithoutRepositoryInput>
+  }
+
+  export type WebhookConfigUpdateWithoutRepositoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    githubWebhookId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scoreThreshold?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type WebhookConfigUncheckedUpdateWithoutRepositoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    githubWebhookId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scoreThreshold?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type ReviewCreateWithoutChildReviewsInput = {
@@ -61123,16 +61250,16 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
-    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
+    parentReview?: ReviewCreateNestedOneWithoutChildReviewsInput
     repository: RepositoryCreateNestedOneWithoutReviewsInput
     user: UserCreateNestedOneWithoutReviewsInput
-    parentReview?: ReviewCreateNestedOneWithoutChildReviewsInput
+    feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
-    feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentCreateNestedManyWithoutReviewInput
     securityIssues?: SecurityIssueCreateNestedManyWithoutReviewInput
@@ -61151,14 +61278,14 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
-    parentReviewId?: string | null
-    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
+    parentReviewId?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
+    feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
-    feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalUncheckedCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentUncheckedCreateNestedManyWithoutReviewInput
     securityIssues?: SecurityIssueUncheckedCreateNestedManyWithoutReviewInput
@@ -61180,16 +61307,16 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
-    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
+    childReviews?: ReviewCreateNestedManyWithoutParentReviewInput
     repository: RepositoryCreateNestedOneWithoutReviewsInput
     user: UserCreateNestedOneWithoutReviewsInput
-    childReviews?: ReviewCreateNestedManyWithoutParentReviewInput
+    feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
-    feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentCreateNestedManyWithoutReviewInput
     securityIssues?: SecurityIssueCreateNestedManyWithoutReviewInput
@@ -61208,14 +61335,14 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
-    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
+    feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
-    feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalUncheckedCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentUncheckedCreateNestedManyWithoutReviewInput
     securityIssues?: SecurityIssueUncheckedCreateNestedManyWithoutReviewInput
@@ -61228,6 +61355,176 @@ export namespace Prisma {
 
   export type ReviewCreateManyParentReviewInputEnvelope = {
     data: ReviewCreateManyParentReviewInput | ReviewCreateManyParentReviewInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type RepositoryCreateWithoutReviewsInput = {
+    id?: string
+    githubId: number
+    name: string
+    fullName: string
+    private?: boolean
+    htmlUrl: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    diagrams?: DiagramCreateNestedManyWithoutRepositoryInput
+    team?: TeamCreateNestedOneWithoutRepositoriesInput
+    user: UserCreateNestedOneWithoutRepositoriesInput
+    branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
+    githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
+    reviewRules?: ReviewRuleCreateNestedManyWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
+    webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
+  }
+
+  export type RepositoryUncheckedCreateWithoutReviewsInput = {
+    id?: string
+    userId: string
+    teamId?: string | null
+    githubId: number
+    name: string
+    fullName: string
+    private?: boolean
+    htmlUrl: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    diagrams?: DiagramUncheckedCreateNestedManyWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
+    githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
+    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
+    webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
+  }
+
+  export type RepositoryCreateOrConnectWithoutReviewsInput = {
+    where: RepositoryWhereUniqueInput
+    create: XOR<RepositoryCreateWithoutReviewsInput, RepositoryUncheckedCreateWithoutReviewsInput>
+  }
+
+  export type UserCreateWithoutReviewsInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reviewDepth?: string
+    defaultLanguage?: string
+    autoReview?: boolean
+    includeSecurityChecks?: boolean
+    includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
+    emailNotifications?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    repositories?: RepositoryCreateNestedManyWithoutUserInput
+    reviewFeedbacks?: ReviewFeedbackCreateNestedManyWithoutUserInput
+    threadComments?: ReviewThreadCommentCreateNestedManyWithoutUserInput
+    teamMembers?: TeamMemberCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutActorInput
+    reviewApprovals?: ReviewApprovalCreateNestedManyWithoutUserInput
+    assignedByMe?: ReviewAssignmentCreateNestedManyWithoutAssignerInput
+    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
+    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
+    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutReviewsInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reviewDepth?: string
+    defaultLanguage?: string
+    autoReview?: boolean
+    includeSecurityChecks?: boolean
+    includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
+    emailNotifications?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
+    reviewFeedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput
+    threadComments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput
+    teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
+    reviewApprovals?: ReviewApprovalUncheckedCreateNestedManyWithoutUserInput
+    assignedByMe?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssignerInput
+    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutReviewsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutReviewsInput, UserUncheckedCreateWithoutReviewsInput>
+  }
+
+  export type ReviewFeedbackCreateWithoutReviewInput = {
+    id?: string
+    rating: number
+    comment?: string | null
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutReviewFeedbacksInput
+  }
+
+  export type ReviewFeedbackUncheckedCreateWithoutReviewInput = {
+    id?: string
+    userId: string
+    rating: number
+    comment?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ReviewFeedbackCreateOrConnectWithoutReviewInput = {
+    where: ReviewFeedbackWhereUniqueInput
+    create: XOR<ReviewFeedbackCreateWithoutReviewInput, ReviewFeedbackUncheckedCreateWithoutReviewInput>
+  }
+
+  export type ReviewFeedbackCreateManyReviewInputEnvelope = {
+    data: ReviewFeedbackCreateManyReviewInput | ReviewFeedbackCreateManyReviewInput[]
     skipDuplicates?: boolean
   }
 
@@ -61307,32 +61604,6 @@ export namespace Prisma {
     create: XOR<GitHubStatusCheckCreateWithoutReviewInput, GitHubStatusCheckUncheckedCreateWithoutReviewInput>
   }
 
-  export type ReviewFeedbackCreateWithoutReviewInput = {
-    id?: string
-    rating: number
-    comment?: string | null
-    createdAt?: Date | string
-    user: UserCreateNestedOneWithoutReviewFeedbacksInput
-  }
-
-  export type ReviewFeedbackUncheckedCreateWithoutReviewInput = {
-    id?: string
-    userId: string
-    rating: number
-    comment?: string | null
-    createdAt?: Date | string
-  }
-
-  export type ReviewFeedbackCreateOrConnectWithoutReviewInput = {
-    where: ReviewFeedbackWhereUniqueInput
-    create: XOR<ReviewFeedbackCreateWithoutReviewInput, ReviewFeedbackUncheckedCreateWithoutReviewInput>
-  }
-
-  export type ReviewFeedbackCreateManyReviewInputEnvelope = {
-    data: ReviewFeedbackCreateManyReviewInput | ReviewFeedbackCreateManyReviewInput[]
-    skipDuplicates?: boolean
-  }
-
   export type ReviewApprovalCreateWithoutReviewInput = {
     id?: string
     state: $Enums.ReviewApprovalState
@@ -61369,8 +61640,8 @@ export namespace Prisma {
     note?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    assignee: UserCreateNestedOneWithoutAssignedReviewsInput
     assigner: UserCreateNestedOneWithoutAssignedByMeInput
+    assignee: UserCreateNestedOneWithoutAssignedReviewsInput
   }
 
   export type ReviewAssignmentUncheckedCreateWithoutReviewInput = {
@@ -61445,152 +61716,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type RepositoryUpsertWithoutReviewsInput = {
-    update: XOR<RepositoryUpdateWithoutReviewsInput, RepositoryUncheckedUpdateWithoutReviewsInput>
-    create: XOR<RepositoryCreateWithoutReviewsInput, RepositoryUncheckedCreateWithoutReviewsInput>
-    where?: RepositoryWhereInput
-  }
-
-  export type RepositoryUpdateToOneWithWhereWithoutReviewsInput = {
-    where?: RepositoryWhereInput
-    data: XOR<RepositoryUpdateWithoutReviewsInput, RepositoryUncheckedUpdateWithoutReviewsInput>
-  }
-
-  export type RepositoryUpdateWithoutReviewsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    githubId?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    fullName?: StringFieldUpdateOperationsInput | string
-    private?: BoolFieldUpdateOperationsInput | boolean
-    htmlUrl?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutRepositoriesNestedInput
-    team?: TeamUpdateOneWithoutRepositoriesNestedInput
-    webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
-    scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
-    githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
-    branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
-    diagrams?: DiagramUpdateManyWithoutRepositoryNestedInput
-    reviewRules?: ReviewRuleUpdateManyWithoutRepositoryNestedInput
-  }
-
-  export type RepositoryUncheckedUpdateWithoutReviewsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    teamId?: NullableStringFieldUpdateOperationsInput | string | null
-    githubId?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    fullName?: StringFieldUpdateOperationsInput | string
-    private?: BoolFieldUpdateOperationsInput | boolean
-    htmlUrl?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
-    scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
-    githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
-    branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
-    diagrams?: DiagramUncheckedUpdateManyWithoutRepositoryNestedInput
-    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutRepositoryNestedInput
-  }
-
-  export type UserUpsertWithoutReviewsInput = {
-    update: XOR<UserUpdateWithoutReviewsInput, UserUncheckedUpdateWithoutReviewsInput>
-    create: XOR<UserCreateWithoutReviewsInput, UserUncheckedCreateWithoutReviewsInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutReviewsInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutReviewsInput, UserUncheckedUpdateWithoutReviewsInput>
-  }
-
-  export type UserUpdateWithoutReviewsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    emailVerified?: BoolFieldUpdateOperationsInput | boolean
-    image?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewDepth?: StringFieldUpdateOperationsInput | string
-    defaultLanguage?: StringFieldUpdateOperationsInput | string
-    autoReview?: BoolFieldUpdateOperationsInput | boolean
-    includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
-    includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
-    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
-    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUpdateManyWithoutUserNestedInput
-    accounts?: AccountUpdateManyWithoutUserNestedInput
-    repositories?: RepositoryUpdateManyWithoutUserNestedInput
-    threadComments?: ReviewThreadCommentUpdateManyWithoutUserNestedInput
-    teamMembers?: TeamMemberUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    reviewFeedbacks?: ReviewFeedbackUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
-    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
-    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
-    reviewApprovals?: ReviewApprovalUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
-    assignedByMe?: ReviewAssignmentUpdateManyWithoutAssignerNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutReviewsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    emailVerified?: BoolFieldUpdateOperationsInput | boolean
-    image?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewDepth?: StringFieldUpdateOperationsInput | string
-    defaultLanguage?: StringFieldUpdateOperationsInput | string
-    autoReview?: BoolFieldUpdateOperationsInput | boolean
-    includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
-    includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
-    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
-    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
-    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
-    repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
-    threadComments?: ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput
-    teamMembers?: TeamMemberUncheckedUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    reviewFeedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
-    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
-    reviewApprovals?: ReviewApprovalUncheckedUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
-    assignedByMe?: ReviewAssignmentUncheckedUpdateManyWithoutAssignerNestedInput
-  }
-
   export type ReviewUpsertWithoutChildReviewsInput = {
     update: XOR<ReviewUpdateWithoutChildReviewsInput, ReviewUncheckedUpdateWithoutChildReviewsInput>
     create: XOR<ReviewCreateWithoutChildReviewsInput, ReviewUncheckedCreateWithoutChildReviewsInput>
@@ -61613,16 +61738,16 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
+    parentReview?: ReviewUpdateOneWithoutChildReviewsNestedInput
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
     user?: UserUpdateOneRequiredWithoutReviewsNestedInput
-    parentReview?: ReviewUpdateOneWithoutChildReviewsNestedInput
+    feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
-    feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUpdateManyWithoutReviewNestedInput
     securityIssues?: SecurityIssueUpdateManyWithoutReviewNestedInput
@@ -61641,14 +61766,14 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
-    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
+    feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
-    feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUncheckedUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUncheckedUpdateManyWithoutReviewNestedInput
     securityIssues?: SecurityIssueUncheckedUpdateManyWithoutReviewNestedInput
@@ -61668,6 +61793,178 @@ export namespace Prisma {
   export type ReviewUpdateManyWithWhereWithoutParentReviewInput = {
     where: ReviewScalarWhereInput
     data: XOR<ReviewUpdateManyMutationInput, ReviewUncheckedUpdateManyWithoutParentReviewInput>
+  }
+
+  export type RepositoryUpsertWithoutReviewsInput = {
+    update: XOR<RepositoryUpdateWithoutReviewsInput, RepositoryUncheckedUpdateWithoutReviewsInput>
+    create: XOR<RepositoryCreateWithoutReviewsInput, RepositoryUncheckedCreateWithoutReviewsInput>
+    where?: RepositoryWhereInput
+  }
+
+  export type RepositoryUpdateToOneWithWhereWithoutReviewsInput = {
+    where?: RepositoryWhereInput
+    data: XOR<RepositoryUpdateWithoutReviewsInput, RepositoryUncheckedUpdateWithoutReviewsInput>
+  }
+
+  export type RepositoryUpdateWithoutReviewsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    githubId?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    private?: BoolFieldUpdateOperationsInput | boolean
+    htmlUrl?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    diagrams?: DiagramUpdateManyWithoutRepositoryNestedInput
+    team?: TeamUpdateOneWithoutRepositoriesNestedInput
+    user?: UserUpdateOneRequiredWithoutRepositoriesNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
+    reviewRules?: ReviewRuleUpdateManyWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
+  }
+
+  export type RepositoryUncheckedUpdateWithoutReviewsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    teamId?: NullableStringFieldUpdateOperationsInput | string | null
+    githubId?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    private?: BoolFieldUpdateOperationsInput | boolean
+    htmlUrl?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    diagrams?: DiagramUncheckedUpdateManyWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
+    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
+  }
+
+  export type UserUpsertWithoutReviewsInput = {
+    update: XOR<UserUpdateWithoutReviewsInput, UserUncheckedUpdateWithoutReviewsInput>
+    create: XOR<UserCreateWithoutReviewsInput, UserUncheckedCreateWithoutReviewsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutReviewsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutReviewsInput, UserUncheckedUpdateWithoutReviewsInput>
+  }
+
+  export type UserUpdateWithoutReviewsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDepth?: StringFieldUpdateOperationsInput | string
+    defaultLanguage?: StringFieldUpdateOperationsInput | string
+    autoReview?: BoolFieldUpdateOperationsInput | boolean
+    includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
+    includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    repositories?: RepositoryUpdateManyWithoutUserNestedInput
+    reviewFeedbacks?: ReviewFeedbackUpdateManyWithoutUserNestedInput
+    threadComments?: ReviewThreadCommentUpdateManyWithoutUserNestedInput
+    teamMembers?: TeamMemberUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
+    reviewApprovals?: ReviewApprovalUpdateManyWithoutUserNestedInput
+    assignedByMe?: ReviewAssignmentUpdateManyWithoutAssignerNestedInput
+    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
+    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
+    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutReviewsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDepth?: StringFieldUpdateOperationsInput | string
+    defaultLanguage?: StringFieldUpdateOperationsInput | string
+    autoReview?: BoolFieldUpdateOperationsInput | boolean
+    includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
+    includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
+    reviewFeedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput
+    threadComments?: ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput
+    teamMembers?: TeamMemberUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
+    reviewApprovals?: ReviewApprovalUncheckedUpdateManyWithoutUserNestedInput
+    assignedByMe?: ReviewAssignmentUncheckedUpdateManyWithoutAssignerNestedInput
+    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type ReviewFeedbackUpsertWithWhereUniqueWithoutReviewInput = {
+    where: ReviewFeedbackWhereUniqueInput
+    update: XOR<ReviewFeedbackUpdateWithoutReviewInput, ReviewFeedbackUncheckedUpdateWithoutReviewInput>
+    create: XOR<ReviewFeedbackCreateWithoutReviewInput, ReviewFeedbackUncheckedCreateWithoutReviewInput>
+  }
+
+  export type ReviewFeedbackUpdateWithWhereUniqueWithoutReviewInput = {
+    where: ReviewFeedbackWhereUniqueInput
+    data: XOR<ReviewFeedbackUpdateWithoutReviewInput, ReviewFeedbackUncheckedUpdateWithoutReviewInput>
+  }
+
+  export type ReviewFeedbackUpdateManyWithWhereWithoutReviewInput = {
+    where: ReviewFeedbackScalarWhereInput
+    data: XOR<ReviewFeedbackUpdateManyMutationInput, ReviewFeedbackUncheckedUpdateManyWithoutReviewInput>
   }
 
   export type ReviewThreadUpsertWithWhereUniqueWithoutReviewInput = {
@@ -61757,22 +62054,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ReviewFeedbackUpsertWithWhereUniqueWithoutReviewInput = {
-    where: ReviewFeedbackWhereUniqueInput
-    update: XOR<ReviewFeedbackUpdateWithoutReviewInput, ReviewFeedbackUncheckedUpdateWithoutReviewInput>
-    create: XOR<ReviewFeedbackCreateWithoutReviewInput, ReviewFeedbackUncheckedCreateWithoutReviewInput>
-  }
-
-  export type ReviewFeedbackUpdateWithWhereUniqueWithoutReviewInput = {
-    where: ReviewFeedbackWhereUniqueInput
-    data: XOR<ReviewFeedbackUpdateWithoutReviewInput, ReviewFeedbackUncheckedUpdateWithoutReviewInput>
-  }
-
-  export type ReviewFeedbackUpdateManyWithWhereWithoutReviewInput = {
-    where: ReviewFeedbackScalarWhereInput
-    data: XOR<ReviewFeedbackUpdateManyMutationInput, ReviewFeedbackUncheckedUpdateManyWithoutReviewInput>
-  }
-
   export type ReviewApprovalUpsertWithWhereUniqueWithoutReviewInput = {
     where: ReviewApprovalWhereUniqueInput
     update: XOR<ReviewApprovalUpdateWithoutReviewInput, ReviewApprovalUncheckedUpdateWithoutReviewInput>
@@ -61856,13 +62137,13 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
-    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
-    repository: RepositoryCreateNestedOneWithoutReviewsInput
-    user: UserCreateNestedOneWithoutReviewsInput
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     parentReview?: ReviewCreateNestedOneWithoutChildReviewsInput
     childReviews?: ReviewCreateNestedManyWithoutParentReviewInput
+    repository: RepositoryCreateNestedOneWithoutReviewsInput
+    user: UserCreateNestedOneWithoutReviewsInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
@@ -61884,10 +62165,10 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
-    parentReviewId?: string | null
-    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
+    parentReviewId?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
@@ -61909,8 +62190,6 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -61918,31 +62197,38 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
     emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
     notifyReviewCompleted?: boolean
     notifyReviewFailed?: boolean
     notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionCreateNestedManyWithoutUserInput
-    accounts?: AccountCreateNestedManyWithoutUserInput
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     repositories?: RepositoryCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
     threadComments?: ReviewThreadCommentCreateNestedManyWithoutUserInput
     teamMembers?: TeamMemberCreateNestedManyWithoutUserInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutActorInput
-    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
-    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
     reviewApprovals?: ReviewApprovalCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
     assignedByMe?: ReviewAssignmentCreateNestedManyWithoutAssignerInput
+    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
+    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
+    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReviewFeedbacksInput = {
@@ -61952,8 +62238,6 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -61961,31 +62245,38 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
     emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
     notifyReviewCompleted?: boolean
     notifyReviewFailed?: boolean
     notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
-    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
     threadComments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput
     teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutUserInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
-    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
     reviewApprovals?: ReviewApprovalUncheckedCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     assignedByMe?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssignerInput
+    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewFeedbacksInput = {
@@ -62015,13 +62306,13 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
-    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     parentReview?: ReviewUpdateOneWithoutChildReviewsNestedInput
     childReviews?: ReviewUpdateManyWithoutParentReviewNestedInput
+    repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
+    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
@@ -62043,10 +62334,10 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
-    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
@@ -62074,8 +62365,6 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -62083,31 +62372,38 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
     notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUpdateManyWithoutUserNestedInput
-    accounts?: AccountUpdateManyWithoutUserNestedInput
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
     threadComments?: ReviewThreadCommentUpdateManyWithoutUserNestedInput
     teamMembers?: TeamMemberUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
-    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
-    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
     reviewApprovals?: ReviewApprovalUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
     assignedByMe?: ReviewAssignmentUpdateManyWithoutAssignerNestedInput
+    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
+    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
+    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewFeedbacksInput = {
@@ -62117,8 +62413,6 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -62126,31 +62420,38 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
     notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
-    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
     threadComments?: ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput
     teamMembers?: TeamMemberUncheckedUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
-    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
     reviewApprovals?: ReviewApprovalUncheckedUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     assignedByMe?: ReviewAssignmentUncheckedUpdateManyWithoutAssignerNestedInput
+    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ReviewCreateWithoutSecurityIssuesInput = {
@@ -62164,17 +62465,17 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
-    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
-    repository: RepositoryCreateNestedOneWithoutReviewsInput
-    user: UserCreateNestedOneWithoutReviewsInput
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     parentReview?: ReviewCreateNestedOneWithoutChildReviewsInput
     childReviews?: ReviewCreateNestedManyWithoutParentReviewInput
+    repository: RepositoryCreateNestedOneWithoutReviewsInput
+    user: UserCreateNestedOneWithoutReviewsInput
+    feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
-    feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentCreateNestedManyWithoutReviewInput
   }
@@ -62192,15 +62493,15 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
-    parentReviewId?: string | null
-    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
+    parentReviewId?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
+    feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
-    feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalUncheckedCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentUncheckedCreateNestedManyWithoutReviewInput
   }
@@ -62232,17 +62533,17 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
-    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     parentReview?: ReviewUpdateOneWithoutChildReviewsNestedInput
     childReviews?: ReviewUpdateManyWithoutParentReviewNestedInput
+    repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
+    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
-    feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUpdateManyWithoutReviewNestedInput
   }
@@ -62260,15 +62561,15 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
-    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
+    feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
-    feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUncheckedUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUncheckedUpdateManyWithoutReviewNestedInput
   }
@@ -62284,16 +62585,16 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
-    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
-    repository: RepositoryCreateNestedOneWithoutReviewsInput
-    user: UserCreateNestedOneWithoutReviewsInput
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     parentReview?: ReviewCreateNestedOneWithoutChildReviewsInput
     childReviews?: ReviewCreateNestedManyWithoutParentReviewInput
+    repository: RepositoryCreateNestedOneWithoutReviewsInput
+    user: UserCreateNestedOneWithoutReviewsInput
+    feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
-    feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentCreateNestedManyWithoutReviewInput
     securityIssues?: SecurityIssueCreateNestedManyWithoutReviewInput
@@ -62312,14 +62613,14 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
-    parentReviewId?: string | null
-    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
+    parentReviewId?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
+    feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
-    feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalUncheckedCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentUncheckedCreateNestedManyWithoutReviewInput
     securityIssues?: SecurityIssueUncheckedCreateNestedManyWithoutReviewInput
@@ -62380,16 +62681,16 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
-    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     parentReview?: ReviewUpdateOneWithoutChildReviewsNestedInput
     childReviews?: ReviewUpdateManyWithoutParentReviewNestedInput
+    repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
+    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
-    feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUpdateManyWithoutReviewNestedInput
     securityIssues?: SecurityIssueUpdateManyWithoutReviewNestedInput
@@ -62408,14 +62709,14 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
-    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
+    feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
-    feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUncheckedUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUncheckedUpdateManyWithoutReviewNestedInput
     securityIssues?: SecurityIssueUncheckedUpdateManyWithoutReviewNestedInput
@@ -62469,8 +62770,6 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -62478,31 +62777,38 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
     emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
     notifyReviewCompleted?: boolean
     notifyReviewFailed?: boolean
     notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionCreateNestedManyWithoutUserInput
-    accounts?: AccountCreateNestedManyWithoutUserInput
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     repositories?: RepositoryCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
-    teamMembers?: TeamMemberCreateNestedManyWithoutUserInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
     reviewFeedbacks?: ReviewFeedbackCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
+    teamMembers?: TeamMemberCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutActorInput
-    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
-    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
     reviewApprovals?: ReviewApprovalCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
     assignedByMe?: ReviewAssignmentCreateNestedManyWithoutAssignerInput
+    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
+    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
+    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutThreadCommentsInput = {
@@ -62512,8 +62818,6 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -62521,31 +62825,38 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
     emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
     notifyReviewCompleted?: boolean
     notifyReviewFailed?: boolean
     notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
-    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
-    teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutUserInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     reviewFeedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
+    teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
-    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
     reviewApprovals?: ReviewApprovalUncheckedCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     assignedByMe?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssignerInput
+    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutThreadCommentsInput = {
@@ -62626,8 +62937,6 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -62635,31 +62944,38 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
     notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUpdateManyWithoutUserNestedInput
-    accounts?: AccountUpdateManyWithoutUserNestedInput
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
-    teamMembers?: TeamMemberUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
     reviewFeedbacks?: ReviewFeedbackUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
+    teamMembers?: TeamMemberUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
-    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
-    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
     reviewApprovals?: ReviewApprovalUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
     assignedByMe?: ReviewAssignmentUpdateManyWithoutAssignerNestedInput
+    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
+    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
+    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutThreadCommentsInput = {
@@ -62669,8 +62985,6 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -62678,31 +62992,38 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
     notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
-    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
-    teamMembers?: TeamMemberUncheckedUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     reviewFeedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
+    teamMembers?: TeamMemberUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
-    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
     reviewApprovals?: ReviewApprovalUncheckedUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     assignedByMe?: ReviewAssignmentUncheckedUpdateManyWithoutAssignerNestedInput
+    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ReviewThreadCommentReactionUpsertWithWhereUniqueWithoutCommentInput = {
@@ -62751,8 +63072,6 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -62760,31 +63079,38 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
     emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
     notifyReviewCompleted?: boolean
     notifyReviewFailed?: boolean
     notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionCreateNestedManyWithoutUserInput
-    accounts?: AccountCreateNestedManyWithoutUserInput
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     repositories?: RepositoryCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    reviewFeedbacks?: ReviewFeedbackCreateNestedManyWithoutUserInput
     threadComments?: ReviewThreadCommentCreateNestedManyWithoutUserInput
     teamMembers?: TeamMemberCreateNestedManyWithoutUserInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    reviewFeedbacks?: ReviewFeedbackCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutActorInput
-    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
     reviewApprovals?: ReviewApprovalCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
     assignedByMe?: ReviewAssignmentCreateNestedManyWithoutAssignerInput
+    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
+    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCommentReactionsInput = {
@@ -62794,8 +63120,6 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -62803,31 +63127,38 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
     emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
     notifyReviewCompleted?: boolean
     notifyReviewFailed?: boolean
     notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
-    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    reviewFeedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput
     threadComments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput
     teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutUserInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    reviewFeedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
-    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
     reviewApprovals?: ReviewApprovalUncheckedCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     assignedByMe?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssignerInput
+    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCommentReactionsInput = {
@@ -62882,8 +63213,6 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -62891,31 +63220,38 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
     notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUpdateManyWithoutUserNestedInput
-    accounts?: AccountUpdateManyWithoutUserNestedInput
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    reviewFeedbacks?: ReviewFeedbackUpdateManyWithoutUserNestedInput
     threadComments?: ReviewThreadCommentUpdateManyWithoutUserNestedInput
     teamMembers?: TeamMemberUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    reviewFeedbacks?: ReviewFeedbackUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
-    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
     reviewApprovals?: ReviewApprovalUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
     assignedByMe?: ReviewAssignmentUpdateManyWithoutAssignerNestedInput
+    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
+    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCommentReactionsInput = {
@@ -62925,8 +63261,6 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -62934,31 +63268,38 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
     notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
-    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    reviewFeedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput
     threadComments?: ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput
     teamMembers?: TeamMemberUncheckedUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    reviewFeedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
-    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
     reviewApprovals?: ReviewApprovalUncheckedUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     assignedByMe?: ReviewAssignmentUncheckedUpdateManyWithoutAssignerNestedInput
+    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ReviewCreateWithoutApprovalsInput = {
@@ -62972,17 +63313,17 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
-    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
-    repository: RepositoryCreateNestedOneWithoutReviewsInput
-    user: UserCreateNestedOneWithoutReviewsInput
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     parentReview?: ReviewCreateNestedOneWithoutChildReviewsInput
     childReviews?: ReviewCreateNestedManyWithoutParentReviewInput
+    repository: RepositoryCreateNestedOneWithoutReviewsInput
+    user: UserCreateNestedOneWithoutReviewsInput
+    feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
-    feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentCreateNestedManyWithoutReviewInput
     securityIssues?: SecurityIssueCreateNestedManyWithoutReviewInput
   }
@@ -63000,15 +63341,15 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
-    parentReviewId?: string | null
-    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
+    parentReviewId?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
+    feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
-    feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentUncheckedCreateNestedManyWithoutReviewInput
     securityIssues?: SecurityIssueUncheckedCreateNestedManyWithoutReviewInput
   }
@@ -63025,8 +63366,6 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -63034,31 +63373,38 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
     emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
     notifyReviewCompleted?: boolean
     notifyReviewFailed?: boolean
     notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionCreateNestedManyWithoutUserInput
-    accounts?: AccountCreateNestedManyWithoutUserInput
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     repositories?: RepositoryCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    reviewFeedbacks?: ReviewFeedbackCreateNestedManyWithoutUserInput
     threadComments?: ReviewThreadCommentCreateNestedManyWithoutUserInput
     teamMembers?: TeamMemberCreateNestedManyWithoutUserInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    reviewFeedbacks?: ReviewFeedbackCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutActorInput
-    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
-    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
     assignedByMe?: ReviewAssignmentCreateNestedManyWithoutAssignerInput
+    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
+    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
+    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReviewApprovalsInput = {
@@ -63068,8 +63414,6 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -63077,31 +63421,38 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
     emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
     notifyReviewCompleted?: boolean
     notifyReviewFailed?: boolean
     notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
-    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    reviewFeedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput
     threadComments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput
     teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutUserInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    reviewFeedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
-    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     assignedByMe?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssignerInput
+    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewApprovalsInput = {
@@ -63131,17 +63482,17 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
-    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     parentReview?: ReviewUpdateOneWithoutChildReviewsNestedInput
     childReviews?: ReviewUpdateManyWithoutParentReviewNestedInput
+    repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
+    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
-    feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUpdateManyWithoutReviewNestedInput
     securityIssues?: SecurityIssueUpdateManyWithoutReviewNestedInput
   }
@@ -63159,15 +63510,15 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
-    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
+    feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
-    feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUncheckedUpdateManyWithoutReviewNestedInput
     securityIssues?: SecurityIssueUncheckedUpdateManyWithoutReviewNestedInput
   }
@@ -63190,8 +63541,6 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -63199,31 +63548,38 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
     notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUpdateManyWithoutUserNestedInput
-    accounts?: AccountUpdateManyWithoutUserNestedInput
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    reviewFeedbacks?: ReviewFeedbackUpdateManyWithoutUserNestedInput
     threadComments?: ReviewThreadCommentUpdateManyWithoutUserNestedInput
     teamMembers?: TeamMemberUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    reviewFeedbacks?: ReviewFeedbackUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
-    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
-    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
     assignedByMe?: ReviewAssignmentUpdateManyWithoutAssignerNestedInput
+    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
+    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
+    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewApprovalsInput = {
@@ -63233,8 +63589,6 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -63242,31 +63596,240 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
     notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
-    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    reviewFeedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput
     threadComments?: ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput
     teamMembers?: TeamMemberUncheckedUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    reviewFeedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
-    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     assignedByMe?: ReviewAssignmentUncheckedUpdateManyWithoutAssignerNestedInput
+    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutAssignedByMeInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reviewDepth?: string
+    defaultLanguage?: string
+    autoReview?: boolean
+    includeSecurityChecks?: boolean
+    includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
+    emailNotifications?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    repositories?: RepositoryCreateNestedManyWithoutUserInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
+    reviewFeedbacks?: ReviewFeedbackCreateNestedManyWithoutUserInput
+    threadComments?: ReviewThreadCommentCreateNestedManyWithoutUserInput
+    teamMembers?: TeamMemberCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutActorInput
+    reviewApprovals?: ReviewApprovalCreateNestedManyWithoutUserInput
+    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
+    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
+    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutAssignedByMeInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reviewDepth?: string
+    defaultLanguage?: string
+    autoReview?: boolean
+    includeSecurityChecks?: boolean
+    includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
+    emailNotifications?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    reviewFeedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput
+    threadComments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput
+    teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
+    reviewApprovals?: ReviewApprovalUncheckedCreateNestedManyWithoutUserInput
+    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutAssignedByMeInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAssignedByMeInput, UserUncheckedCreateWithoutAssignedByMeInput>
+  }
+
+  export type UserCreateWithoutAssignedReviewsInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reviewDepth?: string
+    defaultLanguage?: string
+    autoReview?: boolean
+    includeSecurityChecks?: boolean
+    includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
+    emailNotifications?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    repositories?: RepositoryCreateNestedManyWithoutUserInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
+    reviewFeedbacks?: ReviewFeedbackCreateNestedManyWithoutUserInput
+    threadComments?: ReviewThreadCommentCreateNestedManyWithoutUserInput
+    teamMembers?: TeamMemberCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutActorInput
+    reviewApprovals?: ReviewApprovalCreateNestedManyWithoutUserInput
+    assignedByMe?: ReviewAssignmentCreateNestedManyWithoutAssignerInput
+    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
+    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutAssignedReviewsInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reviewDepth?: string
+    defaultLanguage?: string
+    autoReview?: boolean
+    includeSecurityChecks?: boolean
+    includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
+    emailNotifications?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    reviewFeedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput
+    threadComments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput
+    teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
+    reviewApprovals?: ReviewApprovalUncheckedCreateNestedManyWithoutUserInput
+    assignedByMe?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssignerInput
+    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutAssignedReviewsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAssignedReviewsInput, UserUncheckedCreateWithoutAssignedReviewsInput>
   }
 
   export type ReviewCreateWithoutAssignmentsInput = {
@@ -63280,17 +63843,17 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
-    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
-    repository: RepositoryCreateNestedOneWithoutReviewsInput
-    user: UserCreateNestedOneWithoutReviewsInput
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     parentReview?: ReviewCreateNestedOneWithoutChildReviewsInput
     childReviews?: ReviewCreateNestedManyWithoutParentReviewInput
+    repository: RepositoryCreateNestedOneWithoutReviewsInput
+    user: UserCreateNestedOneWithoutReviewsInput
+    feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
-    feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalCreateNestedManyWithoutReviewInput
     securityIssues?: SecurityIssueCreateNestedManyWithoutReviewInput
   }
@@ -63308,15 +63871,15 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
-    parentReviewId?: string | null
-    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
+    parentReviewId?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
+    feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
-    feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalUncheckedCreateNestedManyWithoutReviewInput
     securityIssues?: SecurityIssueUncheckedCreateNestedManyWithoutReviewInput
   }
@@ -63326,186 +63889,218 @@ export namespace Prisma {
     create: XOR<ReviewCreateWithoutAssignmentsInput, ReviewUncheckedCreateWithoutAssignmentsInput>
   }
 
-  export type UserCreateWithoutAssignedReviewsInput = {
-    id: string
-    name: string
-    email: string
-    emailVerified?: boolean
-    image?: string | null
-    role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    reviewDepth?: string
-    defaultLanguage?: string
-    autoReview?: boolean
-    includeSecurityChecks?: boolean
-    includePerfSuggestions?: boolean
-    emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
-    notifyReviewCompleted?: boolean
-    notifyReviewFailed?: boolean
-    notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionCreateNestedManyWithoutUserInput
-    accounts?: AccountCreateNestedManyWithoutUserInput
-    repositories?: RepositoryCreateNestedManyWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutUserInput
-    threadComments?: ReviewThreadCommentCreateNestedManyWithoutUserInput
-    teamMembers?: TeamMemberCreateNestedManyWithoutUserInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    reviewFeedbacks?: ReviewFeedbackCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
-    auditLogs?: AuditLogCreateNestedManyWithoutActorInput
-    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
-    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
-    reviewApprovals?: ReviewApprovalCreateNestedManyWithoutUserInput
-    assignedByMe?: ReviewAssignmentCreateNestedManyWithoutAssignerInput
-  }
-
-  export type UserUncheckedCreateWithoutAssignedReviewsInput = {
-    id: string
-    name: string
-    email: string
-    emailVerified?: boolean
-    image?: string | null
-    role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    reviewDepth?: string
-    defaultLanguage?: string
-    autoReview?: boolean
-    includeSecurityChecks?: boolean
-    includePerfSuggestions?: boolean
-    emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
-    notifyReviewCompleted?: boolean
-    notifyReviewFailed?: boolean
-    notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
-    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
-    repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
-    threadComments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput
-    teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutUserInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    reviewFeedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
-    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
-    reviewApprovals?: ReviewApprovalUncheckedCreateNestedManyWithoutUserInput
-    assignedByMe?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssignerInput
-  }
-
-  export type UserCreateOrConnectWithoutAssignedReviewsInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutAssignedReviewsInput, UserUncheckedCreateWithoutAssignedReviewsInput>
-  }
-
-  export type UserCreateWithoutAssignedByMeInput = {
-    id: string
-    name: string
-    email: string
-    emailVerified?: boolean
-    image?: string | null
-    role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    reviewDepth?: string
-    defaultLanguage?: string
-    autoReview?: boolean
-    includeSecurityChecks?: boolean
-    includePerfSuggestions?: boolean
-    emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
-    notifyReviewCompleted?: boolean
-    notifyReviewFailed?: boolean
-    notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionCreateNestedManyWithoutUserInput
-    accounts?: AccountCreateNestedManyWithoutUserInput
-    repositories?: RepositoryCreateNestedManyWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutUserInput
-    threadComments?: ReviewThreadCommentCreateNestedManyWithoutUserInput
-    teamMembers?: TeamMemberCreateNestedManyWithoutUserInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    reviewFeedbacks?: ReviewFeedbackCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
-    auditLogs?: AuditLogCreateNestedManyWithoutActorInput
-    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
-    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
-    reviewApprovals?: ReviewApprovalCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
-  }
-
-  export type UserUncheckedCreateWithoutAssignedByMeInput = {
-    id: string
-    name: string
-    email: string
-    emailVerified?: boolean
-    image?: string | null
-    role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    reviewDepth?: string
-    defaultLanguage?: string
-    autoReview?: boolean
-    includeSecurityChecks?: boolean
-    includePerfSuggestions?: boolean
-    emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
-    notifyReviewCompleted?: boolean
-    notifyReviewFailed?: boolean
-    notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
-    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
-    repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
-    threadComments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput
-    teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutUserInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    reviewFeedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
-    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
-    reviewApprovals?: ReviewApprovalUncheckedCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
-  }
-
-  export type UserCreateOrConnectWithoutAssignedByMeInput = {
-    where: UserWhereUniqueInput
+  export type UserUpsertWithoutAssignedByMeInput = {
+    update: XOR<UserUpdateWithoutAssignedByMeInput, UserUncheckedUpdateWithoutAssignedByMeInput>
     create: XOR<UserCreateWithoutAssignedByMeInput, UserUncheckedCreateWithoutAssignedByMeInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutAssignedByMeInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutAssignedByMeInput, UserUncheckedUpdateWithoutAssignedByMeInput>
+  }
+
+  export type UserUpdateWithoutAssignedByMeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDepth?: StringFieldUpdateOperationsInput | string
+    defaultLanguage?: StringFieldUpdateOperationsInput | string
+    autoReview?: BoolFieldUpdateOperationsInput | boolean
+    includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
+    includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    repositories?: RepositoryUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
+    reviewFeedbacks?: ReviewFeedbackUpdateManyWithoutUserNestedInput
+    threadComments?: ReviewThreadCommentUpdateManyWithoutUserNestedInput
+    teamMembers?: TeamMemberUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
+    reviewApprovals?: ReviewApprovalUpdateManyWithoutUserNestedInput
+    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
+    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
+    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAssignedByMeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDepth?: StringFieldUpdateOperationsInput | string
+    defaultLanguage?: StringFieldUpdateOperationsInput | string
+    autoReview?: BoolFieldUpdateOperationsInput | boolean
+    includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
+    includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    reviewFeedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput
+    threadComments?: ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput
+    teamMembers?: TeamMemberUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
+    reviewApprovals?: ReviewApprovalUncheckedUpdateManyWithoutUserNestedInput
+    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUpsertWithoutAssignedReviewsInput = {
+    update: XOR<UserUpdateWithoutAssignedReviewsInput, UserUncheckedUpdateWithoutAssignedReviewsInput>
+    create: XOR<UserCreateWithoutAssignedReviewsInput, UserUncheckedCreateWithoutAssignedReviewsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutAssignedReviewsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutAssignedReviewsInput, UserUncheckedUpdateWithoutAssignedReviewsInput>
+  }
+
+  export type UserUpdateWithoutAssignedReviewsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDepth?: StringFieldUpdateOperationsInput | string
+    defaultLanguage?: StringFieldUpdateOperationsInput | string
+    autoReview?: BoolFieldUpdateOperationsInput | boolean
+    includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
+    includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    repositories?: RepositoryUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
+    reviewFeedbacks?: ReviewFeedbackUpdateManyWithoutUserNestedInput
+    threadComments?: ReviewThreadCommentUpdateManyWithoutUserNestedInput
+    teamMembers?: TeamMemberUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
+    reviewApprovals?: ReviewApprovalUpdateManyWithoutUserNestedInput
+    assignedByMe?: ReviewAssignmentUpdateManyWithoutAssignerNestedInput
+    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
+    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAssignedReviewsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDepth?: StringFieldUpdateOperationsInput | string
+    defaultLanguage?: StringFieldUpdateOperationsInput | string
+    autoReview?: BoolFieldUpdateOperationsInput | boolean
+    includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
+    includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    reviewFeedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput
+    threadComments?: ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput
+    teamMembers?: TeamMemberUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
+    reviewApprovals?: ReviewApprovalUncheckedUpdateManyWithoutUserNestedInput
+    assignedByMe?: ReviewAssignmentUncheckedUpdateManyWithoutAssignerNestedInput
+    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ReviewUpsertWithoutAssignmentsInput = {
@@ -63530,17 +64125,17 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
-    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     parentReview?: ReviewUpdateOneWithoutChildReviewsNestedInput
     childReviews?: ReviewUpdateManyWithoutParentReviewNestedInput
+    repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
+    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
-    feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUpdateManyWithoutReviewNestedInput
     securityIssues?: SecurityIssueUpdateManyWithoutReviewNestedInput
   }
@@ -63558,235 +64153,17 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
-    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
+    feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
-    feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUncheckedUpdateManyWithoutReviewNestedInput
     securityIssues?: SecurityIssueUncheckedUpdateManyWithoutReviewNestedInput
-  }
-
-  export type UserUpsertWithoutAssignedReviewsInput = {
-    update: XOR<UserUpdateWithoutAssignedReviewsInput, UserUncheckedUpdateWithoutAssignedReviewsInput>
-    create: XOR<UserCreateWithoutAssignedReviewsInput, UserUncheckedCreateWithoutAssignedReviewsInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutAssignedReviewsInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutAssignedReviewsInput, UserUncheckedUpdateWithoutAssignedReviewsInput>
-  }
-
-  export type UserUpdateWithoutAssignedReviewsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    emailVerified?: BoolFieldUpdateOperationsInput | boolean
-    image?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewDepth?: StringFieldUpdateOperationsInput | string
-    defaultLanguage?: StringFieldUpdateOperationsInput | string
-    autoReview?: BoolFieldUpdateOperationsInput | boolean
-    includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
-    includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
-    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
-    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUpdateManyWithoutUserNestedInput
-    accounts?: AccountUpdateManyWithoutUserNestedInput
-    repositories?: RepositoryUpdateManyWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutUserNestedInput
-    threadComments?: ReviewThreadCommentUpdateManyWithoutUserNestedInput
-    teamMembers?: TeamMemberUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    reviewFeedbacks?: ReviewFeedbackUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
-    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
-    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
-    reviewApprovals?: ReviewApprovalUpdateManyWithoutUserNestedInput
-    assignedByMe?: ReviewAssignmentUpdateManyWithoutAssignerNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutAssignedReviewsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    emailVerified?: BoolFieldUpdateOperationsInput | boolean
-    image?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewDepth?: StringFieldUpdateOperationsInput | string
-    defaultLanguage?: StringFieldUpdateOperationsInput | string
-    autoReview?: BoolFieldUpdateOperationsInput | boolean
-    includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
-    includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
-    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
-    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
-    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
-    repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
-    threadComments?: ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput
-    teamMembers?: TeamMemberUncheckedUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    reviewFeedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
-    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
-    reviewApprovals?: ReviewApprovalUncheckedUpdateManyWithoutUserNestedInput
-    assignedByMe?: ReviewAssignmentUncheckedUpdateManyWithoutAssignerNestedInput
-  }
-
-  export type UserUpsertWithoutAssignedByMeInput = {
-    update: XOR<UserUpdateWithoutAssignedByMeInput, UserUncheckedUpdateWithoutAssignedByMeInput>
-    create: XOR<UserCreateWithoutAssignedByMeInput, UserUncheckedCreateWithoutAssignedByMeInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutAssignedByMeInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutAssignedByMeInput, UserUncheckedUpdateWithoutAssignedByMeInput>
-  }
-
-  export type UserUpdateWithoutAssignedByMeInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    emailVerified?: BoolFieldUpdateOperationsInput | boolean
-    image?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewDepth?: StringFieldUpdateOperationsInput | string
-    defaultLanguage?: StringFieldUpdateOperationsInput | string
-    autoReview?: BoolFieldUpdateOperationsInput | boolean
-    includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
-    includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
-    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
-    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUpdateManyWithoutUserNestedInput
-    accounts?: AccountUpdateManyWithoutUserNestedInput
-    repositories?: RepositoryUpdateManyWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutUserNestedInput
-    threadComments?: ReviewThreadCommentUpdateManyWithoutUserNestedInput
-    teamMembers?: TeamMemberUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    reviewFeedbacks?: ReviewFeedbackUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
-    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
-    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
-    reviewApprovals?: ReviewApprovalUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutAssignedByMeInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    emailVerified?: BoolFieldUpdateOperationsInput | boolean
-    image?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewDepth?: StringFieldUpdateOperationsInput | string
-    defaultLanguage?: StringFieldUpdateOperationsInput | string
-    autoReview?: BoolFieldUpdateOperationsInput | boolean
-    includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
-    includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
-    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
-    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
-    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
-    repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
-    threadComments?: ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput
-    teamMembers?: TeamMemberUncheckedUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    reviewFeedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
-    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
-    reviewApprovals?: ReviewApprovalUncheckedUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
-  }
-
-  export type TeamMemberCreateWithoutTeamInput = {
-    id?: string
-    role?: $Enums.TeamRole
-    createdAt?: Date | string
-    user: UserCreateNestedOneWithoutTeamMembersInput
-  }
-
-  export type TeamMemberUncheckedCreateWithoutTeamInput = {
-    id?: string
-    userId: string
-    role?: $Enums.TeamRole
-    createdAt?: Date | string
-  }
-
-  export type TeamMemberCreateOrConnectWithoutTeamInput = {
-    where: TeamMemberWhereUniqueInput
-    create: XOR<TeamMemberCreateWithoutTeamInput, TeamMemberUncheckedCreateWithoutTeamInput>
-  }
-
-  export type TeamMemberCreateManyTeamInputEnvelope = {
-    data: TeamMemberCreateManyTeamInput | TeamMemberCreateManyTeamInput[]
-    skipDuplicates?: boolean
   }
 
   export type RepositoryCreateWithoutTeamInput = {
@@ -63798,14 +64175,14 @@ export namespace Prisma {
     htmlUrl: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    diagrams?: DiagramCreateNestedManyWithoutRepositoryInput
     user: UserCreateNestedOneWithoutRepositoriesInput
     reviews?: ReviewCreateNestedManyWithoutRepositoryInput
-    webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
-    scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
-    githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
     branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
-    diagrams?: DiagramCreateNestedManyWithoutRepositoryInput
+    githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
     reviewRules?: ReviewRuleCreateNestedManyWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
+    webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
   }
 
   export type RepositoryUncheckedCreateWithoutTeamInput = {
@@ -63818,13 +64195,13 @@ export namespace Prisma {
     htmlUrl: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    reviews?: ReviewUncheckedCreateNestedManyWithoutRepositoryInput
-    webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
-    scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
-    githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
-    branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
     diagrams?: DiagramUncheckedCreateNestedManyWithoutRepositoryInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
+    githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
     reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
+    webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
   }
 
   export type RepositoryCreateOrConnectWithoutTeamInput = {
@@ -63875,6 +64252,30 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type TeamMemberCreateWithoutTeamInput = {
+    id?: string
+    role?: $Enums.TeamRole
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutTeamMembersInput
+  }
+
+  export type TeamMemberUncheckedCreateWithoutTeamInput = {
+    id?: string
+    userId: string
+    role?: $Enums.TeamRole
+    createdAt?: Date | string
+  }
+
+  export type TeamMemberCreateOrConnectWithoutTeamInput = {
+    where: TeamMemberWhereUniqueInput
+    create: XOR<TeamMemberCreateWithoutTeamInput, TeamMemberUncheckedCreateWithoutTeamInput>
+  }
+
+  export type TeamMemberCreateManyTeamInputEnvelope = {
+    data: TeamMemberCreateManyTeamInput | TeamMemberCreateManyTeamInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ReviewRuleCreateWithoutTeamInput = {
     id?: string
     name: string
@@ -63884,8 +64285,8 @@ export namespace Prisma {
     enabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutReviewRulesInput
     repository?: RepositoryCreateNestedOneWithoutReviewRulesInput
+    user: UserCreateNestedOneWithoutReviewRulesInput
   }
 
   export type ReviewRuleUncheckedCreateWithoutTeamInput = {
@@ -63909,22 +64310,6 @@ export namespace Prisma {
   export type ReviewRuleCreateManyTeamInputEnvelope = {
     data: ReviewRuleCreateManyTeamInput | ReviewRuleCreateManyTeamInput[]
     skipDuplicates?: boolean
-  }
-
-  export type TeamMemberUpsertWithWhereUniqueWithoutTeamInput = {
-    where: TeamMemberWhereUniqueInput
-    update: XOR<TeamMemberUpdateWithoutTeamInput, TeamMemberUncheckedUpdateWithoutTeamInput>
-    create: XOR<TeamMemberCreateWithoutTeamInput, TeamMemberUncheckedCreateWithoutTeamInput>
-  }
-
-  export type TeamMemberUpdateWithWhereUniqueWithoutTeamInput = {
-    where: TeamMemberWhereUniqueInput
-    data: XOR<TeamMemberUpdateWithoutTeamInput, TeamMemberUncheckedUpdateWithoutTeamInput>
-  }
-
-  export type TeamMemberUpdateManyWithWhereWithoutTeamInput = {
-    where: TeamMemberScalarWhereInput
-    data: XOR<TeamMemberUpdateManyMutationInput, TeamMemberUncheckedUpdateManyWithoutTeamInput>
   }
 
   export type RepositoryUpsertWithWhereUniqueWithoutTeamInput = {
@@ -63975,6 +64360,22 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"TeamAction"> | Date | string
     resolvedAt?: DateTimeNullableFilter<"TeamAction"> | Date | string | null
     resolvedBy?: StringNullableFilter<"TeamAction"> | string | null
+  }
+
+  export type TeamMemberUpsertWithWhereUniqueWithoutTeamInput = {
+    where: TeamMemberWhereUniqueInput
+    update: XOR<TeamMemberUpdateWithoutTeamInput, TeamMemberUncheckedUpdateWithoutTeamInput>
+    create: XOR<TeamMemberCreateWithoutTeamInput, TeamMemberUncheckedCreateWithoutTeamInput>
+  }
+
+  export type TeamMemberUpdateWithWhereUniqueWithoutTeamInput = {
+    where: TeamMemberWhereUniqueInput
+    data: XOR<TeamMemberUpdateWithoutTeamInput, TeamMemberUncheckedUpdateWithoutTeamInput>
+  }
+
+  export type TeamMemberUpdateManyWithWhereWithoutTeamInput = {
+    where: TeamMemberScalarWhereInput
+    data: XOR<TeamMemberUpdateManyMutationInput, TeamMemberUncheckedUpdateManyWithoutTeamInput>
   }
 
   export type ReviewRuleUpsertWithWhereUniqueWithoutTeamInput = {
@@ -64029,8 +64430,6 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -64038,31 +64437,38 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
     emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
     notifyReviewCompleted?: boolean
     notifyReviewFailed?: boolean
     notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionCreateNestedManyWithoutUserInput
-    accounts?: AccountCreateNestedManyWithoutUserInput
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     repositories?: RepositoryCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
-    threadComments?: ReviewThreadCommentCreateNestedManyWithoutUserInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
     reviewFeedbacks?: ReviewFeedbackCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
+    threadComments?: ReviewThreadCommentCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutActorInput
-    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
-    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
     reviewApprovals?: ReviewApprovalCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
     assignedByMe?: ReviewAssignmentCreateNestedManyWithoutAssignerInput
+    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
+    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
+    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTeamMembersInput = {
@@ -64072,8 +64478,6 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -64081,31 +64485,38 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
     emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
     notifyReviewCompleted?: boolean
     notifyReviewFailed?: boolean
     notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
-    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
-    threadComments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     reviewFeedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
+    threadComments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
-    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
     reviewApprovals?: ReviewApprovalUncheckedCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     assignedByMe?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssignerInput
+    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTeamMembersInput = {
@@ -64166,8 +64577,6 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -64175,31 +64584,38 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
     notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUpdateManyWithoutUserNestedInput
-    accounts?: AccountUpdateManyWithoutUserNestedInput
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
-    threadComments?: ReviewThreadCommentUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
     reviewFeedbacks?: ReviewFeedbackUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
+    threadComments?: ReviewThreadCommentUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
-    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
-    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
     reviewApprovals?: ReviewApprovalUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
     assignedByMe?: ReviewAssignmentUpdateManyWithoutAssignerNestedInput
+    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
+    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
+    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTeamMembersInput = {
@@ -64209,8 +64625,6 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -64218,31 +64632,38 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
     notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
-    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
-    threadComments?: ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     reviewFeedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
+    threadComments?: ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
-    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
     reviewApprovals?: ReviewApprovalUncheckedUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     assignedByMe?: ReviewAssignmentUncheckedUpdateManyWithoutAssignerNestedInput
+    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type TeamCreateWithoutActionsInput = {
@@ -64252,8 +64673,8 @@ export namespace Prisma {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    members?: TeamMemberCreateNestedManyWithoutTeamInput
     repositories?: RepositoryCreateNestedManyWithoutTeamInput
+    members?: TeamMemberCreateNestedManyWithoutTeamInput
     reviewRules?: ReviewRuleCreateNestedManyWithoutTeamInput
   }
 
@@ -64264,8 +64685,8 @@ export namespace Prisma {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    members?: TeamMemberUncheckedCreateNestedManyWithoutTeamInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutTeamInput
+    members?: TeamMemberUncheckedCreateNestedManyWithoutTeamInput
     reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutTeamInput
   }
 
@@ -64292,8 +64713,8 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    members?: TeamMemberUpdateManyWithoutTeamNestedInput
     repositories?: RepositoryUpdateManyWithoutTeamNestedInput
+    members?: TeamMemberUpdateManyWithoutTeamNestedInput
     reviewRules?: ReviewRuleUpdateManyWithoutTeamNestedInput
   }
 
@@ -64304,8 +64725,8 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    members?: TeamMemberUncheckedUpdateManyWithoutTeamNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutTeamNestedInput
+    members?: TeamMemberUncheckedUpdateManyWithoutTeamNestedInput
     reviewRules?: ReviewRuleUncheckedUpdateManyWithoutTeamNestedInput
   }
 
@@ -64316,8 +64737,6 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -64325,31 +64744,38 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
     emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
     notifyReviewCompleted?: boolean
     notifyReviewFailed?: boolean
     notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionCreateNestedManyWithoutUserInput
-    accounts?: AccountCreateNestedManyWithoutUserInput
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     repositories?: RepositoryCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    reviewFeedbacks?: ReviewFeedbackCreateNestedManyWithoutUserInput
     threadComments?: ReviewThreadCommentCreateNestedManyWithoutUserInput
     teamMembers?: TeamMemberCreateNestedManyWithoutUserInput
-    reviewFeedbacks?: ReviewFeedbackCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutActorInput
-    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
-    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
     reviewApprovals?: ReviewApprovalCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
     assignedByMe?: ReviewAssignmentCreateNestedManyWithoutAssignerInput
+    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
+    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
+    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -64359,8 +64785,6 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -64368,31 +64792,38 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
     emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
     notifyReviewCompleted?: boolean
     notifyReviewFailed?: boolean
     notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
-    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    reviewFeedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput
     threadComments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput
     teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutUserInput
-    reviewFeedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
-    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
     reviewApprovals?: ReviewApprovalUncheckedCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     assignedByMe?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssignerInput
+    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -64418,8 +64849,6 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -64427,31 +64856,38 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
     notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUpdateManyWithoutUserNestedInput
-    accounts?: AccountUpdateManyWithoutUserNestedInput
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    reviewFeedbacks?: ReviewFeedbackUpdateManyWithoutUserNestedInput
     threadComments?: ReviewThreadCommentUpdateManyWithoutUserNestedInput
     teamMembers?: TeamMemberUpdateManyWithoutUserNestedInput
-    reviewFeedbacks?: ReviewFeedbackUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
-    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
-    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
     reviewApprovals?: ReviewApprovalUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
     assignedByMe?: ReviewAssignmentUpdateManyWithoutAssignerNestedInput
+    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
+    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
+    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -64461,8 +64897,6 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -64470,31 +64904,38 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
     notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
-    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    reviewFeedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput
     threadComments?: ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput
     teamMembers?: TeamMemberUncheckedUpdateManyWithoutUserNestedInput
-    reviewFeedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
-    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
     reviewApprovals?: ReviewApprovalUncheckedUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     assignedByMe?: ReviewAssignmentUncheckedUpdateManyWithoutAssignerNestedInput
+    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type RepositoryCreateWithoutWebhookConfigInput = {
@@ -64506,14 +64947,14 @@ export namespace Prisma {
     htmlUrl: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutRepositoriesInput
-    team?: TeamCreateNestedOneWithoutRepositoriesInput
-    reviews?: ReviewCreateNestedManyWithoutRepositoryInput
-    scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
-    githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
-    branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
     diagrams?: DiagramCreateNestedManyWithoutRepositoryInput
+    team?: TeamCreateNestedOneWithoutRepositoriesInput
+    user: UserCreateNestedOneWithoutRepositoriesInput
+    reviews?: ReviewCreateNestedManyWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
+    githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
     reviewRules?: ReviewRuleCreateNestedManyWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
   }
 
   export type RepositoryUncheckedCreateWithoutWebhookConfigInput = {
@@ -64527,12 +64968,12 @@ export namespace Prisma {
     htmlUrl: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    reviews?: ReviewUncheckedCreateNestedManyWithoutRepositoryInput
-    scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
-    githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
-    branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
     diagrams?: DiagramUncheckedCreateNestedManyWithoutRepositoryInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
+    githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
     reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
   }
 
   export type RepositoryCreateOrConnectWithoutWebhookConfigInput = {
@@ -64560,14 +65001,14 @@ export namespace Prisma {
     htmlUrl?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutRepositoriesNestedInput
-    team?: TeamUpdateOneWithoutRepositoriesNestedInput
-    reviews?: ReviewUpdateManyWithoutRepositoryNestedInput
-    scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
-    githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
-    branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
     diagrams?: DiagramUpdateManyWithoutRepositoryNestedInput
+    team?: TeamUpdateOneWithoutRepositoriesNestedInput
+    user?: UserUpdateOneRequiredWithoutRepositoriesNestedInput
+    reviews?: ReviewUpdateManyWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
     reviewRules?: ReviewRuleUpdateManyWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
   }
 
   export type RepositoryUncheckedUpdateWithoutWebhookConfigInput = {
@@ -64581,12 +65022,12 @@ export namespace Prisma {
     htmlUrl?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviews?: ReviewUncheckedUpdateManyWithoutRepositoryNestedInput
-    scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
-    githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
-    branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
     diagrams?: DiagramUncheckedUpdateManyWithoutRepositoryNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
     reviewRules?: ReviewRuleUncheckedUpdateManyWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
   }
 
   export type RepositoryCreateWithoutScheduledScanConfigInput = {
@@ -64598,14 +65039,14 @@ export namespace Prisma {
     htmlUrl: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutRepositoriesInput
-    team?: TeamCreateNestedOneWithoutRepositoriesInput
-    reviews?: ReviewCreateNestedManyWithoutRepositoryInput
-    webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
-    githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
-    branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
     diagrams?: DiagramCreateNestedManyWithoutRepositoryInput
+    team?: TeamCreateNestedOneWithoutRepositoriesInput
+    user: UserCreateNestedOneWithoutRepositoriesInput
+    reviews?: ReviewCreateNestedManyWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
+    githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
     reviewRules?: ReviewRuleCreateNestedManyWithoutRepositoryInput
+    webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
   }
 
   export type RepositoryUncheckedCreateWithoutScheduledScanConfigInput = {
@@ -64619,12 +65060,12 @@ export namespace Prisma {
     htmlUrl: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    reviews?: ReviewUncheckedCreateNestedManyWithoutRepositoryInput
-    webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
-    githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
-    branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
     diagrams?: DiagramUncheckedCreateNestedManyWithoutRepositoryInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
+    githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
     reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutRepositoryInput
+    webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
   }
 
   export type RepositoryCreateOrConnectWithoutScheduledScanConfigInput = {
@@ -64680,14 +65121,14 @@ export namespace Prisma {
     htmlUrl?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutRepositoriesNestedInput
-    team?: TeamUpdateOneWithoutRepositoriesNestedInput
-    reviews?: ReviewUpdateManyWithoutRepositoryNestedInput
-    webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
-    githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
-    branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
     diagrams?: DiagramUpdateManyWithoutRepositoryNestedInput
+    team?: TeamUpdateOneWithoutRepositoriesNestedInput
+    user?: UserUpdateOneRequiredWithoutRepositoriesNestedInput
+    reviews?: ReviewUpdateManyWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
     reviewRules?: ReviewRuleUpdateManyWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
   }
 
   export type RepositoryUncheckedUpdateWithoutScheduledScanConfigInput = {
@@ -64701,12 +65142,12 @@ export namespace Prisma {
     htmlUrl?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviews?: ReviewUncheckedUpdateManyWithoutRepositoryNestedInput
-    webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
-    githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
-    branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
     diagrams?: DiagramUncheckedUpdateManyWithoutRepositoryNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
     reviewRules?: ReviewRuleUncheckedUpdateManyWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
   }
 
   export type ScheduledScanRunUpsertWithWhereUniqueWithoutConfigInput = {
@@ -64790,6 +65231,49 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type RepositoryCreateWithoutGithubCommentsInput = {
+    id?: string
+    githubId: number
+    name: string
+    fullName: string
+    private?: boolean
+    htmlUrl: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    diagrams?: DiagramCreateNestedManyWithoutRepositoryInput
+    team?: TeamCreateNestedOneWithoutRepositoriesInput
+    user: UserCreateNestedOneWithoutRepositoriesInput
+    reviews?: ReviewCreateNestedManyWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
+    reviewRules?: ReviewRuleCreateNestedManyWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
+    webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
+  }
+
+  export type RepositoryUncheckedCreateWithoutGithubCommentsInput = {
+    id?: string
+    userId: string
+    teamId?: string | null
+    githubId: number
+    name: string
+    fullName: string
+    private?: boolean
+    htmlUrl: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    diagrams?: DiagramUncheckedCreateNestedManyWithoutRepositoryInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
+    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
+    webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
+  }
+
+  export type RepositoryCreateOrConnectWithoutGithubCommentsInput = {
+    where: RepositoryWhereUniqueInput
+    create: XOR<RepositoryCreateWithoutGithubCommentsInput, RepositoryUncheckedCreateWithoutGithubCommentsInput>
+  }
+
   export type ReviewCreateWithoutGithubCommentInput = {
     id?: string
     prNumber: number
@@ -64801,16 +65285,16 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
-    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
-    repository: RepositoryCreateNestedOneWithoutReviewsInput
-    user: UserCreateNestedOneWithoutReviewsInput
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     parentReview?: ReviewCreateNestedOneWithoutChildReviewsInput
     childReviews?: ReviewCreateNestedManyWithoutParentReviewInput
+    repository: RepositoryCreateNestedOneWithoutReviewsInput
+    user: UserCreateNestedOneWithoutReviewsInput
+    feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckCreateNestedOneWithoutReviewInput
-    feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentCreateNestedManyWithoutReviewInput
     securityIssues?: SecurityIssueCreateNestedManyWithoutReviewInput
@@ -64829,14 +65313,14 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
-    parentReviewId?: string | null
-    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
+    parentReviewId?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
+    feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
     githubStatusCheck?: GitHubStatusCheckUncheckedCreateNestedOneWithoutReviewInput
-    feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalUncheckedCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentUncheckedCreateNestedManyWithoutReviewInput
     securityIssues?: SecurityIssueUncheckedCreateNestedManyWithoutReviewInput
@@ -64847,47 +65331,53 @@ export namespace Prisma {
     create: XOR<ReviewCreateWithoutGithubCommentInput, ReviewUncheckedCreateWithoutGithubCommentInput>
   }
 
-  export type RepositoryCreateWithoutGithubCommentsInput = {
-    id?: string
-    githubId: number
-    name: string
-    fullName: string
-    private?: boolean
-    htmlUrl: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutRepositoriesInput
-    team?: TeamCreateNestedOneWithoutRepositoriesInput
-    reviews?: ReviewCreateNestedManyWithoutRepositoryInput
-    webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
-    scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
-    branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
-    diagrams?: DiagramCreateNestedManyWithoutRepositoryInput
-    reviewRules?: ReviewRuleCreateNestedManyWithoutRepositoryInput
-  }
-
-  export type RepositoryUncheckedCreateWithoutGithubCommentsInput = {
-    id?: string
-    userId: string
-    teamId?: string | null
-    githubId: number
-    name: string
-    fullName: string
-    private?: boolean
-    htmlUrl: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    reviews?: ReviewUncheckedCreateNestedManyWithoutRepositoryInput
-    webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
-    scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
-    branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
-    diagrams?: DiagramUncheckedCreateNestedManyWithoutRepositoryInput
-    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutRepositoryInput
-  }
-
-  export type RepositoryCreateOrConnectWithoutGithubCommentsInput = {
-    where: RepositoryWhereUniqueInput
+  export type RepositoryUpsertWithoutGithubCommentsInput = {
+    update: XOR<RepositoryUpdateWithoutGithubCommentsInput, RepositoryUncheckedUpdateWithoutGithubCommentsInput>
     create: XOR<RepositoryCreateWithoutGithubCommentsInput, RepositoryUncheckedCreateWithoutGithubCommentsInput>
+    where?: RepositoryWhereInput
+  }
+
+  export type RepositoryUpdateToOneWithWhereWithoutGithubCommentsInput = {
+    where?: RepositoryWhereInput
+    data: XOR<RepositoryUpdateWithoutGithubCommentsInput, RepositoryUncheckedUpdateWithoutGithubCommentsInput>
+  }
+
+  export type RepositoryUpdateWithoutGithubCommentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    githubId?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    private?: BoolFieldUpdateOperationsInput | boolean
+    htmlUrl?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    diagrams?: DiagramUpdateManyWithoutRepositoryNestedInput
+    team?: TeamUpdateOneWithoutRepositoriesNestedInput
+    user?: UserUpdateOneRequiredWithoutRepositoriesNestedInput
+    reviews?: ReviewUpdateManyWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
+    reviewRules?: ReviewRuleUpdateManyWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
+  }
+
+  export type RepositoryUncheckedUpdateWithoutGithubCommentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    teamId?: NullableStringFieldUpdateOperationsInput | string | null
+    githubId?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    private?: BoolFieldUpdateOperationsInput | boolean
+    htmlUrl?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    diagrams?: DiagramUncheckedUpdateManyWithoutRepositoryNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
+    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
   }
 
   export type ReviewUpsertWithoutGithubCommentInput = {
@@ -64912,16 +65402,16 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
-    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     parentReview?: ReviewUpdateOneWithoutChildReviewsNestedInput
     childReviews?: ReviewUpdateManyWithoutParentReviewNestedInput
+    repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
+    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
-    feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUpdateManyWithoutReviewNestedInput
     securityIssues?: SecurityIssueUpdateManyWithoutReviewNestedInput
@@ -64940,66 +65430,17 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
-    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
+    feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
-    feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUncheckedUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUncheckedUpdateManyWithoutReviewNestedInput
     securityIssues?: SecurityIssueUncheckedUpdateManyWithoutReviewNestedInput
-  }
-
-  export type RepositoryUpsertWithoutGithubCommentsInput = {
-    update: XOR<RepositoryUpdateWithoutGithubCommentsInput, RepositoryUncheckedUpdateWithoutGithubCommentsInput>
-    create: XOR<RepositoryCreateWithoutGithubCommentsInput, RepositoryUncheckedCreateWithoutGithubCommentsInput>
-    where?: RepositoryWhereInput
-  }
-
-  export type RepositoryUpdateToOneWithWhereWithoutGithubCommentsInput = {
-    where?: RepositoryWhereInput
-    data: XOR<RepositoryUpdateWithoutGithubCommentsInput, RepositoryUncheckedUpdateWithoutGithubCommentsInput>
-  }
-
-  export type RepositoryUpdateWithoutGithubCommentsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    githubId?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    fullName?: StringFieldUpdateOperationsInput | string
-    private?: BoolFieldUpdateOperationsInput | boolean
-    htmlUrl?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutRepositoriesNestedInput
-    team?: TeamUpdateOneWithoutRepositoriesNestedInput
-    reviews?: ReviewUpdateManyWithoutRepositoryNestedInput
-    webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
-    scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
-    branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
-    diagrams?: DiagramUpdateManyWithoutRepositoryNestedInput
-    reviewRules?: ReviewRuleUpdateManyWithoutRepositoryNestedInput
-  }
-
-  export type RepositoryUncheckedUpdateWithoutGithubCommentsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    teamId?: NullableStringFieldUpdateOperationsInput | string | null
-    githubId?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    fullName?: StringFieldUpdateOperationsInput | string
-    private?: BoolFieldUpdateOperationsInput | boolean
-    htmlUrl?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviews?: ReviewUncheckedUpdateManyWithoutRepositoryNestedInput
-    webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
-    scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
-    branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
-    diagrams?: DiagramUncheckedUpdateManyWithoutRepositoryNestedInput
-    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutRepositoryNestedInput
   }
 
   export type ReviewCreateWithoutGithubStatusCheckInput = {
@@ -65013,16 +65454,16 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
-    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
-    repository: RepositoryCreateNestedOneWithoutReviewsInput
-    user: UserCreateNestedOneWithoutReviewsInput
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     parentReview?: ReviewCreateNestedOneWithoutChildReviewsInput
     childReviews?: ReviewCreateNestedManyWithoutParentReviewInput
+    repository: RepositoryCreateNestedOneWithoutReviewsInput
+    user: UserCreateNestedOneWithoutReviewsInput
+    feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     threads?: ReviewThreadCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentCreateNestedOneWithoutReviewInput
-    feedbacks?: ReviewFeedbackCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentCreateNestedManyWithoutReviewInput
     securityIssues?: SecurityIssueCreateNestedManyWithoutReviewInput
@@ -65041,14 +65482,14 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
-    parentReviewId?: string | null
-    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
+    parentReviewId?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     childReviews?: ReviewUncheckedCreateNestedManyWithoutParentReviewInput
+    feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     threads?: ReviewThreadUncheckedCreateNestedManyWithoutReviewInput
     githubComment?: GitHubCommentUncheckedCreateNestedOneWithoutReviewInput
-    feedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutReviewInput
     approvals?: ReviewApprovalUncheckedCreateNestedManyWithoutReviewInput
     assignments?: ReviewAssignmentUncheckedCreateNestedManyWithoutReviewInput
     securityIssues?: SecurityIssueUncheckedCreateNestedManyWithoutReviewInput
@@ -65081,16 +65522,16 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
-    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     parentReview?: ReviewUpdateOneWithoutChildReviewsNestedInput
     childReviews?: ReviewUpdateManyWithoutParentReviewNestedInput
+    repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
+    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
-    feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUpdateManyWithoutReviewNestedInput
     securityIssues?: SecurityIssueUpdateManyWithoutReviewNestedInput
@@ -65109,14 +65550,14 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
-    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
+    feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
-    feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUncheckedUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUncheckedUpdateManyWithoutReviewNestedInput
     securityIssues?: SecurityIssueUncheckedUpdateManyWithoutReviewNestedInput
@@ -65131,14 +65572,14 @@ export namespace Prisma {
     htmlUrl: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutRepositoriesInput
-    team?: TeamCreateNestedOneWithoutRepositoriesInput
-    reviews?: ReviewCreateNestedManyWithoutRepositoryInput
-    webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
-    scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
-    githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
     diagrams?: DiagramCreateNestedManyWithoutRepositoryInput
+    team?: TeamCreateNestedOneWithoutRepositoriesInput
+    user: UserCreateNestedOneWithoutRepositoriesInput
+    reviews?: ReviewCreateNestedManyWithoutRepositoryInput
+    githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
     reviewRules?: ReviewRuleCreateNestedManyWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
+    webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
   }
 
   export type RepositoryUncheckedCreateWithoutBranchProtectionRecsInput = {
@@ -65152,12 +65593,12 @@ export namespace Prisma {
     htmlUrl: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    reviews?: ReviewUncheckedCreateNestedManyWithoutRepositoryInput
-    webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
-    scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
-    githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
     diagrams?: DiagramUncheckedCreateNestedManyWithoutRepositoryInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutRepositoryInput
+    githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
     reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
+    webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
   }
 
   export type RepositoryCreateOrConnectWithoutBranchProtectionRecsInput = {
@@ -65185,14 +65626,14 @@ export namespace Prisma {
     htmlUrl?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutRepositoriesNestedInput
-    team?: TeamUpdateOneWithoutRepositoriesNestedInput
-    reviews?: ReviewUpdateManyWithoutRepositoryNestedInput
-    webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
-    scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
-    githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
     diagrams?: DiagramUpdateManyWithoutRepositoryNestedInput
+    team?: TeamUpdateOneWithoutRepositoriesNestedInput
+    user?: UserUpdateOneRequiredWithoutRepositoriesNestedInput
+    reviews?: ReviewUpdateManyWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
     reviewRules?: ReviewRuleUpdateManyWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
   }
 
   export type RepositoryUncheckedUpdateWithoutBranchProtectionRecsInput = {
@@ -65206,12 +65647,12 @@ export namespace Prisma {
     htmlUrl?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviews?: ReviewUncheckedUpdateManyWithoutRepositoryNestedInput
-    webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
-    scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
-    githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
     diagrams?: DiagramUncheckedUpdateManyWithoutRepositoryNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
     reviewRules?: ReviewRuleUncheckedUpdateManyWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
   }
 
   export type RepositoryCreateWithoutDiagramsInput = {
@@ -65223,14 +65664,14 @@ export namespace Prisma {
     htmlUrl: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutRepositoriesInput
     team?: TeamCreateNestedOneWithoutRepositoriesInput
+    user: UserCreateNestedOneWithoutRepositoriesInput
     reviews?: ReviewCreateNestedManyWithoutRepositoryInput
-    webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
-    scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
-    githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
     branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
+    githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
     reviewRules?: ReviewRuleCreateNestedManyWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
+    webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
   }
 
   export type RepositoryUncheckedCreateWithoutDiagramsInput = {
@@ -65245,11 +65686,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     reviews?: ReviewUncheckedCreateNestedManyWithoutRepositoryInput
-    webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
-    scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
-    githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
     branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
+    githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
     reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
+    webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
   }
 
   export type RepositoryCreateOrConnectWithoutDiagramsInput = {
@@ -65277,14 +65718,14 @@ export namespace Prisma {
     htmlUrl?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutRepositoriesNestedInput
     team?: TeamUpdateOneWithoutRepositoriesNestedInput
+    user?: UserUpdateOneRequiredWithoutRepositoriesNestedInput
     reviews?: ReviewUpdateManyWithoutRepositoryNestedInput
-    webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
-    scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
-    githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
     branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
     reviewRules?: ReviewRuleUpdateManyWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
   }
 
   export type RepositoryUncheckedUpdateWithoutDiagramsInput = {
@@ -65299,102 +65740,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviews?: ReviewUncheckedUpdateManyWithoutRepositoryNestedInput
-    webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
-    scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
-    githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
     branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
     reviewRules?: ReviewRuleUncheckedUpdateManyWithoutRepositoryNestedInput
-  }
-
-  export type UserCreateWithoutReviewRulesInput = {
-    id: string
-    name: string
-    email: string
-    emailVerified?: boolean
-    image?: string | null
-    role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    reviewDepth?: string
-    defaultLanguage?: string
-    autoReview?: boolean
-    includeSecurityChecks?: boolean
-    includePerfSuggestions?: boolean
-    emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
-    notifyReviewCompleted?: boolean
-    notifyReviewFailed?: boolean
-    notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionCreateNestedManyWithoutUserInput
-    accounts?: AccountCreateNestedManyWithoutUserInput
-    repositories?: RepositoryCreateNestedManyWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutUserInput
-    threadComments?: ReviewThreadCommentCreateNestedManyWithoutUserInput
-    teamMembers?: TeamMemberCreateNestedManyWithoutUserInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    reviewFeedbacks?: ReviewFeedbackCreateNestedManyWithoutUserInput
-    auditLogs?: AuditLogCreateNestedManyWithoutActorInput
-    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
-    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
-    reviewApprovals?: ReviewApprovalCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
-    assignedByMe?: ReviewAssignmentCreateNestedManyWithoutAssignerInput
-  }
-
-  export type UserUncheckedCreateWithoutReviewRulesInput = {
-    id: string
-    name: string
-    email: string
-    emailVerified?: boolean
-    image?: string | null
-    role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    reviewDepth?: string
-    defaultLanguage?: string
-    autoReview?: boolean
-    includeSecurityChecks?: boolean
-    includePerfSuggestions?: boolean
-    emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
-    notifyReviewCompleted?: boolean
-    notifyReviewFailed?: boolean
-    notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
-    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
-    repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
-    threadComments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput
-    teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutUserInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    reviewFeedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
-    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
-    reviewApprovals?: ReviewApprovalUncheckedCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
-    assignedByMe?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssignerInput
-  }
-
-  export type UserCreateOrConnectWithoutReviewRulesInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutReviewRulesInput, UserUncheckedCreateWithoutReviewRulesInput>
+    scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
   }
 
   export type RepositoryCreateWithoutReviewRulesInput = {
@@ -65406,14 +65756,14 @@ export namespace Prisma {
     htmlUrl: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutRepositoriesInput
-    team?: TeamCreateNestedOneWithoutRepositoriesInput
-    reviews?: ReviewCreateNestedManyWithoutRepositoryInput
-    webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
-    scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
-    githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
-    branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
     diagrams?: DiagramCreateNestedManyWithoutRepositoryInput
+    team?: TeamCreateNestedOneWithoutRepositoriesInput
+    user: UserCreateNestedOneWithoutRepositoriesInput
+    reviews?: ReviewCreateNestedManyWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationCreateNestedManyWithoutRepositoryInput
+    githubComments?: GitHubCommentCreateNestedManyWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigCreateNestedOneWithoutRepositoryInput
+    webhookConfig?: WebhookConfigCreateNestedOneWithoutRepositoryInput
   }
 
   export type RepositoryUncheckedCreateWithoutReviewRulesInput = {
@@ -65427,12 +65777,12 @@ export namespace Prisma {
     htmlUrl: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    reviews?: ReviewUncheckedCreateNestedManyWithoutRepositoryInput
-    webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
-    scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
-    githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
-    branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
     diagrams?: DiagramUncheckedCreateNestedManyWithoutRepositoryInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutRepositoryInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedCreateNestedManyWithoutRepositoryInput
+    githubComments?: GitHubCommentUncheckedCreateNestedManyWithoutRepositoryInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedCreateNestedOneWithoutRepositoryInput
+    webhookConfig?: WebhookConfigUncheckedCreateNestedOneWithoutRepositoryInput
   }
 
   export type RepositoryCreateOrConnectWithoutReviewRulesInput = {
@@ -65447,9 +65797,9 @@ export namespace Prisma {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    members?: TeamMemberCreateNestedManyWithoutTeamInput
     repositories?: RepositoryCreateNestedManyWithoutTeamInput
     actions?: TeamActionCreateNestedManyWithoutTeamInput
+    members?: TeamMemberCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUncheckedCreateWithoutReviewRulesInput = {
@@ -65459,9 +65809,9 @@ export namespace Prisma {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    members?: TeamMemberUncheckedCreateNestedManyWithoutTeamInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutTeamInput
     actions?: TeamActionUncheckedCreateNestedManyWithoutTeamInput
+    members?: TeamMemberUncheckedCreateNestedManyWithoutTeamInput
   }
 
   export type TeamCreateOrConnectWithoutReviewRulesInput = {
@@ -65469,101 +65819,105 @@ export namespace Prisma {
     create: XOR<TeamCreateWithoutReviewRulesInput, TeamUncheckedCreateWithoutReviewRulesInput>
   }
 
-  export type UserUpsertWithoutReviewRulesInput = {
-    update: XOR<UserUpdateWithoutReviewRulesInput, UserUncheckedUpdateWithoutReviewRulesInput>
+  export type UserCreateWithoutReviewRulesInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reviewDepth?: string
+    defaultLanguage?: string
+    autoReview?: boolean
+    includeSecurityChecks?: boolean
+    includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
+    emailNotifications?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    repositories?: RepositoryCreateNestedManyWithoutUserInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
+    reviewFeedbacks?: ReviewFeedbackCreateNestedManyWithoutUserInput
+    threadComments?: ReviewThreadCommentCreateNestedManyWithoutUserInput
+    teamMembers?: TeamMemberCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutActorInput
+    reviewApprovals?: ReviewApprovalCreateNestedManyWithoutUserInput
+    assignedByMe?: ReviewAssignmentCreateNestedManyWithoutAssignerInput
+    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
+    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutReviewRulesInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reviewDepth?: string
+    defaultLanguage?: string
+    autoReview?: boolean
+    includeSecurityChecks?: boolean
+    includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
+    emailNotifications?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    reviewFeedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput
+    threadComments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput
+    teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
+    reviewApprovals?: ReviewApprovalUncheckedCreateNestedManyWithoutUserInput
+    assignedByMe?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssignerInput
+    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutReviewRulesInput = {
+    where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutReviewRulesInput, UserUncheckedCreateWithoutReviewRulesInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutReviewRulesInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutReviewRulesInput, UserUncheckedUpdateWithoutReviewRulesInput>
-  }
-
-  export type UserUpdateWithoutReviewRulesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    emailVerified?: BoolFieldUpdateOperationsInput | boolean
-    image?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewDepth?: StringFieldUpdateOperationsInput | string
-    defaultLanguage?: StringFieldUpdateOperationsInput | string
-    autoReview?: BoolFieldUpdateOperationsInput | boolean
-    includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
-    includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
-    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
-    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUpdateManyWithoutUserNestedInput
-    accounts?: AccountUpdateManyWithoutUserNestedInput
-    repositories?: RepositoryUpdateManyWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutUserNestedInput
-    threadComments?: ReviewThreadCommentUpdateManyWithoutUserNestedInput
-    teamMembers?: TeamMemberUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    reviewFeedbacks?: ReviewFeedbackUpdateManyWithoutUserNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
-    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
-    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
-    reviewApprovals?: ReviewApprovalUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
-    assignedByMe?: ReviewAssignmentUpdateManyWithoutAssignerNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutReviewRulesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    emailVerified?: BoolFieldUpdateOperationsInput | boolean
-    image?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewDepth?: StringFieldUpdateOperationsInput | string
-    defaultLanguage?: StringFieldUpdateOperationsInput | string
-    autoReview?: BoolFieldUpdateOperationsInput | boolean
-    includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
-    includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
-    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
-    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
-    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
-    repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
-    threadComments?: ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput
-    teamMembers?: TeamMemberUncheckedUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    reviewFeedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
-    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
-    reviewApprovals?: ReviewApprovalUncheckedUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
-    assignedByMe?: ReviewAssignmentUncheckedUpdateManyWithoutAssignerNestedInput
   }
 
   export type RepositoryUpsertWithoutReviewRulesInput = {
@@ -65586,14 +65940,14 @@ export namespace Prisma {
     htmlUrl?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutRepositoriesNestedInput
-    team?: TeamUpdateOneWithoutRepositoriesNestedInput
-    reviews?: ReviewUpdateManyWithoutRepositoryNestedInput
-    webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
-    scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
-    githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
-    branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
     diagrams?: DiagramUpdateManyWithoutRepositoryNestedInput
+    team?: TeamUpdateOneWithoutRepositoriesNestedInput
+    user?: UserUpdateOneRequiredWithoutRepositoriesNestedInput
+    reviews?: ReviewUpdateManyWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
   }
 
   export type RepositoryUncheckedUpdateWithoutReviewRulesInput = {
@@ -65607,12 +65961,12 @@ export namespace Prisma {
     htmlUrl?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviews?: ReviewUncheckedUpdateManyWithoutRepositoryNestedInput
-    webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
-    scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
-    githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
-    branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
     diagrams?: DiagramUncheckedUpdateManyWithoutRepositoryNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
   }
 
   export type TeamUpsertWithoutReviewRulesInput = {
@@ -65633,9 +65987,9 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    members?: TeamMemberUpdateManyWithoutTeamNestedInput
     repositories?: RepositoryUpdateManyWithoutTeamNestedInput
     actions?: TeamActionUpdateManyWithoutTeamNestedInput
+    members?: TeamMemberUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateWithoutReviewRulesInput = {
@@ -65645,9 +65999,116 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    members?: TeamMemberUncheckedUpdateManyWithoutTeamNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutTeamNestedInput
     actions?: TeamActionUncheckedUpdateManyWithoutTeamNestedInput
+    members?: TeamMemberUncheckedUpdateManyWithoutTeamNestedInput
+  }
+
+  export type UserUpsertWithoutReviewRulesInput = {
+    update: XOR<UserUpdateWithoutReviewRulesInput, UserUncheckedUpdateWithoutReviewRulesInput>
+    create: XOR<UserCreateWithoutReviewRulesInput, UserUncheckedCreateWithoutReviewRulesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutReviewRulesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutReviewRulesInput, UserUncheckedUpdateWithoutReviewRulesInput>
+  }
+
+  export type UserUpdateWithoutReviewRulesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDepth?: StringFieldUpdateOperationsInput | string
+    defaultLanguage?: StringFieldUpdateOperationsInput | string
+    autoReview?: BoolFieldUpdateOperationsInput | boolean
+    includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
+    includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    repositories?: RepositoryUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
+    reviewFeedbacks?: ReviewFeedbackUpdateManyWithoutUserNestedInput
+    threadComments?: ReviewThreadCommentUpdateManyWithoutUserNestedInput
+    teamMembers?: TeamMemberUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
+    reviewApprovals?: ReviewApprovalUpdateManyWithoutUserNestedInput
+    assignedByMe?: ReviewAssignmentUpdateManyWithoutAssignerNestedInput
+    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
+    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutReviewRulesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDepth?: StringFieldUpdateOperationsInput | string
+    defaultLanguage?: StringFieldUpdateOperationsInput | string
+    autoReview?: BoolFieldUpdateOperationsInput | boolean
+    includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
+    includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    reviewFeedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput
+    threadComments?: ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput
+    teamMembers?: TeamMemberUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
+    reviewApprovals?: ReviewApprovalUncheckedUpdateManyWithoutUserNestedInput
+    assignedByMe?: ReviewAssignmentUncheckedUpdateManyWithoutAssignerNestedInput
+    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAuditLogsInput = {
@@ -65657,8 +66118,6 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -65666,31 +66125,38 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
     emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
     notifyReviewCompleted?: boolean
     notifyReviewFailed?: boolean
     notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionCreateNestedManyWithoutUserInput
-    accounts?: AccountCreateNestedManyWithoutUserInput
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     repositories?: RepositoryCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    reviewFeedbacks?: ReviewFeedbackCreateNestedManyWithoutUserInput
     threadComments?: ReviewThreadCommentCreateNestedManyWithoutUserInput
     teamMembers?: TeamMemberCreateNestedManyWithoutUserInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    reviewFeedbacks?: ReviewFeedbackCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
-    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
-    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
     reviewApprovals?: ReviewApprovalCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
     assignedByMe?: ReviewAssignmentCreateNestedManyWithoutAssignerInput
+    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
+    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
+    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -65700,8 +66166,6 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: string | null
     role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviewDepth?: string
@@ -65709,31 +66173,38 @@ export namespace Prisma {
     autoReview?: boolean
     includeSecurityChecks?: boolean
     includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
     emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
     notifyReviewCompleted?: boolean
     notifyReviewFailed?: boolean
     notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
-    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    reviewFeedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput
     threadComments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput
     teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutUserInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    reviewFeedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
-    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     reviewApprovals?: ReviewApprovalUncheckedCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     assignedByMe?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssignerInput
+    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    customRoles?: UserCustomRoleUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -65759,8 +66230,6 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -65768,31 +66237,38 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
     notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUpdateManyWithoutUserNestedInput
-    accounts?: AccountUpdateManyWithoutUserNestedInput
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    reviewFeedbacks?: ReviewFeedbackUpdateManyWithoutUserNestedInput
     threadComments?: ReviewThreadCommentUpdateManyWithoutUserNestedInput
     teamMembers?: TeamMemberUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    reviewFeedbacks?: ReviewFeedbackUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
-    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
-    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
     reviewApprovals?: ReviewApprovalUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
     assignedByMe?: ReviewAssignmentUpdateManyWithoutAssignerNestedInput
+    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
+    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
+    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -65802,8 +66278,6 @@ export namespace Prisma {
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviewDepth?: StringFieldUpdateOperationsInput | string
@@ -65811,31 +66285,38 @@ export namespace Prisma {
     autoReview?: BoolFieldUpdateOperationsInput | boolean
     includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
     includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
     emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
     notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
     notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
-    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    reviewFeedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput
     threadComments?: ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput
     teamMembers?: TeamMemberUncheckedUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    reviewFeedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
-    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     reviewApprovals?: ReviewApprovalUncheckedUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     assignedByMe?: ReviewAssignmentUncheckedUpdateManyWithoutAssignerNestedInput
+    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCustomRoleCreateWithoutRoleInput = {
@@ -65876,97 +66357,6 @@ export namespace Prisma {
     data: XOR<UserCustomRoleUpdateManyMutationInput, UserCustomRoleUncheckedUpdateManyWithoutRoleInput>
   }
 
-  export type UserCreateWithoutCustomRolesInput = {
-    id: string
-    name: string
-    email: string
-    emailVerified?: boolean
-    image?: string | null
-    role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    reviewDepth?: string
-    defaultLanguage?: string
-    autoReview?: boolean
-    includeSecurityChecks?: boolean
-    includePerfSuggestions?: boolean
-    emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
-    notifyReviewCompleted?: boolean
-    notifyReviewFailed?: boolean
-    notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionCreateNestedManyWithoutUserInput
-    accounts?: AccountCreateNestedManyWithoutUserInput
-    repositories?: RepositoryCreateNestedManyWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutUserInput
-    threadComments?: ReviewThreadCommentCreateNestedManyWithoutUserInput
-    teamMembers?: TeamMemberCreateNestedManyWithoutUserInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    reviewFeedbacks?: ReviewFeedbackCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
-    auditLogs?: AuditLogCreateNestedManyWithoutActorInput
-    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
-    reviewApprovals?: ReviewApprovalCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
-    assignedByMe?: ReviewAssignmentCreateNestedManyWithoutAssignerInput
-  }
-
-  export type UserUncheckedCreateWithoutCustomRolesInput = {
-    id: string
-    name: string
-    email: string
-    emailVerified?: boolean
-    image?: string | null
-    role?: $Enums.UserRole
-    banned?: boolean
-    bannedReason?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    reviewDepth?: string
-    defaultLanguage?: string
-    autoReview?: boolean
-    includeSecurityChecks?: boolean
-    includePerfSuggestions?: boolean
-    emailNotifications?: boolean
-    notifyTeamInvites?: boolean
-    notifyTeamMemberAdded?: boolean
-    notifyReviewCompleted?: boolean
-    notifyReviewFailed?: boolean
-    notifyScheduledScanCompleted?: boolean
-    notifyReviewAssigned?: boolean
-    notifyReviewApproved?: boolean
-    notifyReviewChangesRequested?: boolean
-    notificationSoundEnabled?: boolean
-    desktopNotifications?: boolean
-    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
-    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
-    repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
-    threadComments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput
-    teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutUserInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    reviewFeedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput
-    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
-    reviewApprovals?: ReviewApprovalUncheckedCreateNestedManyWithoutUserInput
-    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
-    assignedByMe?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssignerInput
-  }
-
-  export type UserCreateOrConnectWithoutCustomRolesInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutCustomRolesInput, UserUncheckedCreateWithoutCustomRolesInput>
-  }
-
   export type CustomRoleCreateWithoutUserRolesInput = {
     id?: string
     name: string
@@ -66002,101 +66392,105 @@ export namespace Prisma {
     create: XOR<CustomRoleCreateWithoutUserRolesInput, CustomRoleUncheckedCreateWithoutUserRolesInput>
   }
 
-  export type UserUpsertWithoutCustomRolesInput = {
-    update: XOR<UserUpdateWithoutCustomRolesInput, UserUncheckedUpdateWithoutCustomRolesInput>
+  export type UserCreateWithoutCustomRolesInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reviewDepth?: string
+    defaultLanguage?: string
+    autoReview?: boolean
+    includeSecurityChecks?: boolean
+    includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
+    emailNotifications?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    repositories?: RepositoryCreateNestedManyWithoutUserInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
+    reviewFeedbacks?: ReviewFeedbackCreateNestedManyWithoutUserInput
+    threadComments?: ReviewThreadCommentCreateNestedManyWithoutUserInput
+    teamMembers?: TeamMemberCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutActorInput
+    reviewApprovals?: ReviewApprovalCreateNestedManyWithoutUserInput
+    assignedByMe?: ReviewAssignmentCreateNestedManyWithoutAssignerInput
+    assignedReviews?: ReviewAssignmentCreateNestedManyWithoutAssigneeInput
+    reviewRules?: ReviewRuleCreateNestedManyWithoutUserInput
+    commentReactions?: ReviewThreadCommentReactionCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutCustomRolesInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reviewDepth?: string
+    defaultLanguage?: string
+    autoReview?: boolean
+    includeSecurityChecks?: boolean
+    includePerfSuggestions?: boolean
+    banned?: boolean
+    bannedReason?: string | null
+    desktopNotifications?: boolean
+    emailNotifications?: boolean
+    notificationSoundEnabled?: boolean
+    notifyReviewApproved?: boolean
+    notifyReviewAssigned?: boolean
+    notifyReviewChangesRequested?: boolean
+    notifyReviewCompleted?: boolean
+    notifyReviewFailed?: boolean
+    notifyScheduledScanCompleted?: boolean
+    notifyTeamInvites?: boolean
+    notifyTeamMemberAdded?: boolean
+    planId?: string
+    planExpiresAt?: Date | string | null
+    overrideReposLimit?: number | null
+    overrideReviewsLimit?: number | null
+    overrideSeatsLimit?: number | null
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    repositories?: RepositoryUncheckedCreateNestedManyWithoutUserInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    reviewFeedbacks?: ReviewFeedbackUncheckedCreateNestedManyWithoutUserInput
+    threadComments?: ReviewThreadCommentUncheckedCreateNestedManyWithoutUserInput
+    teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
+    reviewApprovals?: ReviewApprovalUncheckedCreateNestedManyWithoutUserInput
+    assignedByMe?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssignerInput
+    assignedReviews?: ReviewAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    reviewRules?: ReviewRuleUncheckedCreateNestedManyWithoutUserInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutCustomRolesInput = {
+    where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutCustomRolesInput, UserUncheckedCreateWithoutCustomRolesInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutCustomRolesInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutCustomRolesInput, UserUncheckedUpdateWithoutCustomRolesInput>
-  }
-
-  export type UserUpdateWithoutCustomRolesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    emailVerified?: BoolFieldUpdateOperationsInput | boolean
-    image?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewDepth?: StringFieldUpdateOperationsInput | string
-    defaultLanguage?: StringFieldUpdateOperationsInput | string
-    autoReview?: BoolFieldUpdateOperationsInput | boolean
-    includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
-    includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
-    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
-    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUpdateManyWithoutUserNestedInput
-    accounts?: AccountUpdateManyWithoutUserNestedInput
-    repositories?: RepositoryUpdateManyWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutUserNestedInput
-    threadComments?: ReviewThreadCommentUpdateManyWithoutUserNestedInput
-    teamMembers?: TeamMemberUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    reviewFeedbacks?: ReviewFeedbackUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
-    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
-    reviewApprovals?: ReviewApprovalUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
-    assignedByMe?: ReviewAssignmentUpdateManyWithoutAssignerNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutCustomRolesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    emailVerified?: BoolFieldUpdateOperationsInput | boolean
-    image?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    banned?: BoolFieldUpdateOperationsInput | boolean
-    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewDepth?: StringFieldUpdateOperationsInput | string
-    defaultLanguage?: StringFieldUpdateOperationsInput | string
-    autoReview?: BoolFieldUpdateOperationsInput | boolean
-    includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
-    includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
-    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
-    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
-    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
-    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
-    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
-    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
-    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
-    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
-    repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
-    threadComments?: ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput
-    teamMembers?: TeamMemberUncheckedUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    reviewFeedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput
-    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
-    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
-    reviewApprovals?: ReviewApprovalUncheckedUpdateManyWithoutUserNestedInput
-    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
-    assignedByMe?: ReviewAssignmentUncheckedUpdateManyWithoutAssignerNestedInput
   }
 
   export type CustomRoleUpsertWithoutUserRolesInput = {
@@ -66140,29 +66534,121 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type SessionCreateManyUserInput = {
-    id: string
-    expiresAt: Date | string
-    token: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    ipAddress?: string | null
-    userAgent?: string | null
+  export type UserUpsertWithoutCustomRolesInput = {
+    update: XOR<UserUpdateWithoutCustomRolesInput, UserUncheckedUpdateWithoutCustomRolesInput>
+    create: XOR<UserCreateWithoutCustomRolesInput, UserUncheckedCreateWithoutCustomRolesInput>
+    where?: UserWhereInput
   }
 
-  export type AccountCreateManyUserInput = {
-    id: string
-    accountId: string
-    providerId: string
-    accessToken?: string | null
-    refreshToken?: string | null
-    idToken?: string | null
-    accessTokenExpiresAt?: Date | string | null
-    refreshTokenExpiresAt?: Date | string | null
-    scope?: string | null
-    password?: string | null
+  export type UserUpdateToOneWithWhereWithoutCustomRolesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutCustomRolesInput, UserUncheckedUpdateWithoutCustomRolesInput>
+  }
+
+  export type UserUpdateWithoutCustomRolesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDepth?: StringFieldUpdateOperationsInput | string
+    defaultLanguage?: StringFieldUpdateOperationsInput | string
+    autoReview?: BoolFieldUpdateOperationsInput | boolean
+    includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
+    includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    repositories?: RepositoryUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
+    reviewFeedbacks?: ReviewFeedbackUpdateManyWithoutUserNestedInput
+    threadComments?: ReviewThreadCommentUpdateManyWithoutUserNestedInput
+    teamMembers?: TeamMemberUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
+    reviewApprovals?: ReviewApprovalUpdateManyWithoutUserNestedInput
+    assignedByMe?: ReviewAssignmentUpdateManyWithoutAssignerNestedInput
+    assignedReviews?: ReviewAssignmentUpdateManyWithoutAssigneeNestedInput
+    reviewRules?: ReviewRuleUpdateManyWithoutUserNestedInput
+    commentReactions?: ReviewThreadCommentReactionUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutCustomRolesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDepth?: StringFieldUpdateOperationsInput | string
+    defaultLanguage?: StringFieldUpdateOperationsInput | string
+    autoReview?: BoolFieldUpdateOperationsInput | boolean
+    includeSecurityChecks?: BoolFieldUpdateOperationsInput | boolean
+    includePerfSuggestions?: BoolFieldUpdateOperationsInput | boolean
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    bannedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    desktopNotifications?: BoolFieldUpdateOperationsInput | boolean
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    notificationSoundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewApproved?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewAssigned?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewChangesRequested?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyReviewFailed?: BoolFieldUpdateOperationsInput | boolean
+    notifyScheduledScanCompleted?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamInvites?: BoolFieldUpdateOperationsInput | boolean
+    notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
+    planId?: StringFieldUpdateOperationsInput | string
+    planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    repositories?: RepositoryUncheckedUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    reviewFeedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutUserNestedInput
+    threadComments?: ReviewThreadCommentUncheckedUpdateManyWithoutUserNestedInput
+    teamMembers?: TeamMemberUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
+    reviewApprovals?: ReviewApprovalUncheckedUpdateManyWithoutUserNestedInput
+    assignedByMe?: ReviewAssignmentUncheckedUpdateManyWithoutAssignerNestedInput
+    assignedReviews?: ReviewAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    reviewRules?: ReviewRuleUncheckedUpdateManyWithoutUserNestedInput
+    commentReactions?: ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type NotificationCreateManyUserInput = {
+    id?: string
+    type: $Enums.NotificationType
+    title: string
+    message: string
+    link?: string | null
+    read?: boolean
     createdAt?: Date | string
-    updatedAt?: Date | string
   }
 
   export type RepositoryCreateManyUserInput = {
@@ -66189,10 +66675,18 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
-    parentReviewId?: string | null
-    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
+    parentReviewId?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
+  }
+
+  export type ReviewFeedbackCreateManyUserInput = {
+    id?: string
+    reviewId: string
+    rating: number
+    comment?: string | null
+    createdAt?: Date | string
   }
 
   export type ReviewThreadCommentCreateManyUserInput = {
@@ -66210,33 +66704,17 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
-  export type NotificationCreateManyUserInput = {
-    id?: string
-    type: $Enums.NotificationType
-    title: string
-    message: string
-    link?: string | null
-    read?: boolean
-    createdAt?: Date | string
-  }
-
-  export type ReviewFeedbackCreateManyUserInput = {
-    id?: string
-    reviewId: string
-    rating: number
-    comment?: string | null
-    createdAt?: Date | string
-  }
-
-  export type ReviewRuleCreateManyUserInput = {
-    id?: string
-    name: string
-    description: string
-    pattern?: string | null
-    severity?: $Enums.RuleSeverity
-    repositoryId?: string | null
-    teamId?: string | null
-    enabled?: boolean
+  export type AccountCreateManyUserInput = {
+    id: string
+    accountId: string
+    providerId: string
+    accessToken?: string | null
+    refreshToken?: string | null
+    idToken?: string | null
+    accessTokenExpiresAt?: Date | string | null
+    refreshTokenExpiresAt?: Date | string | null
+    scope?: string | null
+    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -66254,36 +66732,11 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
-  export type UserCustomRoleCreateManyUserInput = {
-    id?: string
-    roleId: string
-    assignedAt?: Date | string
-  }
-
-  export type ReviewThreadCommentReactionCreateManyUserInput = {
-    id?: string
-    commentId: string
-    emoji: string
-    createdAt?: Date | string
-  }
-
   export type ReviewApprovalCreateManyUserInput = {
     id?: string
     reviewId: string
     state: $Enums.ReviewApprovalState
     body?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type ReviewAssignmentCreateManyAssigneeInput = {
-    id?: string
-    reviewId: string
-    assignedBy: string
-    dueDate?: Date | string | null
-    priority?: $Enums.AssignmentPriority
-    status?: $Enums.AssignmentStatus
-    note?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -66300,79 +66753,82 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type SessionUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    token?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+  export type ReviewAssignmentCreateManyAssigneeInput = {
+    id?: string
+    reviewId: string
+    assignedBy: string
+    dueDate?: Date | string | null
+    priority?: $Enums.AssignmentPriority
+    status?: $Enums.AssignmentStatus
+    note?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
-  export type SessionUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    token?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+  export type ReviewRuleCreateManyUserInput = {
+    id?: string
+    name: string
+    description: string
+    pattern?: string | null
+    severity?: $Enums.RuleSeverity
+    repositoryId?: string | null
+    teamId?: string | null
+    enabled?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
-  export type SessionUncheckedUpdateManyWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    token?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+  export type ReviewThreadCommentReactionCreateManyUserInput = {
+    id?: string
+    commentId: string
+    emoji: string
+    createdAt?: Date | string
   }
 
-  export type AccountUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    accountId?: StringFieldUpdateOperationsInput | string
-    providerId?: StringFieldUpdateOperationsInput | string
-    accessToken?: NullableStringFieldUpdateOperationsInput | string | null
-    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
-    idToken?: NullableStringFieldUpdateOperationsInput | string | null
-    accessTokenExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokenExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    scope?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type SessionCreateManyUserInput = {
+    id: string
+    expiresAt: Date | string
+    token: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ipAddress?: string | null
+    userAgent?: string | null
   }
 
-  export type AccountUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    accountId?: StringFieldUpdateOperationsInput | string
-    providerId?: StringFieldUpdateOperationsInput | string
-    accessToken?: NullableStringFieldUpdateOperationsInput | string | null
-    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
-    idToken?: NullableStringFieldUpdateOperationsInput | string | null
-    accessTokenExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokenExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    scope?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type UserCustomRoleCreateManyUserInput = {
+    id?: string
+    roleId: string
+    assignedAt?: Date | string
   }
 
-  export type AccountUncheckedUpdateManyWithoutUserInput = {
+  export type NotificationUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    accountId?: StringFieldUpdateOperationsInput | string
-    providerId?: StringFieldUpdateOperationsInput | string
-    accessToken?: NullableStringFieldUpdateOperationsInput | string | null
-    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
-    idToken?: NullableStringFieldUpdateOperationsInput | string | null
-    accessTokenExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokenExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    scope?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    read?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    read?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RepositoryUpdateWithoutUserInput = {
@@ -66384,14 +66840,14 @@ export namespace Prisma {
     htmlUrl?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    diagrams?: DiagramUpdateManyWithoutRepositoryNestedInput
     team?: TeamUpdateOneWithoutRepositoriesNestedInput
     reviews?: ReviewUpdateManyWithoutRepositoryNestedInput
-    webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
-    scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
-    githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
     branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
-    diagrams?: DiagramUpdateManyWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
     reviewRules?: ReviewRuleUpdateManyWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
   }
 
   export type RepositoryUncheckedUpdateWithoutUserInput = {
@@ -66404,13 +66860,13 @@ export namespace Prisma {
     htmlUrl?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviews?: ReviewUncheckedUpdateManyWithoutRepositoryNestedInput
-    webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
-    scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
-    githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
-    branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
     diagrams?: DiagramUncheckedUpdateManyWithoutRepositoryNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
     reviewRules?: ReviewRuleUncheckedUpdateManyWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
   }
 
   export type RepositoryUncheckedUpdateManyWithoutUserInput = {
@@ -66436,16 +66892,16 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     parentReview?: ReviewUpdateOneWithoutChildReviewsNestedInput
     childReviews?: ReviewUpdateManyWithoutParentReviewNestedInput
+    repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
+    feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
-    feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUpdateManyWithoutReviewNestedInput
     securityIssues?: SecurityIssueUpdateManyWithoutReviewNestedInput
@@ -66463,15 +66919,15 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
-    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
+    feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
-    feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUncheckedUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUncheckedUpdateManyWithoutReviewNestedInput
     securityIssues?: SecurityIssueUncheckedUpdateManyWithoutReviewNestedInput
@@ -66489,10 +66945,34 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
-    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
+  }
+
+  export type ReviewFeedbackUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    review?: ReviewUpdateOneRequiredWithoutFeedbacksNestedInput
+  }
+
+  export type ReviewFeedbackUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewId?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReviewFeedbackUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewId?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ReviewThreadCommentUpdateWithoutUserInput = {
@@ -66542,95 +67022,47 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type NotificationUpdateWithoutUserInput = {
+  export type AccountUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
-    title?: StringFieldUpdateOperationsInput | string
-    message?: StringFieldUpdateOperationsInput | string
-    link?: NullableStringFieldUpdateOperationsInput | string | null
-    read?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type NotificationUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
-    title?: StringFieldUpdateOperationsInput | string
-    message?: StringFieldUpdateOperationsInput | string
-    link?: NullableStringFieldUpdateOperationsInput | string | null
-    read?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type NotificationUncheckedUpdateManyWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
-    title?: StringFieldUpdateOperationsInput | string
-    message?: StringFieldUpdateOperationsInput | string
-    link?: NullableStringFieldUpdateOperationsInput | string | null
-    read?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ReviewFeedbackUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    rating?: IntFieldUpdateOperationsInput | number
-    comment?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    review?: ReviewUpdateOneRequiredWithoutFeedbacksNestedInput
-  }
-
-  export type ReviewFeedbackUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    reviewId?: StringFieldUpdateOperationsInput | string
-    rating?: IntFieldUpdateOperationsInput | number
-    comment?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ReviewFeedbackUncheckedUpdateManyWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    reviewId?: StringFieldUpdateOperationsInput | string
-    rating?: IntFieldUpdateOperationsInput | number
-    comment?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ReviewRuleUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    pattern?: NullableStringFieldUpdateOperationsInput | string | null
-    severity?: EnumRuleSeverityFieldUpdateOperationsInput | $Enums.RuleSeverity
-    enabled?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    repository?: RepositoryUpdateOneWithoutReviewRulesNestedInput
-    team?: TeamUpdateOneWithoutReviewRulesNestedInput
-  }
-
-  export type ReviewRuleUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    pattern?: NullableStringFieldUpdateOperationsInput | string | null
-    severity?: EnumRuleSeverityFieldUpdateOperationsInput | $Enums.RuleSeverity
-    repositoryId?: NullableStringFieldUpdateOperationsInput | string | null
-    teamId?: NullableStringFieldUpdateOperationsInput | string | null
-    enabled?: BoolFieldUpdateOperationsInput | boolean
+    accountId?: StringFieldUpdateOperationsInput | string
+    providerId?: StringFieldUpdateOperationsInput | string
+    accessToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    idToken?: NullableStringFieldUpdateOperationsInput | string | null
+    accessTokenExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refreshTokenExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    scope?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ReviewRuleUncheckedUpdateManyWithoutUserInput = {
+  export type AccountUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    pattern?: NullableStringFieldUpdateOperationsInput | string | null
-    severity?: EnumRuleSeverityFieldUpdateOperationsInput | $Enums.RuleSeverity
-    repositoryId?: NullableStringFieldUpdateOperationsInput | string | null
-    teamId?: NullableStringFieldUpdateOperationsInput | string | null
-    enabled?: BoolFieldUpdateOperationsInput | boolean
+    accountId?: StringFieldUpdateOperationsInput | string
+    providerId?: StringFieldUpdateOperationsInput | string
+    accessToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    idToken?: NullableStringFieldUpdateOperationsInput | string | null
+    accessTokenExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refreshTokenExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    scope?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AccountUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    providerId?: StringFieldUpdateOperationsInput | string
+    accessToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    idToken?: NullableStringFieldUpdateOperationsInput | string | null
+    accessTokenExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refreshTokenExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    scope?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -66674,45 +67106,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type UserCustomRoleUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    role?: CustomRoleUpdateOneRequiredWithoutUserRolesNestedInput
-  }
-
-  export type UserCustomRoleUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    roleId?: StringFieldUpdateOperationsInput | string
-    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type UserCustomRoleUncheckedUpdateManyWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    roleId?: StringFieldUpdateOperationsInput | string
-    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ReviewThreadCommentReactionUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    emoji?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    comment?: ReviewThreadCommentUpdateOneRequiredWithoutReactionsNestedInput
-  }
-
-  export type ReviewThreadCommentReactionUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    commentId?: StringFieldUpdateOperationsInput | string
-    emoji?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    commentId?: StringFieldUpdateOperationsInput | string
-    emoji?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type ReviewApprovalUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     state?: EnumReviewApprovalStateFieldUpdateOperationsInput | $Enums.ReviewApprovalState
@@ -66740,42 +67133,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ReviewAssignmentUpdateWithoutAssigneeInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    priority?: EnumAssignmentPriorityFieldUpdateOperationsInput | $Enums.AssignmentPriority
-    status?: EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
-    note?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    review?: ReviewUpdateOneRequiredWithoutAssignmentsNestedInput
-    assigner?: UserUpdateOneRequiredWithoutAssignedByMeNestedInput
-  }
-
-  export type ReviewAssignmentUncheckedUpdateWithoutAssigneeInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    reviewId?: StringFieldUpdateOperationsInput | string
-    assignedBy?: StringFieldUpdateOperationsInput | string
-    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    priority?: EnumAssignmentPriorityFieldUpdateOperationsInput | $Enums.AssignmentPriority
-    status?: EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
-    note?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ReviewAssignmentUncheckedUpdateManyWithoutAssigneeInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    reviewId?: StringFieldUpdateOperationsInput | string
-    assignedBy?: StringFieldUpdateOperationsInput | string
-    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    priority?: EnumAssignmentPriorityFieldUpdateOperationsInput | $Enums.AssignmentPriority
-    status?: EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
-    note?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type ReviewAssignmentUpdateWithoutAssignerInput = {
     id?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -66784,8 +67141,8 @@ export namespace Prisma {
     note?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    review?: ReviewUpdateOneRequiredWithoutAssignmentsNestedInput
     assignee?: UserUpdateOneRequiredWithoutAssignedReviewsNestedInput
+    review?: ReviewUpdateOneRequiredWithoutAssignmentsNestedInput
   }
 
   export type ReviewAssignmentUncheckedUpdateWithoutAssignerInput = {
@@ -66812,42 +67169,148 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ReviewCreateManyRepositoryInput = {
-    id?: string
-    userId: string
-    prNumber: number
-    prTitle: string
-    prUrl: string
-    status?: $Enums.ReviewStatus
-    summary?: string | null
-    riskScore?: number | null
-    comments?: NullableJsonNullValueInput | InputJsonValue
-    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
-    error?: string | null
-    parentReviewId?: string | null
-    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
-    createdAt?: Date | string
-    updatedAt?: Date | string
+  export type ReviewAssignmentUpdateWithoutAssigneeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumAssignmentPriorityFieldUpdateOperationsInput | $Enums.AssignmentPriority
+    status?: EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assigner?: UserUpdateOneRequiredWithoutAssignedByMeNestedInput
+    review?: ReviewUpdateOneRequiredWithoutAssignmentsNestedInput
   }
 
-  export type GitHubCommentCreateManyRepositoryInput = {
-    id?: string
-    reviewId: string
-    githubReviewId: bigint | number
-    prNumber: number
-    commitSha: string
-    findingCount?: number
-    createdAt?: Date | string
+  export type ReviewAssignmentUncheckedUpdateWithoutAssigneeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewId?: StringFieldUpdateOperationsInput | string
+    assignedBy?: StringFieldUpdateOperationsInput | string
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumAssignmentPriorityFieldUpdateOperationsInput | $Enums.AssignmentPriority
+    status?: EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type BranchProtectionRecommendationCreateManyRepositoryInput = {
-    id?: string
-    rule: string
-    rationale: string
-    priority: $Enums.RecommendationPriority
-    dismissed?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
+  export type ReviewAssignmentUncheckedUpdateManyWithoutAssigneeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewId?: StringFieldUpdateOperationsInput | string
+    assignedBy?: StringFieldUpdateOperationsInput | string
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumAssignmentPriorityFieldUpdateOperationsInput | $Enums.AssignmentPriority
+    status?: EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReviewRuleUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    pattern?: NullableStringFieldUpdateOperationsInput | string | null
+    severity?: EnumRuleSeverityFieldUpdateOperationsInput | $Enums.RuleSeverity
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    repository?: RepositoryUpdateOneWithoutReviewRulesNestedInput
+    team?: TeamUpdateOneWithoutReviewRulesNestedInput
+  }
+
+  export type ReviewRuleUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    pattern?: NullableStringFieldUpdateOperationsInput | string | null
+    severity?: EnumRuleSeverityFieldUpdateOperationsInput | $Enums.RuleSeverity
+    repositoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    teamId?: NullableStringFieldUpdateOperationsInput | string | null
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReviewRuleUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    pattern?: NullableStringFieldUpdateOperationsInput | string | null
+    severity?: EnumRuleSeverityFieldUpdateOperationsInput | $Enums.RuleSeverity
+    repositoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    teamId?: NullableStringFieldUpdateOperationsInput | string | null
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReviewThreadCommentReactionUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    emoji?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    comment?: ReviewThreadCommentUpdateOneRequiredWithoutReactionsNestedInput
+  }
+
+  export type ReviewThreadCommentReactionUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    commentId?: StringFieldUpdateOperationsInput | string
+    emoji?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReviewThreadCommentReactionUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    commentId?: StringFieldUpdateOperationsInput | string
+    emoji?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SessionUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    token?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type SessionUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    token?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type SessionUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    token?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type UserCustomRoleUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    role?: CustomRoleUpdateOneRequiredWithoutUserRolesNestedInput
+  }
+
+  export type UserCustomRoleUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    roleId?: StringFieldUpdateOperationsInput | string
+    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserCustomRoleUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    roleId?: StringFieldUpdateOperationsInput | string
+    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DiagramCreateManyRepositoryInput = {
@@ -66863,6 +67326,44 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type ReviewCreateManyRepositoryInput = {
+    id?: string
+    userId: string
+    prNumber: number
+    prTitle: string
+    prUrl: string
+    status?: $Enums.ReviewStatus
+    summary?: string | null
+    riskScore?: number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    parentReviewId?: string | null
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
+  }
+
+  export type BranchProtectionRecommendationCreateManyRepositoryInput = {
+    id?: string
+    rule: string
+    rationale: string
+    priority: $Enums.RecommendationPriority
+    dismissed?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GitHubCommentCreateManyRepositoryInput = {
+    id?: string
+    reviewId: string
+    githubReviewId: bigint | number
+    prNumber: number
+    commitSha: string
+    findingCount?: number
+    createdAt?: Date | string
+  }
+
   export type ReviewRuleCreateManyRepositoryInput = {
     id?: string
     name: string
@@ -66874,136 +67375,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     userId: string
-  }
-
-  export type ReviewUpdateWithoutRepositoryInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    prNumber?: IntFieldUpdateOperationsInput | number
-    prTitle?: StringFieldUpdateOperationsInput | string
-    prUrl?: StringFieldUpdateOperationsInput | string
-    status?: EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
-    summary?: NullableStringFieldUpdateOperationsInput | string | null
-    riskScore?: NullableIntFieldUpdateOperationsInput | number | null
-    comments?: NullableJsonNullValueInput | InputJsonValue
-    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
-    error?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
-    parentReview?: ReviewUpdateOneWithoutChildReviewsNestedInput
-    childReviews?: ReviewUpdateManyWithoutParentReviewNestedInput
-    threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
-    githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
-    githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
-    feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
-    approvals?: ReviewApprovalUpdateManyWithoutReviewNestedInput
-    assignments?: ReviewAssignmentUpdateManyWithoutReviewNestedInput
-    securityIssues?: SecurityIssueUpdateManyWithoutReviewNestedInput
-  }
-
-  export type ReviewUncheckedUpdateWithoutRepositoryInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    prNumber?: IntFieldUpdateOperationsInput | number
-    prTitle?: StringFieldUpdateOperationsInput | string
-    prUrl?: StringFieldUpdateOperationsInput | string
-    status?: EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
-    summary?: NullableStringFieldUpdateOperationsInput | string | null
-    riskScore?: NullableIntFieldUpdateOperationsInput | number | null
-    comments?: NullableJsonNullValueInput | InputJsonValue
-    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
-    error?: NullableStringFieldUpdateOperationsInput | string | null
-    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
-    threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
-    githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
-    githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
-    feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
-    approvals?: ReviewApprovalUncheckedUpdateManyWithoutReviewNestedInput
-    assignments?: ReviewAssignmentUncheckedUpdateManyWithoutReviewNestedInput
-    securityIssues?: SecurityIssueUncheckedUpdateManyWithoutReviewNestedInput
-  }
-
-  export type ReviewUncheckedUpdateManyWithoutRepositoryInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    prNumber?: IntFieldUpdateOperationsInput | number
-    prTitle?: StringFieldUpdateOperationsInput | string
-    prUrl?: StringFieldUpdateOperationsInput | string
-    status?: EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
-    summary?: NullableStringFieldUpdateOperationsInput | string | null
-    riskScore?: NullableIntFieldUpdateOperationsInput | number | null
-    comments?: NullableJsonNullValueInput | InputJsonValue
-    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
-    error?: NullableStringFieldUpdateOperationsInput | string | null
-    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type GitHubCommentUpdateWithoutRepositoryInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    githubReviewId?: BigIntFieldUpdateOperationsInput | bigint | number
-    prNumber?: IntFieldUpdateOperationsInput | number
-    commitSha?: StringFieldUpdateOperationsInput | string
-    findingCount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    review?: ReviewUpdateOneRequiredWithoutGithubCommentNestedInput
-  }
-
-  export type GitHubCommentUncheckedUpdateWithoutRepositoryInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    reviewId?: StringFieldUpdateOperationsInput | string
-    githubReviewId?: BigIntFieldUpdateOperationsInput | bigint | number
-    prNumber?: IntFieldUpdateOperationsInput | number
-    commitSha?: StringFieldUpdateOperationsInput | string
-    findingCount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type GitHubCommentUncheckedUpdateManyWithoutRepositoryInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    reviewId?: StringFieldUpdateOperationsInput | string
-    githubReviewId?: BigIntFieldUpdateOperationsInput | bigint | number
-    prNumber?: IntFieldUpdateOperationsInput | number
-    commitSha?: StringFieldUpdateOperationsInput | string
-    findingCount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type BranchProtectionRecommendationUpdateWithoutRepositoryInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    rule?: StringFieldUpdateOperationsInput | string
-    rationale?: StringFieldUpdateOperationsInput | string
-    priority?: EnumRecommendationPriorityFieldUpdateOperationsInput | $Enums.RecommendationPriority
-    dismissed?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type BranchProtectionRecommendationUncheckedUpdateWithoutRepositoryInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    rule?: StringFieldUpdateOperationsInput | string
-    rationale?: StringFieldUpdateOperationsInput | string
-    priority?: EnumRecommendationPriorityFieldUpdateOperationsInput | $Enums.RecommendationPriority
-    dismissed?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    rule?: StringFieldUpdateOperationsInput | string
-    rationale?: StringFieldUpdateOperationsInput | string
-    priority?: EnumRecommendationPriorityFieldUpdateOperationsInput | $Enums.RecommendationPriority
-    dismissed?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DiagramUpdateWithoutRepositoryInput = {
@@ -67045,6 +67416,136 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ReviewUpdateWithoutRepositoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    prNumber?: IntFieldUpdateOperationsInput | number
+    prTitle?: StringFieldUpdateOperationsInput | string
+    prUrl?: StringFieldUpdateOperationsInput | string
+    status?: EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    riskScore?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
+    parentReview?: ReviewUpdateOneWithoutChildReviewsNestedInput
+    childReviews?: ReviewUpdateManyWithoutParentReviewNestedInput
+    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
+    threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
+    githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
+    githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
+    approvals?: ReviewApprovalUpdateManyWithoutReviewNestedInput
+    assignments?: ReviewAssignmentUpdateManyWithoutReviewNestedInput
+    securityIssues?: SecurityIssueUpdateManyWithoutReviewNestedInput
+  }
+
+  export type ReviewUncheckedUpdateWithoutRepositoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    prNumber?: IntFieldUpdateOperationsInput | number
+    prTitle?: StringFieldUpdateOperationsInput | string
+    prUrl?: StringFieldUpdateOperationsInput | string
+    status?: EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    riskScore?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
+    childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
+    feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
+    threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
+    githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
+    githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
+    approvals?: ReviewApprovalUncheckedUpdateManyWithoutReviewNestedInput
+    assignments?: ReviewAssignmentUncheckedUpdateManyWithoutReviewNestedInput
+    securityIssues?: SecurityIssueUncheckedUpdateManyWithoutReviewNestedInput
+  }
+
+  export type ReviewUncheckedUpdateManyWithoutRepositoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    prNumber?: IntFieldUpdateOperationsInput | number
+    prTitle?: StringFieldUpdateOperationsInput | string
+    prUrl?: StringFieldUpdateOperationsInput | string
+    status?: EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    riskScore?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableJsonNullValueInput | InputJsonValue
+    qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentReviewId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
+  }
+
+  export type BranchProtectionRecommendationUpdateWithoutRepositoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rule?: StringFieldUpdateOperationsInput | string
+    rationale?: StringFieldUpdateOperationsInput | string
+    priority?: EnumRecommendationPriorityFieldUpdateOperationsInput | $Enums.RecommendationPriority
+    dismissed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BranchProtectionRecommendationUncheckedUpdateWithoutRepositoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rule?: StringFieldUpdateOperationsInput | string
+    rationale?: StringFieldUpdateOperationsInput | string
+    priority?: EnumRecommendationPriorityFieldUpdateOperationsInput | $Enums.RecommendationPriority
+    dismissed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rule?: StringFieldUpdateOperationsInput | string
+    rationale?: StringFieldUpdateOperationsInput | string
+    priority?: EnumRecommendationPriorityFieldUpdateOperationsInput | $Enums.RecommendationPriority
+    dismissed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GitHubCommentUpdateWithoutRepositoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    githubReviewId?: BigIntFieldUpdateOperationsInput | bigint | number
+    prNumber?: IntFieldUpdateOperationsInput | number
+    commitSha?: StringFieldUpdateOperationsInput | string
+    findingCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    review?: ReviewUpdateOneRequiredWithoutGithubCommentNestedInput
+  }
+
+  export type GitHubCommentUncheckedUpdateWithoutRepositoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewId?: StringFieldUpdateOperationsInput | string
+    githubReviewId?: BigIntFieldUpdateOperationsInput | bigint | number
+    prNumber?: IntFieldUpdateOperationsInput | number
+    commitSha?: StringFieldUpdateOperationsInput | string
+    findingCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GitHubCommentUncheckedUpdateManyWithoutRepositoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewId?: StringFieldUpdateOperationsInput | string
+    githubReviewId?: BigIntFieldUpdateOperationsInput | bigint | number
+    prNumber?: IntFieldUpdateOperationsInput | number
+    commitSha?: StringFieldUpdateOperationsInput | string
+    findingCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ReviewRuleUpdateWithoutRepositoryInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -67054,8 +67555,8 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutReviewRulesNestedInput
     team?: TeamUpdateOneWithoutReviewRulesNestedInput
+    user?: UserUpdateOneRequiredWithoutReviewRulesNestedInput
   }
 
   export type ReviewRuleUncheckedUpdateWithoutRepositoryInput = {
@@ -67097,9 +67598,17 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
-    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
+    resolvedComments?: ReviewCreateresolvedCommentsInput | string[]
+  }
+
+  export type ReviewFeedbackCreateManyReviewInput = {
+    id?: string
+    userId: string
+    rating: number
+    comment?: string | null
+    createdAt?: Date | string
   }
 
   export type ReviewThreadCreateManyReviewInput = {
@@ -67109,14 +67618,6 @@ export namespace Prisma {
     resolved?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-  }
-
-  export type ReviewFeedbackCreateManyReviewInput = {
-    id?: string
-    userId: string
-    rating: number
-    comment?: string | null
-    createdAt?: Date | string
   }
 
   export type ReviewApprovalCreateManyReviewInput = {
@@ -67171,16 +67672,16 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
+    childReviews?: ReviewUpdateManyWithoutParentReviewNestedInput
     repository?: RepositoryUpdateOneRequiredWithoutReviewsNestedInput
     user?: UserUpdateOneRequiredWithoutReviewsNestedInput
-    childReviews?: ReviewUpdateManyWithoutParentReviewNestedInput
+    feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     threads?: ReviewThreadUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUpdateOneWithoutReviewNestedInput
-    feedbacks?: ReviewFeedbackUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUpdateManyWithoutReviewNestedInput
     securityIssues?: SecurityIssueUpdateManyWithoutReviewNestedInput
@@ -67199,14 +67700,14 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     childReviews?: ReviewUncheckedUpdateManyWithoutParentReviewNestedInput
+    feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     threads?: ReviewThreadUncheckedUpdateManyWithoutReviewNestedInput
     githubComment?: GitHubCommentUncheckedUpdateOneWithoutReviewNestedInput
     githubStatusCheck?: GitHubStatusCheckUncheckedUpdateOneWithoutReviewNestedInput
-    feedbacks?: ReviewFeedbackUncheckedUpdateManyWithoutReviewNestedInput
     approvals?: ReviewApprovalUncheckedUpdateManyWithoutReviewNestedInput
     assignments?: ReviewAssignmentUncheckedUpdateManyWithoutReviewNestedInput
     securityIssues?: SecurityIssueUncheckedUpdateManyWithoutReviewNestedInput
@@ -67225,9 +67726,33 @@ export namespace Prisma {
     comments?: NullableJsonNullValueInput | InputJsonValue
     qualityMetrics?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resolvedComments?: ReviewUpdateresolvedCommentsInput | string[]
+  }
+
+  export type ReviewFeedbackUpdateWithoutReviewInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutReviewFeedbacksNestedInput
+  }
+
+  export type ReviewFeedbackUncheckedUpdateWithoutReviewInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReviewFeedbackUncheckedUpdateManyWithoutReviewInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ReviewThreadUpdateWithoutReviewInput = {
@@ -67257,30 +67782,6 @@ export namespace Prisma {
     resolved?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ReviewFeedbackUpdateWithoutReviewInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    rating?: IntFieldUpdateOperationsInput | number
-    comment?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutReviewFeedbacksNestedInput
-  }
-
-  export type ReviewFeedbackUncheckedUpdateWithoutReviewInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    rating?: IntFieldUpdateOperationsInput | number
-    comment?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ReviewFeedbackUncheckedUpdateManyWithoutReviewInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    rating?: IntFieldUpdateOperationsInput | number
-    comment?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ReviewApprovalUpdateWithoutReviewInput = {
@@ -67318,8 +67819,8 @@ export namespace Prisma {
     note?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    assignee?: UserUpdateOneRequiredWithoutAssignedReviewsNestedInput
     assigner?: UserUpdateOneRequiredWithoutAssignedByMeNestedInput
+    assignee?: UserUpdateOneRequiredWithoutAssignedReviewsNestedInput
   }
 
   export type ReviewAssignmentUncheckedUpdateWithoutReviewInput = {
@@ -67468,13 +67969,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type TeamMemberCreateManyTeamInput = {
-    id?: string
-    userId: string
-    role?: $Enums.TeamRole
-    createdAt?: Date | string
-  }
-
   export type RepositoryCreateManyTeamInput = {
     id?: string
     userId: string
@@ -67501,6 +67995,13 @@ export namespace Prisma {
     resolvedBy?: string | null
   }
 
+  export type TeamMemberCreateManyTeamInput = {
+    id?: string
+    userId: string
+    role?: $Enums.TeamRole
+    createdAt?: Date | string
+  }
+
   export type ReviewRuleCreateManyTeamInput = {
     id?: string
     name: string
@@ -67514,27 +68015,6 @@ export namespace Prisma {
     userId: string
   }
 
-  export type TeamMemberUpdateWithoutTeamInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    role?: EnumTeamRoleFieldUpdateOperationsInput | $Enums.TeamRole
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutTeamMembersNestedInput
-  }
-
-  export type TeamMemberUncheckedUpdateWithoutTeamInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    role?: EnumTeamRoleFieldUpdateOperationsInput | $Enums.TeamRole
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type TeamMemberUncheckedUpdateManyWithoutTeamInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    role?: EnumTeamRoleFieldUpdateOperationsInput | $Enums.TeamRole
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type RepositoryUpdateWithoutTeamInput = {
     id?: StringFieldUpdateOperationsInput | string
     githubId?: IntFieldUpdateOperationsInput | number
@@ -67544,14 +68024,14 @@ export namespace Prisma {
     htmlUrl?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    diagrams?: DiagramUpdateManyWithoutRepositoryNestedInput
     user?: UserUpdateOneRequiredWithoutRepositoriesNestedInput
     reviews?: ReviewUpdateManyWithoutRepositoryNestedInput
-    webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
-    scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
-    githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
     branchProtectionRecs?: BranchProtectionRecommendationUpdateManyWithoutRepositoryNestedInput
-    diagrams?: DiagramUpdateManyWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUpdateManyWithoutRepositoryNestedInput
     reviewRules?: ReviewRuleUpdateManyWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUpdateOneWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUpdateOneWithoutRepositoryNestedInput
   }
 
   export type RepositoryUncheckedUpdateWithoutTeamInput = {
@@ -67564,13 +68044,13 @@ export namespace Prisma {
     htmlUrl?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviews?: ReviewUncheckedUpdateManyWithoutRepositoryNestedInput
-    webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
-    scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
-    githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
-    branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
     diagrams?: DiagramUncheckedUpdateManyWithoutRepositoryNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutRepositoryNestedInput
+    branchProtectionRecs?: BranchProtectionRecommendationUncheckedUpdateManyWithoutRepositoryNestedInput
+    githubComments?: GitHubCommentUncheckedUpdateManyWithoutRepositoryNestedInput
     reviewRules?: ReviewRuleUncheckedUpdateManyWithoutRepositoryNestedInput
+    scheduledScanConfig?: ScheduledScanConfigUncheckedUpdateOneWithoutRepositoryNestedInput
+    webhookConfig?: WebhookConfigUncheckedUpdateOneWithoutRepositoryNestedInput
   }
 
   export type RepositoryUncheckedUpdateManyWithoutTeamInput = {
@@ -67627,6 +68107,27 @@ export namespace Prisma {
     resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type TeamMemberUpdateWithoutTeamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: EnumTeamRoleFieldUpdateOperationsInput | $Enums.TeamRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutTeamMembersNestedInput
+  }
+
+  export type TeamMemberUncheckedUpdateWithoutTeamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    role?: EnumTeamRoleFieldUpdateOperationsInput | $Enums.TeamRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TeamMemberUncheckedUpdateManyWithoutTeamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    role?: EnumTeamRoleFieldUpdateOperationsInput | $Enums.TeamRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ReviewRuleUpdateWithoutTeamInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -67636,8 +68137,8 @@ export namespace Prisma {
     enabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutReviewRulesNestedInput
     repository?: RepositoryUpdateOneWithoutReviewRulesNestedInput
+    user?: UserUpdateOneRequiredWithoutReviewRulesNestedInput
   }
 
   export type ReviewRuleUncheckedUpdateWithoutTeamInput = {

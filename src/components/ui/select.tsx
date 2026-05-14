@@ -62,23 +62,20 @@ const NativeSelect = React.forwardRef<HTMLSelectElement, NativeSelectProps>(
     const [isOpen, setIsOpen] = React.useState(false);
     const selectId = React.useId();
 
-    const selectedOption: React.ReactNode = React.useMemo(() => {
-      if (!children) return null;
-      const childrenArray = React.Children.toArray(children);
-      for (const child of childrenArray) {
-        if (
-          React.isValidElement(child) &&
-          child.props &&
-          typeof child.props === "object" &&
-          "value" in child.props &&
-          "children" in child.props &&
-          child.props.value === value
-        ) {
-          return child.props.children as React.ReactNode;
+    const childrenArray = React.Children.toArray(children);
+    let selectedOption: React.ReactNode = null;
+    for (const child of childrenArray) {
+      if (React.isValidElement(child) && child.props) {
+        const props = child.props as {
+          value?: string | number;
+          children?: React.ReactNode;
+        };
+        if (props.value === value) {
+          selectedOption = props.children;
+          break;
         }
       }
-      return null;
-    }, [children, value]);
+    }
 
     return (
       <div className="relative">
@@ -152,28 +149,54 @@ const DropdownSelect = React.forwardRef<HTMLButtonElement, DropdownSelectProps>(
     ref,
   ) => {
     const [isOpen, setIsOpen] = React.useState(false);
+    const containerRef = React.useRef<HTMLDivElement>(null);
     const selectId = React.useId();
 
-    // Find selected label
-    const selectedLabel: React.ReactNode = React.useMemo(() => {
-      const childrenArray = React.Children.toArray(children);
-      for (const child of childrenArray) {
-        if (
-          React.isValidElement(child) &&
-          child.props &&
-          typeof child.props === "object" &&
-          "value" in child.props &&
-          "children" in child.props &&
-          child.props.value === value
-        ) {
-          return child.props.children as React.ReactNode;
+    // Close on click outside
+    React.useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+          setIsOpen(false);
+        }
+      };
+
+      if (isOpen) {
+        document.addEventListener("mousedown", handleClickOutside);
+      } else {
+        document.removeEventListener("mousedown", handleClickOutside);
+      }
+
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, [isOpen]);
+
+    // Find selected item data
+    // We calculate this directly; the React Compiler will handle optimization automatically.
+    const childrenArray = React.Children.toArray(children);
+    let selectedItem: { label: React.ReactNode; icon: React.ReactNode } | null =
+      null;
+
+    for (const child of childrenArray) {
+      if (React.isValidElement(child) && child.props) {
+        const props = child.props as {
+          value?: string | number;
+          children?: React.ReactNode;
+          icon?: React.ReactNode;
+        };
+
+        if (props.value === value) {
+          selectedItem = {
+            label: props.children,
+            icon: props.icon,
+          };
+          break;
         }
       }
-      return null;
-    }, [children, value]);
+    }
 
     return (
-      <div className="relative">
+      <div className="relative" ref={containerRef}>
         <button
           ref={ref}
           type="button"
@@ -185,7 +208,12 @@ const DropdownSelect = React.forwardRef<HTMLButtonElement, DropdownSelectProps>(
           data-state={isOpen ? "open" : "closed"}
           onClick={() => setIsOpen(!isOpen)}
         >
-          <span className="truncate">{selectedLabel || placeholder}</span>
+          <span className="truncate flex items-center gap-2">
+            {selectedItem?.icon && (
+              <span className="shrink-0 opacity-80">{selectedItem.icon}</span>
+            )}
+            {selectedItem?.label || placeholder}
+          </span>
           {isOpen ? (
             <ChevronUpIcon className="h-4 w-4 opacity-50 shrink-0" />
           ) : (
@@ -199,7 +227,6 @@ const DropdownSelect = React.forwardRef<HTMLButtonElement, DropdownSelectProps>(
               className="p-1 space-y-0.5 max-h-64 overflow-y-auto"
               role="listbox"
               aria-labelledby={`${selectId}-trigger`}
-              onMouseLeave={() => setIsOpen(false)}
             >
               {React.Children.map(children, (child) => {
                 if (!React.isValidElement(child)) return null;
@@ -327,4 +354,7 @@ export {
   SelectSeparator,
   NativeSelect,
   DropdownSelect,
+  DropdownSelect as SelectRoot,
+  DropdownSelect as SelectTrigger,
+  SelectValue as SelectContent,
 };

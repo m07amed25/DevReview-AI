@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Check, ExternalLink, Loader2, Shield, Unlink } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 interface Account {
   id: string;
@@ -85,22 +86,24 @@ export function ConnectedAccountsCard({
 
   return (
     <>
-      <Card>
-        <CardHeader>
+      <Card className="border-none shadow-xl bg-card/50 backdrop-blur-md overflow-hidden">
+        <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-base flex items-center gap-2">
-                <Shield className="size-4" />
-                Connected Accounts
+            <div className="space-y-1">
+              <CardTitle className="text-lg font-semibold uppercase tracking-tight flex items-center gap-2">
+                <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-500">
+                  <Shield className="size-4" />
+                </div>
+                Trust & Safety
               </CardTitle>
-              <CardDescription className="mt-1">
-                Manage your linked third-party accounts for authentication and
-                integrations.
+              <CardDescription>
+                Third-party integrations and security methods
               </CardDescription>
             </div>
-            <Badge variant="outline" className="hidden sm:flex gap-1 text-xs">
-              {connectedCount} / {providers.length} connected
-            </Badge>
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-neutral-500">Integrations</span>
+              <span className="text-[10px] font-semibold text-indigo-500">{connectedCount} / {providers.length}</span>
+            </div>
           </div>
         </CardHeader>
         <CardContent className="pb-6 space-y-3">
@@ -112,11 +115,12 @@ export function ConnectedAccountsCard({
             return (
               <div
                 key={provider.id}
-                className={`group relative flex items-center justify-between p-4 rounded-lg border transition-all ${
+                className={cn(
+                  "group relative flex items-center justify-between p-4 rounded-2xl border transition-all duration-300",
                   isConnected
-                    ? "bg-card border-green-500/20 dark:border-green-500/10"
-                    : "bg-muted/30 border-dashed hover:border-solid hover:bg-muted/50"
-                }`}
+                    ? "bg-white/5 border-green-500/10 hover:border-green-500/30 shadow-sm"
+                    : "bg-neutral-50/50 dark:bg-neutral-900/50 border-dashed border-neutral-200 dark:border-neutral-800 hover:border-indigo-500/50"
+                )}
               >
                 {isConnected && (
                   <div className="absolute top-3 right-3 sm:hidden">

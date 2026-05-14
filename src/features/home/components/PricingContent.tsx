@@ -24,6 +24,7 @@ import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { trpc } from "@/lib/trpc/client";
+import { Plan } from "@/lib/plan";
 
 export interface PricingSettings {
   annualDiscount: number;
@@ -62,12 +63,12 @@ interface PlanFeature {
   label: string;
   free: boolean | string;
   pro: boolean | string;
-  ultra: boolean | string;
+  enterprise: boolean | string;
 }
 
 /* Display-only constants (not stored in DB) */
-const PLAN_DISPLAY_MAP: Record<string, Omit<MergedPlan, keyof DbPricingPlan>> = {
-  free: {
+const PLAN_DISPLAY_MAP: Record<Plan, Omit<MergedPlan, keyof DbPricingPlan>> = {
+  [Plan.FREE]: {
     icon: Zap,
     color: "from-slate-500 to-slate-600",
     borderColor: "border-border",
@@ -76,7 +77,7 @@ const PLAN_DISPLAY_MAP: Record<string, Omit<MergedPlan, keyof DbPricingPlan>> = 
     cta: "Start Free",
     ctaVariant: "outline",
   },
-  pro: {
+  [Plan.PRO]: {
     icon: Rocket,
     color: "from-indigo-500 to-violet-600",
     borderColor: "border-indigo-500/50",
@@ -85,13 +86,13 @@ const PLAN_DISPLAY_MAP: Record<string, Omit<MergedPlan, keyof DbPricingPlan>> = 
     cta: "Start Pro Trial",
     ctaVariant: "default",
   },
-  ultra: {
+  [Plan.ENTERPRISE]: {
     icon: Crown,
     color: "from-amber-500 to-orange-600",
     borderColor: "border-amber-500/40",
     badge: "Best Value",
     badgeColor: "bg-amber-500 text-white",
-    cta: "Go Ultra",
+    cta: "Go Enterprise",
     ctaVariant: "outline",
   },
 };
@@ -101,23 +102,23 @@ function limitLabel(v: number | null): string {
 }
 
 function buildComparison(plans: MergedPlan[]): PlanFeature[] {
-  const get = (id: string) => plans.find((p) => p.id === id);
-  const f = get("free");
-  const p = get("pro");
-  const u = get("ultra");
+  const get = (id: Plan) => plans.find((p) => p.id === id);
+  const f = get(Plan.FREE);
+  const p = get(Plan.PRO);
+  const e = get(Plan.ENTERPRISE);
   return [
-    { label: "Repositories", free: limitLabel(f?.reposLimit ?? 1), pro: limitLabel(p?.reposLimit ?? 10), ultra: limitLabel(u?.reposLimit ?? null) },
-    { label: "AI Reviews / month", free: limitLabel(f?.reviewsLimit ?? 5), pro: limitLabel(p?.reviewsLimit ?? 100), ultra: limitLabel(u?.reviewsLimit ?? null) },
-    { label: "Team seats", free: limitLabel(f?.seatsLimit ?? 1), pro: limitLabel(p?.seatsLimit ?? 5), ultra: limitLabel(u?.seatsLimit ?? null) },
-    { label: "Private repos", free: f?.privateRepos ?? false, pro: p?.privateRepos ?? true, ultra: u?.privateRepos ?? true },
-    { label: "Custom review rules", free: false, pro: true, ultra: true },
-    { label: "PR inline comments", free: false, pro: true, ultra: true },
-    { label: "Advanced analytics", free: false, pro: false, ultra: true },
-    { label: "SSO / SAML", free: false, pro: false, ultra: true },
-    { label: "Custom webhooks", free: false, pro: false, ultra: true },
-    { label: "Audit logs", free: false, pro: false, ultra: true },
-    { label: "Dedicated support", free: false, pro: false, ultra: true },
-    { label: "99.9% SLA", free: false, pro: false, ultra: true },
+    { label: "Repositories", free: limitLabel(f?.reposLimit ?? 1), pro: limitLabel(p?.reposLimit ?? 10), enterprise: limitLabel(e?.reposLimit ?? null) },
+    { label: "AI Reviews / month", free: limitLabel(f?.reviewsLimit ?? 5), pro: limitLabel(p?.reviewsLimit ?? 100), enterprise: limitLabel(e?.reviewsLimit ?? null) },
+    { label: "Team seats", free: limitLabel(f?.seatsLimit ?? 1), pro: limitLabel(p?.seatsLimit ?? 5), enterprise: limitLabel(e?.seatsLimit ?? null) },
+    { label: "Private repos", free: f?.privateRepos ?? false, pro: p?.privateRepos ?? true, enterprise: e?.privateRepos ?? true },
+    { label: "Custom review rules", free: false, pro: true, enterprise: true },
+    { label: "PR inline comments", free: false, pro: true, enterprise: true },
+    { label: "Advanced analytics", free: false, pro: false, enterprise: true },
+    { label: "SSO / SAML", free: false, pro: false, enterprise: true },
+    { label: "Custom webhooks", free: false, pro: false, enterprise: true },
+    { label: "Audit logs", free: false, pro: false, enterprise: true },
+    { label: "Dedicated support", free: false, pro: false, enterprise: true },
+    { label: "99.9% SLA", free: false, pro: false, enterprise: true },
   ];
 }
 
@@ -133,7 +134,7 @@ const FAQS = (trialDays: number, annualDiscount: number, trialPlan: string) => [
   {
     q: "Do you offer a free trial for paid plans?",
     a: trialDays > 0
-      ? `Yes! The ${trialPlan.charAt(0).toUpperCase() + trialPlan.slice(1)} plan includes a ${trialDays}-day free trial with no credit card required. Ultra trials are available on request.`
+      ? `Yes! The ${trialPlan.charAt(0) + trialPlan.slice(1).toLowerCase()} plan includes a ${trialDays}-day free trial with no credit card required. Enterprise trials are available on request.`
       : "Trial periods are not available at this time. All paid plans can be cancelled anytime.",
   },
   {
@@ -146,7 +147,7 @@ const FAQS = (trialDays: number, annualDiscount: number, trialPlan: string) => [
   },
   {
     q: "Do you support self-hosted Git servers?",
-    a: "Ultra plan supports GitHub Enterprise, GitLab Self-Managed, and Bitbucket Data Center. Contact us for custom setups.",
+    a: "Enterprise plan supports GitHub Enterprise, GitLab Self-Managed, and Bitbucket Data Center. Contact us for custom setups.",
   },
 ];
 
@@ -164,7 +165,7 @@ function PlanCard({
   freeSignupEnabled: boolean;
   annualDiscount: number;
 }) {
-  const isFreeUnavailable = plan.id === "free" && !freeSignupEnabled;
+  const isFreeUnavailable = plan.id === Plan.FREE && !freeSignupEnabled;
   const yearlyMonthlyPrice =
     plan.monthlyPrice > 0
       ? Math.round(plan.monthlyPrice * (1 - annualDiscount / 100))
@@ -200,7 +201,7 @@ function PlanCard({
       {plan.highlight && (
         <div className="pointer-events-none absolute -inset-px rounded-3xl bg-linear-to-br from-indigo-500/10 via-violet-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       )}
-      {plan.id === "ultra" && (
+      {plan.id === Plan.ENTERPRISE && (
         <div className="pointer-events-none absolute -inset-px rounded-3xl bg-linear-to-br from-amber-500/8 via-orange-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       )}
 
@@ -217,7 +218,7 @@ function PlanCard({
             )}
           >
             {plan.highlight && <Flame className="h-3 w-3" />}
-            {plan.id === "ultra" && <Crown className="h-3 w-3" />}
+            {plan.id === Plan.ENTERPRISE && <Crown className="h-3 w-3" />}
             {plan.badge}
           </motion.span>
         </div>
@@ -229,7 +230,7 @@ function PlanCard({
             "mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br shadow-lg",
             plan.color,
             plan.highlight && "shadow-indigo-500/40",
-            plan.id === "ultra" && "shadow-amber-500/30",
+            plan.id === Plan.ENTERPRISE && "shadow-amber-500/30",
           )}
         >
           <Icon className="h-7 w-7 text-white" />
@@ -251,7 +252,7 @@ function PlanCard({
                 "text-5xl font-extrabold tracking-tight",
                 plan.highlight &&
                   "bg-linear-to-r from-indigo-500 to-violet-500 bg-clip-text text-transparent",
-                plan.id === "ultra" &&
+                plan.id === Plan.ENTERPRISE &&
                   "bg-linear-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent",
               )}
             >
@@ -292,7 +293,7 @@ function PlanCard({
           "mb-8 w-full gap-2 font-bold text-base h-12 transition-all duration-200",
           plan.highlight &&
             "bg-linear-to-r from-indigo-500 to-violet-600 hover:from-indigo-600 hover:to-violet-700 border-0 text-white shadow-lg shadow-indigo-500/40 hover:shadow-indigo-500/60 hover:scale-[1.02]",
-          plan.id === "ultra" &&
+          plan.id === Plan.ENTERPRISE &&
             "border-amber-500/50 hover:bg-amber-500/10 hover:border-amber-500 hover:scale-[1.02]",
           isFreeUnavailable && "opacity-60 cursor-not-allowed",
         )}
@@ -323,7 +324,7 @@ function PlanCard({
                 "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full shadow-sm",
                 plan.highlight
                   ? "bg-linear-to-br from-indigo-500 to-violet-600 text-white"
-                  : plan.id === "ultra"
+                  : plan.id === Plan.ENTERPRISE
                     ? "bg-linear-to-br from-amber-500 to-orange-500 text-white"
                     : "bg-muted text-muted-foreground",
               )}
@@ -437,7 +438,7 @@ export function PricingContent({
 
   const mergedPlans: MergedPlan[] = dbPlans.map((p) => ({
     ...p,
-    ...(PLAN_DISPLAY_MAP[p.id] ?? PLAN_DISPLAY_MAP.free!),
+    ...(PLAN_DISPLAY_MAP[p.id as Plan] ?? PLAN_DISPLAY_MAP[Plan.FREE]!),
   }));
   const COMPARISON = buildComparison(mergedPlans);
 
@@ -620,7 +621,7 @@ export function PricingContent({
                   <td className="px-6 py-4 text-sm font-medium">{row.label}</td>
                   <ComparisonCell value={row.free} />
                   <ComparisonCell value={row.pro} />
-                  <ComparisonCell value={row.ultra} />
+                  <ComparisonCell value={row.enterprise} />
                 </tr>
               ))}
             </tbody>
@@ -660,7 +661,7 @@ export function PricingContent({
               },
               {
                 quote:
-                  "Ultra's unlimited seats let our entire 40-person eng team stay in sync without extra overhead.",
+                  "Enterprise's unlimited seats let our entire 40-person eng team stay in sync without extra overhead.",
                 author: "Priya N.",
                 role: "VP Engineering",
               },

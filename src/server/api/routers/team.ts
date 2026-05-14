@@ -5,6 +5,7 @@ import type { PrismaClient } from "@/server/db/client";
 import { sendTeamMemberAddedEmail } from "@/server/email/service";
 import { getAppUrl } from "@/server/email/transporter";
 import { inngest } from "@/server/inngest";
+import { checkUserLimit } from "@/lib/limits";
 import {
   getGitHubAccessToken,
   fetchPullRequestByFullName,
@@ -92,6 +93,9 @@ export const teamRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      // Check seat limit (at least 1 for the owner)
+      await checkUserLimit(ctx.db, ctx.user.id, "seatsLimit");
+
       const baseSlug = slugify(input.name);
 
       // Use optimistic creation with P2002 retry to eliminate the TOCTOU race
@@ -169,6 +173,14 @@ export const teamRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       await assertRole(ctx, input.teamId, ["OWNER", "ADMIN"]);
+
+      // Check seat limit for the team owner
+      const owner = await ctx.db.teamMember.findFirst({
+        where: { teamId: input.teamId, role: "OWNER" },
+      });
+      if (owner) {
+        await checkUserLimit(ctx.db, owner.userId, "seatsLimit");
+      }
 
       const user = await ctx.db.user.findUnique({
         where: { email: input.email },
@@ -329,6 +341,9 @@ export const teamRouter = createTRPCRouter({
           message: "You are already a member of this team",
         });
       }
+      
+      // Check if the inviter has enough seats
+      await checkUserLimit(ctx.db, meta.inviterId, "seatsLimit");
 
       // Create membership and clean up token atomically
       const [membership] = await ctx.db.$transaction([

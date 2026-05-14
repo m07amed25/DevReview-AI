@@ -29,6 +29,7 @@ import {
   SharedReposCard,
   PendingInvitesCard,
 } from "./team-cards";
+import { toast } from "sonner";
 
 export default function TeamDetailPage() {
   const { teamId } = useParams<{ teamId: string }>();
@@ -37,7 +38,6 @@ export default function TeamDetailPage() {
   const [inviting, setInviting] = useState(false);
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [requestActionDialogOpen, setRequestActionDialogOpen] = useState(false);
 
   const team = trpc.team.get.useQuery({ teamId });
@@ -48,59 +48,84 @@ export default function TeamDetailPage() {
   const utils = trpc.useUtils();
 
   const inviteMember = trpc.team.inviteMember.useMutation({
-    onSuccess: () => utils.team.get.invalidate({ teamId }),
-    onError: (err) => setError(err.message),
+    onSuccess: () => {
+      toast.success("Invitation sent");
+      utils.team.get.invalidate({ teamId });
+      utils.team.getPendingInvites.invalidate({ teamId });
+    },
+    onError: (err) => toast.error(err.message),
   });
   const requestAction = trpc.team.requestAction.useMutation({
     onSuccess: (data) => {
-      if (data.requiresApproval)
-        setError("Your request has been submitted for approval.");
+      if (data.requiresApproval) {
+        toast.info("Request submitted for approval");
+      } else {
+        toast.success("Action performed");
+      }
       utils.team.getPendingActions.invalidate({ teamId });
       utils.team.get.invalidate({ teamId });
     },
-    onError: (err) => setError(err.message),
+    onError: (err) => toast.error(err.message),
   });
   const approveAction = trpc.team.approveAction.useMutation({
     onSuccess: () => {
+      toast.success("Action approved");
       utils.team.getPendingActions.invalidate({ teamId });
       utils.team.get.invalidate({ teamId });
     },
-    onError: (err) => setError(err.message),
+    onError: (err) => toast.error(err.message),
   });
   const rejectAction = trpc.team.rejectAction.useMutation({
-    onSuccess: () => utils.team.getPendingActions.invalidate({ teamId }),
-    onError: (err) => setError(err.message),
+    onSuccess: () => {
+      toast.success("Action rejected");
+      utils.team.getPendingActions.invalidate({ teamId });
+    },
+    onError: (err) => toast.error(err.message),
   });
   const updateRole = trpc.team.updateMemberRole.useMutation({
-    onSuccess: () => utils.team.get.invalidate({ teamId }),
-    onError: (err) => setError(err.message),
+    onSuccess: () => {
+      toast.success("Role updated");
+      utils.team.get.invalidate({ teamId });
+    },
+    onError: (err) => toast.error(err.message),
   });
   const removeMember = trpc.team.removeMember.useMutation({
-    onSuccess: () => utils.team.get.invalidate({ teamId }),
-    onError: (err) => setError(err.message),
+    onSuccess: () => {
+      toast.success("Member removed");
+      utils.team.get.invalidate({ teamId });
+    },
+    onError: (err) => toast.error(err.message),
   });
   const shareRepo = trpc.team.shareRepository.useMutation({
     onSuccess: () => {
       setShareDialogOpen(false);
+      toast.success("Repository shared");
       utils.team.get.invalidate({ teamId });
       utils.repository.list.invalidate();
     },
-    onError: (err) => setError(err.message),
+    onError: (err) => toast.error(err.message),
   });
   const unshareRepo = trpc.team.unshareRepository.useMutation({
     onSuccess: () => {
+      toast.success("Repository unshared");
       utils.team.get.invalidate({ teamId });
       utils.repository.list.invalidate();
     },
-    onError: (err) => setError(err.message),
+    onError: (err) => toast.error(err.message),
   });
   const deleteTeam = trpc.team.delete.useMutation({
-    onSuccess: () => router.push("/teams"),
-    onError: (err) => setError(err.message),
+    onSuccess: () => {
+      toast.success("Team deleted");
+      router.push("/teams");
+    },
+    onError: (err) => toast.error(err.message),
   });
   const cancelInvite = trpc.team.cancelInvite.useMutation({
-    onSuccess: () => utils.team.getPendingInvites.invalidate({ teamId }),
-    onError: (err) => setError(err.message),
+    onSuccess: () => {
+      toast.success("Invite cancelled");
+      utils.team.getPendingInvites.invalidate({ teamId });
+    },
+    onError: (err) => toast.error(err.message),
   });
 
   const isOwnerOrAdmin =
@@ -135,23 +160,7 @@ export default function TeamDetailPage() {
   return (
     <div className="flex flex-col min-h-[calc(100vh-8rem)]">
       <div className="flex-1 space-y-6 max-w-6xl mx-auto w-full pb-12 pt-6 px-4 sm:px-6 lg:px-8">
-        {/* Error dialog */}
-        <AlertDialog open={!!error} onOpenChange={() => setError(null)}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle className="text-destructive flex items-center gap-2">
-                <AlertTriangle className="size-5" />
-                Error
-              </AlertDialogTitle>
-              <AlertDialogDescription>{error}</AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogAction onClick={() => setError(null)}>
-                Dismiss
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+
 
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">

@@ -2,6 +2,8 @@
 
 import { useState, useRef, useCallback } from "react";
 import { trpc } from "@/lib/trpc/client";
+import { Plan } from "@/lib/plan";
+import { motion, AnimatePresence } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 import {
   User,
   Mail,
@@ -34,7 +37,8 @@ interface Profile {
   email: string;
   image?: string | null;
   createdAt: Date | string;
-  stats: { repositories: number; reviews: number };
+  plan: { id: string; name: string };
+  stats: { repositories: number; reviews: number; teamMembers: number };
   accounts: Array<{
     id: string;
     providerId: string;
@@ -98,55 +102,58 @@ export function ProfileHeaderCard({
   };
 
   return (
-    <Card>
-      <CardContent className="py-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+    <Card className="border-none shadow-xl bg-card/50 backdrop-blur-md mb-8 overflow-hidden">
+      <CardContent className="p-8">
+        <div className="flex flex-col sm:flex-row items-center gap-8">
           <div className="relative group">
-            <Avatar className="size-20 ring-2 ring-border shadow-md">
-              <AvatarImage src={displayImage || undefined} alt={displayName} />
-              <AvatarFallback className="text-xl font-semibold bg-primary/10 text-primary">
-                {initials}
-              </AvatarFallback>
-            </Avatar>
-            {isUploading && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <svg className="size-20 -rotate-90" viewBox="0 0 80 80">
-                  <circle
-                    cx="40"
-                    cy="40"
-                    r="36"
-                    fill="rgba(0,0,0,0.45)"
-                    stroke="rgba(255,255,255,0.2)"
-                    strokeWidth="4"
-                  />
-                  <circle
-                    cx="40"
-                    cy="40"
-                    r="36"
-                    fill="none"
-                    stroke="white"
-                    strokeWidth="4"
-                    strokeLinecap="round"
-                    strokeDasharray={`${2 * Math.PI * 36}`}
-                    strokeDashoffset={`${2 * Math.PI * 36 * (1 - uploadProgress / 100)}`}
-                    className="transition-all duration-200 ease-out"
-                  />
-                </svg>
-                <span className="absolute text-xs font-semibold text-white">
-                  {uploadProgress}%
-                </span>
-              </div>
-            )}
-            {!isUploading && (
-              <button
+            <motion.div 
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+              className="relative"
+            >
+              <Avatar className="size-32 sm:size-36 ring-4 ring-background shadow-2xl border-none">
+                <AvatarImage src={displayImage || undefined} alt={displayName} className="object-cover" />
+                <AvatarFallback className="text-3xl font-semibold bg-indigo-100 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400">
+                  {initials}
+                </AvatarFallback>
+              </Avatar>
+              
+              <AnimatePresence>
+                {isUploading && (
+                  <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute inset-0 flex items-center justify-center rounded-full bg-black/60 backdrop-blur-sm z-10"
+                  >
+                    <div className="relative size-16">
+                      <svg className="size-16 -rotate-90" viewBox="0 0 80 80">
+                        <circle cx="40" cy="40" r="36" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="4" />
+                        <motion.circle
+                          cx="40" cy="40" r="36" fill="none" stroke="white" strokeWidth="4"
+                          strokeLinecap="round"
+                          strokeDasharray={`${2 * Math.PI * 36}`}
+                          initial={{ strokeDashoffset: 2 * Math.PI * 36 }}
+                          animate={{ strokeDashoffset: 2 * Math.PI * 36 * (1 - uploadProgress / 100) }}
+                          className="transition-all duration-300 ease-out"
+                        />
+                      </svg>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <motion.button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="absolute bottom-1 right-1 size-9 rounded-full bg-indigo-600 text-white shadow-xl flex items-center justify-center hover:bg-indigo-700 transition-colors z-20"
                 aria-label="Upload avatar photo"
               >
-                <Camera className="size-5 text-white" />
-              </button>
-            )}
+                <Camera className="size-4" />
+              </motion.button>
+            </motion.div>
             <input
               ref={fileInputRef}
               type="file"
@@ -157,29 +164,37 @@ export function ProfileHeaderCard({
             />
           </div>
 
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <h2 className="text-xl font-semibold truncate">
+          <div className="flex-1 text-center sm:text-left space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+              <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-foreground">
                 {displayName || "User"}
-              </h2>
-              {!isEditing && (
-                <Badge
-                  variant="secondary"
-                  className="text-[10px] px-1.5 py-0 h-4 font-medium"
-                >
-                  Pro
-                </Badge>
-              )}
+              </h1>
+              <Badge
+                className={cn(
+                  "w-fit mx-auto sm:mx-0 text-[10px] px-2 py-0.5 h-5 font-semibold uppercase tracking-widest border-none",
+                {
+                  "bg-linear-to-r from-violet-600 to-fuchsia-600 text-white": profile.plan.id === Plan.ENTERPRISE,
+                  "bg-indigo-600 text-white": profile.plan.id === Plan.PRO,
+                  "bg-neutral-200 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400": profile.plan.id === Plan.FREE
+                }
+                )}
+              >
+                {profile.plan.name} Plan
+              </Badge>
             </div>
-            <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
-              <Mail className="size-3.5 shrink-0" />
-              <span className="truncate">
-                {isEditing ? editEmail : profile.email}
-              </span>
-            </div>
-            <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
-              <Calendar className="size-3.5 shrink-0" />
-              <span>Joined {formatDate(profile.createdAt)}</span>
+            <div className="flex flex-wrap justify-center sm:justify-start items-center gap-x-6 gap-y-2">
+              <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                <div className="p-1.5 rounded-md bg-indigo-500/10 text-indigo-500">
+                  <Mail className="size-3.5" />
+                </div>
+                {profile.email}
+              </div>
+              <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                <div className="p-1.5 rounded-md bg-amber-500/10 text-amber-500">
+                  <Calendar className="size-3.5" />
+                </div>
+                Member since {formatDate(profile.createdAt)}
+              </div>
             </div>
           </div>
         </div>
@@ -218,17 +233,26 @@ export function PersonalInfoCard({
   isPending,
 }: PersonalInfoCardProps) {
   return (
-    <Card>
+    <Card className="border-none shadow-xl bg-card/50 backdrop-blur-md">
       <CardHeader>
-        <CardTitle className="text-base flex items-center gap-2">
-          <User className="size-4" />
-          Personal Information
-        </CardTitle>
-        <CardDescription>
-          {isEditing
-            ? "Update your personal details below."
-            : "Your account details."}
-        </CardDescription>
+        <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <CardTitle className="text-lg font-semibold uppercase tracking-tight flex items-center gap-2">
+              <div className="p-2 rounded-lg bg-indigo-500/10 text-indigo-500">
+                <User className="size-4" />
+              </div>
+              Identity
+            </CardTitle>
+            <CardDescription>
+              Personal details and account appearance
+            </CardDescription>
+          </div>
+          {!isEditing && (
+            <div className="size-10 rounded-full bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-neutral-400">
+              <Check className="size-5" />
+            </div>
+          )}
+        </div>
       </CardHeader>
       <CardContent className="pb-6">
         <div className="space-y-5">

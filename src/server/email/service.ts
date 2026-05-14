@@ -7,6 +7,7 @@ import { renderAdminPromotedEmail } from "./templates/admin-promoted";
 import { renderAdminDemotedEmail } from "./templates/admin-demoted";
 import { renderSecurityAlertEmail } from "./templates/security-alert";
 import { renderPasswordResetEmail } from "./templates/password-reset";
+import { renderPlanChangedEmail } from "./templates/plan-changed";
 import type {
   TeamMemberAddedEmailParams,
   ReviewCompletionEmailParams,
@@ -15,6 +16,7 @@ import type {
   AdminPromotedEmailParams,
   AdminDemotedEmailParams,
   SecurityAlertEmailParams,
+  PlanChangedEmailParams,
   EmailSendResult,
 } from "@/types/email";
 
@@ -133,7 +135,7 @@ export async function sendGithubConnectionWarningEmail(
 
   try {
     const html = await renderGithubConnectionWarningEmail(params);
-    const subject = `Action Required: Connect GitHub to DEPI Code Review`;
+    const subject = `Action Required: Connect GitHub to Code Catch`;
 
     return await sendEmail(to, subject, html);
   } catch (error) {
@@ -159,7 +161,7 @@ export async function sendSupportReplyEmail(
 
   try {
     const html = await renderSupportReplyEmail(params);
-    const subject = `Re: Support Inquiry Response - DEPI Code Review`;
+    const subject = `Re: Support Inquiry Response - Code Catch`;
 
     return await sendEmail(to, subject, html);
   } catch (error) {
@@ -179,7 +181,7 @@ export async function sendAdminPromotedEmail(
 
   try {
     const html = await renderAdminPromotedEmail(params);
-    const subject = `Congratulations! You've been promoted to Admin - DEPI Code Review`;
+    const subject = `Congratulations! You've been promoted to Admin - Code Catch`;
 
     return await sendEmail(to, subject, html);
   } catch (error) {
@@ -199,7 +201,7 @@ export async function sendAdminDemotedEmail(
 
   try {
     const html = await renderAdminDemotedEmail(params);
-    const subject = `Administrator privileges revoked - DEPI Code Review`;
+    const subject = `Administrator privileges revoked - Code Catch`;
 
     return await sendEmail(to, subject, html);
   } catch (error) {
@@ -217,7 +219,7 @@ export async function sendTestEmail(to: string): Promise<EmailSendResult> {
 
   const testHtml = `
     <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; padding: 24px;">
-      <h2 style="color: #111;">Test Email from DEPI Code Review</h2>
+      <h2 style="color: #111;">Test Email from Code Catch</h2>
       <p style="color: #333; line-height: 1.6;">
         This is a test email to verify your SMTP configuration is working correctly.
       </p>
@@ -233,7 +235,7 @@ export async function sendTestEmail(to: string): Promise<EmailSendResult> {
     </div>
   `;
 
-  return sendEmail(to, "Test Email - DEPI Code Review", testHtml);
+  return sendEmail(to, "Test Email - Code Catch", testHtml);
 }
 
 /**
@@ -278,6 +280,29 @@ export async function sendPasswordResetEmail(
     return await sendEmail(to, "Reset your DevReview AI password", html);
   } catch (error) {
     console.error("❌ Error generating password reset email:", error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "Failed to generate email",
+    };
+  }
+}
+
+/**
+ * Send plan changed notification email
+ */
+export async function sendPlanChangedEmail(
+  params: PlanChangedEmailParams,
+): Promise<EmailSendResult> {
+  const { to, newPlan } = params;
+
+  try {
+    const html = await renderPlanChangedEmail(params);
+    const subject = `Your subscription has been updated to ${newPlan.toUpperCase()}`;
+
+    return await sendEmail(to, subject, html);
+  } catch (error) {
+    console.error("❌ Error generating plan changed email:", error);
     return {
       success: false,
       error:

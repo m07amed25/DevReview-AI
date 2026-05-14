@@ -19,6 +19,7 @@ import { StatsCards } from "@/features/repo/components/stats-cards";
 import { ConnectedRepoCard } from "@/features/repo/components/connected-repo-card";
 import { GithubReposPanel } from "@/features/repo/components/github-repos-panel";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 export default function ReposPage() {
   const [selectedRepos, setSelectedRepos] = useState<Set<number>>(new Set());
@@ -39,15 +40,23 @@ export default function ReposPage() {
       connectedRepos.refetch();
       setSelectedRepos(new Set());
       setShowGitHubRepos(false);
+      toast.success("Repositories connected successfully");
     },
     onError: (error) => {
-      alert(`Failed to connect repositories: ${error.message}`);
+      toast.error(error.message || "Failed to connect repositories", {
+        description: "Please check your plan limits in settings.",
+      });
     },
   });
 
   const disconnectMutation = trpc.repository.disconnect.useMutation({
     onSuccess: () => {
       connectedRepos.refetch();
+      toast.success("Repository disconnected successfully");
+      setRepoToDelete(null);
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to disconnect repository");
     },
   });
 

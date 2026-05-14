@@ -1,5 +1,6 @@
 "use client";
 
+import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
@@ -8,13 +9,28 @@ import { linkSocial } from "@/lib/auth-client";
 import { CropDialog } from "@/features/profile/components/crop-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Loader2, Check, Pencil, X, Save, FolderGit2, GitPullRequest } from "lucide-react";
 import {
-  FaGithub, FaDiscord, FaLinkedin, FaTwitch, FaApple,
+  Loader2,
+  Check,
+  Pencil,
+  X,
+  Save,
+  FolderGit2,
+  GitPullRequest,
+} from "lucide-react";
+import {
+  FaGithub,
+  FaDiscord,
+  FaLinkedin,
+  FaTwitch,
+  FaApple,
 } from "react-icons/fa";
 import { ProfileSkeleton } from "./profile-skeleton";
-import { PersonalInfoCard } from "./profile-cards";
+import { PersonalInfoCard, ProfileHeaderCard } from "./profile-cards";
 import { ConnectedAccountsCard } from "./connected-accounts";
+import { SubscriptionCard } from "./subscription-card";
+import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 const ALL_PROVIDERS = [
   {
@@ -63,30 +79,27 @@ export default function ProfilePage() {
   const searchParams = useSearchParams();
   const utils = trpc.useUtils();
   const { data: profile, isLoading } = trpc.profile.get.useQuery();
-  const { data: availableProviders } = trpc.profile.availableProviders.useQuery();
+  const { data: availableProviders } =
+    trpc.profile.availableProviders.useQuery();
 
   const updateProfile = trpc.profile.update.useMutation({
     onSuccess: () => {
       utils.profile.get.invalidate();
       setIsEditing(false);
-      setSaveMessage("Profile updated successfully!");
-      setTimeout(() => setSaveMessage(null), 3000);
+      toast.success("Profile updated successfully!");
     },
     onError: (error) => {
-      setErrorMessage(error.message);
-      setTimeout(() => setErrorMessage(null), 5000);
+      toast.error(error.message || "Failed to update profile");
     },
   });
 
   const disconnectAccount = trpc.profile.disconnectAccount.useMutation({
     onSuccess: (data) => {
-      setSaveMessage(`Successfully disconnected ${data.providerId}.`);
-      setTimeout(() => setSaveMessage(null), 3000);
+      toast.success(`Successfully disconnected ${data.providerId}.`);
       void utils.profile.get.invalidate();
     },
     onError: (error) => {
-      setErrorMessage(error.message);
-      setTimeout(() => setErrorMessage(null), 5000);
+      toast.error(error.message || "Failed to disconnect account");
     },
   });
 
@@ -94,12 +107,15 @@ export default function ProfilePage() {
   const [editName, setEditName] = useState("");
   const [editEmail, setEditEmail] = useState("");
   const [editImage, setEditImage] = useState("");
-  const [connectingProvider, setConnectingProvider] = useState<string | null>(null);
-  const [saveMessage, setSaveMessage] = useState<string | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [connectingProvider, setConnectingProvider] = useState<string | null>(
+    null,
+  );
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [disconnectTarget, setDisconnectTarget] = useState<{ accountId: string; providerName: string } | null>(null);
+  const [disconnectTarget, setDisconnectTarget] = useState<{
+    accountId: string;
+    providerName: string;
+  } | null>(null);
   const [cropSrc, setCropSrc] = useState<string | null>(null);
   const [cropDialogOpen, setCropDialogOpen] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
@@ -108,10 +124,12 @@ export default function ProfilePage() {
     const authError = searchParams.get("auth_error");
     if (authError) {
       const messages: Record<string, string> = {
-        account_already_linked_to_different_user: "This social account is already linked to a different user.",
-        "email_doesn't_match": "The email on the social account doesn\u2019t match your profile email.",
+        account_already_linked_to_different_user:
+          "This social account is already linked to a different user.",
+        "email_doesn't_match":
+          "The email on the social account doesn\u2019t match your profile email.",
       };
-      setErrorMessage(messages[authError] ?? `Authentication error: ${authError}`);
+      toast.error(messages[authError] ?? `Authentication error: ${authError}`);
       window.history.replaceState({}, "", window.location.pathname);
     }
   }, [searchParams]);
@@ -125,40 +143,61 @@ export default function ProfilePage() {
     setEditEmail(profile?.email ?? "");
     setEditImage(profile?.image ?? "");
     setIsEditing(true);
-    setErrorMessage(null);
-    setSaveMessage(null);
     setTimeout(() => nameInputRef.current?.focus(), 50);
   };
 
   const handleSave = () => {
-    if (!editName.trim()) { setErrorMessage("Name is required."); return; }
+    if (!editName.trim()) {
+      toast.error("Name is required.");
+      return;
+    }
     const updates: { name?: string; email?: string; image?: string } = {};
     let hasChanges = false;
-    if (editName.trim() !== profile?.name) { updates.name = editName.trim(); hasChanges = true; }
-    if (editEmail.trim() !== profile?.email) { updates.email = editEmail.trim(); hasChanges = true; }
-    if (editImage.trim() !== (profile?.image ?? "")) { updates.image = editImage.trim(); hasChanges = true; }
-    if (!hasChanges) { setIsEditing(false); return; }
+    if (editName.trim() !== profile?.name) {
+      updates.name = editName.trim();
+      hasChanges = true;
+    }
+    if (editEmail.trim() !== profile?.email) {
+      updates.email = editEmail.trim();
+      hasChanges = true;
+    }
+    if (editImage.trim() !== (profile?.image ?? "")) {
+      updates.image = editImage.trim();
+      hasChanges = true;
+    }
+    if (!hasChanges) {
+      setIsEditing(false);
+      return;
+    }
     updateProfile.mutate(updates);
   };
 
-  const handleCancel = () => { setIsEditing(false); setErrorMessage(null); };
+  const handleCancel = () => {
+    setIsEditing(false);
+  };
 
   const handleConnectProvider = async (providerId: string) => {
     setConnectingProvider(providerId);
     try {
       const result = await linkSocial({
-        provider: providerId as "github" | "discord" | "linkedin" | "twitch" | "apple",
+        provider: providerId as
+          | "github"
+          | "discord"
+          | "linkedin"
+          | "twitch"
+          | "apple",
         callbackURL: window.location.href,
       });
       if (result?.error) {
-        setErrorMessage(result.error.message || `Failed to connect ${providerId}. The provider may not be configured.`);
-        setTimeout(() => setErrorMessage(null), 5000);
+        toast.error(
+          result.error.message ||
+            `Failed to connect ${providerId}. The provider may not be configured.`,
+        );
         setConnectingProvider(null);
       }
       setTimeout(() => setConnectingProvider(null), 5000);
     } catch (error) {
-      setErrorMessage(`Failed to connect ${providerId}. Please try again.`);
-      setTimeout(() => setErrorMessage(null), 5000);
+      toast.error(`Failed to connect ${providerId}. Please try again.`);
       setConnectingProvider(null);
     }
   };
@@ -170,15 +209,19 @@ export default function ProfilePage() {
   };
 
   const handleAvatarFileSelected = (file: File) => {
-    const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml"];
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/gif",
+      "image/webp",
+      "image/svg+xml",
+    ];
     if (!allowedTypes.includes(file.type)) {
-      setErrorMessage("Invalid file type. Allowed: JPEG, PNG, GIF, WebP, SVG");
-      setTimeout(() => setErrorMessage(null), 5000);
+      toast.error("Invalid file type. Allowed: JPEG, PNG, GIF, WebP, SVG");
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      setErrorMessage("File too large. Maximum size is 5MB.");
-      setTimeout(() => setErrorMessage(null), 5000);
+      toast.error("File too large. Maximum size is 5MB.");
       return;
     }
     const objectUrl = URL.createObjectURL(file);
@@ -192,12 +235,12 @@ export default function ProfilePage() {
       setCropSrc(null);
       setIsUploading(true);
       setUploadProgress(0);
-      setErrorMessage(null);
       const formData = new FormData();
       formData.append("file", blob, "avatar.jpg");
       const xhr = new XMLHttpRequest();
       xhr.upload.addEventListener("progress", (e) => {
-        if (e.lengthComputable) setUploadProgress(Math.round((e.loaded / e.total) * 100));
+        if (e.lengthComputable)
+          setUploadProgress(Math.round((e.loaded / e.total) * 100));
       });
       xhr.addEventListener("load", () => {
         try {
@@ -206,19 +249,19 @@ export default function ProfilePage() {
             if (isEditing) setEditImage(data.url);
             else updateProfile.mutate({ image: data.url });
           } else {
-            throw new Error(data.error || "Upload failed");
+            throw new Error(data.message || "Failed to upload photo.");
           }
         } catch (err) {
-          setErrorMessage(err instanceof Error ? err.message : "Failed to upload photo.");
-          setTimeout(() => setErrorMessage(null), 5000);
+          toast.error(
+            err instanceof Error ? err.message : "Failed to upload photo.",
+          );
         } finally {
           setIsUploading(false);
           setUploadProgress(0);
         }
       });
       xhr.addEventListener("error", () => {
-        setErrorMessage("Network error during upload.");
-        setTimeout(() => setErrorMessage(null), 5000);
+        toast.error("Network error during upload.");
         setIsUploading(false);
         setUploadProgress(0);
       });
@@ -233,7 +276,9 @@ export default function ProfilePage() {
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold tracking-tight">Profile</h1>
-          <p className="text-muted-foreground mt-1">Manage your personal information and connected accounts.</p>
+          <p className="text-muted-foreground mt-1">
+            Manage your personal information and connected accounts.
+          </p>
         </div>
         <ProfileSkeleton />
       </div>
@@ -247,183 +292,171 @@ export default function ProfilePage() {
           <X className="size-8 text-destructive" />
         </div>
         <h2 className="text-xl font-semibold mb-2">Unable to Load Profile</h2>
-        <p className="text-muted-foreground">We couldn&apos;t retrieve your profile information. Please try again later.</p>
+        <p className="text-muted-foreground">
+          We couldn&apos;t retrieve your profile information. Please try again
+          later.
+        </p>
       </div>
     );
   }
 
   const displayName = isEditing ? editName : profile.name;
-  const hasPassword = profile.accounts.some((a) => a.providerId === "credential");
+  const hasPassword = profile.accounts.some(
+    (a) => a.providerId === "credential",
+  );
 
   return (
-    <div className="max-w-3xl mx-auto">
-      {/* Page Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Profile</h1>
-          <p className="text-muted-foreground mt-1">Manage your personal information and connected accounts.</p>
-        </div>
-        {!isEditing ? (
-          <Button variant="outline" onClick={handleStartEdit} className="gap-2">
-            <Pencil className="size-4" />
-            Edit Profile
-          </Button>
-        ) : (
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" onClick={handleCancel} disabled={updateProfile.isPending}>Cancel</Button>
-            <Button onClick={handleSave} disabled={updateProfile.isPending || !editName.trim()} className="gap-2">
-              {updateProfile.isPending ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
-              Save Changes
-            </Button>
-          </div>
-        )}
-      </div>
-
-      {/* Toast Messages */}
-      {saveMessage && (
-        <div className="mb-6 flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-700 dark:border-green-800 dark:bg-green-950/30 dark:text-green-400">
-          <Check className="size-4 shrink-0" />
-          {saveMessage}
-        </div>
-      )}
-      {errorMessage && (
-        <div className="mb-6 flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-950/30 dark:text-red-400">
-          <X className="size-4 shrink-0" />
-          {errorMessage}
-        </div>
-      )}
-
-      <div className="space-y-6">
-        {/* Profile Header Card - avatar + name + email + joined date */}
-        <Card>
-          <CardContent className="py-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-              {/* Avatar (inline to access upload state) */}
-              <div className="relative group">
-                <div
-                  className="size-20 rounded-full ring-2 ring-border shadow-md bg-primary/10 flex items-center justify-center text-xl font-semibold text-primary overflow-hidden cursor-pointer"
-                  onClick={() => document.getElementById("avatar-file-input")?.click()}
-                >
-                  {(isEditing ? editImage : profile.image) ? (
-                    <Image
-                      src={isEditing ? editImage : (profile.image ?? "")}
-                      alt={displayName || "User avatar"}
-                      fill
-                      className="object-cover"
-                      sizes="80px"
-                    />
-                  ) : (
-                    displayName ? displayName.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2) : "U"
-                  )}
-                </div>
-                {isUploading && (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <svg className="size-20 -rotate-90" viewBox="0 0 80 80">
-                      <circle cx="40" cy="40" r="36" fill="rgba(0,0,0,0.45)" stroke="rgba(255,255,255,0.2)" strokeWidth="4" />
-                      <circle
-                        cx="40" cy="40" r="36" fill="none" stroke="white" strokeWidth="4"
-                        strokeLinecap="round"
-                        strokeDasharray={`${2 * Math.PI * 36}`}
-                        strokeDashoffset={`${2 * Math.PI * 36 * (1 - uploadProgress / 100)}`}
-                        className="transition-all duration-200 ease-out"
-                      />
-                    </svg>
-                    <span className="absolute text-xs font-semibold text-white">{uploadProgress}%</span>
-                  </div>
-                )}
-                <input
-                  id="avatar-file-input"
-                  type="file"
-                  accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml"
-                  onChange={(e) => { const f = e.target.files?.[0]; if (f) handleAvatarFileSelected(f); e.target.value = ""; }}
-                  className="hidden"
-                  aria-hidden="true"
-                />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h2 className="text-xl font-semibold truncate">{displayName || "User"}</h2>
-                <p className="text-sm text-muted-foreground mt-1 truncate">{isEditing ? editEmail : profile.email}</p>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Joined {new Date(profile.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Stats Cards */}
-        <div className="grid gap-4 grid-cols-2">
-          <Card>
-            <CardContent className="py-6">
-              <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center size-10 rounded-md bg-violet-500/10">
-                  <FolderGit2 className="size-5 text-violet-500" />
-                </div>
-                <div>
-                  <p className="text-2xl font-bold">{profile.stats.repositories}</p>
-                  <p className="text-xs text-muted-foreground">Connected Repositories</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="py-6">
-              <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center size-10 rounded-md bg-pink-500/10">
-                  <GitPullRequest className="size-5 text-pink-500" />
-                </div>
-                <div>
-                  <p className="text-2xl font-bold">{profile.stats.reviews}</p>
-                  <p className="text-xs text-muted-foreground">Code Reviews</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Personal Information */}
-        <PersonalInfoCard
+    <div className="min-h-screen pb-20">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+      >
+        {/* Profile Header / Hero */}
+        <ProfileHeaderCard
           profile={profile}
           isEditing={isEditing}
           editName={editName}
           editEmail={editEmail}
           editImage={editImage}
           setEditName={setEditName}
-          setEditEmail={setEditEmail}
           setEditImage={setEditImage}
+          isUploading={isUploading}
+          uploadProgress={uploadProgress}
+          onAvatarFileSelected={handleAvatarFileSelected}
           nameInputRef={nameInputRef}
-          onSave={handleSave}
-          onCancel={handleCancel}
-          isPending={updateProfile.isPending}
         />
 
-        {/* Connected Accounts */}
-        <ConnectedAccountsCard
-          accounts={profile.accounts}
-          providers={providers}
-          connectingProvider={connectingProvider}
-          disconnectTarget={disconnectTarget}
-          setDisconnectTarget={setDisconnectTarget}
-          onConnect={handleConnectProvider}
-          onDisconnect={handleDisconnect}
-          isDisconnecting={disconnectAccount.isPending}
-          hasPassword={hasPassword}
-        />
-      </div>
+        {/* Status Bar / Actions */}
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
+          <div className="flex items-center gap-4">
+            <h2 className="text-sm font-semibold uppercase tracking-[0.3em] text-muted-foreground/50">
+              Account Command Center
+            </h2>
+            <div className="h-px w-12 bg-border" />
+          </div>
+
+          {!isEditing ? (
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Button
+                variant="outline"
+                onClick={handleStartEdit}
+                className="rounded-full px-6 bg-background/50 backdrop-blur-md border-border/50 hover:bg-indigo-500 hover:text-white hover:border-indigo-500 transition-all duration-300 shadow-lg group"
+              >
+                <Pencil className="size-4 mr-2 group-hover:rotate-12 transition-transform" />
+                Edit Account
+              </Button>
+            </motion.div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                onClick={handleCancel}
+                disabled={updateProfile.isPending}
+                className="rounded-full"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleSave}
+                disabled={updateProfile.isPending || !editName.trim()}
+                className="rounded-full px-8 bg-indigo-600 hover:bg-indigo-700 text-white shadow-xl shadow-indigo-500/20"
+              >
+                {updateProfile.isPending ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <>
+                    <Save className="size-4 mr-2" />
+                    Apply Changes
+                  </>
+                )}
+              </Button>
+            </div>
+          )}
+        </div>
+
+        {/* Bento Grid Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Main Content Area - Identity & Connections */}
+          <div className="lg:col-span-7 space-y-6">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <PersonalInfoCard
+                profile={profile}
+                isEditing={isEditing}
+                editName={editName}
+                editEmail={editEmail}
+                editImage={editImage}
+                setEditName={setEditName}
+                setEditEmail={setEditEmail}
+                setEditImage={setEditImage}
+                nameInputRef={nameInputRef}
+                onSave={handleSave}
+                onCancel={handleCancel}
+                isPending={updateProfile.isPending}
+              />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <ConnectedAccountsCard
+                accounts={profile.accounts}
+                providers={providers}
+                connectingProvider={connectingProvider}
+                disconnectTarget={disconnectTarget}
+                setDisconnectTarget={setDisconnectTarget}
+                onConnect={handleConnectProvider}
+                onDisconnect={handleDisconnect}
+                isDisconnecting={disconnectAccount.isPending}
+                hasPassword={hasPassword}
+              />
+            </motion.div>
+          </div>
+
+          {/* Sidebar Area - Subscription & Quotas */}
+          <div className="lg:col-span-5 space-y-6">
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.4 }}
+              className="h-full"
+            >
+              <SubscriptionCard
+                plan={profile.plan}
+                limits={profile.limits}
+                stats={profile.stats}
+                planExpiresAt={profile.planExpiresAt}
+              />
+            </motion.div>
+          </div>
+        </div>
+      </motion.div>
 
       {/* Image Crop Dialog */}
-      {cropSrc && (
-        <CropDialog
-          src={cropSrc}
-          open={cropDialogOpen}
-          onOpenChange={(open: boolean) => {
-            setCropDialogOpen(open);
-            if (!open && cropSrc) { URL.revokeObjectURL(cropSrc); setCropSrc(null); }
-          }}
-          outputSize={512}
-          onCrop={handleCroppedUpload}
-        />
-      )}
+      <AnimatePresence>
+        {cropSrc && (
+          <CropDialog
+            src={cropSrc}
+            open={cropDialogOpen}
+            onOpenChange={(open: boolean) => {
+              setCropDialogOpen(open);
+              if (!open && cropSrc) {
+                URL.revokeObjectURL(cropSrc);
+                setCropSrc(null);
+              }
+            }}
+            outputSize={512}
+            onCrop={handleCroppedUpload}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

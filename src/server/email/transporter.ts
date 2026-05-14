@@ -7,7 +7,7 @@ function getEmailConfig(): EmailServiceConfig {
   const user = process.env.SMTP_USER;
   const pass = process.env.SMTP_PASS;
   const from = process.env.SMTP_FROM;
-  const fromName = process.env.SMTP_FROM_NAME || "DEPI Code Review";
+  const fromName = process.env.SMTP_FROM_NAME || "Code Catch";
 
   if (!host || !user || !pass || !from) {
     console.warn(
@@ -29,7 +29,7 @@ function getEmailConfig(): EmailServiceConfig {
       user: user || "test@ethereal.email",
       pass: pass || "testpassword",
     },
-    from: from || "DEPI Code Review <noreply@depi-code-review.app>",
+    from: from || "Code Catch <noreply@code-catch.app>",
     fromName,
   };
 }

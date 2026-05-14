@@ -1,3 +1,6 @@
+import type { Plan } from "@/lib/plan";
+
+
 export interface BaseEmailParams {
   to: string;
   subject: string;
@@ -38,6 +41,20 @@ export interface AdminDemotedEmailParams {
   to: string;
   userName: string;
   demotedByName: string;
+}
+
+export interface PlanChangedEmailParams {
+  to: string;
+  userName: string;
+  oldPlan: string;
+  newPlan: string;
+  expiresAt: Date | null;
+  changedBy: string;
+  overrides?: {
+    repos?: number | null;
+    reviews?: number | null;
+    seats?: number | null;
+  };
 }
 
 import type { ReviewStatus } from "@/lib/constants";

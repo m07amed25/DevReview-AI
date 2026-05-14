@@ -37,7 +37,7 @@ export function GithubConnectionWarningEmail({ params }: { params: GithubConnect
                 src={`${baseUrl}/file.svg`}
                 width="56"
                 height="56"
-                alt="DEPI Code Review"
+                alt="Code Catch"
                 className="mx-auto"
               />
             </Section>
@@ -56,7 +56,7 @@ export function GithubConnectionWarningEmail({ params }: { params: GithubConnect
             </Text>
 
             <Text className="mb-4 text-base leading-6 text-gray-700">
-              We noticed you just signed in but haven&apos;t connected a GitHub account yet. You need to connect your GitHub account to fully use DEPI Code Review.
+              We noticed you just signed in but haven&apos;t connected a GitHub account yet. You need to connect your GitHub account to fully use Code Catch.
             </Text>
 
             <Section className="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-5">

@@ -2,6 +2,7 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
+
 export const profileRouter = createTRPCRouter({
   availableProviders: publicProcedure.query(() => {
     // Return the list of provider IDs that are actually configured on the server
@@ -37,6 +38,7 @@ export const profileRouter = createTRPCRouter({
           select: {
             repositories: true,
             reviews: true,
+            teamMembers: true,
           },
         },
       },
@@ -49,6 +51,50 @@ export const profileRouter = createTRPCRouter({
       });
     }
 
+    const plan = await ctx.db.pricingPlan.findUnique({
+      where: { id: user.planId },
+    });
+
+    const defaultPlan = {
+      id: "free",
+      name: "Free",
+      tagline: "Perfect for individuals and small side projects.",
+      monthlyPrice: 0,
+      features: [
+        "Up to 3 private repositories",
+        "50 AI Reviews per month",
+        "Basic Security Scanning",
+      ],
+      reposLimit: 3,
+      reviewsLimit: 50,
+      seatsLimit: 1,
+      privateRepos: false,
+    };
+
+    const effectivePlan = plan ?? defaultPlan;
+
+    // Calculate accurate seat usage
+    const ownedTeams = await ctx.db.team.findMany({
+      where: {
+        members: {
+          some: {
+            userId: ctx.user.id,
+            role: "OWNER",
+          },
+        },
+      },
+      select: {
+        _count: {
+          select: { members: true },
+        },
+      },
+    });
+
+    const seatsUsed = ownedTeams.reduce(
+      (acc, team) => acc + team._count.members,
+      0,
+    );
+
     return {
       id: user.id,
       name: user.name,
@@ -56,18 +102,43 @@ export const profileRouter = createTRPCRouter({
       image: user.image,
       createdAt: user.createdAt,
       accounts: user.accounts,
+      planId: user.planId,
+      planExpiresAt: user.planExpiresAt,
+      // Overrides
+      overrideReposLimit: user.overrideReposLimit,
+      overrideReviewsLimit: user.overrideReviewsLimit,
+      overrideSeatsLimit: user.overrideSeatsLimit,
+      plan: effectivePlan,
+      // Effective limits (override takes precedence if set)
+      limits: {
+        reposLimit: user.overrideReposLimit ?? effectivePlan.reposLimit,
+        reviewsLimit: user.overrideReviewsLimit ?? effectivePlan.reviewsLimit,
+        seatsLimit: user.overrideSeatsLimit ?? effectivePlan.seatsLimit,
+      },
       stats: {
         repositories: user._count.repositories,
         reviews: user._count.reviews,
+        teamMembers: seatsUsed,
       },
+      isOwner: user.email === process.env.OWNER_MAIL,
     };
   }),
 
   update: protectedProcedure
     .input(
       z.object({
-        name: z.string().max(255).min(1, "Name is required").max(100).optional(),
-        email: z.string().email().max(255).email("Invalid email address").optional(),
+        name: z
+          .string()
+          .max(255)
+          .min(1, "Name is required")
+          .max(100)
+          .optional(),
+        email: z
+          .string()
+          .email()
+          .max(255)
+          .email("Invalid email address")
+          .optional(),
         image: z.string().min(1).or(z.literal("")).optional(),
       }),
     )

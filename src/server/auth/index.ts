@@ -3,7 +3,10 @@ import { APIError } from "better-auth/api";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { sso } from "@better-auth/sso";
 import { db } from "../db";
-import { sendGithubConnectionWarningEmail, sendPasswordResetEmail } from "../email";
+import {
+  sendGithubConnectionWarningEmail,
+  sendPasswordResetEmail,
+} from "../email";
 
 const getTrustedOrigins = () => {
   const origins = ["http://localhost:3000"];
@@ -102,6 +105,12 @@ export const auth = betterAuth({
         type: "string",
         required: false,
         defaultValue: null,
+        input: false,
+      },
+      planId: {
+        type: "string",
+        required: false,
+        defaultValue: "free",
         input: false,
       },
     },

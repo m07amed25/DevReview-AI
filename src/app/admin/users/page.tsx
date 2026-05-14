@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
+import { Plan } from "@/lib/plan";
+import { motion, AnimatePresence } from "framer-motion";
+import { Separator } from "@/components/ui/separator";
 import {
   Card,
   CardContent,
@@ -52,7 +55,17 @@ import {
   ArrowDown,
   Github,
   KeyRound,
+  CreditCard,
+  Calendar,
+  Layers,
+  Users,
+  CheckCircle2,
+  AlertCircle,
 } from "lucide-react";
+import { DropdownSelect, SelectItem } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 export default function AdminUsersPage() {
   const [search, setSearch] = useState("");
@@ -66,11 +79,32 @@ export default function AdminUsersPage() {
   } | null>(null);
   const [banReason, setBanReason] = useState("");
 
+  // Plan dialog state
+  const [planTarget, setPlanTarget] = useState<{
+    id: string;
+    name: string;
+    planId: string;
+    expiresAt: string | null;
+  } | null>(null);
+  const [newPlan, setNewPlan] = useState<Plan>(Plan.FREE);
+  const [newExpiresAt, setNewExpiresAt] = useState<string>("");
+  const [overrideRepos, setOverrideRepos] = useState<string>("");
+  const [overrideReviews, setOverrideReviews] = useState<string>("");
+  const [overrideSeats, setOverrideSeats] = useState<string>("");
+
+  // Bulk selection state
+  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
+  const [isBulkPlanDialogOpen, setIsBulkPlanDialogOpen] = useState(false);
+  const [isSelectAllMenuOpen, setIsSelectAllMenuOpen] = useState(false);
+
   const { data, isLoading, refetch } = trpc.admin.getUsers.useQuery({
     page,
     limit: 20,
     search: search || undefined,
   });
+
+  const { data: profile } = trpc.profile.get.useQuery();
+  const currentUserIsOwner = profile?.isOwner;
 
   const deleteUser = trpc.admin.deleteUser.useMutation({
     onSuccess: () => void refetch(),
@@ -78,6 +112,29 @@ export default function AdminUsersPage() {
 
   const updateRole = trpc.admin.updateUserRole.useMutation({
     onSuccess: () => void refetch(),
+  });
+
+  const updatePlan = trpc.admin.updateUserPlan.useMutation({
+    onSuccess: () => {
+      setPlanTarget(null);
+      toast.success("User plan updated successfully");
+      void refetch();
+    },
+    onError: (err) => {
+      toast.error(err.message || "Failed to update plan");
+    },
+  });
+
+  const bulkUpdatePlan = trpc.admin.bulkUpdateUserPlans.useMutation({
+    onSuccess: (data) => {
+      setIsBulkPlanDialogOpen(false);
+      setSelectedUsers([]);
+      toast.success(`Updated plans for ${data.count} users`);
+      void refetch();
+    },
+    onError: (err) => {
+      toast.error(err.message || "Failed to update bulk plans");
+    },
   });
 
   const banUser = trpc.admin.banUser.useMutation({
@@ -167,13 +224,168 @@ export default function AdminUsersPage() {
               </div>
             ) : (
               <div className="divide-y">
+                {/* Header with Select All */}
+                <div className="flex items-center gap-4 px-6 py-3 bg-muted/40 border-b">
+                  <div className="flex items-center gap-3 relative">
+                    <Checkbox
+                      checked={
+                        selectedUsers.length > 0 &&
+                        data?.users.every((u) => selectedUsers.includes(u.id))
+                      }
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          const currentIds = data?.users.map((u) => u.id) ?? [];
+                          setSelectedUsers((prev) =>
+                            Array.from(new Set([...prev, ...currentIds])),
+                          );
+                        } else {
+                          const currentIds = data?.users.map((u) => u.id) ?? [];
+                          setSelectedUsers((prev) =>
+                            prev.filter((id) => !currentIds.includes(id)),
+                          );
+                        }
+                      }}
+                    />
+
+                    <div className="group relative">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 px-2 text-[10px] uppercase font-bold text-muted-foreground tracking-wider hover:bg-muted"
+                        onClick={() =>
+                          setIsSelectAllMenuOpen(!isSelectAllMenuOpen)
+                        }
+                      >
+                        Selection Options
+                        <ArrowDown
+                          className={`ml-1 h-3 w-3 transition-transform ${isSelectAllMenuOpen ? "rotate-180" : ""}`}
+                        />
+                      </Button>
+
+                      {isSelectAllMenuOpen && (
+                        <>
+                          <div
+                            className="fixed inset-0 z-40"
+                            onClick={() => setIsSelectAllMenuOpen(false)}
+                          />
+                          <div className="absolute left-0 mt-2 w-56 z-50 bg-white dark:bg-neutral-900 border rounded-lg shadow-xl py-2 overflow-hidden animate-in fade-in slide-in-from-top-2">
+                            <div className="px-3 py-1.5 text-[10px] font-bold text-muted-foreground uppercase tracking-widest border-b mb-1">
+                              Bulk Selection
+                            </div>
+                            <button
+                              className="w-full text-left px-4 py-2 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 flex items-center gap-2"
+                              onClick={() => {
+                                setSelectedUsers(
+                                  data?.users.map((u) => u.id) ?? [],
+                                );
+                                setIsSelectAllMenuOpen(false);
+                              }}
+                            >
+                              <Users className="h-4 w-4 text-neutral-500" />
+                              Select all on this page
+                            </button>
+                            <button
+                              className="w-full text-left px-4 py-2 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 flex items-center gap-2"
+                              onClick={() => {
+                                // For real "Select all in DB", we'd need a special query or handle it on backend.
+                                // For now, we simulate by telling the user we're selecting all matching current filters.
+                                toast.info(
+                                  "Full database selection would happen here. Selecting visible users for now.",
+                                );
+                                setSelectedUsers(
+                                  data?.users.map((u) => u.id) ?? [],
+                                );
+                                setIsSelectAllMenuOpen(false);
+                              }}
+                            >
+                              <CheckCircle2 className="h-4 w-4 text-indigo-500" />
+                              Select all matching filter ({data?.total})
+                            </button>
+
+                            <div className="h-px bg-neutral-100 dark:bg-neutral-800 my-1" />
+                            <div className="px-3 py-1.5 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                              By Tier
+                            </div>
+                            <button
+                              className="w-full text-left px-4 py-2 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 flex items-center gap-2"
+                              onClick={() => {
+                                const ids =
+                                  data?.users
+                                    .filter((u) => u.planId === Plan.FREE)
+                                    .map((u) => u.id) ?? [];
+                                setSelectedUsers(ids);
+                                setIsSelectAllMenuOpen(false);
+                              }}
+                            >
+                              <div className="w-2 h-2 rounded-full bg-neutral-400" />
+                              Select all Free users
+                            </button>
+                            <button
+                              className="w-full text-left px-4 py-2 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 flex items-center gap-2"
+                              onClick={() => {
+                                const ids =
+                                  data?.users
+                                    .filter((u) => u.planId === Plan.PRO)
+                                    .map((u) => u.id) ?? [];
+                                setSelectedUsers(ids);
+                                setIsSelectAllMenuOpen(false);
+                              }}
+                            >
+                              <div className="w-2 h-2 rounded-full bg-indigo-500" />
+                              Select all Pro users
+                            </button>
+                            <button
+                              className="w-full text-left px-4 py-2 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 flex items-center gap-2"
+                              onClick={() => {
+                                const ids =
+                                  data?.users
+                                    .filter((u) => u.planId === Plan.ENTERPRISE)
+                                    .map((u) => u.id) ?? [];
+                                setSelectedUsers(ids);
+                                setIsSelectAllMenuOpen(false);
+                              }}
+                            >
+                              <div className="w-2 h-2 rounded-full bg-violet-600" />
+                              Select all Enterprise users
+                            </button>
+
+                            <div className="h-px bg-neutral-100 dark:bg-neutral-800 my-1" />
+                            <button
+                              className="w-full text-left px-4 py-2 text-sm hover:bg-red-50 text-red-600 dark:hover:bg-red-900/20 flex items-center gap-2"
+                              onClick={() => {
+                                setSelectedUsers([]);
+                                setIsSelectAllMenuOpen(false);
+                              }}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                              Clear selection
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
                 {data?.users.map((user) => (
                   <div
                     key={user.id}
-                    className={`flex items-center gap-4 px-6 py-4 ${
+                    className={`flex items-center gap-4 px-6 py-4 transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-900/40 ${
                       user.banned ? "bg-amber-500/5" : ""
                     }`}
                   >
+                    <Checkbox
+                      checked={selectedUsers.includes(user.id)}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          setSelectedUsers([...selectedUsers, user.id]);
+                        } else {
+                          setSelectedUsers(
+                            selectedUsers.filter((id) => id !== user.id),
+                          );
+                        }
+                      }}
+                    />
                     <Avatar className="h-9 w-9 shrink-0">
                       {user.image && (
                         <AvatarImage src={user.image} alt={user.name ?? ""} />
@@ -247,6 +459,20 @@ export default function AdminUsersPage() {
                             GitHub
                           </Badge>
                         )}
+
+                        <Badge
+                          variant="secondary"
+                          className={cn(
+                            "text-[10px] h-5 px-1.5 font-normal",
+                            user.planId === Plan.ENTERPRISE
+                              ? "bg-purple-500/10 text-purple-500 border-purple-500/20"
+                              : user.planId === Plan.PRO
+                                ? "bg-indigo-500/10 text-indigo-500 border-indigo-500/20"
+                                : "bg-neutral-500/10 text-neutral-500 border-neutral-500/20"
+                          )}
+                        >
+                          {user.planId === Plan.ENTERPRISE ? "ENTERPRISE" : user.planId.toUpperCase()}
+                        </Badge>
                       </div>
                       <p className="truncate text-sm text-muted-foreground">
                         {user.email}
@@ -287,7 +513,10 @@ export default function AdminUsersPage() {
                               ? "text-amber-600 border-amber-200 hover:bg-amber-50 hover:text-amber-700"
                               : "bg-violet-600 text-white hover:bg-violet-700"
                           }`}
-                          disabled={updateRole.isPending || user.isOwner}
+                          disabled={
+                            updateRole.isPending ||
+                            (user.isOwner && !currentUserIsOwner)
+                          }
                         >
                           {user.role === "ADMIN" ? (
                             <>
@@ -340,7 +569,10 @@ export default function AdminUsersPage() {
                             variant="outline"
                             size="icon"
                             className="shrink-0 text-amber-500 border-amber-500/40 hover:bg-amber-500/10"
-                            disabled={unbanUser.isPending || user.isOwner}
+                            disabled={
+                              unbanUser.isPending ||
+                              (user.isOwner && !currentUserIsOwner)
+                            }
                             title="Unban user"
                           >
                             <ShieldCheck className="h-4 w-4" />
@@ -373,7 +605,10 @@ export default function AdminUsersPage() {
                         variant="ghost"
                         size="icon"
                         className="shrink-0 text-amber-500 hover:bg-amber-500/10"
-                        disabled={banUser.isPending || user.isOwner}
+                        disabled={
+                          banUser.isPending ||
+                          (user.isOwner && !currentUserIsOwner)
+                        }
                         title="Ban user"
                         onClick={() =>
                           setBanTarget({
@@ -386,6 +621,40 @@ export default function AdminUsersPage() {
                       </Button>
                     )}
 
+                    {/* Manage Plan */}
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="shrink-0 text-indigo-500 hover:bg-indigo-500/10"
+                      disabled={
+                        updatePlan.isPending ||
+                        (user.isOwner && !currentUserIsOwner)
+                      }
+                      title="Manage plan"
+                      onClick={() => {
+                        setPlanTarget({
+                          id: user.id,
+                          name: user.name ?? user.email,
+                          planId: user.planId,
+                          expiresAt: user.planExpiresAt
+                            ? new Date(user.planExpiresAt)
+                                .toISOString()
+                                .split("T")[0]
+                            : null,
+                        });
+                        setNewPlan(user.planId as Plan);
+                        setNewExpiresAt(
+                          user.planExpiresAt
+                            ? new Date(user.planExpiresAt)
+                                .toISOString()
+                                .split("T")[0]
+                            : "",
+                        );
+                      }}
+                    >
+                      <CreditCard className="h-4 w-4" />
+                    </Button>
+
                     {/* Reset Password */}
                     <AlertDialog>
                       <Tooltip>
@@ -395,13 +664,18 @@ export default function AdminUsersPage() {
                               variant="ghost"
                               size="icon"
                               className="shrink-0 text-muted-foreground hover:bg-orange-100 hover:text-orange-600 dark:hover:bg-orange-950/50 dark:hover:text-orange-400"
-                              disabled={resetPassword.isPending || user.isOwner}
+                              disabled={
+                                resetPassword.isPending ||
+                                (user.isOwner && !currentUserIsOwner)
+                              }
                             >
                               <KeyRound className="h-4 w-4" />
                             </Button>
                           </AlertDialogTrigger>
                         </TooltipTrigger>
-                        <TooltipContent>Send password reset email</TooltipContent>
+                        <TooltipContent>
+                          Send password reset email
+                        </TooltipContent>
                       </Tooltip>
                       <AlertDialogContent>
                         <AlertDialogHeader>
@@ -432,7 +706,10 @@ export default function AdminUsersPage() {
                           variant="ghost"
                           size="icon"
                           className="shrink-0 text-destructive hover:bg-destructive/10"
-                          disabled={deleteUser.isPending || user.isOwner}
+                          disabled={
+                            deleteUser.isPending ||
+                            (user.isOwner && !currentUserIsOwner)
+                          }
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -547,6 +824,253 @@ export default function AdminUsersPage() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        {/* Plan Management Dialog */}
+        <Dialog
+          open={!!planTarget}
+          onOpenChange={(open) => {
+            if (!open) setPlanTarget(null);
+          }}
+        >
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Manage Plan for {planTarget?.name}</DialogTitle>
+              <DialogDescription>
+                Change the user&apos;s subscription plan and expiration date.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label>Subscription Plan</Label>
+                <DropdownSelect
+                  value={newPlan}
+                  onValueChange={(val) => setNewPlan(val as Plan)}
+                  placeholder="Select a plan"
+                >
+                  <SelectItem value="free">Free Plan</SelectItem>
+                  <SelectItem value="pro">Pro Plan</SelectItem>
+                  <SelectItem value="enterprise">Enterprise Plan</SelectItem>
+                </DropdownSelect>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Repo Limit Override</Label>
+                  <Input
+                    type="number"
+                    placeholder="Plan default"
+                    value={overrideRepos}
+                    onChange={(e) => setOverrideRepos(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Review Limit Override</Label>
+                  <Input
+                    type="number"
+                    placeholder="Plan default"
+                    value={overrideReviews}
+                    onChange={(e) => setOverrideReviews(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Seat Limit Override</Label>
+                <Input
+                  type="number"
+                  placeholder="Plan default"
+                  value={overrideSeats}
+                  onChange={(e) => setOverrideSeats(e.target.value)}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Expiration Date (Optional)</Label>
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="date"
+                    value={newExpiresAt}
+                    onChange={(e) => setNewExpiresAt(e.target.value)}
+                  />
+                </div>
+                <p className="text-[10px] text-muted-foreground">
+                  Leave empty for perpetual access.
+                </p>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setPlanTarget(null)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  if (!planTarget) return;
+                  updatePlan.mutate({
+                    userId: planTarget.id,
+                    planId: newPlan as any,
+                    expiresAt: newExpiresAt ? new Date(newExpiresAt) : null,
+                    overrideReposLimit: overrideRepos
+                      ? parseInt(overrideRepos)
+                      : null,
+                    overrideReviewsLimit: overrideReviews
+                      ? parseInt(overrideReviews)
+                      : null,
+                    overrideSeatsLimit: overrideSeats
+                      ? parseInt(overrideSeats)
+                      : null,
+                  });
+                }}
+                disabled={updatePlan.isPending}
+                className="bg-indigo-600 hover:bg-indigo-700"
+              >
+                {updatePlan.isPending ? "Updating…" : "Save Changes"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Bulk Plan Dialog */}
+        <Dialog
+          open={isBulkPlanDialogOpen}
+          onOpenChange={setIsBulkPlanDialogOpen}
+        >
+          <DialogContent>
+            <DialogHeader>
+              <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center mb-4">
+                <Layers className="h-6 w-6 text-indigo-600" />
+              </div>
+              <DialogTitle className="text-xl">Bulk Update Plans</DialogTitle>
+              <DialogDescription className="text-base">
+                You are about to update the subscription status for{" "}
+                <span className="font-bold text-indigo-600 dark:text-indigo-400">
+                  {selectedUsers.length}
+                </span>{" "}
+                selected users.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="grid gap-6 py-6">
+              <div className="p-4 bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800 rounded-lg flex gap-3">
+                <AlertCircle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+                <p className="text-xs text-amber-800 dark:text-amber-300 leading-relaxed">
+                  This action will immediately change the service level and
+                  trigger automated notification emails to all selected users.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-sm font-semibold">
+                    New Subscription Plan
+                  </Label>
+                  <DropdownSelect value={newPlan} onValueChange={(val) => setNewPlan(val as Plan)}>
+                    <SelectItem value="free">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-neutral-400" />
+                        <span>Free Plan</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="pro">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-indigo-500" />
+                        <span>Pro Plan</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="enterprise">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-violet-600" />
+                        <span>Enterprise Plan</span>
+                      </div>
+                    </SelectItem>
+                  </DropdownSelect>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-sm font-semibold">
+                    Expiration Date (Optional)
+                  </Label>
+                  <div className="relative">
+                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      type="date"
+                      className="pl-9"
+                      value={newExpiresAt}
+                      onChange={(e) => setNewExpiresAt(e.target.value)}
+                    />
+                  </div>
+                  <p className="text-[10px] text-muted-foreground italic">
+                    Leave blank for lifetime access or plan-default behavior.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <DialogFooter className="gap-2 sm:gap-0">
+              <Button
+                variant="outline"
+                onClick={() => setIsBulkPlanDialogOpen(false)}
+                className="rounded-xl px-6"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  bulkUpdatePlan.mutate({
+                    userIds: selectedUsers,
+                    planId: newPlan as any,
+                    expiresAt: newExpiresAt ? new Date(newExpiresAt) : null,
+                  });
+                }}
+                disabled={bulkUpdatePlan.isPending}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl px-8 shadow-lg shadow-indigo-500/20"
+              >
+                {bulkUpdatePlan.isPending ? (
+                  <div className="flex items-center gap-2">
+                    <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <span>Processing...</span>
+                  </div>
+                ) : (
+                  "Update All Users"
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Bulk Action Bar */}
+        <AnimatePresence>
+          {selectedUsers.length > 0 && (
+            <motion.div
+              initial={{ y: 100, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 100, opacity: 0 }}
+              className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 px-6 py-3 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-full shadow-2xl shadow-indigo-500/10"
+            >
+              <span className="text-sm font-medium">
+                {selectedUsers.length} users selected
+              </span>
+              <Separator orientation="vertical" className="h-4" />
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => setIsBulkPlanDialogOpen(true)}
+                className="text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50"
+              >
+                <CreditCard className="mr-2 h-4 w-4" />
+                Change Plan
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => setSelectedUsers([])}
+                className="text-neutral-500 hover:text-neutral-700"
+              >
+                Clear Selection
+              </Button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </TooltipProvider>
   );

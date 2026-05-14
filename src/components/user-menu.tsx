@@ -170,7 +170,7 @@ export function UserMenu({ user }: { user: UserProps }) {
               <DropdownMenuShortcut>⌘,</DropdownMenuShortcut>
             </DropdownMenuItem>
 
-            {/* <DropdownMenuItem
+            <DropdownMenuItem
               className="gap-3 px-2 py-2 cursor-pointer rounded-md"
               onClick={() => router.push("/billing")}
             >
@@ -184,7 +184,7 @@ export function UserMenu({ user }: { user: UserProps }) {
                 </span>
               </div>
               <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-            </DropdownMenuItem> */}
+            </DropdownMenuItem>
 
             {/* <DropdownMenuItem
               className="gap-3 px-2 py-2 cursor-pointer rounded-md"

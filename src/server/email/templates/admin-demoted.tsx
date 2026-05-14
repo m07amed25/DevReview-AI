@@ -38,7 +38,7 @@ export function AdminDemotedEmail({
                 src={`${baseUrl}/file.svg`}
                 width="40"
                 height="40"
-                alt="DEPI Code Review"
+                alt="Code Catch"
                 className="mx-auto"
               />
             </Section>
@@ -53,7 +53,7 @@ export function AdminDemotedEmail({
             </Text>
 
             <Text className="mb-6 text-base leading-7 text-gray-700">
-              Your **Administrator** privileges on the **DEPI Code Review**
+              Your **Administrator** privileges on the **Code Catch**
               platform have been revoked by **{demotedByName}**.
             </Text>
 
@@ -80,7 +80,7 @@ export function AdminDemotedEmail({
             <Text className="text-sm text-gray-400 text-center">
               This is an automated notification.
               <br />
-              &copy; {new Date().getFullYear()} DEPI Code Review. All rights
+              &copy; {new Date().getFullYear()} Code Catch. All rights
               reserved.
             </Text>
           </Container>

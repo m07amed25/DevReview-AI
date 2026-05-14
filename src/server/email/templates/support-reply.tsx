@@ -42,7 +42,7 @@ export function SupportReplyEmail({
                 src={`${baseUrl}/file.svg`}
                 width="40"
                 height="40"
-                alt="DEPI Code Review"
+                alt="Code Catch"
                 className="mx-auto"
               />
             </Section>
@@ -74,7 +74,7 @@ export function SupportReplyEmail({
             <Text className="mt-10 text-sm text-gray-400 text-center">
               This is a response to the inquiry you sent via our support form.
               <br />
-              &copy; {new Date().getFullYear()} DEPI Code Review. All rights
+              &copy; {new Date().getFullYear()} Code Catch. All rights
               reserved.
             </Text>
           </Container>
