@@ -69,6 +69,7 @@ export const profileRouter = createTRPCRouter({
       reviewsLimit: 50,
       seatsLimit: 1,
       privateRepos: false,
+      accentColor: "indigo",
     };
 
     const effectivePlan = plan ?? defaultPlan;

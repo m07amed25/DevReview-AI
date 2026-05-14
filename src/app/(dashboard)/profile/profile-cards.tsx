@@ -37,7 +37,7 @@ interface Profile {
   email: string;
   image?: string | null;
   createdAt: Date | string;
-  plan: { id: string; name: string };
+  plan: { id: string; name: string; accentColor: string };
   stats: { repositories: number; reviews: number; teamMembers: number };
   accounts: Array<{
     id: string;
@@ -106,21 +106,25 @@ export function ProfileHeaderCard({
       <CardContent className="p-8">
         <div className="flex flex-col sm:flex-row items-center gap-8">
           <div className="relative group">
-            <motion.div 
+            <motion.div
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 300 }}
               className="relative"
             >
               <Avatar className="size-32 sm:size-36 ring-4 ring-background shadow-2xl border-none">
-                <AvatarImage src={displayImage || undefined} alt={displayName} className="object-cover" />
+                <AvatarImage
+                  src={displayImage || undefined}
+                  alt={displayName}
+                  className="object-cover"
+                />
                 <AvatarFallback className="text-3xl font-semibold bg-indigo-100 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400">
                   {initials}
                 </AvatarFallback>
               </Avatar>
-              
+
               <AnimatePresence>
                 {isUploading && (
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -128,13 +132,28 @@ export function ProfileHeaderCard({
                   >
                     <div className="relative size-16">
                       <svg className="size-16 -rotate-90" viewBox="0 0 80 80">
-                        <circle cx="40" cy="40" r="36" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="4" />
+                        <circle
+                          cx="40"
+                          cy="40"
+                          r="36"
+                          fill="none"
+                          stroke="rgba(255,255,255,0.1)"
+                          strokeWidth="4"
+                        />
                         <motion.circle
-                          cx="40" cy="40" r="36" fill="none" stroke="white" strokeWidth="4"
+                          cx="40"
+                          cy="40"
+                          r="36"
+                          fill="none"
+                          stroke="white"
+                          strokeWidth="4"
                           strokeLinecap="round"
                           strokeDasharray={`${2 * Math.PI * 36}`}
                           initial={{ strokeDashoffset: 2 * Math.PI * 36 }}
-                          animate={{ strokeDashoffset: 2 * Math.PI * 36 * (1 - uploadProgress / 100) }}
+                          animate={{
+                            strokeDashoffset:
+                              2 * Math.PI * 36 * (1 - uploadProgress / 100),
+                          }}
                           className="transition-all duration-300 ease-out"
                         />
                       </svg>
@@ -172,15 +191,22 @@ export function ProfileHeaderCard({
               <Badge
                 className={cn(
                   "w-fit mx-auto sm:mx-0 text-[10px] px-2 py-0.5 h-5 font-semibold uppercase tracking-widest border-none",
-                  {
-                    "slate": "bg-slate-500 text-white",
-                    "indigo": "bg-indigo-600 text-white",
-                    "amber": "bg-linear-to-r from-amber-500 to-orange-500 text-white",
-                    "rose": "bg-rose-500 text-white",
-                    "emerald": "bg-emerald-500 text-white",
-                    "violet": "bg-violet-600 text-white",
-                    "blue": "bg-blue-600 text-white",
-                  }[profile.plan.accentColor] || "bg-neutral-200 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400"
+                  (() => {
+                    const colorMap: Record<string, string> = {
+                      slate: "bg-slate-500 text-white",
+                      indigo: "bg-indigo-600 text-white",
+                      amber:
+                        "bg-linear-to-r from-amber-500 to-orange-500 text-white",
+                      rose: "bg-rose-500 text-white",
+                      emerald: "bg-emerald-500 text-white",
+                      violet: "bg-violet-600 text-white",
+                      blue: "bg-blue-600 text-white",
+                    };
+                    return (
+                      colorMap[profile.plan.accentColor] ||
+                      "bg-neutral-200 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400"
+                    );
+                  })(),
                 )}
               >
                 {profile.plan.name} Plan
