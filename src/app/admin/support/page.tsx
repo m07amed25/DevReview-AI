@@ -109,7 +109,8 @@ export default function AdminSupportPage() {
               </p>
             </div>
           ) : (
-            <Table>
+            <div className="overflow-x-auto">
+              <Table className="min-w-[800px]">
               <TableHeader>
                 <TableRow>
                   <TableHead>User / Email</TableHead>

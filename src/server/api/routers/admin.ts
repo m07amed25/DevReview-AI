@@ -263,6 +263,7 @@ export const adminRouter = createTRPCRouter({
         throw new Error("You cannot change your own role.");
       }
 
+      // Update user role without deleting sessions so they are not logged out abruptly.
       await ctx.db.user.update({
         where: { id: input.userId },
         data: { role: input.role },
@@ -369,6 +370,97 @@ export const adminRouter = createTRPCRouter({
           },
         }).catch((err) => console.error("Failed to send plan update email:", err));
       }
+
+      return { success: true };
+    }),
+
+  updateUserLimits: adminProcedure
+    .input(
+      z.object({
+        userId: z.string().max(255),
+        reposLimitDelta: z.number().int().optional(),
+        reviewsLimitDelta: z.number().int().optional(),
+        seatsLimitDelta: z.number().int().optional(),
+        reposLimitSet: z.number().int().min(0).nullable().optional(),
+        reviewsLimitSet: z.number().int().min(0).nullable().optional(),
+        seatsLimitSet: z.number().int().min(0).nullable().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const targetUser = await ctx.db.user.findUnique({
+        where: { id: input.userId },
+        select: {
+          email: true,
+          name: true,
+          planId: true,
+          overrideReposLimit: true,
+          overrideReviewsLimit: true,
+          overrideSeatsLimit: true,
+        },
+      });
+
+      if (!targetUser) {
+        throw new Error("User not found.");
+      }
+
+      let baseRepos = targetUser.overrideReposLimit;
+      let baseReviews = targetUser.overrideReviewsLimit;
+      let baseSeats = targetUser.overrideSeatsLimit;
+
+      if (baseRepos === null || baseReviews === null || baseSeats === null) {
+        const plan = await ctx.db.pricingPlan.findUnique({ where: { id: targetUser.planId } });
+        if (baseRepos === null) baseRepos = plan?.reposLimit ?? 3;
+        if (baseReviews === null) baseReviews = plan?.reviewsLimit ?? 50;
+        if (baseSeats === null) baseSeats = plan?.seatsLimit ?? 1;
+      }
+
+      const newReposLimit = input.reposLimitSet !== undefined
+        ? input.reposLimitSet
+        : input.reposLimitDelta !== undefined
+          ? Math.max(0, (baseRepos ?? 0) + input.reposLimitDelta)
+          : targetUser.overrideReposLimit;
+
+      const newReviewsLimit = input.reviewsLimitSet !== undefined
+        ? input.reviewsLimitSet
+        : input.reviewsLimitDelta !== undefined
+          ? Math.max(0, (baseReviews ?? 0) + input.reviewsLimitDelta)
+          : targetUser.overrideReviewsLimit;
+
+      const newSeatsLimit = input.seatsLimitSet !== undefined
+        ? input.seatsLimitSet
+        : input.seatsLimitDelta !== undefined
+          ? Math.max(0, (baseSeats ?? 0) + input.seatsLimitDelta)
+          : targetUser.overrideSeatsLimit;
+
+      await ctx.db.user.update({
+        where: { id: input.userId },
+        data: {
+          overrideReposLimit: newReposLimit,
+          overrideReviewsLimit: newReviewsLimit,
+          overrideSeatsLimit: newSeatsLimit,
+        },
+      });
+
+      void logAudit({
+        actorId: ctx.user.id,
+        action: "USER_LIMITS_UPDATED",
+        resource: "USER",
+        resourceId: input.userId,
+        ipAddress: ctx.ip,
+        userAgent: ctx.userAgent,
+        metadata: {
+          oldOverrides: {
+            repos: targetUser.overrideReposLimit,
+            reviews: targetUser.overrideReviewsLimit,
+            seats: targetUser.overrideSeatsLimit,
+          },
+          newOverrides: {
+            repos: newReposLimit,
+            reviews: newReviewsLimit,
+            seats: newSeatsLimit,
+          },
+        },
+      });
 
       return { success: true };
     }),

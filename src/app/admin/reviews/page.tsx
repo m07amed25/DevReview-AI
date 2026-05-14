@@ -528,201 +528,209 @@ export default function AdminReviewsPage() {
                   return (
                     <div key={review.id}>
                       <div
-                        className={`flex items-center gap-4 px-6 py-4 transition-colors cursor-pointer hover:bg-muted/30 ${
+                        className={`flex flex-col sm:flex-row sm:items-center gap-4 px-4 sm:px-6 py-4 transition-colors cursor-pointer hover:bg-muted/30 ${
                           isExpanded ? "bg-muted/20" : ""
                         }`}
                         onClick={() =>
                           setExpandedId(isExpanded ? null : review.id)
                         }
                       >
-                        {/* User Avatar */}
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Avatar className="h-8 w-8 shrink-0">
-                              {review.user.image && (
-                                <AvatarImage
-                                  src={review.user.image}
-                                  alt={review.user.name ?? ""}
-                                />
-                              )}
-                              <AvatarFallback className="text-xs">
-                                {(review.user.name ?? review.user.email)
-                                  .charAt(0)
-                                  .toUpperCase()}
-                              </AvatarFallback>
-                            </Avatar>
-                          </TooltipTrigger>
-                          <TooltipContent side="top">
-                            <p>{review.user.name ?? review.user.email}</p>
-                          </TooltipContent>
-                        </Tooltip>
+                        <div className="flex items-start sm:items-center gap-3 w-full sm:w-auto sm:flex-1 min-w-0">
+                          {/* User Avatar */}
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Avatar className="h-8 w-8 shrink-0">
+                                {review.user.image && (
+                                  <AvatarImage
+                                    src={review.user.image}
+                                    alt={review.user.name ?? ""}
+                                  />
+                                )}
+                                <AvatarFallback className="text-xs">
+                                  {(review.user.name ?? review.user.email)
+                                    .charAt(0)
+                                    .toUpperCase()}
+                                </AvatarFallback>
+                              </Avatar>
+                            </TooltipTrigger>
+                            <TooltipContent side="top">
+                              <p>{review.user.name ?? review.user.email}</p>
+                            </TooltipContent>
+                          </Tooltip>
 
-                        {/* PR Info */}
-                        <div className="min-w-0 flex-1">
+                          {/* PR Info */}
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2">
+                              <p className="truncate font-medium text-sm">
+                                {review.prTitle ?? `PR #${review.prNumber}`}
+                              </p>
+                              <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
+                                #{review.prNumber}
+                              </span>
+                            </div>
+                            <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted-foreground">
+                              <span className="truncate max-w-[200px]">
+                                {review.repository.fullName}
+                              </span>
+                              <span className="text-border">·</span>
+                              <span>
+                                {new Date(review.createdAt).toLocaleDateString(
+                                  undefined,
+                                  {
+                                    month: "short",
+                                    day: "numeric",
+                                    year: "numeric",
+                                  },
+                                )}
+                              </span>
+                              {review._count.threads > 0 && (
+                                <>
+                                  <span className="text-border">·</span>
+                                  <span className="inline-flex items-center gap-0.5">
+                                    <MessageSquare className="h-3 w-3" />
+                                    {review._count.threads}
+                                  </span>
+                                </>
+                              )}
+                              {review._count.childReviews > 0 && (
+                                <>
+                                  <span className="text-border">·</span>
+                                  <span className="inline-flex items-center gap-0.5">
+                                    <GitBranch className="h-3 w-3" />
+                                    {review._count.childReviews} re-review
+                                    {review._count.childReviews > 1 ? "s" : ""}
+                                  </span>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-4 pt-2 sm:pt-0 mt-2 sm:mt-0 border-t sm:border-t-0">
+                          <div className="flex items-center gap-4">
+                            {/* Feedback */}
+                            <div className="hidden lg:block">
+                              <FeedbackIndicator feedbacks={review.feedbacks} />
+                            </div>
+
+                            {/* Risk Score */}
+                            <div className="hidden sm:block">
+                              <RiskScoreBar score={review.riskScore} />
+                            </div>
+
+                            {/* Status */}
+                            <StatusBadge status={review.status} />
+                          </div>
+
                           <div className="flex items-center gap-2">
-                            <p className="truncate font-medium text-sm">
-                              {review.prTitle ?? `PR #${review.prNumber}`}
-                            </p>
-                            <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
-                              #{review.prNumber}
-                            </span>
-                          </div>
-                          <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted-foreground">
-                            <span className="truncate max-w-[200px]">
-                              {review.repository.fullName}
-                            </span>
-                            <span className="text-border">·</span>
-                            <span>
-                              {new Date(review.createdAt).toLocaleDateString(
-                                undefined,
-                                {
-                                  month: "short",
-                                  day: "numeric",
-                                  year: "numeric",
-                                },
-                              )}
-                            </span>
-                            {review._count.threads > 0 && (
-                              <>
-                                <span className="text-border">·</span>
-                                <span className="inline-flex items-center gap-0.5">
-                                  <MessageSquare className="h-3 w-3" />
-                                  {review._count.threads}
-                                </span>
-                              </>
-                            )}
-                            {review._count.childReviews > 0 && (
-                              <>
-                                <span className="text-border">·</span>
-                                <span className="inline-flex items-center gap-0.5">
-                                  <GitBranch className="h-3 w-3" />
-                                  {review._count.childReviews} re-review
-                                  {review._count.childReviews > 1 ? "s" : ""}
-                                </span>
-                              </>
-                            )}
-                          </div>
-                        </div>
+                            {/* Expand indicator */}
+                            <ChevronDown
+                              className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 ${
+                                isExpanded ? "rotate-180" : ""
+                              }`}
+                            />
 
-                        {/* Feedback */}
-                        <div className="hidden lg:block">
-                          <FeedbackIndicator feedbacks={review.feedbacks} />
-                        </div>
-
-                        {/* Risk Score */}
-                        <div className="hidden sm:block">
-                          <RiskScoreBar score={review.riskScore} />
-                        </div>
-
-                        {/* Status */}
-                        <StatusBadge status={review.status} />
-
-                        {/* Expand indicator */}
-                        <ChevronDown
-                          className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 ${
-                            isExpanded ? "rotate-180" : ""
-                          }`}
-                        />
-
-                        {/* Actions Menu */}
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8 shrink-0"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem
-                              disabled={review.repository.private}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                window.open(review.prUrl, "_blank");
-                              }}
-                            >
-                              <ExternalLink className="mr-2 h-4 w-4" />
-                              View on GitHub
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                window.open(
-                                  `/repo/${review.repository.id}/review/${review.id}`,
-                                  "_blank",
-                                );
-                              }}
-                            >
-                              <Eye className="mr-2 h-4 w-4" />
-                              View Review
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                void navigator.clipboard.writeText(review.id);
-                              }}
-                            >
-                              <Copy className="mr-2 h-4 w-4" />
-                              Copy ID
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <AlertDialog>
-                              <AlertDialogTrigger asChild>
+                            {/* Actions Menu */}
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8 shrink-0"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
                                 <DropdownMenuItem
-                                  variant="destructive"
-                                  onSelect={(e) => {
-                                    e.preventDefault();
+                                  disabled={review.repository.private}
+                                  onClick={(e) => {
                                     e.stopPropagation();
+                                    window.open(review.prUrl, "_blank");
                                   }}
                                 >
-                                  <Trash2 className="mr-2 h-4 w-4" />
-                                  Delete Review
+                                  <ExternalLink className="mr-2 h-4 w-4" />
+                                  View on GitHub
                                 </DropdownMenuItem>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>
-                                    Delete review?
-                                  </AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    Permanently delete review for{" "}
-                                    <strong>
-                                      {review.prTitle ??
-                                        `PR #${review.prNumber}`}
-                                    </strong>{" "}
-                                    in{" "}
-                                    <strong>
-                                      {review.repository.fullName}
-                                    </strong>
-                                    . This will also remove all associated
-                                    threads, feedback, and GitHub comments. This
-                                    action cannot be undone.
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                  <AlertDialogAction
-                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                                    onClick={() =>
-                                      deleteReview.mutate({
-                                        reviewId: review.id,
-                                      })
-                                    }
+                                <DropdownMenuItem
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    window.open(
+                                      `/repo/${review.repository.id}/review/${review.id}`,
+                                      "_blank",
+                                    );
+                                  }}
+                                >
+                                  <Eye className="mr-2 h-4 w-4" />
+                                  View Review
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    void navigator.clipboard.writeText(review.id);
+                                  }}
+                                >
+                                  <Copy className="mr-2 h-4 w-4" />
+                                  Copy ID
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <DropdownMenuItem
+                                      variant="destructive"
+                                      onSelect={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                      }}
+                                    >
+                                      <Trash2 className="mr-2 h-4 w-4" />
+                                      Delete Review
+                                    </DropdownMenuItem>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent
+                                    onClick={(e) => e.stopPropagation()}
                                   >
-                                    {deleteReview.isPending
-                                      ? "Deleting…"
-                                      : "Delete"}
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>
+                                        Delete review?
+                                      </AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        Permanently delete review for{" "}
+                                        <strong>
+                                          {review.prTitle ??
+                                            `PR #${review.prNumber}`}
+                                        </strong>{" "}
+                                        in{" "}
+                                        <strong>
+                                          {review.repository.fullName}
+                                        </strong>
+                                        . This will also remove all associated
+                                        threads, feedback, and GitHub comments. This
+                                        action cannot be undone.
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                      <AlertDialogAction
+                                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                        onClick={() =>
+                                          deleteReview.mutate({
+                                            reviewId: review.id,
+                                          })
+                                        }
+                                      >
+                                        {deleteReview.isPending
+                                          ? "Deleting…"
+                                          : "Delete"}
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+                        </div>
                       </div>
 
                       {/* Expanded detail panel */}

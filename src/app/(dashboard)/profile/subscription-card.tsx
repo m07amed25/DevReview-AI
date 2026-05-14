@@ -62,7 +62,7 @@ export function SubscriptionCard({
           isFree
             ? "bg-linear-to-br from-neutral-600 to-transparent"
             : isEnterprise
-              ? "bg-linear-to-br from-violet-600 via-fuchsia-600 to-transparent"
+              ? "bg-linear-to-br from-amber-500 via-orange-500 to-transparent"
               : "bg-linear-to-br from-indigo-600 to-transparent",
         )}
       />
@@ -73,7 +73,7 @@ export function SubscriptionCard({
           <div className="space-y-1.5">
             <Badge className={cn(
               "border-none text-[10px] font-semibold uppercase tracking-[0.2em] px-2 py-0.5",
-              isEnterprise ? "bg-violet-500 text-white" : "bg-indigo-500 text-white"
+              isEnterprise ? "bg-amber-500 text-white" : "bg-indigo-500 text-white"
             )}>
               Current Plan
             </Badge>
@@ -105,7 +105,7 @@ export function SubscriptionCard({
               label="Repositories"
               usage={stats.repositories}
               limit={limits.reposLimit}
-              color={isEnterprise ? "bg-violet-500" : "bg-indigo-500"}
+              color={isEnterprise ? "bg-amber-500" : "bg-indigo-500"}
               icon={<FolderGit2 className="size-4" />}
               className="bg-black/20 border-white/5"
             />
@@ -113,7 +113,7 @@ export function SubscriptionCard({
               label="AI Reviews"
               usage={stats.reviews}
               limit={limits.reviewsLimit}
-              color={isEnterprise ? "bg-fuchsia-500" : "bg-violet-500"}
+              color={isEnterprise ? "bg-orange-500" : "bg-violet-500"}
               icon={<CheckCircle2 className="size-4" />}
               className="bg-black/20 border-white/5"
             />

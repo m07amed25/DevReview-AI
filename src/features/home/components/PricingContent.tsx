@@ -47,6 +47,7 @@ export interface DbPricingPlan {
   seatsLimit: number | null;
   privateRepos: boolean;
   sortOrder: number;
+  accentColor: string;
 }
 
 interface MergedPlan extends DbPricingPlan {
@@ -57,6 +58,15 @@ interface MergedPlan extends DbPricingPlan {
   badgeColor: string;
   cta: string;
   ctaVariant: "default" | "outline";
+  glow: string;
+  borderGlow: string;
+  iconShadow: string;
+  buttonBg: string;
+  buttonHoverBg: string;
+  buttonShadow: string;
+  buttonOutlineHoverBg: string;
+  checkBg: string;
+  dividerVia: string;
 }
 
 interface PlanFeature {
@@ -66,33 +76,144 @@ interface PlanFeature {
   enterprise: boolean | string;
 }
 
+export const ACCENT_THEMES: Record<
+  string,
+  {
+    color: string;
+    borderColor: string;
+    badgeColor: string;
+    glow: string;
+    borderGlow: string;
+    iconShadow: string;
+    buttonBg: string;
+    buttonHoverBg: string;
+    buttonShadow: string;
+    buttonOutlineHoverBg: string;
+    checkBg: string;
+    dividerVia: string;
+  }
+> = {
+  slate: {
+    color: "from-slate-500 to-slate-600",
+    borderColor: "border-slate-500/50",
+    badgeColor: "bg-slate-500 text-white",
+    glow: "from-slate-500/10 via-slate-500/5 to-transparent",
+    borderGlow: "from-slate-500 via-slate-500 to-slate-600",
+    iconShadow: "shadow-slate-500/30",
+    buttonBg: "bg-linear-to-r from-slate-500 to-slate-600",
+    buttonHoverBg: "hover:from-slate-600 hover:to-slate-700",
+    buttonShadow: "shadow-slate-500/40 hover:shadow-slate-500/60",
+    buttonOutlineHoverBg: "hover:bg-slate-500/10 hover:border-slate-500",
+    checkBg: "bg-linear-to-br from-slate-500 to-slate-600",
+    dividerVia: "via-slate-500/30",
+  },
+  indigo: {
+    color: "from-indigo-500 to-violet-600",
+    borderColor: "border-indigo-500/50",
+    badgeColor: "bg-linear-to-r from-indigo-500 to-violet-600 text-white",
+    glow: "from-indigo-500/10 via-violet-500/5 to-transparent",
+    borderGlow: "from-indigo-500 via-violet-500 to-purple-600",
+    iconShadow: "shadow-indigo-500/40",
+    buttonBg: "bg-linear-to-r from-indigo-500 to-violet-600",
+    buttonHoverBg: "hover:from-indigo-600 hover:to-violet-700",
+    buttonShadow: "shadow-indigo-500/40 hover:shadow-indigo-500/60",
+    buttonOutlineHoverBg: "hover:bg-indigo-500/10 hover:border-indigo-500",
+    checkBg: "bg-linear-to-br from-indigo-500 to-violet-600",
+    dividerVia: "via-indigo-500/30",
+  },
+  amber: {
+    color: "from-amber-500 to-orange-600",
+    borderColor: "border-amber-500/40",
+    badgeColor: "bg-amber-500 text-white",
+    glow: "from-amber-500/8 via-orange-500/5 to-transparent",
+    borderGlow: "from-amber-500 via-amber-500 to-orange-600",
+    iconShadow: "shadow-amber-500/30",
+    buttonBg: "bg-linear-to-r from-amber-500 to-orange-600",
+    buttonHoverBg: "hover:from-amber-600 hover:to-orange-700",
+    buttonShadow: "shadow-amber-500/40 hover:shadow-amber-500/60",
+    buttonOutlineHoverBg: "hover:bg-amber-500/10 hover:border-amber-500",
+    checkBg: "bg-linear-to-br from-amber-500 to-orange-600",
+    dividerVia: "via-amber-500/30",
+  },
+  rose: {
+    color: "from-rose-500 to-pink-600",
+    borderColor: "border-rose-500/40",
+    badgeColor: "bg-rose-500 text-white",
+    glow: "from-rose-500/10 via-pink-500/5 to-transparent",
+    borderGlow: "from-rose-500 via-rose-500 to-pink-600",
+    iconShadow: "shadow-rose-500/30",
+    buttonBg: "bg-linear-to-r from-rose-500 to-pink-600",
+    buttonHoverBg: "hover:from-rose-600 hover:to-pink-700",
+    buttonShadow: "shadow-rose-500/40 hover:shadow-rose-500/60",
+    buttonOutlineHoverBg: "hover:bg-rose-500/10 hover:border-rose-500",
+    checkBg: "bg-linear-to-br from-rose-500 to-pink-600",
+    dividerVia: "via-rose-500/30",
+  },
+  emerald: {
+    color: "from-emerald-500 to-teal-600",
+    borderColor: "border-emerald-500/40",
+    badgeColor: "bg-emerald-500 text-white",
+    glow: "from-emerald-500/10 via-teal-500/5 to-transparent",
+    borderGlow: "from-emerald-500 via-emerald-500 to-teal-600",
+    iconShadow: "shadow-emerald-500/30",
+    buttonBg: "bg-linear-to-r from-emerald-500 to-teal-600",
+    buttonHoverBg: "hover:from-emerald-600 hover:to-teal-700",
+    buttonShadow: "shadow-emerald-500/40 hover:shadow-emerald-500/60",
+    buttonOutlineHoverBg: "hover:bg-emerald-500/10 hover:border-emerald-500",
+    checkBg: "bg-linear-to-br from-emerald-500 to-teal-600",
+    dividerVia: "via-emerald-500/30",
+  },
+  violet: {
+    color: "from-violet-500 to-purple-600",
+    borderColor: "border-violet-500/40",
+    badgeColor: "bg-violet-500 text-white",
+    glow: "from-violet-500/10 via-purple-500/5 to-transparent",
+    borderGlow: "from-violet-500 via-violet-500 to-purple-600",
+    iconShadow: "shadow-violet-500/30",
+    buttonBg: "bg-linear-to-r from-violet-500 to-purple-600",
+    buttonHoverBg: "hover:from-violet-600 hover:to-purple-700",
+    buttonShadow: "shadow-violet-500/40 hover:shadow-violet-500/60",
+    buttonOutlineHoverBg: "hover:bg-violet-500/10 hover:border-violet-500",
+    checkBg: "bg-linear-to-br from-violet-500 to-purple-600",
+    dividerVia: "via-violet-500/30",
+  },
+  blue: {
+    color: "from-blue-500 to-cyan-600",
+    borderColor: "border-blue-500/40",
+    badgeColor: "bg-blue-500 text-white",
+    glow: "from-blue-500/10 via-cyan-500/5 to-transparent",
+    borderGlow: "from-blue-500 via-blue-500 to-cyan-600",
+    iconShadow: "shadow-blue-500/30",
+    buttonBg: "bg-linear-to-r from-blue-500 to-cyan-600",
+    buttonHoverBg: "hover:from-blue-600 hover:to-cyan-700",
+    buttonShadow: "shadow-blue-500/40 hover:shadow-blue-500/60",
+    buttonOutlineHoverBg: "hover:bg-blue-500/10 hover:border-blue-500",
+    checkBg: "bg-linear-to-br from-blue-500 to-cyan-600",
+    dividerVia: "via-blue-500/30",
+  },
+};
+
 /* Display-only constants (not stored in DB) */
-const PLAN_DISPLAY_MAP: Record<Plan, Omit<MergedPlan, keyof DbPricingPlan>> = {
+const PLAN_DISPLAY_MAP: Record<
+  string,
+  Pick<MergedPlan, "icon" | "badge" | "cta" | "ctaVariant">
+> = {
   [Plan.FREE]: {
     icon: Zap,
-    color: "from-slate-500 to-slate-600",
-    borderColor: "border-border",
     badge: null,
-    badgeColor: "",
     cta: "Start Free",
     ctaVariant: "outline",
   },
   [Plan.PRO]: {
     icon: Rocket,
-    color: "from-indigo-500 to-violet-600",
-    borderColor: "border-indigo-500/50",
     badge: "Most Popular",
-    badgeColor: "bg-linear-to-r from-indigo-500 to-violet-600 text-white",
     cta: "Start Pro Trial",
     ctaVariant: "default",
   },
   [Plan.ENTERPRISE]: {
     icon: Crown,
-    color: "from-amber-500 to-orange-600",
-    borderColor: "border-amber-500/40",
     badge: "Best Value",
-    badgeColor: "bg-amber-500 text-white",
-    cta: "Go Enterprise",
+    cta: "Go Ultra",
     ctaVariant: "outline",
   },
 };
@@ -107,10 +228,30 @@ function buildComparison(plans: MergedPlan[]): PlanFeature[] {
   const p = get(Plan.PRO);
   const e = get(Plan.ENTERPRISE);
   return [
-    { label: "Repositories", free: limitLabel(f?.reposLimit ?? 1), pro: limitLabel(p?.reposLimit ?? 10), enterprise: limitLabel(e?.reposLimit ?? null) },
-    { label: "AI Reviews / month", free: limitLabel(f?.reviewsLimit ?? 5), pro: limitLabel(p?.reviewsLimit ?? 100), enterprise: limitLabel(e?.reviewsLimit ?? null) },
-    { label: "Team seats", free: limitLabel(f?.seatsLimit ?? 1), pro: limitLabel(p?.seatsLimit ?? 5), enterprise: limitLabel(e?.seatsLimit ?? null) },
-    { label: "Private repos", free: f?.privateRepos ?? false, pro: p?.privateRepos ?? true, enterprise: e?.privateRepos ?? true },
+    {
+      label: "Repositories",
+      free: limitLabel(f?.reposLimit ?? 1),
+      pro: limitLabel(p?.reposLimit ?? 10),
+      enterprise: limitLabel(e?.reposLimit ?? null),
+    },
+    {
+      label: "AI Reviews / month",
+      free: limitLabel(f?.reviewsLimit ?? 5),
+      pro: limitLabel(p?.reviewsLimit ?? 100),
+      enterprise: limitLabel(e?.reviewsLimit ?? null),
+    },
+    {
+      label: "Team seats",
+      free: limitLabel(f?.seatsLimit ?? 1),
+      pro: limitLabel(p?.seatsLimit ?? 5),
+      enterprise: limitLabel(e?.seatsLimit ?? null),
+    },
+    {
+      label: "Private repos",
+      free: f?.privateRepos ?? false,
+      pro: p?.privateRepos ?? true,
+      enterprise: e?.privateRepos ?? true,
+    },
     { label: "Custom review rules", free: false, pro: true, enterprise: true },
     { label: "PR inline comments", free: false, pro: true, enterprise: true },
     { label: "Advanced analytics", free: false, pro: false, enterprise: true },
@@ -133,9 +274,10 @@ const FAQS = (trialDays: number, annualDiscount: number, trialPlan: string) => [
   },
   {
     q: "Do you offer a free trial for paid plans?",
-    a: trialDays > 0
-      ? `Yes! The ${trialPlan.charAt(0) + trialPlan.slice(1).toLowerCase()} plan includes a ${trialDays}-day free trial with no credit card required. Enterprise trials are available on request.`
-      : "Trial periods are not available at this time. All paid plans can be cancelled anytime.",
+    a:
+      trialDays > 0
+        ? `Yes! The ${trialPlan.charAt(0) + trialPlan.slice(1).toLowerCase()} plan includes a ${trialDays}-day free trial with no credit card required. Ultra trials are available on request.`
+        : "Trial periods are not available at this time. All paid plans can be cancelled anytime.",
   },
   {
     q: "Is there a discount for annual billing?",
@@ -147,7 +289,7 @@ const FAQS = (trialDays: number, annualDiscount: number, trialPlan: string) => [
   },
   {
     q: "Do you support self-hosted Git servers?",
-    a: "Enterprise plan supports GitHub Enterprise, GitLab Self-Managed, and Bitbucket Data Center. Contact us for custom setups.",
+    a: "Ultra plan supports GitHub Enterprise, GitLab Self-Managed, and Bitbucket Data Center. Contact us for custom setups.",
   },
 ];
 
@@ -181,29 +323,35 @@ function PlanCard({
     <motion.div
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ y: plan.highlight ? -6 : -4, transition: { duration: 0.2 } }}
+      transition={{
+        duration: 0.6,
+        delay: index * 0.12,
+        ease: [0.22, 1, 0.36, 1],
+      }}
+      whileHover={{
+        y: plan.highlight ? -6 : -4,
+        transition: { duration: 0.2 },
+      }}
       className={cn(
         "group relative flex flex-col rounded-3xl border bg-card p-8 transition-all duration-300",
         plan.highlight
-          ? "border-transparent shadow-2xl shadow-indigo-500/25 scale-[1.03] z-10"
+          ? `border-transparent shadow-2xl scale-[1.03] z-10 shadow-${plan.accentColor || "indigo"}-500/25`
           : "border-border/60 hover:border-border hover:shadow-xl",
       )}
     >
       {/* Gradient border for highlighted card */}
       {plan.highlight && (
-        <div className="absolute inset-0 rounded-3xl bg-linear-to-br from-indigo-500 via-violet-500 to-purple-600 p-px -z-10">
+        <div
+          className={`absolute inset-0 rounded-3xl bg-linear-to-br ${plan.borderGlow} p-px -z-10`}
+        >
           <div className="h-full w-full rounded-3xl bg-card" />
         </div>
       )}
 
       {/* Ambient glow */}
-      {plan.highlight && (
-        <div className="pointer-events-none absolute -inset-px rounded-3xl bg-linear-to-br from-indigo-500/10 via-violet-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      )}
-      {plan.id === Plan.ENTERPRISE && (
-        <div className="pointer-events-none absolute -inset-px rounded-3xl bg-linear-to-br from-amber-500/8 via-orange-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      )}
+      <div
+        className={`pointer-events-none absolute -inset-px rounded-3xl bg-linear-to-br ${plan.glow} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
+      />
 
       {/* Badge */}
       {plan.badge && (
@@ -211,7 +359,11 @@ function PlanCard({
           <motion.span
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: index * 0.12 + 0.3, type: "spring", stiffness: 200 }}
+            transition={{
+              delay: index * 0.12 + 0.3,
+              type: "spring",
+              stiffness: 200,
+            }}
             className={cn(
               "relative inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-bold tracking-wide shadow-lg",
               plan.badgeColor,
@@ -229,11 +381,10 @@ function PlanCard({
           className={cn(
             "mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br shadow-lg",
             plan.color,
-            plan.highlight && "shadow-indigo-500/40",
-            plan.id === Plan.ENTERPRISE && "shadow-amber-500/30",
+            plan.iconShadow,
           )}
         >
-          <Icon className="h-7 w-7 text-white" />
+          <Icon className="h-6 w-6 text-white" />
         </div>
         <h3 className="text-2xl font-bold">{plan.name}</h3>
         <p className="mt-1 text-sm text-muted-foreground">{plan.tagline}</p>
@@ -250,10 +401,8 @@ function PlanCard({
               transition={{ duration: 0.25 }}
               className={cn(
                 "text-5xl font-extrabold tracking-tight",
-                plan.highlight &&
-                  "bg-linear-to-r from-indigo-500 to-violet-500 bg-clip-text text-transparent",
-                plan.id === Plan.ENTERPRISE &&
-                  "bg-linear-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent",
+                (plan.highlight || plan.monthlyPrice > 0) &&
+                  `bg-linear-to-r ${plan.color} bg-clip-text text-transparent`,
               )}
             >
               ${price}
@@ -292,9 +441,10 @@ function PlanCard({
         className={cn(
           "mb-8 w-full gap-2 font-bold text-base h-12 transition-all duration-200",
           plan.highlight &&
-            "bg-linear-to-r from-indigo-500 to-violet-600 hover:from-indigo-600 hover:to-violet-700 border-0 text-white shadow-lg shadow-indigo-500/40 hover:shadow-indigo-500/60 hover:scale-[1.02]",
-          plan.id === Plan.ENTERPRISE &&
-            "border-amber-500/50 hover:bg-amber-500/10 hover:border-amber-500 hover:scale-[1.02]",
+            `${plan.buttonBg} ${plan.buttonHoverBg} border-0 text-white shadow-lg ${plan.buttonShadow} hover:scale-[1.02]`,
+          !plan.highlight &&
+            plan.monthlyPrice > 0 &&
+            `${plan.borderColor} ${plan.buttonOutlineHoverBg} hover:scale-[1.02]`,
           isFreeUnavailable && "opacity-60 cursor-not-allowed",
         )}
         size="lg"
@@ -314,7 +464,14 @@ function PlanCard({
       </Button>
 
       {/* Divider */}
-      <div className={cn("mb-6 h-px w-full", plan.highlight ? "bg-linear-to-r from-transparent via-indigo-500/30 to-transparent" : "bg-border/50")} />
+      <div
+        className={cn(
+          "mb-6 h-px w-full",
+          plan.highlight
+            ? `bg-linear-to-r from-transparent ${plan.dividerVia} to-transparent`
+            : "bg-border/50",
+        )}
+      />
 
       <ul className="flex-1 space-y-3">
         {plan.features.map((feature) => (
@@ -322,11 +479,9 @@ function PlanCard({
             <span
               className={cn(
                 "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full shadow-sm",
-                plan.highlight
-                  ? "bg-linear-to-br from-indigo-500 to-violet-600 text-white"
-                  : plan.id === Plan.ENTERPRISE
-                    ? "bg-linear-to-br from-amber-500 to-orange-500 text-white"
-                    : "bg-muted text-muted-foreground",
+                plan.monthlyPrice > 0 || plan.highlight
+                  ? `${plan.checkBg} text-white`
+                  : "bg-muted text-muted-foreground",
               )}
             >
               <Check className="h-3 w-3" />
@@ -341,7 +496,9 @@ function PlanCard({
 
 function ComparisonCell({ value }: { value: boolean | string }) {
   if (typeof value === "string") {
-    return <td className="px-6 py-4 text-center text-sm font-medium">{value}</td>;
+    return (
+      <td className="px-6 py-4 text-center text-sm font-medium">{value}</td>
+    );
   }
   return (
     <td className="px-6 py-4 text-center">
@@ -436,10 +593,14 @@ export function PricingContent({
   const { annualDiscount, trialDays, trialPlan, freeSignupEnabled } = settings;
   const [yearly, setYearly] = useState(true);
 
-  const mergedPlans: MergedPlan[] = dbPlans.map((p) => ({
-    ...p,
-    ...(PLAN_DISPLAY_MAP[p.id as Plan] ?? PLAN_DISPLAY_MAP[Plan.FREE]!),
-  }));
+  const mergedPlans: MergedPlan[] = dbPlans.map((p) => {
+    const theme = ACCENT_THEMES[p.accentColor] || ACCENT_THEMES.slate;
+    return {
+      ...p,
+      ...(PLAN_DISPLAY_MAP[p.id as Plan] ?? PLAN_DISPLAY_MAP[Plan.FREE]!),
+      ...theme,
+    };
+  });
   const COMPARISON = buildComparison(mergedPlans);
 
   return (
@@ -507,7 +668,13 @@ export function PricingContent({
           >
             {[
               { icon: Shield, text: "No credit card required" },
-              { icon: Clock, text: trialDays > 0 ? `${trialDays}-day free trial` : "No trial required" },
+              {
+                icon: Clock,
+                text:
+                  trialDays > 0
+                    ? `${trialDays}-day free trial`
+                    : "No trial required",
+              },
               { icon: Zap, text: "Cancel anytime" },
             ].map(({ icon: Icon, text }) => (
               <div key={text} className="flex items-center gap-1.5">
@@ -559,12 +726,20 @@ export function PricingContent({
       <section className="mx-auto max-w-6xl px-6 pb-24">
         <div className="grid gap-8 lg:grid-cols-3 lg:items-stretch">
           {mergedPlans.map((plan, i) => (
-            <PlanCard key={plan.id} plan={plan} yearly={yearly} index={i} freeSignupEnabled={freeSignupEnabled} annualDiscount={annualDiscount} />
+            <PlanCard
+              key={plan.id}
+              plan={plan}
+              yearly={yearly}
+              index={i}
+              freeSignupEnabled={freeSignupEnabled}
+              annualDiscount={annualDiscount}
+            />
           ))}
         </div>
         {yearly && (
           <p className="mt-4 text-center text-xs text-muted-foreground">
-            * Prices shown per month, billed annually. Save {annualDiscount}% vs monthly.
+            * Prices shown per month, billed annually. Save {annualDiscount}% vs
+            monthly.
           </p>
         )}
       </section>
@@ -580,7 +755,9 @@ export function PricingContent({
           <h2 className="text-3xl font-bold tracking-tight">
             Compare all features
           </h2>
-          <p className="mt-2 text-muted-foreground">Every detail, side by side.</p>
+          <p className="mt-2 text-muted-foreground">
+            Every detail, side by side.
+          </p>
         </motion.div>
 
         <div className="overflow-hidden rounded-2xl border shadow-sm">
@@ -661,7 +838,7 @@ export function PricingContent({
               },
               {
                 quote:
-                  "Enterprise's unlimited seats let our entire 40-person eng team stay in sync without extra overhead.",
+                  "Ultra's unlimited seats let our entire 40-person eng team stay in sync without extra overhead.",
                 author: "Priya N.",
                 role: "VP Engineering",
               },
@@ -753,7 +930,11 @@ export function PricingContent({
 
               <motion.div
                 animate={{ rotate: [0, 10, -10, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
                 className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-indigo-500 to-violet-600 shadow-lg shadow-indigo-500/40"
               >
                 <Rocket className="h-8 w-8 text-white" />
@@ -773,7 +954,10 @@ export function PricingContent({
                 <PricingCtaUsers />
               </Suspense>
               <div className="mt-8 flex flex-wrap justify-center gap-4">
-                <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
+                <motion.div
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.97 }}
+                >
                   <Button
                     size="lg"
                     className="gap-2 bg-linear-to-r from-indigo-500 to-violet-600 px-10 font-bold text-white shadow-lg shadow-indigo-500/40 hover:from-indigo-600 hover:to-violet-700 border-0 h-13 text-base"
@@ -785,7 +969,10 @@ export function PricingContent({
                     </Link>
                   </Button>
                 </motion.div>
-                <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
+                <motion.div
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.97 }}
+                >
                   <Button
                     size="lg"
                     variant="outline"

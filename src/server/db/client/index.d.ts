@@ -44109,6 +44109,7 @@ export namespace Prisma {
     seatsLimit: number | null
     privateRepos: boolean | null
     sortOrder: number | null
+    accentColor: string | null
     updatedAt: Date | null
   }
 
@@ -44124,6 +44125,7 @@ export namespace Prisma {
     seatsLimit: number | null
     privateRepos: boolean | null
     sortOrder: number | null
+    accentColor: string | null
     updatedAt: Date | null
   }
 
@@ -44140,6 +44142,7 @@ export namespace Prisma {
     seatsLimit: number
     privateRepos: number
     sortOrder: number
+    accentColor: number
     updatedAt: number
     _all: number
   }
@@ -44173,6 +44176,7 @@ export namespace Prisma {
     seatsLimit?: true
     privateRepos?: true
     sortOrder?: true
+    accentColor?: true
     updatedAt?: true
   }
 
@@ -44188,6 +44192,7 @@ export namespace Prisma {
     seatsLimit?: true
     privateRepos?: true
     sortOrder?: true
+    accentColor?: true
     updatedAt?: true
   }
 
@@ -44204,6 +44209,7 @@ export namespace Prisma {
     seatsLimit?: true
     privateRepos?: true
     sortOrder?: true
+    accentColor?: true
     updatedAt?: true
     _all?: true
   }
@@ -44307,6 +44313,7 @@ export namespace Prisma {
     seatsLimit: number | null
     privateRepos: boolean
     sortOrder: number
+    accentColor: string
     updatedAt: Date
     _count: PricingPlanCountAggregateOutputType | null
     _avg: PricingPlanAvgAggregateOutputType | null
@@ -44342,6 +44349,7 @@ export namespace Prisma {
     seatsLimit?: boolean
     privateRepos?: boolean
     sortOrder?: boolean
+    accentColor?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["pricingPlan"]>
 
@@ -44358,6 +44366,7 @@ export namespace Prisma {
     seatsLimit?: boolean
     privateRepos?: boolean
     sortOrder?: boolean
+    accentColor?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["pricingPlan"]>
 
@@ -44374,6 +44383,7 @@ export namespace Prisma {
     seatsLimit?: boolean
     privateRepos?: boolean
     sortOrder?: boolean
+    accentColor?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["pricingPlan"]>
 
@@ -44390,10 +44400,11 @@ export namespace Prisma {
     seatsLimit?: boolean
     privateRepos?: boolean
     sortOrder?: boolean
+    accentColor?: boolean
     updatedAt?: boolean
   }
 
-  export type PricingPlanOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "tagline" | "monthlyPrice" | "visible" | "highlight" | "features" | "reposLimit" | "reviewsLimit" | "seatsLimit" | "privateRepos" | "sortOrder" | "updatedAt", ExtArgs["result"]["pricingPlan"]>
+  export type PricingPlanOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "tagline" | "monthlyPrice" | "visible" | "highlight" | "features" | "reposLimit" | "reviewsLimit" | "seatsLimit" | "privateRepos" | "sortOrder" | "accentColor" | "updatedAt", ExtArgs["result"]["pricingPlan"]>
 
   export type $PricingPlanPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "PricingPlan"
@@ -44411,6 +44422,7 @@ export namespace Prisma {
       seatsLimit: number | null
       privateRepos: boolean
       sortOrder: number
+      accentColor: string
       updatedAt: Date
     }, ExtArgs["result"]["pricingPlan"]>
     composites: {}
@@ -44847,6 +44859,7 @@ export namespace Prisma {
     readonly seatsLimit: FieldRef<"PricingPlan", 'Int'>
     readonly privateRepos: FieldRef<"PricingPlan", 'Boolean'>
     readonly sortOrder: FieldRef<"PricingPlan", 'Int'>
+    readonly accentColor: FieldRef<"PricingPlan", 'String'>
     readonly updatedAt: FieldRef<"PricingPlan", 'DateTime'>
   }
     
@@ -46924,6 +46937,7 @@ export namespace Prisma {
     seatsLimit: 'seatsLimit',
     privateRepos: 'privateRepos',
     sortOrder: 'sortOrder',
+    accentColor: 'accentColor',
     updatedAt: 'updatedAt'
   };
 
@@ -50207,6 +50221,7 @@ export namespace Prisma {
     seatsLimit?: IntNullableFilter<"PricingPlan"> | number | null
     privateRepos?: BoolFilter<"PricingPlan"> | boolean
     sortOrder?: IntFilter<"PricingPlan"> | number
+    accentColor?: StringFilter<"PricingPlan"> | string
     updatedAt?: DateTimeFilter<"PricingPlan"> | Date | string
   }
 
@@ -50223,6 +50238,7 @@ export namespace Prisma {
     seatsLimit?: SortOrderInput | SortOrder
     privateRepos?: SortOrder
     sortOrder?: SortOrder
+    accentColor?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -50242,6 +50258,7 @@ export namespace Prisma {
     seatsLimit?: IntNullableFilter<"PricingPlan"> | number | null
     privateRepos?: BoolFilter<"PricingPlan"> | boolean
     sortOrder?: IntFilter<"PricingPlan"> | number
+    accentColor?: StringFilter<"PricingPlan"> | string
     updatedAt?: DateTimeFilter<"PricingPlan"> | Date | string
   }, "id">
 
@@ -50258,6 +50275,7 @@ export namespace Prisma {
     seatsLimit?: SortOrderInput | SortOrder
     privateRepos?: SortOrder
     sortOrder?: SortOrder
+    accentColor?: SortOrder
     updatedAt?: SortOrder
     _count?: PricingPlanCountOrderByAggregateInput
     _avg?: PricingPlanAvgOrderByAggregateInput
@@ -50282,6 +50300,7 @@ export namespace Prisma {
     seatsLimit?: IntNullableWithAggregatesFilter<"PricingPlan"> | number | null
     privateRepos?: BoolWithAggregatesFilter<"PricingPlan"> | boolean
     sortOrder?: IntWithAggregatesFilter<"PricingPlan"> | number
+    accentColor?: StringWithAggregatesFilter<"PricingPlan"> | string
     updatedAt?: DateTimeWithAggregatesFilter<"PricingPlan"> | Date | string
   }
 
@@ -53530,6 +53549,7 @@ export namespace Prisma {
     seatsLimit?: number | null
     privateRepos?: boolean
     sortOrder?: number
+    accentColor?: string
     updatedAt?: Date | string
   }
 
@@ -53546,6 +53566,7 @@ export namespace Prisma {
     seatsLimit?: number | null
     privateRepos?: boolean
     sortOrder?: number
+    accentColor?: string
     updatedAt?: Date | string
   }
 
@@ -53562,6 +53583,7 @@ export namespace Prisma {
     seatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     privateRepos?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    accentColor?: StringFieldUpdateOperationsInput | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -53578,6 +53600,7 @@ export namespace Prisma {
     seatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     privateRepos?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    accentColor?: StringFieldUpdateOperationsInput | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -53594,6 +53617,7 @@ export namespace Prisma {
     seatsLimit?: number | null
     privateRepos?: boolean
     sortOrder?: number
+    accentColor?: string
     updatedAt?: Date | string
   }
 
@@ -53610,6 +53634,7 @@ export namespace Prisma {
     seatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     privateRepos?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    accentColor?: StringFieldUpdateOperationsInput | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -53626,6 +53651,7 @@ export namespace Prisma {
     seatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     privateRepos?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    accentColor?: StringFieldUpdateOperationsInput | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -56188,6 +56214,7 @@ export namespace Prisma {
     seatsLimit?: SortOrder
     privateRepos?: SortOrder
     sortOrder?: SortOrder
+    accentColor?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -56211,6 +56238,7 @@ export namespace Prisma {
     seatsLimit?: SortOrder
     privateRepos?: SortOrder
     sortOrder?: SortOrder
+    accentColor?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -56226,6 +56254,7 @@ export namespace Prisma {
     seatsLimit?: SortOrder
     privateRepos?: SortOrder
     sortOrder?: SortOrder
+    accentColor?: SortOrder
     updatedAt?: SortOrder
   }
 

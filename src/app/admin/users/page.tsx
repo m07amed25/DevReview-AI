@@ -61,6 +61,7 @@ import {
   Users,
   CheckCircle2,
   AlertCircle,
+  Sliders,
 } from "lucide-react";
 import { DropdownSelect, SelectItem } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -92,6 +93,19 @@ export default function AdminUsersPage() {
   const [overrideReviews, setOverrideReviews] = useState<string>("");
   const [overrideSeats, setOverrideSeats] = useState<string>("");
 
+  // Limits dialog state
+  const [limitsTarget, setLimitsTarget] = useState<{
+    id: string;
+    name: string;
+    overrideReposLimit: number | null;
+    overrideReviewsLimit: number | null;
+    overrideSeatsLimit: number | null;
+  } | null>(null);
+  const [limitsMode, setLimitsMode] = useState<"SET" | "EXTEND">("SET");
+  const [reposVal, setReposVal] = useState<string>("");
+  const [reviewsVal, setReviewsVal] = useState<string>("");
+  const [seatsVal, setSeatsVal] = useState<string>("");
+
   // Bulk selection state
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const [isBulkPlanDialogOpen, setIsBulkPlanDialogOpen] = useState(false);
@@ -122,6 +136,17 @@ export default function AdminUsersPage() {
     },
     onError: (err) => {
       toast.error(err.message || "Failed to update plan");
+    },
+  });
+
+  const updateLimits = trpc.admin.updateUserLimits.useMutation({
+    onSuccess: () => {
+      setLimitsTarget(null);
+      toast.success("User limits updated successfully");
+      void refetch();
+    },
+    onError: (err) => {
+      toast.error(err.message || "Failed to update limits");
     },
   });
 
@@ -345,8 +370,8 @@ export default function AdminUsersPage() {
                                 setIsSelectAllMenuOpen(false);
                               }}
                             >
-                              <div className="w-2 h-2 rounded-full bg-violet-600" />
-                              Select all Enterprise users
+                              <div className="w-2 h-2 rounded-full bg-amber-500" />
+                              Select all Ultra users
                             </button>
 
                             <div className="h-px bg-neutral-100 dark:bg-neutral-800 my-1" />
@@ -370,38 +395,39 @@ export default function AdminUsersPage() {
                 {data?.users.map((user) => (
                   <div
                     key={user.id}
-                    className={`flex items-center gap-4 px-6 py-4 transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-900/40 ${
+                    className={`flex flex-col sm:flex-row sm:items-center gap-4 px-4 sm:px-6 py-4 transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-900/40 ${
                       user.banned ? "bg-amber-500/5" : ""
                     }`}
                   >
-                    <Checkbox
-                      checked={selectedUsers.includes(user.id)}
-                      onCheckedChange={(checked) => {
-                        if (checked) {
-                          setSelectedUsers([...selectedUsers, user.id]);
-                        } else {
-                          setSelectedUsers(
-                            selectedUsers.filter((id) => id !== user.id),
-                          );
-                        }
-                      }}
-                    />
-                    <Avatar className="h-9 w-9 shrink-0">
-                      {user.image && (
-                        <AvatarImage src={user.image} alt={user.name ?? ""} />
-                      )}
-                      <AvatarFallback>
-                        {(user.name ?? user.email).charAt(0).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
+                    <div className="flex items-center gap-3 w-full sm:w-auto sm:flex-1 min-w-0">
+                      <Checkbox
+                        checked={selectedUsers.includes(user.id)}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            setSelectedUsers([...selectedUsers, user.id]);
+                          } else {
+                            setSelectedUsers(
+                              selectedUsers.filter((id) => id !== user.id),
+                            );
+                          }
+                        }}
+                      />
+                      <Avatar className="h-9 w-9 shrink-0">
+                        {user.image && (
+                          <AvatarImage src={user.image} alt={user.name ?? ""} />
+                        )}
+                        <AvatarFallback>
+                          {(user.name ?? user.email).charAt(0).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
 
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2">
-                        <span className="truncate font-medium">
-                          {user.name ?? "(no name)"}
-                        </span>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="truncate font-medium">
+                            {user.name ?? "(no name)"}
+                          </span>
 
-                        {/* Role badge */}
+                          {/* Role badge */}
                         {user.isOwner ? (
                           <Badge
                             variant="default"
@@ -465,21 +491,22 @@ export default function AdminUsersPage() {
                           className={cn(
                             "text-[10px] h-5 px-1.5 font-normal",
                             user.planId === Plan.ENTERPRISE
-                              ? "bg-purple-500/10 text-purple-500 border-purple-500/20"
+                              ? "bg-amber-500/10 text-amber-600 border-amber-500/20"
                               : user.planId === Plan.PRO
                                 ? "bg-indigo-500/10 text-indigo-500 border-indigo-500/20"
                                 : "bg-neutral-500/10 text-neutral-500 border-neutral-500/20"
                           )}
                         >
-                          {user.planId === Plan.ENTERPRISE ? "ENTERPRISE" : user.planId.toUpperCase()}
+                          {user.planId === Plan.ENTERPRISE ? "ULTRA" : user.planId.toUpperCase()}
                         </Badge>
                       </div>
                       <p className="truncate text-sm text-muted-foreground">
                         {user.email}
                       </p>
                     </div>
+                    </div>
 
-                    <div className="hidden gap-6 text-center text-sm sm:flex">
+                    <div className="hidden gap-6 text-center text-sm lg:flex">
                       <div>
                         <p className="font-medium">
                           {user._count.repositories}
@@ -496,11 +523,12 @@ export default function AdminUsersPage() {
                       </div>
                     </div>
 
-                    <span className="hidden text-xs text-muted-foreground lg:block">
+                    <span className="hidden text-xs text-muted-foreground xl:block w-24 text-right">
                       {new Date(user.createdAt).toLocaleDateString()}
                     </span>
 
-                    {/* Promote / Demote */}
+                    <div className="flex items-center flex-wrap gap-2 sm:gap-1 mt-2 sm:mt-0 sm:shrink-0 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0">
+                      {/* Promote / Demote */}
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
                         <Button
@@ -655,6 +683,33 @@ export default function AdminUsersPage() {
                       <CreditCard className="h-4 w-4" />
                     </Button>
 
+                    {/* Manage Limits */}
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="shrink-0 text-cyan-600 hover:bg-cyan-600/10"
+                      disabled={
+                        updateLimits.isPending ||
+                        (user.isOwner && !currentUserIsOwner)
+                      }
+                      title="Manage Limits"
+                      onClick={() => {
+                        setLimitsTarget({
+                          id: user.id,
+                          name: user.name ?? user.email,
+                          overrideReposLimit: user.overrideReposLimit,
+                          overrideReviewsLimit: user.overrideReviewsLimit,
+                          overrideSeatsLimit: user.overrideSeatsLimit,
+                        });
+                        setLimitsMode("SET");
+                        setReposVal(user.overrideReposLimit?.toString() ?? "");
+                        setReviewsVal(user.overrideReviewsLimit?.toString() ?? "");
+                        setSeatsVal(user.overrideSeatsLimit?.toString() ?? "");
+                      }}
+                    >
+                      <Sliders className="h-4 w-4" />
+                    </Button>
+
                     {/* Reset Password */}
                     <AlertDialog>
                       <Tooltip>
@@ -737,6 +792,7 @@ export default function AdminUsersPage() {
                         </AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>
+                    </div>
                   </div>
                 ))}
 
@@ -849,11 +905,11 @@ export default function AdminUsersPage() {
                 >
                   <SelectItem value="free">Free Plan</SelectItem>
                   <SelectItem value="pro">Pro Plan</SelectItem>
-                  <SelectItem value="enterprise">Enterprise Plan</SelectItem>
+                  <SelectItem value="enterprise">Ultra Plan</SelectItem>
                 </DropdownSelect>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Repo Limit Override</Label>
                   <Input
@@ -930,6 +986,101 @@ export default function AdminUsersPage() {
           </DialogContent>
         </Dialog>
 
+        {/* Manage Limits Dialog */}
+        <Dialog
+          open={!!limitsTarget}
+          onOpenChange={(open) => {
+            if (!open) setLimitsTarget(null);
+          }}
+        >
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Manage Limits for {limitsTarget?.name}</DialogTitle>
+              <DialogDescription>
+                Explicitly set limits or extend current limits relative to their plan.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label>Action Mode</Label>
+                <DropdownSelect
+                  value={limitsMode}
+                  onValueChange={(val) => {
+                    setLimitsMode(val as "SET" | "EXTEND");
+                    if (val === "SET") {
+                      setReposVal(limitsTarget?.overrideReposLimit?.toString() ?? "");
+                      setReviewsVal(limitsTarget?.overrideReviewsLimit?.toString() ?? "");
+                      setSeatsVal(limitsTarget?.overrideSeatsLimit?.toString() ?? "");
+                    } else {
+                      setReposVal("");
+                      setReviewsVal("");
+                      setSeatsVal("");
+                    }
+                  }}
+                  placeholder="Select mode"
+                >
+                  <SelectItem value="SET">Set Explicit Limit</SelectItem>
+                  <SelectItem value="EXTEND">Extend (Add limits)</SelectItem>
+                </DropdownSelect>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Repos Limit {limitsMode === "EXTEND" ? "(Delta)" : ""}</Label>
+                  <Input
+                    type="number"
+                    placeholder={limitsMode === "EXTEND" ? "+0" : "Plan default"}
+                    value={reposVal}
+                    onChange={(e) => setReposVal(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Reviews Limit {limitsMode === "EXTEND" ? "(Delta)" : ""}</Label>
+                  <Input
+                    type="number"
+                    placeholder={limitsMode === "EXTEND" ? "+0" : "Plan default"}
+                    value={reviewsVal}
+                    onChange={(e) => setReviewsVal(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Seats Limit {limitsMode === "EXTEND" ? "(Delta)" : ""}</Label>
+                <Input
+                  type="number"
+                  placeholder={limitsMode === "EXTEND" ? "+0" : "Plan default"}
+                  value={seatsVal}
+                  onChange={(e) => setSeatsVal(e.target.value)}
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setLimitsTarget(null)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  if (!limitsTarget) return;
+                  updateLimits.mutate({
+                    userId: limitsTarget.id,
+                    reposLimitSet: limitsMode === "SET" && reposVal !== "" ? parseInt(reposVal) : null,
+                    reviewsLimitSet: limitsMode === "SET" && reviewsVal !== "" ? parseInt(reviewsVal) : null,
+                    seatsLimitSet: limitsMode === "SET" && seatsVal !== "" ? parseInt(seatsVal) : null,
+                    reposLimitDelta: limitsMode === "EXTEND" && reposVal !== "" ? parseInt(reposVal) : undefined,
+                    reviewsLimitDelta: limitsMode === "EXTEND" && reviewsVal !== "" ? parseInt(reviewsVal) : undefined,
+                    seatsLimitDelta: limitsMode === "EXTEND" && seatsVal !== "" ? parseInt(seatsVal) : undefined,
+                  });
+                }}
+                disabled={updateLimits.isPending}
+                className="bg-cyan-600 hover:bg-cyan-700"
+              >
+                {updateLimits.isPending ? "Updating…" : "Save Limits"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
         {/* Bulk Plan Dialog */}
         <Dialog
           open={isBulkPlanDialogOpen}
@@ -979,8 +1130,8 @@ export default function AdminUsersPage() {
                     </SelectItem>
                     <SelectItem value="enterprise">
                       <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-violet-600" />
-                        <span>Enterprise Plan</span>
+                        <div className="w-2 h-2 rounded-full bg-amber-500" />
+                        <span>Ultra Plan</span>
                       </div>
                     </SelectItem>
                   </DropdownSelect>

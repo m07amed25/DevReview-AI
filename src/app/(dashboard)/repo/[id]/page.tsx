@@ -52,7 +52,21 @@ export default function RepositoryDetailPage({ params }: PageProps) {
   // GitHub API calls and the double re-render they cause.
   const allPullRequests = trpc.pullRequest.list.useQuery(
     { repositoryId: id, state: "all" },
-    { enabled: !!id },
+    {
+      enabled: !!id,
+      refetchInterval: (query) => {
+        const { data } = query.state;
+        if (
+          data?.some(
+            (pr) =>
+              pr.review?.status === "PROCESSING" ||
+              pr.review?.status === "PENDING",
+          )
+        )
+          return 3000;
+        return false;
+      },
+    },
   );
 
   const utils = trpc.useUtils();

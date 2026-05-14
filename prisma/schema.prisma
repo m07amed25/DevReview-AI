@@ -655,6 +655,7 @@ model PricingPlan {
   seatsLimit   Int?
   privateRepos Boolean  @default(false)
   sortOrder    Int      @default(0)
+  accentColor  String   @default("indigo")
   updatedAt    DateTime @updatedAt
 
   @@map("pricing_plan")

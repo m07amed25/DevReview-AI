@@ -172,11 +172,15 @@ export function ProfileHeaderCard({
               <Badge
                 className={cn(
                   "w-fit mx-auto sm:mx-0 text-[10px] px-2 py-0.5 h-5 font-semibold uppercase tracking-widest border-none",
-                {
-                  "bg-linear-to-r from-violet-600 to-fuchsia-600 text-white": profile.plan.id === Plan.ENTERPRISE,
-                  "bg-indigo-600 text-white": profile.plan.id === Plan.PRO,
-                  "bg-neutral-200 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400": profile.plan.id === Plan.FREE
-                }
+                  {
+                    "slate": "bg-slate-500 text-white",
+                    "indigo": "bg-indigo-600 text-white",
+                    "amber": "bg-linear-to-r from-amber-500 to-orange-500 text-white",
+                    "rose": "bg-rose-500 text-white",
+                    "emerald": "bg-emerald-500 text-white",
+                    "violet": "bg-violet-600 text-white",
+                    "blue": "bg-blue-600 text-white",
+                  }[profile.plan.accentColor] || "bg-neutral-200 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400"
                 )}
               >
                 {profile.plan.name} Plan

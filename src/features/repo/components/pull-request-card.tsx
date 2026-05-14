@@ -28,6 +28,7 @@ import {
   ChevronDown,
   ChevronRight,
   BookMarked,
+  RefreshCw,
 } from "lucide-react";
 import { cn, formatDate } from "@/lib/utils";
 
@@ -484,16 +485,34 @@ export function PullRequestCard({
                       size="sm"
                       className={cn(
                         "h-8 px-3 text-xs gap-1.5 transition-all",
-                        hasCompletedReview
+                        hasCompletedReview ||
+                          pr.review?.status === "PENDING" ||
+                          pr.review?.status === "PROCESSING"
                           ? "variant-outline border-primary/20 hover:bg-primary/5"
                           : "bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm shadow-emerald-500/25",
                       )}
-                      variant={hasCompletedReview ? "outline" : "default"}
+                      variant={
+                        hasCompletedReview ||
+                        pr.review?.status === "PENDING" ||
+                        pr.review?.status === "PROCESSING"
+                          ? "outline"
+                          : "default"
+                      }
                     >
                       {pr.review?.status === "PROCESSING" ? (
                         <>
                           <Loader2 className="size-3.5 animate-spin" />
                           Analyzing…
+                        </>
+                      ) : pr.review?.status === "PENDING" ? (
+                        <>
+                          <Loader2 className="size-3.5 animate-spin" />
+                          Queued…
+                        </>
+                      ) : pr.review?.status === "FAILED" ? (
+                        <>
+                          <RefreshCw className="size-3.5" />
+                          Retry Review
                         </>
                       ) : hasCompletedReview ? (
                         <>

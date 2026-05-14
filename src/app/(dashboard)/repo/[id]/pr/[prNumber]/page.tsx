@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useMemo, useRef, useState } from "react";
+import { use, useMemo, useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
@@ -124,27 +124,34 @@ export default function PullRequestPage({ params }: PageProps) {
     (r) => r.status === "COMPLETED",
   );
 
-  const triggerReview = trpc.review.trigger.useMutation({
-    onSuccess: () => {
-      pollStartRef.current = Date.now();
-      setPollTimedOut(false);
-      latestReview.refetch();
-      reviewHistory.refetch();
-      pr.refetch();
-      toast.success("Review triggered successfully");
-    },
-    onError: (err) => {
-      toast.error(err.message || "Failed to trigger review");
-    },
-  });
+  const utils = trpc.useUtils();
+
+  const triggerReview = trpc.review.trigger.useMutation();
 
   const triggerReReview = () => {
     const parentId = latestReview.data?.id;
-    triggerReview.mutate({
-      repositoryId: id,
-      prNumber: prNum,
-      parentReviewId: parentId ?? undefined,
-    });
+    triggerReview.mutate(
+      {
+        repositoryId: id,
+        prNumber: prNum,
+        parentReviewId: parentId ?? undefined,
+      },
+      {
+        onSuccess: () => {
+          pollStartRef.current = Date.now();
+          setPollTimedOut(false);
+          latestReview.refetch();
+          reviewHistory.refetch();
+          pr.refetch();
+          utils.pullRequest.list.invalidate();
+          utils.review.list.invalidate();
+          toast.success("Review triggered successfully");
+        },
+        onError: (err) => {
+          toast.error(err.message || "Failed to trigger review");
+        },
+      }
+    );
   };
 
   const isReviewing =
@@ -153,7 +160,6 @@ export default function PullRequestPage({ params }: PageProps) {
       latestReview.data?.status === "PENDING");
 
   const reviewId = latestReview.data?.id;
-  const utils = trpc.useUtils();
 
   const diagrams = trpc.diagram.listForRepository.useQuery(
     { repositoryId: id },
@@ -180,6 +186,14 @@ export default function PullRequestPage({ params }: PageProps) {
       void utils.diagram.listForRepository.invalidate({ repositoryId: id });
     },
   );
+
+  const reviewStatus = latestReview.data?.status;
+  useEffect(() => {
+    if (reviewStatus === "COMPLETED" || reviewStatus === "FAILED") {
+      void utils.pullRequest.list.invalidate();
+      void utils.review.list.invalidate();
+    }
+  }, [reviewStatus, utils]);
 
   if (pr.isLoading) {
     return (

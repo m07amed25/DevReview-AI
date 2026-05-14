@@ -152,7 +152,8 @@ export default function AdminUserFeedbackPage() {
               No feedback items yet.
             </p>
           ) : (
-            <Table>
+            <div className="overflow-x-auto">
+              <Table className="min-w-[900px]">
               <TableHeader>
                 <TableRow>
                   <TableHead>From</TableHead>

@@ -566,6 +566,7 @@ exports.Prisma.PricingPlanScalarFieldEnum = {
   seatsLimit: 'seatsLimit',
   privateRepos: 'privateRepos',
   sortOrder: 'sortOrder',
+  accentColor: 'accentColor',
   updatedAt: 'updatedAt'
 };
 

@@ -130,7 +130,7 @@ function BannerForm({ initial }: { initial: BannerData }) {
   return (
     <>
       {/* ── Enable toggle ── */}
-      <div className="flex items-center justify-between rounded-lg border bg-muted/30 p-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-lg border bg-muted/30 p-4">
         <div className="space-y-0.5">
           <Label className="text-base">Enable Banner</Label>
           <p className="text-sm text-muted-foreground">Show the announcement bar to all visitors.</p>
@@ -270,7 +270,7 @@ export default function AdminSettingsPage() {
                 Name configuration is currently locked to project defaults.
               </p>
             </div>
-            <div className="flex items-center justify-between p-4 rounded-lg border bg-muted/30">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-lg border bg-muted/30">
               <div className="space-y-0.5">
                 <Label className="text-base">Maintenance Mode</Label>
                 <p className="text-sm text-muted-foreground italic">
