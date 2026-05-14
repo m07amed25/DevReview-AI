@@ -184,6 +184,7 @@ export default function AdminSupportPage() {
                 ))}
               </TableBody>
             </Table>
+            </div>
           )}
         </CardContent>
       </Card>

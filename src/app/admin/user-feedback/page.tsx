@@ -224,6 +224,7 @@ export default function AdminUserFeedbackPage() {
                 ))}
               </TableBody>
             </Table>
+            </div>
           )}
         </CardContent>
       </Card>
