@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export const metadata = {
   title: "Pricing - Code Catch",
   description:
-    "Simple, transparent pricing for every team. Free, Pro, and Enterprise plans.",
+    "Simple, transparent pricing for every team. Free, Pro, and Ultra plans.",
 };
 
 export default async function PricingPage() {

@@ -26,7 +26,7 @@ export function PasswordResetEmail({ userName, resetUrl }: PasswordResetEmailPro
     <Html>
       <Tailwind>
         <Head />
-        <Preview>Reset your DevReview AI password</Preview>
+        <Preview>Reset your CodeCatch password</Preview>
         <Body className="bg-gray-100 font-sans">
           <Container className="mx-auto my-10 max-w-[560px] rounded-lg bg-white p-8 shadow-md">
             <Section className="mb-6 text-center">
@@ -52,7 +52,7 @@ export function PasswordResetEmail({ userName, resetUrl }: PasswordResetEmailPro
             </Text>
 
             <Text className="mb-4 text-base leading-6 text-gray-700">
-              Someone requested a password reset for your DevReview AI account. Click the button below to set a new password. This link will expire in <strong>1 hour</strong>.
+              Someone requested a password reset for your CodeCatch account. Click the button below to set a new password. This link will expire in <strong>1 hour</strong>.
             </Text>
 
             <Section className="my-8 text-center">
@@ -80,7 +80,7 @@ export function PasswordResetEmail({ userName, resetUrl }: PasswordResetEmailPro
             <Hr className="my-6 border-gray-200" />
 
             <Text className="text-xs text-gray-400 text-center">
-              © {new Date().getFullYear()} DevReview AI. All rights reserved.
+              © {new Date().getFullYear()} CodeCatch. All rights reserved.
             </Text>
           </Container>
         </Body>

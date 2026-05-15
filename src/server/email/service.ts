@@ -8,6 +8,7 @@ import { renderAdminDemotedEmail } from "./templates/admin-demoted";
 import { renderSecurityAlertEmail } from "./templates/security-alert";
 import { renderPasswordResetEmail } from "./templates/password-reset";
 import { renderPlanChangedEmail } from "./templates/plan-changed";
+import { renderBroadcastEmail } from "./templates/broadcast";
 import type {
   TeamMemberAddedEmailParams,
   ReviewCompletionEmailParams,
@@ -277,7 +278,7 @@ export async function sendPasswordResetEmail(
 
   try {
     const html = await renderPasswordResetEmail(userName, resetUrl);
-    return await sendEmail(to, "Reset your DevReview AI password", html);
+    return await sendEmail(to, "Reset your CodeCatch password", html);
   } catch (error) {
     console.error("❌ Error generating password reset email:", error);
     return {
@@ -307,6 +308,36 @@ export async function sendPlanChangedEmail(
       success: false,
       error:
         error instanceof Error ? error.message : "Failed to generate email",
+    };
+  }
+}
+
+/**
+ * Send a broadcast email to a user
+ */
+export async function sendBroadcastEmail(params: {
+  to: string;
+  subject: string;
+  body: string;
+  userName?: string;
+}): Promise<EmailSendResult> {
+  const { to, subject, body, userName } = params;
+  const appUrl = getAppUrl();
+
+  try {
+    const html = await renderBroadcastEmail({
+      subject,
+      body,
+      userName,
+      appUrl,
+    });
+
+    return await sendEmail(to, subject, html);
+  } catch (error) {
+    console.error("❌ Error generating broadcast email:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to generate email",
     };
   }
 }

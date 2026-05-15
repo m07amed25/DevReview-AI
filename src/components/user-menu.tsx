@@ -27,20 +27,11 @@ import {
   Settings,
   ChevronDown,
   CreditCard,
-  Keyboard,
-  FolderGit2,
-  GitPullRequest,
-  LifeBuoy,
-  MessageSquare,
   Sun,
   Moon,
   Monitor,
-  ExternalLink,
   Shield,
-  Bell,
   Loader2,
-  Users,
-  BarChart3,
 } from "lucide-react";
 import { ThemeTogglerButton } from "./animate-ui/components/buttons/theme-toggler";
 
@@ -186,91 +177,6 @@ export function UserMenu({ user }: { user: UserProps }) {
               <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
             </DropdownMenuItem>
 
-            {/* <DropdownMenuItem
-              className="gap-3 px-2 py-2 cursor-pointer rounded-md"
-              onClick={() => router.push("/notifications")}
-            >
-              <div className="flex items-center justify-center size-8 rounded-md bg-blue-500/10">
-                <Bell className="size-4 text-blue-500" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-sm font-medium">Notifications</span>
-                <span className="text-[11px] text-muted-foreground">
-                  Alert preferences
-                </span>
-              </div>
-            </DropdownMenuItem> */}
-          </DropdownMenuGroup>
-        </div>
-
-        <DropdownMenuSeparator className="my-0" />
-
-        {/* ── Workspace Section ── */}
-        <div className="p-1">
-          <DropdownMenuLabel className="text-[11px] uppercase tracking-wider text-muted-foreground/70 font-semibold px-2 py-1.5">
-            Workspace
-          </DropdownMenuLabel>
-          <DropdownMenuGroup>
-            <DropdownMenuItem
-              className="gap-3 px-2 py-2 cursor-pointer rounded-md"
-              onClick={() => router.push("/teams")}
-            >
-              <div className="flex items-center justify-center size-8 rounded-md bg-indigo-500/10">
-                <Users className="size-4 text-indigo-500" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-sm font-medium">Teams</span>
-                <span className="text-[11px] text-muted-foreground">
-                  Collaborate securely
-                </span>
-              </div>
-            </DropdownMenuItem>
-
-            <DropdownMenuItem
-              className="gap-3 px-2 py-2 cursor-pointer rounded-md"
-              onClick={() => router.push("/repo")}
-            >
-              <div className="flex items-center justify-center size-8 rounded-md bg-violet-500/10">
-                <FolderGit2 className="size-4 text-violet-500" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-sm font-medium">Repositories</span>
-                <span className="text-[11px] text-muted-foreground">
-                  Your code repos
-                </span>
-              </div>
-            </DropdownMenuItem>
-
-            <DropdownMenuItem
-              className="gap-3 px-2 py-2 cursor-pointer rounded-md"
-              onClick={() => router.push("/reviews")}
-            >
-              <div className="flex items-center justify-center size-8 rounded-md bg-pink-500/10">
-                <GitPullRequest className="size-4 text-pink-500" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-sm font-medium">Reviews</span>
-                <span className="text-[11px] text-muted-foreground">
-                  Code review history
-                </span>
-              </div>
-            </DropdownMenuItem>
-
-            <DropdownMenuItem
-              className="gap-3 px-2 py-2 cursor-pointer rounded-md"
-              onClick={() => router.push("/analytics")}
-            >
-              <div className="flex items-center justify-center size-8 rounded-md bg-cyan-500/10">
-                <BarChart3 className="size-4 text-cyan-500" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-sm font-medium">Analytics</span>
-                <span className="text-[11px] text-muted-foreground">
-                  Review metrics & insights
-                </span>
-              </div>
-            </DropdownMenuItem>
-
             {user.role === "ADMIN" && (
               <DropdownMenuItem
                 className="gap-3 px-2 py-2 cursor-pointer rounded-md"
@@ -289,7 +195,6 @@ export function UserMenu({ user }: { user: UserProps }) {
             )}
           </DropdownMenuGroup>
         </div>
-
         <DropdownMenuSeparator className="my-0" />
 
         {/* ── Preferences Section ── */}

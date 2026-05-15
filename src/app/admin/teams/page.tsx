@@ -77,70 +77,76 @@ export default function AdminTeamsPage() {
               {data?.teams.map((team) => (
                 <div
                   key={team.id}
-                  className="flex items-center gap-4 px-6 py-4"
+                  className="flex flex-col sm:flex-row sm:items-center gap-4 px-4 sm:px-6 py-4"
                 >
-                  <Avatar className="h-9 w-9 shrink-0">
-                    {team.image && (
-                      <AvatarImage src={team.image} alt={team.name} />
-                    )}
-                    <AvatarFallback>
-                      {team.name.charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
+                  <div className="flex items-center gap-4 min-w-0 flex-1">
+                    <Avatar className="h-9 w-9 shrink-0">
+                      {team.image && (
+                        <AvatarImage src={team.image} alt={team.name} />
+                      )}
+                      <AvatarFallback>
+                        {team.name.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
 
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate font-medium">{team.name}</p>
-                    <p className="truncate text-sm text-muted-foreground">
-                      /{team.slug}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center gap-6 text-sm">
-                    <div className="flex items-center gap-1">
-                      <Users2 className="h-4 w-4 text-muted-foreground" />
-                      <span>{team._count.members}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Database className="h-4 w-4 text-muted-foreground" />
-                      <span>{team._count.repositories}</span>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate font-medium">{team.name}</p>
+                      <p className="truncate text-sm text-muted-foreground">
+                        /{team.slug}
+                      </p>
                     </div>
                   </div>
 
-                  <span className="hidden text-xs text-muted-foreground lg:block">
-                    {new Date(team.createdAt).toLocaleDateString()}
-                  </span>
+                  <div className="flex items-center justify-between sm:justify-end gap-4 sm:gap-6 mt-2 sm:mt-0 pt-2 sm:pt-0 border-t sm:border-t-0 w-full sm:w-auto">
+                    <div className="flex items-center gap-6 text-sm">
+                      <div className="flex items-center gap-1">
+                        <Users2 className="h-4 w-4 text-muted-foreground" />
+                        <span>{team._count.members}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Database className="h-4 w-4 text-muted-foreground" />
+                        <span>{team._count.repositories}</span>
+                      </div>
+                    </div>
 
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="shrink-0 text-destructive hover:bg-destructive/10"
-                        disabled={deleteTeam.isPending}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Delete team?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Permanently delete <strong>{team.name}</strong> and
-                          remove all its members and repository associations.
-                          This cannot be undone.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                          onClick={() => deleteTeam.mutate({ teamId: team.id })}
-                        >
-                          Delete
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                    <div className="flex items-center gap-4">
+                      <span className="hidden text-xs text-muted-foreground lg:block">
+                        {new Date(team.createdAt).toLocaleDateString()}
+                      </span>
+
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="shrink-0 text-destructive hover:bg-destructive/10"
+                            disabled={deleteTeam.isPending}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Delete team?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Permanently delete <strong>{team.name}</strong> and
+                              remove all its members and repository associations.
+                              This cannot be undone.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                              onClick={() => deleteTeam.mutate({ teamId: team.id })}
+                            >
+                              Delete
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  </div>
                 </div>
               ))}
 

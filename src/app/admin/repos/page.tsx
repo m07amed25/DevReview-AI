@@ -312,176 +312,181 @@ export default function AdminRepositoriesPage() {
                   return (
                     <div key={repo.id}>
                       <div
-                        className={`flex items-center gap-4 px-6 py-4 transition-colors cursor-pointer hover:bg-muted/30 ${
+                        className={`flex flex-col sm:flex-row sm:items-center gap-4 px-4 sm:px-6 py-4 transition-colors cursor-pointer hover:bg-muted/30 ${
                           isExpanded ? "bg-muted/20" : ""
                         }`}
                         onClick={() =>
                           setExpandedId(isExpanded ? null : repo.id)
                         }
                       >
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border bg-muted/50">
-                          <Github className="h-5 w-5 text-muted-foreground" />
-                        </div>
-
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-2">
-                            <span className="truncate font-medium text-sm">
-                              {repo.fullName}
-                            </span>
-                            <Badge
-                              variant="outline"
-                              className="text-[10px] uppercase tracking-wider"
-                            >
-                              {repo.private ? (
-                                <span className="flex items-center gap-1 text-muted-foreground">
-                                  <Lock className="h-3 w-3" /> Private
-                                </span>
-                              ) : (
-                                <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
-                                  <Globe className="h-3 w-3" /> Public
-                                </span>
-                              )}
-                            </Badge>
+                        <div className="flex items-center gap-3 w-full sm:w-auto sm:flex-1 min-w-0">
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border bg-muted/50">
+                            <Github className="h-5 w-5 text-muted-foreground" />
                           </div>
 
-                          <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <div className="flex items-center gap-1 cursor-default">
-                                  <Avatar className="h-4 w-4">
-                                    {repo.user.image && (
-                                      <AvatarImage
-                                        src={repo.user.image}
-                                        alt={repo.user.name ?? ""}
-                                      />
-                                    )}
-                                    <AvatarFallback className="text-[8px]">
-                                      {(repo.user.name ?? repo.user.email)
-                                        .charAt(0)
-                                        .toUpperCase()}
-                                    </AvatarFallback>
-                                  </Avatar>
-                                  <span className="truncate max-w-[120px]">
-                                    {repo.user.name ?? repo.user.email}
+                          <div className="min-w-0 flex-1">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span className="truncate font-medium text-sm">
+                                {repo.fullName}
+                              </span>
+                              <Badge
+                                variant="outline"
+                                className="text-[10px] uppercase tracking-wider"
+                              >
+                                {repo.private ? (
+                                  <span className="flex items-center gap-1 text-muted-foreground">
+                                    <Lock className="h-3 w-3" /> Private
                                   </span>
-                                </div>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                Connected by {repo.user.email}
-                              </TooltipContent>
-                            </Tooltip>
+                                ) : (
+                                  <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
+                                    <Globe className="h-3 w-3" /> Public
+                                  </span>
+                                )}
+                              </Badge>
+                            </div>
 
-                            {repo.team && (
-                              <>
-                                <span>·</span>
-                                <span className="truncate max-w-[120px]">
-                                  Team: {repo.team.name}
-                                </span>
-                              </>
-                            )}
+                            <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <div className="flex items-center gap-1 cursor-default">
+                                    <Avatar className="h-4 w-4">
+                                      {repo.user.image && (
+                                        <AvatarImage
+                                          src={repo.user.image}
+                                          alt={repo.user.name ?? ""}
+                                        />
+                                      )}
+                                      <AvatarFallback className="text-[8px]">
+                                        {(repo.user.name ?? repo.user.email)
+                                          .charAt(0)
+                                          .toUpperCase()}
+                                      </AvatarFallback>
+                                    </Avatar>
+                                    <span className="truncate max-w-[120px]">
+                                      {repo.user.name ?? repo.user.email}
+                                    </span>
+                                  </div>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  Connected by {repo.user.email}
+                                </TooltipContent>
+                              </Tooltip>
+
+                              {repo.team && (
+                                <>
+                                  <span>·</span>
+                                  <span className="truncate max-w-[120px]">
+                                    Team: {repo.team.name}
+                                  </span>
+                                </>
+                              )}
+                            </div>
                           </div>
                         </div>
 
-                        <div className="hidden gap-6 text-center text-sm sm:flex items-center">
-                          <div>
-                            <p className="font-medium">{repo._count.reviews}</p>
-                            <p className="text-xs text-muted-foreground">
-                              Reviews
-                            </p>
+                        <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto pt-2 sm:pt-0 mt-2 sm:mt-0 border-t sm:border-t-0">
+                          <div className="flex items-center gap-6 text-sm">
+                            <div className="hidden sm:block">
+                              <p className="font-medium text-center">{repo._count.reviews}</p>
+                              <p className="text-xs text-muted-foreground">
+                                Reviews
+                              </p>
+                            </div>
+                            <span className="hidden text-xs text-muted-foreground lg:block whitespace-nowrap">
+                              {new Date(repo.createdAt).toLocaleDateString()}
+                            </span>
                           </div>
-                        </div>
 
-                        <span className="hidden text-xs text-muted-foreground lg:block whitespace-nowrap ml-4">
-                          {new Date(repo.createdAt).toLocaleDateString()}
-                        </span>
+                          <div className="flex items-center gap-2 ml-auto">
+                            {/* Expand indicator */}
+                            <ChevronDown
+                              className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 ${
+                                isExpanded ? "rotate-180" : ""
+                              }`}
+                            />
 
-                        {/* Expand indicator */}
-                        <ChevronDown
-                          className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 ml-4 ${
-                            isExpanded ? "rotate-180" : ""
-                          }`}
-                        />
-
-                        {/* Actions Menu */}
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8 shrink-0 ml-2"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem
-                              disabled={repo.private}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                window.open(repo.htmlUrl, "_blank");
-                              }}
-                            >
-                              <ExternalLink className="mr-2 h-4 w-4" />
-                              View on GitHub
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                window.open(`/repo/${repo.id}`, "_blank");
-                              }}
-                            >
-                              <Eye className="mr-2 h-4 w-4" />
-                              View Dashboard
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <AlertDialog>
-                              <AlertDialogTrigger asChild>
+                            {/* Actions Menu */}
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8 shrink-0"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
                                 <DropdownMenuItem
-                                  variant="destructive"
-                                  onSelect={(e) => {
-                                    e.preventDefault();
+                                  disabled={repo.private}
+                                  onClick={(e) => {
                                     e.stopPropagation();
+                                    window.open(repo.htmlUrl, "_blank");
                                   }}
                                 >
-                                  <Trash2 className="mr-2 h-4 w-4" />
-                                  Delete Repository
+                                  <ExternalLink className="mr-2 h-4 w-4" />
+                                  View on GitHub
                                 </DropdownMenuItem>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>
-                                    Delete repository?
-                                  </AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    Permanently delete{" "}
-                                    <strong>{repo.fullName}</strong>. This will
-                                    also remove all associated reviews,
-                                    webhooks, scan configurations, and diagrams.
-                                    This action cannot be undone.
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                  <AlertDialogAction
-                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                                    onClick={() =>
-                                      deleteRepository.mutate({
-                                        repositoryId: repo.id,
-                                      })
-                                    }
+                                <DropdownMenuItem
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    window.open(`/repo/${repo.id}`, "_blank");
+                                  }}
+                                >
+                                  <Eye className="mr-2 h-4 w-4" />
+                                  View Dashboard
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <DropdownMenuItem
+                                      variant="destructive"
+                                      onSelect={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                      }}
+                                    >
+                                      <Trash2 className="mr-2 h-4 w-4" />
+                                      Delete Repository
+                                    </DropdownMenuItem>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent
+                                    onClick={(e) => e.stopPropagation()}
                                   >
-                                    {deleteRepository.isPending
-                                      ? "Deleting…"
-                                      : "Delete"}
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>
+                                        Delete repository?
+                                      </AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        Permanently delete{" "}
+                                        <strong>{repo.fullName}</strong>. This will
+                                        also remove all associated reviews,
+                                        webhooks, scan configurations, and diagrams.
+                                        This action cannot be undone.
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                      <AlertDialogAction
+                                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                        onClick={() =>
+                                          deleteRepository.mutate({
+                                            repositoryId: repo.id,
+                                          })
+                                        }
+                                      >
+                                        {deleteRepository.isPending
+                                          ? "Deleting…"
+                                          : "Delete"}
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+                        </div>
                       </div>
 
                       {/* Expanded detail panel */}

@@ -123,7 +123,7 @@ export default function AdminFeedbackPage() {
                   key={fb.id}
                   className="flex flex-col gap-4 p-6 transition-colors hover:bg-muted/50"
                 >
-                  <div className="flex items-start justify-between gap-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
                       <Avatar className="h-10 w-10 border">
                         {fb.user.image && <AvatarImage src={fb.user.image} />}
@@ -140,7 +140,7 @@ export default function AdminFeedbackPage() {
                         </span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 self-start sm:self-auto">
                       <div
                         className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border ${
                           fb.rating === 1

@@ -51,16 +51,16 @@ export async function checkUserLimit(
 
   switch (limitType) {
     case "reposLimit":
-      limit = user.overrideReposLimit ?? (effectivePlan as any).reposLimit ?? null;
+      limit = user.overrideReposLimit ?? effectivePlan.reposLimit ?? null;
       currentUsage = user._count.repositories;
       break;
     case "reviewsLimit":
       limit =
-        user.overrideReviewsLimit ?? (effectivePlan as any).reviewsLimit ?? null;
+        user.overrideReviewsLimit ?? effectivePlan.reviewsLimit ?? null;
       currentUsage = user._count.reviews;
       break;
     case "seatsLimit": {
-      limit = user.overrideSeatsLimit ?? (effectivePlan as any).seatsLimit ?? null;
+      limit = user.overrideSeatsLimit ?? effectivePlan.seatsLimit ?? null;
 
       // Count total members across all teams where this user is an OWNER
       const ownedTeams = await db.team.findMany({

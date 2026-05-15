@@ -92,12 +92,12 @@ export async function middleware(request: NextRequest) {
         if (!sessionData?.user) {
           return NextResponse.redirect(new URL("/sign-in", request.url));
         }
-        if (
-          pathname.startsWith("/admin") &&
-          sessionData.user.role !== "ADMIN"
-        ) {
-          return NextResponse.redirect(new URL("/", request.url));
-        }
+        // NOTE: We intentionally do NOT check the admin role here.
+        // Better Auth's cookie cache can hold a stale role for up to 5
+        // minutes after a promotion, causing newly promoted admins to be
+        // incorrectly redirected. The server-side admin layout
+        // (app/admin/layout.tsx) performs a fresh DB query for the role,
+        // so the authorization is still enforced.
         return NextResponse.next();
       }
     } catch (e) {

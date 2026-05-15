@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { revalidatePath } from "next/cache";
 import { createTRPCRouter, adminProcedure } from "../trpc";
 import { DiscountType } from "../../db/client";
 
@@ -81,6 +82,7 @@ const planSaveSchema = z.object({
   reviewsLimit: z.number().int().min(0).nullable(),
   seatsLimit:   z.number().int().min(0).nullable(),
   privateRepos: z.boolean(),
+  accentColor:  z.string().min(1).max(20).default("indigo"),
 });
 
 
@@ -277,11 +279,20 @@ export const adminPricingRouter = createTRPCRouter({
   saveSettings: adminProcedure
     .input(pricingSettingsSchema)
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.pricingSettings.upsert({
+      const result = await ctx.db.pricingSettings.upsert({
         where: { id: "global" },
         create: { id: "global", ...input },
         update: input,
       });
+
+      try {
+        revalidatePath("/pricing");
+        revalidatePath("/");
+      } catch (e) {
+        console.error("Failed to revalidate path", e);
+      }
+
+      return result;
     }),
 
   listPlans: adminProcedure.query(async ({ ctx }) => {
@@ -293,10 +304,19 @@ export const adminPricingRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input;
       const sortOrder = id === "free" ? 0 : id === "pro" ? 1 : 2;
-      return ctx.db.pricingPlan.upsert({
+      const result = await ctx.db.pricingPlan.upsert({
         where: { id },
         create: { id, sortOrder, ...data },
         update: data,
       });
+      
+      try {
+        revalidatePath("/pricing");
+        revalidatePath("/");
+      } catch (e) {
+        // console.error("Failed to revalidate path", e);
+      }
+      
+      return result;
     }),
 });
