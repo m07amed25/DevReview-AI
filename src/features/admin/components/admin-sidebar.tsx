@@ -22,6 +22,7 @@ import {
   KeyRound,
   Shield,
   CreditCard,
+  Mail,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -54,6 +55,7 @@ const NAV_GROUPS = [
       { href: "/admin/sso", label: "SSO / SAML", icon: KeyRound },
       { href: "/admin/roles", label: "Custom Roles", icon: Shield },
       { href: "/admin/security", label: "Security", icon: ShieldCheck },
+      { href: "/admin/email", label: "Email Engine", icon: Mail },
       { href: "/admin/feedback", label: "Review Feedback", icon: MessageSquareText },
       { href: "/admin/user-feedback", label: "User Feedback", icon: ShieldAlert },
       { href: "/admin/settings", label: "Settings", icon: Settings },
@@ -223,7 +225,7 @@ export function AdminSidebar({ admin }: AdminSidebarProps) {
 
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-72 border-r bg-background transition-transform duration-300 ease-in-out lg:hidden",
+          "fixed inset-y-0 left-0 z-50 w-72 flex flex-col border-r bg-background transition-transform duration-300 ease-in-out lg:hidden",
           open ? "translate-x-0" : "-translate-x-full",
         )}
       >

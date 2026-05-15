@@ -14,6 +14,7 @@ import {
 } from "../../email/service";
 import { auth } from "../../auth";
 import { logAudit } from "../../services/audit";
+import { inngest } from "../../inngest";
 import { checkRateLimit, getRateLimitRemaining } from "@/lib/rate-limiter";
 
 const RESET_WINDOW_MS = 5 * 60 * 1000; // 5 minutes
@@ -1648,6 +1649,63 @@ export const adminRouter = createTRPCRouter({
         resourceId: input.userId,
         ipAddress: ctx.ip,
         userAgent: ctx.userAgent,
+      });
+
+      return { success: true };
+    }),
+
+  sendTestBroadcastEmail: adminProcedure
+    .input(
+      z.object({
+        subject: z.string().min(1).max(200),
+        body: z.string().min(1).max(50000),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { sendBroadcastEmail } = await import("../../email/service");
+      
+      await sendBroadcastEmail({
+        to: ctx.user.email,
+        subject: input.subject,
+        body: input.body,
+        userName: ctx.user.name ?? "Admin",
+      });
+
+      return { success: true };
+    }),
+
+  sendBroadcastEmail: adminProcedure
+    .input(
+      z.object({
+        subject: z.string().min(1).max(200),
+        body: z.string().min(1).max(50000), // Large enough for HTML
+        target: z.union([
+          z.enum(["ALL", "FREE", "PRO"]),
+          z.array(z.string().email()),
+        ]),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await inngest.send({
+        name: "app/email.broadcast",
+        data: {
+          subject: input.subject,
+          body: input.body,
+          target: input.target,
+        },
+      });
+
+      void logAudit({
+        actorId: ctx.user.id,
+        action: "BROADCAST_EMAIL_SENT",
+        resource: "SYSTEM",
+        resourceId: "EMAIL",
+        ipAddress: ctx.ip,
+        userAgent: ctx.userAgent,
+        metadata: {
+          subject: input.subject,
+          target: input.target,
+        },
       });
 
       return { success: true };

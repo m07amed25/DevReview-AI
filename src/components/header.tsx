@@ -55,14 +55,6 @@ interface HeaderProps {
   user: User;
 }
 
-// ── Product (links to /product page sections) ───────────────────────────────
-const productLinks = [
-  { href: "/product#review", label: "Code Review", icon: GitPullRequest, description: "AI-powered PR analysis" },
-  { href: "/product#teams", label: "Teams", icon: Users, description: "Collaborate with your team" },
-  { href: "/product#analytics", label: "Analytics", icon: BarChart3, description: "Insights and reporting" },
-  { href: "/product#security", label: "Security", icon: Shield, description: "Vulnerability detection" },
-  { href: "/product#diagrams", label: "Diagrams", icon: GitBranch, description: "Auto-generated architecture" },
-];
 
 const resourceLinks = [
   { href: "/docs", label: "Documentation", icon: BookOpen, description: "Guides and API reference" },
@@ -72,7 +64,6 @@ const resourceLinks = [
   { href: "/contact", label: "Contact", icon: MessageSquare, description: "Get in touch" },
 ];
 
-// ── Workspace (app-specific) ────────────────────────────────────────────────
 const workspaceLinks = [
   { href: "/repo", label: "Repositories", icon: FolderGit2, description: "Browse all repositories" },
   { href: "/reviews", label: "Reviews", icon: GitPullRequest, description: "Your code reviews" },
@@ -184,49 +175,19 @@ export function Header({ user }: HeaderProps) {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* Product Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                className={cn(
-                  "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200 hover:scale-105 outline-none",
-                  isProductActive
-                    ? "text-primary bg-primary/8 shadow-sm"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                )}
-              >
-                <Zap className="size-4" />
-                Product
-                <ChevronDown className="size-3 ml-0.5 transition-transform duration-200 data-[state=open]:rotate-180" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" sideOffset={8} className="w-64 p-1.5">
-                <DropdownMenuLabel className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-semibold px-2 py-1">
-                  Features
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator className="my-1" />
-                {productLinks.map((link) => {
-                  const Icon = link.icon;
-                  return (
-                    <DropdownMenuItem key={link.href + link.label} asChild>
-                      <Link href={link.href} className="flex items-start gap-3 px-2 py-2 rounded-md cursor-pointer">
-                        <div className="flex items-center justify-center size-7 rounded-md bg-indigo-500/10 mt-0.5 shrink-0">
-                          <Icon className="size-3.5 text-indigo-500" />
-                        </div>
-                        <div className="flex flex-col gap-0.5">
-                          <span className="text-sm font-medium">{link.label}</span>
-                          <span className="text-[11px] text-muted-foreground">{link.description}</span>
-                        </div>
-                      </Link>
-                    </DropdownMenuItem>
-                  );
-                })}
-                <DropdownMenuSeparator className="my-1" />
-                <DropdownMenuItem asChild>
-                  <Link href="/product" className="flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer text-xs text-muted-foreground hover:text-foreground">
-                    View all features →
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {/* Product */}
+            <Link
+              href="/product"
+              className={cn(
+                "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200 hover:scale-105",
+                isProductActive
+                  ? "text-primary bg-primary/8 shadow-sm"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50",
+              )}
+            >
+              <Zap className="size-4" />
+              Product
+            </Link>
 
             {/* Resources Dropdown */}
             <DropdownMenu>
@@ -292,46 +253,18 @@ export function Header({ user }: HeaderProps) {
 
             {/* Admin */}
             {user.role === "ADMIN" && (
-              <DropdownMenu>
-                <DropdownMenuTrigger
-                  className={cn(
-                    "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200 hover:scale-105 outline-none",
-                    pathname.startsWith("/admin")
-                      ? "text-primary bg-primary/8 shadow-sm"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                  )}
-                >
-                  <Shield className="size-4" />
-                  Admin
-                  <ChevronDown className="size-3 ml-0.5 transition-transform duration-200 data-[state=open]:rotate-180" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" sideOffset={8} className="w-56 p-1.5">
-                  <DropdownMenuLabel className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-semibold px-2 py-1">
-                    Admin
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator className="my-1" />
-                  {[
-                    { href: "/admin", label: "Dashboard", icon: LayoutDashboard, description: "Admin overview" },
-                    { href: "/admin?tab=users", label: "Users", icon: Users, description: "Manage all users" },
-                    { href: "/admin?tab=activity", label: "Activity", icon: Activity, description: "System activity logs" },
-                  ].map((sub) => {
-                    const Icon = sub.icon;
-                    return (
-                      <DropdownMenuItem key={sub.href} asChild>
-                        <Link href={sub.href} className="flex items-start gap-3 px-2 py-2 rounded-md cursor-pointer">
-                          <div className="flex items-center justify-center size-7 rounded-md bg-muted mt-0.5 shrink-0">
-                            <Icon className="size-3.5 text-muted-foreground" />
-                          </div>
-                          <div className="flex flex-col gap-0.5">
-                            <span className="text-sm font-medium">{sub.label}</span>
-                            <span className="text-[11px] text-muted-foreground">{sub.description}</span>
-                          </div>
-                        </Link>
-                      </DropdownMenuItem>
-                    );
-                  })}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <Link
+                href="/admin"
+                className={cn(
+                  "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200 hover:scale-105",
+                  pathname.startsWith("/admin")
+                    ? "text-primary bg-primary/8 shadow-sm"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50",
+                )}
+              >
+                <Shield className="size-4" />
+                Admin
+              </Link>
             )}
           </nav>
         </div>
