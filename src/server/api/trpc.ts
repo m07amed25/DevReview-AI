@@ -1,7 +1,7 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
-import { db } from "../db";
+import { db, withDbRetry } from "../db";
 import { auth } from "../auth";
 import {
   getClientIP,
@@ -254,10 +254,12 @@ export const adminProcedure = t.procedure.use(async ({ ctx, next, path }) => {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
 
-  const dbUser = await ctx.db.user.findUnique({
-    where: { id: ctx.session.user.id },
-    select: { id: true, role: true, email: true },
-  });
+  const dbUser = await withDbRetry(() =>
+    ctx.db.user.findUnique({
+      where: { id: ctx.session.user.id },
+      select: { id: true, role: true, email: true },
+    }),
+  );
 
   const isOwner = dbUser?.email === process.env.OWNER_MAIL;
 

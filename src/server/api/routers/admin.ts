@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { withDbRetry } from "../../db";
 import { UserRole } from "../../db/client";
 import {
   createTRPCRouter,
@@ -966,11 +967,13 @@ export const adminRouter = createTRPCRouter({
     }),
 
   getSystemSettings: adminProcedure.query(async ({ ctx }) => {
-    return ctx.db.systemSettings.upsert({
-      where: { id: "global" },
-      update: {},
-      create: { id: "global", maintenanceMode: false },
-    });
+    return withDbRetry(() =>
+      ctx.db.systemSettings.upsert({
+        where: { id: "global" },
+        update: {},
+        create: { id: "global", maintenanceMode: false },
+      }),
+    );
   }),
 
   updateSystemSettings: adminProcedure
@@ -983,11 +986,13 @@ export const adminRouter = createTRPCRouter({
     }),
 
   getBannerSettings: publicProcedure.query(async ({ ctx }) => {
-    const settings = await ctx.db.systemSettings.upsert({
-      where: { id: "global" },
-      update: {},
-      create: { id: "global", maintenanceMode: false },
-    });
+    const settings = await withDbRetry(() =>
+      ctx.db.systemSettings.upsert({
+        where: { id: "global" },
+        update: {},
+        create: { id: "global", maintenanceMode: false },
+      }),
+    );
     return {
       enabled: settings.bannerEnabled,
       text: settings.bannerText,

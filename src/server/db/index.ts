@@ -9,16 +9,16 @@ const createPrismaClient = () => {
 
       // How long (seconds) to wait when establishing a new connection.
       if (!parsedUrl.searchParams.has("connect_timeout")) {
-        parsedUrl.searchParams.set("connect_timeout", "15");
+        parsedUrl.searchParams.set("connect_timeout", "30");
       }
       // How long (seconds) to wait for an idle connection from the pool.
       if (!parsedUrl.searchParams.has("pool_timeout")) {
-        parsedUrl.searchParams.set("pool_timeout", "15");
+        parsedUrl.searchParams.set("pool_timeout", "30");
       }
       // Detect stale connections quickly so Neon's auto-pause wake-up cycle
       // is short. socket_timeout causes a P1017 sooner rather than later.
       if (!parsedUrl.searchParams.has("socket_timeout")) {
-        parsedUrl.searchParams.set("socket_timeout", "10");
+        parsedUrl.searchParams.set("socket_timeout", "20");
       }
 
       if (
@@ -58,10 +58,13 @@ if (process.env.NODE_ENV !== "production") {
  * the compute node is waking up (Neon auto-pause). Safe to disconnect the
  * client, wait briefly, and retry once.
  *
+ *  P1000 – Authentication failed (sometimes happens during cold start)
  *  P1001 – Can't reach database server (compute still waking)
+ *  P1008 – Operations timed out (query took too long while waking)
  *  P1017 – Server has closed the connection (Neon killed the idle socket)
+ *  P2024 – A query timed out
  */
-const RECONNECT_CODES = new Set(["P1001", "P1017"]);
+const RECONNECT_CODES = new Set(["P1000", "P1001", "P1008", "P1017", "P2024"]);
 
 /**
  * Wraps a Prisma operation with a single retry on connection drop errors.
