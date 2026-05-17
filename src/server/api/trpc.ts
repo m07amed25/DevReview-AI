@@ -258,7 +258,7 @@ export const adminProcedure = t.procedure.use(async ({ ctx, next, path }) => {
 
   const dbUser = await withDbRetry(() =>
     ctx.db.user.findUnique({
-      where: { id: ctx.session.user.id },
+      where: { id: ctx.session!.user.id },
       select: { id: true, role: true, email: true },
     }),
   );
