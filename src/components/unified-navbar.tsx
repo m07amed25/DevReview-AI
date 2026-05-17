@@ -248,7 +248,7 @@ export function UnifiedNavbar() {
               animate={{ y: 0 }}
               exit={{ y: "-100%" }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="fixed inset-x-0 top-0 z-[70] bg-zinc-950 border-b border-white/10 flex flex-col md:hidden max-h-[85vh] overflow-y-auto"
+              className="fixed inset-x-0 top-0 z-[70] bg-zinc-950 border-b border-white/10 flex flex-col md:hidden max-h-[85vh] overflow-hidden"
             >
               {/* Header */}
               <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
@@ -258,7 +258,8 @@ export function UnifiedNavbar() {
                 </button>
               </div>
 
-              <nav className="flex-1 px-4 py-4 space-y-5">
+              <div className="flex-1 overflow-y-auto relative">
+              <nav className="px-4 py-4 pb-8 space-y-5">
                 {/* Workspace */}
                 {isClient && user && (
                   <div>
@@ -388,6 +389,11 @@ export function UnifiedNavbar() {
                   })}
                 </div>
               </nav>
+              {/* Scroll hint */}
+              <div className="sticky bottom-0 flex justify-center py-2 bg-gradient-to-t from-zinc-950 via-zinc-950/80 to-transparent">
+                <ChevronDown className="h-4 w-4 text-zinc-500 animate-bounce" />
+              </div>
+              </div>
 
               {/* Bottom */}
               <div className="px-4 py-4 border-t border-white/10">
