@@ -29,14 +29,10 @@ const pullRequestPayloadSchema = z.object({
 function verifySignature(payload: string, signature: string | null): boolean {
   const secret = process.env.GITHUB_WEBHOOK_SECRET;
   if (!secret) {
-    if (process.env.NODE_ENV === "production") {
-      console.error("GITHUB_WEBHOOK_SECRET is not set in production!");
-      return false;
-    }
-    console.warn(
-      "GITHUB_WEBHOOK_SECRET not set, skipping verification (dev only)",
+    console.error(
+      "GITHUB_WEBHOOK_SECRET is not set — rejecting webhook request.",
     );
-    return true;
+    return false;
   }
 
   if (!signature) {

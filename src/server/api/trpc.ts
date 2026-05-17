@@ -97,6 +97,8 @@ export const createCallerFactory = t.createCallerFactory;
 
 export const createTRPCRouter = t.router;
 
+export const mergeRouters = t.mergeRouters;
+
 // Initialize rate limiter with default config, wiring Redis credentials from
 // environment variables so that production deployments use a shared Upstash
 // store instead of per-process in-memory counters.

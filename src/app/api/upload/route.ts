@@ -5,8 +5,40 @@ import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import crypto from "crypto";
 import { fileTypeFromBuffer } from "file-type";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
+// Simple in-memory rate limiter fallback when Redis is not configured
+const inMemoryStore = new Map<string, { count: number; resetAt: number }>();
+const UPLOAD_LIMIT = 10; // max uploads per window
+const UPLOAD_WINDOW_MS = 60_000; // 1 minute
+
+function checkInMemoryLimit(userId: string): boolean {
+  const now = Date.now();
+  const entry = inMemoryStore.get(userId);
+  if (!entry || now > entry.resetAt) {
+    inMemoryStore.set(userId, { count: 1, resetAt: now + UPLOAD_WINDOW_MS });
+    return true;
+  }
+  if (entry.count >= UPLOAD_LIMIT) return false;
+  entry.count++;
+  return true;
+}
+
+// Use Redis-backed rate limiter when available
+const ratelimit =
+  process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN
+    ? new Ratelimit({
+        redis: new Redis({
+          url: process.env.UPSTASH_REDIS_REST_URL,
+          token: process.env.UPSTASH_REDIS_REST_TOKEN,
+        }),
+        limiter: Ratelimit.slidingWindow(UPLOAD_LIMIT, "1m"),
+        prefix: "ratelimit:upload",
+      })
+    : null;
 
 // SVG is intentionally excluded — SVG files can contain <script> tags and
 // inline event handlers that execute in the browser when served as a static
@@ -33,6 +65,22 @@ export async function POST(request: NextRequest) {
   const session = await auth.api.getSession({ headers: request.headers });
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Rate limit: 10 uploads per minute per user
+  if (ratelimit) {
+    const { success } = await ratelimit.limit(session.user.id);
+    if (!success) {
+      return NextResponse.json(
+        { error: "Too many uploads. Please try again later." },
+        { status: 429 },
+      );
+    }
+  } else if (!checkInMemoryLimit(session.user.id)) {
+    return NextResponse.json(
+      { error: "Too many uploads. Please try again later." },
+      { status: 429 },
+    );
   }
 
   try {
