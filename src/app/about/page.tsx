@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { HomeHeader } from "@/features/home/components/HomeHeader";
+import { UnifiedNavbar } from "@/components/unified-navbar";
 import { HomeFooter } from "@/features/home/components/HomeFooter";
 import { AboutContent } from "@/features/home/components/AboutContent";
 import { api, HydrateClient } from "@/lib/trpc/server";
@@ -18,7 +18,7 @@ export default async function AboutPage() {
   return (
     <HydrateClient>
       <div className="dark min-h-screen bg-zinc-950 text-zinc-50">
-        <HomeHeader />
+        <UnifiedNavbar />
         <AboutContent />
         <HomeFooter />
       </div>

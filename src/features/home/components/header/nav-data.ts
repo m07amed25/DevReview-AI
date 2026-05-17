@@ -11,7 +11,6 @@ import {
   MessageSquare,
   Info,
   FolderGit2,
-  GitMerge,
 } from "lucide-react";
 
 export const productLinks = [
@@ -37,7 +36,6 @@ export const simpleLinks = [
 export const workspaceLinks = [
   { href: "/repo", label: "Repositories", icon: FolderGit2, description: "Browse all repositories" },
   { href: "/reviews", label: "Reviews", icon: GitPullRequest, description: "Your code reviews" },
-  { href: "/reviews?status=pending", label: "Pending Reviews", icon: GitMerge, description: "Awaiting your attention" },
   { href: "/teams", label: "Teams", icon: Users, description: "Your teams" },
   { href: "/analytics", label: "Analytics", icon: BarChart3, description: "Insights and reporting" },
 ];

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { HomeHeader } from "@/features/home/components/HomeHeader";
+import { UnifiedNavbar } from "@/components/unified-navbar";
 import { HomeFooter } from "@/features/home/components/HomeFooter";
 import { ProductContent } from "@/features/home/components/ProductContent";
 
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function ProductPage() {
   return (
     <div className="dark min-h-screen bg-zinc-950 text-zinc-50">
-      <HomeHeader />
+      <UnifiedNavbar />
       <ProductContent />
       <HomeFooter />
     </div>

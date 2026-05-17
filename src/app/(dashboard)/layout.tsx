@@ -8,39 +8,25 @@ import { db } from "@/server/db";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { FeedbackButton } from "@/components/feedback/feedback-button";
-import { ClientHeader } from "@/components/client-header";
-
-/**
- * User type matching the Header component's expectations.
- * This interface is shared across the dashboard layout to ensure type consistency.
- */
-export interface DashboardUser {
-  id: string;
-  name: string;
-  email: string;
-  image?: string | null | undefined;
-  role?: string;
-}
+import { UnifiedNavbar } from "@/components/unified-navbar";
 
 function DashboardContent({
   children,
-  user,
   needsGithubConnection,
 }: {
   children: React.ReactNode;
-  user: DashboardUser;
   needsGithubConnection: boolean;
 }) {
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background pt-14">
         {/* Ambient indigo glow — subtle, top-right and bottom-left */}
         <div className="pointer-events-none fixed inset-0 overflow-hidden -z-10" aria-hidden>
           <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-indigo-500/5 blur-3xl" />
           <div className="absolute top-1/2 -left-32 h-72 w-72 rounded-full bg-violet-500/4 blur-3xl" />
           <div className="absolute bottom-0 right-1/3 h-64 w-64 rounded-full bg-indigo-400/3 blur-3xl" />
         </div>
-        <ClientHeader user={user} />
+        <UnifiedNavbar />
         {needsGithubConnection && (
           <div className="container mx-auto px-4 pt-6">
             <Alert
@@ -106,16 +92,8 @@ export default async function DashboardLayout({
   const hasGithub = dbUser?.accounts && dbUser.accounts.length > 0;
   const needsGithubConnection = !hasGithub;
 
-  const user: DashboardUser = {
-    id: session.user.id,
-    name: session.user.name ?? "User",
-    email: session.user.email,
-    image: session.user.image ?? null,
-    role: dbUser?.role as string | undefined,
-  };
-
   return (
-    <DashboardContent user={user} needsGithubConnection={needsGithubConnection}>
+    <DashboardContent needsGithubConnection={needsGithubConnection}>
       {children}
     </DashboardContent>
   );

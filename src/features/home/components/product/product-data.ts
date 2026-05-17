@@ -6,7 +6,7 @@ export const accentTokens: Record<Accent, { text: string; dot: string; glow: str
   indigo: { text: "text-indigo-400", dot: "bg-indigo-400", glow: "bg-indigo-500/20", line: "bg-indigo-400/60", border: "border-indigo-500/25" },
   violet: { text: "text-violet-400", dot: "bg-violet-400", glow: "bg-violet-500/20", line: "bg-violet-400/60", border: "border-violet-500/25" },
   cyan: { text: "text-cyan-400", dot: "bg-cyan-400", glow: "bg-cyan-500/20", line: "bg-cyan-400/60", border: "border-cyan-500/25" },
-  rose: { text: "text-rose-400", dot: "bg-rose-400", glow: "bg-rose-500/20", line: "bg-rose-400/60", border: "border-rose-500/25" },
+  rose: { text: "text-red-500", dot: "bg-red-400", glow: "bg-red-500/20", line: "bg-red-400/60", border: "border-red-500/25" },
   emerald: { text: "text-emerald-400", dot: "bg-emerald-400", glow: "bg-emerald-500/20", line: "bg-emerald-400/60", border: "border-emerald-500/25" },
 };
 

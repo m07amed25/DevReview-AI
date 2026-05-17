@@ -1,5 +1,5 @@
 import { PageBackground } from "@/features/home/components/PageBackground";
-import { HomeHeader } from "@/features/home/components/HomeHeader";
+import { UnifiedNavbar } from "@/components/unified-navbar";
 import { HeroSection } from "@/features/home/components/HeroSection";
 import { StatsSection } from "@/features/home/components/StatsSection";
 import { FeaturesSection } from "@/features/home/components/FeaturesSection";
@@ -61,7 +61,7 @@ export default async function HomePage() {
           />
         )}
 
-        <HomeHeader />
+        <UnifiedNavbar />
 
         <main id="main-content" role="main">
           <HeroSection />

@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { HomeHeader } from "@/features/home/components/HomeHeader";
+import { UnifiedNavbar } from "@/components/unified-navbar";
 import { HomeFooter } from "@/features/home/components/HomeFooter";
 import { PricingContent } from "@/features/home/components/PricingContent";
 import { api, HydrateClient } from "@/lib/trpc/server";
@@ -35,7 +35,7 @@ export default async function PricingPage() {
   return (
     <HydrateClient>
       <div className="min-h-screen bg-background">
-        <HomeHeader />
+        <UnifiedNavbar />
         <PricingContent settings={settings} plans={plans} />
         <HomeFooter />
       </div>

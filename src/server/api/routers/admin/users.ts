@@ -574,4 +574,57 @@ export const adminUsersRouter = createTRPCRouter({
 
       return { success: true };
     }),
+
+  updateUser: adminProcedure
+    .input(
+      z.object({
+        userId: z.string().max(255),
+        name: z.string().min(1).max(255).optional(),
+        email: z.string().email().max(255).optional(),
+        role: z.nativeEnum(UserRole).optional(),
+        planId: z.string().optional(),
+        planExpiresAt: z.date().nullable().optional(),
+        banned: z.boolean().optional(),
+        bannedReason: z.string().max(2000).nullable().optional(),
+        reviewDepth: z.string().optional(),
+        defaultLanguage: z.string().optional(),
+        autoReview: z.boolean().optional(),
+        includeSecurityChecks: z.boolean().optional(),
+        includePerfSuggestions: z.boolean().optional(),
+        overrideReposLimit: z.number().int().min(0).nullable().optional(),
+        overrideReviewsLimit: z.number().int().min(0).nullable().optional(),
+        overrideSeatsLimit: z.number().int().min(0).nullable().optional(),
+        desktopNotifications: z.boolean().optional(),
+        emailNotifications: z.boolean().optional(),
+        notificationSoundEnabled: z.boolean().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { userId, ...data } = input;
+
+      const targetUser = await ctx.db.user.findUnique({
+        where: { id: userId },
+        select: { email: true },
+      });
+
+      if (!targetUser) throw new Error("User not found.");
+
+      if (targetUser.email === process.env.OWNER_MAIL && ctx.user.email !== process.env.OWNER_MAIL) {
+        throw new Error("Only the owner can edit the owner's account.");
+      }
+
+      await ctx.db.user.update({ where: { id: userId }, data });
+
+      void logAudit({
+        actorId: ctx.user.id,
+        action: "USER_UPDATED",
+        resource: "USER",
+        resourceId: userId,
+        ipAddress: ctx.ip,
+        userAgent: ctx.userAgent,
+        metadata: data,
+      });
+
+      return { success: true };
+    }),
 });

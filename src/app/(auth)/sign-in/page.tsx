@@ -21,6 +21,7 @@ import {
   AuroraBackground,
   GridBackground,
 } from "@/components/animations/backgrounds";
+import { AuthBackLink } from "@/components/auth-back-link";
 
 interface FieldErrors {
   email?: string;
@@ -186,6 +187,8 @@ function SignInContent() {
         <AuroraBackground />
         <GridBackground />
       </div>
+
+      <AuthBackLink />
 
       <Card
         ref={cardRef}

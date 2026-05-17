@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { HomeHeader } from "@/features/home/components/HomeHeader";
+import { UnifiedNavbar } from "@/components/unified-navbar";
 import { HomeFooter } from "@/features/home/components/HomeFooter";
 import { db } from "@/server/db";
 import { LegalMarkdown } from "@/components/legal-markdown";
@@ -17,7 +17,7 @@ export default async function PrivacyPage() {
 
   return (
     <div className="dark min-h-screen bg-zinc-950 text-zinc-50">
-      <HomeHeader />
+      <UnifiedNavbar />
       <main className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 pt-32 pb-24">
         <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4">
           Privacy Policy

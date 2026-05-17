@@ -495,6 +495,7 @@ export default function PullRequestPage({ params }: PageProps) {
             onClick={() => setActiveTab("diagrams")}
             icon={Network}
             label="Diagrams"
+            badge="BETA"
             count={diagrams.data?.length ?? 0}
           />
         </div>

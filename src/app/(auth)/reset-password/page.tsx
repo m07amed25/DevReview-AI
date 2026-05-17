@@ -19,6 +19,7 @@ import {
   AuroraBackground,
   GridBackground,
 } from "@/components/animations/backgrounds";
+import { AuthBackLink } from "@/components/auth-back-link";
 
 function ResetPasswordContent() {
   const searchParams = useSearchParams();
@@ -103,6 +104,8 @@ function ResetPasswordContent() {
         <AuroraBackground />
         <GridBackground />
       </div>
+
+      <AuthBackLink />
 
       <Card className="w-full max-w-md hover-lift transition-all duration-300">
         <CardHeader className="text-center">

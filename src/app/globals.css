@@ -3,6 +3,17 @@
 @import "shadcn/tailwind.css";
 @plugin "@tailwindcss/typography";
 
+* {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+*::-webkit-scrollbar {
+  display: none !important;
+}
+html, body {
+  overflow: -moz-scrollbars-none;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

@@ -19,8 +19,8 @@ import {
 import { Separator } from "@/components/ui/separator";import {
   AuroraBackground,
   GridBackground,
-} from
- "@/components/animations/backgrounds";
+} from "@/components/animations/backgrounds";
+import { AuthBackLink } from "@/components/auth-back-link";
 
 interface FieldErrors {
   name?: string;
@@ -153,6 +153,8 @@ export default function SignUpPage() {
         <AuroraBackground />
         <GridBackground />
       </div>
+
+      <AuthBackLink />
 
       <Card
         ref={cardRef}

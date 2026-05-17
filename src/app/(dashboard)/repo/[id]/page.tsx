@@ -482,6 +482,7 @@ export default function RepositoryDetailPage({ params }: PageProps) {
         <h2 className="text-xl font-semibold tracking-tight mb-4 flex items-center gap-2">
           <Network className="size-5" />
           Architecture Diagrams
+          <span className="px-1.5 py-0.5 text-[10px] font-semibold uppercase rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">BETA</span>
         </h2>
         <DiagramPanel
           diagrams={diagrams.data ?? []}

@@ -33,6 +33,7 @@ import {
 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface UserRowProps {
   user: any;
@@ -91,13 +92,14 @@ export function UserRow({
             else setSelectedUsers(selectedUsers.filter((id) => id !== user.id));
           }}
         />
-        <Avatar className="h-9 w-9 shrink-0">
-          {user.image && <AvatarImage src={user.image} alt={user.name ?? ""} />}
-          <AvatarFallback>{(user.name ?? user.email).charAt(0).toUpperCase()}</AvatarFallback>
-        </Avatar>
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="truncate font-medium">{user.name ?? "(no name)"}</span>
+        <Link href={`/admin/users/${user.id}`} className="flex items-center gap-3 min-w-0 flex-1">
+          <Avatar className="h-9 w-9 shrink-0">
+            {user.image && <AvatarImage src={user.image} alt={user.name ?? ""} />}
+            <AvatarFallback>{(user.name ?? user.email).charAt(0).toUpperCase()}</AvatarFallback>
+          </Avatar>
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="truncate font-medium hover:underline">{user.name ?? "(no name)"}</span>
             {user.isOwner ? (
               <Badge variant="default" className="border-amber-500 bg-amber-500/15 text-amber-500">Owner</Badge>
             ) : (
@@ -132,7 +134,8 @@ export function UserRow({
             </Badge>
           </div>
           <p className="truncate text-sm text-muted-foreground">{user.email}</p>
-        </div>
+          </div>
+        </Link>
       </div>
 
       <div className="hidden gap-6 text-center text-sm lg:flex">

@@ -18,12 +18,14 @@ export function TabButton({
   icon: Icon,
   label,
   count,
+  badge,
 }: {
   active: boolean;
   onClick: () => void;
   icon: React.ComponentType<{ className?: string }>;
   label: string;
   count?: number;
+  badge?: string;
 }) {
   return (
     <button
@@ -37,6 +39,11 @@ export function TabButton({
     >
       <Icon className="size-4" />
       {label}
+      {badge && (
+        <span className="px-1.5 py-0.5 text-[10px] font-semibold uppercase rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+          {badge}
+        </span>
+      )}
       {count !== undefined && (
         <span
           className={cn(

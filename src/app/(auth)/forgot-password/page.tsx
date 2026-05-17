@@ -18,6 +18,7 @@ import {
   AuroraBackground,
   GridBackground,
 } from "@/components/animations/backgrounds";
+import { AuthBackLink } from "@/components/auth-back-link";
 
 function ForgotPasswordContent() {
   const [email, setEmail] = useState("");
@@ -51,6 +52,8 @@ function ForgotPasswordContent() {
         <AuroraBackground />
         <GridBackground />
       </div>
+
+      <AuthBackLink />
 
       <Card className="w-full max-w-md hover-lift transition-all duration-300">
         <CardHeader className="text-center">
