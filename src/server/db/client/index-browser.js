@@ -586,6 +586,13 @@ exports.Prisma.PricingSettingsScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.LegalPageScalarFieldEnum = {
+  slug: 'slug',
+  title: 'title',
+  content: 'content',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -781,7 +788,8 @@ exports.Prisma.ModelName = {
   UserPriceOverride: 'UserPriceOverride',
   PartnerDomain: 'PartnerDomain',
   PricingPlan: 'PricingPlan',
-  PricingSettings: 'PricingSettings'
+  PricingSettings: 'PricingSettings',
+  LegalPage: 'LegalPage'
 };
 
 /**

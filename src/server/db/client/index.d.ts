@@ -193,6 +193,11 @@ export type PricingPlan = $Result.DefaultSelection<Prisma.$PricingPlanPayload>
  * Single-row global pricing configuration (id is always "global").
  */
 export type PricingSettings = $Result.DefaultSelection<Prisma.$PricingSettingsPayload>
+/**
+ * Model LegalPage
+ * 
+ */
+export type LegalPage = $Result.DefaultSelection<Prisma.$LegalPagePayload>
 
 /**
  * Enums
@@ -939,6 +944,16 @@ export class PrismaClient<
     * ```
     */
   get pricingSettings(): Prisma.PricingSettingsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.legalPage`: Exposes CRUD operations for the **LegalPage** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more LegalPages
+    * const legalPages = await prisma.legalPage.findMany()
+    * ```
+    */
+  get legalPage(): Prisma.LegalPageDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1415,7 +1430,8 @@ export namespace Prisma {
     UserPriceOverride: 'UserPriceOverride',
     PartnerDomain: 'PartnerDomain',
     PricingPlan: 'PricingPlan',
-    PricingSettings: 'PricingSettings'
+    PricingSettings: 'PricingSettings',
+    LegalPage: 'LegalPage'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1434,7 +1450,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "repository" | "review" | "reviewFeedback" | "securityIssue" | "reviewThread" | "reviewThreadComment" | "reviewThreadCommentReaction" | "reviewApproval" | "reviewAssignment" | "team" | "teamMember" | "teamAction" | "notification" | "webhookConfig" | "scheduledScanConfig" | "scheduledScanRun" | "gitHubComment" | "gitHubStatusCheck" | "branchProtectionRecommendation" | "diagram" | "reviewRule" | "systemSettings" | "supportMessage" | "auditLog" | "ssoProvider" | "customRole" | "userCustomRole" | "discount" | "userPriceOverride" | "partnerDomain" | "pricingPlan" | "pricingSettings"
+      modelProps: "user" | "session" | "account" | "verification" | "repository" | "review" | "reviewFeedback" | "securityIssue" | "reviewThread" | "reviewThreadComment" | "reviewThreadCommentReaction" | "reviewApproval" | "reviewAssignment" | "team" | "teamMember" | "teamAction" | "notification" | "webhookConfig" | "scheduledScanConfig" | "scheduledScanRun" | "gitHubComment" | "gitHubStatusCheck" | "branchProtectionRecommendation" | "diagram" | "reviewRule" | "systemSettings" | "supportMessage" | "auditLog" | "ssoProvider" | "customRole" | "userCustomRole" | "discount" | "userPriceOverride" | "partnerDomain" | "pricingPlan" | "pricingSettings" | "legalPage"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4102,6 +4118,80 @@ export namespace Prisma {
           }
         }
       }
+      LegalPage: {
+        payload: Prisma.$LegalPagePayload<ExtArgs>
+        fields: Prisma.LegalPageFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.LegalPageFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LegalPagePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.LegalPageFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LegalPagePayload>
+          }
+          findFirst: {
+            args: Prisma.LegalPageFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LegalPagePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.LegalPageFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LegalPagePayload>
+          }
+          findMany: {
+            args: Prisma.LegalPageFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LegalPagePayload>[]
+          }
+          create: {
+            args: Prisma.LegalPageCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LegalPagePayload>
+          }
+          createMany: {
+            args: Prisma.LegalPageCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.LegalPageCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LegalPagePayload>[]
+          }
+          delete: {
+            args: Prisma.LegalPageDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LegalPagePayload>
+          }
+          update: {
+            args: Prisma.LegalPageUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LegalPagePayload>
+          }
+          deleteMany: {
+            args: Prisma.LegalPageDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.LegalPageUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.LegalPageUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LegalPagePayload>[]
+          }
+          upsert: {
+            args: Prisma.LegalPageUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LegalPagePayload>
+          }
+          aggregate: {
+            args: Prisma.LegalPageAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateLegalPage>
+          }
+          groupBy: {
+            args: Prisma.LegalPageGroupByArgs<ExtArgs>
+            result: $Utils.Optional<LegalPageGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.LegalPageCountArgs<ExtArgs>
+            result: $Utils.Optional<LegalPageCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -4234,6 +4324,7 @@ export namespace Prisma {
     partnerDomain?: PartnerDomainOmit
     pricingPlan?: PricingPlanOmit
     pricingSettings?: PricingSettingsOmit
+    legalPage?: LegalPageOmit
   }
 
   /* Types for Logging */
@@ -46377,6 +46468,988 @@ export namespace Prisma {
 
 
   /**
+   * Model LegalPage
+   */
+
+  export type AggregateLegalPage = {
+    _count: LegalPageCountAggregateOutputType | null
+    _min: LegalPageMinAggregateOutputType | null
+    _max: LegalPageMaxAggregateOutputType | null
+  }
+
+  export type LegalPageMinAggregateOutputType = {
+    slug: string | null
+    title: string | null
+    content: string | null
+    updatedAt: Date | null
+  }
+
+  export type LegalPageMaxAggregateOutputType = {
+    slug: string | null
+    title: string | null
+    content: string | null
+    updatedAt: Date | null
+  }
+
+  export type LegalPageCountAggregateOutputType = {
+    slug: number
+    title: number
+    content: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type LegalPageMinAggregateInputType = {
+    slug?: true
+    title?: true
+    content?: true
+    updatedAt?: true
+  }
+
+  export type LegalPageMaxAggregateInputType = {
+    slug?: true
+    title?: true
+    content?: true
+    updatedAt?: true
+  }
+
+  export type LegalPageCountAggregateInputType = {
+    slug?: true
+    title?: true
+    content?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type LegalPageAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LegalPage to aggregate.
+     */
+    where?: LegalPageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LegalPages to fetch.
+     */
+    orderBy?: LegalPageOrderByWithRelationInput | LegalPageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: LegalPageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LegalPages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LegalPages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned LegalPages
+    **/
+    _count?: true | LegalPageCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: LegalPageMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: LegalPageMaxAggregateInputType
+  }
+
+  export type GetLegalPageAggregateType<T extends LegalPageAggregateArgs> = {
+        [P in keyof T & keyof AggregateLegalPage]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateLegalPage[P]>
+      : GetScalarType<T[P], AggregateLegalPage[P]>
+  }
+
+
+
+
+  export type LegalPageGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LegalPageWhereInput
+    orderBy?: LegalPageOrderByWithAggregationInput | LegalPageOrderByWithAggregationInput[]
+    by: LegalPageScalarFieldEnum[] | LegalPageScalarFieldEnum
+    having?: LegalPageScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: LegalPageCountAggregateInputType | true
+    _min?: LegalPageMinAggregateInputType
+    _max?: LegalPageMaxAggregateInputType
+  }
+
+  export type LegalPageGroupByOutputType = {
+    slug: string
+    title: string
+    content: string
+    updatedAt: Date
+    _count: LegalPageCountAggregateOutputType | null
+    _min: LegalPageMinAggregateOutputType | null
+    _max: LegalPageMaxAggregateOutputType | null
+  }
+
+  type GetLegalPageGroupByPayload<T extends LegalPageGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<LegalPageGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof LegalPageGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], LegalPageGroupByOutputType[P]>
+            : GetScalarType<T[P], LegalPageGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type LegalPageSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    slug?: boolean
+    title?: boolean
+    content?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["legalPage"]>
+
+  export type LegalPageSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    slug?: boolean
+    title?: boolean
+    content?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["legalPage"]>
+
+  export type LegalPageSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    slug?: boolean
+    title?: boolean
+    content?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["legalPage"]>
+
+  export type LegalPageSelectScalar = {
+    slug?: boolean
+    title?: boolean
+    content?: boolean
+    updatedAt?: boolean
+  }
+
+  export type LegalPageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"slug" | "title" | "content" | "updatedAt", ExtArgs["result"]["legalPage"]>
+
+  export type $LegalPagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "LegalPage"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      slug: string
+      title: string
+      content: string
+      updatedAt: Date
+    }, ExtArgs["result"]["legalPage"]>
+    composites: {}
+  }
+
+  type LegalPageGetPayload<S extends boolean | null | undefined | LegalPageDefaultArgs> = $Result.GetResult<Prisma.$LegalPagePayload, S>
+
+  type LegalPageCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<LegalPageFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: LegalPageCountAggregateInputType | true
+    }
+
+  export interface LegalPageDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['LegalPage'], meta: { name: 'LegalPage' } }
+    /**
+     * Find zero or one LegalPage that matches the filter.
+     * @param {LegalPageFindUniqueArgs} args - Arguments to find a LegalPage
+     * @example
+     * // Get one LegalPage
+     * const legalPage = await prisma.legalPage.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends LegalPageFindUniqueArgs>(args: SelectSubset<T, LegalPageFindUniqueArgs<ExtArgs>>): Prisma__LegalPageClient<$Result.GetResult<Prisma.$LegalPagePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one LegalPage that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {LegalPageFindUniqueOrThrowArgs} args - Arguments to find a LegalPage
+     * @example
+     * // Get one LegalPage
+     * const legalPage = await prisma.legalPage.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends LegalPageFindUniqueOrThrowArgs>(args: SelectSubset<T, LegalPageFindUniqueOrThrowArgs<ExtArgs>>): Prisma__LegalPageClient<$Result.GetResult<Prisma.$LegalPagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LegalPage that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LegalPageFindFirstArgs} args - Arguments to find a LegalPage
+     * @example
+     * // Get one LegalPage
+     * const legalPage = await prisma.legalPage.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends LegalPageFindFirstArgs>(args?: SelectSubset<T, LegalPageFindFirstArgs<ExtArgs>>): Prisma__LegalPageClient<$Result.GetResult<Prisma.$LegalPagePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LegalPage that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LegalPageFindFirstOrThrowArgs} args - Arguments to find a LegalPage
+     * @example
+     * // Get one LegalPage
+     * const legalPage = await prisma.legalPage.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends LegalPageFindFirstOrThrowArgs>(args?: SelectSubset<T, LegalPageFindFirstOrThrowArgs<ExtArgs>>): Prisma__LegalPageClient<$Result.GetResult<Prisma.$LegalPagePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more LegalPages that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LegalPageFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all LegalPages
+     * const legalPages = await prisma.legalPage.findMany()
+     * 
+     * // Get first 10 LegalPages
+     * const legalPages = await prisma.legalPage.findMany({ take: 10 })
+     * 
+     * // Only select the `slug`
+     * const legalPageWithSlugOnly = await prisma.legalPage.findMany({ select: { slug: true } })
+     * 
+     */
+    findMany<T extends LegalPageFindManyArgs>(args?: SelectSubset<T, LegalPageFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LegalPagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a LegalPage.
+     * @param {LegalPageCreateArgs} args - Arguments to create a LegalPage.
+     * @example
+     * // Create one LegalPage
+     * const LegalPage = await prisma.legalPage.create({
+     *   data: {
+     *     // ... data to create a LegalPage
+     *   }
+     * })
+     * 
+     */
+    create<T extends LegalPageCreateArgs>(args: SelectSubset<T, LegalPageCreateArgs<ExtArgs>>): Prisma__LegalPageClient<$Result.GetResult<Prisma.$LegalPagePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many LegalPages.
+     * @param {LegalPageCreateManyArgs} args - Arguments to create many LegalPages.
+     * @example
+     * // Create many LegalPages
+     * const legalPage = await prisma.legalPage.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends LegalPageCreateManyArgs>(args?: SelectSubset<T, LegalPageCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many LegalPages and returns the data saved in the database.
+     * @param {LegalPageCreateManyAndReturnArgs} args - Arguments to create many LegalPages.
+     * @example
+     * // Create many LegalPages
+     * const legalPage = await prisma.legalPage.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many LegalPages and only return the `slug`
+     * const legalPageWithSlugOnly = await prisma.legalPage.createManyAndReturn({
+     *   select: { slug: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends LegalPageCreateManyAndReturnArgs>(args?: SelectSubset<T, LegalPageCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LegalPagePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a LegalPage.
+     * @param {LegalPageDeleteArgs} args - Arguments to delete one LegalPage.
+     * @example
+     * // Delete one LegalPage
+     * const LegalPage = await prisma.legalPage.delete({
+     *   where: {
+     *     // ... filter to delete one LegalPage
+     *   }
+     * })
+     * 
+     */
+    delete<T extends LegalPageDeleteArgs>(args: SelectSubset<T, LegalPageDeleteArgs<ExtArgs>>): Prisma__LegalPageClient<$Result.GetResult<Prisma.$LegalPagePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one LegalPage.
+     * @param {LegalPageUpdateArgs} args - Arguments to update one LegalPage.
+     * @example
+     * // Update one LegalPage
+     * const legalPage = await prisma.legalPage.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends LegalPageUpdateArgs>(args: SelectSubset<T, LegalPageUpdateArgs<ExtArgs>>): Prisma__LegalPageClient<$Result.GetResult<Prisma.$LegalPagePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more LegalPages.
+     * @param {LegalPageDeleteManyArgs} args - Arguments to filter LegalPages to delete.
+     * @example
+     * // Delete a few LegalPages
+     * const { count } = await prisma.legalPage.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends LegalPageDeleteManyArgs>(args?: SelectSubset<T, LegalPageDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LegalPages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LegalPageUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many LegalPages
+     * const legalPage = await prisma.legalPage.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends LegalPageUpdateManyArgs>(args: SelectSubset<T, LegalPageUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LegalPages and returns the data updated in the database.
+     * @param {LegalPageUpdateManyAndReturnArgs} args - Arguments to update many LegalPages.
+     * @example
+     * // Update many LegalPages
+     * const legalPage = await prisma.legalPage.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more LegalPages and only return the `slug`
+     * const legalPageWithSlugOnly = await prisma.legalPage.updateManyAndReturn({
+     *   select: { slug: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends LegalPageUpdateManyAndReturnArgs>(args: SelectSubset<T, LegalPageUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LegalPagePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one LegalPage.
+     * @param {LegalPageUpsertArgs} args - Arguments to update or create a LegalPage.
+     * @example
+     * // Update or create a LegalPage
+     * const legalPage = await prisma.legalPage.upsert({
+     *   create: {
+     *     // ... data to create a LegalPage
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the LegalPage we want to update
+     *   }
+     * })
+     */
+    upsert<T extends LegalPageUpsertArgs>(args: SelectSubset<T, LegalPageUpsertArgs<ExtArgs>>): Prisma__LegalPageClient<$Result.GetResult<Prisma.$LegalPagePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of LegalPages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LegalPageCountArgs} args - Arguments to filter LegalPages to count.
+     * @example
+     * // Count the number of LegalPages
+     * const count = await prisma.legalPage.count({
+     *   where: {
+     *     // ... the filter for the LegalPages we want to count
+     *   }
+     * })
+    **/
+    count<T extends LegalPageCountArgs>(
+      args?: Subset<T, LegalPageCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], LegalPageCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a LegalPage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LegalPageAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends LegalPageAggregateArgs>(args: Subset<T, LegalPageAggregateArgs>): Prisma.PrismaPromise<GetLegalPageAggregateType<T>>
+
+    /**
+     * Group by LegalPage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LegalPageGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends LegalPageGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: LegalPageGroupByArgs['orderBy'] }
+        : { orderBy?: LegalPageGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, LegalPageGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLegalPageGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the LegalPage model
+   */
+  readonly fields: LegalPageFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for LegalPage.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__LegalPageClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the LegalPage model
+   */
+  interface LegalPageFieldRefs {
+    readonly slug: FieldRef<"LegalPage", 'String'>
+    readonly title: FieldRef<"LegalPage", 'String'>
+    readonly content: FieldRef<"LegalPage", 'String'>
+    readonly updatedAt: FieldRef<"LegalPage", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * LegalPage findUnique
+   */
+  export type LegalPageFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LegalPage
+     */
+    select?: LegalPageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LegalPage
+     */
+    omit?: LegalPageOmit<ExtArgs> | null
+    /**
+     * Filter, which LegalPage to fetch.
+     */
+    where: LegalPageWhereUniqueInput
+  }
+
+  /**
+   * LegalPage findUniqueOrThrow
+   */
+  export type LegalPageFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LegalPage
+     */
+    select?: LegalPageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LegalPage
+     */
+    omit?: LegalPageOmit<ExtArgs> | null
+    /**
+     * Filter, which LegalPage to fetch.
+     */
+    where: LegalPageWhereUniqueInput
+  }
+
+  /**
+   * LegalPage findFirst
+   */
+  export type LegalPageFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LegalPage
+     */
+    select?: LegalPageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LegalPage
+     */
+    omit?: LegalPageOmit<ExtArgs> | null
+    /**
+     * Filter, which LegalPage to fetch.
+     */
+    where?: LegalPageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LegalPages to fetch.
+     */
+    orderBy?: LegalPageOrderByWithRelationInput | LegalPageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LegalPages.
+     */
+    cursor?: LegalPageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LegalPages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LegalPages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LegalPages.
+     */
+    distinct?: LegalPageScalarFieldEnum | LegalPageScalarFieldEnum[]
+  }
+
+  /**
+   * LegalPage findFirstOrThrow
+   */
+  export type LegalPageFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LegalPage
+     */
+    select?: LegalPageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LegalPage
+     */
+    omit?: LegalPageOmit<ExtArgs> | null
+    /**
+     * Filter, which LegalPage to fetch.
+     */
+    where?: LegalPageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LegalPages to fetch.
+     */
+    orderBy?: LegalPageOrderByWithRelationInput | LegalPageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LegalPages.
+     */
+    cursor?: LegalPageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LegalPages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LegalPages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LegalPages.
+     */
+    distinct?: LegalPageScalarFieldEnum | LegalPageScalarFieldEnum[]
+  }
+
+  /**
+   * LegalPage findMany
+   */
+  export type LegalPageFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LegalPage
+     */
+    select?: LegalPageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LegalPage
+     */
+    omit?: LegalPageOmit<ExtArgs> | null
+    /**
+     * Filter, which LegalPages to fetch.
+     */
+    where?: LegalPageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LegalPages to fetch.
+     */
+    orderBy?: LegalPageOrderByWithRelationInput | LegalPageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing LegalPages.
+     */
+    cursor?: LegalPageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LegalPages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LegalPages.
+     */
+    skip?: number
+    distinct?: LegalPageScalarFieldEnum | LegalPageScalarFieldEnum[]
+  }
+
+  /**
+   * LegalPage create
+   */
+  export type LegalPageCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LegalPage
+     */
+    select?: LegalPageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LegalPage
+     */
+    omit?: LegalPageOmit<ExtArgs> | null
+    /**
+     * The data needed to create a LegalPage.
+     */
+    data: XOR<LegalPageCreateInput, LegalPageUncheckedCreateInput>
+  }
+
+  /**
+   * LegalPage createMany
+   */
+  export type LegalPageCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many LegalPages.
+     */
+    data: LegalPageCreateManyInput | LegalPageCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * LegalPage createManyAndReturn
+   */
+  export type LegalPageCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LegalPage
+     */
+    select?: LegalPageSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LegalPage
+     */
+    omit?: LegalPageOmit<ExtArgs> | null
+    /**
+     * The data used to create many LegalPages.
+     */
+    data: LegalPageCreateManyInput | LegalPageCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * LegalPage update
+   */
+  export type LegalPageUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LegalPage
+     */
+    select?: LegalPageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LegalPage
+     */
+    omit?: LegalPageOmit<ExtArgs> | null
+    /**
+     * The data needed to update a LegalPage.
+     */
+    data: XOR<LegalPageUpdateInput, LegalPageUncheckedUpdateInput>
+    /**
+     * Choose, which LegalPage to update.
+     */
+    where: LegalPageWhereUniqueInput
+  }
+
+  /**
+   * LegalPage updateMany
+   */
+  export type LegalPageUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update LegalPages.
+     */
+    data: XOR<LegalPageUpdateManyMutationInput, LegalPageUncheckedUpdateManyInput>
+    /**
+     * Filter which LegalPages to update
+     */
+    where?: LegalPageWhereInput
+    /**
+     * Limit how many LegalPages to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * LegalPage updateManyAndReturn
+   */
+  export type LegalPageUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LegalPage
+     */
+    select?: LegalPageSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LegalPage
+     */
+    omit?: LegalPageOmit<ExtArgs> | null
+    /**
+     * The data used to update LegalPages.
+     */
+    data: XOR<LegalPageUpdateManyMutationInput, LegalPageUncheckedUpdateManyInput>
+    /**
+     * Filter which LegalPages to update
+     */
+    where?: LegalPageWhereInput
+    /**
+     * Limit how many LegalPages to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * LegalPage upsert
+   */
+  export type LegalPageUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LegalPage
+     */
+    select?: LegalPageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LegalPage
+     */
+    omit?: LegalPageOmit<ExtArgs> | null
+    /**
+     * The filter to search for the LegalPage to update in case it exists.
+     */
+    where: LegalPageWhereUniqueInput
+    /**
+     * In case the LegalPage found by the `where` argument doesn't exist, create a new LegalPage with this data.
+     */
+    create: XOR<LegalPageCreateInput, LegalPageUncheckedCreateInput>
+    /**
+     * In case the LegalPage was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<LegalPageUpdateInput, LegalPageUncheckedUpdateInput>
+  }
+
+  /**
+   * LegalPage delete
+   */
+  export type LegalPageDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LegalPage
+     */
+    select?: LegalPageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LegalPage
+     */
+    omit?: LegalPageOmit<ExtArgs> | null
+    /**
+     * Filter which LegalPage to delete.
+     */
+    where: LegalPageWhereUniqueInput
+  }
+
+  /**
+   * LegalPage deleteMany
+   */
+  export type LegalPageDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LegalPages to delete
+     */
+    where?: LegalPageWhereInput
+    /**
+     * Limit how many LegalPages to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * LegalPage without action
+   */
+  export type LegalPageDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LegalPage
+     */
+    select?: LegalPageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LegalPage
+     */
+    omit?: LegalPageOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -46961,6 +48034,16 @@ export namespace Prisma {
   };
 
   export type PricingSettingsScalarFieldEnum = (typeof PricingSettingsScalarFieldEnum)[keyof typeof PricingSettingsScalarFieldEnum]
+
+
+  export const LegalPageScalarFieldEnum: {
+    slug: 'slug',
+    title: 'title',
+    content: 'content',
+    updatedAt: 'updatedAt'
+  };
+
+  export type LegalPageScalarFieldEnum = (typeof LegalPageScalarFieldEnum)[keyof typeof LegalPageScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -50398,6 +51481,53 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"PricingSettings"> | Date | string
   }
 
+  export type LegalPageWhereInput = {
+    AND?: LegalPageWhereInput | LegalPageWhereInput[]
+    OR?: LegalPageWhereInput[]
+    NOT?: LegalPageWhereInput | LegalPageWhereInput[]
+    slug?: StringFilter<"LegalPage"> | string
+    title?: StringFilter<"LegalPage"> | string
+    content?: StringFilter<"LegalPage"> | string
+    updatedAt?: DateTimeFilter<"LegalPage"> | Date | string
+  }
+
+  export type LegalPageOrderByWithRelationInput = {
+    slug?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type LegalPageWhereUniqueInput = Prisma.AtLeast<{
+    slug?: string
+    AND?: LegalPageWhereInput | LegalPageWhereInput[]
+    OR?: LegalPageWhereInput[]
+    NOT?: LegalPageWhereInput | LegalPageWhereInput[]
+    title?: StringFilter<"LegalPage"> | string
+    content?: StringFilter<"LegalPage"> | string
+    updatedAt?: DateTimeFilter<"LegalPage"> | Date | string
+  }, "slug">
+
+  export type LegalPageOrderByWithAggregationInput = {
+    slug?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    updatedAt?: SortOrder
+    _count?: LegalPageCountOrderByAggregateInput
+    _max?: LegalPageMaxOrderByAggregateInput
+    _min?: LegalPageMinOrderByAggregateInput
+  }
+
+  export type LegalPageScalarWhereWithAggregatesInput = {
+    AND?: LegalPageScalarWhereWithAggregatesInput | LegalPageScalarWhereWithAggregatesInput[]
+    OR?: LegalPageScalarWhereWithAggregatesInput[]
+    NOT?: LegalPageScalarWhereWithAggregatesInput | LegalPageScalarWhereWithAggregatesInput[]
+    slug?: StringWithAggregatesFilter<"LegalPage"> | string
+    title?: StringWithAggregatesFilter<"LegalPage"> | string
+    content?: StringWithAggregatesFilter<"LegalPage"> | string
+    updatedAt?: DateTimeWithAggregatesFilter<"LegalPage"> | Date | string
+  }
+
   export type UserCreateInput = {
     id: string
     name: string
@@ -53767,6 +54897,55 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type LegalPageCreateInput = {
+    slug: string
+    title: string
+    content: string
+    updatedAt?: Date | string
+  }
+
+  export type LegalPageUncheckedCreateInput = {
+    slug: string
+    title: string
+    content: string
+    updatedAt?: Date | string
+  }
+
+  export type LegalPageUpdateInput = {
+    slug?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LegalPageUncheckedUpdateInput = {
+    slug?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LegalPageCreateManyInput = {
+    slug: string
+    title: string
+    content: string
+    updatedAt?: Date | string
+  }
+
+  export type LegalPageUpdateManyMutationInput = {
+    slug?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LegalPageUncheckedUpdateManyInput = {
+    slug?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -56328,6 +57507,27 @@ export namespace Prisma {
     gracePeriodDays?: SortOrder
     refundWindowDays?: SortOrder
     taxRate?: SortOrder
+  }
+
+  export type LegalPageCountOrderByAggregateInput = {
+    slug?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type LegalPageMaxOrderByAggregateInput = {
+    slug?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type LegalPageMinOrderByAggregateInput = {
+    slug?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type NotificationCreateNestedManyWithoutUserInput = {

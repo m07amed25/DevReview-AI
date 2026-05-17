@@ -809,3 +809,10 @@ enum DiscountType {
   PERCENTAGE
   FIXED
 }
+
+model LegalPage {
+  slug      String   @id
+  title     String
+  content   String   @db.Text
+  updatedAt DateTime @updatedAt
+}

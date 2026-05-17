@@ -27,7 +27,7 @@ export function MobileDashboardMenu({
       opacity: 0,
       x: "100%",
       transition: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 300,
         damping: 30,
         staggerChildren: 0.05,
@@ -38,7 +38,7 @@ export function MobileDashboardMenu({
       opacity: 1,
       x: 0,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 300,
         damping: 30,
         staggerChildren: 0.07,

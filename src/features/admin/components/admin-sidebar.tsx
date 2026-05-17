@@ -23,6 +23,7 @@ import {
   Shield,
   CreditCard,
   Mail,
+  FileText,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -46,6 +47,7 @@ const NAV_GROUPS = [
       { href: "/admin/teams", label: "Teams", icon: Users2 },
       { href: "/admin/support", label: "Support Messages", icon: MessageSquareText },
       { href: "/admin/pricing", label: "Pricing", icon: CreditCard },
+      { href: "/admin/legal", label: "Legal Pages", icon: FileText },
     ],
   },
   {

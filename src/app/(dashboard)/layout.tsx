@@ -1,4 +1,3 @@
-import { Header } from "@/components/header";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Github, AlertCircle } from "lucide-react";
@@ -9,6 +8,7 @@ import { db } from "@/server/db";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { FeedbackButton } from "@/components/feedback/feedback-button";
+import { ClientHeader } from "@/components/client-header";
 
 /**
  * User type matching the Header component's expectations.
@@ -40,7 +40,7 @@ function DashboardContent({
           <div className="absolute top-1/2 -left-32 h-72 w-72 rounded-full bg-violet-500/4 blur-3xl" />
           <div className="absolute bottom-0 right-1/3 h-64 w-64 rounded-full bg-indigo-400/3 blur-3xl" />
         </div>
-        <Header user={user} />
+        <ClientHeader user={user} />
         {needsGithubConnection && (
           <div className="container mx-auto px-4 pt-6">
             <Alert
