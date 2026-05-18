@@ -218,18 +218,13 @@ export async function HomeFooter() {
                 Company
               </p>
               <ul className="space-y-2.5">
-                {footerLinks.company.map(({ label, href, soon }) => (
+                {footerLinks.company.map(({ label, href }) => (
                   <li key={label}>
                     <Link
                       href={href}
                       className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 inline-flex items-center gap-2"
                     >
                       {label}
-                      {soon && (
-                        <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-muted border border-border text-muted-foreground leading-none">
-                          soon
-                        </span>
-                      )}
                     </Link>
                   </li>
                 ))}
