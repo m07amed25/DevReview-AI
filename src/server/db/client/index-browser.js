@@ -593,6 +593,18 @@ exports.Prisma.LegalPageScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ContactMessageScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  subject: 'subject',
+  message: 'message',
+  category: 'category',
+  resolved: 'resolved',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -752,6 +764,13 @@ exports.DiscountType = exports.$Enums.DiscountType = {
   FIXED: 'FIXED'
 };
 
+exports.MessageCategory = exports.$Enums.MessageCategory = {
+  CONTACT: 'CONTACT',
+  FEEDBACK: 'FEEDBACK',
+  REVIEW_FEEDBACK: 'REVIEW_FEEDBACK',
+  MAINTENANCE_FEEDBACK: 'MAINTENANCE_FEEDBACK'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Session: 'Session',
@@ -789,7 +808,8 @@ exports.Prisma.ModelName = {
   PartnerDomain: 'PartnerDomain',
   PricingPlan: 'PricingPlan',
   PricingSettings: 'PricingSettings',
-  LegalPage: 'LegalPage'
+  LegalPage: 'LegalPage',
+  ContactMessage: 'ContactMessage'
 };
 
 /**

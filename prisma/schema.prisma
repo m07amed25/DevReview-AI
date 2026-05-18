@@ -816,3 +816,24 @@ model LegalPage {
   content   String   @db.Text
   updatedAt DateTime @updatedAt
 }
+
+enum MessageCategory {
+  CONTACT
+  FEEDBACK
+  REVIEW_FEEDBACK
+  MAINTENANCE_FEEDBACK
+}
+
+model ContactMessage {
+  id        String          @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  category  MessageCategory @default(CONTACT)
+  resolved  Boolean         @default(false)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  @@map("contact_messages")
+}

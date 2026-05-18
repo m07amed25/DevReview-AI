@@ -29,10 +29,10 @@ const footerLinks = {
   ],
   company: [
     { label: "About", href: "/about"},
-    { label: "Privacy Policy", href: "/privacy", soon: true },
-    { label: "Terms of Service", href: "/terms", soon: true },
+    { label: "Privacy Policy", href: "/privacy"},
+    { label: "Terms of Service", href: "/terms"},
     { label: "Security", href: "/security" },
-    { label: "Contact", href: "/contact", soon: true },
+    { label: "Contact", href: "/contact" },
   ],
 };
 
