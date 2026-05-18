@@ -46,6 +46,7 @@ const NAV_GROUPS = [
       { href: "/admin/reviews", label: "Reviews", icon: GitPullRequest },
       { href: "/admin/teams", label: "Teams", icon: Users2 },
       { href: "/admin/support", label: "Support Messages", icon: MessageSquareText },
+      { href: "/admin/messages", label: "Messages", icon: Mail },
       { href: "/admin/pricing", label: "Pricing", icon: CreditCard },
       { href: "/admin/legal", label: "Legal Pages", icon: FileText },
     ],

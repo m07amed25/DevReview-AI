@@ -607,7 +607,7 @@ model UserPriceOverride {
   email                String
   /// "FREE" | "PRO" | "ENTERPRISE"
   planId               String
-  overrideMonthlyPrice Float?
+  overrideMonthlyPrice Int?
   overrideYearlyPrice  Float?
   reason               String?
   active               Boolean   @default(true)
@@ -627,7 +627,7 @@ model PartnerDomain {
   companyName          String
   /// "FREE" | "PRO" | "ENTERPRISE"
   planId               String
-  overrideMonthlyPrice Float?
+  overrideMonthlyPrice Int?
   overrideYearlyPrice  Float?
   /// Internal note visible only to admins
   note                 String?
@@ -646,7 +646,7 @@ model PricingPlan {
   id           String   @id
   name         String
   tagline      String
-  monthlyPrice Float
+  monthlyPrice Int
   visible      Boolean  @default(true)
   highlight    Boolean  @default(false)
   features     String[]
@@ -815,4 +815,25 @@ model LegalPage {
   title     String
   content   String   @db.Text
   updatedAt DateTime @updatedAt
+}
+
+enum MessageCategory {
+  CONTACT
+  FEEDBACK
+  REVIEW_FEEDBACK
+  MAINTENANCE_FEEDBACK
+}
+
+model ContactMessage {
+  id        String          @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  category  MessageCategory @default(CONTACT)
+  resolved  Boolean         @default(false)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  @@map("contact_messages")
 }

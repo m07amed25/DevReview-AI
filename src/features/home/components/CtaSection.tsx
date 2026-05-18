@@ -48,7 +48,7 @@ export function CtaSection() {
         </h2>
 
         <p
-          className="mx-auto mt-4 max-w-2xl text-lg sm:text-xl text-muted-foreground font-light mb-10"
+          className="mx-auto mt-4 max-w-2xl text-lg sm:text-xl text-muted-foreground mb-10"
           style={{ textWrap: "balance" }}
         >
           Join thousands of engineering teams who have automated their code

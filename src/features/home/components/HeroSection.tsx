@@ -61,7 +61,7 @@ export function HeroSection() {
         {/* Description */}
         <Fade delay={800}>
           <p
-            className="mx-auto mt-6 max-w-2xl text-lg sm:text-xl text-muted-foreground leading-relaxed font-light"
+            className="mx-auto mt-6 max-w-2xl text-lg sm:text-xl text-muted-foreground leading-relaxed"
             style={{ textWrap: "balance" }}
           >
             Connect your GitHub repositories and let our AI agent analyze,

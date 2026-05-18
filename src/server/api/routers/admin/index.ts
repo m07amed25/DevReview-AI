@@ -5,6 +5,7 @@ import { adminReviewsRouter } from "./reviews";
 import { adminSettingsRouter } from "./settings";
 import { adminSecurityRouter } from "./security";
 import { adminLegalRouter } from "./legal";
+import { adminMessagesRouter } from "./messages";
 
 export const adminRouter = mergeRouters(
   adminStatsRouter,
@@ -13,4 +14,5 @@ export const adminRouter = mergeRouters(
   adminSettingsRouter,
   adminSecurityRouter,
   adminLegalRouter,
+  adminMessagesRouter,
 );

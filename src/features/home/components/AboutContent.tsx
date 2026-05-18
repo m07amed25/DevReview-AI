@@ -27,7 +27,7 @@ export function AboutContent() {
             Built by developers,{" "}
             <span className="bg-linear-to-r from-indigo-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">for developers</span>
           </motion.h1>
-          <motion.p initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.22 }} className="mx-auto mt-6 max-w-2xl text-lg sm:text-xl text-muted-foreground leading-relaxed font-light" style={{ textWrap: "balance" }}>
+          <motion.p initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.22 }} className="mx-auto mt-6 max-w-2xl text-lg sm:text-xl text-muted-foreground leading-relaxed" style={{ textWrap: "balance" }}>
             Code Catch was born from a simple frustration: great code was being delayed by slow, inconsistent reviews. We set out to fix that — with AI that never sleeps and always has context.
           </motion.p>
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.34 }} className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
