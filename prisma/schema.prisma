@@ -607,7 +607,7 @@ model UserPriceOverride {
   email                String
   /// "FREE" | "PRO" | "ENTERPRISE"
   planId               String
-  overrideMonthlyPrice Float?
+  overrideMonthlyPrice Int?
   overrideYearlyPrice  Float?
   reason               String?
   active               Boolean   @default(true)
@@ -627,7 +627,7 @@ model PartnerDomain {
   companyName          String
   /// "FREE" | "PRO" | "ENTERPRISE"
   planId               String
-  overrideMonthlyPrice Float?
+  overrideMonthlyPrice Int?
   overrideYearlyPrice  Float?
   /// Internal note visible only to admins
   note                 String?
@@ -646,7 +646,7 @@ model PricingPlan {
   id           String   @id
   name         String
   tagline      String
-  monthlyPrice Float
+  monthlyPrice Int
   visible      Boolean  @default(true)
   highlight    Boolean  @default(false)
   features     String[]

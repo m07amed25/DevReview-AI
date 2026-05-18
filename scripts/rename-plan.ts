@@ -31,6 +31,7 @@ async function main() {
       seatsLimit: null,
       privateRepos: true,
       sortOrder: 2,
+      accentColor: "indigo",
     },
   });
   console.log("Done:", result.id, "->", result.name);

@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { LimitProgress } from "@/components/ui/limit-progress";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { Plan } from "@/lib/plan";
 

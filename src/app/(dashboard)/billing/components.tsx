@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
+
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -119,7 +119,7 @@ export function OverviewTab({
           <Card className="h-full border-border/50 bg-background/40 backdrop-blur-xl shadow-xs">
             <CardHeader>
               <CardTitle className="text-xl">Resource Usage</CardTitle>
-              <CardDescription>Your current usage for this billing cycle. Resets on Jun 1, 2026.</CardDescription>
+              <CardDescription>Your current usage for this billing cycle. Resets on {new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-8">
               <UsageBar icon={<Zap className="h-4 w-4 text-indigo-500" />} label="AI Code Reviews" used={stats.reviews} limit={limits.reviewsLimit} gradient="from-indigo-500 to-purple-500" />
@@ -163,17 +163,17 @@ export function OverviewTab({
 }
 
 function UsageBar({ icon, label, used, limit, gradient }: { icon: React.ReactNode; label: string; used: number; limit: number | null; gradient: string }) {
-  const pct = limit ? (used / limit) * 100 : 0;
+  const pct = limit ? Math.min((used / limit) * 100, 100) : 0;
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between text-sm">
         <div className="flex items-center gap-2 font-medium">{icon}{label}</div>
         <span className="text-muted-foreground"><span className="text-foreground font-semibold">{used}</span> / {limit ?? "∞"}</span>
       </div>
-      <Progress value={pct} className="h-2 bg-muted">
-        <div className={`h-full bg-linear-to-r ${gradient} transition-all duration-1000 ease-in-out`} style={{ width: `${Math.min(pct, 100)}%` }} />
-      </Progress>
-      {limit && used >= limit * 0.8 && (
+      <div className="relative h-2 w-full overflow-hidden rounded-full bg-muted">
+        <div className={`h-full bg-linear-to-r ${gradient} transition-all duration-1000 ease-in-out`} style={{ width: `${pct}%` }} />
+      </div>
+      {limit && pct >= 80 && (
         <p className="text-xs text-muted-foreground flex items-center gap-1"><AlertCircle className="h-3 w-3 text-amber-500" />You are approaching your monthly limit.</p>
       )}
     </div>

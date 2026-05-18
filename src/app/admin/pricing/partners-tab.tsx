@@ -95,7 +95,7 @@ export function PartnersTab() {
       domain: domain.trim().toLowerCase(),
       companyName: companyName.trim(),
       planId,
-      overrideMonthlyPrice: monthlyPrice ? parseFloat(monthlyPrice) : null,
+      overrideMonthlyPrice: monthlyPrice ? parseInt(monthlyPrice) : null,
       overrideYearlyPrice: yearlyPrice ? parseFloat(yearlyPrice) : null,
       note: note || undefined,
       expiresAt: expiresAt ? new Date(expiresAt) : null,

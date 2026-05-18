@@ -72,7 +72,7 @@ export function UserMenu({ user }: { user: UserProps }) {
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="h-9 gap-2 px-2 hover:bg-muted/80 transition-all duration-200 data-[state=open]:bg-muted"
+          className="h-9 gap-1.5 px-1.5 sm:px-2 hover:bg-muted/80 transition-all duration-200 data-[state=open]:bg-muted"
           suppressHydrationWarning
         >
           <Avatar className="size-7 ring-2 ring-border transition-all duration-200 group-hover:ring-primary/20">
@@ -87,7 +87,7 @@ export function UserMenu({ user }: { user: UserProps }) {
           <span className="hidden md:inline-block text-sm font-medium max-w-25 truncate">
             {user.name ?? "User"}
           </span>
-          <ChevronDown className="size-3.5 text-muted-foreground transition-transform duration-200" />
+          <ChevronDown className="hidden sm:block size-3.5 text-muted-foreground transition-transform duration-200" />
         </Button>
       </DropdownMenuTrigger>
 

@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback } from "react";
 import { trpc } from "@/lib/trpc/client";
 import { Plan } from "@/lib/plan";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

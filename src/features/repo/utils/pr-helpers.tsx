@@ -31,16 +31,16 @@ export function TabButton({
     <button
       onClick={onClick}
       className={cn(
-        "relative px-4 py-2.5 text-sm font-medium transition-colors flex items-center gap-2",
+        "relative px-2.5 sm:px-4 py-2.5 text-sm font-medium transition-colors flex items-center gap-1.5 sm:gap-2 shrink-0",
         active
           ? "text-foreground"
           : "text-muted-foreground hover:text-foreground",
       )}
     >
       <Icon className="size-4" />
-      {label}
+      <span className="hidden sm:inline">{label}</span>
       {badge && (
-        <span className="px-1.5 py-0.5 text-[10px] font-semibold uppercase rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+        <span className="hidden sm:inline px-1.5 py-0.5 text-[10px] font-semibold uppercase rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
           {badge}
         </span>
       )}
@@ -219,15 +219,15 @@ export function ReviewStatusBadge({
   return (
     <Badge
       variant="outline"
-      className={cn("gap-1.5 border whitespace-nowrap", config.className)}
+      className={cn("gap-1.5 border max-w-full", config.className)}
     >
       <Icon
         className={cn(
-          "h-3 w-3",
+          "h-3 w-3 shrink-0",
           "spin" in config && config.spin && "animate-spin",
         )}
       />
-      {config.label}
+      <span className="truncate">{config.label}</span>
     </Badge>
   );
 }

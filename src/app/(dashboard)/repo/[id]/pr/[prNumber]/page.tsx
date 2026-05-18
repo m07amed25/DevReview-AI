@@ -362,12 +362,12 @@ export default function PullRequestPage({ params }: PageProps) {
                   <p className="text-xs text-muted-foreground mb-1">
                     Merge direction
                   </p>
-                  <div className="flex items-center gap-1.5 sm:gap-2 text-sm flex-wrap">
-                    <code className="px-1.5 sm:px-2 py-0.5 rounded bg-secondary font-mono text-xs truncate max-w-32 sm:max-w-48">
+                  <div className="flex items-center gap-1.5 sm:gap-2 text-sm flex-wrap min-w-0">
+                    <code className="px-1.5 sm:px-2 py-0.5 rounded bg-secondary font-mono text-xs truncate max-w-[8rem] sm:max-w-48">
                       {pr.data.headRef}
                     </code>
                     <ArrowRight className="size-3 text-muted-foreground shrink-0" />
-                    <code className="px-1.5 sm:px-2 py-0.5 rounded bg-secondary font-mono text-xs truncate max-w-32 sm:max-w-48">
+                    <code className="px-1.5 sm:px-2 py-0.5 rounded bg-secondary font-mono text-xs truncate max-w-[8rem] sm:max-w-48">
                       {pr.data.baseRef}
                     </code>
                   </div>
@@ -443,7 +443,7 @@ export default function PullRequestPage({ params }: PageProps) {
 
       {/* Tabs */}
       <div className="border-b border-border/60">
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-3 overflow-x-auto">
           <TabButton
             active={activeTab === "review"}
             onClick={() => setActiveTab("review")}

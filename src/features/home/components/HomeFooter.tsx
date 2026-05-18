@@ -31,7 +31,7 @@ const footerLinks = {
     { label: "About", href: "/about"},
     { label: "Privacy Policy", href: "/privacy", soon: true },
     { label: "Terms of Service", href: "/terms", soon: true },
-    { label: "Security", href: "/security", soon: true },
+    { label: "Security", href: "/security" },
     { label: "Contact", href: "/contact", soon: true },
   ],
 };
@@ -82,7 +82,7 @@ export async function HomeFooter() {
   ];
 
   return (
-    <footer className="relative bg-zinc-950 overflow-hidden" role="contentinfo">
+    <footer className="relative bg-background overflow-hidden" role="contentinfo">
       {/* Top gradient border */}
       <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-indigo-500/40 to-transparent" />
 
@@ -91,7 +91,7 @@ export async function HomeFooter() {
       <div className="absolute top-1/2 right-1/4 w-48 h-48 bg-blue-600/5 rounded-full blur-3xl pointer-events-none" />
 
       {/* Stats bar */}
-      <div className="border-b border-white/5">
+      <div className="border-b border-border">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
             {stats.map(({ icon: Icon, value, label }) => (
@@ -100,8 +100,8 @@ export async function HomeFooter() {
                   <Icon className="h-4 w-4" aria-hidden="true" />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-white">{value}</p>
-                  <p className="text-xs text-zinc-500">{label}</p>
+                  <p className="text-sm font-bold text-foreground">{value}</p>
+                  <p className="text-xs text-muted-foreground">{label}</p>
                 </div>
               </div>
             ))}
@@ -116,7 +116,7 @@ export async function HomeFooter() {
           <div className="lg:col-span-2 space-y-5">
             <Link href="/" className="flex items-center gap-2.5 group w-fit">
               <Logo className="h-9 transition-all duration-200 group-hover:scale-105" />
-              <span className="font-bold text-lg text-white tracking-tight">
+              <span className="font-bold text-lg text-foreground tracking-tight">
                 Code{" "}
                 <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-400 to-blue-400">
                   Catch
@@ -124,7 +124,7 @@ export async function HomeFooter() {
               </span>
             </Link>
 
-            <p className="text-sm text-zinc-400 leading-relaxed max-w-xs">
+            <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
               Automated AI-powered code reviews for engineering teams. Catch
               bugs, security vulnerabilities, and quality issues instantly in
               every pull request.
@@ -139,7 +139,7 @@ export async function HomeFooter() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 border border-white/10 text-zinc-400 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all duration-200"
+                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted border border-border text-muted-foreground hover:text-foreground hover:bg-accent hover:border-border transition-all duration-200"
                 >
                   <Icon className="h-3.5 w-3.5" aria-hidden="true" />
                 </a>
@@ -151,7 +151,7 @@ export async function HomeFooter() {
               href="https://github.com/m07amed25/DevReview-AI"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-zinc-300 hover:text-white hover:bg-white/8 hover:border-white/20 transition-all duration-200 group w-fit"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-muted border border-border text-sm text-muted-foreground hover:text-foreground hover:bg-accent hover:border-border transition-all duration-200 group w-fit"
             >
               <Github className="h-4 w-4" aria-hidden="true" />
               <span>Star on GitHub</span>
@@ -166,7 +166,7 @@ export async function HomeFooter() {
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 lg:col-span-3">
             {/* Product */}
             <nav aria-label="Product links">
-              <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-4">
+              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">
                 Product
               </p>
               <ul className="space-y-2.5">
@@ -174,11 +174,11 @@ export async function HomeFooter() {
                   <li key={label}>
                     <Link
                       href={href}
-                      className="text-sm text-zinc-400 hover:text-white transition-colors duration-200 inline-flex items-center gap-2"
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 inline-flex items-center gap-2"
                     >
                       {label}
                       {soon && (
-                        <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-500 leading-none">
+                        <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-muted border border-border text-muted-foreground leading-none">
                           soon
                         </span>
                       )}
@@ -190,7 +190,7 @@ export async function HomeFooter() {
 
             {/* Resources */}
             <nav aria-label="Resources links">
-              <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-4">
+              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">
                 Resources
               </p>
               <ul className="space-y-2.5">
@@ -198,11 +198,11 @@ export async function HomeFooter() {
                   <li key={label}>
                     <Link
                       href={href}
-                      className="text-sm text-zinc-400 hover:text-white transition-colors duration-200 inline-flex items-center gap-2"
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 inline-flex items-center gap-2"
                     >
                       {label}
                       {soon && (
-                        <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-500 leading-none">
+                        <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-muted border border-border text-muted-foreground leading-none">
                           soon
                         </span>
                       )}
@@ -214,7 +214,7 @@ export async function HomeFooter() {
 
             {/* Company */}
             <nav aria-label="Company links">
-              <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-4">
+              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">
                 Company
               </p>
               <ul className="space-y-2.5">
@@ -222,11 +222,11 @@ export async function HomeFooter() {
                   <li key={label}>
                     <Link
                       href={href}
-                      className="text-sm text-zinc-400 hover:text-white transition-colors duration-200 inline-flex items-center gap-2"
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 inline-flex items-center gap-2"
                     >
                       {label}
                       {soon && (
-                        <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-500 leading-none">
+                        <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-muted border border-border text-muted-foreground leading-none">
                           soon
                         </span>
                       )}
@@ -240,39 +240,39 @@ export async function HomeFooter() {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-white/5">
+      <div className="border-t border-border">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-5">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-            <p className="text-xs text-zinc-600">
+            <p className="text-xs text-muted-foreground">
               © {new Date().getFullYear()} Code Catch. All rights reserved.
               Built with <span className="text-indigo-500/70">♥</span> for
               developers.
             </p>
-            <div className="flex items-center gap-4 text-xs text-zinc-600">
+            <div className="flex items-center gap-4 text-xs text-muted-foreground">
               <Link
                 href="/privacy"
-                className="hover:text-zinc-400 transition-colors"
+                className="hover:text-foreground transition-colors"
               >
                 Privacy
               </Link>
-              <span className="text-zinc-800">·</span>
+              <span className="text-border">·</span>
               <Link
                 href="/terms"
-                className="hover:text-zinc-400 transition-colors"
+                className="hover:text-foreground transition-colors"
               >
                 Terms
               </Link>
-              <span className="text-zinc-800">·</span>
+              <span className="text-border">·</span>
               <Link
                 href="/security"
-                className="hover:text-zinc-400 transition-colors"
+                className="hover:text-foreground transition-colors"
               >
                 Security
               </Link>
-              <span className="text-zinc-800">·</span>
+              <span className="text-border">·</span>
               <Link
                 href="/sitemap.xml"
-                className="hover:text-zinc-400 transition-colors"
+                className="hover:text-foreground transition-colors"
               >
                 Sitemap
               </Link>

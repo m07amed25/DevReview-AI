@@ -11,7 +11,7 @@ export const notificationRouter = createTRPCRouter({
           cursor: z.string().max(255).optional(),
           unreadOnly: z.boolean().default(false),
           type: z.string().optional(),
-          search: z.string().optional(),
+          search: z.string().max(100).optional(),
         })
         .optional(),
     )

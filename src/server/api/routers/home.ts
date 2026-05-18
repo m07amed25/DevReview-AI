@@ -72,7 +72,6 @@ export const homeRouter = createTRPCRouter({
     .input(
       z.object({
         email: z.string().email().max(255),
-        redirectTo: z.string().url().max(500).optional(),
       }),
     )
     .mutation(async ({ input }) => {
@@ -93,7 +92,7 @@ export const homeRouter = createTRPCRouter({
       await auth.api.requestPasswordReset({
         body: {
           email: input.email,
-          redirectTo: input.redirectTo ?? `${baseUrl}/reset-password`,
+          redirectTo: `${baseUrl}/reset-password`,
         },
         headers: new Headers(),
       });

@@ -27,6 +27,7 @@ interface FieldErrors {
   email?: string;
   password?: string;
   confirmPassword?: string;
+  terms?: string;
 }
 
 function getPasswordStrength(password: string): {
@@ -61,6 +62,7 @@ export default function SignUpPage() {
   const cardRef = useRef<HTMLDivElement>(null);
 
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   const validateFields = (): boolean => {
     const errors: FieldErrors = {};
@@ -85,6 +87,10 @@ export default function SignUpPage() {
       errors.confirmPassword = "Please confirm your password.";
     } else if (password !== confirmPassword) {
       errors.confirmPassword = "Passwords do not match.";
+    }
+
+    if (!acceptedTerms) {
+      errors.terms = "You must accept the Terms of Service and Privacy Policy.";
     }
 
     setFieldErrors(errors);
@@ -338,6 +344,37 @@ export default function SignUpPage() {
               {fieldErrors.confirmPassword && (
                 <p className="text-xs text-destructive animate-in fade-in slide-in-from-top-1 duration-200">
                   {fieldErrors.confirmPassword}
+                </p>
+              )}
+            </div>
+
+            <div className="space-y-1.5">
+              <div className="flex items-start gap-2">
+                <input
+                  id="terms"
+                  type="checkbox"
+                  checked={acceptedTerms}
+                  onChange={(e) => {
+                    setAcceptedTerms(e.target.checked);
+                    clearFieldError("terms");
+                  }}
+                  disabled={loading}
+                  className="mt-0.5 size-4 shrink-0 accent-primary cursor-pointer"
+                />
+                <Label htmlFor="terms" className="text-sm font-normal leading-snug cursor-pointer">
+                  I agree to the{" "}
+                  <Link href="/terms" className="text-blue-500 font-medium hover:underline underline-offset-4">
+                    Terms of Service
+                  </Link>{" "}
+                  and{" "}
+                  <Link href="/privacy" className="text-blue-500 font-medium hover:underline underline-offset-4">
+                    Privacy Policy
+                  </Link>
+                </Label>
+              </div>
+              {fieldErrors.terms && (
+                <p className="text-xs text-destructive animate-in fade-in slide-in-from-top-1 duration-200">
+                  {fieldErrors.terms}
                 </p>
               )}
             </div>

@@ -91,7 +91,7 @@ export function OverridesTab() {
     createMutation.mutate({
       email: email.trim().toLowerCase(),
       planId,
-      overrideMonthlyPrice: monthlyPrice ? parseFloat(monthlyPrice) : null,
+      overrideMonthlyPrice: monthlyPrice ? parseInt(monthlyPrice) : null,
       overrideYearlyPrice: yearlyPrice ? parseFloat(yearlyPrice) : null,
       reason: reason || undefined,
       expiresAt: expiresAt ? new Date(expiresAt) : null,

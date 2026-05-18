@@ -42667,7 +42667,7 @@ export namespace Prisma {
     readonly id: FieldRef<"UserPriceOverride", 'String'>
     readonly email: FieldRef<"UserPriceOverride", 'String'>
     readonly planId: FieldRef<"UserPriceOverride", 'String'>
-    readonly overrideMonthlyPrice: FieldRef<"UserPriceOverride", 'Float'>
+    readonly overrideMonthlyPrice: FieldRef<"UserPriceOverride", 'Int'>
     readonly overrideYearlyPrice: FieldRef<"UserPriceOverride", 'Float'>
     readonly reason: FieldRef<"UserPriceOverride", 'String'>
     readonly active: FieldRef<"UserPriceOverride", 'Boolean'>
@@ -43787,7 +43787,7 @@ export namespace Prisma {
     readonly domain: FieldRef<"PartnerDomain", 'String'>
     readonly companyName: FieldRef<"PartnerDomain", 'String'>
     readonly planId: FieldRef<"PartnerDomain", 'String'>
-    readonly overrideMonthlyPrice: FieldRef<"PartnerDomain", 'Float'>
+    readonly overrideMonthlyPrice: FieldRef<"PartnerDomain", 'Int'>
     readonly overrideYearlyPrice: FieldRef<"PartnerDomain", 'Float'>
     readonly note: FieldRef<"PartnerDomain", 'String'>
     readonly active: FieldRef<"PartnerDomain", 'Boolean'>
@@ -44941,7 +44941,7 @@ export namespace Prisma {
     readonly id: FieldRef<"PricingPlan", 'String'>
     readonly name: FieldRef<"PricingPlan", 'String'>
     readonly tagline: FieldRef<"PricingPlan", 'String'>
-    readonly monthlyPrice: FieldRef<"PricingPlan", 'Float'>
+    readonly monthlyPrice: FieldRef<"PricingPlan", 'Int'>
     readonly visible: FieldRef<"PricingPlan", 'Boolean'>
     readonly highlight: FieldRef<"PricingPlan", 'Boolean'>
     readonly features: FieldRef<"PricingPlan", 'String[]'>
@@ -51131,7 +51131,7 @@ export namespace Prisma {
     id?: StringFilter<"UserPriceOverride"> | string
     email?: StringFilter<"UserPriceOverride"> | string
     planId?: StringFilter<"UserPriceOverride"> | string
-    overrideMonthlyPrice?: FloatNullableFilter<"UserPriceOverride"> | number | null
+    overrideMonthlyPrice?: IntNullableFilter<"UserPriceOverride"> | number | null
     overrideYearlyPrice?: FloatNullableFilter<"UserPriceOverride"> | number | null
     reason?: StringNullableFilter<"UserPriceOverride"> | string | null
     active?: BoolFilter<"UserPriceOverride"> | boolean
@@ -51161,7 +51161,7 @@ export namespace Prisma {
     NOT?: UserPriceOverrideWhereInput | UserPriceOverrideWhereInput[]
     email?: StringFilter<"UserPriceOverride"> | string
     planId?: StringFilter<"UserPriceOverride"> | string
-    overrideMonthlyPrice?: FloatNullableFilter<"UserPriceOverride"> | number | null
+    overrideMonthlyPrice?: IntNullableFilter<"UserPriceOverride"> | number | null
     overrideYearlyPrice?: FloatNullableFilter<"UserPriceOverride"> | number | null
     reason?: StringNullableFilter<"UserPriceOverride"> | string | null
     active?: BoolFilter<"UserPriceOverride"> | boolean
@@ -51195,7 +51195,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"UserPriceOverride"> | string
     email?: StringWithAggregatesFilter<"UserPriceOverride"> | string
     planId?: StringWithAggregatesFilter<"UserPriceOverride"> | string
-    overrideMonthlyPrice?: FloatNullableWithAggregatesFilter<"UserPriceOverride"> | number | null
+    overrideMonthlyPrice?: IntNullableWithAggregatesFilter<"UserPriceOverride"> | number | null
     overrideYearlyPrice?: FloatNullableWithAggregatesFilter<"UserPriceOverride"> | number | null
     reason?: StringNullableWithAggregatesFilter<"UserPriceOverride"> | string | null
     active?: BoolWithAggregatesFilter<"UserPriceOverride"> | boolean
@@ -51212,7 +51212,7 @@ export namespace Prisma {
     domain?: StringFilter<"PartnerDomain"> | string
     companyName?: StringFilter<"PartnerDomain"> | string
     planId?: StringFilter<"PartnerDomain"> | string
-    overrideMonthlyPrice?: FloatNullableFilter<"PartnerDomain"> | number | null
+    overrideMonthlyPrice?: IntNullableFilter<"PartnerDomain"> | number | null
     overrideYearlyPrice?: FloatNullableFilter<"PartnerDomain"> | number | null
     note?: StringNullableFilter<"PartnerDomain"> | string | null
     active?: BoolFilter<"PartnerDomain"> | boolean
@@ -51243,7 +51243,7 @@ export namespace Prisma {
     NOT?: PartnerDomainWhereInput | PartnerDomainWhereInput[]
     companyName?: StringFilter<"PartnerDomain"> | string
     planId?: StringFilter<"PartnerDomain"> | string
-    overrideMonthlyPrice?: FloatNullableFilter<"PartnerDomain"> | number | null
+    overrideMonthlyPrice?: IntNullableFilter<"PartnerDomain"> | number | null
     overrideYearlyPrice?: FloatNullableFilter<"PartnerDomain"> | number | null
     note?: StringNullableFilter<"PartnerDomain"> | string | null
     active?: BoolFilter<"PartnerDomain"> | boolean
@@ -51279,7 +51279,7 @@ export namespace Prisma {
     domain?: StringWithAggregatesFilter<"PartnerDomain"> | string
     companyName?: StringWithAggregatesFilter<"PartnerDomain"> | string
     planId?: StringWithAggregatesFilter<"PartnerDomain"> | string
-    overrideMonthlyPrice?: FloatNullableWithAggregatesFilter<"PartnerDomain"> | number | null
+    overrideMonthlyPrice?: IntNullableWithAggregatesFilter<"PartnerDomain"> | number | null
     overrideYearlyPrice?: FloatNullableWithAggregatesFilter<"PartnerDomain"> | number | null
     note?: StringNullableWithAggregatesFilter<"PartnerDomain"> | string | null
     active?: BoolWithAggregatesFilter<"PartnerDomain"> | boolean
@@ -51295,7 +51295,7 @@ export namespace Prisma {
     id?: StringFilter<"PricingPlan"> | string
     name?: StringFilter<"PricingPlan"> | string
     tagline?: StringFilter<"PricingPlan"> | string
-    monthlyPrice?: FloatFilter<"PricingPlan"> | number
+    monthlyPrice?: IntFilter<"PricingPlan"> | number
     visible?: BoolFilter<"PricingPlan"> | boolean
     highlight?: BoolFilter<"PricingPlan"> | boolean
     features?: StringNullableListFilter<"PricingPlan">
@@ -51332,7 +51332,7 @@ export namespace Prisma {
     NOT?: PricingPlanWhereInput | PricingPlanWhereInput[]
     name?: StringFilter<"PricingPlan"> | string
     tagline?: StringFilter<"PricingPlan"> | string
-    monthlyPrice?: FloatFilter<"PricingPlan"> | number
+    monthlyPrice?: IntFilter<"PricingPlan"> | number
     visible?: BoolFilter<"PricingPlan"> | boolean
     highlight?: BoolFilter<"PricingPlan"> | boolean
     features?: StringNullableListFilter<"PricingPlan">
@@ -51374,7 +51374,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"PricingPlan"> | string
     name?: StringWithAggregatesFilter<"PricingPlan"> | string
     tagline?: StringWithAggregatesFilter<"PricingPlan"> | string
-    monthlyPrice?: FloatWithAggregatesFilter<"PricingPlan"> | number
+    monthlyPrice?: IntWithAggregatesFilter<"PricingPlan"> | number
     visible?: BoolWithAggregatesFilter<"PricingPlan"> | boolean
     highlight?: BoolWithAggregatesFilter<"PricingPlan"> | boolean
     features?: StringNullableListFilter<"PricingPlan">
@@ -54507,7 +54507,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     planId?: StringFieldUpdateOperationsInput | string
-    overrideMonthlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    overrideMonthlyPrice?: NullableIntFieldUpdateOperationsInput | number | null
     overrideYearlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     reason?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
@@ -54520,7 +54520,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     planId?: StringFieldUpdateOperationsInput | string
-    overrideMonthlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    overrideMonthlyPrice?: NullableIntFieldUpdateOperationsInput | number | null
     overrideYearlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     reason?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
@@ -54546,7 +54546,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     planId?: StringFieldUpdateOperationsInput | string
-    overrideMonthlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    overrideMonthlyPrice?: NullableIntFieldUpdateOperationsInput | number | null
     overrideYearlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     reason?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
@@ -54559,7 +54559,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     planId?: StringFieldUpdateOperationsInput | string
-    overrideMonthlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    overrideMonthlyPrice?: NullableIntFieldUpdateOperationsInput | number | null
     overrideYearlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     reason?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
@@ -54601,7 +54601,7 @@ export namespace Prisma {
     domain?: StringFieldUpdateOperationsInput | string
     companyName?: StringFieldUpdateOperationsInput | string
     planId?: StringFieldUpdateOperationsInput | string
-    overrideMonthlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    overrideMonthlyPrice?: NullableIntFieldUpdateOperationsInput | number | null
     overrideYearlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     note?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
@@ -54615,7 +54615,7 @@ export namespace Prisma {
     domain?: StringFieldUpdateOperationsInput | string
     companyName?: StringFieldUpdateOperationsInput | string
     planId?: StringFieldUpdateOperationsInput | string
-    overrideMonthlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    overrideMonthlyPrice?: NullableIntFieldUpdateOperationsInput | number | null
     overrideYearlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     note?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
@@ -54643,7 +54643,7 @@ export namespace Prisma {
     domain?: StringFieldUpdateOperationsInput | string
     companyName?: StringFieldUpdateOperationsInput | string
     planId?: StringFieldUpdateOperationsInput | string
-    overrideMonthlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    overrideMonthlyPrice?: NullableIntFieldUpdateOperationsInput | number | null
     overrideYearlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     note?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
@@ -54657,7 +54657,7 @@ export namespace Prisma {
     domain?: StringFieldUpdateOperationsInput | string
     companyName?: StringFieldUpdateOperationsInput | string
     planId?: StringFieldUpdateOperationsInput | string
-    overrideMonthlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    overrideMonthlyPrice?: NullableIntFieldUpdateOperationsInput | number | null
     overrideYearlyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     note?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
@@ -54704,7 +54704,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     tagline?: StringFieldUpdateOperationsInput | string
-    monthlyPrice?: FloatFieldUpdateOperationsInput | number
+    monthlyPrice?: IntFieldUpdateOperationsInput | number
     visible?: BoolFieldUpdateOperationsInput | boolean
     highlight?: BoolFieldUpdateOperationsInput | boolean
     features?: PricingPlanUpdatefeaturesInput | string[]
@@ -54721,7 +54721,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     tagline?: StringFieldUpdateOperationsInput | string
-    monthlyPrice?: FloatFieldUpdateOperationsInput | number
+    monthlyPrice?: IntFieldUpdateOperationsInput | number
     visible?: BoolFieldUpdateOperationsInput | boolean
     highlight?: BoolFieldUpdateOperationsInput | boolean
     features?: PricingPlanUpdatefeaturesInput | string[]
@@ -54755,7 +54755,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     tagline?: StringFieldUpdateOperationsInput | string
-    monthlyPrice?: FloatFieldUpdateOperationsInput | number
+    monthlyPrice?: IntFieldUpdateOperationsInput | number
     visible?: BoolFieldUpdateOperationsInput | boolean
     highlight?: BoolFieldUpdateOperationsInput | boolean
     features?: PricingPlanUpdatefeaturesInput | string[]
@@ -54772,7 +54772,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     tagline?: StringFieldUpdateOperationsInput | string
-    monthlyPrice?: FloatFieldUpdateOperationsInput | number
+    monthlyPrice?: IntFieldUpdateOperationsInput | number
     visible?: BoolFieldUpdateOperationsInput | boolean
     highlight?: BoolFieldUpdateOperationsInput | boolean
     features?: PricingPlanUpdatefeaturesInput | string[]

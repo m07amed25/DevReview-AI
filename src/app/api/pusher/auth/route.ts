@@ -48,8 +48,9 @@ async function authorizeChannel(
     return !!review;
   }
 
-  // Repo channels: presence-repo-{repoId} or private-repo-{repoId}
-  const repoMatch = channel.match(/^(?:private|presence)-repo-(.+)$/);
+  // Repo channels: presence-repo-{repoId}, private-repo-{repoId},
+  // presence-repository-{repoId}, or private-repository-{repoId}
+  const repoMatch = channel.match(/^(?:private|presence)-repo(?:sitory)?-(.+)$/);
   if (repoMatch) {
     const repo = await db.repository.findFirst({
       where: {

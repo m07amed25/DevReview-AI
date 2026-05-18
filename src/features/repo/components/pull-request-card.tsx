@@ -321,11 +321,11 @@ export function PullRequestCard({
                   <Calendar className="size-3" />
                   {timeAgo}
                 </span>
-                <span className="flex items-center gap-1.5 font-mono text-[11px] bg-muted/40 px-2 py-0.5 rounded border border-border/30">
-                  <GitBranch className="size-3 text-muted-foreground/60" />
-                  <span className="text-foreground/60">{pr.baseRef}</span>
-                  <span className="text-muted-foreground/40">←</span>
-                  <span className="text-emerald-600 dark:text-emerald-400">
+                <span className="flex items-center gap-1.5 font-mono text-[11px] bg-muted/40 px-2 py-0.5 rounded border border-border/30 max-w-[180px] sm:max-w-none truncate">
+                  <GitBranch className="size-3 text-muted-foreground/60 shrink-0" />
+                  <span className="text-foreground/60 truncate">{pr.baseRef}</span>
+                  <span className="text-muted-foreground/40 shrink-0">←</span>
+                  <span className="text-emerald-600 dark:text-emerald-400 truncate">
                     {pr.headRef}
                   </span>
                 </span>
@@ -439,7 +439,7 @@ export function PullRequestCard({
               )}
 
               {/* Bottom Row: Code Churn + Actions */}
-              <div className="flex items-center justify-between gap-3 pt-1 flex-wrap">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1">
                 <div className="flex items-center gap-2 min-w-0">
                   <div className="flex items-center gap-1 text-xs font-mono">
                     <span className="text-emerald-600 dark:text-emerald-400 font-semibold">
@@ -470,21 +470,22 @@ export function PullRequestCard({
                     href={pr.htmlUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="flex-1 sm:flex-none"
                   >
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-8 px-2.5 text-xs gap-1.5"
+                      className="h-8 w-full sm:w-auto px-2.5 text-xs gap-1.5"
                     >
                       <ExternalLink className="size-3.5" />
                       GitHub
                     </Button>
                   </a>
-                  <Link href={`/repo/${repositoryId}/pr/${pr.number}`}>
+                  <Link href={`/repo/${repositoryId}/pr/${pr.number}`} className="flex-1 sm:flex-none">
                     <Button
                       size="sm"
                       className={cn(
-                        "h-8 px-3 text-xs gap-1.5 transition-all",
+                        "h-8 w-full sm:w-auto px-3 text-xs gap-1.5 transition-all",
                         hasCompletedReview ||
                           pr.review?.status === "PENDING" ||
                           pr.review?.status === "PROCESSING"

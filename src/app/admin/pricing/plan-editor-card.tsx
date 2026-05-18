@@ -259,7 +259,7 @@ export function PlanEditorCard({
               onChange={(e) =>
                 setDraft((d) => ({
                   ...d,
-                  monthlyPrice: parseFloat(e.target.value) || 0,
+                  monthlyPrice: parseInt(e.target.value) || 0,
                 }))
               }
               className={cn("h-8 text-sm", !editing && "bg-muted/50")}
