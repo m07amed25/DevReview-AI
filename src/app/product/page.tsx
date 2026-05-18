@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function ProductPage() {
   return (
-    <div className="dark min-h-screen bg-zinc-950 text-zinc-50">
+    <div className="min-h-screen bg-background text-foreground">
       <UnifiedNavbar />
       <ProductContent />
       <HomeFooter />

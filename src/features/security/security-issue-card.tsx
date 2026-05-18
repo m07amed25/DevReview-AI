@@ -62,7 +62,7 @@ const severityColors = {
   HIGH: "bg-orange-500",
   MEDIUM: "bg-yellow-500",
   LOW: "bg-blue-500",
-  INFO: "bg-gray-500",
+  INFO: "bg-slate-500",
 };
 
 const severityIcons = {
@@ -112,7 +112,7 @@ export function SecurityIssueCard({
                   </Badge>
                 )}
                 {issue.falsePositive && (
-                  <Badge variant="outline" className="text-gray-600">
+                  <Badge variant="outline" className="text-muted-foreground">
                     False Positive
                   </Badge>
                 )}
@@ -122,7 +122,7 @@ export function SecurityIssueCard({
                 {issue.type.replace(/_/g, " ")}
                 {issue.cveId && (
                   <>
-                    <span className="text-gray-400">•</span>
+                    <span className="text-muted-foreground/60">•</span>
                     <a
                       href={`https://nvd.nist.gov/vuln/detail/${issue.cveId}`}
                       target="_blank"
@@ -135,8 +135,8 @@ export function SecurityIssueCard({
                 )}
                 {issue.cweId && (
                   <>
-                    <span className="text-gray-400">•</span>
-                    <span className="text-gray-600">{issue.cweId}</span>
+                    <span className="text-muted-foreground/60">•</span>
+                    <span className="text-muted-foreground">{issue.cweId}</span>
                   </>
                 )}
               </CardDescription>
@@ -151,13 +151,13 @@ export function SecurityIssueCard({
         <Collapsible open={isOpen} onOpenChange={setIsOpen}>
           <div className="space-y-4">
             <div>
-              <p className="text-sm text-gray-700">{issue.description}</p>
+              <p className="text-sm text-muted-foreground">{issue.description}</p>
             </div>
 
             {issue.packageName && (
-              <div className="rounded-md bg-gray-50 p-3">
+              <div className="rounded-md bg-muted p-3">
                 <p className="text-sm font-medium">Affected Package:</p>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-muted-foreground">
                   {issue.packageName}
                   {issue.packageVersion && ` (${issue.packageVersion})`}
                 </p>
@@ -165,14 +165,14 @@ export function SecurityIssueCard({
             )}
 
             {Array.isArray(issue.affectedLines) && issue.affectedLines.length > 0 && (
-              <div className="rounded-md bg-gray-50 p-3">
+              <div className="rounded-md bg-muted p-3">
                 <p className="text-sm font-medium">Affected Files:</p>
                 <ul className="mt-1 space-y-1">
                   {(issue.affectedLines as { file: string; startLine: number; endLine: number }[]).map((location, idx) => (
-                    <li key={idx} className="text-sm text-gray-600">
+                    <li key={idx} className="text-sm text-muted-foreground">
                       {location.file}
                       {location.startLine > 0 && (
-                        <span className="text-gray-500">
+                        <span className="text-muted-foreground/70">
                           {" "}
                           (Line {location.startLine}
                           {location.endLine !== location.startLine &&
@@ -203,11 +203,11 @@ export function SecurityIssueCard({
             </CollapsibleTrigger>
 
             <CollapsibleContent>
-              <div className="rounded-md bg-blue-50 p-4">
-                <p className="text-sm font-medium text-blue-900">
+              <div className="rounded-md bg-blue-50 dark:bg-blue-950/30 p-4">
+                <p className="text-sm font-medium text-blue-900 dark:text-blue-200">
                   Remediation Steps:
                 </p>
-                <div className="mt-2 whitespace-pre-wrap text-sm text-blue-800">
+                <div className="mt-2 whitespace-pre-wrap text-sm text-blue-800 dark:text-blue-300">
                   {issue.remediation}
                 </div>
               </div>

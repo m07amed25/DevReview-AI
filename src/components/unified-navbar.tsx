@@ -9,12 +9,7 @@ import {
   Menu,
   X,
   Star,
-  CreditCard,
   ChevronDown,
-  Zap,
-  BookOpen,
-  LayoutDashboard,
-  Shield,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { Button } from "@/components/ui/button";
@@ -31,6 +26,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { UserMenu } from "./user-menu";
 import { Notifications } from "./notifications";
+import { ThemeTogglerButton } from "./animate-ui/components/buttons/theme-toggler";
 import {
   resourceLinks,
   simpleLinks,
@@ -98,7 +94,6 @@ export function UnifiedNavbar() {
             {isClient && user && (
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 outline-none text-muted-foreground hover:text-foreground hover:bg-accent">
-                  <LayoutDashboard className="h-4 w-4" />
                   Workspace
                   <ChevronDown className="h-3 w-3" />
                 </DropdownMenuTrigger>
@@ -128,13 +123,11 @@ export function UnifiedNavbar() {
             )}
 
             <Link href="/product" className={cn("flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200", pathname?.startsWith("/product") ? "text-foreground bg-accent" : "text-muted-foreground hover:text-foreground hover:bg-accent")}>
-              <Zap className="h-4 w-4" />
               Product
             </Link>
 
             <DropdownMenu>
               <DropdownMenuTrigger className={cn("flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 outline-none", ["/docs", "/blog", "/changelog", "/status", "/contact"].some((p) => pathname?.startsWith(p)) ? "text-foreground bg-accent" : "text-muted-foreground hover:text-foreground hover:bg-accent")}>
-                <BookOpen className="h-4 w-4" />
                 Resources
                 <ChevronDown className="h-3 w-3" />
               </DropdownMenuTrigger>
@@ -163,15 +156,12 @@ export function UnifiedNavbar() {
             </DropdownMenu>
 
             <Link href="/pricing" className={cn("flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200", pathname === "/pricing" ? "text-foreground bg-accent" : "text-muted-foreground hover:text-foreground hover:bg-accent")}>
-              <CreditCard className="h-4 w-4" />
               Pricing
             </Link>
 
             {simpleLinks.map((link) => {
-              const Icon = link.icon;
               return (
                 <Link key={link.href} href={link.href} className={cn("flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200", pathname === link.href ? "text-foreground bg-accent" : "text-muted-foreground hover:text-foreground hover:bg-accent")}>
-                  <Icon className="h-4 w-4" />
                   {link.label}
                 </Link>
               );
@@ -179,7 +169,6 @@ export function UnifiedNavbar() {
 
             {isClient && user && (user as { role?: string }).role === "ADMIN" && (
               <Link href="/admin" className={cn("flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200", pathname?.startsWith("/admin") ? "text-foreground bg-accent" : "text-muted-foreground hover:text-foreground hover:bg-accent")}>
-                <Shield className="h-4 w-4" />
                 Admin
               </Link>
             )}
@@ -193,6 +182,7 @@ export function UnifiedNavbar() {
 
           {/* Right side */}
           <div className="flex items-center gap-1 sm:gap-2">
+            <ThemeTogglerButton variant="ghost" size="sm" />
             {isClient && user ? (
               <>
                 <Notifications />
@@ -274,7 +264,6 @@ export function UnifiedNavbar() {
                     <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-semibold px-3 mb-2">Workspace</p>
                     <div className="space-y-0.5">
                       {workspaceLinks.map((link) => {
-                        const Icon = link.icon;
                         const isActive = pathname === link.href;
                         return (
                           <Link
@@ -288,7 +277,6 @@ export function UnifiedNavbar() {
                                 : "text-muted-foreground hover:text-foreground hover:bg-accent"
                             )}
                           >
-                            <Icon className={cn("size-[18px] shrink-0", isActive ? "text-indigo-400" : "text-muted-foreground")} />
                             {link.label}
                           </Link>
                         );
@@ -311,7 +299,6 @@ export function UnifiedNavbar() {
                           : "text-muted-foreground hover:text-foreground hover:bg-accent"
                       )}
                     >
-                      <Zap className={cn("size-[18px] shrink-0", pathname?.startsWith("/product") ? "text-indigo-400" : "text-muted-foreground")} />
                       Code Review
                     </Link>
                     <Link
@@ -319,7 +306,6 @@ export function UnifiedNavbar() {
                       onClick={() => setMobileOpen(false)}
                       className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-accent transition-all duration-150"
                     >
-                      <Shield className="size-[18px] shrink-0 text-muted-foreground" />
                       Security
                     </Link>
                     <Link
@@ -327,7 +313,6 @@ export function UnifiedNavbar() {
                       onClick={() => setMobileOpen(false)}
                       className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-accent transition-all duration-150"
                     >
-                      <Github className="size-[18px] shrink-0 text-muted-foreground" />
                       Diagrams
                     </Link>
                   </div>
@@ -338,7 +323,6 @@ export function UnifiedNavbar() {
                   <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-semibold px-3 mb-2">Resources</p>
                   <div className="space-y-0.5">
                     {resourceLinks.map((link) => {
-                      const Icon = link.icon;
                       const isActive = pathname?.startsWith(link.href);
                       return (
                         <Link
@@ -352,7 +336,6 @@ export function UnifiedNavbar() {
                               : "text-muted-foreground hover:text-foreground hover:bg-accent"
                           )}
                         >
-                          <Icon className={cn("size-[18px] shrink-0", isActive ? "text-indigo-400" : "text-muted-foreground")} />
                           {link.label}
                         </Link>
                       );
@@ -372,11 +355,9 @@ export function UnifiedNavbar() {
                         : "text-muted-foreground hover:text-foreground hover:bg-accent"
                     )}
                   >
-                    <CreditCard className={cn("size-[18px] shrink-0", pathname === "/pricing" ? "text-indigo-400" : "text-muted-foreground")} />
                     Pricing
                   </Link>
                   {simpleLinks.map((link) => {
-                    const Icon = link.icon;
                     const isActive = pathname === link.href;
                     return (
                       <Link
@@ -390,7 +371,6 @@ export function UnifiedNavbar() {
                             : "text-muted-foreground hover:text-foreground hover:bg-accent"
                         )}
                       >
-                        <Icon className={cn("size-[18px] shrink-0", isActive ? "text-indigo-400" : "text-muted-foreground")} />
                         {link.label}
                       </Link>
                     );
@@ -404,7 +384,11 @@ export function UnifiedNavbar() {
               </div>
 
               {/* Bottom */}
-              <div className="px-4 py-4 border-t border-border">
+              <div className="px-4 py-4 border-t border-border space-y-3">
+                <div className="flex items-center justify-between px-1">
+                  <span className="text-sm text-muted-foreground">Theme</span>
+                  <ThemeTogglerButton variant="outline" size="sm" />
+                </div>
                 {isClient && user ? (
                   <Link href="/repo" onClick={() => setMobileOpen(false)} className="flex items-center justify-center gap-2 w-full py-2.5 rounded-full bg-indigo-500 text-white text-sm font-semibold hover:bg-indigo-600 transition-colors">
                     <Github className="h-4 w-4" />

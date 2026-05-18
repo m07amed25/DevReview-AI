@@ -155,7 +155,7 @@ export function UserRow({
             <Button
               variant={user.role === "ADMIN" ? "outline" : "default"}
               size="sm"
-              className={`h-8 shrink-0 gap-1.5 text-xs ${user.role === "ADMIN" ? "text-amber-600 border-amber-200 hover:bg-amber-50 hover:text-amber-700" : "bg-violet-600 text-white hover:bg-violet-700"}`}
+              className={`h-8 shrink-0 gap-1.5 text-xs ${user.role === "ADMIN" ? "text-amber-600 border-amber-200 dark:border-amber-800 hover:bg-amber-50 dark:hover:bg-amber-950/30 hover:text-amber-700 dark:hover:text-amber-400" : "bg-violet-600 text-white hover:bg-violet-700"}`}
               disabled={updateRole.isPending || (user.isOwner && !currentUserIsOwner)}
             >
               {user.role === "ADMIN" ? (<><ArrowDown className="h-3 w-3" />Demote</>) : (<><ArrowUp className="h-3 w-3" />Promote</>)}

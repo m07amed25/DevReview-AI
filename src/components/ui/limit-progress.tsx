@@ -29,7 +29,7 @@ export function LimitProgress({
   return (
     <div
       className={cn(
-        "group space-y-3 p-5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm transition-all hover:bg-white/10 hover:border-white/20 hover:shadow-2xl hover:shadow-black/20",
+        "group space-y-3 p-5 rounded-2xl bg-muted/50 border border-border backdrop-blur-sm transition-all hover:bg-muted hover:border-border hover:shadow-2xl hover:shadow-black/10",
         className,
       )}
     >
@@ -37,7 +37,7 @@ export function LimitProgress({
         <div className="flex items-center gap-3">
           <div
             className={cn(
-              "p-2 rounded-xl bg-white/5 shadow-inner transition-all group-hover:scale-110",
+              "p-2 rounded-xl bg-muted shadow-inner transition-all group-hover:scale-110",
               color.replace("bg-", "text-"),
             )}
           >
@@ -102,14 +102,14 @@ export function LimitProgress({
           </div>
         </>
       ) : (
-        <div className="h-2.5 w-full bg-linear-to-r from-indigo-500/10 via-violet-500/20 to-indigo-500/10 rounded-full relative overflow-hidden border border-white/5">
+        <div className="h-2.5 w-full bg-linear-to-r from-indigo-500/10 via-violet-500/20 to-indigo-500/10 rounded-full relative overflow-hidden border border-border">
           <motion.div
             animate={{ x: ["-100%", "100%"] }}
             transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-            className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent w-1/2"
+            className="absolute inset-0 bg-linear-to-r from-transparent via-foreground/10 to-transparent w-1/2"
           />
           <div className="absolute inset-0 flex items-center justify-center">
-            <p className="text-[8px] font-black uppercase tracking-[0.2em] text-white/40 drop-shadow-sm">
+            <p className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground drop-shadow-sm">
               Unlimited Access
             </p>
           </div>

@@ -28,21 +28,21 @@ export function HowItWorksSection() {
   return (
     <section
       id="how-it-works"
-      className="relative border-t border-white/5 bg-zinc-950/50"
+      className="relative border-t border-border bg-background/50"
       aria-labelledby="how-it-works-heading"
     >
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
         <div className="text-center mb-16 sm:mb-20">
           <h2
             id="how-it-works-heading"
-            className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-zinc-100"
+            className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground"
           >
             Up and running in{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-blue-400">
               minutes
             </span>
           </h2>
-          <p className="mt-6 text-lg text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+          <p className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Three simple steps to completely transform your engineering
             workflow.
           </p>
@@ -64,8 +64,8 @@ export function HowItWorksSection() {
             >
               {/* Content */}
               <div className="relative z-10">
-                <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-zinc-950 border-8 border-zinc-900 transition-all duration-500 group-hover:scale-110 group-hover:border-indigo-500/20 shadow-xl">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/5">
+                <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-background border-8 border-card transition-all duration-500 group-hover:scale-110 group-hover:border-indigo-500/20 shadow-xl">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted/30">
                     <item.icon
                       className="h-6 w-6 text-indigo-400"
                       aria-hidden="true"
@@ -77,10 +77,10 @@ export function HowItWorksSection() {
                   <div className="inline-block px-3 py-1 mb-4 text-xs font-mono font-medium text-indigo-300 bg-indigo-500/10 rounded-full border border-indigo-500/20">
                     Step {item.step}
                   </div>
-                  <h3 className="text-xl font-semibold text-zinc-200 mb-3">
+                  <h3 className="text-xl font-semibold text-foreground mb-3">
                     {item.title}
                   </h3>
-                  <p className="text-zinc-400 leading-relaxed text-sm max-w-[280px] mx-auto">
+                  <p className="text-muted-foreground leading-relaxed text-sm max-w-[280px] mx-auto">
                     {item.description}
                   </p>
                 </div>

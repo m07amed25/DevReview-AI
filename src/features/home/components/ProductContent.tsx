@@ -20,23 +20,23 @@ export function ProductContent() {
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-indigo-500/40 to-transparent" />
 
         <div className="relative max-w-4xl">
-          <p className="mb-10 inline-flex items-center gap-3 font-mono text-xs uppercase tracking-[0.25em] text-zinc-500">
+          <p className="mb-10 inline-flex items-center gap-3 font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">
             <span className="inline-block h-px w-8 bg-indigo-400/50" />
             The complete platform for better code
             <span className="inline-block h-px w-8 bg-indigo-400/50" />
           </p>
-          <h1 className="mb-7 text-5xl font-extrabold leading-[1.04] tracking-tight text-zinc-50 sm:text-6xl md:text-7xl lg:text-[5.25rem]">
+          <h1 className="mb-7 text-5xl font-extrabold leading-[1.04] tracking-tight text-foreground sm:text-6xl md:text-7xl lg:text-[5.25rem]">
             Ship code with<br />
             <span className="bg-linear-to-r from-indigo-400 via-violet-400 to-fuchsia-400 bg-clip-text text-transparent">confidence.</span>
           </h1>
-          <p className="mx-auto mb-12 max-w-xl text-base leading-relaxed text-zinc-400 sm:text-lg">
+          <p className="mx-auto mb-12 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             Code Catch connects to GitHub and analyses every pull request — surfacing bugs, security vulnerabilities, team insights, and architecture diagrams, automatically.
           </p>
           <div className="mb-16 flex flex-wrap items-center justify-center gap-5">
             <Link href="/repo" className="group inline-flex items-center gap-2 rounded-xl bg-indigo-500 px-7 py-3 text-sm font-semibold text-white shadow-[0_0_32px_rgba(99,102,241,0.35)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-indigo-400 hover:shadow-[0_0_48px_rgba(99,102,241,0.5)]">
               Connect a repo <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
             </Link>
-            <Link href="/pricing" className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-400 transition-colors hover:text-zinc-100">
+            <Link href="/pricing" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
               View pricing <ArrowRight className="size-3.5" />
             </Link>
           </div>
@@ -55,9 +55,9 @@ export function ProductContent() {
       </section>
 
       {/* Stats strip */}
-      <div className="border-y border-zinc-800/50">
+      <div className="border-y border-border">
         <div className="mx-auto max-w-5xl">
-          <div className="grid grid-cols-2 divide-x divide-y divide-zinc-800/50 sm:grid-cols-4 sm:divide-y-0">
+          <div className="grid grid-cols-2 divide-x divide-y divide-border sm:grid-cols-4 sm:divide-y-0">
             {[
               { value: "60s", label: "Average review time" },
               { value: "30+", label: "Languages supported" },
@@ -65,8 +65,8 @@ export function ProductContent() {
               { value: "10k+", label: "PRs reviewed" },
             ].map((s) => (
               <div key={s.label} className="px-8 py-10 text-center">
-                <p className="text-4xl font-black tabular-nums tracking-tight text-zinc-50 sm:text-5xl">{s.value}</p>
-                <p className="mt-2 font-mono text-[10px] uppercase tracking-widest text-zinc-600">{s.label}</p>
+                <p className="text-4xl font-black tabular-nums tracking-tight text-foreground sm:text-5xl">{s.value}</p>
+                <p className="mt-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{s.label}</p>
               </div>
             ))}
           </div>
@@ -80,20 +80,20 @@ export function ProductContent() {
           const Icon = feature.icon;
           const isEven = i % 2 === 0;
           return (
-            <section key={feature.id} id={feature.id} className="scroll-mt-24 relative border-b border-zinc-800/40 py-28 sm:py-36">
-              <span aria-hidden className="pointer-events-none absolute bottom-0 right-0 select-none font-black leading-none text-zinc-900 text-[clamp(6rem,20vw,18rem)]">{feature.num}</span>
+            <section key={feature.id} id={feature.id} className="scroll-mt-24 relative border-b border-border py-28 sm:py-36">
+              <span aria-hidden className="pointer-events-none absolute bottom-0 right-0 select-none font-black leading-none text-muted/50 text-[clamp(6rem,20vw,18rem)]">{feature.num}</span>
               <div className="relative grid items-center gap-14 md:grid-cols-2 md:gap-24">
                 <div className={isEven ? "" : "md:col-start-2 md:row-start-1"}>
                   <p className={cn("mb-6 flex items-center gap-3 font-mono text-xs uppercase tracking-[0.25em]", c.text)}>
                     <span className={cn("inline-block h-px w-10", c.line)} />{feature.label}
                   </p>
-                  <h2 className="mb-6 text-4xl font-extrabold leading-[1.1] tracking-tight text-zinc-50 sm:text-5xl">
+                  <h2 className="mb-6 text-4xl font-extrabold leading-[1.1] tracking-tight text-foreground sm:text-5xl">
                     {feature.headlineMain}<br /><span className={c.text}>{feature.headlineAccent}</span>
                   </h2>
-                  <p className="mb-8 max-w-lg text-base leading-relaxed text-zinc-400">{feature.body}</p>
+                  <p className="mb-8 max-w-lg text-base leading-relaxed text-muted-foreground">{feature.body}</p>
                   <ul className="mb-10 space-y-3">
                     {feature.highlights.map((h) => (
-                      <li key={h} className="flex items-start gap-3 text-sm text-zinc-300">
+                      <li key={h} className="flex items-start gap-3 text-sm text-foreground/80">
                         <span className={cn("mt-1.75 size-1.5 shrink-0 rounded-full", c.dot)} />{h}
                       </li>
                     ))}
@@ -102,7 +102,7 @@ export function ProductContent() {
                     <div>
                       <div className={cn("mb-2 h-px w-6", c.line)} />
                       <p className={cn("text-5xl font-black tabular-nums leading-none", c.text)}>{feature.stat.value}</p>
-                      <p className="mt-2 font-mono text-[10px] uppercase tracking-widest text-zinc-600">{feature.stat.label}</p>
+                      <p className="mt-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{feature.stat.label}</p>
                     </div>
                     <Link href={feature.cta.href} className={cn("group mb-1 inline-flex items-center gap-1.5 border-b border-current pb-px text-sm font-medium opacity-60 transition-all hover:opacity-100", c.text)}>
                       {feature.cta.label} <ArrowRight className="size-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
@@ -115,17 +115,17 @@ export function ProductContent() {
                     <DiagramsShowcase />
                   ) : feature.image ? (
                     <div className={cn("w-full overflow-hidden rounded-2xl border shadow-2xl", c.border)}>
-                      <div className="flex items-center gap-1.5 border-b border-zinc-800/60 bg-zinc-900/80 px-3 py-2 backdrop-blur-sm">
+                      <div className="flex items-center gap-1.5 border-b border-border bg-muted/80 px-3 py-2 backdrop-blur-sm">
                         <span className="size-2.5 rounded-full bg-rose-500/60" />
                         <span className="size-2.5 rounded-full bg-amber-500/60" />
                         <span className="size-2.5 rounded-full bg-emerald-500/60" />
-                        <div className="ml-2 flex flex-1 items-center rounded bg-zinc-800/50 px-2.5 py-0.5">
-                          <span className="font-mono text-[10px] text-zinc-600">codecatch.app</span>
+                        <div className="ml-2 flex flex-1 items-center rounded bg-muted px-2.5 py-0.5">
+                          <span className="font-mono text-[10px] text-muted-foreground">codecatch.app</span>
                         </div>
                       </div>
-                      <div className="relative bg-zinc-950">
+                      <div className="relative bg-background">
                         <Image src={feature.image} alt={feature.label} width={800} height={500} className="h-auto w-full object-cover" priority={feature.id === "review"} />
-                        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-linear-to-t from-zinc-950/60 to-transparent" />
+                        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-linear-to-t from-background/60 to-transparent" />
                       </div>
                     </div>
                   ) : null}
@@ -137,19 +137,19 @@ export function ProductContent() {
       </div>
 
       {/* How it works */}
-      <section className="relative border-t border-zinc-800/40 py-28 sm:py-36">
+      <section className="relative border-t border-border py-28 sm:py-36">
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute left-1/2 top-0 h-64 w-64 -translate-x-1/2 rounded-full bg-indigo-500/5 blur-[80px]" />
         </div>
         <div className="relative mx-auto max-w-5xl px-6 sm:px-8">
-          <p className="mb-6 flex items-center gap-3 font-mono text-xs uppercase tracking-[0.25em] text-zinc-600">
-            <span className="inline-block h-px w-8 bg-zinc-700" />How it works
+          <p className="mb-6 flex items-center gap-3 font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">
+            <span className="inline-block h-px w-8 bg-border" />How it works
           </p>
-          <h2 className="mb-24 text-4xl font-extrabold leading-tight tracking-tight text-zinc-50 sm:text-5xl">
-            From push to insight<br /><span className="text-zinc-600">in seconds.</span>
+          <h2 className="mb-24 text-4xl font-extrabold leading-tight tracking-tight text-foreground sm:text-5xl">
+            From push to insight<br /><span className="text-muted-foreground">in seconds.</span>
           </h2>
           <div className="relative grid gap-16 md:grid-cols-3 md:gap-12">
-            <div aria-hidden className="absolute top-7 left-14 right-14 hidden h-px bg-zinc-800/80 md:block" />
+            <div aria-hidden className="absolute top-7 left-14 right-14 hidden h-px bg-border md:block" />
             {[
               { num: "01", icon: GitPullRequest, accent: "indigo" as Accent, title: "Connect your repo", desc: "Authenticate with GitHub and select the repositories you want to monitor. Code Catch installs a webhook and is ready in under two minutes." },
               { num: "02", icon: Bot, accent: "violet" as Accent, title: "AI reviews every PR", desc: "When a PR opens, Code Catch fetches the diff, runs full AI analysis, and posts inline comments directly on GitHub with a quality score." },
@@ -158,12 +158,12 @@ export function ProductContent() {
               const c = accentTokens[accent];
               return (
                 <div key={num} className="relative">
-                  <div className="relative z-10 mb-8 flex size-14 items-center justify-center rounded-full border border-zinc-800 bg-zinc-950">
+                  <div className="relative z-10 mb-8 flex size-14 items-center justify-center rounded-full border border-border bg-background">
                     <StepIcon className={cn("size-5", c.text)} />
                   </div>
                   <p className={cn("mb-3 font-mono text-xs uppercase tracking-widest", c.text)}>{num}</p>
-                  <h3 className="mb-3 text-lg font-bold text-zinc-100">{title}</h3>
-                  <p className="text-sm leading-relaxed text-zinc-500">{desc}</p>
+                  <h3 className="mb-3 text-lg font-bold text-foreground">{title}</h3>
+                  <p className="text-sm leading-relaxed text-muted-foreground">{desc}</p>
                 </div>
               );
             })}
@@ -172,21 +172,21 @@ export function ProductContent() {
       </section>
 
       {/* CTA */}
-      <section className="border-t border-zinc-800/40">
+      <section className="border-t border-border">
         <div className="mx-auto max-w-5xl px-6 py-28 sm:px-8 sm:py-36">
           <div className="mb-10 h-px w-16 bg-indigo-400/50" />
-          <p className="mb-6 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-zinc-500">
+          <p className="mb-6 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
             <Sparkles className="size-3 text-indigo-400" />Free to get started
           </p>
-          <h2 className="mb-8 text-5xl font-extrabold leading-tight tracking-tight text-zinc-50 sm:text-6xl md:text-7xl">
-            Ready to level up<br /><span className="text-zinc-600">your code review?</span>
+          <h2 className="mb-8 text-5xl font-extrabold leading-tight tracking-tight text-foreground sm:text-6xl md:text-7xl">
+            Ready to level up<br /><span className="text-muted-foreground">your code review?</span>
           </h2>
-          <p className="mb-12 max-w-lg text-base leading-relaxed text-zinc-400">Connect your first repository in under two minutes. No credit card required. Start catching issues before they reach production.</p>
+          <p className="mb-12 max-w-lg text-base leading-relaxed text-muted-foreground">Connect your first repository in under two minutes. No credit card required. Start catching issues before they reach production.</p>
           <div className="flex flex-wrap items-center gap-6">
             <Link href="/repo" className="group inline-flex items-center gap-2 rounded-xl bg-indigo-500 px-7 py-3.5 text-sm font-semibold text-white shadow-[0_0_40px_rgba(99,102,241,0.35)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-indigo-400 hover:shadow-[0_0_60px_rgba(99,102,241,0.5)]">
               Connect a repository <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
             </Link>
-            <Link href="/pricing" className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-400 transition-colors hover:text-zinc-100">
+            <Link href="/pricing" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
               View pricing <ArrowRight className="size-3.5" />
             </Link>
           </div>

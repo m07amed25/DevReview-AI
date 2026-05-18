@@ -21,37 +21,37 @@ const colorStyles: Record<
 > = {
   amber: {
     bg: "bg-amber-500/10",
-    text: "text-amber-400",
+    text: "text-amber-500",
     shadow: "group-hover:shadow-amber-500/20",
     border: "group-hover:border-amber-500/30",
   },
   red: {
     bg: "bg-red-500/10",
-    text: "text-red-400",
+    text: "text-red-500",
     shadow: "group-hover:shadow-red-500/20",
     border: "group-hover:border-red-500/30",
   },
   blue: {
     bg: "bg-blue-500/10",
-    text: "text-blue-400",
+    text: "text-blue-500",
     shadow: "group-hover:shadow-blue-500/20",
     border: "group-hover:border-blue-500/30",
   },
   cyan: {
     bg: "bg-cyan-500/10",
-    text: "text-cyan-400",
+    text: "text-cyan-500",
     shadow: "group-hover:shadow-cyan-500/20",
     border: "group-hover:border-cyan-500/30",
   },
   emerald: {
     bg: "bg-emerald-500/10",
-    text: "text-emerald-400",
+    text: "text-emerald-500",
     shadow: "group-hover:shadow-emerald-500/20",
     border: "group-hover:border-emerald-500/30",
   },
   pink: {
     bg: "bg-pink-500/10",
-    text: "text-pink-400",
+    text: "text-pink-500",
     shadow: "group-hover:shadow-pink-500/20",
     border: "group-hover:border-pink-500/30",
   },
@@ -108,23 +108,23 @@ export function FeaturesSection() {
   return (
     <section
       id="features"
-      className="relative border-t border-white/5 bg-zinc-950"
+      className="relative border-t border-border bg-background"
       aria-labelledby="features-heading"
     >
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.02)_0%,transparent_100%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.02)_0%,transparent_100%)] dark:bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.02)_0%,transparent_100%)]" />
 
       <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
         <Fade className="text-center mb-16 sm:mb-20">
           <h2
             id="features-heading"
-            className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-zinc-100"
+            className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground"
           >
             Everything you need for{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-400 to-zinc-100">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-muted-foreground to-foreground">
               better reviews
             </span>
           </h2>
-          <p className="mt-6 text-lg text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+          <p className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Focus on building. Let our specialized AI agent handle the
             repetitive review work while you concentrate on shipping features
             that matter.
@@ -145,16 +145,16 @@ export function FeaturesSection() {
                 className="h-full"
               >
                 <div
-                  className={`feature-card group relative h-full overflow-hidden rounded-2xl border border-white/5 bg-white/[0.02] p-8 transition-all duration-500 hover:bg-white/[0.04] ${styles.border}`}
+                  className={`feature-card group relative h-full overflow-hidden rounded-2xl border border-border bg-muted/20 p-8 transition-all duration-500 hover:bg-muted/40 ${styles.border}`}
                   role="listitem"
                   onMouseEnter={() => setActiveFeature(index)}
                   onMouseLeave={() => setActiveFeature(null)}
                 >
                   {/* Glow effect */}
                   <div
-                    className={`absolute -inset-px opacity-0 transition-opacity duration-500 group-hover:opacity-100`}
+                    className="absolute -inset-px opacity-0 transition-opacity duration-500 group-hover:opacity-100"
                     style={{
-                      background: `radial-gradient(600px circle at ${activeFeature === index ? "50% 100%" : "50% 50%"}, rgba(255,255,255,0.06), transparent 40%)`,
+                      background: `radial-gradient(600px circle at ${activeFeature === index ? "50% 100%" : "50% 50%"}, rgba(0,0,0,0.04), transparent 40%)`,
                     }}
                   />
 
@@ -167,10 +167,10 @@ export function FeaturesSection() {
                         aria-hidden="true"
                       />
                     </div>
-                    <h3 className="text-xl font-semibold text-zinc-200 mb-3">
+                    <h3 className="text-xl font-semibold text-foreground mb-3">
                       {feature.title}
                     </h3>
-                    <p className="text-zinc-400 leading-relaxed text-sm grow">
+                    <p className="text-muted-foreground leading-relaxed text-sm grow">
                       {feature.description}
                     </p>
 

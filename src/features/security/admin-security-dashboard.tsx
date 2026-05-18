@@ -267,7 +267,7 @@ export function AdminSecurityDashboard() {
                 <Link
                   key={issue.id}
                   href={`/reviews/${issue.reviewId}`}
-                  className="flex items-start justify-between rounded-lg border p-4 transition-colors hover:bg-gray-50"
+                  className="flex items-start justify-between rounded-lg border p-4 transition-colors hover:bg-muted"
                 >
                   <div className="flex-1">
                     <div className="flex items-center gap-2">

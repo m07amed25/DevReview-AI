@@ -17,18 +17,18 @@ export function LanguagesSection() {
   return (
     <section
       id="languages"
-      className="relative border-t border-white/5 bg-zinc-950 overflow-hidden"
+      className="relative border-t border-border bg-background overflow-hidden"
       aria-labelledby="languages-heading"
     >
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
         <div className="text-center mb-16 sm:mb-20">
           <h2
             id="languages-heading"
-            className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-zinc-100"
+            className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground"
           >
             Supports 50+ languages
           </h2>
-          <p className="mt-6 text-lg text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+          <p className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             From modern web frameworks to low-level systems programming, our AI
             understands your tech stack.
           </p>
@@ -42,13 +42,13 @@ export function LanguagesSection() {
           {languages.map((lang) => (
             <span
               key={lang.name}
-              className={`lang-badge px-5 py-2.5 rounded-full bg-white/[0.03] border border-white/10 text-sm font-medium transition-all duration-300 hover:scale-105 hover:bg-white/[0.08] hover:border-white/20 cursor-default shadow-lg shadow-black/20 ${lang.color}`}
+              className={`lang-badge px-5 py-2.5 rounded-full bg-muted/20 border border-border text-sm font-medium transition-all duration-300 hover:scale-105 hover:bg-muted/30 hover:border-border cursor-default shadow-lg shadow-black/10 ${lang.color}`}
               role="listitem"
             >
               {lang.name}
             </span>
           ))}
-          <span className="lang-badge px-5 py-2.5 rounded-full bg-transparent border border-dashed border-white/20 text-zinc-500 text-sm font-medium">
+          <span className="lang-badge px-5 py-2.5 rounded-full bg-transparent border border-dashed border-border text-muted-foreground/70 text-sm font-medium">
             + 40 more
           </span>
         </div>

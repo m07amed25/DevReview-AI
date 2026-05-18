@@ -23,7 +23,7 @@ export function CtaSection() {
 
   return (
     <section
-      className="cta-section relative overflow-hidden bg-zinc-950 border-t border-white/5"
+      className="cta-section relative overflow-hidden bg-background border-t border-border"
       aria-labelledby="cta-heading"
     >
       {/* Background gradients */}
@@ -31,14 +31,14 @@ export function CtaSection() {
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-indigo-500/50 to-transparent" />
 
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-24 sm:py-32 text-center relative z-10">
-        <div className="inline-flex items-center gap-2 px-3 py-1 mb-8 rounded-full bg-white/5 border border-white/10 text-sm text-indigo-300">
+        <div className="inline-flex items-center gap-2 px-3 py-1 mb-8 rounded-full bg-muted/30 border border-border text-sm text-indigo-300">
           <Sparkles className="h-4 w-4" />
           <span>Transform your workflow today</span>
         </div>
 
         <h2
           id="cta-heading"
-          className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-6"
+          className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-foreground mb-6"
           style={{ textWrap: "balance" }}
         >
           Ready to ship better code,{" "}
@@ -48,7 +48,7 @@ export function CtaSection() {
         </h2>
 
         <p
-          className="mx-auto mt-4 max-w-2xl text-lg sm:text-xl text-zinc-400 font-light mb-10"
+          className="mx-auto mt-4 max-w-2xl text-lg sm:text-xl text-muted-foreground font-light mb-10"
           style={{ textWrap: "balance" }}
         >
           Join thousands of engineering teams who have automated their code
@@ -59,7 +59,7 @@ export function CtaSection() {
           {mounted && session ? (
             <Button
               size="lg"
-              className="h-14 px-10 text-base w-full sm:w-auto bg-white text-zinc-900 hover:bg-zinc-200 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 rounded-full font-bold shadow-[0_0_30px_rgba(255,255,255,0.15)] group"
+              className="h-14 px-10 text-base w-full sm:w-auto bg-foreground text-background hover:bg-foreground/90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 rounded-full font-bold shadow-[0_0_30px_rgba(120,119,198,0.15)] group"
               asChild
             >
               <Link
@@ -82,7 +82,7 @@ export function CtaSection() {
             <>
               <Button
                 size="lg"
-                className="h-14 px-8 text-base w-full sm:w-auto bg-white text-zinc-900 hover:bg-zinc-200 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 rounded-full font-semibold shadow-[0_0_30px_rgba(255,255,255,0.15)]"
+                className="h-14 px-8 text-base w-full sm:w-auto bg-foreground text-background hover:bg-foreground/90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 rounded-full font-semibold shadow-[0_0_30px_rgba(120,119,198,0.15)]"
                 asChild
               >
                 <Link
@@ -97,7 +97,7 @@ export function CtaSection() {
               <Button
                 size="lg"
                 variant="outline"
-                className="h-14 px-8 text-base w-full sm:w-auto rounded-full border-white/10 bg-zinc-900/50 backdrop-blur-md hover:bg-zinc-800 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-zinc-300"
+                className="h-14 px-8 text-base w-full sm:w-auto rounded-full border-border bg-card/50 backdrop-blur-md hover:bg-muted hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-foreground/80"
                 asChild
               >
                 <Link
@@ -113,13 +113,13 @@ export function CtaSection() {
         </div>
 
         {/* Social proof */}
-        <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-zinc-500 font-medium">
+        <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-muted-foreground/70 font-medium">
           {recentUsers.length > 0 && (
             <div className="flex -space-x-3">
               {recentUsers.map((user, i) => (
                 <div
                   key={user.id || i}
-                  className="relative h-10 w-10 rounded-full border-2 border-zinc-950 overflow-hidden bg-zinc-800 shadow-sm"
+                  className="relative h-10 w-10 rounded-full border-2 border-background overflow-hidden bg-muted shadow-sm"
                   aria-hidden="true"
                 >
                   {user.image ? (
