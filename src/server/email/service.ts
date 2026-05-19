@@ -320,8 +320,33 @@ export async function sendBroadcastEmail(params: {
   subject: string;
   body: string;
   userName?: string;
+  design?: {
+    bgColor: string;
+    containerBg: string;
+    textColor: string;
+    headingColor: string;
+    linkColor: string;
+    buttonBg: string;
+    buttonTextColor: string;
+    fontFamily: string;
+    fontSize: string;
+    headingSize: string;
+    containerWidth: string;
+    padding: string;
+    borderRadius: string;
+    logoPosition: "hidden" | "top" | "before-greeting" | "after-greeting";
+    logoUrl: string;
+    logoWidth: string;
+    greetingText: string;
+    showFooter: boolean;
+    footerText: string;
+    showUnsubscribe: boolean;
+    headerImageUrl?: string;
+    footerImageUrl?: string;
+    bodyImages?: string[];
+  };
 }): Promise<EmailSendResult> {
-  const { to, subject, body, userName } = params;
+  const { to, subject, body, userName, design } = params;
   const appUrl = getAppUrl();
 
   try {
@@ -330,6 +355,7 @@ export async function sendBroadcastEmail(params: {
       body,
       userName,
       appUrl,
+      design,
     });
 
     return await sendEmail(to, subject, html);
