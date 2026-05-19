@@ -3,7 +3,7 @@
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Bot, Shield, FileCode, Languages, RefreshCw } from "lucide-react";
+import { Bot, Shield, FileCode, Languages, RefreshCw, Sparkles } from "lucide-react";
 
 interface Prefs {
   reviewDepth?: "quick" | "standard" | "thorough" | null;
@@ -11,6 +11,7 @@ interface Prefs {
   autoReview?: boolean | null;
   includeSecurityChecks?: boolean | null;
   includePerfSuggestions?: boolean | null;
+  preferredModel?: string | null;
 }
 
 interface PreferencesCardContentProps {
@@ -62,6 +63,16 @@ const TOGGLE_OPTIONS = [
     icon: RefreshCw,
     color: "text-green-500 bg-green-500/10",
   },
+];
+
+const MODEL_OPTIONS = [
+  { id: "openai/gpt-4o", name: "GPT-4o", provider: "OpenAI" },
+  { id: "openai/gpt-4o-mini", name: "GPT-4o Mini", provider: "OpenAI" },
+  { id: "meta/llama-4-maverick", name: "Llama 4 Maverick", provider: "Meta" },
+  { id: "meta/llama-4-scout", name: "Llama 4 Scout", provider: "Meta" },
+  { id: "mistralai/mistral-large-2411", name: "Mistral Large", provider: "Mistral" },
+  { id: "deepseek/DeepSeek-V3-0324", name: "DeepSeek V3", provider: "DeepSeek" },
+  { id: "cohere/command-a", name: "Command A", provider: "Cohere" },
 ];
 
 export function PreferencesCardContent({
@@ -140,6 +151,33 @@ export function PreferencesCardContent({
           <option value="rust">Rust</option>
           <option value="csharp">C#</option>
           <option value="cpp">C++</option>
+        </select>
+      </div>
+
+      <Separator />
+
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center size-8 rounded-md bg-purple-500/10">
+            <Sparkles className="size-4 text-purple-500" />
+          </div>
+          <div>
+            <p className="text-sm font-medium">AI Model</p>
+            <p className="text-xs text-muted-foreground">
+              Model used for chat and code reviews
+            </p>
+          </div>
+        </div>
+        <select
+          value={prefs?.preferredModel ?? "openai/gpt-4o"}
+          onChange={(e) => updatePref("preferredModel", e.target.value)}
+          className="h-9 rounded-md border border-input bg-background px-3 text-sm"
+        >
+          {MODEL_OPTIONS.map((m) => (
+            <option key={m.id} value={m.id}>
+              {m.name} ({m.provider})
+            </option>
+          ))}
         </select>
       </div>
 

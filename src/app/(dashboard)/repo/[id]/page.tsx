@@ -27,6 +27,7 @@ import {
   ExternalLink,
   Network,
   ShieldCheck,
+  Sparkles,
 } from "lucide-react";
 import { cn, formatDate } from "@/lib/utils";
 import { CodeTimeline } from "@/features/code-timeline";
@@ -46,6 +47,8 @@ export default function RepositoryDetailPage({ params }: PageProps) {
   const repository = trpc.repository.list.useQuery(undefined, {
     select: (repos) => repos.find((r) => r.id === id),
   });
+
+  const { data: prefs } = trpc.settings.getPreferences.useQuery();
 
   // Single query fetches all PRs — we filter client-side for both
   // the visible list and the tab counts. This avoids two concurrent
@@ -250,6 +253,10 @@ export default function RepositoryDetailPage({ params }: PageProps) {
             <span className="flex items-center gap-2">
               <RefreshCw className="size-4" />
               Updated {formatDate(repo.updatedAt.toString())}
+            </span>
+            <span className="flex items-center gap-2">
+              <Sparkles className="size-4 text-purple-500" />
+              {prefs?.preferredModel?.split("/").pop() ?? "gpt-4o"}
             </span>
           </div>
           <a

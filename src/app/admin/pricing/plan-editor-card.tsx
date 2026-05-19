@@ -53,9 +53,9 @@ function LimitField({
       </Label>
       <div className="flex items-center gap-2">
         <Input
-          type={isUnlimited ? "text" : "number"}
-          value={isUnlimited ? "∞" : (value ?? 0)}
-          readOnly={isUnlimited}
+          type="number"
+          value={isUnlimited ? "" : (value ?? 0)}
+          placeholder={isUnlimited ? "∞ Unlimited" : ""}
           min={0}
           onChange={(e) => {
             const n = parseInt(e.target.value, 10);
@@ -381,7 +381,22 @@ export function PlanEditorCard({
                 <Check
                   className={cn("h-3.5 w-3.5 shrink-0", accentStyle.text)}
                 />
-                <span className="flex-1 text-sm">{f}</span>
+                {editing ? (
+                  <Input
+                    value={f}
+                    onChange={(e) =>
+                      setDraft((d) => ({
+                        ...d,
+                        features: d.features.map((feat, idx) =>
+                          idx === i ? e.target.value : feat,
+                        ),
+                      }))
+                    }
+                    className="h-7 flex-1 text-sm"
+                  />
+                ) : (
+                  <span className="flex-1 text-sm">{f}</span>
+                )}
                 {editing && (
                   <button
                     title="Remove feature"

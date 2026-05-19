@@ -138,9 +138,9 @@ export function buildComparison(plans: MergedPlan[]): PlanFeature[] {
   const p = get(Plan.PRO);
   const e = get(Plan.ENTERPRISE);
   return [
-    { label: "Repositories", free: limitLabel(f?.reposLimit ?? 1), pro: limitLabel(p?.reposLimit ?? 10), enterprise: limitLabel(e?.reposLimit ?? null) },
-    { label: "AI Reviews / month", free: limitLabel(f?.reviewsLimit ?? 5), pro: limitLabel(p?.reviewsLimit ?? 100), enterprise: limitLabel(e?.reviewsLimit ?? null) },
-    { label: "Team seats", free: limitLabel(f?.seatsLimit ?? 1), pro: limitLabel(p?.seatsLimit ?? 5), enterprise: limitLabel(e?.seatsLimit ?? null) },
+    { label: "Repositories", free: limitLabel(f?.reposLimit ?? 1), pro: limitLabel(p?.reposLimit ?? 10), enterprise: limitLabel(e?.reposLimit ?? 500) },
+    { label: "AI Reviews / month", free: limitLabel(f?.reviewsLimit ?? 5), pro: limitLabel(p?.reviewsLimit ?? 100), enterprise: limitLabel(e?.reviewsLimit ?? 500) },
+    { label: "Team seats", free: limitLabel(f?.seatsLimit ?? 1), pro: limitLabel(p?.seatsLimit ?? 5), enterprise: limitLabel(e?.seatsLimit ?? 500) },
     { label: "Private repos", free: f?.privateRepos ?? false, pro: p?.privateRepos ?? true, enterprise: e?.privateRepos ?? true },
     { label: "Custom review rules", free: false, pro: true, enterprise: true },
     { label: "PR inline comments", free: false, pro: true, enterprise: true },
