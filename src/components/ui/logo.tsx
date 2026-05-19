@@ -10,7 +10,7 @@ interface LogoProps {
 export function Logo({ className }: LogoProps) {
   return (
     <Image
-      src="/logo-noback.png"
+      src="web-app-manifest-512x512.png"
       alt="Code Catch Logo"
       width={57}
       height={40}

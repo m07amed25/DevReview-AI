@@ -9,8 +9,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Newspaper, Send, Loader2, Users, Check, ImagePlus, Eye, EyeOff, X, Search, Palette, Type, Layout } from "lucide-react";
+import { Newspaper, Send, Loader2, Users, Check, ImagePlus, Eye, EyeOff, X, Search, Palette, Type, Layout, Bold, Italic, Heading1, Heading2, Link2, List, ListOrdered, Minus, Quote, Code, Table, MousePointer2 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
 
 type Target = "ALL" | "FREE" | "PRO" | "CUSTOM";
 
@@ -61,7 +63,7 @@ const defaultDesign: EmailDesign = {
   containerWidth: "600px",
   padding: "40px",
   borderRadius: "8px",
-  logoPosition: "top",
+  logoPosition: "hidden",
   logoUrl: "",
   logoWidth: "56",
   greetingText: "Hi {name},",
@@ -74,11 +76,13 @@ const defaultDesign: EmailDesign = {
 };
 
 const colorPresets = [
-  { name: "Default", bgColor: "#f6f9fc", containerBg: "#ffffff", textColor: "#444444", headingColor: "#1a1a1a", linkColor: "#2563eb", buttonBg: "#2563eb" },
-  { name: "Dark", bgColor: "#1a1a1a", containerBg: "#262626", textColor: "#d4d4d4", headingColor: "#ffffff", linkColor: "#60a5fa", buttonBg: "#3b82f6" },
-  { name: "Purple", bgColor: "#faf5ff", containerBg: "#ffffff", textColor: "#581c87", headingColor: "#581c87", linkColor: "#9333ea", buttonBg: "#9333ea" },
-  { name: "Green", bgColor: "#f0fdf4", containerBg: "#ffffff", textColor: "#166534", headingColor: "#166534", linkColor: "#16a34a", buttonBg: "#16a34a" },
-  { name: "Orange", bgColor: "#fff7ed", containerBg: "#ffffff", textColor: "#9a3412", headingColor: "#c2410c", linkColor: "#ea580c", buttonBg: "#ea580c" },
+  { name: "Default", bgColor: "#f6f9fc", containerBg: "#ffffff", textColor: "#374151", headingColor: "#111827", linkColor: "#2563eb", buttonBg: "#2563eb" },
+  { name: "Dark", bgColor: "#111827", containerBg: "#1f2937", textColor: "#e5e7eb", headingColor: "#f9fafb", linkColor: "#60a5fa", buttonBg: "#3b82f6" },
+  { name: "Purple", bgColor: "#faf5ff", containerBg: "#ffffff", textColor: "#4b5563", headingColor: "#6b21a8", linkColor: "#9333ea", buttonBg: "#7c3aed" },
+  { name: "Green", bgColor: "#f0fdf4", containerBg: "#ffffff", textColor: "#4b5563", headingColor: "#15803d", linkColor: "#16a34a", buttonBg: "#16a34a" },
+  { name: "Orange", bgColor: "#fff7ed", containerBg: "#ffffff", textColor: "#4b5563", headingColor: "#c2410c", linkColor: "#ea580c", buttonBg: "#ea580c" },
+  { name: "Ocean", bgColor: "#f0f9ff", containerBg: "#ffffff", textColor: "#475569", headingColor: "#0c4a6e", linkColor: "#0284c7", buttonBg: "#0369a1" },
+  { name: "Midnight", bgColor: "#0f172a", containerBg: "#1e293b", textColor: "#cbd5e1", headingColor: "#f1f5f9", linkColor: "#38bdf8", buttonBg: "#0ea5e9" },
 ];
 
 export default function AdminNewsletterPage() {
@@ -97,6 +101,7 @@ export default function AdminNewsletterPage() {
   const headerFileRef = useRef<HTMLInputElement>(null);
   const footerFileRef = useRef<HTMLInputElement>(null);
   const bodyImageFileRef = useRef<HTMLInputElement>(null);
+  const logoFileRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const userIds = selectedUsers.map((u) => u.id);
@@ -173,7 +178,7 @@ export default function AdminNewsletterPage() {
     }
   };
 
-  const handleDesignImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, target: "headerImageUrl" | "footerImageUrl" | "bodyImage") => {
+  const handleDesignImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, target: "headerImageUrl" | "footerImageUrl" | "logoUrl" | "bodyImage") => {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
@@ -192,6 +197,48 @@ export default function AdminNewsletterPage() {
       setUploading(false);
       e.target.value = "";
     }
+  };
+
+  const insertAtCursor = (before: string, after = "") => {
+    const ta = textareaRef.current;
+    if (!ta) return;
+    const start = ta.selectionStart;
+    const end = ta.selectionEnd;
+    const selected = body.slice(start, end);
+    const insert = before + (selected || "text") + after;
+    setBody(body.slice(0, start) + insert + body.slice(end));
+    setTimeout(() => {
+      ta.focus();
+      ta.selectionStart = start + before.length;
+      ta.selectionEnd = start + before.length + (selected || "text").length;
+    }, 0);
+  };
+
+  const insertBlock = (text: string) => {
+    const ta = textareaRef.current;
+    if (!ta) return;
+    const pos = ta.selectionStart;
+    const prefix = pos > 0 && body[pos - 1] !== "\n" ? "\n" : "";
+    setBody(body.slice(0, pos) + prefix + text + "\n" + body.slice(pos));
+    setTimeout(() => { ta.focus(); }, 0);
+  };
+
+  const insertImageFromUrl = () => {
+    const url = prompt("Image URL:");
+    if (!url) return;
+    const alt = prompt("Alt text (optional):") || "image";
+    const width = prompt("Width (e.g. 400, 100%, or leave empty for auto):") || "";
+    const md = width
+      ? `<img src="${url}" alt="${alt}" width="${width}" />`
+      : `![${alt}](${url})`;
+    insertBlock(md);
+  };
+
+  const insertButton = () => {
+    const text = prompt("Button text:") || "Click here";
+    const url = prompt("Button URL:") || "https://";
+    const color = prompt("Button color (hex, e.g. #2563eb):") || "#2563eb";
+    insertBlock(`<a href="${url}" style="display:inline-block;padding:12px 24px;background:${color};color:#fff;border-radius:6px;text-decoration:none;font-weight:600">${text}</a>`);
   };
 
   const handleSend = () => {
@@ -283,14 +330,14 @@ export default function AdminNewsletterPage() {
                 <img src={design.headerImageUrl} alt="Header" style={{ width: "100%", height: "auto", borderRadius: design.borderRadius }} />
               </div>
             )}
-            {design.logoPosition === "top" && (
+            {design.logoPosition === "top" && design.logoUrl && (
               <div style={{ textAlign: "center", marginBottom: "24px" }}>
-                <img src={design.logoUrl || "/file.svg"} alt="Logo" style={{ width: design.logoWidth, height: "auto", margin: "0 auto" }} />
+                <img src={design.logoUrl} alt="Logo" style={{ width: `${design.logoWidth}px`, height: "auto", margin: "0 auto" }} />
               </div>
             )}
-            {design.logoPosition === "before-greeting" && design.greetingText && (
+            {design.logoPosition === "before-greeting" && design.logoUrl && design.greetingText && (
               <div style={{ textAlign: "center", marginBottom: "16px" }}>
-                <img src={design.logoUrl || "/file.svg"} alt="Logo" style={{ width: design.logoWidth, height: "auto", margin: "0 auto 8px" }} />
+                <img src={design.logoUrl} alt="Logo" style={{ width: `${design.logoWidth}px`, height: "auto", margin: "0 auto 8px" }} />
               </div>
             )}
             {design.greetingText && (
@@ -298,9 +345,9 @@ export default function AdminNewsletterPage() {
                 {design.greetingText.replace("{name}", "User")}
               </p>
             )}
-            {design.logoPosition === "after-greeting" && (
+            {design.logoPosition === "after-greeting" && design.logoUrl && (
               <div style={{ textAlign: "center", marginBottom: "24px" }}>
-                <img src={design.logoUrl || "/file.svg"} alt="Logo" style={{ width: design.logoWidth, height: "auto", margin: "0 auto" }} />
+                <img src={design.logoUrl} alt="Logo" style={{ width: `${design.logoWidth}px`, height: "auto", margin: "0 auto" }} />
               </div>
             )}
             {design.bodyImages.length > 0 && (
@@ -312,10 +359,18 @@ export default function AdminNewsletterPage() {
             )}
             <div className="prose prose-sm max-w-none" style={{ color: design.textColor }}>
               <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeRaw]}
                 components={{
                   h1: ({ children }) => <h1 style={{ color: design.headingColor, fontSize: design.headingSize }}>{children}</h1>,
                   h2: ({ children }) => <h2 style={{ color: design.headingColor }}>{children}</h2>,
+                  h3: ({ children }) => <h3 style={{ color: design.headingColor }}>{children}</h3>,
                   a: ({ href, children }) => <a href={href} style={{ color: design.linkColor }}>{children}</a>,
+                  p: ({ children }) => <p style={{ marginBottom: "12px" }}>{children}</p>,
+                  strong: ({ children }) => <strong style={{ fontWeight: 700 }}>{children}</strong>,
+                  li: ({ children }) => <li>{children}</li>,
+                  img: ({ src, alt, ...props }) => <img src={src} alt={alt || ""} style={{ maxWidth: "100%", height: "auto", borderRadius: "6px", margin: "12px 0" }} {...props} />,
+                  hr: () => <hr style={{ border: "none", borderTop: "1px solid #e5e7eb", margin: "20px 0" }} />,
                 }}
               >
                 {body || "*No content*"}
@@ -325,7 +380,7 @@ export default function AdminNewsletterPage() {
               <div style={{ borderTop: "1px solid #e5e7eb", marginTop: "24px", paddingTop: "16px" }}>
                 {design.footerImageUrl && (
                   <div style={{ textAlign: "center", marginBottom: "12px" }}>
-                    <img src={design.footerImageUrl} alt="Footer" style={{ maxWidth: "100%", height: "auto", maxHeight: "80px" }} />
+                    <img src={design.footerImageUrl} alt="Footer" style={{ width: "100%", height: "auto" }} />
                   </div>
                 )}
                 <p style={{ fontSize: "12px", color: "#9ca3af" }}>{design.footerText}</p>
@@ -478,32 +533,70 @@ export default function AdminNewsletterPage() {
 
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label>Body (Markdown)</Label>
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={handleImageUpload}
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="gap-1.5 text-xs h-7"
-                      onClick={() => fileInputRef.current?.click()}
-                      disabled={uploading}
-                    >
-                      {uploading ? <Loader2 className="h-3 w-3 animate-spin" /> : <ImagePlus className="h-3 w-3" />}
-                      Image
+                    <Label>Body (Markdown + HTML)</Label>
+                  </div>
+                  {/* Toolbar */}
+                  <div className="flex flex-wrap gap-0.5 rounded-md border bg-muted/50 p-1">
+                    <Button type="button" variant="ghost" size="sm" className="h-7 w-7 p-0" title="Bold" onClick={() => insertAtCursor("**", "**")}>
+                      <Bold className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button type="button" variant="ghost" size="sm" className="h-7 w-7 p-0" title="Italic" onClick={() => insertAtCursor("*", "*")}>
+                      <Italic className="h-3.5 w-3.5" />
+                    </Button>
+                    <div className="mx-0.5 w-px bg-border" />
+                    <Button type="button" variant="ghost" size="sm" className="h-7 w-7 p-0" title="Heading 1" onClick={() => insertBlock("# Heading")}>
+                      <Heading1 className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button type="button" variant="ghost" size="sm" className="h-7 w-7 p-0" title="Heading 2" onClick={() => insertBlock("## Heading")}>
+                      <Heading2 className="h-3.5 w-3.5" />
+                    </Button>
+                    <div className="mx-0.5 w-px bg-border" />
+                    <Button type="button" variant="ghost" size="sm" className="h-7 w-7 p-0" title="Bullet List" onClick={() => insertBlock("- Item 1\n- Item 2\n- Item 3")}>
+                      <List className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button type="button" variant="ghost" size="sm" className="h-7 w-7 p-0" title="Numbered List" onClick={() => insertBlock("1. Item 1\n2. Item 2\n3. Item 3")}>
+                      <ListOrdered className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button type="button" variant="ghost" size="sm" className="h-7 w-7 p-0" title="Blockquote" onClick={() => insertBlock("> Quote")}>
+                      <Quote className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button type="button" variant="ghost" size="sm" className="h-7 w-7 p-0" title="Code" onClick={() => insertAtCursor("`", "`")}>
+                      <Code className="h-3.5 w-3.5" />
+                    </Button>
+                    <div className="mx-0.5 w-px bg-border" />
+                    <Button type="button" variant="ghost" size="sm" className="h-7 w-7 p-0" title="Link" onClick={() => { const url = prompt("URL:") || "https://"; insertAtCursor("[", `](${url})`); }}>
+                      <Link2 className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button type="button" variant="ghost" size="sm" className="h-7 w-7 p-0" title="Upload Image" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
+                      {uploading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ImagePlus className="h-3.5 w-3.5" />}
+                    </Button>
+                    <Button type="button" variant="ghost" size="sm" className="h-7 w-7 p-0" title="Image from URL" onClick={insertImageFromUrl}>
+                      <Eye className="h-3.5 w-3.5" />
+                    </Button>
+                    <div className="mx-0.5 w-px bg-border" />
+                    <Button type="button" variant="ghost" size="sm" className="h-7 w-7 p-0" title="Divider" onClick={() => insertBlock("\n---\n")}>
+                      <Minus className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button type="button" variant="ghost" size="sm" className="h-7 w-7 p-0" title="Table" onClick={() => insertBlock("| Column 1 | Column 2 | Column 3 |\n|----------|----------|----------|\n| Cell 1   | Cell 2   | Cell 3   |")}>
+                      <Table className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button type="button" variant="ghost" size="sm" className="h-7 px-1.5" title="CTA Button" onClick={insertButton}>
+                      <MousePointer2 className="h-3.5 w-3.5" />
                     </Button>
                   </div>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageUpload}
+                  />
                   <Textarea
                     ref={textareaRef}
                     value={body}
                     onChange={(e) => setBody(e.target.value)}
-                    placeholder={"# Hello!\n\nWe have exciting news...\n\n- Feature 1\n- Feature 2\n\n[Learn more](https://example.com)"}
-                    rows={14}
+                    placeholder={"# Hello!\n\nWe have exciting news...\n\n![banner](https://...)\n\n- Feature 1\n- Feature 2\n\n<img src=\"...\" width=\"300\" />\n\n[Learn more](https://example.com)"}
+                    rows={16}
                     className="font-mono text-sm"
                   />
                 </div>
@@ -669,12 +762,18 @@ export default function AdminNewsletterPage() {
                   { value: "after-greeting", label: "After Greeting" },
                 ])}
                 {design.logoPosition !== "hidden" && (
-                  <Input
-                    value={design.logoUrl}
-                    onChange={(e) => updateDesign("logoUrl", e.target.value)}
-                    placeholder="Logo URL (empty = default)"
-                    className="h-8 text-sm"
-                  />
+                  <div className="flex gap-1">
+                    <Input
+                      value={design.logoUrl}
+                      onChange={(e) => updateDesign("logoUrl", e.target.value)}
+                      placeholder="Logo URL (empty = default)"
+                      className="h-8 text-sm"
+                    />
+                    <input ref={logoFileRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleDesignImageUpload(e, "logoUrl")} />
+                    <Button type="button" size="sm" variant="outline" className="h-8 px-2" onClick={() => logoFileRef.current?.click()} disabled={uploading}>
+                      <ImagePlus className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
                 )}
               </div>
               <div className="space-y-2">
