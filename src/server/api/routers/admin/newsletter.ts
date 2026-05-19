@@ -23,6 +23,9 @@ const emailDesignSchema = z.object({
   showFooter: z.boolean(),
   footerText: z.string(),
   showUnsubscribe: z.boolean(),
+  headerImageUrl: z.string().optional(),
+  footerImageUrl: z.string().optional(),
+  bodyImages: z.array(z.string()).optional(),
 });
 
 export const adminNewsletterRouter = createTRPCRouter({

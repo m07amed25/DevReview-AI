@@ -16,13 +16,16 @@ interface EmailDesign {
   containerWidth: string;
   padding: string;
   borderRadius: string;
-  showLogo: boolean;
+  logoPosition: "hidden" | "top" | "before-greeting" | "after-greeting";
   logoUrl: string;
   logoWidth: string;
   greetingText: string;
   showFooter: boolean;
   footerText: string;
   showUnsubscribe: boolean;
+  headerImageUrl: string;
+  footerImageUrl: string;
+  bodyImages: string[];
 }
 
 export const broadcastEmail = inngest.createFunction(

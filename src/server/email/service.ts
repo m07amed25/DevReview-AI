@@ -341,6 +341,9 @@ export async function sendBroadcastEmail(params: {
     showFooter: boolean;
     footerText: string;
     showUnsubscribe: boolean;
+    headerImageUrl?: string;
+    footerImageUrl?: string;
+    bodyImages?: string[];
   };
 }): Promise<EmailSendResult> {
   const { to, subject, body, userName, design } = params;

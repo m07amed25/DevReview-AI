@@ -39,6 +39,9 @@ interface EmailDesign {
   showFooter: boolean;
   footerText: string;
   showUnsubscribe: boolean;
+  headerImageUrl?: string;
+  footerImageUrl?: string;
+  bodyImages?: string[];
 }
 
 interface BroadcastEmailProps {
@@ -70,6 +73,9 @@ const defaultDesign: EmailDesign = {
   showFooter: true,
   footerText: "Sent from CodeCatch",
   showUnsubscribe: true,
+  headerImageUrl: "",
+  footerImageUrl: "",
+  bodyImages: [],
 };
 
 const Logo = ({ url, width }: { url: string; width: string }) => (
