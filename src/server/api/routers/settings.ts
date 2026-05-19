@@ -133,6 +133,7 @@ export const settingsRouter = createTRPCRouter({
         autoReview: true,
         includeSecurityChecks: true,
         includePerfSuggestions: true,
+        preferredModel: true,
       },
     });
 
@@ -184,6 +185,7 @@ export const settingsRouter = createTRPCRouter({
         autoReview: z.boolean().optional(),
         includeSecurityChecks: z.boolean().optional(),
         includePerfSuggestions: z.boolean().optional(),
+        preferredModel: z.string().max(100).optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -198,6 +200,7 @@ export const settingsRouter = createTRPCRouter({
           autoReview: true,
           includeSecurityChecks: true,
           includePerfSuggestions: true,
+          preferredModel: true,
         },
       });
 

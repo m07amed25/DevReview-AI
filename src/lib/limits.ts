@@ -33,6 +33,11 @@ export async function checkUserLimit(
     });
   }
 
+  // Admins bypass all limits
+  if (user.role === "ADMIN") {
+    return { limit: null, usage: 0 };
+  }
+
   const plan = await db.pricingPlan.findUnique({
     where: { id: user.planId },
   });

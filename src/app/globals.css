@@ -207,6 +207,10 @@ html, body {
   }
 }
 
+@utility backface-hidden {
+  backface-visibility: hidden;
+}
+
 .coming-soon-dot-grid {
   background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
   background-size: 32px 32px;

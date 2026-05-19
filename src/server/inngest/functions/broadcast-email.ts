@@ -38,25 +38,33 @@ export const broadcastEmail = inngest.createFunction(
     });
 
     // 2. Send emails in chunks to avoid overwhelming the SMTP server or hitting limits
-    const CHUNK_SIZE = 50;
+    const CHUNK_SIZE = 10;
     const results = [];
 
     for (let i = 0; i < users.length; i += CHUNK_SIZE) {
       const chunk = users.slice(i, i + CHUNK_SIZE);
       
       const chunkResults = await step.run(`send-chunk-${i}`, async () => {
-        const promises = chunk.map((user) =>
-          sendBroadcastEmail({
-            to: user.email,
-            subject,
-            body,
-            userName: user.name || undefined,
-          })
-        );
-        return Promise.all(promises);
+        const sent = [];
+        for (const user of chunk) {
+          sent.push(
+            await sendBroadcastEmail({
+              to: user.email,
+              subject,
+              body,
+              userName: user.name || undefined,
+            })
+          );
+          // Wait 2s between emails to avoid Gmail 421 rate limit
+          await new Promise((r) => setTimeout(r, 2000));
+        }
+        return sent;
       });
       
       results.push(...chunkResults);
+
+      // Wait 5s between chunks
+      await step.sleep(`pause-after-chunk-${i}`, "5s");
     }
 
     return {

@@ -34,8 +34,6 @@ export const BroadcastEmail = ({
       <Preview>{subject}</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Heading style={h1}>{subject}</Heading>
-          <Text style={text}>Hi {userName || "there"},</Text>
           <Section style={section}>
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}

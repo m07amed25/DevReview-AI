@@ -135,6 +135,7 @@ exports.Prisma.UserScalarFieldEnum = {
   autoReview: 'autoReview',
   includeSecurityChecks: 'includeSecurityChecks',
   includePerfSuggestions: 'includePerfSuggestions',
+  preferredModel: 'preferredModel',
   banned: 'banned',
   bannedReason: 'bannedReason',
   desktopNotifications: 'desktopNotifications',
@@ -586,6 +587,50 @@ exports.Prisma.PricingSettingsScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.InvoiceScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  amount: 'amount',
+  status: 'status',
+  planId: 'planId',
+  description: 'description',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.UserDiscountScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  discountId: 'discountId',
+  appliedAt: 'appliedAt'
+};
+
+exports.Prisma.BillingInfoScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  fullName: 'fullName',
+  email: 'email',
+  address: 'address',
+  city: 'city',
+  state: 'state',
+  zip: 'zip',
+  country: 'country',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PaymentMethodScalarFieldEnum = {
+  id: 'id',
+  billingInfoId: 'billingInfoId',
+  cardBrand: 'cardBrand',
+  lastFour: 'lastFour',
+  expiryMonth: 'expiryMonth',
+  expiryYear: 'expiryYear',
+  isDefault: 'isDefault',
+  fingerprint: 'fingerprint',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.LegalPageScalarFieldEnum = {
   slug: 'slug',
   title: 'title',
@@ -764,6 +809,13 @@ exports.DiscountType = exports.$Enums.DiscountType = {
   FIXED: 'FIXED'
 };
 
+exports.InvoiceStatus = exports.$Enums.InvoiceStatus = {
+  PAID: 'PAID',
+  PENDING: 'PENDING',
+  FAILED: 'FAILED',
+  REFUNDED: 'REFUNDED'
+};
+
 exports.MessageCategory = exports.$Enums.MessageCategory = {
   CONTACT: 'CONTACT',
   FEEDBACK: 'FEEDBACK',
@@ -808,6 +860,10 @@ exports.Prisma.ModelName = {
   PartnerDomain: 'PartnerDomain',
   PricingPlan: 'PricingPlan',
   PricingSettings: 'PricingSettings',
+  Invoice: 'Invoice',
+  UserDiscount: 'UserDiscount',
+  BillingInfo: 'BillingInfo',
+  PaymentMethod: 'PaymentMethod',
   LegalPage: 'LegalPage',
   ContactMessage: 'ContactMessage'
 };

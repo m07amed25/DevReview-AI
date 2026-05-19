@@ -14,6 +14,7 @@ import { adminPricingRouter } from "./routers/admin-pricing";
 import { rulesRouter } from "./routers/rules";
 import { securityRouter } from "./routers/security";
 import { homeRouter } from "./routers/home";
+import { billingRouter } from "./routers/billing";
 import { createCallerFactory, createTRPCRouter, publicProcedure } from "./trpc";
 
 export const appRouter = createTRPCRouter({
@@ -39,6 +40,7 @@ export const appRouter = createTRPCRouter({
   adminPricing: adminPricingRouter,
   rules: rulesRouter,
   security: securityRouter,
+  billing: billingRouter,
 });
 
 export type AppRouter = typeof appRouter;
