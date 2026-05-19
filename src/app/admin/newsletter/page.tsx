@@ -2,16 +2,84 @@
 
 import { useState, useRef } from "react";
 import { trpc } from "@/lib/trpc/client";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Newspaper, Send, Loader2, Users, Check, ImagePlus, Eye, EyeOff } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Newspaper, Send, Loader2, Users, Check, ImagePlus, Eye, EyeOff, X, Search, Palette, Type, Layout } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
-type Target = "ALL" | "FREE" | "PRO";
+type Target = "ALL" | "FREE" | "PRO" | "CUSTOM";
+
+interface SelectedUser {
+  id: string;
+  name: string | null;
+  email: string;
+  image: string | null;
+}
+
+interface EmailDesign {
+  bgColor: string;
+  containerBg: string;
+  textColor: string;
+  headingColor: string;
+  linkColor: string;
+  buttonBg: string;
+  buttonTextColor: string;
+  fontFamily: string;
+  fontSize: string;
+  headingSize: string;
+  containerWidth: string;
+  padding: string;
+  borderRadius: string;
+  logoPosition: "hidden" | "top" | "before-greeting" | "after-greeting";
+  logoUrl: string;
+  logoWidth: string;
+  greetingText: string;
+  showFooter: boolean;
+  footerText: string;
+  showUnsubscribe: boolean;
+  headerImageUrl: string;
+  footerImageUrl: string;
+  bodyImages: string[];
+}
+
+const defaultDesign: EmailDesign = {
+  bgColor: "#f6f9fc",
+  containerBg: "#ffffff",
+  textColor: "#444444",
+  headingColor: "#1a1a1a",
+  linkColor: "#2563eb",
+  buttonBg: "#2563eb",
+  buttonTextColor: "#ffffff",
+  fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+  fontSize: "16px",
+  headingSize: "24px",
+  containerWidth: "600px",
+  padding: "40px",
+  borderRadius: "8px",
+  logoPosition: "top",
+  logoUrl: "",
+  logoWidth: "56",
+  greetingText: "Hi {name},",
+  showFooter: true,
+  footerText: "Sent from CodeCatch",
+  showUnsubscribe: true,
+  headerImageUrl: "",
+  footerImageUrl: "",
+  bodyImages: [],
+};
+
+const colorPresets = [
+  { name: "Default", bgColor: "#f6f9fc", containerBg: "#ffffff", textColor: "#444444", headingColor: "#1a1a1a", linkColor: "#2563eb", buttonBg: "#2563eb" },
+  { name: "Dark", bgColor: "#1a1a1a", containerBg: "#262626", textColor: "#d4d4d4", headingColor: "#ffffff", linkColor: "#60a5fa", buttonBg: "#3b82f6" },
+  { name: "Purple", bgColor: "#faf5ff", containerBg: "#ffffff", textColor: "#581c87", headingColor: "#581c87", linkColor: "#9333ea", buttonBg: "#9333ea" },
+  { name: "Green", bgColor: "#f0fdf4", containerBg: "#ffffff", textColor: "#166534", headingColor: "#166534", linkColor: "#16a34a", buttonBg: "#16a34a" },
+  { name: "Orange", bgColor: "#fff7ed", containerBg: "#ffffff", textColor: "#9a3412", headingColor: "#c2410c", linkColor: "#ea580c", buttonBg: "#ea580c" },
+];
 
 export default function AdminNewsletterPage() {
   const [subject, setSubject] = useState("");
@@ -19,11 +87,25 @@ export default function AdminNewsletterPage() {
   const [target, setTarget] = useState<Target>("ALL");
   const [sent, setSent] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [showPreview, setShowPreview] = useState(false);
+  const [showPreview, setShowPreview] = useState(true);
+  const [selectedUsers, setSelectedUsers] = useState<SelectedUser[]>([]);
+  const [userSearch, setUserSearch] = useState("");
+  const [design, setDesign] = useState<EmailDesign>(defaultDesign);
+  const [activeTab, setActiveTab] = useState<"content" | "design">("content");
+  const [bodyImageInput, setBodyImageInput] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const headerFileRef = useRef<HTMLInputElement>(null);
+  const footerFileRef = useRef<HTMLInputElement>(null);
+  const bodyImageFileRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const { data: count } = trpc.admin.recipientCount.useQuery({ target });
+  const userIds = selectedUsers.map((u) => u.id);
+  const { data: count } = trpc.admin.recipientCount.useQuery({ target, userIds });
+  const { data: searchResults, isFetching: searching } = trpc.admin.searchUsers.useQuery(
+    { search: userSearch },
+    { enabled: userSearch.length >= 2 },
+  );
+
   const sendMutation = trpc.admin.send.useMutation({
     onSuccess: () => {
       setSent(true);
@@ -33,17 +115,48 @@ export default function AdminNewsletterPage() {
     },
   });
 
+  const updateDesign = (key: keyof EmailDesign, value: string | boolean) => {
+    setDesign((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const addBodyImage = () => {
+    if (!bodyImageInput.trim()) return;
+    setDesign((prev) => ({ ...prev, bodyImages: [...prev.bodyImages, bodyImageInput.trim()] }));
+    setBodyImageInput("");
+  };
+
+  const removeBodyImage = (index: number) => {
+    setDesign((prev) => ({ ...prev, bodyImages: prev.bodyImages.filter((_, i) => i !== index) }));
+  };
+
+  const applyPreset = (preset: typeof colorPresets[0]) => {
+    setDesign((prev) => ({
+      ...prev,
+      bgColor: preset.bgColor,
+      containerBg: preset.containerBg,
+      textColor: preset.textColor,
+      headingColor: preset.headingColor,
+      linkColor: preset.linkColor,
+      buttonBg: preset.buttonBg,
+    }));
+  };
+
+  const uploadFile = async (file: File): Promise<string | null> => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await fetch("/api/upload", { method: "POST", body: formData });
+    const data = await res.json();
+    return data.url ?? null;
+  };
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await fetch("/api/upload", { method: "POST", body: formData });
-      const data = await res.json();
-      if (data.url) {
-        const markdown = `![${file.name}](${data.url})\n`;
+      const url = await uploadFile(file);
+      if (url) {
+        const markdown = `![${file.name}](${url})\n`;
         const ta = textareaRef.current;
         if (ta) {
           const pos = ta.selectionStart ?? body.length;
@@ -60,23 +173,191 @@ export default function AdminNewsletterPage() {
     }
   };
 
+  const handleDesignImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, target: "headerImageUrl" | "footerImageUrl" | "bodyImage") => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const url = await uploadFile(file);
+      if (url) {
+        if (target === "bodyImage") {
+          setDesign((prev) => ({ ...prev, bodyImages: [...prev.bodyImages, url] }));
+        } else {
+          updateDesign(target, url);
+        }
+      }
+    } catch {
+      // silent fail
+    } finally {
+      setUploading(false);
+      e.target.value = "";
+    }
+  };
+
   const handleSend = () => {
     if (!subject.trim() || !body.trim()) return;
-    sendMutation.mutate({ subject, body, target });
+    sendMutation.mutate({
+      subject,
+      body,
+      target,
+      userIds: target === "CUSTOM" ? userIds : undefined,
+      design,
+    });
   };
+
+  const addUser = (user: SelectedUser) => {
+    if (!selectedUsers.find((u) => u.id === user.id)) {
+      setSelectedUsers([...selectedUsers, user]);
+    }
+    setUserSearch("");
+  };
+
+  const removeUser = (userId: string) => {
+    setSelectedUsers(selectedUsers.filter((u) => u.id !== userId));
+  };
+
+  const renderDesignInput = (label: string, key: keyof EmailDesign, type: "color" | "text" | "select" = "text", options?: { value: string; label: string }[]) => (
+    <div className="space-y-1.5">
+      <Label className="text-xs">{label}</Label>
+      {type === "color" ? (
+        <div className="flex items-center gap-2">
+          <input
+            type="color"
+            value={design[key] as string}
+            onChange={(e) => updateDesign(key, e.target.value)}
+            className="h-8 w-8 cursor-pointer rounded border"
+          />
+          <Input
+            value={design[key] as string}
+            onChange={(e) => updateDesign(key, e.target.value)}
+            className="h-8 flex-1 font-mono text-xs"
+          />
+        </div>
+      ) : type === "select" ? (
+        <select
+          value={design[key] as string}
+          onChange={(e) => updateDesign(key, e.target.value)}
+          className="flex h-8 w-full rounded-md border bg-background px-2 text-sm"
+        >
+          {options?.map((opt) => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
+      ) : (
+        <Input
+          value={design[key] as string}
+          onChange={(e) => updateDesign(key, e.target.value)}
+          className="h-8"
+        />
+      )}
+    </div>
+  );
+
+  const previewCard = (
+    <Card className="lg:sticky lg:top-4 lg:self-start">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-base flex items-center gap-2">
+          <Eye className="h-4 w-4" />
+          Live Preview
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div
+          className="overflow-auto rounded-lg shadow-sm"
+          style={{ backgroundColor: design.bgColor, padding: "20px" }}
+        >
+          <div
+            style={{
+              backgroundColor: design.containerBg,
+              maxWidth: design.containerWidth,
+              margin: "0 auto",
+              padding: design.padding,
+              borderRadius: design.borderRadius,
+              fontFamily: design.fontFamily,
+              color: design.textColor,
+              fontSize: design.fontSize,
+            }}
+          >
+            {design.headerImageUrl && (
+              <div style={{ textAlign: "center", marginBottom: "24px" }}>
+                <img src={design.headerImageUrl} alt="Header" style={{ width: "100%", height: "auto", borderRadius: design.borderRadius }} />
+              </div>
+            )}
+            {design.logoPosition === "top" && (
+              <div style={{ textAlign: "center", marginBottom: "24px" }}>
+                <img src={design.logoUrl || "/file.svg"} alt="Logo" style={{ width: design.logoWidth, height: "auto", margin: "0 auto" }} />
+              </div>
+            )}
+            {design.logoPosition === "before-greeting" && design.greetingText && (
+              <div style={{ textAlign: "center", marginBottom: "16px" }}>
+                <img src={design.logoUrl || "/file.svg"} alt="Logo" style={{ width: design.logoWidth, height: "auto", margin: "0 auto 8px" }} />
+              </div>
+            )}
+            {design.greetingText && (
+              <p style={{ fontSize: design.headingSize, fontWeight: 600, color: design.headingColor, marginBottom: "16px" }}>
+                {design.greetingText.replace("{name}", "User")}
+              </p>
+            )}
+            {design.logoPosition === "after-greeting" && (
+              <div style={{ textAlign: "center", marginBottom: "24px" }}>
+                <img src={design.logoUrl || "/file.svg"} alt="Logo" style={{ width: design.logoWidth, height: "auto", margin: "0 auto" }} />
+              </div>
+            )}
+            {design.bodyImages.length > 0 && (
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "12px", marginBottom: "20px", justifyContent: "center" }}>
+                {design.bodyImages.map((url, i) => (
+                  <img key={i} src={url} alt="" style={{ maxHeight: "48px", width: "auto" }} />
+                ))}
+              </div>
+            )}
+            <div className="prose prose-sm max-w-none" style={{ color: design.textColor }}>
+              <ReactMarkdown
+                components={{
+                  h1: ({ children }) => <h1 style={{ color: design.headingColor, fontSize: design.headingSize }}>{children}</h1>,
+                  h2: ({ children }) => <h2 style={{ color: design.headingColor }}>{children}</h2>,
+                  a: ({ href, children }) => <a href={href} style={{ color: design.linkColor }}>{children}</a>,
+                }}
+              >
+                {body || "*No content*"}
+              </ReactMarkdown>
+            </div>
+            {design.showFooter && (
+              <div style={{ borderTop: "1px solid #e5e7eb", marginTop: "24px", paddingTop: "16px" }}>
+                {design.footerImageUrl && (
+                  <div style={{ textAlign: "center", marginBottom: "12px" }}>
+                    <img src={design.footerImageUrl} alt="Footer" style={{ maxWidth: "100%", height: "auto", maxHeight: "80px" }} />
+                  </div>
+                )}
+                <p style={{ fontSize: "12px", color: "#9ca3af" }}>{design.footerText}</p>
+                {design.showUnsubscribe && (
+                  <p style={{ fontSize: "12px", color: "#9ca3af", marginTop: "4px" }}>
+                    <a href="#" style={{ color: design.linkColor }}>Unsubscribe</a> · Manage preferences
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-500/10">
-          <Newspaper className="h-5 w-5 text-indigo-500" />
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-500/10">
+            <Newspaper className="h-5 w-5 text-indigo-500" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">Newsletter</h1>
+            <p className="text-sm text-muted-foreground">Design and send emails to users</p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Newsletter</h1>
-          <p className="text-sm text-muted-foreground">
-            Send emails to all registered users
-          </p>
-        </div>
+        <Badge variant="outline" className="gap-1.5">
+          <Users className="h-3.5 w-3.5" />
+          {count ?? "..."} recipients
+        </Badge>
       </div>
 
       {sent && (
@@ -86,147 +367,430 @@ export default function AdminNewsletterPage() {
         </div>
       )}
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Compose Newsletter</CardTitle>
-          <CardDescription>
-            Write your message using Markdown. It will be rendered as HTML in the email.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {/* Target audience */}
-          <div className="space-y-2">
-            <Label>Audience</Label>
-            <div className="flex items-center gap-2">
-              {(["ALL", "FREE", "PRO"] as const).map((t) => (
+      {/* Tabs */}
+      <div className="flex gap-1 rounded-lg bg-muted p-1">
+        <button
+          onClick={() => setActiveTab("content")}
+          className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+            activeTab === "content" ? "bg-background shadow" : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          Content
+        </button>
+        <button
+          onClick={() => setActiveTab("design")}
+          className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+            activeTab === "design" ? "bg-background shadow" : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          Design
+        </button>
+      </div>
+
+      {/* Content Tab */}
+      {activeTab === "content" && (
+        <div className="grid gap-6 lg:grid-cols-2">
+          <div className="space-y-4">
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base">Recipients</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex flex-wrap gap-2">
+                  {(["ALL", "FREE", "PRO", "CUSTOM"] as const).map((t) => (
+                    <button
+                      key={t}
+                      onClick={() => setTarget(t)}
+                      className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors ${
+                        target === t
+                          ? "border-primary bg-primary/10 text-primary"
+                          : "border-border text-muted-foreground hover:bg-muted"
+                      }`}
+                    >
+                      {t === "ALL" ? "All Users" : t === "FREE" ? "Free Plan" : t === "PRO" ? "Pro & Ultra" : "Custom"}
+                    </button>
+                  ))}
+                </div>
+
+                {target === "CUSTOM" && (
+                  <div className="space-y-3">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <Input
+                        value={userSearch}
+                        onChange={(e) => setUserSearch(e.target.value)}
+                        placeholder="Search users..."
+                        className="pl-9"
+                      />
+                      {searching && (
+                        <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground" />
+                      )}
+                      {userSearch.length >= 2 && searchResults && searchResults.length > 0 && (
+                        <div className="absolute z-10 mt-1 max-h-48 w-full overflow-auto rounded-md border bg-popover shadow-lg">
+                          {searchResults.map((user) => (
+                            <button
+                              key={user.id}
+                              type="button"
+                              className="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-muted"
+                              onClick={() => addUser(user)}
+                            >
+                              <Avatar className="h-6 w-6">
+                                <AvatarImage src={user.image ?? undefined} />
+                                <AvatarFallback className="text-xs">{user.name?.[0] ?? user.email[0]}</AvatarFallback>
+                              </Avatar>
+                              <span className="truncate text-sm">{user.name ?? user.email}</span>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    {selectedUsers.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5">
+                        {selectedUsers.map((user) => (
+                          <Badge key={user.id} variant="secondary" className="gap-1 py-0.5 pl-2 pr-1 text-xs">
+                            {user.name ?? user.email}
+                            <button type="button" onClick={() => removeUser(user.id)} className="rounded-full p-0.5 hover:bg-muted-foreground/20">
+                              <X className="h-3 w-3" />
+                            </button>
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base">Message</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label>Subject</Label>
+                  <Input
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value)}
+                    placeholder="What's new at Code Catch..."
+                    maxLength={200}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label>Body (Markdown)</Label>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleImageUpload}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="gap-1.5 text-xs h-7"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploading}
+                    >
+                      {uploading ? <Loader2 className="h-3 w-3 animate-spin" /> : <ImagePlus className="h-3 w-3" />}
+                      Image
+                    </Button>
+                  </div>
+                  <Textarea
+                    ref={textareaRef}
+                    value={body}
+                    onChange={(e) => setBody(e.target.value)}
+                    placeholder={"# Hello!\n\nWe have exciting news...\n\n- Feature 1\n- Feature 2\n\n[Learn more](https://example.com)"}
+                    rows={14}
+                    className="font-mono text-sm"
+                  />
+                </div>
+
+                <div className="flex justify-end gap-2 pt-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setShowPreview(!showPreview)}
+                    disabled={!body.trim()}
+                    className="gap-2"
+                  >
+                    {showPreview ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {showPreview ? "Hide" : "Preview"}
+                  </Button>
+                  <Button
+                    onClick={handleSend}
+                    disabled={!subject.trim() || !body.trim() || sendMutation.isPending}
+                    className="gap-2"
+                  >
+                    {sendMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                    Send
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Preview */}
+          {showPreview && previewCard}
+        </div>
+      )}
+
+      {/* Design Tab */}
+      {activeTab === "design" && (
+        <div className="grid gap-6 lg:grid-cols-3">
+          {/* Color Presets */}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2">
+                <Palette className="h-4 w-4" />
+                Presets
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              {colorPresets.map((preset) => (
                 <button
-                  key={t}
-                  onClick={() => setTarget(t)}
-                  className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors ${
-                    target === t
-                      ? "border-primary bg-primary/10 text-primary"
-                      : "border-border text-muted-foreground hover:bg-muted"
-                  }`}
+                  key={preset.name}
+                  onClick={() => applyPreset(preset)}
+                  className="flex w-full items-center gap-3 rounded-lg border p-2 text-left transition-colors hover:bg-muted"
                 >
-                  {t === "ALL" ? "All Users" : t === "FREE" ? "Free Plan" : "Pro & Ultra"}
+                  <div className="flex -space-x-1">
+                    <div className="h-5 w-5 rounded-full border-2 border-white" style={{ backgroundColor: preset.bgColor }} />
+                    <div className="h-5 w-5 rounded-full border-2 border-white" style={{ backgroundColor: preset.containerBg }} />
+                    <div className="h-5 w-5 rounded-full border-2 border-white" style={{ backgroundColor: preset.buttonBg }} />
+                  </div>
+                  <span className="text-sm font-medium">{preset.name}</span>
                 </button>
               ))}
-              <Badge variant="outline" className="ml-2 gap-1">
-                <Users className="h-3 w-3" />
-                {count ?? "..."} recipients
-              </Badge>
-            </div>
+            </CardContent>
+          </Card>
+
+          {/* Colors */}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base">Colors</CardTitle>
+            </CardHeader>
+            <CardContent className="grid grid-cols-2 gap-3">
+              {renderDesignInput("Background", "bgColor", "color")}
+              {renderDesignInput("Container", "containerBg", "color")}
+              {renderDesignInput("Text", "textColor", "color")}
+              {renderDesignInput("Headings", "headingColor", "color")}
+              {renderDesignInput("Links", "linkColor", "color")}
+              {renderDesignInput("Button", "buttonBg", "color")}
+              {renderDesignInput("Button Text", "buttonTextColor", "color")}
+            </CardContent>
+          </Card>
+
+          {/* Typography & Layout */}
+          <div className="space-y-6">
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base flex items-center gap-2">
+                  <Type className="h-4 w-4" />
+                  Typography
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {renderDesignInput("Font Family", "fontFamily", "select", [
+                  { value: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", label: "System" },
+                  { value: "Georgia, serif", label: "Georgia" },
+                  { value: "'Courier New', monospace", label: "Monospace" },
+                  { value: "Arial, sans-serif", label: "Arial" },
+                ])}
+                {renderDesignInput("Font Size", "fontSize", "select", [
+                  { value: "14px", label: "Small (14px)" },
+                  { value: "16px", label: "Medium (16px)" },
+                  { value: "18px", label: "Large (18px)" },
+                ])}
+                {renderDesignInput("Heading Size", "headingSize", "select", [
+                  { value: "20px", label: "Small (20px)" },
+                  { value: "24px", label: "Medium (24px)" },
+                  { value: "28px", label: "Large (28px)" },
+                  { value: "32px", label: "XL (32px)" },
+                ])}
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base flex items-center gap-2">
+                  <Layout className="h-4 w-4" />
+                  Layout
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {renderDesignInput("Width", "containerWidth", "select", [
+                  { value: "480px", label: "Narrow (480px)" },
+                  { value: "600px", label: "Standard (600px)" },
+                  { value: "680px", label: "Wide (680px)" },
+                ])}
+                {renderDesignInput("Padding", "padding", "select", [
+                  { value: "24px", label: "Compact (24px)" },
+                  { value: "40px", label: "Standard (40px)" },
+                  { value: "56px", label: "Spacious (56px)" },
+                ])}
+                {renderDesignInput("Border Radius", "borderRadius", "select", [
+                  { value: "0px", label: "None" },
+                  { value: "8px", label: "Small (8px)" },
+                  { value: "16px", label: "Medium (16px)" },
+                  { value: "24px", label: "Large (24px)" },
+                ])}
+              </CardContent>
+            </Card>
           </div>
 
-          {/* Subject */}
-          <div className="space-y-2">
-            <Label htmlFor="subject">Subject</Label>
-            <Input
-              id="subject"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              placeholder="What's new at Code Catch..."
-              maxLength={200}
-            />
-          </div>
-
-          {/* Body */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="body">Body (Markdown)</Label>
-              <div>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/jpeg,image/png,image/gif,image/webp"
-                  className="hidden"
-                  onChange={handleImageUpload}
+          {/* Header & Footer */}
+          <Card className="lg:col-span-3">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base">Header & Logo</CardTitle>
+            </CardHeader>
+            <CardContent className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="space-y-2">
+                <Label className="text-xs">Header Image (appears first)</Label>
+                <div className="flex gap-1">
+                  <Input
+                    value={design.headerImageUrl}
+                    onChange={(e) => updateDesign("headerImageUrl", e.target.value)}
+                    placeholder="Header image URL (optional)"
+                    className="h-8 text-sm"
+                  />
+                  <input ref={headerFileRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleDesignImageUpload(e, "headerImageUrl")} />
+                  <Button type="button" size="sm" variant="outline" className="h-8 px-2" onClick={() => headerFileRef.current?.click()} disabled={uploading}>
+                    <ImagePlus className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
+              </div>
+              <div className="space-y-2">
+                {renderDesignInput("Logo Position", "logoPosition", "select", [
+                  { value: "hidden", label: "Hidden" },
+                  { value: "top", label: "Top (above all)" },
+                  { value: "before-greeting", label: "Before Greeting" },
+                  { value: "after-greeting", label: "After Greeting" },
+                ])}
+                {design.logoPosition !== "hidden" && (
+                  <Input
+                    value={design.logoUrl}
+                    onChange={(e) => updateDesign("logoUrl", e.target.value)}
+                    placeholder="Logo URL (empty = default)"
+                    className="h-8 text-sm"
+                  />
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs">Greeting Text</Label>
+                <Input
+                  value={design.greetingText}
+                  onChange={(e) => updateDesign("greetingText", e.target.value)}
+                  placeholder="Hi {name},"
+                  className="h-8"
                 />
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  className="gap-1.5 text-xs"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={uploading}
-                >
-                  {uploading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ImagePlus className="h-3.5 w-3.5" />}
-                  Add Image
+                <p className="text-xs text-muted-foreground">Use {"{name}"} for user&apos;s name</p>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs">Footer Image</Label>
+                <div className="flex gap-1">
+                  <Input
+                    value={design.footerImageUrl}
+                    onChange={(e) => updateDesign("footerImageUrl", e.target.value)}
+                    placeholder="Footer image URL (optional)"
+                    className="h-8 text-sm"
+                  />
+                  <input ref={footerFileRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleDesignImageUpload(e, "footerImageUrl")} />
+                  <Button type="button" size="sm" variant="outline" className="h-8 px-2" onClick={() => footerFileRef.current?.click()} disabled={uploading}>
+                    <ImagePlus className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Body Images/Icons */}
+          <Card className="lg:col-span-3">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2">
+                <ImagePlus className="h-4 w-4" />
+                Body Images & Icons
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex gap-2">
+                <Input
+                  value={bodyImageInput}
+                  onChange={(e) => setBodyImageInput(e.target.value)}
+                  placeholder="Image or icon URL"
+                  className="h-8 text-sm"
+                  onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addBodyImage())}
+                />
+                <Button type="button" size="sm" variant="outline" className="h-8" onClick={addBodyImage}>
+                  Add
+                </Button>
+                <input ref={bodyImageFileRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleDesignImageUpload(e, "bodyImage")} />
+                <Button type="button" size="sm" variant="outline" className="h-8 px-2" onClick={() => bodyImageFileRef.current?.click()} disabled={uploading}>
+                  <ImagePlus className="h-3.5 w-3.5" />
                 </Button>
               </div>
-            </div>
-            <Textarea
-              id="body"
-              ref={textareaRef}
-              value={body}
-              onChange={(e) => setBody(e.target.value)}
-              placeholder={"# Hello!\n\nWe have exciting news to share...\n\n- Feature 1\n- Feature 2\n\n[Learn more](https://example.com)"}
-              rows={12}
-              className="font-mono text-sm"
-            />
-          </div>
+              {design.bodyImages.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {design.bodyImages.map((url, i) => (
+                    <div key={i} className="flex items-center gap-1 rounded-md border bg-muted/50 px-2 py-1">
+                      <img src={url} alt="" className="h-6 w-6 rounded object-cover" />
+                      <span className="max-w-[120px] truncate text-xs">{url}</span>
+                      <button type="button" onClick={() => removeBodyImage(i)} className="ml-1 rounded-full p-0.5 hover:bg-muted-foreground/20">
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <p className="text-xs text-muted-foreground">These images/icons will appear between the greeting and body content.</p>
+            </CardContent>
+          </Card>
 
-          {/* Send */}
-          <div className="flex items-center justify-between pt-2">
-            <p className="text-xs text-muted-foreground">
-              Emails are sent in the background via the job queue.
-            </p>
-            <div className="flex gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setShowPreview(!showPreview)}
-                disabled={!body.trim()}
-                className="gap-2"
-              >
-                {showPreview ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                {showPreview ? "Hide Preview" : "Preview"}
-              </Button>
-              <Button
-                onClick={handleSend}
-                disabled={!subject.trim() || !body.trim() || sendMutation.isPending}
-                className="gap-2"
-              >
-                {sendMutation.isPending ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Send className="h-4 w-4" />
+          {/* Footer Settings */}
+          <Card className="lg:col-span-3">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base">Footer Settings</CardTitle>
+            </CardHeader>
+            <CardContent className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="space-y-2">
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={design.showFooter}
+                    onChange={(e) => updateDesign("showFooter", e.target.checked)}
+                    className="rounded"
+                  />
+                  <span className="text-sm">Show Footer</span>
+                </label>
+                {design.showFooter && (
+                  <Input
+                    value={design.footerText}
+                    onChange={(e) => updateDesign("footerText", e.target.value)}
+                    placeholder="Sent from..."
+                    className="h-8"
+                  />
                 )}
-                Send Newsletter
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+              </div>
+              <div className="space-y-2">
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={design.showUnsubscribe}
+                    onChange={(e) => updateDesign("showUnsubscribe", e.target.checked)}
+                    className="rounded"
+                  />
+                  <span className="text-sm">Show Unsubscribe Link</span>
+                </label>
+              </div>
+            </CardContent>
+          </Card>
 
-      {/* Email Preview */}
-      {showPreview && (
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base flex items-center gap-2">
-              <Eye className="h-4 w-4" />
-              Email Preview
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="rounded-lg border bg-white p-8 shadow-sm dark:bg-zinc-950">
-              {/* Simulated email header */}
-              <div className="mb-6 border-b pb-4">
-                <p className="text-xs text-muted-foreground">From: Code Catch &lt;noreply@codecatch.dev&gt;</p>
-                <p className="text-xs text-muted-foreground">To: All {target === "ALL" ? "users" : target === "FREE" ? "free plan users" : "pro & ultra users"}</p>
-                <p className="mt-1 text-sm font-semibold">{subject || "(No subject)"}</p>
-              </div>
-              {/* Rendered body */}
-              <div className="prose prose-sm dark:prose-invert max-w-none">
-                <ReactMarkdown>{body || "*No content yet*"}</ReactMarkdown>
-                <hr className="my-4" />
-                <p className="text-xs text-muted-foreground">
-                  Sent from CodeCatch. If you wish to unsubscribe, manage your notification settings in your profile.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+          {/* Preview in Design Tab */}
+          <div className="lg:col-span-3">
+            {previewCard}
+          </div>
+        </div>
       )}
     </div>
   );

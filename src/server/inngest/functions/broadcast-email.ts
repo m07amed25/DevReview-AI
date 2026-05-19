@@ -2,6 +2,29 @@ import { inngest } from "../client";
 import { db } from "../../db";
 import { sendBroadcastEmail } from "../../email/service";
 
+interface EmailDesign {
+  bgColor: string;
+  containerBg: string;
+  textColor: string;
+  headingColor: string;
+  linkColor: string;
+  buttonBg: string;
+  buttonTextColor: string;
+  fontFamily: string;
+  fontSize: string;
+  headingSize: string;
+  containerWidth: string;
+  padding: string;
+  borderRadius: string;
+  showLogo: boolean;
+  logoUrl: string;
+  logoWidth: string;
+  greetingText: string;
+  showFooter: boolean;
+  footerText: string;
+  showUnsubscribe: boolean;
+}
+
 export const broadcastEmail = inngest.createFunction(
   { 
     id: "broadcast-email", 
@@ -9,17 +32,19 @@ export const broadcastEmail = inngest.createFunction(
     triggers: [{ event: "app/email.broadcast" }]
   },
   async ({ event, step }) => {
-    const { subject, body, target } = event.data as {
+    const { subject, body, target, userIds, design } = event.data as {
       subject: string;
       body: string;
-      target: "ALL" | "FREE" | "PRO" | string[]; // string[] for specific emails
+      target: "ALL" | "FREE" | "PRO" | "CUSTOM";
+      userIds?: string[];
+      design?: EmailDesign;
     };
 
     // 1. Fetch users based on target
     const users = await step.run("fetch-users", async () => {
-      if (Array.isArray(target)) {
+      if (target === "CUSTOM" && userIds?.length) {
         return db.user.findMany({
-          where: { email: { in: target } },
+          where: { id: { in: userIds } },
           select: { email: true, name: true },
         });
       }
@@ -37,7 +62,7 @@ export const broadcastEmail = inngest.createFunction(
       });
     });
 
-    // 2. Send emails in chunks to avoid overwhelming the SMTP server or hitting limits
+    // 2. Send emails in chunks
     const CHUNK_SIZE = 10;
     const results = [];
 
@@ -53,17 +78,15 @@ export const broadcastEmail = inngest.createFunction(
               subject,
               body,
               userName: user.name || undefined,
+              design,
             })
           );
-          // Wait 2s between emails to avoid Gmail 421 rate limit
           await new Promise((r) => setTimeout(r, 2000));
         }
         return sent;
       });
       
       results.push(...chunkResults);
-
-      // Wait 5s between chunks
       await step.sleep(`pause-after-chunk-${i}`, "5s");
     }
 
