@@ -24,14 +24,17 @@ async function request<T>(
 
   console.log("[Fawaterak] Requesting:", url);
 
-  const response = await fetch(url, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${fawaterakConfig.apiKey}`,
-      ...options.headers,
-    },
-  });
+  const response = await fetch(
+    new Request(url, {
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${fawaterakConfig.apiKey}`,
+        ...options.headers,
+      },
+    }),
+    { cache: "no-store" }
+  );
 
   // Check content-type before parsing
   const contentType = response.headers.get("content-type") ?? "";
