@@ -10,8 +10,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { toast } from "sonner";
 
 const methodIcons: Record<string, React.ReactNode> = {
-  "Visa-Mastercard": <CreditCard className="h-8 w-8" />,
+  "Card": <CreditCard className="h-8 w-8" />,
   "Fawry": <Building2 className="h-8 w-8" />,
+  "MobileWallets": <Smartphone className="h-8 w-8" />,
   "Meeza": <Smartphone className="h-8 w-8" />,
   "Aman": <Building2 className="h-8 w-8" />,
 };
@@ -122,29 +123,28 @@ export default function PayPage() {
               <div className="grid gap-3">
                 {methods.map((method) => (
                   <motion.button
-                    key={method.id}
+                    key={method.paymentId}
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
                     onClick={() => {
-                      setSelectedMethod(method.id);
+                      setSelectedMethod(method.paymentId);
                       setSavedCardId(null);
                     }}
                     className={`w-full p-4 rounded-lg border-2 text-left transition-colors ${
-                      selectedMethod === method.id
+                      selectedMethod === method.paymentId
                         ? "border-primary bg-primary/5"
                         : "border-border hover:border-primary/50"
                     }`}
                   >
                     <div className="flex items-center gap-4">
                       <div className="text-muted-foreground">
-                        {methodIcons[method.name] ?? <CreditCard className="h-8 w-8" />}
+                        {methodIcons[method.name_en] ?? <CreditCard className="h-8 w-8" />}
                       </div>
                       <div className="flex-1">
                         <p className="font-medium">{method.name_en}</p>
-                        <p className="text-sm text-muted-foreground">{method.integration_type}</p>
                       </div>
                       {method.logo && (
-                        <img src={method.logo} alt={method.name} className="h-8 w-auto" />
+                        <img src={method.logo} alt={method.name_en} className="h-8 w-auto" />
                       )}
                     </div>
                   </motion.button>

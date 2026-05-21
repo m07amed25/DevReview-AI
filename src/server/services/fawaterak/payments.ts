@@ -14,7 +14,7 @@ export const payments = {
    */
   async getPaymentMethods(): Promise<GetPaymentMethodsResponse["data"]> {
     const response = await fawaterakClient.get<GetPaymentMethodsResponse>(
-      "/api/v2/payment_methods"
+      "/api/v2/getPaymentmethods"
     );
     return response.data;
   },

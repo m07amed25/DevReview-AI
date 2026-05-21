@@ -49,12 +49,11 @@ export interface ExecutePaymentResponse {
 }
 
 export interface PaymentMethod {
-  id: number;
-  name: string;
+  paymentId: number;
   name_en: string;
+  name_ar: string;
+  redirect: string;
   logo: string;
-  status: number;
-  integration_type: string;
 }
 
 export interface GetPaymentMethodsResponse {

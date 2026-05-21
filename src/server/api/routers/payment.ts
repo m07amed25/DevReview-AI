@@ -11,10 +11,9 @@ export const paymentRouter = createTRPCRouter({
   getPaymentMethods: protectedProcedure.query(async () => {
     try {
       const methods = await payments.getPaymentMethods();
-      return methods.filter((m) => m.status === 1);
+      return methods;
     } catch (error) {
       console.error("Failed to fetch payment methods:", error);
-      // Return empty array so UI doesn't break
       return [];
     }
   }),
