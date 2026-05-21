@@ -26,7 +26,7 @@ export const payments = {
     data: ExecutePaymentRequest
   ): Promise<ExecutePaymentResponse["data"]> {
     const response = await fawaterakClient.post<ExecutePaymentResponse>(
-      "/api/v2/invoice",
+      "/api/v2/invoiceInitPay",
       data
     );
     return response.data;
@@ -39,7 +39,7 @@ export const payments = {
     data: CreateInvoiceLinkRequest
   ): Promise<CreateInvoiceLinkResponse["data"]> {
     const response = await fawaterakClient.post<CreateInvoiceLinkResponse>(
-      "/api/v2/invoice/link",
+      "/api/v2/createInvoiceLink",
       data
     );
     return response.data;
@@ -50,7 +50,7 @@ export const payments = {
    */
   async getTransactionData(invoiceId: number): Promise<TransactionDataResponse["data"]> {
     const response = await fawaterakClient.get<TransactionDataResponse>(
-      `/api/v2/invoice/${invoiceId}`
+      `/api/v2/getInvoiceData/${invoiceId}`
     );
     return response.data;
   },
