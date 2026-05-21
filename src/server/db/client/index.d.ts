@@ -47068,10 +47068,12 @@ export namespace Prisma {
 
   export type InvoiceAvgAggregateOutputType = {
     amount: number | null
+    fawaterakInvoiceId: number | null
   }
 
   export type InvoiceSumAggregateOutputType = {
     amount: number | null
+    fawaterakInvoiceId: number | null
   }
 
   export type InvoiceMinAggregateOutputType = {
@@ -47081,6 +47083,12 @@ export namespace Prisma {
     status: $Enums.InvoiceStatus | null
     planId: string | null
     description: string | null
+    fawaterakInvoiceId: number | null
+    fawaterakInvoiceKey: string | null
+    paymentMethodUsed: string | null
+    referenceNumber: string | null
+    currency: string | null
+    paidAt: Date | null
     createdAt: Date | null
   }
 
@@ -47091,6 +47099,12 @@ export namespace Prisma {
     status: $Enums.InvoiceStatus | null
     planId: string | null
     description: string | null
+    fawaterakInvoiceId: number | null
+    fawaterakInvoiceKey: string | null
+    paymentMethodUsed: string | null
+    referenceNumber: string | null
+    currency: string | null
+    paidAt: Date | null
     createdAt: Date | null
   }
 
@@ -47101,6 +47115,12 @@ export namespace Prisma {
     status: number
     planId: number
     description: number
+    fawaterakInvoiceId: number
+    fawaterakInvoiceKey: number
+    paymentMethodUsed: number
+    referenceNumber: number
+    currency: number
+    paidAt: number
     createdAt: number
     _all: number
   }
@@ -47108,10 +47128,12 @@ export namespace Prisma {
 
   export type InvoiceAvgAggregateInputType = {
     amount?: true
+    fawaterakInvoiceId?: true
   }
 
   export type InvoiceSumAggregateInputType = {
     amount?: true
+    fawaterakInvoiceId?: true
   }
 
   export type InvoiceMinAggregateInputType = {
@@ -47121,6 +47143,12 @@ export namespace Prisma {
     status?: true
     planId?: true
     description?: true
+    fawaterakInvoiceId?: true
+    fawaterakInvoiceKey?: true
+    paymentMethodUsed?: true
+    referenceNumber?: true
+    currency?: true
+    paidAt?: true
     createdAt?: true
   }
 
@@ -47131,6 +47159,12 @@ export namespace Prisma {
     status?: true
     planId?: true
     description?: true
+    fawaterakInvoiceId?: true
+    fawaterakInvoiceKey?: true
+    paymentMethodUsed?: true
+    referenceNumber?: true
+    currency?: true
+    paidAt?: true
     createdAt?: true
   }
 
@@ -47141,6 +47175,12 @@ export namespace Prisma {
     status?: true
     planId?: true
     description?: true
+    fawaterakInvoiceId?: true
+    fawaterakInvoiceKey?: true
+    paymentMethodUsed?: true
+    referenceNumber?: true
+    currency?: true
+    paidAt?: true
     createdAt?: true
     _all?: true
   }
@@ -47238,6 +47278,12 @@ export namespace Prisma {
     status: $Enums.InvoiceStatus
     planId: string | null
     description: string | null
+    fawaterakInvoiceId: number | null
+    fawaterakInvoiceKey: string | null
+    paymentMethodUsed: string | null
+    referenceNumber: string | null
+    currency: string
+    paidAt: Date | null
     createdAt: Date
     _count: InvoiceCountAggregateOutputType | null
     _avg: InvoiceAvgAggregateOutputType | null
@@ -47267,6 +47313,12 @@ export namespace Prisma {
     status?: boolean
     planId?: boolean
     description?: boolean
+    fawaterakInvoiceId?: boolean
+    fawaterakInvoiceKey?: boolean
+    paymentMethodUsed?: boolean
+    referenceNumber?: boolean
+    currency?: boolean
+    paidAt?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["invoice"]>
@@ -47278,6 +47330,12 @@ export namespace Prisma {
     status?: boolean
     planId?: boolean
     description?: boolean
+    fawaterakInvoiceId?: boolean
+    fawaterakInvoiceKey?: boolean
+    paymentMethodUsed?: boolean
+    referenceNumber?: boolean
+    currency?: boolean
+    paidAt?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["invoice"]>
@@ -47289,6 +47347,12 @@ export namespace Prisma {
     status?: boolean
     planId?: boolean
     description?: boolean
+    fawaterakInvoiceId?: boolean
+    fawaterakInvoiceKey?: boolean
+    paymentMethodUsed?: boolean
+    referenceNumber?: boolean
+    currency?: boolean
+    paidAt?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["invoice"]>
@@ -47300,10 +47364,16 @@ export namespace Prisma {
     status?: boolean
     planId?: boolean
     description?: boolean
+    fawaterakInvoiceId?: boolean
+    fawaterakInvoiceKey?: boolean
+    paymentMethodUsed?: boolean
+    referenceNumber?: boolean
+    currency?: boolean
+    paidAt?: boolean
     createdAt?: boolean
   }
 
-  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "amount" | "status" | "planId" | "description" | "createdAt", ExtArgs["result"]["invoice"]>
+  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "amount" | "status" | "planId" | "description" | "fawaterakInvoiceId" | "fawaterakInvoiceKey" | "paymentMethodUsed" | "referenceNumber" | "currency" | "paidAt" | "createdAt", ExtArgs["result"]["invoice"]>
   export type InvoiceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -47329,6 +47399,18 @@ export namespace Prisma {
       status: $Enums.InvoiceStatus
       planId: string | null
       description: string | null
+      fawaterakInvoiceId: number | null
+      fawaterakInvoiceKey: string | null
+      /**
+       * "Visa-Mastercard", "Fawry", etc.
+       */
+      paymentMethodUsed: string | null
+      /**
+       * Fawry code, Aman code, etc.
+       */
+      referenceNumber: string | null
+      currency: string
+      paidAt: Date | null
       createdAt: Date
     }, ExtArgs["result"]["invoice"]>
     composites: {}
@@ -47760,6 +47842,12 @@ export namespace Prisma {
     readonly status: FieldRef<"Invoice", 'InvoiceStatus'>
     readonly planId: FieldRef<"Invoice", 'String'>
     readonly description: FieldRef<"Invoice", 'String'>
+    readonly fawaterakInvoiceId: FieldRef<"Invoice", 'Int'>
+    readonly fawaterakInvoiceKey: FieldRef<"Invoice", 'String'>
+    readonly paymentMethodUsed: FieldRef<"Invoice", 'String'>
+    readonly referenceNumber: FieldRef<"Invoice", 'String'>
+    readonly currency: FieldRef<"Invoice", 'String'>
+    readonly paidAt: FieldRef<"Invoice", 'DateTime'>
     readonly createdAt: FieldRef<"Invoice", 'DateTime'>
   }
     
@@ -50354,6 +50442,9 @@ export namespace Prisma {
     expiryYear: number | null
     isDefault: boolean | null
     fingerprint: string | null
+    fawaterakToken: string | null
+    customerUniqueId: string | null
+    cardTokenUniqueId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -50367,6 +50458,9 @@ export namespace Prisma {
     expiryYear: number | null
     isDefault: boolean | null
     fingerprint: string | null
+    fawaterakToken: string | null
+    customerUniqueId: string | null
+    cardTokenUniqueId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -50380,6 +50474,9 @@ export namespace Prisma {
     expiryYear: number
     isDefault: number
     fingerprint: number
+    fawaterakToken: number
+    customerUniqueId: number
+    cardTokenUniqueId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -50405,6 +50502,9 @@ export namespace Prisma {
     expiryYear?: true
     isDefault?: true
     fingerprint?: true
+    fawaterakToken?: true
+    customerUniqueId?: true
+    cardTokenUniqueId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -50418,6 +50518,9 @@ export namespace Prisma {
     expiryYear?: true
     isDefault?: true
     fingerprint?: true
+    fawaterakToken?: true
+    customerUniqueId?: true
+    cardTokenUniqueId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -50431,6 +50534,9 @@ export namespace Prisma {
     expiryYear?: true
     isDefault?: true
     fingerprint?: true
+    fawaterakToken?: true
+    customerUniqueId?: true
+    cardTokenUniqueId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -50531,6 +50637,9 @@ export namespace Prisma {
     expiryYear: number
     isDefault: boolean
     fingerprint: string | null
+    fawaterakToken: string | null
+    customerUniqueId: string | null
+    cardTokenUniqueId: string | null
     createdAt: Date
     updatedAt: Date
     _count: PaymentMethodCountAggregateOutputType | null
@@ -50563,6 +50672,9 @@ export namespace Prisma {
     expiryYear?: boolean
     isDefault?: boolean
     fingerprint?: boolean
+    fawaterakToken?: boolean
+    customerUniqueId?: boolean
+    cardTokenUniqueId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     billingInfo?: boolean | BillingInfoDefaultArgs<ExtArgs>
@@ -50577,6 +50689,9 @@ export namespace Prisma {
     expiryYear?: boolean
     isDefault?: boolean
     fingerprint?: boolean
+    fawaterakToken?: boolean
+    customerUniqueId?: boolean
+    cardTokenUniqueId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     billingInfo?: boolean | BillingInfoDefaultArgs<ExtArgs>
@@ -50591,6 +50706,9 @@ export namespace Prisma {
     expiryYear?: boolean
     isDefault?: boolean
     fingerprint?: boolean
+    fawaterakToken?: boolean
+    customerUniqueId?: boolean
+    cardTokenUniqueId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     billingInfo?: boolean | BillingInfoDefaultArgs<ExtArgs>
@@ -50605,11 +50723,14 @@ export namespace Prisma {
     expiryYear?: boolean
     isDefault?: boolean
     fingerprint?: boolean
+    fawaterakToken?: boolean
+    customerUniqueId?: boolean
+    cardTokenUniqueId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type PaymentMethodOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "billingInfoId" | "cardBrand" | "lastFour" | "expiryMonth" | "expiryYear" | "isDefault" | "fingerprint" | "createdAt" | "updatedAt", ExtArgs["result"]["paymentMethod"]>
+  export type PaymentMethodOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "billingInfoId" | "cardBrand" | "lastFour" | "expiryMonth" | "expiryYear" | "isDefault" | "fingerprint" | "fawaterakToken" | "customerUniqueId" | "cardTokenUniqueId" | "createdAt" | "updatedAt", ExtArgs["result"]["paymentMethod"]>
   export type PaymentMethodInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     billingInfo?: boolean | BillingInfoDefaultArgs<ExtArgs>
   }
@@ -50637,6 +50758,18 @@ export namespace Prisma {
        * Encrypted card fingerprint for deduplication — never store full card numbers
        */
       fingerprint: string | null
+      /**
+       * Fawaterak token used to charge this card
+       */
+      fawaterakToken: string | null
+      /**
+       * Stable per-user ID sent to Fawaterak
+       */
+      customerUniqueId: string | null
+      /**
+       * Returned by Fawaterak; needed to delete the token
+       */
+      cardTokenUniqueId: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["paymentMethod"]>
@@ -51071,6 +51204,9 @@ export namespace Prisma {
     readonly expiryYear: FieldRef<"PaymentMethod", 'Int'>
     readonly isDefault: FieldRef<"PaymentMethod", 'Boolean'>
     readonly fingerprint: FieldRef<"PaymentMethod", 'String'>
+    readonly fawaterakToken: FieldRef<"PaymentMethod", 'String'>
+    readonly customerUniqueId: FieldRef<"PaymentMethod", 'String'>
+    readonly cardTokenUniqueId: FieldRef<"PaymentMethod", 'String'>
     readonly createdAt: FieldRef<"PaymentMethod", 'DateTime'>
     readonly updatedAt: FieldRef<"PaymentMethod", 'DateTime'>
   }
@@ -54111,6 +54247,12 @@ export namespace Prisma {
     status: 'status',
     planId: 'planId',
     description: 'description',
+    fawaterakInvoiceId: 'fawaterakInvoiceId',
+    fawaterakInvoiceKey: 'fawaterakInvoiceKey',
+    paymentMethodUsed: 'paymentMethodUsed',
+    referenceNumber: 'referenceNumber',
+    currency: 'currency',
+    paidAt: 'paidAt',
     createdAt: 'createdAt'
   };
 
@@ -54153,6 +54295,9 @@ export namespace Prisma {
     expiryYear: 'expiryYear',
     isDefault: 'isDefault',
     fingerprint: 'fingerprint',
+    fawaterakToken: 'fawaterakToken',
+    customerUniqueId: 'customerUniqueId',
+    cardTokenUniqueId: 'cardTokenUniqueId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -57669,6 +57814,12 @@ export namespace Prisma {
     status?: EnumInvoiceStatusFilter<"Invoice"> | $Enums.InvoiceStatus
     planId?: StringNullableFilter<"Invoice"> | string | null
     description?: StringNullableFilter<"Invoice"> | string | null
+    fawaterakInvoiceId?: IntNullableFilter<"Invoice"> | number | null
+    fawaterakInvoiceKey?: StringNullableFilter<"Invoice"> | string | null
+    paymentMethodUsed?: StringNullableFilter<"Invoice"> | string | null
+    referenceNumber?: StringNullableFilter<"Invoice"> | string | null
+    currency?: StringFilter<"Invoice"> | string
+    paidAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     createdAt?: DateTimeFilter<"Invoice"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
@@ -57680,12 +57831,19 @@ export namespace Prisma {
     status?: SortOrder
     planId?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
+    fawaterakInvoiceId?: SortOrderInput | SortOrder
+    fawaterakInvoiceKey?: SortOrderInput | SortOrder
+    paymentMethodUsed?: SortOrderInput | SortOrder
+    referenceNumber?: SortOrderInput | SortOrder
+    currency?: SortOrder
+    paidAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     user?: UserOrderByWithRelationInput
   }
 
   export type InvoiceWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    fawaterakInvoiceId?: number
     AND?: InvoiceWhereInput | InvoiceWhereInput[]
     OR?: InvoiceWhereInput[]
     NOT?: InvoiceWhereInput | InvoiceWhereInput[]
@@ -57694,9 +57852,14 @@ export namespace Prisma {
     status?: EnumInvoiceStatusFilter<"Invoice"> | $Enums.InvoiceStatus
     planId?: StringNullableFilter<"Invoice"> | string | null
     description?: StringNullableFilter<"Invoice"> | string | null
+    fawaterakInvoiceKey?: StringNullableFilter<"Invoice"> | string | null
+    paymentMethodUsed?: StringNullableFilter<"Invoice"> | string | null
+    referenceNumber?: StringNullableFilter<"Invoice"> | string | null
+    currency?: StringFilter<"Invoice"> | string
+    paidAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     createdAt?: DateTimeFilter<"Invoice"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }, "id">
+  }, "id" | "fawaterakInvoiceId">
 
   export type InvoiceOrderByWithAggregationInput = {
     id?: SortOrder
@@ -57705,6 +57868,12 @@ export namespace Prisma {
     status?: SortOrder
     planId?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
+    fawaterakInvoiceId?: SortOrderInput | SortOrder
+    fawaterakInvoiceKey?: SortOrderInput | SortOrder
+    paymentMethodUsed?: SortOrderInput | SortOrder
+    referenceNumber?: SortOrderInput | SortOrder
+    currency?: SortOrder
+    paidAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: InvoiceCountOrderByAggregateInput
     _avg?: InvoiceAvgOrderByAggregateInput
@@ -57723,6 +57892,12 @@ export namespace Prisma {
     status?: EnumInvoiceStatusWithAggregatesFilter<"Invoice"> | $Enums.InvoiceStatus
     planId?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
     description?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
+    fawaterakInvoiceId?: IntNullableWithAggregatesFilter<"Invoice"> | number | null
+    fawaterakInvoiceKey?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
+    paymentMethodUsed?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
+    referenceNumber?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
+    currency?: StringWithAggregatesFilter<"Invoice"> | string
+    paidAt?: DateTimeNullableWithAggregatesFilter<"Invoice"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Invoice"> | Date | string
   }
 
@@ -57874,6 +58049,9 @@ export namespace Prisma {
     expiryYear?: IntFilter<"PaymentMethod"> | number
     isDefault?: BoolFilter<"PaymentMethod"> | boolean
     fingerprint?: StringNullableFilter<"PaymentMethod"> | string | null
+    fawaterakToken?: StringNullableFilter<"PaymentMethod"> | string | null
+    customerUniqueId?: StringNullableFilter<"PaymentMethod"> | string | null
+    cardTokenUniqueId?: StringNullableFilter<"PaymentMethod"> | string | null
     createdAt?: DateTimeFilter<"PaymentMethod"> | Date | string
     updatedAt?: DateTimeFilter<"PaymentMethod"> | Date | string
     billingInfo?: XOR<BillingInfoScalarRelationFilter, BillingInfoWhereInput>
@@ -57888,6 +58066,9 @@ export namespace Prisma {
     expiryYear?: SortOrder
     isDefault?: SortOrder
     fingerprint?: SortOrderInput | SortOrder
+    fawaterakToken?: SortOrderInput | SortOrder
+    customerUniqueId?: SortOrderInput | SortOrder
+    cardTokenUniqueId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     billingInfo?: BillingInfoOrderByWithRelationInput
@@ -57895,6 +58076,7 @@ export namespace Prisma {
 
   export type PaymentMethodWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    fawaterakToken?: string
     AND?: PaymentMethodWhereInput | PaymentMethodWhereInput[]
     OR?: PaymentMethodWhereInput[]
     NOT?: PaymentMethodWhereInput | PaymentMethodWhereInput[]
@@ -57905,10 +58087,12 @@ export namespace Prisma {
     expiryYear?: IntFilter<"PaymentMethod"> | number
     isDefault?: BoolFilter<"PaymentMethod"> | boolean
     fingerprint?: StringNullableFilter<"PaymentMethod"> | string | null
+    customerUniqueId?: StringNullableFilter<"PaymentMethod"> | string | null
+    cardTokenUniqueId?: StringNullableFilter<"PaymentMethod"> | string | null
     createdAt?: DateTimeFilter<"PaymentMethod"> | Date | string
     updatedAt?: DateTimeFilter<"PaymentMethod"> | Date | string
     billingInfo?: XOR<BillingInfoScalarRelationFilter, BillingInfoWhereInput>
-  }, "id">
+  }, "id" | "fawaterakToken">
 
   export type PaymentMethodOrderByWithAggregationInput = {
     id?: SortOrder
@@ -57919,6 +58103,9 @@ export namespace Prisma {
     expiryYear?: SortOrder
     isDefault?: SortOrder
     fingerprint?: SortOrderInput | SortOrder
+    fawaterakToken?: SortOrderInput | SortOrder
+    customerUniqueId?: SortOrderInput | SortOrder
+    cardTokenUniqueId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: PaymentMethodCountOrderByAggregateInput
@@ -57940,6 +58127,9 @@ export namespace Prisma {
     expiryYear?: IntWithAggregatesFilter<"PaymentMethod"> | number
     isDefault?: BoolWithAggregatesFilter<"PaymentMethod"> | boolean
     fingerprint?: StringNullableWithAggregatesFilter<"PaymentMethod"> | string | null
+    fawaterakToken?: StringNullableWithAggregatesFilter<"PaymentMethod"> | string | null
+    customerUniqueId?: StringNullableWithAggregatesFilter<"PaymentMethod"> | string | null
+    cardTokenUniqueId?: StringNullableWithAggregatesFilter<"PaymentMethod"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"PaymentMethod"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"PaymentMethod"> | Date | string
   }
@@ -61453,6 +61643,12 @@ export namespace Prisma {
     status?: $Enums.InvoiceStatus
     planId?: string | null
     description?: string | null
+    fawaterakInvoiceId?: number | null
+    fawaterakInvoiceKey?: string | null
+    paymentMethodUsed?: string | null
+    referenceNumber?: string | null
+    currency?: string
+    paidAt?: Date | string | null
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutInvoicesInput
   }
@@ -61464,6 +61660,12 @@ export namespace Prisma {
     status?: $Enums.InvoiceStatus
     planId?: string | null
     description?: string | null
+    fawaterakInvoiceId?: number | null
+    fawaterakInvoiceKey?: string | null
+    paymentMethodUsed?: string | null
+    referenceNumber?: string | null
+    currency?: string
+    paidAt?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -61473,6 +61675,12 @@ export namespace Prisma {
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     planId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    fawaterakInvoiceId?: NullableIntFieldUpdateOperationsInput | number | null
+    fawaterakInvoiceKey?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentMethodUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    currency?: StringFieldUpdateOperationsInput | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutInvoicesNestedInput
   }
@@ -61484,6 +61692,12 @@ export namespace Prisma {
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     planId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    fawaterakInvoiceId?: NullableIntFieldUpdateOperationsInput | number | null
+    fawaterakInvoiceKey?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentMethodUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    currency?: StringFieldUpdateOperationsInput | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -61494,6 +61708,12 @@ export namespace Prisma {
     status?: $Enums.InvoiceStatus
     planId?: string | null
     description?: string | null
+    fawaterakInvoiceId?: number | null
+    fawaterakInvoiceKey?: string | null
+    paymentMethodUsed?: string | null
+    referenceNumber?: string | null
+    currency?: string
+    paidAt?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -61503,6 +61723,12 @@ export namespace Prisma {
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     planId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    fawaterakInvoiceId?: NullableIntFieldUpdateOperationsInput | number | null
+    fawaterakInvoiceKey?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentMethodUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    currency?: StringFieldUpdateOperationsInput | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -61513,6 +61739,12 @@ export namespace Prisma {
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     planId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    fawaterakInvoiceId?: NullableIntFieldUpdateOperationsInput | number | null
+    fawaterakInvoiceKey?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentMethodUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    currency?: StringFieldUpdateOperationsInput | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -61674,6 +61906,9 @@ export namespace Prisma {
     expiryYear: number
     isDefault?: boolean
     fingerprint?: string | null
+    fawaterakToken?: string | null
+    customerUniqueId?: string | null
+    cardTokenUniqueId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     billingInfo: BillingInfoCreateNestedOneWithoutPaymentMethodsInput
@@ -61688,6 +61923,9 @@ export namespace Prisma {
     expiryYear: number
     isDefault?: boolean
     fingerprint?: string | null
+    fawaterakToken?: string | null
+    customerUniqueId?: string | null
+    cardTokenUniqueId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -61700,6 +61938,9 @@ export namespace Prisma {
     expiryYear?: IntFieldUpdateOperationsInput | number
     isDefault?: BoolFieldUpdateOperationsInput | boolean
     fingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    fawaterakToken?: NullableStringFieldUpdateOperationsInput | string | null
+    customerUniqueId?: NullableStringFieldUpdateOperationsInput | string | null
+    cardTokenUniqueId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     billingInfo?: BillingInfoUpdateOneRequiredWithoutPaymentMethodsNestedInput
@@ -61714,6 +61955,9 @@ export namespace Prisma {
     expiryYear?: IntFieldUpdateOperationsInput | number
     isDefault?: BoolFieldUpdateOperationsInput | boolean
     fingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    fawaterakToken?: NullableStringFieldUpdateOperationsInput | string | null
+    customerUniqueId?: NullableStringFieldUpdateOperationsInput | string | null
+    cardTokenUniqueId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -61727,6 +61971,9 @@ export namespace Prisma {
     expiryYear: number
     isDefault?: boolean
     fingerprint?: string | null
+    fawaterakToken?: string | null
+    customerUniqueId?: string | null
+    cardTokenUniqueId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -61739,6 +61986,9 @@ export namespace Prisma {
     expiryYear?: IntFieldUpdateOperationsInput | number
     isDefault?: BoolFieldUpdateOperationsInput | boolean
     fingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    fawaterakToken?: NullableStringFieldUpdateOperationsInput | string | null
+    customerUniqueId?: NullableStringFieldUpdateOperationsInput | string | null
+    cardTokenUniqueId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -61752,6 +62002,9 @@ export namespace Prisma {
     expiryYear?: IntFieldUpdateOperationsInput | number
     isDefault?: BoolFieldUpdateOperationsInput | boolean
     fingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    fawaterakToken?: NullableStringFieldUpdateOperationsInput | string | null
+    customerUniqueId?: NullableStringFieldUpdateOperationsInput | string | null
+    cardTokenUniqueId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -64484,11 +64737,18 @@ export namespace Prisma {
     status?: SortOrder
     planId?: SortOrder
     description?: SortOrder
+    fawaterakInvoiceId?: SortOrder
+    fawaterakInvoiceKey?: SortOrder
+    paymentMethodUsed?: SortOrder
+    referenceNumber?: SortOrder
+    currency?: SortOrder
+    paidAt?: SortOrder
     createdAt?: SortOrder
   }
 
   export type InvoiceAvgOrderByAggregateInput = {
     amount?: SortOrder
+    fawaterakInvoiceId?: SortOrder
   }
 
   export type InvoiceMaxOrderByAggregateInput = {
@@ -64498,6 +64758,12 @@ export namespace Prisma {
     status?: SortOrder
     planId?: SortOrder
     description?: SortOrder
+    fawaterakInvoiceId?: SortOrder
+    fawaterakInvoiceKey?: SortOrder
+    paymentMethodUsed?: SortOrder
+    referenceNumber?: SortOrder
+    currency?: SortOrder
+    paidAt?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -64508,11 +64774,18 @@ export namespace Prisma {
     status?: SortOrder
     planId?: SortOrder
     description?: SortOrder
+    fawaterakInvoiceId?: SortOrder
+    fawaterakInvoiceKey?: SortOrder
+    paymentMethodUsed?: SortOrder
+    referenceNumber?: SortOrder
+    currency?: SortOrder
+    paidAt?: SortOrder
     createdAt?: SortOrder
   }
 
   export type InvoiceSumOrderByAggregateInput = {
     amount?: SortOrder
+    fawaterakInvoiceId?: SortOrder
   }
 
   export type EnumInvoiceStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -64617,6 +64890,9 @@ export namespace Prisma {
     expiryYear?: SortOrder
     isDefault?: SortOrder
     fingerprint?: SortOrder
+    fawaterakToken?: SortOrder
+    customerUniqueId?: SortOrder
+    cardTokenUniqueId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -64635,6 +64911,9 @@ export namespace Prisma {
     expiryYear?: SortOrder
     isDefault?: SortOrder
     fingerprint?: SortOrder
+    fawaterakToken?: SortOrder
+    customerUniqueId?: SortOrder
+    cardTokenUniqueId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -64648,6 +64927,9 @@ export namespace Prisma {
     expiryYear?: SortOrder
     isDefault?: SortOrder
     fingerprint?: SortOrder
+    fawaterakToken?: SortOrder
+    customerUniqueId?: SortOrder
+    cardTokenUniqueId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -68353,6 +68635,12 @@ export namespace Prisma {
     status?: $Enums.InvoiceStatus
     planId?: string | null
     description?: string | null
+    fawaterakInvoiceId?: number | null
+    fawaterakInvoiceKey?: string | null
+    paymentMethodUsed?: string | null
+    referenceNumber?: string | null
+    currency?: string
+    paidAt?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -68362,6 +68650,12 @@ export namespace Prisma {
     status?: $Enums.InvoiceStatus
     planId?: string | null
     description?: string | null
+    fawaterakInvoiceId?: number | null
+    fawaterakInvoiceKey?: string | null
+    paymentMethodUsed?: string | null
+    referenceNumber?: string | null
+    currency?: string
+    paidAt?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -68884,6 +69178,12 @@ export namespace Prisma {
     status?: EnumInvoiceStatusFilter<"Invoice"> | $Enums.InvoiceStatus
     planId?: StringNullableFilter<"Invoice"> | string | null
     description?: StringNullableFilter<"Invoice"> | string | null
+    fawaterakInvoiceId?: IntNullableFilter<"Invoice"> | number | null
+    fawaterakInvoiceKey?: StringNullableFilter<"Invoice"> | string | null
+    paymentMethodUsed?: StringNullableFilter<"Invoice"> | string | null
+    referenceNumber?: StringNullableFilter<"Invoice"> | string | null
+    currency?: StringFilter<"Invoice"> | string
+    paidAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     createdAt?: DateTimeFilter<"Invoice"> | Date | string
   }
 
@@ -75915,6 +76215,9 @@ export namespace Prisma {
     expiryYear: number
     isDefault?: boolean
     fingerprint?: string | null
+    fawaterakToken?: string | null
+    customerUniqueId?: string | null
+    cardTokenUniqueId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -75927,6 +76230,9 @@ export namespace Prisma {
     expiryYear: number
     isDefault?: boolean
     fingerprint?: string | null
+    fawaterakToken?: string | null
+    customerUniqueId?: string | null
+    cardTokenUniqueId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -76082,6 +76388,9 @@ export namespace Prisma {
     expiryYear?: IntFilter<"PaymentMethod"> | number
     isDefault?: BoolFilter<"PaymentMethod"> | boolean
     fingerprint?: StringNullableFilter<"PaymentMethod"> | string | null
+    fawaterakToken?: StringNullableFilter<"PaymentMethod"> | string | null
+    customerUniqueId?: StringNullableFilter<"PaymentMethod"> | string | null
+    cardTokenUniqueId?: StringNullableFilter<"PaymentMethod"> | string | null
     createdAt?: DateTimeFilter<"PaymentMethod"> | Date | string
     updatedAt?: DateTimeFilter<"PaymentMethod"> | Date | string
   }
@@ -76324,6 +76633,12 @@ export namespace Prisma {
     status?: $Enums.InvoiceStatus
     planId?: string | null
     description?: string | null
+    fawaterakInvoiceId?: number | null
+    fawaterakInvoiceKey?: string | null
+    paymentMethodUsed?: string | null
+    referenceNumber?: string | null
+    currency?: string
+    paidAt?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -76845,6 +77160,12 @@ export namespace Prisma {
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     planId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    fawaterakInvoiceId?: NullableIntFieldUpdateOperationsInput | number | null
+    fawaterakInvoiceKey?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentMethodUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    currency?: StringFieldUpdateOperationsInput | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -76854,6 +77175,12 @@ export namespace Prisma {
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     planId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    fawaterakInvoiceId?: NullableIntFieldUpdateOperationsInput | number | null
+    fawaterakInvoiceKey?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentMethodUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    currency?: StringFieldUpdateOperationsInput | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -76863,6 +77190,12 @@ export namespace Prisma {
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     planId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    fawaterakInvoiceId?: NullableIntFieldUpdateOperationsInput | number | null
+    fawaterakInvoiceKey?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentMethodUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    currency?: StringFieldUpdateOperationsInput | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -77788,6 +78121,9 @@ export namespace Prisma {
     expiryYear: number
     isDefault?: boolean
     fingerprint?: string | null
+    fawaterakToken?: string | null
+    customerUniqueId?: string | null
+    cardTokenUniqueId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -77800,6 +78136,9 @@ export namespace Prisma {
     expiryYear?: IntFieldUpdateOperationsInput | number
     isDefault?: BoolFieldUpdateOperationsInput | boolean
     fingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    fawaterakToken?: NullableStringFieldUpdateOperationsInput | string | null
+    customerUniqueId?: NullableStringFieldUpdateOperationsInput | string | null
+    cardTokenUniqueId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -77812,6 +78151,9 @@ export namespace Prisma {
     expiryYear?: IntFieldUpdateOperationsInput | number
     isDefault?: BoolFieldUpdateOperationsInput | boolean
     fingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    fawaterakToken?: NullableStringFieldUpdateOperationsInput | string | null
+    customerUniqueId?: NullableStringFieldUpdateOperationsInput | string | null
+    cardTokenUniqueId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -77824,6 +78166,9 @@ export namespace Prisma {
     expiryYear?: IntFieldUpdateOperationsInput | number
     isDefault?: BoolFieldUpdateOperationsInput | boolean
     fingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    fawaterakToken?: NullableStringFieldUpdateOperationsInput | string | null
+    customerUniqueId?: NullableStringFieldUpdateOperationsInput | string | null
+    cardTokenUniqueId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

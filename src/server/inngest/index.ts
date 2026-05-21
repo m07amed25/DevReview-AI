@@ -9,6 +9,11 @@ export {
 export { generateDiagram } from "./functions/generate-diagram";
 export { securityScan } from "./functions/security-scan";
 export { broadcastEmail } from "./functions/broadcast-email";
+export {
+  processPaymentSuccess,
+  processPaymentFailed,
+  processRefund,
+} from "./functions/subscription";
 
 import { reviewPR } from "./functions/review-pr";
 import { postReviewToGitHub } from "./functions/post-review-to-github";
@@ -20,6 +25,11 @@ import {
 import { generateDiagram } from "./functions/generate-diagram";
 import { securityScan } from "./functions/security-scan";
 import { broadcastEmail } from "./functions/broadcast-email";
+import {
+  processPaymentSuccess,
+  processPaymentFailed,
+  processRefund,
+} from "./functions/subscription";
 
 export const functions = [
   reviewPR,
@@ -30,4 +40,7 @@ export const functions = [
   generateDiagram,
   securityScan,
   broadcastEmail,
+  processPaymentSuccess,
+  processPaymentFailed,
+  processRefund,
 ];

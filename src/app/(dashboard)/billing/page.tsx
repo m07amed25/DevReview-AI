@@ -49,13 +49,9 @@ export default function BillingPage() {
 
   if (!user) return null;
 
-  const handleUpgrade = async () => {
-    setIsUpgrading(true);
-    await new Promise((resolve) => setTimeout(resolve, 2500));
-    setIsUpgrading(false);
-    toast.success("Redirecting to Stripe...", {
-      description: "Secure payment session is being initialized.",
-    });
+  const handleUpgrade = () => {
+    // Redirect to pricing page or payment flow
+    window.location.href = "/billing/pay?plan=pro&cycle=monthly";
   };
 
   const handleApplyPromo = () => {

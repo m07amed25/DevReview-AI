@@ -1,0 +1,144 @@
+export interface FawaterakCustomer {
+  first_name: string;
+  last_name: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+  customer_unique_id?: string;
+}
+
+export interface FawaterakCartItem {
+  name: string;
+  price: string;
+  quantity: string;
+}
+
+export interface FawaterakRedirectionUrls {
+  successUrl?: string;
+  failUrl?: string;
+  pendingUrl?: string;
+  webhookUrl?: string;
+}
+
+export interface ExecutePaymentRequest {
+  payment_method_id: number;
+  cartTotal: string;
+  currency: string;
+  customer: FawaterakCustomer;
+  cartItems: FawaterakCartItem[];
+  redirectionUrls: FawaterakRedirectionUrls;
+  invoice_number?: string;
+  payLoad?: Record<string, unknown>;
+}
+
+export interface ExecutePaymentResponse {
+  status: "success";
+  data: {
+    invoice_id: number;
+    invoice_key: string;
+    payment_data: {
+      redirectTo?: string;
+      fawryCode?: string;
+      expireDate?: string;
+      amanCode?: string;
+      masaryCode?: string;
+      meezaReference?: number;
+      meezaQrCode?: string;
+    };
+  };
+}
+
+export interface PaymentMethod {
+  id: number;
+  name: string;
+  name_en: string;
+  logo: string;
+  status: number;
+  integration_type: string;
+}
+
+export interface GetPaymentMethodsResponse {
+  status: "success";
+  data: PaymentMethod[];
+}
+
+export interface CreateInvoiceLinkRequest {
+  invoice_amount: string;
+  invoice_description: string;
+  currency: string;
+  customer?: FawaterakCustomer;
+  webhookUrl?: string;
+  redirect_url?: string;
+  expire_date?: string;
+}
+
+export interface CreateInvoiceLinkResponse {
+  status: "success";
+  data: {
+    url: string;
+    invoice_id: number;
+    invoice_key: string;
+  };
+}
+
+export interface TransactionDataResponse {
+  status: "success";
+  data: {
+    invoice_id: number;
+    invoice_key: string;
+    invoice_amount: string;
+    invoice_description: string;
+    invoice_status: "paid" | "pending" | "failed" | "expired" | "refund";
+    payment_method: string;
+    customer: FawaterakCustomer;
+    created_at: string;
+    paid_at?: string;
+  };
+}
+
+export interface CreateCardTokenRequest {
+  customer_unique_id: string;
+  customer: FawaterakCustomer;
+  redirect_url: string;
+}
+
+export interface CreateCardTokenResponse {
+  status: "success";
+  data: {
+    card_token_screen_url: string;
+    card_token_unique_id: string;
+  };
+}
+
+export interface PayWithTokenRequest {
+  cartTotal: string;
+  currency: string;
+  customer: FawaterakCustomer;
+  cartItems: FawaterakCartItem[];
+  redirectionUrls: FawaterakRedirectionUrls;
+  card_token: string;
+  invoice_number?: string;
+  payLoad?: Record<string, unknown>;
+}
+
+export interface PayWithTokenResponse {
+  status: "success";
+  data: {
+    invoice_id: number;
+    invoice_key: string;
+    transaction_id: string;
+  };
+}
+
+export interface WebhookPayload {
+  invoice_id: number;
+  invoice_key: string;
+  invoice_amount: string;
+  invoice_status: "paid" | "pending" | "failed" | "expired" | "refund";
+  payment_method: string;
+  customer: FawaterakCustomer;
+  created_at: string;
+  paid_at?: string;
+  transaction_id?: string;
+  reference_number?: string;
+}
