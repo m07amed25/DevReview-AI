@@ -86,6 +86,18 @@ export const paymentRouter = createTRPCRouter({
             fawaterakInvoiceId: result.invoice_id,
             fawaterakInvoiceKey: result.invoice_key,
           },
+        }).catch(async (err) => {
+          // Handle unique constraint on fawaterakInvoiceId (stale failed invoice)
+          if (err?.code === "P2002") {
+            await ctx.db.invoice.updateMany({
+              where: { fawaterakInvoiceId: result.invoice_id, id: { not: invoice.id } },
+              data: { fawaterakInvoiceId: null, fawaterakInvoiceKey: null },
+            });
+            await ctx.db.invoice.update({
+              where: { id: invoice.id },
+              data: { fawaterakInvoiceId: result.invoice_id, fawaterakInvoiceKey: result.invoice_key },
+            });
+          } else throw err;
         });
 
         return {
