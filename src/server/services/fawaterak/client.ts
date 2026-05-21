@@ -52,11 +52,13 @@ async function request<T>(
 
   if (!response.ok || data.status !== "success") {
     console.error("[Fawaterak] API error:", data);
-    throw new FawaterakError(
-      data.message || "Fawaterak API request failed",
-      response.status,
-      data
-    );
+    const msg =
+      typeof data.message === "string"
+        ? data.message
+        : typeof data.message === "object" && data.message !== null
+          ? Object.values(data.message).flat().join("; ")
+          : "Fawaterak API request failed";
+    throw new FawaterakError(msg, response.status, data);
   }
 
   return data;

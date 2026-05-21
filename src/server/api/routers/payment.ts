@@ -4,8 +4,8 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { payments, tokenization } from "../../services/fawaterak";
 import { fawaterakConfig } from "../../services/fawaterak/config";
 
-// Currency conversion: cents -> major unit string
-const centsToMajor = (cents: number) => (cents / 100).toFixed(2);
+// Prices are stored in whole EGP — convert to string for Fawaterak
+const toAmountStr = (amount: number) => amount.toFixed(2);
 
 export const paymentRouter = createTRPCRouter({
   getPaymentMethods: protectedProcedure.query(async () => {
@@ -44,7 +44,7 @@ export const paymentRouter = createTRPCRouter({
 
       const amountCents =
         input.billingCycle === "monthly" ? plan.monthlyPrice : Math.round(plan.monthlyPrice * 12 * 0.8);
-      const amountMajor = centsToMajor(amountCents);
+      const amountMajor = toAmountStr(amountCents);
 
       const invoice = await ctx.db.invoice.create({
         data: {
@@ -175,7 +175,7 @@ export const paymentRouter = createTRPCRouter({
 
       const amountCents =
         input.billingCycle === "monthly" ? plan.monthlyPrice : Math.round(plan.monthlyPrice * 12 * 0.8);
-      const amountMajor = centsToMajor(amountCents);
+      const amountMajor = toAmountStr(amountCents);
 
       const invoice = await ctx.db.invoice.create({
         data: {
