@@ -3,6 +3,7 @@ import crypto from "crypto";
 import { z } from "zod";
 import { db } from "@/server/db";
 import { inngest } from "@/server/inngest";
+import { checkUserLimit } from "@/lib/limits";
 import {
   fetchPullRequestByFullName,
   getGitHubAccessToken,
@@ -138,6 +139,9 @@ export async function POST(request: NextRequest) {
   // check and create duplicate review records.
   let review: { id: string } | null = null;
   try {
+    // Enforce plan limits for webhook-triggered reviews
+    await checkUserLimit(db, repository.userId, "reviewsLimit");
+
     review = await db.$transaction(async (tx) => {
       const existing = await tx.review.findFirst({
         where: {
@@ -163,6 +167,12 @@ export async function POST(request: NextRequest) {
       });
     });
   } catch (err) {
+    if (err instanceof Error && err.message.includes("Limit reached")) {
+      return NextResponse.json(
+        { message: err.message },
+        { status: 200 },
+      );
+    }
     console.error("Failed to create review record", err);
     return NextResponse.json(
       { message: "Internal error creating review" },
