@@ -50,6 +50,17 @@ export default function BillingPage() {
     enabled: showPlanPicker,
   });
 
+  const isFreeUpgrade = discount?.type === "PERCENTAGE" && discount.value >= 100;
+
+  const freeUpgrade = trpc.payment.freeUpgrade.useMutation({
+    onSuccess: () => {
+      toast.success("Plan upgraded successfully!");
+      utils.profile.get.invalidate();
+      setShowPlanPicker(false);
+    },
+    onError: (e) => toast.error(e.message),
+  });
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -134,14 +145,22 @@ export default function BillingPage() {
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>Choose a Plan</DialogTitle>
+            {isFreeUpgrade && (
+              <p className="text-sm text-emerald-500 font-medium">Your 100% discount applies — no payment required!</p>
+            )}
           </DialogHeader>
           <div className="space-y-3 mt-2">
             {upgradePlans?.map((p) => (
               <button
                 key={p.id}
+                disabled={freeUpgrade.isPending}
                 onClick={() => {
-                  setShowPlanPicker(false);
-                  window.location.href = `/billing/pay?plan=${p.id}&cycle=monthly`;
+                  if (isFreeUpgrade) {
+                    freeUpgrade.mutate({ planId: p.id, billingCycle: "monthly" });
+                  } else {
+                    setShowPlanPicker(false);
+                    window.location.href = `/billing/pay?plan=${p.id}&cycle=monthly`;
+                  }
                 }}
                 className="w-full p-4 rounded-lg border-2 border-border hover:border-primary/50 text-left transition-colors"
               >
@@ -150,7 +169,7 @@ export default function BillingPage() {
                     <p className="font-semibold">{p.name}</p>
                     <p className="text-sm text-muted-foreground">{p.tagline}</p>
                   </div>
-                  <span className="text-lg font-bold">${p.monthlyPrice}/mo</span>
+                  <span className="text-lg font-bold">{isFreeUpgrade ? "FREE" : `$${p.monthlyPrice}/mo`}</span>
                 </div>
                 <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
                   {p.features.slice(0, 3).map((f, i) => (

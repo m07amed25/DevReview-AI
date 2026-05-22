@@ -319,6 +319,50 @@ export const paymentRouter = createTRPCRouter({
     return billing?.paymentMethods ?? [];
   }),
 
+  freeUpgrade: protectedProcedure
+    .input(z.object({ planId: z.string(), billingCycle: z.enum(["monthly", "yearly"]) }))
+    .mutation(async ({ ctx, input }) => {
+      const plan = await ctx.db.pricingPlan.findUnique({ where: { id: input.planId } });
+      if (!plan) throw new TRPCError({ code: "NOT_FOUND", message: "Plan not found" });
+
+      const settings = await ctx.db.pricingSettings.findUnique({ where: { id: "global" } });
+      const annualDiscount = (settings?.annualDiscount ?? 20) / 100;
+      const basePrice =
+        input.billingCycle === "monthly" ? plan.monthlyPrice : Math.round(plan.monthlyPrice * 12 * (1 - annualDiscount));
+
+      const appliedPromo = await ctx.db.userDiscount.findFirst({
+        where: { userId: ctx.user.id },
+        orderBy: { appliedAt: "desc" },
+      });
+      let finalAmount = basePrice;
+      if (appliedPromo) {
+        const d = await ctx.db.discount.findUnique({ where: { id: appliedPromo.discountId } });
+        if (d) {
+          finalAmount = d.type === "PERCENTAGE"
+            ? Math.round(basePrice * (1 - d.value / 100))
+            : Math.max(0, basePrice - d.value);
+        }
+      }
+
+      if (finalAmount !== 0) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "This plan is not free with your current discount." });
+      }
+
+      const planExpiresAt = new Date();
+      planExpiresAt.setMonth(planExpiresAt.getMonth() + (input.billingCycle === "yearly" ? 12 : 1));
+
+      await ctx.db.invoice.create({
+        data: { userId: ctx.user.id, amount: 0, planId: input.planId, description: `${plan.name} - ${input.billingCycle} (100% discount)`, currency: "USD", status: "PAID", paidAt: new Date() },
+      });
+
+      await ctx.db.user.update({
+        where: { id: ctx.user.id },
+        data: { planId: input.planId, planExpiresAt },
+      });
+
+      return { success: true };
+    }),
+
   getUpgradePlans: protectedProcedure.query(async ({ ctx }) => {
     const user = await ctx.db.user.findUnique({ where: { id: ctx.user.id }, select: { planId: true } });
     return ctx.db.pricingPlan.findMany({

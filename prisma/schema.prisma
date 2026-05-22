@@ -816,14 +816,14 @@ enum DiscountType {
 model Invoice {
   id                  String        @id @default(cuid())
   userId              String
-  amount              Int           /// Amount in cents
+  amount              Int /// Amount in cents
   status              InvoiceStatus @default(PENDING)
   planId              String?
   description         String?
   fawaterakInvoiceId  Int?          @unique
   fawaterakInvoiceKey String?
-  paymentMethodUsed   String?       /// "Visa-Mastercard", "Fawry", etc.
-  referenceNumber     String?       /// Fawry code, Aman code, etc.
+  paymentMethodUsed   String? /// "Visa-Mastercard", "Fawry", etc.
+  referenceNumber     String? /// Fawry code, Aman code, etc.
   currency            String        @default("EGP")
   paidAt              DateTime?
   createdAt           DateTime      @default(now())
@@ -870,24 +870,24 @@ model BillingInfo {
 }
 
 model PaymentMethod {
-  id                 String      @id @default(cuid())
-  billingInfoId      String
-  cardBrand          String
-  lastFour           String      @db.VarChar(4)
-  expiryMonth        Int
-  expiryYear         Int
-  isDefault          Boolean     @default(false)
+  id                String      @id @default(cuid())
+  billingInfoId     String
+  cardBrand         String
+  lastFour          String      @db.VarChar(4)
+  expiryMonth       Int
+  expiryYear        Int
+  isDefault         Boolean     @default(false)
   /// Encrypted card fingerprint for deduplication — never store full card numbers
-  fingerprint        String?
+  fingerprint       String?
   /// Fawaterak token used to charge this card
-  fawaterakToken     String?     @unique
+  fawaterakToken    String?     @unique
   /// Stable per-user ID sent to Fawaterak
-  customerUniqueId   String?
+  customerUniqueId  String?
   /// Returned by Fawaterak; needed to delete the token
-  cardTokenUniqueId  String?
-  createdAt          DateTime    @default(now())
-  updatedAt          DateTime    @updatedAt
-  billingInfo        BillingInfo @relation(fields: [billingInfoId], references: [id], onDelete: Cascade)
+  cardTokenUniqueId String?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  billingInfo       BillingInfo @relation(fields: [billingInfoId], references: [id], onDelete: Cascade)
 
   @@index([billingInfoId])
   @@index([customerUniqueId])

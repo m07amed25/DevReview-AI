@@ -46,7 +46,7 @@ export default function SuccessPage() {
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Amount</span>
                   <span className="font-medium">
-                    {data.invoice.amount * 100} {data.invoice.currency}
+                    {data.invoice.amount} {data.invoice.currency}
                   </span>
                 </div>
                 {data.invoice.planId && (
