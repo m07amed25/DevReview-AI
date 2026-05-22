@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { CheckCircle2, ArrowRight } from "lucide-react";
+import { CheckCircle2, ArrowRight, Loader2 } from "lucide-react";
 import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,11 +12,32 @@ export default function SuccessPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const invoiceId = searchParams.get("invoice");
+  const [activated, setActivated] = useState(false);
 
-  const { data, isLoading } = trpc.payment.getPaymentStatus.useQuery(
+  const { data } = trpc.payment.getPaymentStatus.useQuery(
     { invoiceId: invoiceId! },
-    { enabled: !!invoiceId, refetchInterval: (query) => query.state.data?.status === "paid" ? false : 3000 }
+    { enabled: !!invoiceId }
   );
+
+  const activate = trpc.payment.activatePlan.useMutation({
+    onSuccess: () => setActivated(true),
+    onError: (e) => {
+      // If payment not confirmed yet, retry after 3 seconds
+      if (e.data?.code === "PRECONDITION_FAILED") {
+        setTimeout(() => {
+          if (invoiceId) activate.mutate({ invoiceId });
+        }, 3000);
+      } else {
+        setActivated(true); // Other error (already activated, etc.)
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (invoiceId && !activated && !activate.isPending) {
+      activate.mutate({ invoiceId });
+    }
+  }, [invoiceId]);
 
   return (
     <div className="max-w-md mx-auto py-12 px-4">
@@ -33,11 +54,19 @@ export default function SuccessPage() {
               transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
               className="mx-auto mb-4"
             >
-              <CheckCircle2 className="h-16 w-16 text-emerald-500" />
+              {activated ? (
+                <CheckCircle2 className="h-16 w-16 text-emerald-500" />
+              ) : (
+                <Loader2 className="h-16 w-16 text-primary animate-spin" />
+              )}
             </motion.div>
-            <CardTitle className="text-2xl">Payment Successful</CardTitle>
+            <CardTitle className="text-2xl">
+              {activated ? "Payment Successful" : "Activating your plan..."}
+            </CardTitle>
             <CardDescription>
-              Your payment has been processed successfully
+              {activated
+                ? "Your plan has been upgraded successfully!"
+                : "Please wait while we activate your subscription."}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -57,7 +86,7 @@ export default function SuccessPage() {
                 )}
               </div>
             )}
-            <Button onClick={() => router.push("/billing")} className="w-full">
+            <Button onClick={() => router.push("/billing")} className="w-full" disabled={!activated}>
               Back to Billing
               <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
