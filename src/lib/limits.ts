@@ -33,11 +33,6 @@ export async function checkUserLimit(
     });
   }
 
-  // Admins bypass all limits
-  if (user.role === "ADMIN") {
-    return { limit: null, usage: 0 };
-  }
-
   // If plan has expired, treat as free plan
   const planExpired = user.planExpiresAt && new Date(user.planExpiresAt) < new Date();
   const effectivePlanId = planExpired ? "free" : user.planId;

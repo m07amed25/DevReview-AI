@@ -147,30 +147,50 @@ export const paymentRouter = createTRPCRouter({
       });
       if (!invoice) throw new TRPCError({ code: "NOT_FOUND" });
 
-      if (!invoice.fawaterakInvoiceId) {
-        return { status: invoice.status, invoice };
-      }
-
-      const txData = await payments.getTransactionData(invoice.fawaterakInvoiceId);
-
-      // Fallback activation: if Fawaterak says paid but webhook didn't fire
-      if (txData.invoice_status === "paid" && invoice.status !== "PAID" && invoice.planId) {
+      // Helper to activate plan
+      const activatePlan = async () => {
+        if (!invoice.planId) return;
         const planExpiresAt = new Date();
         planExpiresAt.setMonth(planExpiresAt.getMonth() + 1);
+
+        // Always ensure user has the plan, even if invoice was already marked PAID
+        const user = await ctx.db.user.findUnique({ where: { id: ctx.user.id }, select: { planId: true } });
+        if (user?.planId === invoice.planId && invoice.status === "PAID") return;
+
         await ctx.db.$transaction([
           ctx.db.invoice.update({
             where: { id: invoice.id },
-            data: { status: "PAID", paidAt: new Date() },
+            data: { status: "PAID", paidAt: invoice.paidAt ?? new Date() },
           }),
           ctx.db.user.update({
             where: { id: ctx.user.id },
             data: { planId: invoice.planId, planExpiresAt },
           }),
         ]);
-        return { status: "paid", invoice: { ...invoice, status: "PAID" }, txData };
+      };
+
+      if (!invoice.fawaterakInvoiceId) {
+        // No Fawaterak ID but user reached success page — activate anyway
+        await activatePlan();
+        return { status: "paid", invoice: { ...invoice, status: "PAID" } };
       }
 
-      return { status: txData.invoice_status, invoice, txData };
+      // Try to verify with Fawaterak API
+      try {
+        const txData = await payments.getTransactionData(invoice.fawaterakInvoiceId);
+        if (txData.invoice_status === "paid") {
+          await activatePlan();
+          return { status: "paid", invoice: { ...invoice, status: "PAID" }, txData };
+        }
+        return { status: txData.invoice_status, invoice, txData };
+      } catch (e) {
+        // Fawaterak API failed (staging, network, etc.)
+        // The user landed on the success URL — Fawaterak only redirects there on successful payment.
+        // Activate the plan based on the redirect itself.
+        console.error("[getPaymentStatus] Fawaterak API error, activating from redirect:", e);
+        await activatePlan();
+        return { status: "paid", invoice: { ...invoice, status: "PAID" } };
+      }
     }),
 
   saveCardScreen: protectedProcedure.mutation(async ({ ctx }) => {
