@@ -63,11 +63,18 @@ export async function checkUserLimit(
       limit = user.overrideReposLimit ?? effectivePlan.reposLimit ?? null;
       currentUsage = user._count.repositories;
       break;
-    case "reviewsLimit":
+    case "reviewsLimit": {
       limit =
         user.overrideReviewsLimit ?? effectivePlan.reviewsLimit ?? null;
-      currentUsage = user._count.reviews;
+      // Count only reviews created in the current calendar month
+      const startOfMonth = new Date();
+      startOfMonth.setDate(1);
+      startOfMonth.setHours(0, 0, 0, 0);
+      currentUsage = await db.review.count({
+        where: { userId: userId, createdAt: { gte: startOfMonth } },
+      });
       break;
+    }
     case "seatsLimit": {
       limit = user.overrideSeatsLimit ?? effectivePlan.seatsLimit ?? null;
 

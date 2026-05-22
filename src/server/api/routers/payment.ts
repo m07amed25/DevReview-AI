@@ -152,6 +152,24 @@ export const paymentRouter = createTRPCRouter({
       }
 
       const txData = await payments.getTransactionData(invoice.fawaterakInvoiceId);
+
+      // Fallback activation: if Fawaterak says paid but webhook didn't fire
+      if (txData.invoice_status === "paid" && invoice.status !== "PAID" && invoice.planId) {
+        const planExpiresAt = new Date();
+        planExpiresAt.setMonth(planExpiresAt.getMonth() + 1);
+        await ctx.db.$transaction([
+          ctx.db.invoice.update({
+            where: { id: invoice.id },
+            data: { status: "PAID", paidAt: new Date() },
+          }),
+          ctx.db.user.update({
+            where: { id: ctx.user.id },
+            data: { planId: invoice.planId, planExpiresAt },
+          }),
+        ]);
+        return { status: "paid", invoice: { ...invoice, status: "PAID" }, txData };
+      }
+
       return { status: txData.invoice_status, invoice, txData };
     }),
 
