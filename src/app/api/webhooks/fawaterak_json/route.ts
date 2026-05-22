@@ -73,11 +73,23 @@ export async function POST(request: NextRequest) {
           },
         });
 
-        // Offload subscription activation to Inngest
-        await inngest.send({
-          name: "payment.paid",
-          data: { invoiceId: invoice.id },
-        });
+        // Activate subscription immediately
+        if (invoice.planId) {
+          const planExpiresAt = new Date();
+          planExpiresAt.setMonth(planExpiresAt.getMonth() + 1);
+          await db.user.update({
+            where: { id: invoice.userId },
+            data: { planId: invoice.planId, planExpiresAt },
+          });
+        }
+
+        // Also send to Inngest for email notification (best-effort)
+        try {
+          await inngest.send({
+            name: "payment.paid",
+            data: { invoiceId: invoice.id },
+          });
+        } catch {}
 
         break;
       }

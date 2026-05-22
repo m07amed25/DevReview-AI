@@ -260,7 +260,17 @@ export const paymentRouter = createTRPCRouter({
           fawaterakInvoiceId: result.invoice_id,
           fawaterakInvoiceKey: result.invoice_key,
           paymentMethodUsed: card.cardBrand,
+          status: "PAID",
+          paidAt: new Date(),
         },
+      });
+
+      // Activate subscription immediately for token payments
+      const planExpiresAt = new Date();
+      planExpiresAt.setMonth(planExpiresAt.getMonth() + 1);
+      await ctx.db.user.update({
+        where: { id: ctx.user.id },
+        data: { planId: input.planId, planExpiresAt },
       });
 
       return { invoiceId: invoice.id, transactionId: result.transaction_id };
