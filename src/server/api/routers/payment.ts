@@ -1,4 +1,5 @@
 import { z } from "zod";
+import crypto from "crypto";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { payments, tokenization } from "../../services/fawaterak";
@@ -65,6 +66,7 @@ export const paymentRouter = createTRPCRouter({
 
       const amountMajor = toAmountStr(finalAmount);
 
+      const successToken = crypto.randomBytes(32).toString("hex");
       const invoice = await ctx.db.invoice.create({
         data: {
           userId: ctx.user.id,
@@ -72,6 +74,7 @@ export const paymentRouter = createTRPCRouter({
           planId: input.planId,
           description: `${plan.name} - ${input.billingCycle}`,
           currency: "USD",
+          successToken,
         },
       });
 
@@ -91,7 +94,7 @@ export const paymentRouter = createTRPCRouter({
           },
           cartItems: [{ name: plan.name, price: amountMajor, quantity: "1" }],
           redirectionUrls: {
-            successUrl: `${baseUrl}/billing/success?invoice=${invoice.id}`,
+            successUrl: `${baseUrl}/billing/success?invoice=${invoice.id}&token=${successToken}`,
             failUrl: `${baseUrl}/billing/failed?invoice=${invoice.id}`,
             pendingUrl: `${baseUrl}/billing/pending?invoice=${invoice.id}`,
             webhookUrl: `${baseUrl}/api/webhooks/fawaterak_json`,
@@ -141,7 +144,7 @@ export const paymentRouter = createTRPCRouter({
 
   // Called by the success page to activate the plan after payment
   activatePlan: protectedProcedure
-    .input(z.object({ invoiceId: z.string() }))
+    .input(z.object({ invoiceId: z.string(), token: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const invoice = await ctx.db.invoice.findFirst({
         where: { id: input.invoiceId, userId: ctx.user.id },
@@ -149,27 +152,19 @@ export const paymentRouter = createTRPCRouter({
       if (!invoice) throw new TRPCError({ code: "NOT_FOUND" });
       if (!invoice.planId) throw new TRPCError({ code: "BAD_REQUEST", message: "Invoice has no plan" });
 
-      // If already activated, return early
+      // Already activated
       const user = await ctx.db.user.findUnique({ where: { id: ctx.user.id }, select: { planId: true } });
       if (user?.planId === invoice.planId && invoice.status === "PAID") {
         return { success: true, planId: invoice.planId };
       }
 
-      // Verify payment: either already PAID by webhook, or confirm with Fawaterak API
-      let verified = invoice.status === "PAID";
-
-      if (!verified && invoice.fawaterakInvoiceId) {
-        try {
-          const txData = await payments.getTransactionData(invoice.fawaterakInvoiceId);
-          verified = txData.invoice_status === "paid";
-        } catch {
-          // Fawaterak API unreachable — do NOT activate without verification
-          verified = false;
-        }
+      if (invoice.status === "FAILED") {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "This payment failed." });
       }
 
-      if (!verified) {
-        throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Payment not confirmed yet. Please wait or contact support." });
+      // Verify the secret token — only Fawaterak's redirect has this
+      if (!invoice.successToken || invoice.successToken !== input.token) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Invalid token." });
       }
 
       const planExpiresAt = new Date();
@@ -177,7 +172,7 @@ export const paymentRouter = createTRPCRouter({
 
       await ctx.db.invoice.update({
         where: { id: invoice.id },
-        data: { status: "PAID", paidAt: invoice.paidAt ?? new Date() },
+        data: { status: "PAID", paidAt: invoice.paidAt ?? new Date(), successToken: null },
       });
       await ctx.db.user.update({
         where: { id: ctx.user.id },

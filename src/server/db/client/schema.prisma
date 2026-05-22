@@ -816,7 +816,7 @@ enum DiscountType {
 model Invoice {
   id                  String        @id @default(cuid())
   userId              String
-  amount              Int /// Amount in cents
+  amount              Int
   status              InvoiceStatus @default(PENDING)
   planId              String?
   description         String?
@@ -824,6 +824,7 @@ model Invoice {
   fawaterakInvoiceKey String?
   paymentMethodUsed   String? /// "Visa-Mastercard", "Fawry", etc.
   referenceNumber     String? /// Fawry code, Aman code, etc.
+  successToken        String? /// Secret token to verify success redirect
   currency            String        @default("EGP")
   paidAt              DateTime?
   createdAt           DateTime      @default(now())

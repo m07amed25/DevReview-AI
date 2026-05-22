@@ -47087,6 +47087,7 @@ export namespace Prisma {
     fawaterakInvoiceKey: string | null
     paymentMethodUsed: string | null
     referenceNumber: string | null
+    successToken: string | null
     currency: string | null
     paidAt: Date | null
     createdAt: Date | null
@@ -47103,6 +47104,7 @@ export namespace Prisma {
     fawaterakInvoiceKey: string | null
     paymentMethodUsed: string | null
     referenceNumber: string | null
+    successToken: string | null
     currency: string | null
     paidAt: Date | null
     createdAt: Date | null
@@ -47119,6 +47121,7 @@ export namespace Prisma {
     fawaterakInvoiceKey: number
     paymentMethodUsed: number
     referenceNumber: number
+    successToken: number
     currency: number
     paidAt: number
     createdAt: number
@@ -47147,6 +47150,7 @@ export namespace Prisma {
     fawaterakInvoiceKey?: true
     paymentMethodUsed?: true
     referenceNumber?: true
+    successToken?: true
     currency?: true
     paidAt?: true
     createdAt?: true
@@ -47163,6 +47167,7 @@ export namespace Prisma {
     fawaterakInvoiceKey?: true
     paymentMethodUsed?: true
     referenceNumber?: true
+    successToken?: true
     currency?: true
     paidAt?: true
     createdAt?: true
@@ -47179,6 +47184,7 @@ export namespace Prisma {
     fawaterakInvoiceKey?: true
     paymentMethodUsed?: true
     referenceNumber?: true
+    successToken?: true
     currency?: true
     paidAt?: true
     createdAt?: true
@@ -47282,6 +47288,7 @@ export namespace Prisma {
     fawaterakInvoiceKey: string | null
     paymentMethodUsed: string | null
     referenceNumber: string | null
+    successToken: string | null
     currency: string
     paidAt: Date | null
     createdAt: Date
@@ -47317,6 +47324,7 @@ export namespace Prisma {
     fawaterakInvoiceKey?: boolean
     paymentMethodUsed?: boolean
     referenceNumber?: boolean
+    successToken?: boolean
     currency?: boolean
     paidAt?: boolean
     createdAt?: boolean
@@ -47334,6 +47342,7 @@ export namespace Prisma {
     fawaterakInvoiceKey?: boolean
     paymentMethodUsed?: boolean
     referenceNumber?: boolean
+    successToken?: boolean
     currency?: boolean
     paidAt?: boolean
     createdAt?: boolean
@@ -47351,6 +47360,7 @@ export namespace Prisma {
     fawaterakInvoiceKey?: boolean
     paymentMethodUsed?: boolean
     referenceNumber?: boolean
+    successToken?: boolean
     currency?: boolean
     paidAt?: boolean
     createdAt?: boolean
@@ -47368,12 +47378,13 @@ export namespace Prisma {
     fawaterakInvoiceKey?: boolean
     paymentMethodUsed?: boolean
     referenceNumber?: boolean
+    successToken?: boolean
     currency?: boolean
     paidAt?: boolean
     createdAt?: boolean
   }
 
-  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "amount" | "status" | "planId" | "description" | "fawaterakInvoiceId" | "fawaterakInvoiceKey" | "paymentMethodUsed" | "referenceNumber" | "currency" | "paidAt" | "createdAt", ExtArgs["result"]["invoice"]>
+  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "amount" | "status" | "planId" | "description" | "fawaterakInvoiceId" | "fawaterakInvoiceKey" | "paymentMethodUsed" | "referenceNumber" | "successToken" | "currency" | "paidAt" | "createdAt", ExtArgs["result"]["invoice"]>
   export type InvoiceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -47392,9 +47403,6 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       userId: string
-      /**
-       * Amount in cents
-       */
       amount: number
       status: $Enums.InvoiceStatus
       planId: string | null
@@ -47409,6 +47417,10 @@ export namespace Prisma {
        * Fawry code, Aman code, etc.
        */
       referenceNumber: string | null
+      /**
+       * Secret token to verify success redirect
+       */
+      successToken: string | null
       currency: string
       paidAt: Date | null
       createdAt: Date
@@ -47846,6 +47858,7 @@ export namespace Prisma {
     readonly fawaterakInvoiceKey: FieldRef<"Invoice", 'String'>
     readonly paymentMethodUsed: FieldRef<"Invoice", 'String'>
     readonly referenceNumber: FieldRef<"Invoice", 'String'>
+    readonly successToken: FieldRef<"Invoice", 'String'>
     readonly currency: FieldRef<"Invoice", 'String'>
     readonly paidAt: FieldRef<"Invoice", 'DateTime'>
     readonly createdAt: FieldRef<"Invoice", 'DateTime'>
@@ -54251,6 +54264,7 @@ export namespace Prisma {
     fawaterakInvoiceKey: 'fawaterakInvoiceKey',
     paymentMethodUsed: 'paymentMethodUsed',
     referenceNumber: 'referenceNumber',
+    successToken: 'successToken',
     currency: 'currency',
     paidAt: 'paidAt',
     createdAt: 'createdAt'
@@ -57818,6 +57832,7 @@ export namespace Prisma {
     fawaterakInvoiceKey?: StringNullableFilter<"Invoice"> | string | null
     paymentMethodUsed?: StringNullableFilter<"Invoice"> | string | null
     referenceNumber?: StringNullableFilter<"Invoice"> | string | null
+    successToken?: StringNullableFilter<"Invoice"> | string | null
     currency?: StringFilter<"Invoice"> | string
     paidAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     createdAt?: DateTimeFilter<"Invoice"> | Date | string
@@ -57835,6 +57850,7 @@ export namespace Prisma {
     fawaterakInvoiceKey?: SortOrderInput | SortOrder
     paymentMethodUsed?: SortOrderInput | SortOrder
     referenceNumber?: SortOrderInput | SortOrder
+    successToken?: SortOrderInput | SortOrder
     currency?: SortOrder
     paidAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -57855,6 +57871,7 @@ export namespace Prisma {
     fawaterakInvoiceKey?: StringNullableFilter<"Invoice"> | string | null
     paymentMethodUsed?: StringNullableFilter<"Invoice"> | string | null
     referenceNumber?: StringNullableFilter<"Invoice"> | string | null
+    successToken?: StringNullableFilter<"Invoice"> | string | null
     currency?: StringFilter<"Invoice"> | string
     paidAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     createdAt?: DateTimeFilter<"Invoice"> | Date | string
@@ -57872,6 +57889,7 @@ export namespace Prisma {
     fawaterakInvoiceKey?: SortOrderInput | SortOrder
     paymentMethodUsed?: SortOrderInput | SortOrder
     referenceNumber?: SortOrderInput | SortOrder
+    successToken?: SortOrderInput | SortOrder
     currency?: SortOrder
     paidAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -57896,6 +57914,7 @@ export namespace Prisma {
     fawaterakInvoiceKey?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
     paymentMethodUsed?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
     referenceNumber?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
+    successToken?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
     currency?: StringWithAggregatesFilter<"Invoice"> | string
     paidAt?: DateTimeNullableWithAggregatesFilter<"Invoice"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Invoice"> | Date | string
@@ -61647,6 +61666,7 @@ export namespace Prisma {
     fawaterakInvoiceKey?: string | null
     paymentMethodUsed?: string | null
     referenceNumber?: string | null
+    successToken?: string | null
     currency?: string
     paidAt?: Date | string | null
     createdAt?: Date | string
@@ -61664,6 +61684,7 @@ export namespace Prisma {
     fawaterakInvoiceKey?: string | null
     paymentMethodUsed?: string | null
     referenceNumber?: string | null
+    successToken?: string | null
     currency?: string
     paidAt?: Date | string | null
     createdAt?: Date | string
@@ -61679,6 +61700,7 @@ export namespace Prisma {
     fawaterakInvoiceKey?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethodUsed?: NullableStringFieldUpdateOperationsInput | string | null
     referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    successToken?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: StringFieldUpdateOperationsInput | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -61696,6 +61718,7 @@ export namespace Prisma {
     fawaterakInvoiceKey?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethodUsed?: NullableStringFieldUpdateOperationsInput | string | null
     referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    successToken?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: StringFieldUpdateOperationsInput | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -61712,6 +61735,7 @@ export namespace Prisma {
     fawaterakInvoiceKey?: string | null
     paymentMethodUsed?: string | null
     referenceNumber?: string | null
+    successToken?: string | null
     currency?: string
     paidAt?: Date | string | null
     createdAt?: Date | string
@@ -61727,6 +61751,7 @@ export namespace Prisma {
     fawaterakInvoiceKey?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethodUsed?: NullableStringFieldUpdateOperationsInput | string | null
     referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    successToken?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: StringFieldUpdateOperationsInput | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -61743,6 +61768,7 @@ export namespace Prisma {
     fawaterakInvoiceKey?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethodUsed?: NullableStringFieldUpdateOperationsInput | string | null
     referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    successToken?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: StringFieldUpdateOperationsInput | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -64741,6 +64767,7 @@ export namespace Prisma {
     fawaterakInvoiceKey?: SortOrder
     paymentMethodUsed?: SortOrder
     referenceNumber?: SortOrder
+    successToken?: SortOrder
     currency?: SortOrder
     paidAt?: SortOrder
     createdAt?: SortOrder
@@ -64762,6 +64789,7 @@ export namespace Prisma {
     fawaterakInvoiceKey?: SortOrder
     paymentMethodUsed?: SortOrder
     referenceNumber?: SortOrder
+    successToken?: SortOrder
     currency?: SortOrder
     paidAt?: SortOrder
     createdAt?: SortOrder
@@ -64778,6 +64806,7 @@ export namespace Prisma {
     fawaterakInvoiceKey?: SortOrder
     paymentMethodUsed?: SortOrder
     referenceNumber?: SortOrder
+    successToken?: SortOrder
     currency?: SortOrder
     paidAt?: SortOrder
     createdAt?: SortOrder
@@ -68639,6 +68668,7 @@ export namespace Prisma {
     fawaterakInvoiceKey?: string | null
     paymentMethodUsed?: string | null
     referenceNumber?: string | null
+    successToken?: string | null
     currency?: string
     paidAt?: Date | string | null
     createdAt?: Date | string
@@ -68654,6 +68684,7 @@ export namespace Prisma {
     fawaterakInvoiceKey?: string | null
     paymentMethodUsed?: string | null
     referenceNumber?: string | null
+    successToken?: string | null
     currency?: string
     paidAt?: Date | string | null
     createdAt?: Date | string
@@ -69182,6 +69213,7 @@ export namespace Prisma {
     fawaterakInvoiceKey?: StringNullableFilter<"Invoice"> | string | null
     paymentMethodUsed?: StringNullableFilter<"Invoice"> | string | null
     referenceNumber?: StringNullableFilter<"Invoice"> | string | null
+    successToken?: StringNullableFilter<"Invoice"> | string | null
     currency?: StringFilter<"Invoice"> | string
     paidAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     createdAt?: DateTimeFilter<"Invoice"> | Date | string
@@ -76637,6 +76669,7 @@ export namespace Prisma {
     fawaterakInvoiceKey?: string | null
     paymentMethodUsed?: string | null
     referenceNumber?: string | null
+    successToken?: string | null
     currency?: string
     paidAt?: Date | string | null
     createdAt?: Date | string
@@ -77164,6 +77197,7 @@ export namespace Prisma {
     fawaterakInvoiceKey?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethodUsed?: NullableStringFieldUpdateOperationsInput | string | null
     referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    successToken?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: StringFieldUpdateOperationsInput | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -77179,6 +77213,7 @@ export namespace Prisma {
     fawaterakInvoiceKey?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethodUsed?: NullableStringFieldUpdateOperationsInput | string | null
     referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    successToken?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: StringFieldUpdateOperationsInput | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -77194,6 +77229,7 @@ export namespace Prisma {
     fawaterakInvoiceKey?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethodUsed?: NullableStringFieldUpdateOperationsInput | string | null
     referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    successToken?: NullableStringFieldUpdateOperationsInput | string | null
     currency?: StringFieldUpdateOperationsInput | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

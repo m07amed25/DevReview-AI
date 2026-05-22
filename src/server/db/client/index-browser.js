@@ -598,6 +598,7 @@ exports.Prisma.InvoiceScalarFieldEnum = {
   fawaterakInvoiceKey: 'fawaterakInvoiceKey',
   paymentMethodUsed: 'paymentMethodUsed',
   referenceNumber: 'referenceNumber',
+  successToken: 'successToken',
   currency: 'currency',
   paidAt: 'paidAt',
   createdAt: 'createdAt'

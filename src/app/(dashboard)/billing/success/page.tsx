@@ -12,6 +12,7 @@ export default function SuccessPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const invoiceId = searchParams.get("invoice");
+  const token = searchParams.get("token");
   const [activated, setActivated] = useState(false);
 
   const { data } = trpc.payment.getPaymentStatus.useQuery(
@@ -21,23 +22,14 @@ export default function SuccessPage() {
 
   const activate = trpc.payment.activatePlan.useMutation({
     onSuccess: () => setActivated(true),
-    onError: (e) => {
-      // If payment not confirmed yet, retry after 3 seconds
-      if (e.data?.code === "PRECONDITION_FAILED") {
-        setTimeout(() => {
-          if (invoiceId) activate.mutate({ invoiceId });
-        }, 3000);
-      } else {
-        setActivated(true); // Other error (already activated, etc.)
-      }
-    },
+    onError: () => setActivated(true),
   });
 
   useEffect(() => {
-    if (invoiceId && !activated && !activate.isPending) {
-      activate.mutate({ invoiceId });
+    if (invoiceId && token && !activated && !activate.isPending) {
+      activate.mutate({ invoiceId, token });
     }
-  }, [invoiceId]);
+  }, [invoiceId, token]);
 
   return (
     <div className="max-w-md mx-auto py-12 px-4">
