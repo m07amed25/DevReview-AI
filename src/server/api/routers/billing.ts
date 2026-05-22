@@ -124,14 +124,14 @@ export const billingRouter = createTRPCRouter({
     if (used.length === 0) return [];
     const discounts = await ctx.db.discount.findMany({
       where: { id: { in: used.map((u) => u.discountId) } },
-      select: { id: true, code: true, type: true, value: true, description: true },
+      select: { id: true, code: true, type: true, value: true, description: true, planId: true },
     });
     const map = new Map(discounts.map((d) => [d.id, d]));
     return used
       .filter((u) => map.has(u.discountId))
       .map((u) => {
         const d = map.get(u.discountId)!;
-        return { code: d.code, type: d.type, value: d.value, description: d.description, appliedAt: u.appliedAt };
+        return { code: d.code, type: d.type, value: d.value, description: d.description, planId: d.planId, appliedAt: u.appliedAt };
       });
   }),
 

@@ -29,7 +29,7 @@ export default function BillingPage() {
   const { data: appliedPromos } = trpc.billing.getAppliedPromos.useQuery();
   // Derive active discount from the most recent applied promo
   const discount = appliedPromos?.[0]
-    ? { type: appliedPromos[0].type as "PERCENTAGE" | "FIXED", value: appliedPromos[0].value }
+    ? { type: appliedPromos[0].type as "PERCENTAGE" | "FIXED", value: appliedPromos[0].value, planId: appliedPromos[0].planId as string | null }
     : null;
 
   const applyPromo = trpc.billing.applyPromo.useMutation({
@@ -50,7 +50,19 @@ export default function BillingPage() {
     enabled: showPlanPicker,
   });
 
-  const isFreeUpgrade = discount?.type === "PERCENTAGE" && discount.value >= 100;
+  const isFreeUpgrade = (planId: string) => {
+    if (!discount) return false;
+    if (discount.planId && discount.planId !== planId) return false;
+    return discount.type === "PERCENTAGE" && discount.value >= 100;
+  };
+
+  const getDiscountedPrice = (planId: string, price: number) => {
+    if (!discount) return null;
+    if (discount.planId && discount.planId !== planId) return null;
+    return discount.type === "PERCENTAGE"
+      ? Math.round(price * (1 - discount.value / 100))
+      : Math.max(0, price - discount.value);
+  };
 
   const freeUpgrade = trpc.payment.freeUpgrade.useMutation({
     onSuccess: () => {
@@ -128,7 +140,7 @@ export default function BillingPage() {
             applyingPromo={applyPromo.isPending}
             handleApplyPromo={handleApplyPromo}
             promoMessage={promoMessage}
-            discount={discount}
+            discount={discount && (!discount.planId || discount.planId === user.planId) ? discount : null}
           />
         </TabsContent>
 
@@ -145,17 +157,17 @@ export default function BillingPage() {
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>Choose a Plan</DialogTitle>
-            {isFreeUpgrade && (
-              <p className="text-sm text-emerald-500 font-medium">Your 100% discount applies — no payment required!</p>
-            )}
           </DialogHeader>
           <div className="space-y-3 mt-2">
-            {upgradePlans?.map((p) => (
+            {upgradePlans?.map((p) => {
+              const free = isFreeUpgrade(p.id);
+              const discounted = getDiscountedPrice(p.id, p.monthlyPrice);
+              return (
               <button
                 key={p.id}
                 disabled={freeUpgrade.isPending}
                 onClick={() => {
-                  if (isFreeUpgrade) {
+                  if (free) {
                     freeUpgrade.mutate({ planId: p.id, billingCycle: "monthly" });
                   } else {
                     setShowPlanPicker(false);
@@ -169,7 +181,17 @@ export default function BillingPage() {
                     <p className="font-semibold">{p.name}</p>
                     <p className="text-sm text-muted-foreground">{p.tagline}</p>
                   </div>
-                  <span className="text-lg font-bold">{isFreeUpgrade ? "FREE" : `$${p.monthlyPrice}/mo`}</span>
+                  {free ? (
+                    <span className="text-lg font-bold text-emerald-500">FREE</span>
+                  ) : discounted !== null ? (
+                    <span className="text-lg font-bold">
+                      <span className="text-emerald-500">${discounted}</span>
+                      <span className="text-sm text-muted-foreground line-through ml-1">${p.monthlyPrice}</span>
+                      <span className="text-sm text-muted-foreground">/mo</span>
+                    </span>
+                  ) : (
+                    <span className="text-lg font-bold">${p.monthlyPrice}/mo</span>
+                  )}
                 </div>
                 <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
                   {p.features.slice(0, 3).map((f, i) => (
@@ -179,7 +201,8 @@ export default function BillingPage() {
                   ))}
                 </div>
               </button>
-            ))}
+              );
+            })}
           </div>
         </DialogContent>
       </Dialog>
