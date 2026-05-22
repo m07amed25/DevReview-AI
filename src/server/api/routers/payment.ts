@@ -94,7 +94,7 @@ export const paymentRouter = createTRPCRouter({
             successUrl: `${baseUrl}/billing/success?invoice=${invoice.id}`,
             failUrl: `${baseUrl}/billing/failed?invoice=${invoice.id}`,
             pendingUrl: `${baseUrl}/billing/pending?invoice=${invoice.id}`,
-            webhookUrl: `${baseUrl}/api/webhooks/fawaterak`,
+            webhookUrl: `${baseUrl}/api/webhooks/fawaterak_json`,
           },
           invoice_number: invoice.id,
         });
@@ -248,7 +248,7 @@ export const paymentRouter = createTRPCRouter({
         },
         cartItems: [{ name: plan.name, price: amountMajor, quantity: "1" }],
         redirectionUrls: {
-          webhookUrl: `${baseUrl}/api/webhooks/fawaterak`,
+          webhookUrl: `${baseUrl}/api/webhooks/fawaterak_json`,
         },
         card_token: card.fawaterakToken,
         invoice_number: invoice.id,

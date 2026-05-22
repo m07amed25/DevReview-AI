@@ -702,7 +702,7 @@ export function HistoryTab() {
                         {new Date(inv.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                       </TableCell>
                       <TableCell className="text-sm text-right font-medium">
-                        ${(inv.amount / 100).toFixed(2)}
+                        ${inv.amount}
                       </TableCell>
                     </TableRow>
                   ))}

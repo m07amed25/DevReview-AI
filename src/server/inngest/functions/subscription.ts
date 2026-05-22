@@ -69,7 +69,7 @@ export const processPaymentSuccess = inngest.createFunction(
             html: `
               <h1>Payment Successful</h1>
               <p>Thank you for subscribing to the ${plan.name} plan!</p>
-              <p><strong>Amount:</strong> ${(invoice.amount / 100).toFixed(2)} ${invoice.currency}</p>
+              <p><strong>Amount:</strong> ${invoice.amount} ${invoice.currency}</p>
               <p><strong>Valid until:</strong> ${planExpiresAt.toLocaleDateString()}</p>
             `,
           }),

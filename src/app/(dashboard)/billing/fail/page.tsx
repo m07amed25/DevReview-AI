@@ -58,7 +58,7 @@ export default function FailPage() {
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Amount</span>
                   <span className="font-medium">
-                    {(data.invoice.amount / 100).toFixed(2)} {data.invoice.currency}
+                    {data.invoice.amount} {data.invoice.currency}
                   </span>
                 </div>
               </div>
