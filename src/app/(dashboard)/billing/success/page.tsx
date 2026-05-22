@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { CheckCircle2, ArrowRight, Loader2 } from "lucide-react";
+import { AlertCircle, CheckCircle2, ArrowRight, Loader2 } from "lucide-react";
 import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,23 +13,33 @@ export default function SuccessPage() {
   const searchParams = useSearchParams();
   const invoiceId = searchParams.get("invoice");
   const token = searchParams.get("token");
-  const [activated, setActivated] = useState(false);
+  const utils = trpc.useUtils();
+  const activationAttempted = useRef(false);
+  const [activationError, setActivationError] = useState<string | null>(null);
 
   const { data } = trpc.payment.getPaymentStatus.useQuery(
     { invoiceId: invoiceId! },
-    { enabled: !!invoiceId }
+    { enabled: !!invoiceId, refetchInterval: (query) => query.state.data?.status === "paid" ? false : 5000 }
   );
 
   const activate = trpc.payment.activatePlan.useMutation({
-    onSuccess: () => setActivated(true),
-    onError: () => setActivated(true),
+    onSuccess: () => {
+      setActivationError(null);
+      void utils.payment.getPaymentStatus.invalidate();
+      void utils.profile.get.invalidate();
+    },
+    onError: (error) => setActivationError(error.message),
   });
 
   useEffect(() => {
-    if (invoiceId && token && !activated && !activate.isPending) {
+    if (invoiceId && token && data?.status !== "paid" && !activationAttempted.current && !activate.isPending) {
+      activationAttempted.current = true;
       activate.mutate({ invoiceId, token });
     }
-  }, [invoiceId, token]);
+  }, [activate, data?.status, invoiceId, token]);
+
+  const isPaid = data?.status === "paid";
+  const isVerifying = !isPaid && (activate.isPending || !!token);
 
   return (
     <div className="max-w-md mx-auto py-12 px-4">
@@ -46,19 +56,27 @@ export default function SuccessPage() {
               transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
               className="mx-auto mb-4"
             >
-              {activated ? (
+              {isPaid ? (
                 <CheckCircle2 className="h-16 w-16 text-emerald-500" />
+              ) : activationError ? (
+                <AlertCircle className="h-16 w-16 text-amber-500" />
               ) : (
                 <Loader2 className="h-16 w-16 text-primary animate-spin" />
               )}
             </motion.div>
             <CardTitle className="text-2xl">
-              {activated ? "Payment Successful" : "Activating your plan..."}
+              {isPaid
+                ? "Payment Successful"
+                : activationError
+                  ? "Payment Verification Pending"
+                  : "Verifying your payment..."}
             </CardTitle>
             <CardDescription>
-              {activated
+              {isPaid
                 ? "Your plan has been upgraded successfully!"
-                : "Please wait while we activate your subscription."}
+                : activationError
+                  ? activationError
+                  : "Please wait while we confirm the payment with the provider."}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -78,7 +96,12 @@ export default function SuccessPage() {
                 )}
               </div>
             )}
-            <Button onClick={() => router.push("/billing")} className="w-full" disabled={!activated}>
+            {isVerifying && (
+              <p className="text-xs text-muted-foreground">
+                This page will update automatically once payment is confirmed.
+              </p>
+            )}
+            <Button onClick={() => router.push("/billing")} className="w-full" disabled={!isPaid}>
               Back to Billing
               <ArrowRight className="h-4 w-4 ml-2" />
             </Button>

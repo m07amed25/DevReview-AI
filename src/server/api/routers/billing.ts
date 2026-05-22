@@ -123,7 +123,11 @@ export const billingRouter = createTRPCRouter({
     });
     if (used.length === 0) return [];
     const discounts = await ctx.db.discount.findMany({
-      where: { id: { in: used.map((u) => u.discountId) } },
+      where: {
+        id: { in: used.map((u) => u.discountId) },
+        active: true,
+        OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+      },
       select: { id: true, code: true, type: true, value: true, description: true, planId: true },
     });
     const map = new Map(discounts.map((d) => [d.id, d]));
@@ -163,16 +167,28 @@ export const billingRouter = createTRPCRouter({
         throw new TRPCError({ code: "CONFLICT", message: "You have already used this promo code." });
       }
 
-      // Record usage and increment count
-      await ctx.db.$transaction([
-        ctx.db.userDiscount.create({
-          data: { userId: ctx.user.id, discountId: discount.id },
-        }),
-        ctx.db.discount.update({
-          where: { id: discount.id },
+      // Record usage and increment count atomically so limited-use codes cannot be oversubscribed.
+      await ctx.db.$transaction(async (tx) => {
+        const update = await tx.discount.updateMany({
+          where: {
+            id: discount.id,
+            active: true,
+            OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+            ...(discount.maxUses
+              ? { usedCount: { lt: discount.maxUses } }
+              : {}),
+          },
           data: { usedCount: { increment: 1 } },
-        }),
-      ]);
+        });
+
+        if (update.count !== 1) {
+          throw new TRPCError({ code: "CONFLICT", message: "This promo code is no longer available." });
+        }
+
+        await tx.userDiscount.create({
+          data: { userId: ctx.user.id, discountId: discount.id },
+        });
+      });
 
       const label =
         discount.type === "PERCENTAGE"

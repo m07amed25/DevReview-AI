@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Clock, Copy, Check, ArrowLeft } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -31,10 +31,11 @@ export default function PendingPage() {
     }
   };
 
-  // Auto-redirect if status changes to paid
-  if (data?.status === "paid") {
-    router.push(`/billing/success?invoice=${invoiceId}`);
-  }
+  useEffect(() => {
+    if (data?.status === "paid" && invoiceId) {
+      router.push(`/billing/success?invoice=${invoiceId}`);
+    }
+  }, [data?.status, invoiceId, router]);
 
   return (
     <div className="max-w-md mx-auto py-12 px-4">

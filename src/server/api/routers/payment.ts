@@ -3,10 +3,26 @@ import crypto from "crypto";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { payments, tokenization } from "../../services/fawaterak";
-import { fawaterakConfig } from "../../services/fawaterak/config";
+import { decryptPaymentToken } from "../../services/payment-tokens";
+import {
+  activatePaidInvoice,
+  calculateCheckoutAmount,
+  checkoutCurrency,
+  invoiceAmountMatches,
+  timingSafeStringEqual,
+  toAmountString,
+} from "../../services/payment-workflow";
 
-// Prices are stored in whole EGP — convert to string for Fawaterak
-const toAmountStr = (amount: number) => amount.toFixed(2);
+const safeInvoiceSelect = {
+  id: true,
+  amount: true,
+  status: true,
+  planId: true,
+  description: true,
+  currency: true,
+  paidAt: true,
+  createdAt: true,
+} as const;
 
 export const paymentRouter = createTRPCRouter({
   getPaymentMethods: protectedProcedure.query(async () => {
@@ -43,28 +59,13 @@ export const paymentRouter = createTRPCRouter({
       });
       if (!plan) throw new TRPCError({ code: "NOT_FOUND", message: "Plan not found" });
 
-      // Calculate base price
-      const settings = await ctx.db.pricingSettings.findUnique({ where: { id: "global" } });
-      const annualDiscount = (settings?.annualDiscount ?? 20) / 100;
-      const basePrice =
-        input.billingCycle === "monthly" ? plan.monthlyPrice : Math.round(plan.monthlyPrice * 12 * (1 - annualDiscount));
-
-      // Apply user's active discount
-      const appliedPromo = await ctx.db.userDiscount.findFirst({
-        where: { userId: ctx.user.id },
-        orderBy: { appliedAt: "desc" },
-      });
-      let finalAmount = basePrice;
-      if (appliedPromo) {
-        const d = await ctx.db.discount.findUnique({ where: { id: appliedPromo.discountId } });
-        if (d) {
-          finalAmount = d.type === "PERCENTAGE"
-            ? Math.round(basePrice * (1 - d.value / 100))
-            : Math.max(0, basePrice - d.value);
-        }
-      }
-
-      const amountMajor = toAmountStr(finalAmount);
+      const { finalAmount } = await calculateCheckoutAmount(
+        ctx.db,
+        ctx.user.id,
+        plan,
+        input.billingCycle,
+      );
+      const amountMajor = toAmountString(finalAmount);
 
       const successToken = crypto.randomBytes(32).toString("hex");
       const invoice = await ctx.db.invoice.create({
@@ -73,7 +74,7 @@ export const paymentRouter = createTRPCRouter({
           amount: finalAmount,
           planId: input.planId,
           description: `${plan.name} - ${input.billingCycle}`,
-          currency: "USD",
+          currency: checkoutCurrency,
           successToken,
         },
       });
@@ -84,7 +85,7 @@ export const paymentRouter = createTRPCRouter({
         const result = await payments.executePayment({
           payment_method_id: input.paymentMethodId,
           cartTotal: amountMajor,
-          currency: "USD",
+          currency: checkoutCurrency,
           customer: {
             first_name: billing.fullName.split(" ")[0] ?? billing.fullName,
             last_name: billing.fullName.split(" ").slice(1).join(" ") || "User",
@@ -124,8 +125,6 @@ export const paymentRouter = createTRPCRouter({
 
         return {
           invoiceId: invoice.id,
-          fawaterakInvoiceId: result.invoice_id,
-          fawaterakInvoiceKey: result.invoice_key,
           redirectTo: result.payment_data.redirectTo,
           referenceCode:
             result.payment_data.fawryCode ??
@@ -152,9 +151,7 @@ export const paymentRouter = createTRPCRouter({
       if (!invoice) throw new TRPCError({ code: "NOT_FOUND" });
       if (!invoice.planId) throw new TRPCError({ code: "BAD_REQUEST", message: "Invoice has no plan" });
 
-      // Already activated
-      const user = await ctx.db.user.findUnique({ where: { id: ctx.user.id }, select: { planId: true } });
-      if (user?.planId === invoice.planId && invoice.status === "PAID") {
+      if (invoice.status === "PAID") {
         return { success: true, planId: invoice.planId };
       }
 
@@ -163,20 +160,33 @@ export const paymentRouter = createTRPCRouter({
       }
 
       // Verify the secret token — only Fawaterak's redirect has this
-      if (!invoice.successToken || invoice.successToken !== input.token) {
+      if (!invoice.successToken || input.token.length !== invoice.successToken.length ||
+          !timingSafeStringEqual(input.token, invoice.successToken)) {
         throw new TRPCError({ code: "FORBIDDEN", message: "Invalid token." });
       }
 
-      const planExpiresAt = new Date();
-      planExpiresAt.setMonth(planExpiresAt.getMonth() + 1);
+      if (!invoice.fawaterakInvoiceId || !invoice.fawaterakInvoiceKey) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "Payment has not been initialized with the provider.",
+        });
+      }
 
-      await ctx.db.invoice.update({
-        where: { id: invoice.id },
-        data: { status: "PAID", paidAt: invoice.paidAt ?? new Date(), successToken: null },
-      });
-      await ctx.db.user.update({
-        where: { id: ctx.user.id },
-        data: { planId: invoice.planId, planExpiresAt },
+      const transaction = await payments.getTransactionData(invoice.fawaterakInvoiceId);
+      if (
+        transaction.invoice_key !== invoice.fawaterakInvoiceKey ||
+        transaction.invoice_status !== "paid" ||
+        !invoiceAmountMatches(invoice.amount, transaction.invoice_amount)
+      ) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "Payment is not confirmed yet.",
+        });
+      }
+
+      await activatePaidInvoice(ctx.db, invoice, {
+        paymentMethodUsed: transaction.payment_method,
+        paidAt: transaction.paid_at ? new Date(transaction.paid_at) : new Date(),
       });
 
       return { success: true, planId: invoice.planId };
@@ -187,6 +197,7 @@ export const paymentRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const invoice = await ctx.db.invoice.findFirst({
         where: { id: input.invoiceId, userId: ctx.user.id },
+        select: safeInvoiceSelect,
       });
       if (!invoice) throw new TRPCError({ code: "NOT_FOUND" });
       return { status: invoice.status === "PAID" ? "paid" : invoice.status, invoice };
@@ -215,7 +226,7 @@ export const paymentRouter = createTRPCRouter({
       redirect_url: `${baseUrl}/billing/cards/saved`,
     });
 
-    return { url: result.card_token_screen_url, cardTokenUniqueId: result.card_token_unique_id };
+    return { url: result.card_token_screen_url };
   }),
 
   payWithSavedCard: protectedProcedure
@@ -241,26 +252,13 @@ export const paymentRouter = createTRPCRouter({
       const plan = await ctx.db.pricingPlan.findUnique({ where: { id: input.planId } });
       if (!plan) throw new TRPCError({ code: "NOT_FOUND", message: "Plan not found" });
 
-      const settings = await ctx.db.pricingSettings.findUnique({ where: { id: "global" } });
-      const annualDiscount = (settings?.annualDiscount ?? 20) / 100;
-      const basePrice =
-        input.billingCycle === "monthly" ? plan.monthlyPrice : Math.round(plan.monthlyPrice * 12 * (1 - annualDiscount));
-
-      const appliedPromo = await ctx.db.userDiscount.findFirst({
-        where: { userId: ctx.user.id },
-        orderBy: { appliedAt: "desc" },
-      });
-      let finalAmount = basePrice;
-      if (appliedPromo) {
-        const d = await ctx.db.discount.findUnique({ where: { id: appliedPromo.discountId } });
-        if (d) {
-          finalAmount = d.type === "PERCENTAGE"
-            ? Math.round(basePrice * (1 - d.value / 100))
-            : Math.max(0, basePrice - d.value);
-        }
-      }
-
-      const amountMajor = toAmountStr(finalAmount);
+      const { finalAmount } = await calculateCheckoutAmount(
+        ctx.db,
+        ctx.user.id,
+        plan,
+        input.billingCycle,
+      );
+      const amountMajor = toAmountString(finalAmount);
 
       const invoice = await ctx.db.invoice.create({
         data: {
@@ -268,7 +266,7 @@ export const paymentRouter = createTRPCRouter({
           amount: finalAmount,
           planId: input.planId,
           description: `${plan.name} - ${input.billingCycle}`,
-          currency: "USD",
+          currency: checkoutCurrency,
         },
       });
 
@@ -276,7 +274,7 @@ export const paymentRouter = createTRPCRouter({
 
       const result = await tokenization.payWithToken({
         cartTotal: amountMajor,
-        currency: "USD",
+        currency: checkoutCurrency,
         customer: {
           first_name: billing.fullName.split(" ")[0] ?? billing.fullName,
           last_name: billing.fullName.split(" ").slice(1).join(" ") || "User",
@@ -287,11 +285,11 @@ export const paymentRouter = createTRPCRouter({
         redirectionUrls: {
           webhookUrl: `${baseUrl}/api/webhooks/fawaterak_json`,
         },
-        card_token: card.fawaterakToken,
+        card_token: decryptPaymentToken(card.fawaterakToken),
         invoice_number: invoice.id,
       });
 
-      await ctx.db.invoice.update({
+      const paidInvoice = await ctx.db.invoice.update({
         where: { id: invoice.id },
         data: {
           fawaterakInvoiceId: result.invoice_id,
@@ -302,12 +300,9 @@ export const paymentRouter = createTRPCRouter({
         },
       });
 
-      // Activate subscription immediately for token payments
-      const planExpiresAt = new Date();
-      planExpiresAt.setMonth(planExpiresAt.getMonth() + 1);
-      await ctx.db.user.update({
-        where: { id: ctx.user.id },
-        data: { planId: input.planId, planExpiresAt },
+      await activatePaidInvoice(ctx.db, paidInvoice, {
+        paymentMethodUsed: card.cardBrand,
+        paidAt: paidInvoice.paidAt ?? new Date(),
       });
 
       return { invoiceId: invoice.id, transactionId: result.transaction_id };
@@ -350,6 +345,15 @@ export const paymentRouter = createTRPCRouter({
       include: {
         paymentMethods: {
           orderBy: [{ isDefault: "desc" }, { createdAt: "desc" }],
+          select: {
+            id: true,
+            cardBrand: true,
+            lastFour: true,
+            expiryMonth: true,
+            expiryYear: true,
+            isDefault: true,
+            createdAt: true,
+          },
         },
       },
     });
@@ -362,24 +366,12 @@ export const paymentRouter = createTRPCRouter({
       const plan = await ctx.db.pricingPlan.findUnique({ where: { id: input.planId } });
       if (!plan) throw new TRPCError({ code: "NOT_FOUND", message: "Plan not found" });
 
-      const settings = await ctx.db.pricingSettings.findUnique({ where: { id: "global" } });
-      const annualDiscount = (settings?.annualDiscount ?? 20) / 100;
-      const basePrice =
-        input.billingCycle === "monthly" ? plan.monthlyPrice : Math.round(plan.monthlyPrice * 12 * (1 - annualDiscount));
-
-      const appliedPromo = await ctx.db.userDiscount.findFirst({
-        where: { userId: ctx.user.id },
-        orderBy: { appliedAt: "desc" },
-      });
-      let finalAmount = basePrice;
-      if (appliedPromo) {
-        const d = await ctx.db.discount.findUnique({ where: { id: appliedPromo.discountId } });
-        if (d) {
-          finalAmount = d.type === "PERCENTAGE"
-            ? Math.round(basePrice * (1 - d.value / 100))
-            : Math.max(0, basePrice - d.value);
-        }
-      }
+      const { finalAmount } = await calculateCheckoutAmount(
+        ctx.db,
+        ctx.user.id,
+        plan,
+        input.billingCycle,
+      );
 
       if (finalAmount !== 0) {
         throw new TRPCError({ code: "BAD_REQUEST", message: "This plan is not free with your current discount." });
@@ -389,7 +381,7 @@ export const paymentRouter = createTRPCRouter({
       planExpiresAt.setMonth(planExpiresAt.getMonth() + (input.billingCycle === "yearly" ? 12 : 1));
 
       await ctx.db.invoice.create({
-        data: { userId: ctx.user.id, amount: 0, planId: input.planId, description: `${plan.name} - ${input.billingCycle} (100% discount)`, currency: "USD", status: "PAID", paidAt: new Date() },
+        data: { userId: ctx.user.id, amount: 0, planId: input.planId, description: `${plan.name} - ${input.billingCycle} (100% discount)`, currency: checkoutCurrency, status: "PAID", paidAt: new Date() },
       });
 
       await ctx.db.user.update({

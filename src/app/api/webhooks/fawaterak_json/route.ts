@@ -3,6 +3,10 @@ import crypto from "crypto";
 import { db } from "@/server/db";
 import { fawaterakConfig } from "@/server/services/fawaterak/config";
 import { inngest } from "@/server/inngest";
+import {
+  activatePaidInvoice,
+  invoiceAmountMatches,
+} from "@/server/services/payment-workflow";
 
 function verifyTransactionHash(
   invoiceId: number,
@@ -16,10 +20,25 @@ function verifyTransactionHash(
     .update(queryParam)
     .digest("hex");
 
-  const a = Buffer.from(expected);
-  const b = Buffer.from(receivedHash);
+  if (!/^[a-f0-9]{64}$/i.test(receivedHash)) return false;
+  const a = Buffer.from(expected, "hex");
+  const b = Buffer.from(receivedHash, "hex");
   if (a.length !== b.length) return false;
   return crypto.timingSafeEqual(a, b);
+}
+
+function normalizeStatus(body: Record<string, unknown>): string | null {
+  const rawStatus = body.invoice_status ?? body.status;
+  if (typeof rawStatus === "string") return rawStatus.toLowerCase();
+  if (typeof body.errorMessage === "string" || body.response) return "failed";
+  return null;
+}
+
+function getString(body: Record<string, unknown>, key: string): string | null {
+  const value = body[key];
+  if (typeof value === "string") return value;
+  if (typeof value === "number") return String(value);
+  return null;
 }
 
 function getUserFacingError(errorMessage: string, gatewayCode: string): string {
@@ -37,11 +56,20 @@ function getUserFacingError(errorMessage: string, gatewayCode: string): string {
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { invoice_id, invoice_key, payment_method, status } = body;
+    const body = (await request.json()) as Record<string, unknown>;
+    const invoice_id = Number(body.invoice_id);
+    const invoice_key = getString(body, "invoice_key");
+    const payment_method = getString(body, "payment_method");
+    const status = normalizeStatus(body);
 
-    // Verify hash from header
-    const receivedHash = request.headers.get("x-fawaterak-hash") ?? "";
+    if (!Number.isFinite(invoice_id) || !invoice_key || !payment_method || !status) {
+      return NextResponse.json({ error: "Malformed webhook" }, { status: 400 });
+    }
+
+    const receivedHash =
+      request.headers.get("x-fawaterak-hash") ??
+      getString(body, "hashKey") ??
+      "";
     if (!verifyTransactionHash(invoice_id, invoice_key, payment_method, receivedHash)) {
       return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
     }
@@ -55,6 +83,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invoice not found" }, { status: 404 });
     }
 
+    if (invoice.fawaterakInvoiceKey !== invoice_key) {
+      return NextResponse.json({ error: "Invoice mismatch" }, { status: 409 });
+    }
+
     // Handle based on status
     switch (status) {
       case "paid": {
@@ -63,25 +95,23 @@ export async function POST(request: NextRequest) {
           return NextResponse.json({ received: true });
         }
 
-        await db.invoice.update({
-          where: { id: invoice.id },
-          data: {
-            status: "PAID",
-            paidAt: new Date(),
-            paymentMethodUsed: payment_method,
-            referenceNumber: body.reference_number,
-          },
-        });
-
-        // Activate subscription immediately
-        if (invoice.planId) {
-          const planExpiresAt = new Date();
-          planExpiresAt.setMonth(planExpiresAt.getMonth() + 1);
-          await db.user.update({
-            where: { id: invoice.userId },
-            data: { planId: invoice.planId, planExpiresAt },
-          });
+        if (
+          body.amount !== undefined &&
+          !invoiceAmountMatches(invoice.amount, body.amount)
+        ) {
+          return NextResponse.json({ error: "Amount mismatch" }, { status: 409 });
         }
+
+        const paidCurrency = getString(body, "paidCurrency") ?? getString(body, "currency");
+        if (paidCurrency && paidCurrency !== invoice.currency) {
+          return NextResponse.json({ error: "Currency mismatch" }, { status: 409 });
+        }
+
+        await activatePaidInvoice(db, invoice, {
+          paymentMethodUsed: payment_method,
+          referenceNumber:
+            getString(body, "referenceNumber") ?? getString(body, "reference_number"),
+        });
 
         // Also send to Inngest for email notification (best-effort)
         try {
@@ -95,12 +125,16 @@ export async function POST(request: NextRequest) {
       }
 
       case "failed": {
-        if (invoice.status === "FAILED") {
+        if (invoice.status === "FAILED" || invoice.status === "PAID") {
           return NextResponse.json({ received: true });
         }
 
-        const errorMessage = body.errorMessage ?? "";
-        const gatewayCode = body.response?.gatewayCode ?? "";
+        const errorMessage = getString(body, "errorMessage") ?? "";
+        const response =
+          typeof body.response === "object" && body.response !== null
+            ? (body.response as Record<string, unknown>)
+            : {};
+        const gatewayCode = getString(response, "gatewayCode") ?? "";
 
         await db.invoice.update({
           where: { id: invoice.id },
@@ -123,7 +157,7 @@ export async function POST(request: NextRequest) {
       }
 
       case "expired": {
-        if (invoice.status === "FAILED") {
+        if (invoice.status === "FAILED" || invoice.status === "PAID") {
           return NextResponse.json({ received: true });
         }
 

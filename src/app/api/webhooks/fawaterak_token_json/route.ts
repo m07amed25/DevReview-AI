@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { db } from "@/server/db";
 import { fawaterakConfig } from "@/server/services/fawaterak/config";
+import {
+  encryptPaymentToken,
+  fingerprintPaymentToken,
+} from "@/server/services/payment-tokens";
 
 function verifyTokenizationHash(
   customerUniqueId: string,
@@ -14,8 +18,9 @@ function verifyTokenizationHash(
     .update(queryParam)
     .digest("hex");
 
-  const a = Buffer.from(expected);
-  const b = Buffer.from(receivedHash);
+  if (!/^[a-f0-9]{64}$/i.test(receivedHash)) return false;
+  const a = Buffer.from(expected, "hex");
+  const b = Buffer.from(receivedHash, "hex");
   if (a.length !== b.length) return false;
   return crypto.timingSafeEqual(a, b);
 }
@@ -29,11 +34,23 @@ function detectCardBrand(cardNumber: string): string {
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { customerUniqueId, customerCardToken, customerCard, cardTokenUniqueId } = body;
+    const body = (await request.json()) as Record<string, unknown>;
+    const customerUniqueId =
+      typeof body.customerUniqueId === "string" ? body.customerUniqueId : "";
+    const customerCardToken =
+      typeof body.customerCardToken === "string" ? body.customerCardToken : "";
+    const customerCard =
+      typeof body.customerCard === "string" ? body.customerCard : "";
+    const cardTokenUniqueId =
+      typeof body.cardTokenUniqueId === "string" ? body.cardTokenUniqueId : "";
 
-    // Verify hash from header
-    const receivedHash = request.headers.get("x-fawaterak-hash") ?? "";
+    if (!customerUniqueId || !customerCardToken) {
+      return NextResponse.json({ error: "Malformed webhook" }, { status: 400 });
+    }
+
+    const receivedHash =
+      request.headers.get("x-fawaterak-hash") ??
+      (typeof body.hashKey === "string" ? body.hashKey : "");
     if (!verifyTokenizationHash(customerUniqueId, customerCardToken, receivedHash)) {
       return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
     }
@@ -48,8 +65,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Idempotency: check if token already exists
+    const fingerprint = fingerprintPaymentToken(customerCardToken);
     const existing = await db.paymentMethod.findFirst({
-      where: { fawaterakToken: customerCardToken },
+      where: {
+        OR: [
+          { fingerprint },
+          { fawaterakToken: customerCardToken },
+        ],
+      },
     });
 
     if (existing) {
@@ -57,8 +80,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Extract last 4 digits from masked card
-    const lastFour = customerCard?.slice(-4) ?? "****";
-    const cardBrand = customerCard ? detectCardBrand(customerCard) : "Card";
+    const lastFour = customerCard.slice(-4) || "****";
+    const cardBrand =
+      typeof body.cardBrand === "string" ? body.cardBrand : detectCardBrand(customerCard);
 
     // Check if this is the first card (make it default)
     const existingCount = await db.paymentMethod.count({
@@ -73,9 +97,10 @@ export async function POST(request: NextRequest) {
         expiryMonth: 0, // Fawaterak doesn't return expiry
         expiryYear: 0,
         isDefault: existingCount === 0,
-        fawaterakToken: customerCardToken,
+        fingerprint,
+        fawaterakToken: encryptPaymentToken(customerCardToken),
         customerUniqueId,
-        cardTokenUniqueId: cardTokenUniqueId ?? customerCardToken,
+        cardTokenUniqueId: cardTokenUniqueId || customerCardToken,
       },
     });
 

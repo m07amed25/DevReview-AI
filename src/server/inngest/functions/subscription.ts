@@ -1,5 +1,6 @@
 import { inngest } from "../client";
 import { db } from "@/server/db";
+import { activatePaidInvoice } from "@/server/services/payment-workflow";
 
 export const processPaymentSuccess = inngest.createFunction(
   {
@@ -33,20 +34,10 @@ export const processPaymentSuccess = inngest.createFunction(
       throw new Error("Plan not found");
     }
 
-    // Calculate subscription dates
-    const now = new Date();
-    const planExpiresAt = new Date(now);
-    planExpiresAt.setMonth(planExpiresAt.getMonth() + 1);
-
-    // Activate subscription
+    // Ensure subscription state matches the paid invoice.
     await step.run("activate-subscription", async () => {
-      return db.user.update({
-        where: { id: invoice.userId },
-        data: {
-          planId: invoice.planId!,
-          planExpiresAt,
-        },
-      });
+      await activatePaidInvoice(db, invoice);
+      return { success: true };
     });
 
     // Send confirmation email (if Resend is configured)
@@ -70,7 +61,7 @@ export const processPaymentSuccess = inngest.createFunction(
               <h1>Payment Successful</h1>
               <p>Thank you for subscribing to the ${plan.name} plan!</p>
               <p><strong>Amount:</strong> ${invoice.amount} ${invoice.currency}</p>
-              <p><strong>Valid until:</strong> ${planExpiresAt.toLocaleDateString()}</p>
+              <p><strong>Plan:</strong> ${plan.name}</p>
             `,
           }),
         });

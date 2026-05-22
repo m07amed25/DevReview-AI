@@ -643,7 +643,7 @@ function AddCardForm({ onSuccess }: { onSuccess: () => void }) {
         <Shield className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
         <div className="space-y-1">
           <p className="font-medium text-emerald-600 dark:text-emerald-400">PCI DSS Compliant</p>
-          <p>Card capture is handled by Fawaterak's secure hosted form. We never see or store your full card number.</p>
+          <p>Card capture is handled by Fawaterak&apos;s secure hosted form. We never see or store your full card number.</p>
         </div>
       </div>
     </div>
