@@ -4,7 +4,13 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Zap, Loader2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Zap, Loader2, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc/client";
 import { OverviewTab, PaymentTab, HistoryTab } from "./components";
@@ -39,6 +45,11 @@ export default function BillingPage() {
     },
   });
 
+  const [showPlanPicker, setShowPlanPicker] = useState(false);
+  const { data: upgradePlans } = trpc.payment.getUpgradePlans.useQuery(undefined, {
+    enabled: showPlanPicker,
+  });
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -50,8 +61,7 @@ export default function BillingPage() {
   if (!user) return null;
 
   const handleUpgrade = () => {
-    // Redirect to pricing page or payment flow
-    window.location.href = "/billing/pay?plan=pro&cycle=monthly";
+    setShowPlanPicker(true);
   };
 
   const handleApplyPromo = () => {
@@ -119,6 +129,41 @@ export default function BillingPage() {
           <HistoryTab />
         </TabsContent>
       </Tabs>
+
+      <Dialog open={showPlanPicker} onOpenChange={setShowPlanPicker}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Choose a Plan</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3 mt-2">
+            {upgradePlans?.map((p) => (
+              <button
+                key={p.id}
+                onClick={() => {
+                  setShowPlanPicker(false);
+                  window.location.href = `/billing/pay?plan=${p.id}&cycle=monthly`;
+                }}
+                className="w-full p-4 rounded-lg border-2 border-border hover:border-primary/50 text-left transition-colors"
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-semibold">{p.name}</p>
+                    <p className="text-sm text-muted-foreground">{p.tagline}</p>
+                  </div>
+                  <span className="text-lg font-bold">${p.monthlyPrice}/mo</span>
+                </div>
+                <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+                  {p.features.slice(0, 3).map((f, i) => (
+                    <span key={i} className="text-xs text-muted-foreground flex items-center gap-1">
+                      <CheckCircle2 className="h-3 w-3 text-emerald-500" />{f}
+                    </span>
+                  ))}
+                </div>
+              </button>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

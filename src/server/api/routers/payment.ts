@@ -42,17 +42,36 @@ export const paymentRouter = createTRPCRouter({
       });
       if (!plan) throw new TRPCError({ code: "NOT_FOUND", message: "Plan not found" });
 
-      const amountCents =
-        input.billingCycle === "monthly" ? plan.monthlyPrice : Math.round(plan.monthlyPrice * 12 * 0.8);
-      const amountMajor = toAmountStr(amountCents);
+      // Calculate base price
+      const settings = await ctx.db.pricingSettings.findUnique({ where: { id: "global" } });
+      const annualDiscount = (settings?.annualDiscount ?? 20) / 100;
+      const basePrice =
+        input.billingCycle === "monthly" ? plan.monthlyPrice : Math.round(plan.monthlyPrice * 12 * (1 - annualDiscount));
+
+      // Apply user's active discount
+      const appliedPromo = await ctx.db.userDiscount.findFirst({
+        where: { userId: ctx.user.id },
+        orderBy: { appliedAt: "desc" },
+      });
+      let finalAmount = basePrice;
+      if (appliedPromo) {
+        const d = await ctx.db.discount.findUnique({ where: { id: appliedPromo.discountId } });
+        if (d) {
+          finalAmount = d.type === "PERCENTAGE"
+            ? Math.round(basePrice * (1 - d.value / 100))
+            : Math.max(0, basePrice - d.value);
+        }
+      }
+
+      const amountMajor = toAmountStr(finalAmount);
 
       const invoice = await ctx.db.invoice.create({
         data: {
           userId: ctx.user.id,
-          amount: amountCents,
+          amount: finalAmount,
           planId: input.planId,
           description: `${plan.name} - ${input.billingCycle}`,
-          currency: "EGP",
+          currency: "USD",
         },
       });
 
@@ -62,7 +81,7 @@ export const paymentRouter = createTRPCRouter({
         const result = await payments.executePayment({
           payment_method_id: input.paymentMethodId,
           cartTotal: amountMajor,
-          currency: "EGP",
+          currency: "USD",
           customer: {
             first_name: billing.fullName.split(" ")[0] ?? billing.fullName,
             last_name: billing.fullName.split(" ").slice(1).join(" ") || "User",
@@ -185,17 +204,34 @@ export const paymentRouter = createTRPCRouter({
       const plan = await ctx.db.pricingPlan.findUnique({ where: { id: input.planId } });
       if (!plan) throw new TRPCError({ code: "NOT_FOUND", message: "Plan not found" });
 
-      const amountCents =
-        input.billingCycle === "monthly" ? plan.monthlyPrice : Math.round(plan.monthlyPrice * 12 * 0.8);
-      const amountMajor = toAmountStr(amountCents);
+      const settings = await ctx.db.pricingSettings.findUnique({ where: { id: "global" } });
+      const annualDiscount = (settings?.annualDiscount ?? 20) / 100;
+      const basePrice =
+        input.billingCycle === "monthly" ? plan.monthlyPrice : Math.round(plan.monthlyPrice * 12 * (1 - annualDiscount));
+
+      const appliedPromo = await ctx.db.userDiscount.findFirst({
+        where: { userId: ctx.user.id },
+        orderBy: { appliedAt: "desc" },
+      });
+      let finalAmount = basePrice;
+      if (appliedPromo) {
+        const d = await ctx.db.discount.findUnique({ where: { id: appliedPromo.discountId } });
+        if (d) {
+          finalAmount = d.type === "PERCENTAGE"
+            ? Math.round(basePrice * (1 - d.value / 100))
+            : Math.max(0, basePrice - d.value);
+        }
+      }
+
+      const amountMajor = toAmountStr(finalAmount);
 
       const invoice = await ctx.db.invoice.create({
         data: {
           userId: ctx.user.id,
-          amount: amountCents,
+          amount: finalAmount,
           planId: input.planId,
           description: `${plan.name} - ${input.billingCycle}`,
-          currency: "EGP",
+          currency: "USD",
         },
       });
 
@@ -203,7 +239,7 @@ export const paymentRouter = createTRPCRouter({
 
       const result = await tokenization.payWithToken({
         cartTotal: amountMajor,
-        currency: "EGP",
+        currency: "USD",
         customer: {
           first_name: billing.fullName.split(" ")[0] ?? billing.fullName,
           last_name: billing.fullName.split(" ").slice(1).join(" ") || "User",
@@ -271,5 +307,14 @@ export const paymentRouter = createTRPCRouter({
       },
     });
     return billing?.paymentMethods ?? [];
+  }),
+
+  getUpgradePlans: protectedProcedure.query(async ({ ctx }) => {
+    const user = await ctx.db.user.findUnique({ where: { id: ctx.user.id }, select: { planId: true } });
+    return ctx.db.pricingPlan.findMany({
+      where: { visible: true, monthlyPrice: { gt: 0 }, id: { not: user?.planId ?? "free" } },
+      orderBy: { sortOrder: "asc" },
+      select: { id: true, name: true, monthlyPrice: true, tagline: true, features: true },
+    });
   }),
 });
