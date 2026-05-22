@@ -49,8 +49,6 @@ import { trpc } from "@/lib/trpc/client";
 import { Checkbox } from "@/components/ui/checkbox";
 import { COUNTRIES, SUBDIVISIONS, getSubdivisionLabel } from "@/lib/billing-data";
 
-// ─── Overview Tab (unchanged from original) ─────────────────────────────────
-
 interface UserPlan {
   name: string;
   tagline: string;
@@ -604,290 +602,51 @@ function BillingInfoForm({
   );
 }
 
-// ─── Add Card Form ───────────────────────────────────────────────────────────
+// ─── Add Card Form (Fawaterak Hosted) ─────────────────────────────────────────
 
 function AddCardForm({ onSuccess }: { onSuccess: () => void }) {
   const utils = trpc.useUtils();
-  const [cardNumber, setCardNumber] = useState("");
-  const [expiry, setExpiry] = useState("");
-  const [cvv, setCvv] = useState("");
-  const [cardName, setCardName] = useState("");
-  const [isDefault, setIsDefault] = useState(false);
-  const [cvvFocused, setCvvFocused] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const expiryRef = useRef<HTMLInputElement>(null);
-  const cvvRef = useRef<HTMLInputElement>(null);
-  const nameRef = useRef<HTMLInputElement>(null);
-
-  const brand = detectBrand(cardNumber);
-  const rawDigits = cardNumber.replace(/\s/g, "");
-  const isValidLength = brand === "amex" ? rawDigits.length === 15 : rawDigits.length === 16;
-  const isValidLuhn = isValidLength && luhnCheck(rawDigits);
-  const cvvLength = brand === "amex" ? 4 : 3;
-
-  const addCard = trpc.billing.addCard.useMutation({
-    onSuccess: () => {
-      utils.billing.getInfo.invalidate();
-      toast.success("Card added securely");
-      onSuccess();
+  const saveCardScreen = trpc.payment.saveCardScreen.useMutation({
+    onSuccess: (data) => {
+      window.location.href = data.url;
     },
     onError: (e) => toast.error(e.message),
   });
 
-  const validate = (): boolean => {
-    const errs: Record<string, string> = {};
-
-    if (!isValidLength) errs.cardNumber = "Enter a complete card number";
-    else if (!isValidLuhn) errs.cardNumber = "Invalid card number";
-
-    const [m, y] = expiry.split("/");
-    if (!m || !y || m.length !== 2 || y.length !== 2) {
-      errs.expiry = "Use MM/YY format";
-    } else {
-      const month = parseInt(m, 10);
-      const year = 2000 + parseInt(y, 10);
-      const now = new Date();
-      if (month < 1 || month > 12) errs.expiry = "Invalid month";
-      else if (year < now.getFullYear() || (year === now.getFullYear() && month < now.getMonth() + 1)) {
-        errs.expiry = "Card has expired";
-      }
-    }
-
-    if (cvv.length < cvvLength) errs.cvv = `Must be ${cvvLength} digits`;
-
-    setErrors(errs);
-    return Object.keys(errs).length === 0;
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!validate()) return;
-
-    const [m, y] = expiry.split("/");
-    addCard.mutate({
-      cardNumber: rawDigits,
-      expiryMonth: parseInt(m!, 10),
-      expiryYear: 2000 + parseInt(y!, 10),
-      isDefault,
-    });
+  const handleAddCard = () => {
+    saveCardScreen.mutate();
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      {/* 3D Flip Card Preview */}
-      <div className="perspective-[1000px] h-48 w-full">
-        <motion.div
-          className="relative w-full h-full"
-          style={{ transformStyle: "preserve-3d" }}
-          animate={{ rotateY: cvvFocused ? 180 : 0 }}
-          transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+    <div className="space-y-5">
+      <div className="flex flex-col items-center justify-center py-12 text-center">
+        <CreditCard className="h-16 w-16 text-muted-foreground/30 mb-4" />
+        <h3 className="text-lg font-semibold mb-2">Add Payment Method</h3>
+        <p className="text-sm text-muted-foreground max-w-sm mb-6">
+          Secure card tokenization is handled by our payment provider.
+          Your card details are never stored on our servers.
+        </p>
+        <Button
+          onClick={handleAddCard}
+          disabled={saveCardScreen.isPending}
+          className="h-11 px-8"
         >
-          {/* Front Face */}
-          <div className="absolute inset-0 rounded-xl overflow-hidden bg-gradient-to-br from-zinc-800 via-zinc-900 to-black p-5 text-white shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)] select-none backface-hidden">
-            {/* Brand Icons Row */}
-            <div className="absolute top-4 right-5 flex items-center gap-2">
-              <span className={`text-xs font-bold tracking-wider transition-opacity duration-300 ${brand === "visa" ? "opacity-100" : brand ? "opacity-20" : "opacity-50"}`}>VISA</span>
-              <span className={`flex -space-x-1.5 transition-opacity duration-300 ${brand === "mastercard" ? "opacity-100" : brand ? "opacity-20" : "opacity-50"}`}>
-                <span className="h-4 w-4 rounded-full bg-red-500 inline-block" />
-                <span className="h-4 w-4 rounded-full bg-yellow-500 inline-block" />
-              </span>
-              <span className={`text-xs font-bold tracking-wider transition-opacity duration-300 ${brand === "amex" ? "opacity-100" : brand ? "opacity-20" : "opacity-50"}`}>AMEX</span>
-            </div>
-            {/* Chip */}
-            <div className="absolute top-5 left-5">
-              <div className="h-9 w-12 rounded-md bg-gradient-to-br from-yellow-200 via-yellow-400 to-yellow-600 shadow-inner">
-                <div className="h-full w-full rounded-md border border-yellow-700/30 grid grid-cols-3 grid-rows-3 gap-px p-1 opacity-60">
-                  {Array.from({ length: 9 }).map((_, i) => <div key={i} className="rounded-sm bg-yellow-800/40" />)}
-                </div>
-              </div>
-            </div>
-            {/* Contactless */}
-            <div className="absolute top-7 left-[4.5rem]">
-              <svg className="h-5 w-5 opacity-50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M8.5 14.5A5 5 0 0112 13a5 5 0 013.5 1.5M6 17a8 8 0 014-2 8 8 0 014 2M12 10a2 2 0 012 2" strokeLinecap="round"/></svg>
-            </div>
-            {/* Card Number */}
-            <div className="absolute bottom-16 left-5 right-5">
-              <p className="font-mono text-[1.15rem] tracking-[0.18em] opacity-95">
-                {cardNumber || "•••• •••• •••• ••••"}
-              </p>
-            </div>
-            {/* Bottom row */}
-            <div className="absolute bottom-5 left-5 right-5 flex justify-between items-end">
-              <div>
-                <p className="text-[9px] uppercase tracking-widest opacity-50 mb-0.5">Card Holder</p>
-                <p className="text-xs uppercase tracking-wider opacity-90 font-medium">
-                  {cardName || "YOUR NAME"}
-                </p>
-              </div>
-              <div className="text-right">
-                <p className="text-[9px] uppercase tracking-widest opacity-50 mb-0.5">Expires</p>
-                <p className="text-xs tracking-wider opacity-90 font-mono">
-                  {expiry || "MM/YY"}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Back Face */}
-          <div className="absolute inset-0 rounded-xl overflow-hidden bg-gradient-to-br from-zinc-700 via-zinc-800 to-zinc-900 text-white shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)] select-none backface-hidden [transform:rotateY(180deg)]">
-            {/* Magnetic Strip */}
-            <div className="mt-6 h-11 w-full bg-zinc-950/80" />
-            {/* CVV Strip */}
-            <div className="mt-4 mx-5 flex items-center gap-3">
-              <div className="flex-1 h-9 bg-zinc-200 rounded flex items-center justify-end px-3">
-                <span className="font-mono text-zinc-900 text-sm tracking-widest">
-                  {cvv || "•••"}
-                </span>
-              </div>
-              <span className="text-[10px] uppercase tracking-wider opacity-60">CVV</span>
-            </div>
-            {/* Info text */}
-            <div className="absolute bottom-5 left-5 right-5">
-              <div className="h-3 w-3/4 bg-zinc-600/30 rounded mb-1.5" />
-              <div className="h-3 w-1/2 bg-zinc-600/30 rounded" />
-            </div>
-          </div>
-        </motion.div>
+          {saveCardScreen.isPending ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            "Add Card"
+          )}
+        </Button>
       </div>
-
-      {/* Card Number */}
-      <div className="space-y-1.5">
-        <Label htmlFor="cardNumber" className="text-sm font-medium">
-          Card Number <span className="text-destructive">*</span>
-        </Label>
-        <div className="relative">
-          <Input
-            id="cardNumber"
-            value={cardNumber}
-            onChange={(e) => {
-              const formatted = formatCardNumber(e.target.value);
-              setCardNumber(formatted);
-              errors.cardNumber && setErrors((p) => ({ ...p, cardNumber: "" }));
-              // Auto-advance when card number is complete
-              const digits = formatted.replace(/\s/g, "");
-              const maxLen = /^3[47]/.test(digits) ? 15 : 16;
-              if (digits.length === maxLen) expiryRef.current?.focus();
-            }}
-            required
-            placeholder="4242 4242 4242 4242"
-            maxLength={brand === "amex" ? 17 : 19}
-            autoComplete="cc-number"
-            inputMode="numeric"
-            className={`pr-10 ${errors.cardNumber ? "border-destructive focus-visible:ring-destructive/30" : ""}`}
-          />
-          <div className="absolute right-3 top-1/2 -translate-y-1/2">
-            {isValidLuhn ? (
-              <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 400 }}>
-                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-              </motion.div>
-            ) : rawDigits.length > 0 ? (
-              <CreditCard className="h-4 w-4 text-muted-foreground/50" />
-            ) : null}
-          </div>
-        </div>
-        {errors.cardNumber && <p className="text-xs text-destructive flex items-center gap-1"><AlertCircle className="h-3 w-3" />{errors.cardNumber}</p>}
-      </div>
-
-      {/* Expiry + CVV row */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-1.5">
-          <Label htmlFor="expiry" className="text-sm font-medium">
-            Expiry <span className="text-destructive">*</span>
-          </Label>
-          <Input
-            ref={expiryRef}
-            id="expiry"
-            value={expiry}
-            onChange={(e) => {
-              const formatted = formatExpiry(e.target.value);
-              setExpiry(formatted);
-              errors.expiry && setErrors((p) => ({ ...p, expiry: "" }));
-              // Auto-advance when expiry is complete (MM/YY = 5 chars)
-              if (formatted.length === 5) cvvRef.current?.focus();
-            }}
-            required
-            placeholder="MM/YY"
-            maxLength={5}
-            autoComplete="cc-exp"
-            inputMode="numeric"
-            className={errors.expiry ? "border-destructive focus-visible:ring-destructive/30" : ""}
-          />
-          {errors.expiry && <p className="text-xs text-destructive flex items-center gap-1"><AlertCircle className="h-3 w-3" />{errors.expiry}</p>}
-        </div>
-
-        <div className="space-y-1.5">
-          <Label htmlFor="cvv" className="text-sm font-medium">
-            {brand === "amex" ? "CID (4 digits, front)" : "CVV (3 digits, back)"} <span className="text-destructive">*</span>
-          </Label>
-          <Input
-            ref={cvvRef}
-            id="cvv"
-            value={cvv}
-            onChange={(e) => {
-              const v = e.target.value.replace(/\D/g, "").slice(0, cvvLength);
-              setCvv(v);
-              errors.cvv && setErrors((p) => ({ ...p, cvv: "" }));
-              // Auto-advance when CVV is complete
-              if (v.length === cvvLength) nameRef.current?.focus();
-            }}
-            onFocus={() => setCvvFocused(true)}
-            onBlur={() => setCvvFocused(false)}
-            required
-            placeholder={brand === "amex" ? "••••" : "•••"}
-            maxLength={cvvLength}
-            autoComplete="cc-csc"
-            inputMode="numeric"
-            type="password"
-            className={errors.cvv ? "border-destructive focus-visible:ring-destructive/30" : ""}
-          />
-          {errors.cvv && <p className="text-xs text-destructive flex items-center gap-1"><AlertCircle className="h-3 w-3" />{errors.cvv}</p>}
-        </div>
-      </div>
-
-      {/* Cardholder Name */}
-      <div className="space-y-1.5">
-        <Label htmlFor="cardName" className="text-sm font-medium">
-          Name on Card
-        </Label>
-        <Input
-          ref={nameRef}
-          id="cardName"
-          value={cardName}
-          onChange={(e) => setCardName(e.target.value.toUpperCase())}
-          placeholder="JOHN DOE"
-          autoComplete="cc-name"
-          className="uppercase tracking-wide"
-        />
-      </div>
-
-      {/* Default checkbox */}
-      <label className="flex items-center gap-3 cursor-pointer group">
-        <Checkbox checked={isDefault} onCheckedChange={(v) => setIsDefault(v === true)} />
-        <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">Set as default payment method</span>
-      </label>
-
-      {/* Security notice */}
       <div className="flex items-start gap-3 text-xs text-muted-foreground bg-emerald-500/5 border border-emerald-500/20 p-3.5 rounded-lg">
         <Shield className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
         <div className="space-y-1">
-          <p className="font-medium text-emerald-600 dark:text-emerald-400">256-bit TLS Encrypted</p>
-          <p>Your full card number is never stored. Only the last 4 digits are saved for identification. Transmitted securely via TLS 1.3.</p>
+          <p className="font-medium text-emerald-600 dark:text-emerald-400">PCI DSS Compliant</p>
+          <p>Card capture is handled by Fawaterak's secure hosted form. We never see or store your full card number.</p>
         </div>
       </div>
-
-      <Button type="submit" className="w-full h-11 text-sm font-medium relative overflow-hidden group/btn" disabled={addCard.isPending}>
-        <span className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-emerald-500 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300" />
-        <span className="relative flex items-center justify-center gap-2">
-          {addCard.isPending ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Shield className="h-4 w-4" />
-          )}
-          {addCard.isPending ? "Encrypting & Saving..." : "Add Card Securely"}
-        </span>
-      </Button>
-    </form>
+    </div>
   );
 }
 
@@ -943,7 +702,7 @@ export function HistoryTab() {
                         {new Date(inv.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                       </TableCell>
                       <TableCell className="text-sm text-right font-medium">
-                        ${(inv.amount / 100).toFixed(2)}
+                        ${inv.amount}
                       </TableCell>
                     </TableRow>
                   ))}

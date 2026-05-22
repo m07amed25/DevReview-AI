@@ -1,0 +1,374 @@
+import { z } from "zod";
+import { TRPCError } from "@trpc/server";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { payments, tokenization } from "../../services/fawaterak";
+import { fawaterakConfig } from "../../services/fawaterak/config";
+
+// Prices are stored in whole EGP — convert to string for Fawaterak
+const toAmountStr = (amount: number) => amount.toFixed(2);
+
+export const paymentRouter = createTRPCRouter({
+  getPaymentMethods: protectedProcedure.query(async () => {
+    try {
+      const methods = await payments.getPaymentMethods();
+      return methods;
+    } catch (error) {
+      console.error("Failed to fetch payment methods:", error);
+      return [];
+    }
+  }),
+
+  initiatePayment: protectedProcedure
+    .input(
+      z.object({
+        planId: z.string(),
+        billingCycle: z.enum(["monthly", "yearly"]),
+        paymentMethodId: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const billing = await ctx.db.billingInfo.findUnique({
+        where: { userId: ctx.user.id },
+      });
+      if (!billing) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "Please add billing information first.",
+        });
+      }
+
+      const plan = await ctx.db.pricingPlan.findUnique({
+        where: { id: input.planId },
+      });
+      if (!plan) throw new TRPCError({ code: "NOT_FOUND", message: "Plan not found" });
+
+      // Calculate base price
+      const settings = await ctx.db.pricingSettings.findUnique({ where: { id: "global" } });
+      const annualDiscount = (settings?.annualDiscount ?? 20) / 100;
+      const basePrice =
+        input.billingCycle === "monthly" ? plan.monthlyPrice : Math.round(plan.monthlyPrice * 12 * (1 - annualDiscount));
+
+      // Apply user's active discount
+      const appliedPromo = await ctx.db.userDiscount.findFirst({
+        where: { userId: ctx.user.id },
+        orderBy: { appliedAt: "desc" },
+      });
+      let finalAmount = basePrice;
+      if (appliedPromo) {
+        const d = await ctx.db.discount.findUnique({ where: { id: appliedPromo.discountId } });
+        if (d) {
+          finalAmount = d.type === "PERCENTAGE"
+            ? Math.round(basePrice * (1 - d.value / 100))
+            : Math.max(0, basePrice - d.value);
+        }
+      }
+
+      const amountMajor = toAmountStr(finalAmount);
+
+      const invoice = await ctx.db.invoice.create({
+        data: {
+          userId: ctx.user.id,
+          amount: finalAmount,
+          planId: input.planId,
+          description: `${plan.name} - ${input.billingCycle}`,
+          currency: "USD",
+        },
+      });
+
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+
+      try {
+        const result = await payments.executePayment({
+          payment_method_id: input.paymentMethodId,
+          cartTotal: amountMajor,
+          currency: "USD",
+          customer: {
+            first_name: billing.fullName.split(" ")[0] ?? billing.fullName,
+            last_name: billing.fullName.split(" ").slice(1).join(" ") || "User",
+            email: billing.email,
+            address: billing.address ?? undefined,
+            customer_unique_id: ctx.user.id,
+          },
+          cartItems: [{ name: plan.name, price: amountMajor, quantity: "1" }],
+          redirectionUrls: {
+            successUrl: `${baseUrl}/billing/success?invoice=${invoice.id}`,
+            failUrl: `${baseUrl}/billing/failed?invoice=${invoice.id}`,
+            pendingUrl: `${baseUrl}/billing/pending?invoice=${invoice.id}`,
+            webhookUrl: `${baseUrl}/api/webhooks/fawaterak_json`,
+          },
+          invoice_number: invoice.id,
+        });
+
+        await ctx.db.invoice.update({
+          where: { id: invoice.id },
+          data: {
+            fawaterakInvoiceId: result.invoice_id,
+            fawaterakInvoiceKey: result.invoice_key,
+          },
+        }).catch(async (err) => {
+          // Handle unique constraint on fawaterakInvoiceId (stale failed invoice)
+          if (err?.code === "P2002") {
+            await ctx.db.invoice.updateMany({
+              where: { fawaterakInvoiceId: result.invoice_id, id: { not: invoice.id } },
+              data: { fawaterakInvoiceId: null, fawaterakInvoiceKey: null },
+            });
+            await ctx.db.invoice.update({
+              where: { id: invoice.id },
+              data: { fawaterakInvoiceId: result.invoice_id, fawaterakInvoiceKey: result.invoice_key },
+            });
+          } else throw err;
+        });
+
+        return {
+          invoiceId: invoice.id,
+          fawaterakInvoiceId: result.invoice_id,
+          fawaterakInvoiceKey: result.invoice_key,
+          redirectTo: result.payment_data.redirectTo,
+          referenceCode:
+            result.payment_data.fawryCode ??
+            result.payment_data.amanCode ??
+            result.payment_data.masaryCode ??
+            result.payment_data.meezaReference?.toString(),
+        };
+      } catch (error) {
+        await ctx.db.invoice.update({
+          where: { id: invoice.id },
+          data: { status: "FAILED" },
+        });
+        throw error;
+      }
+    }),
+
+  getPaymentStatus: protectedProcedure
+    .input(z.object({ invoiceId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const invoice = await ctx.db.invoice.findFirst({
+        where: { id: input.invoiceId, userId: ctx.user.id },
+      });
+      if (!invoice) throw new TRPCError({ code: "NOT_FOUND" });
+
+      if (!invoice.fawaterakInvoiceId) {
+        return { status: invoice.status, invoice };
+      }
+
+      const txData = await payments.getTransactionData(invoice.fawaterakInvoiceId);
+      return { status: txData.invoice_status, invoice, txData };
+    }),
+
+  saveCardScreen: protectedProcedure.mutation(async ({ ctx }) => {
+    const billing = await ctx.db.billingInfo.findUnique({
+      where: { userId: ctx.user.id },
+    });
+    if (!billing) {
+      throw new TRPCError({
+        code: "PRECONDITION_FAILED",
+        message: "Please add billing information first.",
+      });
+    }
+
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+
+    const result = await tokenization.createCardTokenScreen({
+      customer_unique_id: ctx.user.id,
+      customer: {
+        first_name: billing.fullName.split(" ")[0] ?? billing.fullName,
+        last_name: billing.fullName.split(" ").slice(1).join(" ") || "User",
+        email: billing.email,
+      },
+      redirect_url: `${baseUrl}/billing/cards/saved`,
+    });
+
+    return { url: result.card_token_screen_url, cardTokenUniqueId: result.card_token_unique_id };
+  }),
+
+  payWithSavedCard: protectedProcedure
+    .input(
+      z.object({
+        planId: z.string(),
+        billingCycle: z.enum(["monthly", "yearly"]),
+        cardId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const billing = await ctx.db.billingInfo.findUnique({
+        where: { userId: ctx.user.id },
+        include: { paymentMethods: true },
+      });
+      if (!billing) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const card = billing.paymentMethods.find((c) => c.id === input.cardId);
+      if (!card || !card.fawaterakToken) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Card not found or not tokenized" });
+      }
+
+      const plan = await ctx.db.pricingPlan.findUnique({ where: { id: input.planId } });
+      if (!plan) throw new TRPCError({ code: "NOT_FOUND", message: "Plan not found" });
+
+      const settings = await ctx.db.pricingSettings.findUnique({ where: { id: "global" } });
+      const annualDiscount = (settings?.annualDiscount ?? 20) / 100;
+      const basePrice =
+        input.billingCycle === "monthly" ? plan.monthlyPrice : Math.round(plan.monthlyPrice * 12 * (1 - annualDiscount));
+
+      const appliedPromo = await ctx.db.userDiscount.findFirst({
+        where: { userId: ctx.user.id },
+        orderBy: { appliedAt: "desc" },
+      });
+      let finalAmount = basePrice;
+      if (appliedPromo) {
+        const d = await ctx.db.discount.findUnique({ where: { id: appliedPromo.discountId } });
+        if (d) {
+          finalAmount = d.type === "PERCENTAGE"
+            ? Math.round(basePrice * (1 - d.value / 100))
+            : Math.max(0, basePrice - d.value);
+        }
+      }
+
+      const amountMajor = toAmountStr(finalAmount);
+
+      const invoice = await ctx.db.invoice.create({
+        data: {
+          userId: ctx.user.id,
+          amount: finalAmount,
+          planId: input.planId,
+          description: `${plan.name} - ${input.billingCycle}`,
+          currency: "USD",
+        },
+      });
+
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+
+      const result = await tokenization.payWithToken({
+        cartTotal: amountMajor,
+        currency: "USD",
+        customer: {
+          first_name: billing.fullName.split(" ")[0] ?? billing.fullName,
+          last_name: billing.fullName.split(" ").slice(1).join(" ") || "User",
+          email: billing.email,
+          customer_unique_id: ctx.user.id,
+        },
+        cartItems: [{ name: plan.name, price: amountMajor, quantity: "1" }],
+        redirectionUrls: {
+          webhookUrl: `${baseUrl}/api/webhooks/fawaterak_json`,
+        },
+        card_token: card.fawaterakToken,
+        invoice_number: invoice.id,
+      });
+
+      await ctx.db.invoice.update({
+        where: { id: invoice.id },
+        data: {
+          fawaterakInvoiceId: result.invoice_id,
+          fawaterakInvoiceKey: result.invoice_key,
+          paymentMethodUsed: card.cardBrand,
+          status: "PAID",
+          paidAt: new Date(),
+        },
+      });
+
+      // Activate subscription immediately for token payments
+      const planExpiresAt = new Date();
+      planExpiresAt.setMonth(planExpiresAt.getMonth() + 1);
+      await ctx.db.user.update({
+        where: { id: ctx.user.id },
+        data: { planId: input.planId, planExpiresAt },
+      });
+
+      return { invoiceId: invoice.id, transactionId: result.transaction_id };
+    }),
+
+  removeSavedCard: protectedProcedure
+    .input(z.object({ cardId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const billing = await ctx.db.billingInfo.findUnique({
+        where: { userId: ctx.user.id },
+        include: { paymentMethods: true },
+      });
+      if (!billing) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const card = billing.paymentMethods.find((c) => c.id === input.cardId);
+      if (!card) throw new TRPCError({ code: "NOT_FOUND" });
+
+      if (card.customerUniqueId && card.cardTokenUniqueId) {
+        await tokenization.deleteCustomerToken(card.customerUniqueId, card.cardTokenUniqueId);
+      }
+
+      await ctx.db.paymentMethod.delete({ where: { id: input.cardId } });
+
+      if (card.isDefault) {
+        const next = billing.paymentMethods.find((c) => c.id !== input.cardId);
+        if (next) {
+          await ctx.db.paymentMethod.update({
+            where: { id: next.id },
+            data: { isDefault: true },
+          });
+        }
+      }
+
+      return { success: true };
+    }),
+
+  getSavedCards: protectedProcedure.query(async ({ ctx }) => {
+    const billing = await ctx.db.billingInfo.findUnique({
+      where: { userId: ctx.user.id },
+      include: {
+        paymentMethods: {
+          orderBy: [{ isDefault: "desc" }, { createdAt: "desc" }],
+        },
+      },
+    });
+    return billing?.paymentMethods ?? [];
+  }),
+
+  freeUpgrade: protectedProcedure
+    .input(z.object({ planId: z.string(), billingCycle: z.enum(["monthly", "yearly"]) }))
+    .mutation(async ({ ctx, input }) => {
+      const plan = await ctx.db.pricingPlan.findUnique({ where: { id: input.planId } });
+      if (!plan) throw new TRPCError({ code: "NOT_FOUND", message: "Plan not found" });
+
+      const settings = await ctx.db.pricingSettings.findUnique({ where: { id: "global" } });
+      const annualDiscount = (settings?.annualDiscount ?? 20) / 100;
+      const basePrice =
+        input.billingCycle === "monthly" ? plan.monthlyPrice : Math.round(plan.monthlyPrice * 12 * (1 - annualDiscount));
+
+      const appliedPromo = await ctx.db.userDiscount.findFirst({
+        where: { userId: ctx.user.id },
+        orderBy: { appliedAt: "desc" },
+      });
+      let finalAmount = basePrice;
+      if (appliedPromo) {
+        const d = await ctx.db.discount.findUnique({ where: { id: appliedPromo.discountId } });
+        if (d) {
+          finalAmount = d.type === "PERCENTAGE"
+            ? Math.round(basePrice * (1 - d.value / 100))
+            : Math.max(0, basePrice - d.value);
+        }
+      }
+
+      if (finalAmount !== 0) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "This plan is not free with your current discount." });
+      }
+
+      const planExpiresAt = new Date();
+      planExpiresAt.setMonth(planExpiresAt.getMonth() + (input.billingCycle === "yearly" ? 12 : 1));
+
+      await ctx.db.invoice.create({
+        data: { userId: ctx.user.id, amount: 0, planId: input.planId, description: `${plan.name} - ${input.billingCycle} (100% discount)`, currency: "USD", status: "PAID", paidAt: new Date() },
+      });
+
+      await ctx.db.user.update({
+        where: { id: ctx.user.id },
+        data: { planId: input.planId, planExpiresAt },
+      });
+
+      return { success: true };
+    }),
+
+  getUpgradePlans: protectedProcedure.query(async ({ ctx }) => {
+    const user = await ctx.db.user.findUnique({ where: { id: ctx.user.id }, select: { planId: true } });
+    return ctx.db.pricingPlan.findMany({
+      where: { visible: true, monthlyPrice: { gt: 0 }, id: { not: user?.planId ?? "free" } },
+      orderBy: { sortOrder: "asc" },
+      select: { id: true, name: true, monthlyPrice: true, tagline: true, features: true },
+    });
+  }),
+});

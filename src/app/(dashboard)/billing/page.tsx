@@ -4,7 +4,13 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Zap, Loader2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Zap, Loader2, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc/client";
 import { OverviewTab, PaymentTab, HistoryTab } from "./components";
@@ -23,7 +29,7 @@ export default function BillingPage() {
   const { data: appliedPromos } = trpc.billing.getAppliedPromos.useQuery();
   // Derive active discount from the most recent applied promo
   const discount = appliedPromos?.[0]
-    ? { type: appliedPromos[0].type as "PERCENTAGE" | "FIXED", value: appliedPromos[0].value }
+    ? { type: appliedPromos[0].type as "PERCENTAGE" | "FIXED", value: appliedPromos[0].value, planId: appliedPromos[0].planId as string | null }
     : null;
 
   const applyPromo = trpc.billing.applyPromo.useMutation({
@@ -39,6 +45,34 @@ export default function BillingPage() {
     },
   });
 
+  const [showPlanPicker, setShowPlanPicker] = useState(false);
+  const { data: upgradePlans } = trpc.payment.getUpgradePlans.useQuery(undefined, {
+    enabled: showPlanPicker,
+  });
+
+  const isFreeUpgrade = (planId: string) => {
+    if (!discount) return false;
+    if (discount.planId && discount.planId !== planId) return false;
+    return discount.type === "PERCENTAGE" && discount.value >= 100;
+  };
+
+  const getDiscountedPrice = (planId: string, price: number) => {
+    if (!discount) return null;
+    if (discount.planId && discount.planId !== planId) return null;
+    return discount.type === "PERCENTAGE"
+      ? Math.round(price * (1 - discount.value / 100))
+      : Math.max(0, price - discount.value);
+  };
+
+  const freeUpgrade = trpc.payment.freeUpgrade.useMutation({
+    onSuccess: () => {
+      toast.success("Plan upgraded successfully!");
+      utils.profile.get.invalidate();
+      setShowPlanPicker(false);
+    },
+    onError: (e) => toast.error(e.message),
+  });
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -49,13 +83,8 @@ export default function BillingPage() {
 
   if (!user) return null;
 
-  const handleUpgrade = async () => {
-    setIsUpgrading(true);
-    await new Promise((resolve) => setTimeout(resolve, 2500));
-    setIsUpgrading(false);
-    toast.success("Redirecting to Stripe...", {
-      description: "Secure payment session is being initialized.",
-    });
+  const handleUpgrade = () => {
+    setShowPlanPicker(true);
   };
 
   const handleApplyPromo = () => {
@@ -111,7 +140,7 @@ export default function BillingPage() {
             applyingPromo={applyPromo.isPending}
             handleApplyPromo={handleApplyPromo}
             promoMessage={promoMessage}
-            discount={discount}
+            discount={discount && (!discount.planId || discount.planId === user.planId) ? discount : null}
           />
         </TabsContent>
 
@@ -123,6 +152,60 @@ export default function BillingPage() {
           <HistoryTab />
         </TabsContent>
       </Tabs>
+
+      <Dialog open={showPlanPicker} onOpenChange={setShowPlanPicker}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Choose a Plan</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3 mt-2">
+            {upgradePlans?.map((p) => {
+              const free = isFreeUpgrade(p.id);
+              const discounted = getDiscountedPrice(p.id, p.monthlyPrice);
+              return (
+              <button
+                key={p.id}
+                disabled={freeUpgrade.isPending}
+                onClick={() => {
+                  if (free) {
+                    freeUpgrade.mutate({ planId: p.id, billingCycle: "monthly" });
+                  } else {
+                    setShowPlanPicker(false);
+                    window.location.href = `/billing/pay?plan=${p.id}&cycle=monthly`;
+                  }
+                }}
+                className="w-full p-4 rounded-lg border-2 border-border hover:border-primary/50 text-left transition-colors"
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-semibold">{p.name}</p>
+                    <p className="text-sm text-muted-foreground">{p.tagline}</p>
+                  </div>
+                  {free ? (
+                    <span className="text-lg font-bold text-emerald-500">FREE</span>
+                  ) : discounted !== null ? (
+                    <span className="text-lg font-bold">
+                      <span className="text-emerald-500">${discounted}</span>
+                      <span className="text-sm text-muted-foreground line-through ml-1">${p.monthlyPrice}</span>
+                      <span className="text-sm text-muted-foreground">/mo</span>
+                    </span>
+                  ) : (
+                    <span className="text-lg font-bold">${p.monthlyPrice}/mo</span>
+                  )}
+                </div>
+                <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+                  {p.features.slice(0, 3).map((f, i) => (
+                    <span key={i} className="text-xs text-muted-foreground flex items-center gap-1">
+                      <CheckCircle2 className="h-3 w-3 text-emerald-500" />{f}
+                    </span>
+                  ))}
+                </div>
+              </button>
+              );
+            })}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

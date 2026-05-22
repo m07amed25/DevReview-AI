@@ -38,8 +38,12 @@ export async function checkUserLimit(
     return { limit: null, usage: 0 };
   }
 
+  // If plan has expired, treat as free plan
+  const planExpired = user.planExpiresAt && new Date(user.planExpiresAt) < new Date();
+  const effectivePlanId = planExpired ? "free" : user.planId;
+
   const plan = await db.pricingPlan.findUnique({
-    where: { id: user.planId },
+    where: { id: effectivePlanId },
   });
 
   // Fallback for free plan if not in DB

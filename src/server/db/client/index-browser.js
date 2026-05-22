@@ -594,6 +594,12 @@ exports.Prisma.InvoiceScalarFieldEnum = {
   status: 'status',
   planId: 'planId',
   description: 'description',
+  fawaterakInvoiceId: 'fawaterakInvoiceId',
+  fawaterakInvoiceKey: 'fawaterakInvoiceKey',
+  paymentMethodUsed: 'paymentMethodUsed',
+  referenceNumber: 'referenceNumber',
+  currency: 'currency',
+  paidAt: 'paidAt',
   createdAt: 'createdAt'
 };
 
@@ -627,6 +633,9 @@ exports.Prisma.PaymentMethodScalarFieldEnum = {
   expiryYear: 'expiryYear',
   isDefault: 'isDefault',
   fingerprint: 'fingerprint',
+  fawaterakToken: 'fawaterakToken',
+  customerUniqueId: 'customerUniqueId',
+  cardTokenUniqueId: 'cardTokenUniqueId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

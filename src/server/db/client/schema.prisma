@@ -814,16 +814,23 @@ enum DiscountType {
 }
 
 model Invoice {
-  id          String        @id @default(cuid())
-  userId      String
-  amount      Int /// Amount in cents
-  status      InvoiceStatus @default(PAID)
-  planId      String?
-  description String?
-  createdAt   DateTime      @default(now())
-  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                  String        @id @default(cuid())
+  userId              String
+  amount              Int /// Amount in cents
+  status              InvoiceStatus @default(PENDING)
+  planId              String?
+  description         String?
+  fawaterakInvoiceId  Int?          @unique
+  fawaterakInvoiceKey String?
+  paymentMethodUsed   String? /// "Visa-Mastercard", "Fawry", etc.
+  referenceNumber     String? /// Fawry code, Aman code, etc.
+  currency            String        @default("EGP")
+  paidAt              DateTime?
+  createdAt           DateTime      @default(now())
+  user                User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@index([fawaterakInvoiceId])
   @@map("invoice")
 }
 
@@ -863,20 +870,27 @@ model BillingInfo {
 }
 
 model PaymentMethod {
-  id            String      @id @default(cuid())
-  billingInfoId String
-  cardBrand     String
-  lastFour      String      @db.VarChar(4)
-  expiryMonth   Int
-  expiryYear    Int
-  isDefault     Boolean     @default(false)
+  id                String      @id @default(cuid())
+  billingInfoId     String
+  cardBrand         String
+  lastFour          String      @db.VarChar(4)
+  expiryMonth       Int
+  expiryYear        Int
+  isDefault         Boolean     @default(false)
   /// Encrypted card fingerprint for deduplication — never store full card numbers
-  fingerprint   String?
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  billingInfo   BillingInfo @relation(fields: [billingInfoId], references: [id], onDelete: Cascade)
+  fingerprint       String?
+  /// Fawaterak token used to charge this card
+  fawaterakToken    String?     @unique
+  /// Stable per-user ID sent to Fawaterak
+  customerUniqueId  String?
+  /// Returned by Fawaterak; needed to delete the token
+  cardTokenUniqueId String?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  billingInfo       BillingInfo @relation(fields: [billingInfoId], references: [id], onDelete: Cascade)
 
   @@index([billingInfoId])
+  @@index([customerUniqueId])
   @@map("payment_method")
 }
 

@@ -1,12 +1,7 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import crypto from "crypto";
-
-// Hash card details for deduplication without storing sensitive data
-function cardFingerprint(cardNumber: string): string {
-  return crypto.createHash("sha256").update(cardNumber).digest("hex");
-}
+import { tokenization } from "../../services/fawaterak";
 
 const billingInfoSchema = z.object({
   fullName: z.string().min(1).max(200),
@@ -17,24 +12,6 @@ const billingInfoSchema = z.object({
   zip: z.string().max(20).optional(),
   country: z.string().length(2).default("US"),
 });
-
-const addCardSchema = z.object({
-  cardNumber: z
-    .string()
-    .regex(/^\d{13,19}$/, "Invalid card number")
-    .transform((v) => v.replace(/\s/g, "")),
-  expiryMonth: z.number().int().min(1).max(12),
-  expiryYear: z.number().int().min(new Date().getFullYear()),
-  isDefault: z.boolean().default(false),
-});
-
-function detectCardBrand(num: string): string {
-  if (/^4/.test(num)) return "Visa";
-  if (/^5[1-5]/.test(num) || /^2[2-7]/.test(num)) return "Mastercard";
-  if (/^3[47]/.test(num)) return "Amex";
-  if (/^6(?:011|5)/.test(num)) return "Discover";
-  return "Card";
-}
 
 export const billingRouter = createTRPCRouter({
   getInfo: protectedProcedure.query(async ({ ctx }) => {
@@ -77,70 +54,6 @@ export const billingRouter = createTRPCRouter({
       });
     }),
 
-  addCard: protectedProcedure
-    .input(addCardSchema)
-    .mutation(async ({ ctx, input }) => {
-      // Ensure billing info exists
-      const billing = await ctx.db.billingInfo.findUnique({
-        where: { userId: ctx.user.id },
-      });
-      if (!billing) {
-        throw new TRPCError({
-          code: "PRECONDITION_FAILED",
-          message: "Please add billing information first.",
-        });
-      }
-
-      const fingerprint = cardFingerprint(input.cardNumber);
-
-      // Check for duplicate card
-      const existing = await ctx.db.paymentMethod.findFirst({
-        where: { billingInfoId: billing.id, fingerprint },
-      });
-      if (existing) {
-        throw new TRPCError({
-          code: "CONFLICT",
-          message: "This card is already on file.",
-        });
-      }
-
-      const lastFour = input.cardNumber.slice(-4);
-      const cardBrand = detectCardBrand(input.cardNumber);
-
-      // If setting as default, unset others
-      if (input.isDefault) {
-        await ctx.db.paymentMethod.updateMany({
-          where: { billingInfoId: billing.id },
-          data: { isDefault: false },
-        });
-      }
-
-      // If first card, make it default
-      const count = await ctx.db.paymentMethod.count({
-        where: { billingInfoId: billing.id },
-      });
-
-      return ctx.db.paymentMethod.create({
-        data: {
-          billingInfoId: billing.id,
-          cardBrand,
-          lastFour,
-          expiryMonth: input.expiryMonth,
-          expiryYear: input.expiryYear,
-          isDefault: input.isDefault || count === 0,
-          fingerprint,
-        },
-        select: {
-          id: true,
-          cardBrand: true,
-          lastFour: true,
-          expiryMonth: true,
-          expiryYear: true,
-          isDefault: true,
-        },
-      });
-    }),
-
   setDefaultCard: protectedProcedure
     .input(z.object({ cardId: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
@@ -179,6 +92,14 @@ export const billingRouter = createTRPCRouter({
       const card = billing.paymentMethods.find((c) => c.id === input.cardId);
       if (!card) throw new TRPCError({ code: "NOT_FOUND" });
 
+      // Delete token from Fawaterak if it exists
+      if (card.cardTokenUniqueId && card.customerUniqueId) {
+        await tokenization.deleteCustomerToken(
+          card.customerUniqueId,
+          card.cardTokenUniqueId
+        );
+      }
+
       await ctx.db.paymentMethod.delete({ where: { id: input.cardId } });
 
       // If deleted card was default, promote next card
@@ -203,13 +124,15 @@ export const billingRouter = createTRPCRouter({
     if (used.length === 0) return [];
     const discounts = await ctx.db.discount.findMany({
       where: { id: { in: used.map((u) => u.discountId) } },
-      select: { id: true, code: true, type: true, value: true, description: true },
+      select: { id: true, code: true, type: true, value: true, description: true, planId: true },
     });
     const map = new Map(discounts.map((d) => [d.id, d]));
-    return used.map((u) => {
-      const d = map.get(u.discountId)!;
-      return { code: d.code, type: d.type, value: d.value, description: d.description, appliedAt: u.appliedAt };
-    });
+    return used
+      .filter((u) => map.has(u.discountId))
+      .map((u) => {
+        const d = map.get(u.discountId)!;
+        return { code: d.code, type: d.type, value: d.value, description: d.description, planId: d.planId, appliedAt: u.appliedAt };
+      });
   }),
 
 

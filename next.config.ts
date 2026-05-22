@@ -77,7 +77,7 @@ const nextConfig: NextConfig = {
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.pusher.com",
               "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: blob: https://avatars.githubusercontent.com https://*.githubusercontent.com https://*.public.blob.vercel-storage.com https://lh3.googleusercontent.com",
+              "img-src 'self' data: blob: https://avatars.githubusercontent.com https://*.githubusercontent.com https://*.public.blob.vercel-storage.com https://lh3.googleusercontent.com https://staging.fawaterk.com https://app.fawaterk.com",
               "font-src 'self'",
               "connect-src 'self' https://*.pusher.com wss://*.pusher.com https://api.github.com https://*.upstash.io",
               "frame-ancestors 'none'",

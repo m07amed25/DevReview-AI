@@ -298,6 +298,12 @@ async function callGroq(
   return response.choices[0]?.message?.content ?? undefined;
 }
 
+const IGNORED_FILE_PATTERNS = [
+  /schema\.prisma$/,
+  /\/migrations?\//,
+  /\.sql$/,
+];
+
 export async function reviewCode(
   prTitle: string,
   files: FileChange[],
@@ -305,7 +311,7 @@ export async function reviewCode(
 ): Promise<ReviewResult> {
   const diffContent = truncateDiff(
     files
-      .filter((f) => f.patch)
+      .filter((f) => f.patch && !IGNORED_FILE_PATTERNS.some((p) => p.test(f.filename)))
       .map((f) => {
         let patch = f.patch!;
         if (patch.length > MAX_PATCH_CHARS_PER_FILE) {
