@@ -15,7 +15,7 @@ export default function SuccessPage() {
 
   const { data, isLoading } = trpc.payment.getPaymentStatus.useQuery(
     { invoiceId: invoiceId! },
-    { enabled: !!invoiceId }
+    { enabled: !!invoiceId, refetchInterval: (query) => query.state.data?.status === "paid" ? false : 3000 }
   );
 
   return (

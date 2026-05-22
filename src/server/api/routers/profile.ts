@@ -96,6 +96,14 @@ export const profileRouter = createTRPCRouter({
       0,
     );
 
+    // Count reviews in current month (matches limit enforcement)
+    const startOfMonth = new Date();
+    startOfMonth.setDate(1);
+    startOfMonth.setHours(0, 0, 0, 0);
+    const monthlyReviews = await ctx.db.review.count({
+      where: { userId: ctx.user.id, createdAt: { gte: startOfMonth } },
+    });
+
     return {
       id: user.id,
       name: user.name,
@@ -118,7 +126,7 @@ export const profileRouter = createTRPCRouter({
       },
       stats: {
         repositories: user._count.repositories,
-        reviews: user._count.reviews,
+        reviews: monthlyReviews,
         teamMembers: seatsUsed,
       },
       isOwner: user.email === process.env.OWNER_MAIL,
