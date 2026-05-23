@@ -41,6 +41,7 @@ interface UserProps {
   email: string;
   image?: string | null | undefined;
   role?: string;
+  planId?: string;
 }
 
 export function UserMenu({ user }: { user: UserProps }) {
@@ -108,12 +109,14 @@ export function UserMenu({ user }: { user: UserProps }) {
               <p className="text-sm font-semibold truncate">
                 {user.name ?? "User"}
               </p>
-              <Badge
-                variant="secondary"
-                className="text-[10px] px-1.5 py-0 h-4 font-medium"
-              >
-                Pro
-              </Badge>
+              {user.planId && user.planId !== "free" && (
+                <Badge
+                  variant="secondary"
+                  className="text-[10px] px-1.5 py-0 h-4 font-medium capitalize"
+                >
+                  {user.planId === "enterprise" ? "Ultra" : user.planId}
+                </Badge>
+              )}
             </div>
             <p className="text-xs text-muted-foreground truncate">
               {user.email}

@@ -193,6 +193,7 @@ export function UnifiedNavbar() {
                     email: user.email,
                     image: user.image,
                     role: (user as { role?: string }).role,
+                    planId: (user as { planId?: string }).planId,
                   }}
                 />
               </>

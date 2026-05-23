@@ -32,11 +32,26 @@ export default function SuccessPage() {
   });
 
   useEffect(() => {
-    if (invoiceId && token && data?.status !== "paid" && !activationAttempted.current && !activate.isPending) {
-      activationAttempted.current = true;
-      activate.mutate({ invoiceId, token });
+    if (invoiceId && token && data?.status !== "paid" && !activate.isPending) {
+      // Retry activation every time the polled status changes (still not paid)
+      // but only if we have a token to verify with
+      if (!activationAttempted.current) {
+        activationAttempted.current = true;
+        activate.mutate({ invoiceId, token });
+      }
     }
   }, [activate, data?.status, invoiceId, token]);
+
+  // Retry activation when polling detects the invoice might be ready
+  useEffect(() => {
+    if (!invoiceId || !token || data?.status === "paid" || activate.isPending) return;
+    if (!activationAttempted.current) return; // wait for first attempt
+
+    const timer = setTimeout(() => {
+      activate.mutate({ invoiceId, token });
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [data, activate, invoiceId, token]);
 
   const isPaid = data?.status === "paid";
   const isVerifying = !isPaid && (activate.isPending || !!token);
