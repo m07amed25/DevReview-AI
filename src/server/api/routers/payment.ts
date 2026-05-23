@@ -178,6 +178,14 @@ export const paymentRouter = createTRPCRouter({
         transaction.invoice_status !== "paid" ||
         !invoiceAmountMatches(invoice.amount, transaction.invoice_amount)
       ) {
+        // Re-check DB in case webhook arrived while we were calling Fawaterak
+        const freshInvoice = await ctx.db.invoice.findFirst({
+          where: { id: input.invoiceId, userId: ctx.user.id },
+        });
+        if (freshInvoice?.status === "PAID") {
+          return { success: true, planId: freshInvoice.planId! };
+        }
+
         throw new TRPCError({
           code: "PRECONDITION_FAILED",
           message: "Payment is not confirmed yet.",

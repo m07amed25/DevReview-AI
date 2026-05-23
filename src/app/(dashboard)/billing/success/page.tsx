@@ -19,7 +19,7 @@ export default function SuccessPage() {
 
   const { data } = trpc.payment.getPaymentStatus.useQuery(
     { invoiceId: invoiceId! },
-    { enabled: !!invoiceId, refetchInterval: (query) => query.state.data?.status === "paid" ? false : 5000 }
+    { enabled: !!invoiceId, refetchInterval: (query) => query.state.data?.status === "paid" ? false : 3000 }
   );
 
   const activate = trpc.payment.activatePlan.useMutation({
@@ -28,30 +28,30 @@ export default function SuccessPage() {
       void utils.payment.getPaymentStatus.invalidate();
       void utils.profile.get.invalidate();
     },
-    onError: (error) => setActivationError(error.message),
+    onError: (error) => {
+      // If the DB already shows paid (webhook processed), ignore activation errors
+      if (data?.status === "paid") {
+        setActivationError(null);
+      } else {
+        setActivationError(error.message);
+      }
+    },
   });
 
   useEffect(() => {
-    if (invoiceId && token && data?.status !== "paid" && !activate.isPending) {
-      // Retry activation every time the polled status changes (still not paid)
-      // but only if we have a token to verify with
-      if (!activationAttempted.current) {
-        activationAttempted.current = true;
-        activate.mutate({ invoiceId, token });
-      }
+    if (invoiceId && token && data?.status !== "paid" && !activate.isPending && !activationAttempted.current) {
+      activationAttempted.current = true;
+      activate.mutate({ invoiceId, token });
     }
   }, [activate, data?.status, invoiceId, token]);
 
-  // Retry activation when polling detects the invoice might be ready
+  // Clear error and stop retrying once polling confirms paid
   useEffect(() => {
-    if (!invoiceId || !token || data?.status === "paid" || activate.isPending) return;
-    if (!activationAttempted.current) return; // wait for first attempt
-
-    const timer = setTimeout(() => {
-      activate.mutate({ invoiceId, token });
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, [data, activate, invoiceId, token]);
+    if (data?.status === "paid" && activationError) {
+      setActivationError(null);
+      void utils.profile.get.invalidate();
+    }
+  }, [data?.status, activationError, utils.profile.get]);
 
   const isPaid = data?.status === "paid";
   const isVerifying = !isPaid && (activate.isPending || !!token);
