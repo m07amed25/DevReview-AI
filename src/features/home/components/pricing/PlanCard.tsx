@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Plan } from "@/lib/plan";
+import { useSession } from "@/lib/auth-client";
 import type { MergedPlan } from "./pricing-types";
 
 export function PlanCard({
@@ -32,6 +33,15 @@ export function PlanCard({
     !yearly && plan.monthlyPrice > 0
       ? (plan.monthlyPrice - yearlyMonthlyPrice) * 12
       : 0;
+  const { data: session } = useSession();
+
+  const getCtaHref = () => {
+    if (isFreeUnavailable) return "/contact";
+    if (session && plan.id !== Plan.FREE) {
+      return `/billing/pay?plan=${plan.id}&cycle=${yearly ? "yearly" : "monthly"}`;
+    }
+    return "/sign-up";
+  };
 
   return (
     <motion.div
@@ -121,7 +131,7 @@ export function PlanCard({
         {isFreeUnavailable ? (
           <Link href="/contact">Join Waitlist <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" /></Link>
         ) : (
-          <Link href="/sign-up">{plan.cta} <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" /></Link>
+          <Link href={getCtaHref()}>{plan.cta} <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" /></Link>
         )}
       </Button>
 
