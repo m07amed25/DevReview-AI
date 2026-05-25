@@ -14,7 +14,7 @@ const stepVariant = {
   visible: (i: number) => ({
     opacity: 1,
     x: 0,
-    transition: { duration: 0.4, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.4, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] as const },
   }),
 };
 

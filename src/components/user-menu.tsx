@@ -19,8 +19,8 @@ interface UserProps {
   name: string;
   email: string;
   image?: string | null | undefined;
-  role?: string;
-  planId?: string;
+  role?: string | null;
+  planId?: string | null;
 }
 
 export function UserMenu({ user, side = "bottom", compact = false, trigger }: { user: UserProps; side?: "top" | "bottom" | "left" | "right"; compact?: boolean; trigger?: React.ReactNode }) {
