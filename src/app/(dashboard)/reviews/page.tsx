@@ -14,7 +14,7 @@ import { ReviewsFilters } from "@/features/review/components/dashboard/ReviewsFi
 const ease = [0.16, 1, 0.3, 1] as const;
 
 // Memoized list to avoid re-renders when parent state changes (e.g. filter typing)
-const ReviewList = memo(function ReviewList({ filtered, viewMode }: { filtered: Array<{ id: string; createdAt: unknown; repository: { fullName: string }; [key: string]: unknown }>; viewMode: ViewMode }) {
+const ReviewList = memo(function ReviewList({ filtered, viewMode }: { filtered: Array<{ id: string; createdAt: unknown; repository: { id: string; name: string; fullName: string; private: boolean }; [key: string]: unknown }>; viewMode: ViewMode }) {
   if (viewMode === "grid") {
     return (
       <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3" role="list" aria-label="Code reviews">
