@@ -15,21 +15,16 @@ const ease = [0.16, 1, 0.3, 1] as const;
 
 // Memoized list to avoid re-renders when parent state changes (e.g. filter typing)
 const ReviewList = memo(function ReviewList({ filtered, viewMode }: { filtered: Array<{ id: string; createdAt: unknown; repository: { id: string; name: string; fullName: string; private: boolean }; [key: string]: unknown }>; viewMode: ViewMode }) {
+  const items = filtered.map((review, i) => (
+    <ReviewCard key={review.id} review={{ ...review, createdAt: review.createdAt as string, repository: review.repository } as Parameters<typeof ReviewCard>[0]["review"]} index={i} viewMode={viewMode} />
+  ));
   if (viewMode === "grid") {
     return (
-      <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3" role="list" aria-label="Code reviews">
-        {filtered.map((review, i) => (
-          <ReviewCard key={review.id} review={{ ...review, createdAt: review.createdAt as string, repository: review.repository }} index={i} viewMode={viewMode} />
-        ))}
-      </div>
+      <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3" role="list" aria-label="Code reviews">{items}</div>
     );
   }
   return (
-    <div className="space-y-1.5" role="list" aria-label="Code reviews">
-      {filtered.map((review, i) => (
-        <ReviewCard key={review.id} review={{ ...review, createdAt: review.createdAt as string, repository: review.repository }} index={i} viewMode={viewMode} />
-      ))}
-    </div>
+    <div className="space-y-1.5" role="list" aria-label="Code reviews">{items}</div>
   );
 });
 
