@@ -52,6 +52,7 @@ export default async function DashboardLayout({
     where: { id: session.user.id },
     select: {
       role: true,
+      planId: true,
       accounts: {
         where: { providerId: "github" },
         select: { id: true },
@@ -73,8 +74,8 @@ export default async function DashboardLayout({
         name: session.user.name ?? "User",
         email: session.user.email,
         image: session.user.image,
-        role: (session.user as { role?: string }).role,
-        planId: (session.user as { planId?: string }).planId,
+        role: dbUser?.role ?? undefined,
+        planId: dbUser?.planId ?? "free",
       }}
       onboarding={{ hasGithub, hasRepos, hasReviews }}
     >
