@@ -40,7 +40,7 @@ export default function AnalyticsPage() {
     URL.revokeObjectURL(url);
   }, [overview, trends, rates, issues, timePeriod]);
 
-  const activeAnomalies = useMemo(() => anomalies?.anomalies?.filter((a) => a.severity === "high") ?? [], [anomalies]);
+  const activeAnomalies = useMemo(() => anomalies?.anomalies?.filter((a) => a.severity === "critical") ?? [], [anomalies]);
   const hasData = overview && overview.totalReviews > 0;
 
   if (!overviewLoading && !hasData) {
