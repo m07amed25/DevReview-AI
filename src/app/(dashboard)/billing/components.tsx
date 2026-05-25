@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, memo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Card,
@@ -68,7 +68,7 @@ interface UserLimits {
   seatsLimit: number | null;
 }
 
-export function OverviewTab({
+export const OverviewTab = memo(function OverviewTab({
   plan,
   stats,
   limits,
@@ -80,6 +80,7 @@ export function OverviewTab({
   handleApplyPromo,
   promoMessage,
   discount,
+  accountCredit,
 }: {
   plan: UserPlan;
   stats: UserStats;
@@ -92,6 +93,7 @@ export function OverviewTab({
   handleApplyPromo: () => void;
   promoMessage: { type: "success" | "error"; text: string } | null;
   discount: { type: "PERCENTAGE" | "FIXED"; value: number } | null;
+  accountCredit: number;
 }) {
   const discountedPrice = discount
     ? discount.type === "PERCENTAGE"
@@ -99,37 +101,54 @@ export function OverviewTab({
       : Math.max(0, plan.monthlyPrice - discount.value)
     : null;
   return (
-    <div className="space-y-8">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }} className="lg:col-span-1">
-          <Card className="h-full border-border/50 bg-background/40 backdrop-blur-xl shadow-xs overflow-hidden relative group">
-            <div className="absolute inset-0 bg-linear-to-br from-indigo-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+    <div className="space-y-6">
+      {accountCredit > 0 && (
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4 }}>
+          <Card className="border-emerald-200/50 dark:border-emerald-800/30 bg-emerald-50/50 dark:bg-emerald-950/20 shadow-xs">
+            <CardContent className="flex items-center gap-4 p-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900/40">
+                <CreditCard className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">Account Credit</p>
+                <p className="text-xs text-emerald-600/70 dark:text-emerald-400/70">Applied automatically on next payment</p>
+              </div>
+              <span className="font-mono text-xl font-semibold text-emerald-600 dark:text-emerald-400">${accountCredit}</span>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4 }} className="lg:col-span-1">
+          <Card className="h-full overflow-hidden relative group">
+            <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="text-xl flex items-center gap-2">Current Plan</CardTitle>
+                <CardTitle className="text-[0.9375rem] flex items-center gap-2">Current Plan</CardTitle>
                 <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20">{plan.name}</Badge>
               </div>
               <CardDescription>{plan.tagline}</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-5">
               <div className="flex items-baseline gap-2">
                 {discountedPrice !== null ? (
                   <>
-                    <span className="text-4xl font-bold tracking-tight text-emerald-500">${discountedPrice}</span>
-                    <span className="text-xl text-muted-foreground line-through">${plan.monthlyPrice}</span>
-                    <span className="text-muted-foreground font-medium">/month</span>
+                    <span className="font-mono text-3xl font-semibold tracking-tight text-emerald-500">${discountedPrice}</span>
+                    <span className="font-mono text-lg text-muted-foreground line-through">${plan.monthlyPrice}</span>
+                    <span className="text-sm text-muted-foreground">/month</span>
                   </>
                 ) : (
                   <>
-                    <span className="text-4xl font-bold tracking-tight">${plan.monthlyPrice}</span>
-                    <span className="text-muted-foreground font-medium">/month</span>
+                    <span className="font-mono text-3xl font-semibold tracking-tight">${plan.monthlyPrice}</span>
+                    <span className="text-sm text-muted-foreground">/month</span>
                   </>
                 )}
               </div>
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 {plan.features.map((feature, i) => (
-                  <div key={i} className="flex items-center gap-3 text-sm">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                  <div key={i} className="flex items-center gap-2.5 text-sm">
+                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
                     <span>{feature}</span>
                   </div>
                 ))}
@@ -152,21 +171,21 @@ export function OverviewTab({
           </Card>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.5 }} className="lg:col-span-2 flex flex-col gap-6">
-          <Card className="border-border/50 bg-background/40 backdrop-blur-xl shadow-xs">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1, duration: 0.4 }} className="lg:col-span-2 flex flex-col gap-5">
+          <Card className="border-border/50 shadow-xs">
             <CardHeader className="pb-3">
-              <CardTitle className="text-base">Resource Usage</CardTitle>
+              <CardTitle className="text-[0.9375rem]">Resource Usage</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <UsageBar icon={<Zap className="h-3.5 w-3.5 text-indigo-500" />} label="AI Code Reviews" used={stats.reviews} limit={limits.reviewsLimit} gradient="from-indigo-500 to-purple-500" />
+            <CardContent className="space-y-3.5">
+              <UsageBar icon={<Zap className="h-3.5 w-3.5 text-primary" />} label="AI Code Reviews" used={stats.reviews} limit={limits.reviewsLimit} gradient="from-primary to-primary/70" />
               <UsageBar icon={<Shield className="h-3.5 w-3.5 text-emerald-500" />} label="Repositories" used={stats.repositories} limit={limits.reposLimit} gradient="from-emerald-400 to-emerald-600" />
               <UsageBar icon={<CreditCard className="h-3.5 w-3.5 text-blue-500" />} label="Team Members" used={stats.teamMembers} limit={limits.seatsLimit} gradient="from-blue-400 to-blue-600" />
             </CardContent>
           </Card>
 
-          <Card className="flex-1 border-border/50 bg-background/40 backdrop-blur-xl shadow-xs overflow-hidden">
+          <Card className="flex-1 overflow-hidden">
             <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2"><Gift className="h-4 w-4 text-pink-500" />Promo Code</CardTitle>
+              <CardTitle className="text-[0.9375rem] flex items-center gap-2"><Gift className="h-4 w-4 text-pink-500" />Promo Code</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex gap-3">
@@ -191,21 +210,21 @@ export function OverviewTab({
       </div>
     </div>
   );
-}
+});
 
 function UsageBar({ icon, label, used, limit, gradient }: { icon: React.ReactNode; label: string; used: number; limit: number | null; gradient: string }) {
   const pct = limit ? Math.min((used / limit) * 100, 100) : 0;
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       <div className="flex items-center justify-between text-sm">
         <div className="flex items-center gap-2 font-medium">{icon}{label}</div>
-        <span className="text-muted-foreground"><span className="text-foreground font-semibold">{used}</span> / {limit ?? "∞"}</span>
+        <span className="font-mono text-xs text-muted-foreground"><span className="text-foreground font-semibold">{used}</span> / {limit ?? "∞"}</span>
       </div>
-      <div className="relative h-2 w-full overflow-hidden rounded-full bg-muted">
+      <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-muted">
         <div className={`h-full bg-linear-to-r ${gradient} transition-all duration-1000 ease-in-out`} style={{ width: `${pct}%` }} />
       </div>
       {limit && pct >= 80 && (
-        <p className="text-xs text-muted-foreground flex items-center gap-1"><AlertCircle className="h-3 w-3 text-amber-500" />You are approaching your monthly limit.</p>
+        <p className="text-xs text-muted-foreground flex items-center gap-1"><AlertCircle className="h-3 w-3 text-amber-500" />Approaching monthly limit.</p>
       )}
     </div>
   );
@@ -217,22 +236,22 @@ function AppliedPromos() {
 
   return (
     <div className="mt-4 space-y-2">
-      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Applied Discounts</p>
+      <p className="font-mono text-xs font-medium text-muted-foreground tracking-wide">Applied Discounts</p>
       {promos.map((p) => (
-        <div key={p.code} className="flex items-center gap-3 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+        <div key={p.code} className="flex items-center gap-3 p-3 rounded-md bg-emerald-500/10 border border-emerald-500/20">
           <div className="h-8 w-8 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
             <Gift className="h-4 w-4 text-emerald-500" />
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
               <p className="text-sm font-medium text-emerald-600 dark:text-emerald-400">{p.code}</p>
-              <Badge variant="secondary" className="text-[10px] h-5 bg-emerald-500/10 text-emerald-500">
+              <Badge variant="secondary" className="text-xs h-5 bg-emerald-500/10 text-emerald-500">
                 {p.type === "PERCENTAGE" ? `${p.value}% off` : `$${p.value} off`}
               </Badge>
             </div>
             {p.description && <p className="text-xs text-muted-foreground truncate">{p.description}</p>}
           </div>
-          <p className="text-[10px] text-muted-foreground shrink-0">
+          <p className="font-mono text-xs text-muted-foreground shrink-0">
             {new Date(p.appliedAt).toLocaleDateString()}
           </p>
         </div>
@@ -272,12 +291,12 @@ export function PaymentTab() {
   }
 
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="space-y-6">
+    <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.35 }} className="space-y-6">
       {/* Billing Info Card */}
-      <Card className="border-border/50 bg-background/40 backdrop-blur-xl shadow-xs">
+      <Card className="border-border/50 shadow-xs">
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle className="text-xl">Billing Information</CardTitle>
+            <CardTitle className="text-[0.9375rem]">Billing Information</CardTitle>
             <CardDescription>Your billing name and address for invoices.</CardDescription>
           </div>
           <Dialog open={billingDialogOpen} onOpenChange={setBillingDialogOpen}>
@@ -311,10 +330,10 @@ export function PaymentTab() {
       </Card>
 
       {/* Payment Methods Card */}
-      <Card className="border-border/50 bg-background/40 backdrop-blur-xl shadow-xs">
+      <Card className="border-border/50 shadow-xs">
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle className="text-xl">Payment Methods</CardTitle>
+            <CardTitle className="text-[0.9375rem]">Payment Methods</CardTitle>
             <CardDescription>Manage your saved cards.</CardDescription>
           </div>
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -337,10 +356,16 @@ export function PaymentTab() {
             <p className="text-sm text-muted-foreground">Add billing information first to manage cards.</p>
           )}
           {billing?.paymentMethods.length === 0 && (
-            <p className="text-sm text-muted-foreground">No payment methods on file.</p>
+            <div className="flex flex-col items-center py-8 text-center">
+              <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center mb-3">
+                <CreditCard className="h-5 w-5 text-muted-foreground" />
+              </div>
+              <p className="text-sm font-medium">No payment methods</p>
+              <p className="text-xs text-muted-foreground mt-1">Add a card to enable automatic billing and upgrades.</p>
+            </div>
           )}
           {billing?.paymentMethods.map((card) => (
-            <div key={card.id} className="flex items-center justify-between p-4 rounded-xl border border-border/50 bg-muted/20 relative overflow-hidden group transition-colors hover:border-primary/30">
+            <div key={card.id} className="flex items-center justify-between p-4 rounded-md border border-border/50 bg-muted/20 relative overflow-hidden group transition-colors hover:border-primary/30">
               {card.isDefault && <div className="absolute inset-y-0 left-0 w-1 bg-primary/80" />}
               <div className="flex items-center gap-4 pl-2">
                 <div className="h-10 w-16 bg-card rounded-md flex items-center justify-center border border-border shadow-xs">
@@ -350,10 +375,10 @@ export function PaymentTab() {
                   <div className="font-medium text-sm flex items-center gap-2">
                     {card.cardBrand} ending in {card.lastFour}
                     {card.isDefault && (
-                      <Badge variant="outline" className="text-[10px] h-5 px-1.5 font-normal border-primary/20 bg-primary/5 text-primary">Default</Badge>
+                      <Badge variant="outline" className="text-xs h-5 px-1.5 font-normal border-primary/20 bg-primary/5 text-primary">Default</Badge>
                     )}
                   </div>
-                  <div className="text-xs text-muted-foreground mt-0.5">
+                  <div className="font-mono text-xs text-muted-foreground mt-0.5">
                     Expires {String(card.expiryMonth).padStart(2, "0")}/{card.expiryYear}
                   </div>
                 </div>
@@ -367,6 +392,7 @@ export function PaymentTab() {
                     disabled={setDefault.isPending}
                     onClick={() => setDefault.mutate({ cardId: card.id })}
                     title="Set as default"
+                    aria-label="Set as default payment method"
                   >
                     <Star className="h-4 w-4 text-muted-foreground" />
                   </Button>
@@ -378,6 +404,7 @@ export function PaymentTab() {
                   disabled={removeCard.isPending}
                   onClick={() => removeCard.mutate({ cardId: card.id })}
                   title="Remove card"
+                  aria-label="Remove payment card"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -622,7 +649,7 @@ function AddCardForm({ onSuccess }: { onSuccess: () => void }) {
     <div className="space-y-5">
       <div className="flex flex-col items-center justify-center py-12 text-center">
         <CreditCard className="h-16 w-16 text-muted-foreground/30 mb-4" />
-        <h3 className="text-lg font-semibold mb-2">Add Payment Method</h3>
+        <h3 className="text-[0.9375rem] font-semibold mb-2">Add Payment Method</h3>
         <p className="text-sm text-muted-foreground max-w-sm mb-6">
           Secure card tokenization is handled by our payment provider.
           Your card details are never stored on our servers.
@@ -663,11 +690,11 @@ export function HistoryTab() {
   };
 
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
-      <Card className="border-border/50 bg-background/40 backdrop-blur-xl shadow-xs">
+    <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.35 }}>
+      <Card className="border-border/50 shadow-xs">
         <CardHeader>
-          <CardTitle className="text-xl">Billing History</CardTitle>
-          <CardDescription>View your past invoices and receipts.</CardDescription>
+          <CardTitle className="text-[0.9375rem]">Billing History</CardTitle>
+          <CardDescription>Past invoices and receipts.</CardDescription>
         </CardHeader>
         <CardContent>
           {isLoading ? (
@@ -675,7 +702,13 @@ export function HistoryTab() {
               <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
             </div>
           ) : !invoices || invoices.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-8">No billing history yet.</p>
+            <div className="flex flex-col items-center py-10 text-center">
+              <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center mb-3">
+                <Download className="h-5 w-5 text-muted-foreground" />
+              </div>
+              <p className="text-sm font-medium">No billing history</p>
+              <p className="text-xs text-muted-foreground mt-1">Invoices and payment receipts will appear here after your first transaction.</p>
+            </div>
           ) : (
             <div className="rounded-md border border-border/50 overflow-hidden">
               <Table>
@@ -699,9 +732,9 @@ export function HistoryTab() {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground">
-                        {new Date(inv.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                        <span className="font-mono">{new Date(inv.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
                       </TableCell>
-                      <TableCell className="text-sm text-right font-medium">
+                      <TableCell className="text-sm text-right font-mono font-medium">
                         ${inv.amount}
                       </TableCell>
                     </TableRow>

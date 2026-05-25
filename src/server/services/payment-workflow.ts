@@ -6,6 +6,7 @@ export type BillingCycle = "monthly" | "yearly";
 type InvoiceForActivation = {
   id: string;
   userId: string;
+  amount: number;
   planId: string | null;
   description: string | null;
   paidAt: Date | string | null;
@@ -58,6 +59,12 @@ export async function calculateCheckoutAmount(
       ? plan.monthlyPrice
       : Math.round(plan.monthlyPrice * 12 * (1 - annualDiscount));
 
+  const user = await db.user.findUnique({
+    where: { id: userId },
+    select: { accountCredit: true },
+  });
+  const accountCredit = user?.accountCredit ?? 0;
+
   const appliedPromos = await db.userDiscount.findMany({
     where: { userId },
     orderBy: { appliedAt: "desc" },
@@ -81,20 +88,21 @@ export async function calculateCheckoutAmount(
       return !candidate.maxUses || candidate.usedCount <= candidate.maxUses;
     });
 
-  if (!discount) {
-    return { basePrice, finalAmount: Math.max(0, basePrice), discountId: null };
+  let afterDiscount = basePrice;
+  let discountId: string | null = null;
+
+  if (discount) {
+    afterDiscount =
+      discount.type === "PERCENTAGE"
+        ? Math.round(basePrice * (1 - Math.min(Math.max(discount.value, 0), 100) / 100))
+        : Math.max(0, Math.round(basePrice - Math.max(discount.value, 0)));
+    discountId = discount.id;
   }
 
-  const finalAmount =
-    discount.type === "PERCENTAGE"
-      ? Math.round(basePrice * (1 - Math.min(Math.max(discount.value, 0), 100) / 100))
-      : Math.max(0, Math.round(basePrice - Math.max(discount.value, 0)));
+  const creditUsed = Math.min(accountCredit, afterDiscount);
+  const finalAmount = Math.max(0, afterDiscount - creditUsed);
 
-  return {
-    basePrice,
-    finalAmount: Math.max(0, finalAmount),
-    discountId: discount.id,
-  };
+  return { basePrice, finalAmount, discountId, creditUsed };
 }
 
 export async function activatePaidInvoice(
@@ -107,10 +115,10 @@ export async function activatePaidInvoice(
 
   const paidAt =
     toValidDate(options.paidAt) ?? toValidDate(invoice.paidAt) ?? new Date();
+  const durationMonths = getInvoiceDurationMonths(invoice.description);
+  const billingCycle: BillingCycle = durationMonths >= 12 ? "yearly" : "monthly";
   const planExpiresAt = new Date(paidAt);
-  planExpiresAt.setMonth(
-    planExpiresAt.getMonth() + getInvoiceDurationMonths(invoice.description),
-  );
+  planExpiresAt.setMonth(planExpiresAt.getMonth() + durationMonths);
 
   await db.$transaction(async (tx) => {
     await tx.invoice.update({
@@ -118,15 +126,29 @@ export async function activatePaidInvoice(
       data: {
         status: "PAID",
         paidAt,
+        billingCycle,
         successToken: null,
         paymentMethodUsed: options.paymentMethodUsed ?? undefined,
         referenceNumber: options.referenceNumber ?? undefined,
       },
     });
 
+    // Deduct any account credit that was applied to this payment
+    const user = await tx.user.findUnique({
+      where: { id: invoice.userId },
+      select: { accountCredit: true },
+    });
+    const creditToDeduct = Math.min(user?.accountCredit ?? 0, invoice.amount ?? 0);
+
     await tx.user.update({
       where: { id: invoice.userId },
-      data: { planId, planExpiresAt },
+      data: {
+        planId,
+        planExpiresAt,
+        planStartedAt: paidAt,
+        billingCycle,
+        ...(creditToDeduct > 0 ? { accountCredit: { decrement: creditToDeduct } } : {}),
+      },
     });
   });
 }

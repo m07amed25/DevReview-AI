@@ -24,8 +24,8 @@ export function WordDiffSegments({
         if (seg.type === "common") return <span key={i}>{seg.text}</span>;
         const cls =
           side === "old"
-            ? "bg-red-500/25 rounded-sm px-px dark:bg-red-400/20"
-            : "bg-emerald-500/25 rounded-sm px-px dark:bg-emerald-400/20";
+            ? "bg-[oklch(0.55_0.2_25/0.2)] rounded-sm px-px"
+            : "bg-[oklch(0.55_0.15_155/0.2)] rounded-sm px-px";
         return (
           <span key={i} className={cls}>
             {seg.text}
@@ -48,16 +48,16 @@ function UnifiedContextRow({
   enableSyntaxHighlighting?: boolean;
 }) {
   return (
-    <tr className="group/line hover:bg-muted/30 transition-colors">
-      <td className="w-12 px-2 py-0.5 text-right select-none border-r border-border/30 text-muted-foreground/50">
+    <tr className="group/line hover:bg-[oklch(0.20_0.02_250/0.5)] transition-colors duration-150">
+      <td className="w-12 px-2 py-0.5 text-right select-none border-r border-[oklch(0.30_0.02_250/0.4)] text-[oklch(0.40_0.03_250)]">
         {line.oldNum || ""}
       </td>
-      <td className="w-12 px-2 py-0.5 text-right select-none border-r border-border/30 text-muted-foreground/50">
+      <td className="w-12 px-2 py-0.5 text-right select-none border-r border-[oklch(0.30_0.02_250/0.4)] text-[oklch(0.40_0.03_250)]">
         {line.newNum || ""}
       </td>
       <td
         className={cn(
-          "px-4 py-0.5 text-foreground",
+          "px-4 py-0.5 text-[oklch(0.82_0.02_250)]",
           wrapLines ? "whitespace-pre-wrap break-all" : "whitespace-pre",
         )}
       >
@@ -85,9 +85,7 @@ export function DiffContentUnified({
   enableSyntaxHighlighting?: boolean;
   language?: string;
 }) {
-  const [expandedContexts, setExpandedContexts] = useState<Set<number>>(
-    new Set(),
-  );
+  const [expandedContexts, setExpandedContexts] = useState<Set<number>>(new Set());
   const toggleContext = useCallback((index: number) => {
     setExpandedContexts((prev) => {
       const next = new Set(prev);
@@ -104,10 +102,10 @@ export function DiffContentUnified({
           {groups.map((group, gi) => {
             if (group.type === "hunk") {
               return (
-                <tr key={gi} className="bg-blue-500/8">
+                <tr key={gi} className="bg-[oklch(0.62_0.16_250/0.06)]">
                   <td
                     colSpan={3}
-                    className="px-4 py-1.5 text-xs text-blue-600 dark:text-blue-400 bg-blue-500/5 select-none font-medium"
+                    className="px-4 py-1.5 text-xs text-[oklch(0.62_0.16_250)] select-none font-medium"
                   >
                     {group.lines[0]?.content}
                   </td>
@@ -116,10 +114,10 @@ export function DiffContentUnified({
             }
             if (group.type === "info") {
               return (
-                <tr key={gi} className="bg-muted/30">
+                <tr key={gi} className="bg-[oklch(0.20_0.02_250/0.5)]">
                   <td
                     colSpan={3}
-                    className="px-4 py-1 text-xs text-muted-foreground italic select-none"
+                    className="px-4 py-1 text-xs text-[oklch(0.60_0.03_250)] italic select-none"
                   >
                     {group.lines[0]?.content}
                   </td>
@@ -129,8 +127,7 @@ export function DiffContentUnified({
             if (group.type === "context") {
               const { lines } = group;
               const shouldCollapse =
-                lines.length > CONTEXT_COLLAPSE_THRESHOLD &&
-                !expandedContexts.has(gi);
+                lines.length > CONTEXT_COLLAPSE_THRESHOLD && !expandedContexts.has(gi);
               if (shouldCollapse) {
                 const topLines = lines.slice(0, 3);
                 const bottomLines = lines.slice(-3);
@@ -150,10 +147,10 @@ export function DiffContentUnified({
                       <td colSpan={3} className="text-center py-1.5">
                         <button
                           onClick={() => toggleContext(gi)}
-                          className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors bg-muted/50 hover:bg-muted px-3 py-1 rounded-full border border-border/40"
+                          className="inline-flex items-center gap-1.5 text-xs text-[oklch(0.60_0.03_250)] hover:text-[oklch(0.82_0.02_250)] transition-colors duration-150 bg-[oklch(0.20_0.02_250)] hover:bg-[oklch(0.24_0.02_250)] px-2.5 py-1 rounded-[4px] border border-[oklch(0.30_0.02_250)] cursor-pointer"
                         >
                           <ChevronsUpDown className="size-3" />
-                          Show {hiddenCount} hidden lines
+                          {hiddenCount} lines
                         </button>
                       </td>
                     </tr>
@@ -188,39 +185,28 @@ export function DiffContentUnified({
               const maxPairs = Math.min(deletions.length, additions.length);
               const wordDiffs = wordDiffEnabled
                 ? Array.from({ length: maxPairs }, (_, i) =>
-                    computeWordDiff(
-                      deletions[i]!.content,
-                      additions[i]!.content,
-                    ),
+                    computeWordDiff(deletions[i]!.content, additions[i]!.content),
                   )
                 : [];
               return (
                 <React.Fragment key={gi}>
                   {deletions.map((line, li) => {
-                    const wd =
-                      wordDiffEnabled && li < maxPairs ? wordDiffs[li] : null;
+                    const wd = wordDiffEnabled && li < maxPairs ? wordDiffs[li] : null;
                     return (
-                      <tr key={`del-${li}`} className="bg-red-500/8 group/line">
-                        <td className="w-12 px-2 py-0.5 text-right select-none border-r border-border/30 bg-red-500/5 text-red-600/70 dark:text-red-400/70">
+                      <tr key={`del-${li}`} className="bg-[oklch(0.55_0.2_25/0.06)]">
+                        <td className="w-12 px-2 py-0.5 text-right select-none border-r border-[oklch(0.30_0.02_250/0.4)] text-[oklch(0.55_0.2_25/0.6)]">
                           {line.oldNum || ""}
                         </td>
-                        <td className="w-12 px-2 py-0.5 text-right select-none border-r border-border/30 bg-red-500/5 text-red-600/70 dark:text-red-400/70" />
+                        <td className="w-12 px-2 py-0.5 text-right select-none border-r border-[oklch(0.30_0.02_250/0.4)] text-[oklch(0.55_0.2_25/0.6)]" />
                         <td
                           className={cn(
-                            "px-4 py-0.5 text-red-700 dark:text-red-300",
-                            wrapLines
-                              ? "whitespace-pre-wrap break-all"
-                              : "whitespace-pre",
+                            "px-4 py-0.5 text-[oklch(0.70_0.12_25)]",
+                            wrapLines ? "whitespace-pre-wrap break-all" : "whitespace-pre",
                           )}
                         >
-                          <span className="select-none text-red-500/50 mr-1">
-                            −
-                          </span>
+                          <span className="select-none text-[oklch(0.55_0.2_25/0.5)] mr-1">−</span>
                           {wd ? (
-                            <WordDiffSegments
-                              segments={wd.oldSegments}
-                              side="old"
-                            />
+                            <WordDiffSegments segments={wd.oldSegments} side="old" />
                           ) : (
                             line.content || " "
                           )}
@@ -229,33 +215,22 @@ export function DiffContentUnified({
                     );
                   })}
                   {additions.map((line, li) => {
-                    const wd =
-                      wordDiffEnabled && li < maxPairs ? wordDiffs[li] : null;
+                    const wd = wordDiffEnabled && li < maxPairs ? wordDiffs[li] : null;
                     return (
-                      <tr
-                        key={`add-${li}`}
-                        className="bg-emerald-500/8 group/line"
-                      >
-                        <td className="w-12 px-2 py-0.5 text-right select-none border-r border-border/30 bg-emerald-500/5 text-emerald-600/70 dark:text-emerald-400/70" />
-                        <td className="w-12 px-2 py-0.5 text-right select-none border-r border-border/30 bg-emerald-500/5 text-emerald-600/70 dark:text-emerald-400/70">
+                      <tr key={`add-${li}`} className="bg-[oklch(0.55_0.15_155/0.06)]">
+                        <td className="w-12 px-2 py-0.5 text-right select-none border-r border-[oklch(0.30_0.02_250/0.4)] text-[oklch(0.55_0.15_155/0.6)]" />
+                        <td className="w-12 px-2 py-0.5 text-right select-none border-r border-[oklch(0.30_0.02_250/0.4)] text-[oklch(0.55_0.15_155/0.6)]">
                           {line.newNum || ""}
                         </td>
                         <td
                           className={cn(
-                            "px-4 py-0.5 text-emerald-700 dark:text-emerald-300",
-                            wrapLines
-                              ? "whitespace-pre-wrap break-all"
-                              : "whitespace-pre",
+                            "px-4 py-0.5 text-[oklch(0.70_0.10_155)]",
+                            wrapLines ? "whitespace-pre-wrap break-all" : "whitespace-pre",
                           )}
                         >
-                          <span className="select-none text-emerald-500/50 mr-1">
-                            +
-                          </span>
+                          <span className="select-none text-[oklch(0.55_0.15_155/0.5)] mr-1">+</span>
                           {wd ? (
-                            <WordDiffSegments
-                              segments={wd.newSegments}
-                              side="new"
-                            />
+                            <WordDiffSegments segments={wd.newSegments} side="new" />
                           ) : (
                             line.content || " "
                           )}

@@ -2,43 +2,22 @@
 
 import { FaGithub } from "react-icons/fa";
 import { AlertCircle, Building2, Eye, EyeOff, Loader2, X } from "lucide-react";
-import { useState, useRef, Suspense } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn, authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import {
-  AuroraBackground,
-  GridBackground,
-} from "@/components/animations/backgrounds";
-import { AuthBackLink } from "@/components/auth-back-link";
+import { Logo } from "@/components/ui/logo";
 
-interface FieldErrors {
-  email?: string;
-  password?: string;
-  ssoEmail?: string;
-}
+interface FieldErrors { email?: string; password?: string; }
 
-function getUrlError(searchParams: Pick<URLSearchParams, "get">): string {
-  const code = searchParams.get("error");
+function getUrlError(sp: Pick<URLSearchParams, "get">): string {
+  const code = sp.get("error");
   if (!code) return "";
-  const desc = searchParams.get("error_description");
-  const msg =
-    desc ??
-    (code === "FORBIDDEN"
-      ? "Your account has been banned. Please contact support."
-      : "Sign-in failed. Please try again.");
-  return decodeURIComponent(msg);
+  const desc = sp.get("error_description");
+  return decodeURIComponent(desc ?? (code === "FORBIDDEN" ? "Your account has been banned." : "Sign-in failed."));
 }
 
 function SignInContent() {
@@ -46,378 +25,150 @@ function SignInContent() {
   const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [ssoEmail, setSsoEmail] = useState("");
-  const [ssoMode, setSsoMode] = useState(false);
-  const [ssoLoading, setSsoLoading] = useState(false);
-  const [ssoFieldError, setSsoFieldError] = useState("");
-  // Lazily initialise from the URL so we never call setState inside an effect
   const [error, setError] = useState(() => getUrlError(searchParams));
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [loading, setLoading] = useState(false);
+  const [githubLoading, setGithubLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const cardRef = useRef<HTMLDivElement>(null);
+  const [ssoMode, setSsoMode] = useState(false);
+  const [ssoEmail, setSsoEmail] = useState("");
+  const [ssoLoading, setSsoLoading] = useState(false);
+  const [ssoError, setSsoError] = useState("");
 
-  const validateFields = (): boolean => {
-    const errors: FieldErrors = {};
+  const busy = loading || githubLoading || ssoLoading;
 
-    if (!email.trim()) {
-      errors.email = "Email is required.";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      errors.email = "Please enter a valid email address.";
-    }
-
-    if (!password) {
-      errors.password = "Password is required.";
-    }
-
-    setFieldErrors(errors);
-    return Object.keys(errors).length === 0;
+  const validate = (): boolean => {
+    const e: FieldErrors = {};
+    if (!email.trim()) e.email = "Email is required.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e.email = "Enter a valid email.";
+    if (!password) e.password = "Password is required.";
+    setFieldErrors(e);
+    return !Object.keys(e).length;
   };
 
-  const clearFieldError = (field: keyof FieldErrors) => {
-    setFieldErrors((prev) => {
-      const next = { ...prev };
-      delete next[field];
-      return next;
-    });
-  };
+  const clearField = (f: keyof FieldErrors) => setFieldErrors((p) => { const n = { ...p }; delete n[f]; return n; });
 
-  const handleEmailSignIn = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleEmail = async (ev: React.FormEvent) => {
+    ev.preventDefault();
     setError("");
-
-    if (!validateFields()) return;
-
+    if (!validate()) return;
     setLoading(true);
-
     try {
-      const result = await signIn.email({
-        email,
-        password,
-      });
-
-      if (result.error) {
-        setError(result.error.message || "An error occurred during sign-in.");
-      }
-      setLoading(false);
-
-      if (!result.error) {
-        router.push("/repo");
-      }
-    } catch {
-      setError(
-        "Something went wrong. Please check your connection and try again.",
-      );
-      setLoading(false);
-    }
+      const r = await signIn.email({ email, password });
+      if (r.error) { setError(r.error.message || "Sign-in failed."); setLoading(false); }
+      else router.push("/repo");
+    } catch { setError("Something went wrong."); setLoading(false); }
   };
 
-  const validateSsoEmail = (): boolean => {
+  const handleGithub = async () => {
+    setError("");
+    setGithubLoading(true);
+    try {
+      const r = await signIn.social({ provider: "github", callbackURL: "/repo", errorCallbackURL: "/sign-in" });
+      if (r?.error) { setError(r.error.message ?? "GitHub sign-in failed."); setGithubLoading(false); }
+    } catch { setError("GitHub sign-in failed."); setGithubLoading(false); }
+  };
+
+  const handleSso = async (ev: React.FormEvent) => {
+    ev.preventDefault();
+    setSsoError("");
     const v = ssoEmail.trim();
-    if (!v) {
-      setSsoFieldError("Work email is required.");
-      return false;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
-      setSsoFieldError("Please enter a valid email address.");
-      return false;
-    }
-    // must have a domain part (e.g. company.com)
-    const domain = v.split("@")[1] ?? "";
-    if (!domain.includes(".")) {
-      setSsoFieldError("Enter a full work email, e.g. name@company.com.");
-      return false;
-    }
-    setSsoFieldError("");
-    return true;
-  };
-
-  const handleSsoSignIn = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validateSsoEmail()) return;
+    if (!v || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { setSsoError("Enter a valid work email."); return; }
     setSsoLoading(true);
-    setError("");
     try {
-      const result = await authClient.signIn.sso({
-        email: ssoEmail,
-        callbackURL: "/repo",
-        errorCallbackURL: "/sign-in",
-      });
-      if (result?.error) {
-        setError(
-          result.error.message ??
-            "SSO sign-in failed. Please check your work email domain.",
-        );
-        setSsoLoading(false);
-      }
-    } catch {
-      setError("SSO sign-in failed. Please try again.");
-      setSsoLoading(false);
-    }
-  };
-
-  const handleGithubSignIn = async () => {
-    setError("");
-    setLoading(true);
-
-    try {
-      const result = await signIn.social({
-        provider: "github",
-        // Redirect back here on failure so the ?error param is visible
-        callbackURL: "/repo",
-        errorCallbackURL: "/sign-in",
-      });
-      if (result?.error) {
-        setError(
-          result.error.message ??
-            "Failed to connect with GitHub. Please try again.",
-        );
-        setLoading(false);
-      }
-    } catch {
-      setError("Failed to connect with GitHub. Please try again.");
-      setLoading(false);
-    }
+      const r = await authClient.signIn.sso({ email: v, callbackURL: "/repo", errorCallbackURL: "/sign-in" });
+      if (r?.error) { setSsoError(r.error.message ?? "SSO failed."); setSsoLoading(false); }
+    } catch { setSsoError("SSO failed."); setSsoLoading(false); }
   };
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center p-4">
-      {/* Animated background */}
-      <div className="fixed inset-0 -z-10" aria-hidden="true">
-        <AuroraBackground />
-        <GridBackground />
-      </div>
+    <div className="flex min-h-dvh items-center justify-center px-5 py-12 sm:px-8">
+      <div className="w-full max-w-[360px] space-y-6">
+        <Link href="/" className="flex items-center gap-2">
+          <Logo className="h-6" />
+          <span className="text-sm font-bold tracking-tight">Code <span className="text-primary">Catch</span></span>
+        </Link>
 
-      <AuthBackLink />
+        <div>
+          <h1 className="text-lg font-semibold tracking-tight">Sign in</h1>
+          <p className="mt-1 text-[13px] text-muted-foreground">Continue to your dashboard.</p>
+        </div>
 
-      <Card
-        ref={cardRef}
-        className="w-full max-w-md hover-lift transition-all duration-300"
-      >
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Sign In</CardTitle>
-          <CardDescription>
-            Enter your email and password to sign in.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4 py-4">
-          <Button
-            variant={"outline"}
-            onClick={handleGithubSignIn}
-            disabled={loading}
-            className="w-full"
-          >
-            {loading ? (
-              <Loader2 className="mr-2 size-4 animate-spin" />
-            ) : (
-              <FaGithub className="mr-2 size-4" />
-            )}
-            Sign in with GitHub
+        <div className="space-y-3.5">
+          <Button variant="outline" onClick={handleGithub} disabled={busy} className="w-full h-9 cursor-pointer">
+            {githubLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <FaGithub className="mr-2 h-4 w-4" />}
+            Continue with GitHub
           </Button>
 
           <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <Separator className="w-full" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-card px-2 text-muted-foreground">
-                Or continue with email
-              </span>
-            </div>
+            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-border" /></div>
+            <div className="relative flex justify-center text-[11px]"><span className="bg-background px-2 text-muted-foreground">or</span></div>
           </div>
 
           {error && (
-            <div className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 animate-in fade-in slide-in-from-top-2 duration-300 dark:border-red-800/50 dark:bg-red-950/50 dark:text-red-300">
-              <AlertCircle className="mt-0.5 size-4 shrink-0" />
-              <p className="flex-1">{error}</p>
-              <button
-                type="button"
-                aria-label="Dismiss error"
-                onClick={() => setError("")}
-                className="shrink-0 rounded-md p-0.5 text-red-800/70 transition-colors hover:text-red-800 dark:text-red-300/70 dark:hover:text-red-300"
-              >
-                <X className="size-4" aria-hidden="true" />
-              </button>
+            <div className="flex items-start gap-2 rounded-sm border border-destructive/30 bg-destructive/5 px-3 py-2.5 text-[13px] text-destructive">
+              <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
+              <span className="flex-1">{error}</span>
+              <button onClick={() => setError("")} aria-label="Dismiss" className="hover:text-destructive/70 cursor-pointer"><X className="h-3.5 w-3.5" /></button>
             </div>
           )}
 
-          <form onSubmit={handleEmailSignIn} noValidate className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="name@example.com"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  clearFieldError("email");
-                }}
-                disabled={loading}
-                aria-invalid={!!fieldErrors.email}
-              />
-              {fieldErrors.email && (
-                <p className="text-xs text-destructive animate-in fade-in slide-in-from-top-1 duration-200">
-                  {fieldErrors.email}
-                </p>
-              )}
+          <form onSubmit={handleEmail} noValidate className="space-y-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="email" className="text-[13px]">Email</Label>
+              <Input id="email" type="email" placeholder="name@example.com" autoComplete="email" value={email} onChange={(e) => { setEmail(e.target.value); clearField("email"); }} disabled={busy} aria-invalid={!!fieldErrors.email} aria-describedby={fieldErrors.email ? "email-err" : undefined} />
+              {fieldErrors.email && <p id="email-err" className="text-xs text-destructive">{fieldErrors.email}</p>}
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password" className="text-[13px]">Password</Label>
+                <Link href="/forgot-password" className="text-[11px] text-muted-foreground hover:text-foreground transition-colors">Forgot password?</Link>
+              </div>
               <div className="relative">
-                <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    clearFieldError("password");
-                  }}
-                  disabled={loading}
-                  aria-invalid={!!fieldErrors.password}
-                />
-                <button
-                  type="button"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
-                  onClick={() => setShowPassword(!showPassword)}
-                  tabIndex={-1}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                >
-                  {showPassword ? (
-                    <EyeOff className="size-4" />
-                  ) : (
-                    <Eye className="size-4" />
-                  )}
+                <Input id="password" type={showPassword ? "text" : "password"} placeholder="Enter password" autoComplete="current-password" value={password} onChange={(e) => { setPassword(e.target.value); clearField("password"); }} disabled={busy} aria-invalid={!!fieldErrors.password} aria-describedby={fieldErrors.password ? "pw-err" : undefined} className="pr-10" />
+                <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer" onClick={() => setShowPassword(!showPassword)} tabIndex={-1} aria-label={showPassword ? "Hide password" : "Show password"}>
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
-              {fieldErrors.password && (
-                <p className="text-xs text-destructive animate-in fade-in slide-in-from-top-1 duration-200">
-                  {fieldErrors.password}
-                </p>
-              )}
+              {fieldErrors.password && <p id="pw-err" className="text-xs text-destructive">{fieldErrors.password}</p>}
             </div>
-
-            <div className="flex justify-end">
-              <Link
-                href="/forgot-password"
-                className="text-sm font-medium text-indigo-500 hover:text-indigo-400 underline-offset-4 hover:underline"
-              >
-                Forgot password?
-              </Link>
-            </div>
-
-            <Button type="submit" disabled={loading} className="w-full">
-              {loading ? (
-                <>
-                  <Loader2 className="mr-2 size-4 animate-spin" />
-                  Signing in...
-                </>
-              ) : (
-                "Sign In"
-              )}
+            <Button type="submit" disabled={busy} className="w-full h-9 cursor-pointer">
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Sign in
             </Button>
           </form>
 
-          <p className="text-center text-sm text-muted-foreground">
-            Don&apos;t have an account?{" "}
-            <Link
-              href="/sign-up"
-              className="text-blue-500 font-bold hover:underline"
-            >
-              Sign up
-            </Link>
+          <p className="text-center text-[13px] text-muted-foreground">
+            No account? <Link href="/sign-up" className="text-primary font-medium hover:underline">Sign up</Link>
           </p>
 
-          {/* Enterprise SSO */}
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <Separator className="w-full" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-card px-2 text-muted-foreground">
-                Enterprise SSO
-              </span>
-            </div>
-          </div>
-
           {!ssoMode ? (
-            <Button
-              variant="outline"
-              onClick={() => setSsoMode(true)}
-              disabled={loading}
-              className="w-full"
-            >
-              <Building2 className="mr-2 size-4" />
-              Sign in with SSO
-            </Button>
+            <button type="button" onClick={() => setSsoMode(true)} disabled={busy} className="flex items-center justify-center gap-1.5 w-full text-[12px] text-muted-foreground hover:text-foreground transition-colors pt-2 cursor-pointer">
+              <Building2 className="h-3.5 w-3.5" />
+              Enterprise SSO
+            </button>
           ) : (
-            <form onSubmit={handleSsoSignIn} className="space-y-3">
-              <div className="space-y-2">
-                <Label htmlFor="sso-email">Work email</Label>
-                <Input
-                  id="sso-email"
-                  type="email"
-                  placeholder="name@company.com"
-                  value={ssoEmail}
-                  onChange={(e) => {
-                    setSsoEmail(e.target.value);
-                    if (ssoFieldError) setSsoFieldError("");
-                  }}
-                  disabled={ssoLoading}
-                  aria-invalid={!!ssoFieldError}
-                  aria-describedby={ssoFieldError ? "sso-email-error" : undefined}
-                  autoFocus
-                />
-                {ssoFieldError && (
-                  <p
-                    id="sso-email-error"
-                    className="text-xs text-destructive animate-in fade-in slide-in-from-top-1 duration-200"
-                  >
-                    {ssoFieldError}
-                  </p>
-                )}
+            <form onSubmit={handleSso} className="space-y-2.5 pt-2 border-t border-border">
+              <div className="space-y-1.5">
+                <Label htmlFor="sso-email" className="text-[12px] text-muted-foreground">Work email</Label>
+                <Input id="sso-email" type="email" placeholder="name@company.com" value={ssoEmail} onChange={(e) => { setSsoEmail(e.target.value); setSsoError(""); }} disabled={ssoLoading} aria-invalid={!!ssoError} autoFocus />
+                {ssoError && <p className="text-xs text-destructive">{ssoError}</p>}
               </div>
               <div className="flex gap-2">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => { setSsoMode(false); setSsoFieldError(""); setSsoEmail(""); }}
-                  disabled={ssoLoading}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  size="sm"
-                  disabled={ssoLoading}
-                  className="flex-1"
-                >
-                  {ssoLoading ? (
-                    <Loader2 className="mr-2 size-4 animate-spin" />
-                  ) : null}
-                  Continue with SSO
+                <Button type="button" variant="ghost" size="sm" onClick={() => { setSsoMode(false); setSsoError(""); setSsoEmail(""); }} disabled={ssoLoading} className="cursor-pointer">Cancel</Button>
+                <Button type="submit" size="sm" disabled={ssoLoading} className="flex-1 cursor-pointer">
+                  {ssoLoading && <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />}
+                  Continue
                 </Button>
               </div>
             </form>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }
 
 export default function SignInPage() {
-  return (
-    <Suspense
-      fallback={
-        <div className="flex min-h-screen items-center justify-center p-4">
-          <Loader2 className="size-8 animate-spin text-muted-foreground" />
-        </div>
-      }
-    >
-      <SignInContent />
-    </Suspense>
-  );
+  return <Suspense fallback={null}><SignInContent /></Suspense>;
 }

@@ -13,7 +13,7 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
     return (
       <select
         className={cn(
-          "flex h-9 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+          "flex h-9 w-full items-center justify-between rounded-sm border border-border bg-[hsl(var(--card))] px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/40 disabled:cursor-not-allowed disabled:opacity-50",
           className,
         )}
         ref={ref}
@@ -98,7 +98,7 @@ const NativeSelect = React.forwardRef<HTMLSelectElement, NativeSelectProps>(
           type="button"
           id={`${selectId}-trigger`}
           className={cn(
-            "flex h-9 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=open]:ring-1 data-[state=open]:ring-ring transition-all duration-150",
+            "flex h-9 w-full items-center justify-between rounded-sm border border-border bg-[hsl(var(--card))] px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/40 disabled:cursor-not-allowed disabled:opacity-50 data-[state=open]:border-primary data-[state=open]:ring-2 data-[state=open]:ring-primary/40 transition-colors duration-150",
             triggerClassName,
           )}
           data-state={isOpen ? "open" : "closed"}
@@ -202,7 +202,7 @@ const DropdownSelect = React.forwardRef<HTMLButtonElement, DropdownSelectProps>(
           type="button"
           id={`${selectId}-trigger`}
           className={cn(
-            "flex h-9 w-full items-center justify-between rounded-lg border border-input bg-background px-3 py-2 text-sm shadow-sm hover:shadow transition-all duration-200 ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-50 data-[state=open]:border-primary/50 data-[state=open]:ring-2 data-[state=open]:ring-primary/20",
+            "flex h-9 w-full items-center justify-between rounded-sm border border-border bg-[hsl(var(--card))] px-3 py-2 text-sm transition-colors duration-150 ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/40 disabled:cursor-not-allowed disabled:opacity-50 data-[state=open]:border-primary data-[state=open]:ring-2 data-[state=open]:ring-primary/40",
             className,
           )}
           data-state={isOpen ? "open" : "closed"}
@@ -222,7 +222,7 @@ const DropdownSelect = React.forwardRef<HTMLButtonElement, DropdownSelectProps>(
         </button>
 
         {isOpen && (
-          <div className="absolute z-50 mt-1.5 w-full min-w-32 overflow-hidden rounded-lg border border-border/60 bg-popover text-popover-foreground shadow-lg shadow-black/5 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2">
+          <div className="absolute z-50 mt-1.5 w-full min-w-32 overflow-hidden rounded-sm border border-border bg-popover text-popover-foreground shadow-lg shadow-black/5 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2">
             <div
               className="p-1 space-y-0.5 max-h-64 overflow-y-auto"
               role="listbox"

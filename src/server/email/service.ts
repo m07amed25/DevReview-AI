@@ -8,6 +8,8 @@ import { renderAdminDemotedEmail } from "./templates/admin-demoted";
 import { renderSecurityAlertEmail } from "./templates/security-alert";
 import { renderPasswordResetEmail } from "./templates/password-reset";
 import { renderPlanChangedEmail } from "./templates/plan-changed";
+import { renderRefundEmail } from "./templates/refund";
+import type { RefundEmailParams } from "./templates/refund";
 import { renderBroadcastEmail } from "./templates/broadcast";
 import type {
   TeamMemberAddedEmailParams,
@@ -361,6 +363,28 @@ export async function sendBroadcastEmail(params: {
     return await sendEmail(to, subject, html);
   } catch (error) {
     console.error("❌ Error generating broadcast email:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to generate email",
+    };
+  }
+}
+
+/**
+ * Send a refund notification email
+ */
+export async function sendRefundEmail(
+  params: RefundEmailParams,
+): Promise<EmailSendResult> {
+  const { to, planName, amount, currency } = params;
+
+  try {
+    const html = await renderRefundEmail(params);
+    const subject = `Refund Processed - ${amount} ${currency} credited to your account`;
+
+    return await sendEmail(to, subject, html);
+  } catch (error) {
+    console.error("❌ Error generating refund email:", error);
     return {
       success: false,
       error: error instanceof Error ? error.message : "Failed to generate email",

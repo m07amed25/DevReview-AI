@@ -39,6 +39,9 @@ model User {
   notifyTeamMemberAdded        Boolean                       @default(true)
   planId                       String                        @default("free")
   planExpiresAt                DateTime?
+  planStartedAt                DateTime?
+  billingCycle                 String?                       /// "monthly" | "yearly"
+  accountCredit                Int                           @default(0) /// Non-withdrawable credit in cents for future payments
   overrideReposLimit           Int?
   overrideReviewsLimit         Int?
   overrideSeatsLimit           Int?
@@ -819,6 +822,7 @@ model Invoice {
   amount              Int
   status              InvoiceStatus @default(PENDING)
   planId              String?
+  billingCycle        String?       /// "monthly" | "yearly"
   description         String?
   fawaterakInvoiceId  Int?          @unique
   fawaterakInvoiceKey String?

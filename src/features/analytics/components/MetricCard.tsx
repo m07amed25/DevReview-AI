@@ -1,7 +1,8 @@
 import React from "react";
-import { TrendingUp, TrendingDown } from "lucide-react";
+import { TrendingUp, TrendingDown, HelpCircle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { COLORS } from "../types";
 import { AnimatedNumber } from "./AnimatedNumber";
@@ -14,6 +15,7 @@ export function MetricCard({
   color = COLORS.primary,
   trend,
   trendValue,
+  tooltip,
 }: {
   title: string;
   value: number | string;
@@ -22,12 +24,27 @@ export function MetricCard({
   color?: string;
   trend?: "up" | "down" | "neutral";
   trendValue?: string;
+  tooltip?: string;
 }) {
   return (
     <Card className="p-6 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm font-medium text-muted-foreground">{title}</p>
+          <p className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+            {title}
+            {tooltip && (
+              <TooltipProvider delayDuration={200}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <HelpCircle className="h-3.5 w-3.5 text-muted-foreground/60 cursor-help" />
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="max-w-[220px] text-xs">
+                    {tooltip}
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
+          </p>
           <p
             className="mt-2 text-3xl font-bold tracking-tight"
             style={{ color }}

@@ -59,12 +59,45 @@ export const paymentRouter = createTRPCRouter({
       });
       if (!plan) throw new TRPCError({ code: "NOT_FOUND", message: "Plan not found" });
 
-      const { finalAmount } = await calculateCheckoutAmount(
+      const { finalAmount, creditUsed } = await calculateCheckoutAmount(
         ctx.db,
         ctx.user.id,
         plan,
         input.billingCycle,
       );
+
+      // If credit covers the full amount, activate immediately without payment gateway
+      if (finalAmount === 0 && creditUsed > 0) {
+        const planExpiresAt = new Date();
+        planExpiresAt.setMonth(planExpiresAt.getMonth() + (input.billingCycle === "yearly" ? 12 : 1));
+
+        const invoice = await ctx.db.invoice.create({
+          data: {
+            userId: ctx.user.id,
+            amount: 0,
+            planId: input.planId,
+            billingCycle: input.billingCycle,
+            description: `${plan.name} - ${input.billingCycle} (paid with credit)`,
+            currency: checkoutCurrency,
+            status: "PAID",
+            paidAt: new Date(),
+          },
+        });
+
+        await ctx.db.user.update({
+          where: { id: ctx.user.id },
+          data: {
+            planId: input.planId,
+            planExpiresAt,
+            planStartedAt: new Date(),
+            billingCycle: input.billingCycle,
+            accountCredit: { decrement: creditUsed },
+          },
+        });
+
+        return { invoiceId: invoice.id, redirectTo: null, referenceCode: null, paidWithCredit: true };
+      }
+
       const amountMajor = toAmountString(finalAmount);
 
       const successToken = crypto.randomBytes(32).toString("hex");
@@ -73,6 +106,7 @@ export const paymentRouter = createTRPCRouter({
           userId: ctx.user.id,
           amount: finalAmount,
           planId: input.planId,
+          billingCycle: input.billingCycle,
           description: `${plan.name} - ${input.billingCycle}`,
           currency: checkoutCurrency,
           successToken,
@@ -273,6 +307,7 @@ export const paymentRouter = createTRPCRouter({
           userId: ctx.user.id,
           amount: finalAmount,
           planId: input.planId,
+          billingCycle: input.billingCycle,
           description: `${plan.name} - ${input.billingCycle}`,
           currency: checkoutCurrency,
         },
@@ -389,15 +424,83 @@ export const paymentRouter = createTRPCRouter({
       planExpiresAt.setMonth(planExpiresAt.getMonth() + (input.billingCycle === "yearly" ? 12 : 1));
 
       await ctx.db.invoice.create({
-        data: { userId: ctx.user.id, amount: 0, planId: input.planId, description: `${plan.name} - ${input.billingCycle} (100% discount)`, currency: checkoutCurrency, status: "PAID", paidAt: new Date() },
+        data: { userId: ctx.user.id, amount: 0, planId: input.planId, billingCycle: input.billingCycle, description: `${plan.name} - ${input.billingCycle} (100% discount)`, currency: checkoutCurrency, status: "PAID", paidAt: new Date() },
       });
 
       await ctx.db.user.update({
         where: { id: ctx.user.id },
-        data: { planId: input.planId, planExpiresAt },
+        data: { planId: input.planId, planExpiresAt, planStartedAt: new Date(), billingCycle: input.billingCycle },
       });
 
       return { success: true };
+    }),
+
+  getCheckoutSummary: protectedProcedure
+    .input(z.object({ planId: z.string(), billingCycle: z.enum(["monthly", "yearly"]) }))
+    .query(async ({ ctx, input }) => {
+      const plan = await ctx.db.pricingPlan.findUnique({ where: { id: input.planId } });
+      if (!plan) throw new TRPCError({ code: "NOT_FOUND", message: "Plan not found" });
+
+      const user = await ctx.db.user.findUnique({
+        where: { id: ctx.user.id },
+        select: { accountCredit: true },
+      });
+
+      const { basePrice, finalAmount, creditUsed } = await calculateCheckoutAmount(
+        ctx.db, ctx.user.id, plan, input.billingCycle,
+      );
+
+      return {
+        basePrice,
+        finalAmount,
+        creditUsed,
+        accountCredit: user?.accountCredit ?? 0,
+        canPayWithCredit: finalAmount === 0 && (creditUsed > 0),
+      };
+    }),
+
+  payWithCredit: protectedProcedure
+    .input(z.object({ planId: z.string(), billingCycle: z.enum(["monthly", "yearly"]) }))
+    .mutation(async ({ ctx, input }) => {
+      const plan = await ctx.db.pricingPlan.findUnique({ where: { id: input.planId } });
+      if (!plan) throw new TRPCError({ code: "NOT_FOUND", message: "Plan not found" });
+
+      const { finalAmount, creditUsed } = await calculateCheckoutAmount(
+        ctx.db, ctx.user.id, plan, input.billingCycle,
+      );
+
+      if (finalAmount !== 0 || creditUsed <= 0) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Insufficient credit to cover this plan." });
+      }
+
+      const planExpiresAt = new Date();
+      planExpiresAt.setMonth(planExpiresAt.getMonth() + (input.billingCycle === "yearly" ? 12 : 1));
+
+      const invoice = await ctx.db.invoice.create({
+        data: {
+          userId: ctx.user.id,
+          amount: 0,
+          planId: input.planId,
+          billingCycle: input.billingCycle,
+          description: `${plan.name} - ${input.billingCycle} (paid with credit)`,
+          currency: checkoutCurrency,
+          status: "PAID",
+          paidAt: new Date(),
+        },
+      });
+
+      await ctx.db.user.update({
+        where: { id: ctx.user.id },
+        data: {
+          planId: input.planId,
+          planExpiresAt,
+          planStartedAt: new Date(),
+          billingCycle: input.billingCycle,
+          accountCredit: { decrement: creditUsed },
+        },
+      });
+
+      return { success: true, invoiceId: invoice.id };
     }),
 
   getUpgradePlans: protectedProcedure.query(async ({ ctx }) => {

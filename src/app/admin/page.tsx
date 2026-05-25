@@ -78,6 +78,7 @@ import {
   ShieldCheck,
   Settings as SettingsIcon,
   Plus,
+  FileDown,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -94,6 +95,116 @@ export default function AdminOverviewPage() {
       staleTime: 5 * 60 * 1000,
     });
 
+  const reportQuery = trpc.admin.getFullReport.useQuery(undefined, { enabled: false });
+
+  const exportReport = async () => {
+    const { data: report } = await reportQuery.refetch();
+    if (!report) return;
+
+    const html = `<!DOCTYPE html><html><head><title>System Report - Code Catch</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,system-ui,sans-serif;padding:48px;color:#111;line-height:1.5;max-width:900px;margin:0 auto}
+h1{font-size:28px;font-weight:800;letter-spacing:-0.5px}
+h2{font-size:16px;font-weight:700;margin-top:36px;padding-bottom:8px;border-bottom:2px solid #111;text-transform:uppercase;letter-spacing:0.5px}
+.meta{color:#666;font-size:12px;margin-top:4px;margin-bottom:32px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.stat{background:#f8f8f8;border:1px solid #e5e5e5;border-radius:8px;padding:16px;text-align:center}
+.stat-value{font-size:32px;font-weight:800;color:#111}
+.stat-label{font-size:11px;color:#666;margin-top:4px;text-transform:uppercase;letter-spacing:0.5px}
+table{width:100%;border-collapse:collapse;margin-top:12px;font-size:12px}
+td,th{text-align:left;padding:8px 10px;border-bottom:1px solid #eee}
+th{font-weight:700;background:#f8f8f8;text-transform:uppercase;font-size:10px;letter-spacing:0.5px}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600}
+.badge-paid{background:#d1fae5;color:#065f46}
+.badge-pending{background:#fef3c7;color:#92400e}
+.badge-failed{background:#fee2e2;color:#991b1b}
+.badge-refunded{background:#dbeafe;color:#1e40af}
+.section{page-break-inside:avoid}
+.footer{margin-top:48px;padding-top:16px;border-top:1px solid #e5e5e5;font-size:11px;color:#999;text-align:center}
+@media print{body{padding:24px}h2{margin-top:24px}}
+</style></head><body>
+<h1>Code Catch — Full System Report</h1>
+<p class="meta">Generated: ${new Date(report.generatedAt).toLocaleString()} | Environment: Production</p>
+
+<div class="section">
+<h2>Platform Overview</h2>
+<div class="grid">
+<div class="stat"><div class="stat-value">${report.platform.totalUsers}</div><div class="stat-label">Total Users</div></div>
+<div class="stat"><div class="stat-value">${report.platform.totalRepos}</div><div class="stat-label">Repositories</div></div>
+<div class="stat"><div class="stat-value">${report.platform.totalReviews}</div><div class="stat-label">AI Reviews</div></div>
+<div class="stat"><div class="stat-value">${report.platform.totalTeams}</div><div class="stat-label">Teams</div></div>
+</div>
+</div>
+
+<div class="section">
+<h2>Growth & Activity</h2>
+<div class="grid">
+<div class="stat"><div class="stat-value">${report.platform.usersThisWeek}</div><div class="stat-label">Users (7d)</div></div>
+<div class="stat"><div class="stat-value">${report.platform.usersThisMonth}</div><div class="stat-label">Users (30d)</div></div>
+<div class="stat"><div class="stat-value">${report.platform.reviewsThisWeek}</div><div class="stat-label">Reviews (7d)</div></div>
+<div class="stat"><div class="stat-value">${report.platform.reviewsThisMonth}</div><div class="stat-label">Reviews (30d)</div></div>
+</div>
+</div>
+
+<div class="section">
+<h2>Review Status Breakdown</h2>
+<div class="grid">
+<div class="stat"><div class="stat-value">${report.reviews.completed}</div><div class="stat-label">Completed</div></div>
+<div class="stat"><div class="stat-value">${report.reviews.processing}</div><div class="stat-label">Processing</div></div>
+<div class="stat"><div class="stat-value">${report.reviews.pending}</div><div class="stat-label">Pending</div></div>
+<div class="stat"><div class="stat-value">${report.reviews.failed}</div><div class="stat-label">Failed</div></div>
+</div>
+</div>
+
+<div class="section">
+<h2>Billing & Revenue</h2>
+<div class="grid">
+<div class="stat"><div class="stat-value">$${report.billing.totalRevenue}</div><div class="stat-label">Total Revenue</div></div>
+<div class="stat"><div class="stat-value">${report.billing.paidInvoices}</div><div class="stat-label">Paid</div></div>
+<div class="stat"><div class="stat-value">${report.billing.pendingInvoices}</div><div class="stat-label">Pending</div></div>
+<div class="stat"><div class="stat-value">${report.billing.failedInvoices + report.billing.refundedInvoices}</div><div class="stat-label">Failed/Refunded</div></div>
+</div>
+</div>
+
+<div class="section">
+<h2>Plan Distribution</h2>
+<table>
+<tr><th>Plan</th><th>Users</th><th>% of Total</th></tr>
+${report.plans.map(p => `<tr><td>${p.planId}</td><td>${p.count}</td><td>${((p.count / report.platform.totalUsers) * 100).toFixed(1)}%</td></tr>`).join("")}
+</table>
+</div>
+
+<div class="section">
+<h2>Recent Users (Last 10)</h2>
+<table>
+<tr><th>Name</th><th>Email</th><th>Plan</th><th>Joined</th></tr>
+${report.recentUsers.map(u => `<tr><td>${u.name ?? "—"}</td><td>${u.email}</td><td>${u.planId}</td><td>${new Date(u.createdAt).toLocaleDateString()}</td></tr>`).join("")}
+</table>
+</div>
+
+<div class="section">
+<h2>Recent Invoices (Last 10)</h2>
+<table>
+<tr><th>ID</th><th>User</th><th>Amount</th><th>Plan</th><th>Status</th><th>Date</th></tr>
+${report.recentInvoices.map(i => `<tr><td style="font-family:monospace;font-size:10px">${i.id.slice(0, 12)}…</td><td>${i.email}</td><td>${i.amount} ${i.currency}</td><td>${i.planId ?? "—"}</td><td><span class="badge badge-${i.status.toLowerCase()}">${i.status}</span></td><td>${new Date(i.createdAt).toLocaleDateString()}</td></tr>`).join("")}
+</table>
+</div>
+
+<div class="footer">
+Code Catch System Report — Confidential — ${new Date().getFullYear()}
+</div>
+</body></html>`;
+
+    const blob = new Blob([html], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    const win = window.open(url, "_blank");
+    if (win) {
+      win.onload = () => { win.print(); URL.revokeObjectURL(url); };
+    }
+  };
+
   return (
     <div className="space-y-10 pb-10">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -106,6 +217,10 @@ export default function AdminOverviewPage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
+          <Button variant="outline" size="sm" className="gap-2" onClick={exportReport} disabled={statsLoading}>
+            <FileDown className="h-4 w-4" />
+            Export Report
+          </Button>
           <Button variant="outline" size="sm" className="gap-2" asChild>
             <Link href="/admin/settings">
               <SettingsIcon className="h-4 w-4" />

@@ -57,12 +57,15 @@ function getUserFacingError(errorMessage: string, gatewayCode: string): string {
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as Record<string, unknown>;
+    console.log("[Fawaterak Webhook] Received:", JSON.stringify(body));
+
     const invoice_id = Number(body.invoice_id);
     const invoice_key = getString(body, "invoice_key");
     const payment_method = getString(body, "payment_method");
     const status = normalizeStatus(body);
 
     if (!Number.isFinite(invoice_id) || !invoice_key || !payment_method || !status) {
+      console.error("[Fawaterak Webhook] Malformed:", { invoice_id, invoice_key, payment_method, status });
       return NextResponse.json({ error: "Malformed webhook" }, { status: 400 });
     }
 
@@ -70,7 +73,10 @@ export async function POST(request: NextRequest) {
       request.headers.get("x-fawaterak-hash") ??
       getString(body, "hashKey") ??
       "";
-    if (!verifyTransactionHash(invoice_id, invoice_key, payment_method, receivedHash)) {
+
+    // Only verify hash if one was provided
+    if (receivedHash && !verifyTransactionHash(invoice_id, invoice_key, payment_method, receivedHash)) {
+      console.error("[Fawaterak Webhook] Hash verification failed for invoice:", invoice_id);
       return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
     }
 

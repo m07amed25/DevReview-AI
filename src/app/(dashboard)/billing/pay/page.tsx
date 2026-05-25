@@ -61,6 +61,10 @@ export default function PayPage() {
   const { data: methods, isLoading: loadingMethods } =
     trpc.payment.getPaymentMethods.useQuery();
   const { data: savedCards } = trpc.payment.getSavedCards.useQuery();
+  const { data: checkout } = trpc.payment.getCheckoutSummary.useQuery(
+    { planId, billingCycle },
+    { enabled: !!planId }
+  );
 
   // Auto-select the plan from URL if available in the list
   useEffect(() => {
@@ -83,7 +87,10 @@ export default function PayPage() {
 
   const initiatePayment = trpc.payment.initiatePayment.useMutation({
     onSuccess: (data) => {
-      if (data.redirectTo) {
+      if ("paidWithCredit" in data && data.paidWithCredit) {
+        toast.success("Plan activated using your account credit!");
+        router.push("/billing");
+      } else if (data.redirectTo) {
         window.location.href = data.redirectTo;
       } else if (data.referenceCode) {
         router.push(
@@ -103,9 +110,22 @@ export default function PayPage() {
     onError: (e) => toast.error(e.message),
   });
 
+  const payWithCredit = trpc.payment.payWithCredit.useMutation({
+    onSuccess: () => {
+      toast.success("Plan activated using your account credit!");
+      router.push("/billing");
+    },
+    onError: (e) => toast.error(e.message),
+  });
+
   const handlePay = () => {
     if (!planId) {
       toast.error("No plan selected");
+      return;
+    }
+    // If credit covers the full amount, pay with credit directly
+    if (checkout?.canPayWithCredit) {
+      payWithCredit.mutate({ planId, billingCycle });
       return;
     }
     if (savedCardId) {
@@ -119,7 +139,7 @@ export default function PayPage() {
     }
   };
 
-  const isLoading = initiatePayment.isPending || payWithSavedCard.isPending;
+  const isLoading = initiatePayment.isPending || payWithSavedCard.isPending || payWithCredit.isPending;
   const displayPrice = getDisplayPrice();
 
   return (
@@ -165,7 +185,7 @@ export default function PayPage() {
                           className={cn(
                             "flex h-10 w-10 items-center justify-center rounded-lg",
                             plan.id === "pro"
-                              ? "bg-indigo-100 text-indigo-600 dark:bg-indigo-950 dark:text-indigo-400"
+                              ? "bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary"
                               : "bg-violet-100 text-violet-600 dark:bg-violet-950 dark:text-violet-400"
                           )}
                         >
@@ -221,7 +241,7 @@ export default function PayPage() {
                     onCheckedChange={(v) =>
                       setBillingCycle(v ? "yearly" : "monthly")
                     }
-                    className="data-[state=checked]:bg-indigo-500"
+                    className="data-[state=checked]:bg-primary"
                   />
                   <span
                     className={cn(
@@ -378,10 +398,16 @@ export default function PayPage() {
                             : "Monthly total"}
                         </span>
                         <span className="font-semibold">
-                          ${displayPrice}
+                          ${checkout?.basePrice ?? displayPrice}
                         </span>
                       </div>
-                      {billingCycle === "yearly" && (
+                      {checkout && checkout.creditUsed > 0 && (
+                        <div className="flex justify-between text-emerald-600 dark:text-emerald-400">
+                          <span>Account credit</span>
+                          <span className="font-medium">-${checkout.creditUsed}</span>
+                        </div>
+                      )}
+                      {billingCycle === "yearly" && !checkout && (
                         <div className="flex justify-between text-green-600 dark:text-green-400">
                           <span>Annual savings</span>
                           <span className="font-medium">
@@ -395,12 +421,19 @@ export default function PayPage() {
 
                     <div className="border-t pt-3">
                       <div className="flex justify-between text-lg font-bold">
-                        <span>Total</span>
+                        <span>To pay</span>
                         <span>
-                          ${displayPrice}
-                          <span className="text-sm font-normal text-muted-foreground">
-                            {billingCycle === "yearly" ? "/yr" : "/mo"}
-                          </span>
+                          ${checkout?.finalAmount ?? displayPrice}
+                          {(checkout?.finalAmount ?? displayPrice) !== 0 && (
+                            <span className="text-sm font-normal text-muted-foreground">
+                              {billingCycle === "yearly" ? "/yr" : "/mo"}
+                            </span>
+                          )}
+                          {checkout?.canPayWithCredit && (
+                            <span className="text-sm font-normal text-emerald-500 ml-2">
+                              Free with credit
+                            </span>
+                          )}
                         </span>
                       </div>
                     </div>
@@ -437,13 +470,15 @@ export default function PayPage() {
                   disabled={
                     isLoading ||
                     !planId ||
-                    (!selectedMethod && !savedCardId)
+                    (!checkout?.canPayWithCredit && !selectedMethod && !savedCardId)
                   }
                   className="w-full h-12 text-base font-semibold"
                   size="lg"
                 >
                   {isLoading ? (
                     <Loader2 className="h-5 w-5 animate-spin" />
+                  ) : checkout?.canPayWithCredit ? (
+                    "Activate with Credit"
                   ) : (
                     "Continue to Payment"
                   )}

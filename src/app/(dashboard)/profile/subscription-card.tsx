@@ -1,171 +1,69 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  CreditCard,
-  Rocket,
-  Crown,
-  Calendar,
-  FolderGit2,
-  CheckCircle2,
-  Users,
-  ArrowRight,
-} from "lucide-react";
-import { LimitProgress } from "@/components/ui/limit-progress";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { motion } from "motion/react";
-import { cn } from "@/lib/utils";
 import { Plan } from "@/lib/plan";
 
 interface SubscriptionCardProps {
-  plan: {
-    id: string;
-    name: string;
-    tagline: string;
-  };
-  limits: {
-    reposLimit: number | null;
-    reviewsLimit: number | null;
-    seatsLimit: number | null;
-  };
-  stats: {
-    repositories: number;
-    reviews: number;
-    teamMembers: number;
-  };
+  plan: { id: string; name: string; tagline: string };
+  limits: { reposLimit: number | null; reviewsLimit: number | null; seatsLimit: number | null };
+  stats: { repositories: number; reviews: number; teamMembers: number };
   planExpiresAt?: Date | string | null;
+  accountCredit?: number;
 }
 
-export function SubscriptionCard({
-  plan,
-  limits,
-  stats,
-  planExpiresAt,
-}: SubscriptionCardProps) {
+function UsageRow({ label, used, limit }: { label: string; used: number; limit: number | null }) {
+  const pct = limit ? Math.min((used / limit) * 100, 100) : 0;
+  return (
+    <div className="flex items-center gap-3">
+      <span className="text-sm text-muted-foreground w-24 shrink-0">{label}</span>
+      <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
+        {limit && <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${pct}%` }} />}
+      </div>
+      <span className="font-mono text-xs text-foreground shrink-0">{used}<span className="text-muted-foreground">/{limit ?? "∞"}</span></span>
+    </div>
+  );
+}
+
+export function SubscriptionCard({ plan, limits, stats, planExpiresAt, accountCredit }: SubscriptionCardProps) {
   const isFree = plan.id === Plan.FREE;
-  const isEnterprise = plan.id === Plan.ENTERPRISE;
 
   return (
-    <Card className="overflow-hidden border-none shadow-2xl bg-neutral-900/40 backdrop-blur-2xl relative group h-full">
-      {/* Dynamic Animated Background */}
-      <div
-        className={cn(
-          "absolute inset-0 opacity-20 pointer-events-none transition-opacity duration-500 group-hover:opacity-30",
-          isFree
-            ? "bg-linear-to-br from-neutral-600 to-transparent"
-            : isEnterprise
-              ? "bg-linear-to-br from-amber-500 via-orange-500 to-transparent"
-              : "bg-linear-to-br from-indigo-600 to-transparent",
-        )}
-      />
-      <div className="absolute inset-0 bg-[url('/noise.svg')] opacity-[0.03] mix-blend-overlay pointer-events-none" />
-
-      <CardHeader className="relative pb-0">
-        <div className="flex items-start justify-between">
-          <div className="space-y-1.5">
-            <Badge className={cn(
-              "border-none text-[10px] font-semibold uppercase tracking-[0.2em] px-2 py-0.5",
-              isEnterprise ? "bg-amber-500 text-white" : "bg-indigo-500 text-white"
-            )}>
-              Current Plan
-            </Badge>
-            <CardTitle className="text-3xl font-semibold tracking-tighter text-white uppercase sm:text-4xl">
-              {plan.name}
-            </CardTitle>
-            <CardDescription className="text-neutral-400 font-medium text-sm tracking-wide">
-              {plan.tagline}
-            </CardDescription>
-          </div>
-          <Link href="/billing">
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button
-                variant="outline"
-                size="sm"
-                className="bg-white/5 border-white/10 text-white hover:bg-white/10 hover:border-white/20 font-semibold text-[10px] uppercase tracking-widest px-4"
-              >
-                Billing
-              </Button>
-            </motion.div>
-          </Link>
+    <div className="rounded-md border border-border p-4">
+      <div className="flex items-center justify-between mb-3">
+        <div>
+          <h3 className="text-[0.9375rem] font-semibold">{plan.name} Plan</h3>
+          <p className="text-xs text-muted-foreground">{plan.tagline}</p>
         </div>
-      </CardHeader>
+        <Link href="/billing">
+          <Button variant="outline" size="sm" className="text-xs gap-1">Billing<ArrowRight className="size-3" /></Button>
+        </Link>
+      </div>
 
-      <CardContent className="relative space-y-8 pt-8">
-        <div className="grid grid-cols-1 gap-6">
-          <div className="space-y-4">
-            <LimitProgress
-              label="Repositories"
-              usage={stats.repositories}
-              limit={limits.reposLimit}
-              color={isEnterprise ? "bg-amber-500" : "bg-indigo-500"}
-              icon={<FolderGit2 className="size-4" />}
-              className="bg-black/20 border-white/5"
-            />
-            <LimitProgress
-              label="AI Reviews"
-              usage={stats.reviews}
-              limit={limits.reviewsLimit}
-              color={isEnterprise ? "bg-orange-500" : "bg-violet-500"}
-              icon={<CheckCircle2 className="size-4" />}
-              className="bg-black/20 border-white/5"
-            />
-            <LimitProgress
-              label="Team Seats"
-              usage={stats.teamMembers}
-              limit={limits.seatsLimit}
-              color="bg-emerald-500"
-              icon={<Users className="size-4" />}
-              className="bg-black/20 border-white/5"
-            />
-          </div>
+      <div className="space-y-2.5">
+        <UsageRow label="Repos" used={stats.repositories} limit={limits.reposLimit} />
+        <UsageRow label="Reviews" used={stats.reviews} limit={limits.reviewsLimit} />
+        <UsageRow label="Seats" used={stats.teamMembers} limit={limits.seatsLimit} />
+      </div>
 
-          <div className="pt-4 border-t border-white/5 flex flex-wrap items-center justify-between gap-4">
-            {planExpiresAt ? (
-              <div className="flex items-center gap-2.5">
-                <div className="size-8 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500">
-                  <Calendar className="size-4" />
-                </div>
-                <div className="space-y-0.5">
-                  <p className="text-[10px] font-semibold uppercase tracking-widest text-neutral-500">Next Billing</p>
-                  <p className="text-xs font-semibold text-neutral-200">
-                    {new Date(planExpiresAt).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2.5">
-                <div className="size-8 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-500">
-                  <Rocket className="size-4" />
-                </div>
-                <div className="space-y-0.5">
-                  <p className="text-[10px] font-semibold uppercase tracking-widest text-neutral-500">Status</p>
-                  <p className="text-xs font-semibold text-neutral-200">Lifetime Access</p>
-                </div>
-              </div>
-            )}
-
-            {isFree && (
-              <Link href="/billing" className="flex-1 sm:flex-none">
-                <Button className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-[10px] uppercase tracking-[0.2em] px-8 shadow-xl shadow-indigo-500/20">
-                  Upgrade
-                </Button>
-              </Link>
-            )}
-          </div>
+      {(planExpiresAt || (accountCredit && accountCredit > 0) || isFree) && (
+        <div className="mt-3 pt-3 border-t border-border flex items-center gap-4">
+          {planExpiresAt && (
+            <span className="font-mono text-xs text-muted-foreground">
+              Expires {new Date(planExpiresAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+            </span>
+          )}
+          {!!accountCredit && accountCredit > 0 && (
+            <span className="font-mono text-xs text-emerald-500">${accountCredit} credit</span>
+          )}
+          {isFree && (
+            <Link href="/billing" className="ml-auto">
+              <Button size="sm" className="text-xs gap-1">Upgrade<ArrowRight className="size-3" /></Button>
+            </Link>
+          )}
         </div>
-      </CardContent>
-    </Card>
+      )}
+    </div>
   );
 }

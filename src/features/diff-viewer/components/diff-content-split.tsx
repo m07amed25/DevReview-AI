@@ -1,4 +1,4 @@
-import { useMemo, useRef, useCallback, useEffect, useState } from "react";
+import { useMemo } from "react";
 import { cn } from "@/lib/utils";
 import {
   DiffGroup,
@@ -17,37 +17,21 @@ interface SplitRow {
   hunkContent?: string;
 }
 
-function buildSplitRows(
-  groups: DiffGroup[],
-  wordDiffEnabled: boolean,
-): SplitRow[] {
+function buildSplitRows(groups: DiffGroup[], wordDiffEnabled: boolean): SplitRow[] {
   const rows: SplitRow[] = [];
   for (const group of groups) {
     if (group.type === "hunk") {
-      rows.push({
-        left: { line: null },
-        right: { line: null },
-        isHunk: true,
-        hunkContent: group.lines[0]?.content,
-      });
+      rows.push({ left: { line: null }, right: { line: null }, isHunk: true, hunkContent: group.lines[0]?.content });
     } else if (group.type === "info") {
-      rows.push({
-        left: { line: null },
-        right: { line: null },
-        isInfo: true,
-        hunkContent: group.lines[0]?.content,
-      });
+      rows.push({ left: { line: null }, right: { line: null }, isInfo: true, hunkContent: group.lines[0]?.content });
     } else if (group.type === "context") {
-      for (const line of group.lines)
-        rows.push({ left: { line }, right: { line } });
+      for (const line of group.lines) rows.push({ left: { line }, right: { line } });
     } else if (group.type === "change") {
       const { deletions, additions } = group;
       const maxLen = Math.max(deletions.length, additions.length);
       const minLen = Math.min(deletions.length, additions.length);
       const wordDiffs = wordDiffEnabled
-        ? Array.from({ length: minLen }, (_, i) =>
-            computeWordDiff(deletions[i]!.content, additions[i]!.content),
-          )
+        ? Array.from({ length: minLen }, (_, i) => computeWordDiff(deletions[i]!.content, additions[i]!.content))
         : [];
       for (let i = 0; i < maxLen; i++) {
         const del = i < deletions.length ? deletions[i]! : null;
@@ -76,32 +60,7 @@ export function DiffContentSplit({
   enableSyntaxHighlighting?: boolean;
   language?: string;
 }) {
-  const rows = useMemo(
-    () => buildSplitRows(groups, wordDiffEnabled),
-    [groups, wordDiffEnabled],
-  );
-
-  const leftScrollRef = useRef<HTMLDivElement>(null);
-  const rightScrollRef = useRef<HTMLDivElement>(null);
-  const [isSyncing, setIsSyncing] = useState(false);
-
-  // Synchronized scrolling for split view
-  const handleScroll = useCallback(
-    (source: "left" | "right") => {
-      if (isSyncing) return;
-      setIsSyncing(true);
-
-      const sourceRef = source === "left" ? leftScrollRef : rightScrollRef;
-      const targetRef = source === "left" ? rightScrollRef : leftScrollRef;
-
-      if (sourceRef.current && targetRef.current) {
-        targetRef.current.scrollTop = sourceRef.current.scrollTop;
-      }
-
-      setTimeout(() => setIsSyncing(false), 10);
-    },
-    [isSyncing],
-  );
+  const rows = useMemo(() => buildSplitRows(groups, wordDiffEnabled), [groups, wordDiffEnabled]);
 
   return (
     <div className="overflow-x-auto">
@@ -116,11 +75,8 @@ export function DiffContentSplit({
           {rows.map((row, ri) => {
             if (row.isHunk) {
               return (
-                <tr key={ri} className="bg-blue-500/8">
-                  <td
-                    colSpan={4}
-                    className="px-4 py-1.5 text-xs text-blue-600 dark:text-blue-400 bg-blue-500/5 select-none text-center font-medium"
-                  >
+                <tr key={ri} className="bg-[oklch(0.62_0.16_250/0.06)]">
+                  <td colSpan={4} className="px-4 py-1.5 text-xs text-[oklch(0.62_0.16_250)] select-none text-center font-medium">
                     {row.hunkContent}
                   </td>
                 </tr>
@@ -128,11 +84,8 @@ export function DiffContentSplit({
             }
             if (row.isInfo) {
               return (
-                <tr key={ri} className="bg-muted/30">
-                  <td
-                    colSpan={4}
-                    className="px-4 py-1 text-xs text-muted-foreground italic select-none text-center"
-                  >
+                <tr key={ri} className="bg-[oklch(0.20_0.02_250/0.5)]">
+                  <td colSpan={4} className="px-4 py-1 text-xs text-[oklch(0.60_0.03_250)] italic select-none text-center">
                     {row.hunkContent}
                   </td>
                 </tr>
@@ -146,38 +99,28 @@ export function DiffContentSplit({
               <tr key={ri} className="group/line">
                 <td
                   className={cn(
-                    "w-12 px-2 py-0.5 text-right select-none border-r border-border/30",
-                    leftIsChange
-                      ? "bg-red-500/5 text-red-600/70 dark:text-red-400/70"
-                      : "text-muted-foreground/50",
+                    "w-12 px-2 py-0.5 text-right select-none border-r border-[oklch(0.30_0.02_250/0.4)]",
+                    leftIsChange ? "text-[oklch(0.55_0.2_25/0.6)]" : "text-[oklch(0.40_0.03_250)]",
                   )}
                 >
                   {leftLine?.oldNum || leftLine?.newNum || ""}
                 </td>
                 <td
                   className={cn(
-                    "px-3 py-0.5 border-r border-border/50",
+                    "px-3 py-0.5 border-r border-[oklch(0.30_0.02_250/0.3)]",
                     leftIsChange
-                      ? "bg-red-500/8 text-red-700 dark:text-red-300"
+                      ? "bg-[oklch(0.55_0.2_25/0.06)] text-[oklch(0.70_0.12_25)]"
                       : leftLine
-                        ? "hover:bg-muted/30 transition-colors"
-                        : "bg-muted/20",
-                    wrapLines
-                      ? "whitespace-pre-wrap break-all"
-                      : "whitespace-pre",
+                        ? "hover:bg-[oklch(0.20_0.02_250/0.5)] transition-colors duration-150"
+                        : "bg-[oklch(0.16_0.025_250/0.5)]",
+                    wrapLines ? "whitespace-pre-wrap break-all" : "whitespace-pre",
                   )}
                 >
                   {leftLine ? (
                     row.left.segments ? (
-                      <WordDiffSegments
-                        segments={row.left.segments}
-                        side="old"
-                      />
+                      <WordDiffSegments segments={row.left.segments} side="old" />
                     ) : enableSyntaxHighlighting && !leftIsChange ? (
-                      <HighlightedLine
-                        content={leftLine.content}
-                        language={language}
-                      />
+                      <HighlightedLine content={leftLine.content} language={language} />
                     ) : (
                       leftLine.content || " "
                     )
@@ -185,10 +128,8 @@ export function DiffContentSplit({
                 </td>
                 <td
                   className={cn(
-                    "w-12 px-2 py-0.5 text-right select-none border-r border-border/30",
-                    rightIsChange
-                      ? "bg-emerald-500/5 text-emerald-600/70 dark:text-emerald-400/70"
-                      : "text-muted-foreground/50",
+                    "w-12 px-2 py-0.5 text-right select-none border-r border-[oklch(0.30_0.02_250/0.4)]",
+                    rightIsChange ? "text-[oklch(0.55_0.15_155/0.6)]" : "text-[oklch(0.40_0.03_250)]",
                   )}
                 >
                   {rightLine?.newNum || rightLine?.oldNum || ""}
@@ -197,26 +138,18 @@ export function DiffContentSplit({
                   className={cn(
                     "px-3 py-0.5",
                     rightIsChange
-                      ? "bg-emerald-500/8 text-emerald-700 dark:text-emerald-300"
+                      ? "bg-[oklch(0.55_0.15_155/0.06)] text-[oklch(0.70_0.10_155)]"
                       : rightLine
-                        ? "hover:bg-muted/30 transition-colors"
-                        : "bg-muted/20",
-                    wrapLines
-                      ? "whitespace-pre-wrap break-all"
-                      : "whitespace-pre",
+                        ? "hover:bg-[oklch(0.20_0.02_250/0.5)] transition-colors duration-150"
+                        : "bg-[oklch(0.16_0.025_250/0.5)]",
+                    wrapLines ? "whitespace-pre-wrap break-all" : "whitespace-pre",
                   )}
                 >
                   {rightLine ? (
                     row.right.segments ? (
-                      <WordDiffSegments
-                        segments={row.right.segments}
-                        side="new"
-                      />
+                      <WordDiffSegments segments={row.right.segments} side="new" />
                     ) : enableSyntaxHighlighting && !rightIsChange ? (
-                      <HighlightedLine
-                        content={rightLine.content}
-                        language={language}
-                      />
+                      <HighlightedLine content={rightLine.content} language={language} />
                     ) : (
                       rightLine.content || " "
                     )

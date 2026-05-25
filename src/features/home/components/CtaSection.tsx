@@ -1,145 +1,169 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Sparkles, Github } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useSession } from "@/lib/auth-client";
+import { ArrowRight, Check } from "lucide-react";
+import { motion, useInView } from "motion/react";
+import { useRef, useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc/client";
 
-export function CtaSection() {
-  const { data: session } = useSession();
-  const [mounted, setMounted] = useState(false);
-  const [data] = trpc.home.getRecentUsers.useSuspenseQuery();
+const reasons = [
+  "Free for open source and solo developers",
+  "No credit card required to start",
+  "Reviews in under 2 seconds per PR",
+  "Works with private and public repos",
+  "Cancel or downgrade anytime",
+];
 
-  const recentUsers = data.recentUsers;
-  const totalUsers = data.totalUsers;
+function AnimatedStat({ value, suffix = "" }: { value: string; suffix?: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true });
+  const [display, setDisplay] = useState("0");
 
   useEffect(() => {
-    const timer = setTimeout(() => setMounted(true), 0);
-    return () => clearTimeout(timer);
-  }, []);
+    if (!inView) return;
+    const num = parseFloat(value);
+    if (isNaN(num)) { setDisplay(value); return; }
+    const duration = 600;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const t = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 4); // ease-out-quart
+      setDisplay(num % 1 === 0 ? Math.round(num * eased).toString() : (num * eased).toFixed(1));
+      if (t < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }, [inView, value]);
+
+  return <span ref={ref} className="font-mono font-medium">{display}{suffix}</span>;
+}
+
+export function CtaSection() {
+  const [data] = trpc.home.getRecentUsers.useSuspenseQuery();
 
   return (
-    <section
-      className="cta-section relative overflow-hidden bg-background border-t border-border"
-      aria-labelledby="cta-heading"
-    >
-      {/* Background gradients */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_120%,rgba(120,119,198,0.3),transparent_100%)]" />
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-indigo-500/50 to-transparent" />
+    <section className="border-t border-border py-24 sm:py-32" aria-labelledby="cta-heading">
+      <div className="mx-auto max-w-[1100px] px-4 sm:px-6">
+        <div className="grid lg:grid-cols-[1fr_auto] gap-10 lg:gap-16 items-start">
+          {/* Left: copy */}
+          <div>
+            <motion.h2
+              id="cta-heading"
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="text-[clamp(1.5rem,3.5vw,2.25rem)] font-bold tracking-tight leading-tight"
+            >
+              Your next PR deserves better.
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.35, delay: 0.06, ease: [0.16, 1, 0.3, 1] }}
+              className="mt-3 text-muted-foreground text-[0.9375rem] max-w-[48ch] leading-relaxed"
+            >
+              Stop shipping bugs you could have caught. Join thousands of developers who review smarter, ship faster, and sleep better.
+            </motion.p>
 
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-24 sm:py-32 text-center relative z-10">
-        <div className="inline-flex items-center gap-2 px-3 py-1 mb-8 rounded-full bg-muted/30 border border-border text-sm text-indigo-300">
-          <Sparkles className="h-4 w-4" />
-          <span>Transform your workflow today</span>
-        </div>
+            <motion.ul
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-60px" }}
+              variants={{ visible: { transition: { staggerChildren: 0.05, delayChildren: 0.15 } } }}
+              className="mt-6 space-y-2"
+            >
+              {reasons.map((r) => (
+                <motion.li
+                  key={r}
+                  variants={{ hidden: { opacity: 0, x: -8 }, visible: { opacity: 1, x: 0, transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] } } }}
+                  className="flex items-center gap-2.5 text-sm text-muted-foreground"
+                >
+                  <Check className="h-3.5 w-3.5 text-primary shrink-0" />
+                  <span>{r}</span>
+                </motion.li>
+              ))}
+            </motion.ul>
 
-        <h2
-          id="cta-heading"
-          className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-foreground mb-6"
-          style={{ textWrap: "balance" }}
-        >
-          Ready to ship better code,{" "}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-blue-400 to-cyan-400">
-            faster?
-          </span>
-        </h2>
-
-        <p
-          className="mx-auto mt-4 max-w-2xl text-lg sm:text-xl text-muted-foreground mb-10"
-          style={{ textWrap: "balance" }}
-        >
-          Join thousands of engineering teams who have automated their code
-          reviews. Start for free, upgrade when you need more power.
-        </p>
-
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 min-h-[56px]">
-          {mounted && session ? (
-            <Button
-              size="lg"
-              className="h-14 px-10 text-base w-full sm:w-auto bg-foreground text-background hover:bg-foreground/90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 rounded-full font-bold shadow-[0_0_30px_rgba(120,119,198,0.15)] group"
-              asChild
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.35, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="mt-8 flex flex-wrap items-center gap-3"
             >
               <Link
-                href="/repo"
-                title="Explore your repositories"
-                aria-label="Explore Repositories"
+                href="/sign-up"
+                className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium bg-primary text-primary-foreground rounded-sm hover:bg-primary/90 transition-colors duration-150"
               >
-                <Github
-                  className="h-5 w-5 mr-2 transition-transform group-hover:scale-110"
-                  aria-hidden="true"
-                />
-                Explore Repositories
-                <ArrowRight
-                  className="h-4 w-4 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all"
-                  aria-hidden="true"
-                />
+                Get started free
+                <ArrowRight className="h-3.5 w-3.5" />
               </Link>
-            </Button>
-          ) : (
-            <>
-              <Button
-                size="lg"
-                className="h-14 px-8 text-base w-full sm:w-auto bg-foreground text-background hover:bg-foreground/90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 rounded-full font-semibold shadow-[0_0_30px_rgba(120,119,198,0.15)]"
-                asChild
+              <Link
+                href="/pricing"
+                className="inline-flex items-center px-4 py-2.5 text-sm text-muted-foreground hover:text-foreground border border-border rounded-sm hover:bg-muted transition-colors duration-150"
               >
-                <Link
-                  href="/sign-up"
-                  title="Create a free account and get started"
-                  aria-label="Get Started for Free"
-                >
-                  Get Started for Free
-                  <ArrowRight className="h-4 w-4 ml-2" aria-hidden="true" />
-                </Link>
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="h-14 px-8 text-base w-full sm:w-auto rounded-full border-border bg-card/50 backdrop-blur-md hover:bg-muted hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-foreground/80"
-                asChild
-              >
-                <Link
-                  href="/pricing"
-                  title="View pricing and plans"
-                  aria-label="View Pricing"
-                >
-                  View Pricing
-                </Link>
-              </Button>
-            </>
-          )}
-        </div>
+                Compare plans
+              </Link>
+            </motion.div>
+          </div>
 
-        {/* Social proof */}
-        <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-muted-foreground/70 font-medium">
-          {recentUsers.length > 0 && (
-            <div className="flex -space-x-3">
-              {recentUsers.map((user, i) => (
-                <div
-                  key={user.id || i}
-                  className="relative h-10 w-10 rounded-full border-2 border-background overflow-hidden bg-muted shadow-sm"
-                  aria-hidden="true"
-                >
-                  {user.image ? (
-                    <Image
-                      src={user.image}
-                      alt={user.name || "User avatar"}
-                      fill
-                      className="object-cover"
-                      sizes="40px"
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-indigo-500/20 text-indigo-400 text-xs font-bold">
-                      {(user.name || "U").charAt(0).toUpperCase()}
-                    </div>
-                  )}
+          {/* Right: social proof + animated stats */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.4, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:w-[280px] space-y-6"
+          >
+            {data.recentUsers.length > 0 && (
+              <div>
+                <div className="flex -space-x-2">
+                  {data.recentUsers.slice(0, 6).map((user, i) => (
+                    <motion.div
+                      key={user.id || i}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.25, delay: 0.2 + i * 0.05, ease: [0.16, 1, 0.3, 1] }}
+                      className="relative h-8 w-8 rounded-full border-2 border-background overflow-hidden bg-muted"
+                    >
+                      {user.image ? (
+                        <Image src={user.image} alt="" fill className="object-cover" sizes="32px" />
+                      ) : (
+                        <span className="flex h-full w-full items-center justify-center text-[11px] font-medium text-muted-foreground">
+                          {(user.name || "U")[0].toUpperCase()}
+                        </span>
+                      )}
+                    </motion.div>
+                  ))}
                 </div>
-              ))}
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Trusted by {data.totalUsers}+ developers
+                </p>
+              </div>
+            )}
+
+            <div className="space-y-3 pt-4 border-t border-border">
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Avg review time</span>
+                <AnimatedStat value="1.2" suffix="s" />
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Languages</span>
+                <AnimatedStat value="50" suffix="+" />
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Uptime</span>
+                <AnimatedStat value="99.9" suffix="%" />
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Setup time</span>
+                <span className="font-mono font-medium">&lt;1 min</span>
+              </div>
             </div>
-          )}
-          <span className="mt-2 sm:mt-0">Join {totalUsers}+ developers</span>
+          </motion.div>
         </div>
       </div>
     </section>

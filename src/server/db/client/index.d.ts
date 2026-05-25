@@ -5422,12 +5422,14 @@ export namespace Prisma {
   }
 
   export type UserAvgAggregateOutputType = {
+    accountCredit: number | null
     overrideReposLimit: number | null
     overrideReviewsLimit: number | null
     overrideSeatsLimit: number | null
   }
 
   export type UserSumAggregateOutputType = {
+    accountCredit: number | null
     overrideReposLimit: number | null
     overrideReviewsLimit: number | null
     overrideSeatsLimit: number | null
@@ -5463,6 +5465,9 @@ export namespace Prisma {
     notifyTeamMemberAdded: boolean | null
     planId: string | null
     planExpiresAt: Date | null
+    planStartedAt: Date | null
+    billingCycle: string | null
+    accountCredit: number | null
     overrideReposLimit: number | null
     overrideReviewsLimit: number | null
     overrideSeatsLimit: number | null
@@ -5498,6 +5503,9 @@ export namespace Prisma {
     notifyTeamMemberAdded: boolean | null
     planId: string | null
     planExpiresAt: Date | null
+    planStartedAt: Date | null
+    billingCycle: string | null
+    accountCredit: number | null
     overrideReposLimit: number | null
     overrideReviewsLimit: number | null
     overrideSeatsLimit: number | null
@@ -5533,6 +5541,9 @@ export namespace Prisma {
     notifyTeamMemberAdded: number
     planId: number
     planExpiresAt: number
+    planStartedAt: number
+    billingCycle: number
+    accountCredit: number
     overrideReposLimit: number
     overrideReviewsLimit: number
     overrideSeatsLimit: number
@@ -5541,12 +5552,14 @@ export namespace Prisma {
 
 
   export type UserAvgAggregateInputType = {
+    accountCredit?: true
     overrideReposLimit?: true
     overrideReviewsLimit?: true
     overrideSeatsLimit?: true
   }
 
   export type UserSumAggregateInputType = {
+    accountCredit?: true
     overrideReposLimit?: true
     overrideReviewsLimit?: true
     overrideSeatsLimit?: true
@@ -5582,6 +5595,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: true
     planId?: true
     planExpiresAt?: true
+    planStartedAt?: true
+    billingCycle?: true
+    accountCredit?: true
     overrideReposLimit?: true
     overrideReviewsLimit?: true
     overrideSeatsLimit?: true
@@ -5617,6 +5633,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: true
     planId?: true
     planExpiresAt?: true
+    planStartedAt?: true
+    billingCycle?: true
+    accountCredit?: true
     overrideReposLimit?: true
     overrideReviewsLimit?: true
     overrideSeatsLimit?: true
@@ -5652,6 +5671,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: true
     planId?: true
     planExpiresAt?: true
+    planStartedAt?: true
+    billingCycle?: true
+    accountCredit?: true
     overrideReposLimit?: true
     overrideReviewsLimit?: true
     overrideSeatsLimit?: true
@@ -5774,6 +5796,9 @@ export namespace Prisma {
     notifyTeamMemberAdded: boolean
     planId: string
     planExpiresAt: Date | null
+    planStartedAt: Date | null
+    billingCycle: string | null
+    accountCredit: number
     overrideReposLimit: number | null
     overrideReviewsLimit: number | null
     overrideSeatsLimit: number | null
@@ -5828,6 +5853,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: boolean
     planExpiresAt?: boolean
+    planStartedAt?: boolean
+    billingCycle?: boolean
+    accountCredit?: boolean
     overrideReposLimit?: boolean
     overrideReviewsLimit?: boolean
     overrideSeatsLimit?: boolean
@@ -5881,6 +5909,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: boolean
     planExpiresAt?: boolean
+    planStartedAt?: boolean
+    billingCycle?: boolean
+    accountCredit?: boolean
     overrideReposLimit?: boolean
     overrideReviewsLimit?: boolean
     overrideSeatsLimit?: boolean
@@ -5916,6 +5947,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: boolean
     planExpiresAt?: boolean
+    planStartedAt?: boolean
+    billingCycle?: boolean
+    accountCredit?: boolean
     overrideReposLimit?: boolean
     overrideReviewsLimit?: boolean
     overrideSeatsLimit?: boolean
@@ -5951,12 +5985,15 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: boolean
     planExpiresAt?: boolean
+    planStartedAt?: boolean
+    billingCycle?: boolean
+    accountCredit?: boolean
     overrideReposLimit?: boolean
     overrideReviewsLimit?: boolean
     overrideSeatsLimit?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "createdAt" | "updatedAt" | "reviewDepth" | "defaultLanguage" | "autoReview" | "includeSecurityChecks" | "includePerfSuggestions" | "preferredModel" | "banned" | "bannedReason" | "desktopNotifications" | "emailNotifications" | "notificationSoundEnabled" | "notifyReviewApproved" | "notifyReviewAssigned" | "notifyReviewChangesRequested" | "notifyReviewCompleted" | "notifyReviewFailed" | "notifyScheduledScanCompleted" | "notifyTeamInvites" | "notifyTeamMemberAdded" | "planId" | "planExpiresAt" | "overrideReposLimit" | "overrideReviewsLimit" | "overrideSeatsLimit", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "createdAt" | "updatedAt" | "reviewDepth" | "defaultLanguage" | "autoReview" | "includeSecurityChecks" | "includePerfSuggestions" | "preferredModel" | "banned" | "bannedReason" | "desktopNotifications" | "emailNotifications" | "notificationSoundEnabled" | "notifyReviewApproved" | "notifyReviewAssigned" | "notifyReviewChangesRequested" | "notifyReviewCompleted" | "notifyReviewFailed" | "notifyScheduledScanCompleted" | "notifyTeamInvites" | "notifyTeamMemberAdded" | "planId" | "planExpiresAt" | "planStartedAt" | "billingCycle" | "accountCredit" | "overrideReposLimit" | "overrideReviewsLimit" | "overrideSeatsLimit", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     notifications?: boolean | User$notificationsArgs<ExtArgs>
     repositories?: boolean | User$repositoriesArgs<ExtArgs>
@@ -6031,6 +6068,15 @@ export namespace Prisma {
       notifyTeamMemberAdded: boolean
       planId: string
       planExpiresAt: Date | null
+      planStartedAt: Date | null
+      /**
+       * "monthly" | "yearly"
+       */
+      billingCycle: string | null
+      /**
+       * Non-withdrawable credit in cents for future payments
+       */
+      accountCredit: number
       overrideReposLimit: number | null
       overrideReviewsLimit: number | null
       overrideSeatsLimit: number | null
@@ -6503,6 +6549,9 @@ export namespace Prisma {
     readonly notifyTeamMemberAdded: FieldRef<"User", 'Boolean'>
     readonly planId: FieldRef<"User", 'String'>
     readonly planExpiresAt: FieldRef<"User", 'DateTime'>
+    readonly planStartedAt: FieldRef<"User", 'DateTime'>
+    readonly billingCycle: FieldRef<"User", 'String'>
+    readonly accountCredit: FieldRef<"User", 'Int'>
     readonly overrideReposLimit: FieldRef<"User", 'Int'>
     readonly overrideReviewsLimit: FieldRef<"User", 'Int'>
     readonly overrideSeatsLimit: FieldRef<"User", 'Int'>
@@ -47082,6 +47131,7 @@ export namespace Prisma {
     amount: number | null
     status: $Enums.InvoiceStatus | null
     planId: string | null
+    billingCycle: string | null
     description: string | null
     fawaterakInvoiceId: number | null
     fawaterakInvoiceKey: string | null
@@ -47099,6 +47149,7 @@ export namespace Prisma {
     amount: number | null
     status: $Enums.InvoiceStatus | null
     planId: string | null
+    billingCycle: string | null
     description: string | null
     fawaterakInvoiceId: number | null
     fawaterakInvoiceKey: string | null
@@ -47116,6 +47167,7 @@ export namespace Prisma {
     amount: number
     status: number
     planId: number
+    billingCycle: number
     description: number
     fawaterakInvoiceId: number
     fawaterakInvoiceKey: number
@@ -47145,6 +47197,7 @@ export namespace Prisma {
     amount?: true
     status?: true
     planId?: true
+    billingCycle?: true
     description?: true
     fawaterakInvoiceId?: true
     fawaterakInvoiceKey?: true
@@ -47162,6 +47215,7 @@ export namespace Prisma {
     amount?: true
     status?: true
     planId?: true
+    billingCycle?: true
     description?: true
     fawaterakInvoiceId?: true
     fawaterakInvoiceKey?: true
@@ -47179,6 +47233,7 @@ export namespace Prisma {
     amount?: true
     status?: true
     planId?: true
+    billingCycle?: true
     description?: true
     fawaterakInvoiceId?: true
     fawaterakInvoiceKey?: true
@@ -47283,6 +47338,7 @@ export namespace Prisma {
     amount: number
     status: $Enums.InvoiceStatus
     planId: string | null
+    billingCycle: string | null
     description: string | null
     fawaterakInvoiceId: number | null
     fawaterakInvoiceKey: string | null
@@ -47319,6 +47375,7 @@ export namespace Prisma {
     amount?: boolean
     status?: boolean
     planId?: boolean
+    billingCycle?: boolean
     description?: boolean
     fawaterakInvoiceId?: boolean
     fawaterakInvoiceKey?: boolean
@@ -47337,6 +47394,7 @@ export namespace Prisma {
     amount?: boolean
     status?: boolean
     planId?: boolean
+    billingCycle?: boolean
     description?: boolean
     fawaterakInvoiceId?: boolean
     fawaterakInvoiceKey?: boolean
@@ -47355,6 +47413,7 @@ export namespace Prisma {
     amount?: boolean
     status?: boolean
     planId?: boolean
+    billingCycle?: boolean
     description?: boolean
     fawaterakInvoiceId?: boolean
     fawaterakInvoiceKey?: boolean
@@ -47373,6 +47432,7 @@ export namespace Prisma {
     amount?: boolean
     status?: boolean
     planId?: boolean
+    billingCycle?: boolean
     description?: boolean
     fawaterakInvoiceId?: boolean
     fawaterakInvoiceKey?: boolean
@@ -47384,7 +47444,7 @@ export namespace Prisma {
     createdAt?: boolean
   }
 
-  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "amount" | "status" | "planId" | "description" | "fawaterakInvoiceId" | "fawaterakInvoiceKey" | "paymentMethodUsed" | "referenceNumber" | "successToken" | "currency" | "paidAt" | "createdAt", ExtArgs["result"]["invoice"]>
+  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "amount" | "status" | "planId" | "billingCycle" | "description" | "fawaterakInvoiceId" | "fawaterakInvoiceKey" | "paymentMethodUsed" | "referenceNumber" | "successToken" | "currency" | "paidAt" | "createdAt", ExtArgs["result"]["invoice"]>
   export type InvoiceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -47406,6 +47466,10 @@ export namespace Prisma {
       amount: number
       status: $Enums.InvoiceStatus
       planId: string | null
+      /**
+       * "monthly" | "yearly"
+       */
+      billingCycle: string | null
       description: string | null
       fawaterakInvoiceId: number | null
       fawaterakInvoiceKey: string | null
@@ -47853,6 +47917,7 @@ export namespace Prisma {
     readonly amount: FieldRef<"Invoice", 'Int'>
     readonly status: FieldRef<"Invoice", 'InvoiceStatus'>
     readonly planId: FieldRef<"Invoice", 'String'>
+    readonly billingCycle: FieldRef<"Invoice", 'String'>
     readonly description: FieldRef<"Invoice", 'String'>
     readonly fawaterakInvoiceId: FieldRef<"Invoice", 'Int'>
     readonly fawaterakInvoiceKey: FieldRef<"Invoice", 'String'>
@@ -53709,6 +53774,9 @@ export namespace Prisma {
     notifyTeamMemberAdded: 'notifyTeamMemberAdded',
     planId: 'planId',
     planExpiresAt: 'planExpiresAt',
+    planStartedAt: 'planStartedAt',
+    billingCycle: 'billingCycle',
+    accountCredit: 'accountCredit',
     overrideReposLimit: 'overrideReposLimit',
     overrideReviewsLimit: 'overrideReviewsLimit',
     overrideSeatsLimit: 'overrideSeatsLimit'
@@ -54259,6 +54327,7 @@ export namespace Prisma {
     amount: 'amount',
     status: 'status',
     planId: 'planId',
+    billingCycle: 'billingCycle',
     description: 'description',
     fawaterakInvoiceId: 'fawaterakInvoiceId',
     fawaterakInvoiceKey: 'fawaterakInvoiceKey',
@@ -54818,6 +54887,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFilter<"User"> | boolean
     planId?: StringFilter<"User"> | string
     planExpiresAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    planStartedAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    billingCycle?: StringNullableFilter<"User"> | string | null
+    accountCredit?: IntFilter<"User"> | number
     overrideReposLimit?: IntNullableFilter<"User"> | number | null
     overrideReviewsLimit?: IntNullableFilter<"User"> | number | null
     overrideSeatsLimit?: IntNullableFilter<"User"> | number | null
@@ -54870,6 +54942,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: SortOrder
     planId?: SortOrder
     planExpiresAt?: SortOrderInput | SortOrder
+    planStartedAt?: SortOrderInput | SortOrder
+    billingCycle?: SortOrderInput | SortOrder
+    accountCredit?: SortOrder
     overrideReposLimit?: SortOrderInput | SortOrder
     overrideReviewsLimit?: SortOrderInput | SortOrder
     overrideSeatsLimit?: SortOrderInput | SortOrder
@@ -54925,6 +55000,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFilter<"User"> | boolean
     planId?: StringFilter<"User"> | string
     planExpiresAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    planStartedAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    billingCycle?: StringNullableFilter<"User"> | string | null
+    accountCredit?: IntFilter<"User"> | number
     overrideReposLimit?: IntNullableFilter<"User"> | number | null
     overrideReviewsLimit?: IntNullableFilter<"User"> | number | null
     overrideSeatsLimit?: IntNullableFilter<"User"> | number | null
@@ -54977,6 +55055,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: SortOrder
     planId?: SortOrder
     planExpiresAt?: SortOrderInput | SortOrder
+    planStartedAt?: SortOrderInput | SortOrder
+    billingCycle?: SortOrderInput | SortOrder
+    accountCredit?: SortOrder
     overrideReposLimit?: SortOrderInput | SortOrder
     overrideReviewsLimit?: SortOrderInput | SortOrder
     overrideSeatsLimit?: SortOrderInput | SortOrder
@@ -55020,6 +55101,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolWithAggregatesFilter<"User"> | boolean
     planId?: StringWithAggregatesFilter<"User"> | string
     planExpiresAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    planStartedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    billingCycle?: StringNullableWithAggregatesFilter<"User"> | string | null
+    accountCredit?: IntWithAggregatesFilter<"User"> | number
     overrideReposLimit?: IntNullableWithAggregatesFilter<"User"> | number | null
     overrideReviewsLimit?: IntNullableWithAggregatesFilter<"User"> | number | null
     overrideSeatsLimit?: IntNullableWithAggregatesFilter<"User"> | number | null
@@ -57827,6 +57911,7 @@ export namespace Prisma {
     amount?: IntFilter<"Invoice"> | number
     status?: EnumInvoiceStatusFilter<"Invoice"> | $Enums.InvoiceStatus
     planId?: StringNullableFilter<"Invoice"> | string | null
+    billingCycle?: StringNullableFilter<"Invoice"> | string | null
     description?: StringNullableFilter<"Invoice"> | string | null
     fawaterakInvoiceId?: IntNullableFilter<"Invoice"> | number | null
     fawaterakInvoiceKey?: StringNullableFilter<"Invoice"> | string | null
@@ -57845,6 +57930,7 @@ export namespace Prisma {
     amount?: SortOrder
     status?: SortOrder
     planId?: SortOrderInput | SortOrder
+    billingCycle?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
     fawaterakInvoiceId?: SortOrderInput | SortOrder
     fawaterakInvoiceKey?: SortOrderInput | SortOrder
@@ -57867,6 +57953,7 @@ export namespace Prisma {
     amount?: IntFilter<"Invoice"> | number
     status?: EnumInvoiceStatusFilter<"Invoice"> | $Enums.InvoiceStatus
     planId?: StringNullableFilter<"Invoice"> | string | null
+    billingCycle?: StringNullableFilter<"Invoice"> | string | null
     description?: StringNullableFilter<"Invoice"> | string | null
     fawaterakInvoiceKey?: StringNullableFilter<"Invoice"> | string | null
     paymentMethodUsed?: StringNullableFilter<"Invoice"> | string | null
@@ -57884,6 +57971,7 @@ export namespace Prisma {
     amount?: SortOrder
     status?: SortOrder
     planId?: SortOrderInput | SortOrder
+    billingCycle?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
     fawaterakInvoiceId?: SortOrderInput | SortOrder
     fawaterakInvoiceKey?: SortOrderInput | SortOrder
@@ -57909,6 +57997,7 @@ export namespace Prisma {
     amount?: IntWithAggregatesFilter<"Invoice"> | number
     status?: EnumInvoiceStatusWithAggregatesFilter<"Invoice"> | $Enums.InvoiceStatus
     planId?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
+    billingCycle?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
     description?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
     fawaterakInvoiceId?: IntNullableWithAggregatesFilter<"Invoice"> | number | null
     fawaterakInvoiceKey?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
@@ -58302,6 +58391,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -58354,6 +58446,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -58406,6 +58501,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -58458,6 +58556,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -58510,6 +58611,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -58545,6 +58649,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -58580,6 +58687,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -61661,6 +61771,7 @@ export namespace Prisma {
     amount: number
     status?: $Enums.InvoiceStatus
     planId?: string | null
+    billingCycle?: string | null
     description?: string | null
     fawaterakInvoiceId?: number | null
     fawaterakInvoiceKey?: string | null
@@ -61679,6 +61790,7 @@ export namespace Prisma {
     amount: number
     status?: $Enums.InvoiceStatus
     planId?: string | null
+    billingCycle?: string | null
     description?: string | null
     fawaterakInvoiceId?: number | null
     fawaterakInvoiceKey?: string | null
@@ -61695,6 +61807,7 @@ export namespace Prisma {
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     planId?: NullableStringFieldUpdateOperationsInput | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     fawaterakInvoiceId?: NullableIntFieldUpdateOperationsInput | number | null
     fawaterakInvoiceKey?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61713,6 +61826,7 @@ export namespace Prisma {
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     planId?: NullableStringFieldUpdateOperationsInput | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     fawaterakInvoiceId?: NullableIntFieldUpdateOperationsInput | number | null
     fawaterakInvoiceKey?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61730,6 +61844,7 @@ export namespace Prisma {
     amount: number
     status?: $Enums.InvoiceStatus
     planId?: string | null
+    billingCycle?: string | null
     description?: string | null
     fawaterakInvoiceId?: number | null
     fawaterakInvoiceKey?: string | null
@@ -61746,6 +61861,7 @@ export namespace Prisma {
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     planId?: NullableStringFieldUpdateOperationsInput | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     fawaterakInvoiceId?: NullableIntFieldUpdateOperationsInput | number | null
     fawaterakInvoiceKey?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61763,6 +61879,7 @@ export namespace Prisma {
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     planId?: NullableStringFieldUpdateOperationsInput | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     fawaterakInvoiceId?: NullableIntFieldUpdateOperationsInput | number | null
     fawaterakInvoiceKey?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62232,6 +62349,17 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type IntNullableFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -62433,12 +62561,16 @@ export namespace Prisma {
     notifyTeamMemberAdded?: SortOrder
     planId?: SortOrder
     planExpiresAt?: SortOrder
+    planStartedAt?: SortOrder
+    billingCycle?: SortOrder
+    accountCredit?: SortOrder
     overrideReposLimit?: SortOrder
     overrideReviewsLimit?: SortOrder
     overrideSeatsLimit?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
+    accountCredit?: SortOrder
     overrideReposLimit?: SortOrder
     overrideReviewsLimit?: SortOrder
     overrideSeatsLimit?: SortOrder
@@ -62474,6 +62606,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: SortOrder
     planId?: SortOrder
     planExpiresAt?: SortOrder
+    planStartedAt?: SortOrder
+    billingCycle?: SortOrder
+    accountCredit?: SortOrder
     overrideReposLimit?: SortOrder
     overrideReviewsLimit?: SortOrder
     overrideSeatsLimit?: SortOrder
@@ -62509,12 +62644,16 @@ export namespace Prisma {
     notifyTeamMemberAdded?: SortOrder
     planId?: SortOrder
     planExpiresAt?: SortOrder
+    planStartedAt?: SortOrder
+    billingCycle?: SortOrder
+    accountCredit?: SortOrder
     overrideReposLimit?: SortOrder
     overrideReviewsLimit?: SortOrder
     overrideSeatsLimit?: SortOrder
   }
 
   export type UserSumOrderByAggregateInput = {
+    accountCredit?: SortOrder
     overrideReposLimit?: SortOrder
     overrideReviewsLimit?: SortOrder
     overrideSeatsLimit?: SortOrder
@@ -62600,6 +62739,22 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -62731,17 +62886,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
-  }
-
   export type DiagramListRelationFilter = {
     every?: DiagramWhereInput
     some?: DiagramWhereInput
@@ -62837,22 +62981,6 @@ export namespace Prisma {
 
   export type RepositorySumOrderByAggregateInput = {
     githubId?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type EnumReviewStatusFilter<$PrismaModel = never> = {
@@ -64762,6 +64890,7 @@ export namespace Prisma {
     amount?: SortOrder
     status?: SortOrder
     planId?: SortOrder
+    billingCycle?: SortOrder
     description?: SortOrder
     fawaterakInvoiceId?: SortOrder
     fawaterakInvoiceKey?: SortOrder
@@ -64784,6 +64913,7 @@ export namespace Prisma {
     amount?: SortOrder
     status?: SortOrder
     planId?: SortOrder
+    billingCycle?: SortOrder
     description?: SortOrder
     fawaterakInvoiceId?: SortOrder
     fawaterakInvoiceKey?: SortOrder
@@ -64801,6 +64931,7 @@ export namespace Prisma {
     amount?: SortOrder
     status?: SortOrder
     planId?: SortOrder
+    billingCycle?: SortOrder
     description?: SortOrder
     fawaterakInvoiceId?: SortOrder
     fawaterakInvoiceKey?: SortOrder
@@ -65300,6 +65431,14 @@ export namespace Prisma {
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type NullableIntFieldUpdateOperationsInput = {
@@ -65910,14 +66049,6 @@ export namespace Prisma {
     create?: XOR<WebhookConfigCreateWithoutRepositoryInput, WebhookConfigUncheckedCreateWithoutRepositoryInput>
     connectOrCreate?: WebhookConfigCreateOrConnectWithoutRepositoryInput
     connect?: WebhookConfigWhereUniqueInput
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type DiagramUpdateManyWithoutRepositoryNestedInput = {
@@ -67522,6 +67653,17 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
+  export type NestedIntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type NestedIntNullableFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -67548,17 +67690,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
-  }
-
-  export type NestedIntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -67624,33 +67755,6 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
-  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -67676,6 +67780,33 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedEnumReviewStatusFilter<$PrismaModel = never> = {
@@ -68663,6 +68794,7 @@ export namespace Prisma {
     amount: number
     status?: $Enums.InvoiceStatus
     planId?: string | null
+    billingCycle?: string | null
     description?: string | null
     fawaterakInvoiceId?: number | null
     fawaterakInvoiceKey?: string | null
@@ -68679,6 +68811,7 @@ export namespace Prisma {
     amount: number
     status?: $Enums.InvoiceStatus
     planId?: string | null
+    billingCycle?: string | null
     description?: string | null
     fawaterakInvoiceId?: number | null
     fawaterakInvoiceKey?: string | null
@@ -69208,6 +69341,7 @@ export namespace Prisma {
     amount?: IntFilter<"Invoice"> | number
     status?: EnumInvoiceStatusFilter<"Invoice"> | $Enums.InvoiceStatus
     planId?: StringNullableFilter<"Invoice"> | string | null
+    billingCycle?: StringNullableFilter<"Invoice"> | string | null
     description?: StringNullableFilter<"Invoice"> | string | null
     fawaterakInvoiceId?: IntNullableFilter<"Invoice"> | number | null
     fawaterakInvoiceKey?: StringNullableFilter<"Invoice"> | string | null
@@ -69249,6 +69383,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -69300,6 +69437,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -69367,6 +69507,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -69418,6 +69561,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -69469,6 +69615,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -69520,6 +69669,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -69587,6 +69739,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -69638,6 +69793,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -69754,6 +69912,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -69805,6 +69966,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -70144,6 +70308,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -70195,6 +70362,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -70558,6 +70728,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -70609,6 +70782,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -71018,6 +71194,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -71069,6 +71248,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -71352,6 +71534,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -71403,6 +71588,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -71533,6 +71721,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -71584,6 +71775,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -71944,6 +72138,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -71995,6 +72192,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -72117,6 +72317,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -72168,6 +72371,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -72258,6 +72464,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -72309,6 +72518,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -72405,6 +72617,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -72456,6 +72671,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -72564,6 +72782,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -72615,6 +72836,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -72745,6 +72969,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -72796,6 +73023,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -72847,6 +73077,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -72898,6 +73131,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -72954,6 +73190,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -73005,6 +73244,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -73129,6 +73371,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -73180,6 +73425,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -73242,6 +73490,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -73293,6 +73544,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -73664,6 +73918,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -73715,6 +73972,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -73817,6 +74077,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -73868,6 +74131,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -73983,6 +74249,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -74034,6 +74303,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -74101,6 +74373,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -74152,6 +74427,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -75084,6 +75362,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -75135,6 +75416,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -75286,6 +75570,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -75337,6 +75624,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -75388,6 +75678,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -75439,6 +75732,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -75506,6 +75802,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -75557,6 +75856,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -75681,6 +75983,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -75732,6 +76037,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -75840,6 +76148,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -75891,6 +76202,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -75942,6 +76256,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -75993,6 +76310,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -76060,6 +76380,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -76111,6 +76434,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -76162,6 +76488,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -76213,6 +76542,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: boolean
     planId?: string
     planExpiresAt?: Date | string | null
+    planStartedAt?: Date | string | null
+    billingCycle?: string | null
+    accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
     overrideSeatsLimit?: number | null
@@ -76320,6 +76652,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -76371,6 +76706,9 @@ export namespace Prisma {
     notifyTeamMemberAdded?: BoolFieldUpdateOperationsInput | boolean
     planId?: StringFieldUpdateOperationsInput | string
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideSeatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -76664,6 +77002,7 @@ export namespace Prisma {
     amount: number
     status?: $Enums.InvoiceStatus
     planId?: string | null
+    billingCycle?: string | null
     description?: string | null
     fawaterakInvoiceId?: number | null
     fawaterakInvoiceKey?: string | null
@@ -77192,6 +77531,7 @@ export namespace Prisma {
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     planId?: NullableStringFieldUpdateOperationsInput | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     fawaterakInvoiceId?: NullableIntFieldUpdateOperationsInput | number | null
     fawaterakInvoiceKey?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77208,6 +77548,7 @@ export namespace Prisma {
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     planId?: NullableStringFieldUpdateOperationsInput | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     fawaterakInvoiceId?: NullableIntFieldUpdateOperationsInput | number | null
     fawaterakInvoiceKey?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77224,6 +77565,7 @@ export namespace Prisma {
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     planId?: NullableStringFieldUpdateOperationsInput | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     fawaterakInvoiceId?: NullableIntFieldUpdateOperationsInput | number | null
     fawaterakInvoiceKey?: NullableStringFieldUpdateOperationsInput | string | null

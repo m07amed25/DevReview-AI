@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   AlertDialog,
@@ -14,7 +13,7 @@ import {
   AlertDialogFooter,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
-import { Users, Plus, FolderGit2, Search } from "lucide-react";
+import { Users, Plus, Search, RefreshCw, AlertTriangle } from "lucide-react";
 import {
   TeamCard,
   TeamCardSkeleton,
@@ -22,6 +21,7 @@ import {
 import { useTeamList } from "@/features/teams/hooks/use-team";
 import type { TeamData } from "@/features/teams/types";
 import { toast } from "sonner";
+import { PageHeader } from "@/components/page-header";
 
 export default function TeamsPage() {
   const [creating, setCreating] = useState(false);
@@ -35,7 +35,10 @@ export default function TeamsPage() {
     filterTeams,
   } = useTeamList();
 
-  const teams = trpc.team.list.useQuery();
+  const teams = trpc.team.list.useQuery(undefined, {
+    staleTime: 30_000,
+    refetchOnWindowFocus: false,
+  });
   const utils = trpc.useUtils();
 
   const createTeam = trpc.team.create.useMutation({
@@ -52,26 +55,21 @@ export default function TeamsPage() {
 
   const filteredTeams = filterTeams(teams.data as TeamData[] | undefined);
 
-  const handleCreateTeam = (name: string) => {
-    createTeam.mutate({ name });
-  };
-
   return (
     <div className="flex flex-col min-h-[calc(100vh-8rem)]">
-      <div className="flex-1 space-y-6 max-w-6xl mx-auto w-full pb-12 pt-6 px-4 sm:px-6 lg:px-8">
+      <div className="flex-1 space-y-6 pb-12">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-semibold tracking-tight">Teams</h1>
-            <p className="text-muted-foreground mt-1.5 text-sm max-w-xl">
-              Create teams to share repositories and collaborate on reviews.
-            </p>
-          </div>
-          <Button onClick={() => setCreating(true)} size="sm" className="shadow-none">
-            <Plus className="size-4 mr-2" />
-            Create Team
-          </Button>
-        </div>
+        <PageHeader
+          icon={<Users className="size-4.5 text-primary" />}
+          title="Teams"
+          description="Group members, share repositories, collaborate on reviews."
+          actions={
+            <Button onClick={() => setCreating(true)} size="sm" className="shadow-none">
+              <Plus className="size-4 mr-2" />
+              New Team
+            </Button>
+          }
+        />
 
         {teams.data && teams.data.length > 0 && (
           <div className="flex flex-col sm:flex-row gap-3">
@@ -91,9 +89,9 @@ export default function TeamsPage() {
                   variant={roleFilter === role ? "secondary" : "ghost"}
                   size="sm"
                   onClick={() => setRoleFilter(role)}
-                  className="h-9 text-sm font-normal"
+                  className="h-9 text-sm font-normal capitalize"
                 >
-                  {role === "ALL" ? "All Roles" : role}
+                  {role === "ALL" ? "All" : role.toLowerCase()}
                 </Button>
               ))}
             </div>
@@ -105,9 +103,9 @@ export default function TeamsPage() {
         <AlertDialog open={creating} onOpenChange={setCreating}>
           <AlertDialogContent className="sm:max-w-md">
             <AlertDialogHeader>
-              <AlertDialogTitle>Create a new team</AlertDialogTitle>
+              <AlertDialogTitle>New team</AlertDialogTitle>
               <AlertDialogDescription>
-                Give your team a name. You can invite members after creation.
+                Pick a name. You can invite members once it&apos;s created.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <form
@@ -120,7 +118,7 @@ export default function TeamsPage() {
             >
               <div className="py-4">
                 <Input
-                  placeholder="E.g. Frontend Engineering"
+                  placeholder="Team name"
                   value={teamName}
                   onChange={(e) => setTeamName(e.target.value)}
                   className="bg-background"
@@ -155,27 +153,41 @@ export default function TeamsPage() {
           </div>
         )}
 
+        {teams.isError && (
+          <div className="border border-destructive/30 rounded-lg flex flex-col items-center justify-center py-16 px-4 text-center bg-destructive/5">
+            <AlertTriangle className="size-6 text-destructive mb-3" />
+            <h3 className="text-base font-semibold mb-1">Could not load teams</h3>
+            <p className="text-[13px] text-muted-foreground mb-4 max-w-[300px]">
+              {teams.error?.message || "Something went wrong."}
+            </p>
+            <Button onClick={() => teams.refetch()} size="sm" variant="outline">
+              <RefreshCw className="size-4 mr-2" />
+              Retry
+            </Button>
+          </div>
+        )}
+
         {teams.data && teams.data.length === 0 && (
           <div className="border border-border border-dashed rounded-lg flex flex-col items-center justify-center py-16 px-4 text-center">
             <div className="rounded-full bg-muted p-3 mb-4">
               <Users className="size-6 text-muted-foreground" />
             </div>
-            <h3 className="text-sm font-semibold mb-1">No teams</h3>
-            <p className="text-sm text-muted-foreground mb-4 max-w-[300px]">
-              Create a team to group members and share repositories.
+            <h3 className="text-base font-semibold mb-1">No teams yet</h3>
+            <p className="text-[13px] text-muted-foreground mb-4 max-w-[280px]">
+              Teams let you share repositories and review code together.
             </p>
             <Button onClick={() => setCreating(true)} size="sm">
               <Plus className="size-4 mr-2" />
-              Create Team
+              New Team
             </Button>
           </div>
         )}
 
         {teams.data && teams.data.length > 0 && filteredTeams.length === 0 && (
           <div className="border border-border border-dashed rounded-lg text-center py-12">
-            <p className="text-sm font-medium">No teams match your search</p>
-            <p className="text-sm text-muted-foreground mt-1">
-              Try adjusting your filters.
+            <p className="text-base font-medium">No matches</p>
+            <p className="text-[13px] text-muted-foreground mt-1">
+              Try a different search or filter.
             </p>
             <Button
               variant="outline"

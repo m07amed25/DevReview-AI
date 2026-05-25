@@ -85,13 +85,13 @@ export function CodeMinimap({
     <div
       ref={containerRef}
       className={cn(
-        "flex flex-col border-l border-border/50 bg-muted/20 backdrop-blur-sm",
+        "flex flex-col border-l border-border/50 bg-muted/20",
         "hidden lg:flex sticky top-0 h-screen overflow-hidden",
         className,
       )}
     >
-      <div className="px-2 py-2 border-b border-border/50 bg-card/80 backdrop-blur">
-        <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
+      <div className="px-2 py-2 border-b border-border/50 bg-card/80">
+        <p className="font-mono text-xs font-medium text-muted-foreground">
           Minimap
         </p>
       </div>
@@ -104,8 +104,8 @@ export function CodeMinimap({
           style={{ imageRendering: "pixelated" }}
         />
       </div>
-      <div className="px-2 py-1.5 border-t border-border/50 bg-card/80 backdrop-blur">
-        <p className="text-[9px] text-muted-foreground text-center">
+      <div className="px-2 py-1.5 border-t border-border/50 bg-card/80">
+        <p className="font-mono text-xs text-muted-foreground text-center">
           {totalLines} lines
         </p>
       </div>

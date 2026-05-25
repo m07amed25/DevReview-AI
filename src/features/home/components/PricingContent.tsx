@@ -1,28 +1,34 @@
 "use client";
 
-import { useState, Suspense } from "react";
-import { motion } from "motion/react";
-import { Sparkles, Shield, Clock, Zap, Rocket, ArrowRight, Star } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
-import { cn } from "@/lib/utils";
+import { useState } from "react";
 import Link from "next/link";
+import { Check, X as XIcon, ArrowRight } from "lucide-react";
+import { motion } from "motion/react";
+import { cn } from "@/lib/utils";
 import { Plan } from "@/lib/plan";
 import {
-  PlanCard,
-  FaqItem,
-  PricingCtaUsers,
-  ComparisonTable,
-  ACCENT_THEMES,
   PLAN_DISPLAY_MAP,
+  ACCENT_THEMES,
   buildComparison,
   FAQS,
 } from "./pricing";
 import type { PricingSettings, DbPricingPlan, MergedPlan } from "./pricing";
 
 export type { PricingSettings, DbPricingPlan } from "./pricing";
-export { ACCENT_THEMES } from "./pricing";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 14 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.45, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] },
+  }),
+};
+
+const cardReveal = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
+};
 
 export function PricingContent({
   settings,
@@ -31,174 +37,220 @@ export function PricingContent({
   settings: PricingSettings;
   plans: DbPricingPlan[];
 }) {
-  const { annualDiscount, trialDays, trialPlan, freeSignupEnabled } = settings;
+  const { annualDiscount, trialDays, trialPlan } = settings;
   const [yearly, setYearly] = useState(true);
 
   const mergedPlans: MergedPlan[] = dbPlans.map((p) => {
-    const theme = ACCENT_THEMES[p.accentColor] || ACCENT_THEMES.slate;
+    const theme = ACCENT_THEMES[p.accentColor] ?? ACCENT_THEMES.slate!;
     return {
       ...p,
       ...(PLAN_DISPLAY_MAP[p.id as Plan] ?? PLAN_DISPLAY_MAP[Plan.FREE]!),
       ...theme,
     };
   });
-  const COMPARISON = buildComparison(mergedPlans);
+
+  const comparison = buildComparison(mergedPlans);
+  const faqs = FAQS(trialDays, annualDiscount, trialPlan);
 
   return (
-    <>
-      {/* Hero */}
-      <section className="relative overflow-hidden py-24 sm:py-32">
-        <div className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute left-1/4 top-0 h-125 w-150 -translate-x-1/2 rounded-full bg-indigo-500/8 blur-[120px]" />
-          <div className="absolute right-1/4 top-20 h-100 w-125 translate-x-1/2 rounded-full bg-violet-500/8 blur-[120px]" />
-          <div className="absolute left-1/2 bottom-0 h-75 w-100 -translate-x-1/2 rounded-full bg-purple-500/6 blur-[80px]" />
-        </div>
+    <div className="pt-28 pb-20">
+      <div className="mx-auto max-w-[1100px] px-4 sm:px-6">
+        {/* Header */}
+        <motion.h1 variants={fadeUp} initial="hidden" animate="visible" custom={0} className="text-2xl sm:text-3xl font-bold tracking-tight">Pricing</motion.h1>
+        <motion.p variants={fadeUp} initial="hidden" animate="visible" custom={1} className="mt-2 text-muted-foreground text-sm max-w-[55ch]">
+          Free for individuals and open source. Pro and Ultra scale with your team. All plans include GitHub integration and AI-powered reviews.
+        </motion.p>
 
-        <div className="mx-auto max-w-4xl px-6 text-center">
-          <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <Badge variant="secondary" className="mb-6 gap-1.5 border border-indigo-200 bg-indigo-50 px-4 py-1.5 text-indigo-700 dark:border-indigo-800 dark:bg-indigo-950/50 dark:text-indigo-300">
-              <Sparkles className="h-3.5 w-3.5" />
-              No surprises. No hidden fees. Just results.
-            </Badge>
-          </motion.div>
+        {/* Billing toggle */}
+        <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={2} className="mt-8 flex items-center gap-1 text-sm border border-border rounded-sm w-fit p-0.5">
+          <button
+            onClick={() => setYearly(false)}
+            className={cn("px-3 py-1.5 rounded-[3px] transition-colors", !yearly ? "bg-muted text-foreground font-medium" : "text-muted-foreground")}
+          >
+            Monthly
+          </button>
+          <button
+            onClick={() => setYearly(true)}
+            className={cn("px-3 py-1.5 rounded-[3px] transition-colors", yearly ? "bg-muted text-foreground font-medium" : "text-muted-foreground")}
+          >
+            Yearly <span className="text-primary font-mono text-xs ml-1">-{annualDiscount}%</span>
+          </button>
+        </motion.div>
 
-          <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.1 }} className="text-5xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl">
-            Pricing that{" "}
-            <span className="relative inline-block">
-              <span className="bg-linear-to-r from-indigo-500 via-violet-500 to-purple-600 bg-clip-text text-transparent">scales with you</span>
-              <motion.span initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 0.6, delay: 0.7, ease: "easeOut" }} className="absolute bottom-1 left-0 h-1 w-full origin-left rounded-full bg-linear-to-r from-indigo-500 to-violet-500 opacity-40" />
-            </span>
-          </motion.h1>
+        {/* Plans row */}
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.12, delayChildren: 0.25 } } }}
+          className="mt-10 grid gap-px bg-border sm:grid-cols-3 border border-border rounded-sm overflow-hidden"
+        >
+          {mergedPlans.map((plan) => {
+            const price = yearly
+              ? Math.round(plan.monthlyPrice * (1 - annualDiscount / 100))
+              : plan.monthlyPrice;
 
-          <motion.p initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }} className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
-            Whether you&apos;re a solo dev catching bugs before they ship or a 50-person team demanding zero-defect merges — there&apos;s a plan engineered exactly for you.
-          </motion.p>
+            return (
+              <motion.div key={plan.id} variants={cardReveal} className={cn(
+                "relative p-6 sm:p-8 flex flex-col overflow-hidden",
+                plan.highlight ? "bg-card" : "bg-background"
+              )}>
+                {/* Top accent glow */}
+                <div className={cn("absolute inset-x-0 top-0 h-24 opacity-[0.07] bg-linear-to-b pointer-events-none", plan.glow)} />
 
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }} className="mx-auto mt-8 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
-            {[
-              { icon: Shield, text: "No credit card required" },
-              { icon: Clock, text: trialDays > 0 ? `${trialDays}-day free trial` : "No trial required" },
-              { icon: Zap, text: "Cancel anytime" },
-            ].map(({ icon: Icon, text }) => (
-              <div key={text} className="flex items-center gap-1.5">
-                <Icon className="h-3.5 w-3.5 text-indigo-500" />
-                <span>{text}</span>
-              </div>
-            ))}
-          </motion.div>
-
-          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.4 }} className="mt-10 inline-flex items-center gap-4 rounded-full border border-border/60 bg-card/80 px-6 py-3 shadow-sm backdrop-blur-sm">
-            <span className={cn("text-sm font-medium transition-colors", !yearly ? "text-foreground" : "text-muted-foreground")}>Monthly</span>
-            <Switch checked={yearly} onCheckedChange={setYearly} className="data-[state=checked]:bg-indigo-500" />
-            <span className={cn("text-sm font-medium transition-colors", yearly ? "text-foreground" : "text-muted-foreground")}>
-              Annual
-              <motion.span animate={{ scale: [1, 1.05, 1] }} transition={{ repeat: Infinity, duration: 2.5, delay: 1 }} className="ml-2 inline-block rounded-full bg-linear-to-r from-green-500 to-emerald-500 px-2.5 py-0.5 text-xs font-bold text-white shadow-sm shadow-green-500/30">
-                Save {annualDiscount}%
-              </motion.span>
-            </span>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Plan Cards */}
-      <section className="mx-auto max-w-6xl px-6 pb-24">
-        <div className="grid gap-8 lg:grid-cols-3 lg:items-stretch">
-          {mergedPlans.map((plan, i) => (
-            <PlanCard key={plan.id} plan={plan} yearly={yearly} index={i} freeSignupEnabled={freeSignupEnabled} annualDiscount={annualDiscount} />
-          ))}
-        </div>
-        {yearly && (
-          <p className="mt-4 text-center text-xs text-muted-foreground">* Prices shown per month, billed annually. Save {annualDiscount}% vs monthly.</p>
-        )}
-      </section>
-
-      {/* Comparison Table */}
-      <ComparisonTable plans={mergedPlans} comparison={COMPARISON} />
-
-      {/* Social Proof */}
-      <section className="border-y bg-linear-to-br from-muted/20 via-muted/40 to-muted/20 py-16">
-        <div className="mx-auto max-w-5xl px-6">
-          <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="mb-8 text-center text-sm font-semibold uppercase tracking-widest text-muted-foreground">
-            Trusted by developers at
-          </motion.p>
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="grid gap-6 md:grid-cols-3">
-            {[
-              { quote: "Code Catch caught a critical SQL injection I missed in code review. Worth every penny.", author: "Sarah K.", role: "Senior Backend Engineer" },
-              { quote: "Went from 3-hour code review cycles to 20 minutes. The Pro plan paid for itself in week one.", author: "Marcus T.", role: "Engineering Lead, Fintech startup" },
-              { quote: "Ultra's unlimited seats let our entire 40-person eng team stay in sync without extra overhead.", author: "Priya N.", role: "VP Engineering" },
-            ].map(({ quote, author, role }, i) => (
-              <motion.div key={author} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="group flex flex-col gap-4 rounded-2xl border bg-card p-6 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1">
-                <div className="flex gap-0.5">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
-                  ))}
+                <div className="relative flex items-center gap-2">
+                  <h3 className={cn("text-[0.9375rem] font-bold bg-linear-to-r bg-clip-text", plan.color)} style={{ WebkitTextFillColor: "unset" }}>{plan.name}</h3>
+                  {plan.badge && (
+                    <span className={cn("text-[10px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded-sm", plan.badgeColor)}>
+                      {plan.badge}
+                    </span>
+                  )}
                 </div>
-                <p className="flex-1 text-sm text-muted-foreground leading-relaxed">&ldquo;{quote}&rdquo;</p>
-                <div className="flex items-center gap-3">
-                  <div className="h-8 w-8 rounded-full bg-linear-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white text-xs font-bold">{author[0]}</div>
-                  <div>
-                    <p className="text-sm font-semibold">{author}</p>
-                    <p className="text-xs text-muted-foreground">{role}</p>
+                <p className="relative mt-1 text-xs text-muted-foreground">{plan.tagline}</p>
+
+                <div className="relative mt-5 flex items-baseline gap-1">
+                  {price === 0 ? (
+                    <span className="text-3xl font-bold">Free</span>
+                  ) : (
+                    <>
+                      <span className="text-3xl font-bold">${price}</span>
+                      <span className="text-xs text-muted-foreground">/mo</span>
+                    </>
+                  )}
+                </div>
+                {yearly && plan.monthlyPrice > 0 && (
+                  <p className="relative mt-1 text-xs text-muted-foreground">
+                    ${plan.monthlyPrice}/mo billed monthly
+                  </p>
+                )}
+
+                <Link
+                  href="/sign-up"
+                  className={cn(
+                    "relative mt-6 inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium rounded-sm transition-all duration-150",
+                    plan.ctaVariant === "default"
+                      ? cn("text-white shadow-lg", plan.buttonBg, plan.buttonHoverBg, plan.buttonShadow)
+                      : cn("border text-foreground", plan.borderColor, plan.buttonOutlineHoverBg),
+                  )}
+                >
+                  {plan.cta}
+                </Link>
+
+                {trialDays > 0 && plan.id === trialPlan.toLowerCase() && (
+                  <p className="mt-2 text-center text-xs text-muted-foreground">
+                    {trialDays}-day free trial
+                  </p>
+                )}
+
+                {/* Limits */}
+                <div className="relative mt-6 pt-4 border-t border-border/40 space-y-2 text-sm">
+                  <div className="flex justify-between text-muted-foreground">
+                    <span>Repositories</span>
+                    <span className="font-mono text-xs text-foreground">{plan.reposLimit === null ? "Unlimited" : plan.reposLimit}</span>
+                  </div>
+                  <div className="flex justify-between text-muted-foreground">
+                    <span>Reviews/month</span>
+                    <span className="font-mono text-xs text-foreground">{plan.reviewsLimit === null ? "Unlimited" : plan.reviewsLimit}</span>
+                  </div>
+                  <div className="flex justify-between text-muted-foreground">
+                    <span>Team seats</span>
+                    <span className="font-mono text-xs text-foreground">{plan.seatsLimit === null ? "Unlimited" : plan.seatsLimit}</span>
                   </div>
                 </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
 
-      {/* FAQ */}
-      <section className="mx-auto max-w-3xl px-6 py-24">
-        <div className="mb-12 text-center">
-          <h2 className="text-3xl font-bold tracking-tight">Frequently asked questions</h2>
-          <p className="mt-2 text-muted-foreground">Everything you need to make the right call.</p>
-        </div>
-        <div>
-          {FAQS(trialDays, annualDiscount, trialPlan).map((faq, i) => (
-            <FaqItem key={i} q={faq.q} a={faq.a} index={i} />
-          ))}
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="pb-24">
-        <div className="mx-auto max-w-3xl px-6 text-center">
-          <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="relative overflow-hidden rounded-3xl shadow-2xl shadow-indigo-500/20">
-            <div className="absolute inset-0 bg-linear-to-br from-indigo-500 via-violet-500 to-purple-600" />
-            <div className="relative m-px rounded-3xl bg-linear-to-br from-indigo-500/10 via-background to-violet-600/10 px-10 py-16">
-              {[...Array(6)].map((_, i) => (
-                <motion.div key={i} className="pointer-events-none absolute" style={{ left: `${15 + i * 15}%`, top: `${10 + (i % 3) * 30}%` }} animate={{ y: [0, -12, 0], opacity: [0.3, 0.8, 0.3] }} transition={{ duration: 2 + i * 0.4, repeat: Infinity, delay: i * 0.3 }}>
-                  <Sparkles className="h-3 w-3 text-indigo-400/60" />
-                </motion.div>
-              ))}
-              <motion.div animate={{ rotate: [0, 10, -10, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-indigo-500 to-violet-600 shadow-lg shadow-indigo-500/40">
-                <Rocket className="h-8 w-8 text-white" />
+                {/* Features */}
+                <ul className="relative mt-4 space-y-2 text-sm text-muted-foreground">
+                  {plan.features.map((f) => (
+                    <li key={f} className="flex items-start gap-2">
+                      <span className={cn("h-3.5 w-3.5 mt-0.5 rounded-full flex items-center justify-center shrink-0", plan.checkBg)}>
+                        <Check className="h-2.5 w-2.5 text-white" />
+                      </span>
+                      <span>{f}</span>
+                    </li>
+                  ))}
+                </ul>
               </motion.div>
-              <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
-                Ready to ship{" "}
-                <span className="bg-linear-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">better code?</span>
-              </h2>
-              <p className="mx-auto mt-4 max-w-xl text-muted-foreground">Join thousands of developers using AI-powered code reviews to catch bugs earlier and merge with confidence.</p>
-              <Suspense fallback={null}>
-                <PricingCtaUsers />
-              </Suspense>
-              <div className="mt-8 flex flex-wrap justify-center gap-4">
-                <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-                  <Button size="lg" className="gap-2 bg-linear-to-r from-indigo-500 to-violet-600 px-10 font-bold text-white shadow-lg shadow-indigo-500/40 hover:from-indigo-600 hover:to-violet-700 border-0 h-13 text-base" asChild>
-                    <Link href="/sign-up">Start for free <ArrowRight className="h-4 w-4" /></Link>
-                  </Button>
-                </motion.div>
-                <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-                  <Button size="lg" variant="outline" className="gap-2 px-10 font-semibold h-13 text-base" asChild>
-                    <Link href="/contact">Talk to sales</Link>
-                  </Button>
-                </motion.div>
+            );
+          })}
+        </motion.div>
+
+        {/* Comparison table */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-20"
+        >
+          <h2 className="text-lg font-semibold">Compare plans</h2>
+          <p className="mt-1 text-sm text-muted-foreground">Detailed feature breakdown across all tiers.</p>
+          <div className="mt-6 overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border text-left">
+                  <th className="py-3 pr-4 font-medium text-muted-foreground w-[40%]">Feature</th>
+                  {mergedPlans.map((p) => (
+                    <th key={p.id} className="py-3 px-4 font-medium">{p.name}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {comparison.map((row) => (
+                  <tr key={row.label} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
+                    <td className="py-3 pr-4 text-muted-foreground">{row.label}</td>
+                    {[row.free, row.pro, row.enterprise].map((val, i) => (
+                      <td key={i} className="py-3 px-4">
+                        {val === true ? <Check className="h-3.5 w-3.5 text-primary" /> :
+                         val === false ? <XIcon className="h-3.5 w-3.5 text-muted-foreground/30" /> :
+                         <span className="font-mono text-xs">{val}</span>}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </motion.div>
+
+        {/* FAQ */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-20"
+        >
+          <h2 className="text-lg font-semibold">Frequently asked questions</h2>
+          <div className="mt-6 grid gap-x-12 gap-y-6 sm:grid-cols-2">
+            {faqs.map((faq) => (
+              <div key={faq.q}>
+                <dt className="text-sm font-medium">{faq.q}</dt>
+                <dd className="mt-1.5 text-sm text-muted-foreground leading-relaxed">{faq.a}</dd>
               </div>
-              <p className="mt-6 text-xs text-muted-foreground">No credit card required · 14-day Pro trial · Cancel anytime</p>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-    </>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Bottom CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-20 pt-10 border-t border-border"
+        >
+          <h2 className="text-lg font-semibold">Not sure which plan?</h2>
+          <p className="mt-1 text-sm text-muted-foreground max-w-[50ch]">
+            Start free and upgrade when you need more reviews, repos, or team seats. No commitment.
+          </p>
+          <Link
+            href="/sign-up"
+            className="mt-4 inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-sm hover:bg-primary/90 transition-colors duration-150"
+          >
+            Get started free
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </motion.div>
+      </div>
+    </div>
   );
 }

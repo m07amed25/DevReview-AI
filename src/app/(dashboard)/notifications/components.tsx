@@ -137,7 +137,7 @@ export function getNotificationIcon(type: string) {
     case "TEAM_INVITE":
       return <UserPlus className={cn(iconClass, "text-blue-500")} />;
     case "TEAM_MEMBER_ADDED":
-      return <UserCog className={cn(iconClass, "text-indigo-500")} />;
+      return <UserCog className={cn(iconClass, "text-primary")} />;
     case "REVIEW_COMPLETED":
       return <FileCheck className={cn(iconClass, "text-emerald-500")} />;
     case "REVIEW_FAILED":

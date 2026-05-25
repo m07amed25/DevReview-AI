@@ -5,31 +5,26 @@ import Link from "next/link";
 import { trpc } from "@/lib/trpc/client";
 import { usePrivateChannel } from "@/lib/pusher/client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   ArrowLeft,
   GitPullRequest,
   GitMerge,
   GitCommit,
-  Clock,
   RefreshCw,
   XCircle,
   GitBranch,
   Globe,
   Lock,
   Search,
-  Calendar,
-  TrendingUp,
-  Activity,
   ExternalLink,
   Network,
   ShieldCheck,
-  Sparkles,
 } from "lucide-react";
-import { cn, formatDate } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { CodeTimeline } from "@/features/code-timeline";
 import { DiagramPanel } from "@/features/review/components/diagram-panel";
 import { PullRequestCard } from "@/features/repo/components/pull-request-card";
@@ -48,25 +43,13 @@ export default function RepositoryDetailPage({ params }: PageProps) {
     select: (repos) => repos.find((r) => r.id === id),
   });
 
-  const { data: prefs } = trpc.settings.getPreferences.useQuery();
-
-  // Single query fetches all PRs — we filter client-side for both
-  // the visible list and the tab counts. This avoids two concurrent
-  // GitHub API calls and the double re-render they cause.
   const allPullRequests = trpc.pullRequest.list.useQuery(
     { repositoryId: id, state: "all" },
     {
       enabled: !!id,
       refetchInterval: (query) => {
         const { data } = query.state;
-        if (
-          data?.some(
-            (pr) =>
-              pr.review?.status === "PROCESSING" ||
-              pr.review?.status === "PENDING",
-          )
-        )
-          return 3000;
+        if (data?.some((pr) => pr.review?.status === "PROCESSING" || pr.review?.status === "PENDING")) return 3000;
         return false;
       },
     },
@@ -77,7 +60,6 @@ export default function RepositoryDetailPage({ params }: PageProps) {
     { repositoryId: id },
     {
       enabled: !!id,
-      // Poll while any diagram is still generating (Pusher fallback)
       refetchInterval: (query) => {
         const { data } = query.state;
         if (data?.some((d) => d.status === "PENDING")) return 3000;
@@ -93,71 +75,47 @@ export default function RepositoryDetailPage({ params }: PageProps) {
   usePrivateChannel<{ diagramId: string; status: string }>(
     id ? `private-repository-${id}` : null,
     "diagram.updated",
-    () => {
-      void utils.diagram.listForRepository.invalidate({ repositoryId: id });
-    },
+    () => { void utils.diagram.listForRepository.invalidate({ repositoryId: id }); },
   );
 
   const filteredPRs = useMemo(() => {
     const source = allPullRequests.data ?? [];
-    // Apply the open / closed / all tab filter
-    const byState =
-      prState === "all" ? source : source.filter((pr) => pr.state === prState);
+    const byState = prState === "all" ? source : source.filter((pr) => pr.state === prState);
     if (!searchQuery.trim()) return byState;
     const q = searchQuery.toLowerCase();
-    return byState.filter(
-      (pr) =>
-        pr.title.toLowerCase().includes(q) ||
-        pr.author.login.toLowerCase().includes(q) ||
-        pr.headRef.toLowerCase().includes(q) ||
-        pr.baseRef.toLowerCase().includes(q),
+    return byState.filter((pr) =>
+      pr.title.toLowerCase().includes(q) || pr.author.login.toLowerCase().includes(q) ||
+      pr.headRef.toLowerCase().includes(q) || pr.baseRef.toLowerCase().includes(q),
     );
   }, [allPullRequests.data, prState, searchQuery]);
 
   const prCounts = {
     open: allPullRequests.data?.filter((pr) => pr.state === "open").length ?? 0,
-    closed:
-      allPullRequests.data?.filter((pr) => pr.state === "closed").length ?? 0,
+    closed: allPullRequests.data?.filter((pr) => pr.state === "closed").length ?? 0,
     all: allPullRequests.data?.length ?? 0,
   };
 
   const stats = useMemo(() => {
     if (!allPullRequests.data?.length) return null;
     return {
-      totalAdditions: allPullRequests.data.reduce(
-        (s, pr) => s + pr.additions,
-        0,
-      ),
-      totalDeletions: allPullRequests.data.reduce(
-        (s, pr) => s + pr.deletions,
-        0,
-      ),
-      totalFiles: allPullRequests.data.reduce(
-        (s, pr) => s + pr.changedFiles,
-        0,
-      ),
+      additions: allPullRequests.data.reduce((s, pr) => s + pr.additions, 0),
+      deletions: allPullRequests.data.reduce((s, pr) => s + pr.deletions, 0),
+      files: allPullRequests.data.reduce((s, pr) => s + pr.changedFiles, 0),
     };
   }, [allPullRequests.data]);
 
   if (repository.isLoading) {
     return (
       <div className="space-y-6">
-        <div className="flex items-center gap-4">
-          <Skeleton className="size-9 rounded-lg" />
-          <div className="space-y-2">
-            <Skeleton className="h-7 w-64" />
-            <Skeleton className="h-4 w-40" />
+        <div className="flex items-center gap-3">
+          <Skeleton className="size-8 rounded-md" />
+          <div className="space-y-1.5">
+            <Skeleton className="h-6 w-48" />
+            <Skeleton className="h-4 w-32" />
           </div>
         </div>
-        <div className="grid gap-4 md:grid-cols-4">
-          {[...Array(4)].map((_, i) => (
-            <Skeleton key={i} className="h-24 rounded-xl" />
-          ))}
-        </div>
         <div className="space-y-3">
-          {[...Array(3)].map((_, i) => (
-            <Skeleton key={i} className="h-32 w-full rounded-xl" />
-          ))}
+          {[...Array(3)].map((_, i) => <Skeleton key={i} className="h-24 w-full rounded-md" />)}
         </div>
       </div>
     );
@@ -165,23 +123,16 @@ export default function RepositoryDetailPage({ params }: PageProps) {
 
   if (!repository.data) {
     return (
-      <Card>
-        <CardContent className="py-16 text-center">
-          <div className="mx-auto w-12 h-12 rounded-full bg-muted flex items-center justify-center">
-            <GitBranch className="h-6 w-6 text-muted-foreground" />
-          </div>
-          <p className="mt-4 font-medium">Repository not found</p>
-          <p className="text-sm text-muted-foreground mt-1">
-            This repository may have been disconnected.
-          </p>
-          <Link href="/repo" className="mt-6 inline-block">
-            <Button variant="outline">
-              <ArrowLeft className="h-4 w-4" />
-              Back to repositories
-            </Button>
-          </Link>
-        </CardContent>
-      </Card>
+      <div className="py-16 text-center">
+        <div className="mx-auto size-10 rounded-md bg-muted flex items-center justify-center mb-3">
+          <GitBranch className="size-5 text-muted-foreground" />
+        </div>
+        <p className="text-sm font-medium">Repository not found</p>
+        <p className="text-xs text-muted-foreground mt-1">This repository may have been disconnected.</p>
+        <Link href="/repo" className="mt-4 inline-block">
+          <Button variant="outline" size="sm"><ArrowLeft className="size-3.5 mr-1.5" />Back to repositories</Button>
+        </Link>
+      </div>
     );
   }
 
@@ -191,323 +142,137 @@ export default function RepositoryDetailPage({ params }: PageProps) {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
-        <div className="flex items-start gap-4">
+        <div className="flex items-start gap-3">
           <Link href="/repo">
-            <Button variant="outline" size="icon" className="shrink-0">
-              <ArrowLeft className="h-4 w-4" />
+            <Button variant="outline" size="icon" className="size-8 shrink-0">
+              <ArrowLeft className="size-3.5" />
             </Button>
           </Link>
           <div>
-            <div className="flex items-center gap-3 flex-wrap">
-              <h1 className="text-2xl font-semibold tracking-tight">
-                {repo.name}
-              </h1>
-              <Badge variant="outline" className="gap-1">
-                {repo.private ? (
-                  <>
-                    <Lock className="size-3" />
-                    Private
-                  </>
-                ) : (
-                  <>
-                    <Globe className="size-3" />
-                    Public
-                  </>
-                )}
+            <div className="flex items-center gap-2 flex-wrap">
+              <h1 className="text-xl font-semibold tracking-tight">{repo.name}</h1>
+              <Badge variant="outline" className="gap-1 text-xs">
+                {repo.private ? <><Lock className="size-3" />Private</> : <><Globe className="size-3" />Public</>}
               </Badge>
             </div>
-            <a
-              href={repo.htmlUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1.5 mt-1"
-            >
-              {repo.fullName}
-              <ExternalLink className="size-3" />
+            <a href={repo.htmlUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1 mt-0.5">
+              {repo.fullName}<ExternalLink className="size-3" />
             </a>
           </div>
         </div>
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          onClick={() => allPullRequests.refetch()}
-          disabled={allPullRequests.isFetching}
-        >
-          <RefreshCw
-            className={cn(
-              "size-4",
-              allPullRequests.isFetching && "animate-spin",
-            )}
-          />
+        <Button variant="ghost" size="sm" onClick={() => allPullRequests.refetch()} disabled={allPullRequests.isFetching} className="shrink-0 h-8 w-8 p-0">
+          <RefreshCw className={cn("size-3.5", allPullRequests.isFetching && "animate-spin")} />
         </Button>
       </div>
 
-      {/* Meta info */}
-      <Card className="bg-muted/30 border-dashed">
-        <CardContent className="py-4 flex items-center justify-between">
-          <div className="flex items-center gap-6 text-sm text-muted-foreground">
-            <span className="flex items-center gap-2">
-              <Calendar className="size-4" />
-              Created {formatDate(repo.createdAt.toString())}
-            </span>
-            <span className="flex items-center gap-2">
-              <RefreshCw className="size-4" />
-              Updated {formatDate(repo.updatedAt.toString())}
-            </span>
-            <span className="flex items-center gap-2">
-              <Sparkles className="size-4 text-purple-500" />
-              {prefs?.preferredModel?.split("/").pop() ?? "gpt-4o"}
-            </span>
-          </div>
-          <a
-            href={repo.htmlUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm text-primary hover:underline flex items-center gap-1"
-          >
-            View on GitHub
-            <ExternalLink className="size-3" />
-          </a>
-        </CardContent>
-      </Card>
+      {/* Inline stats (compact, not hero cards) */}
+      {stats && (
+        <div className="flex items-center gap-4 text-xs text-muted-foreground">
+          <span className="font-mono"><span className="text-emerald-500">+{stats.additions}</span> <span className="text-destructive">-{stats.deletions}</span></span>
+          <span className="font-mono">{stats.files} files</span>
+          <span className="font-mono">{prCounts.all} PRs</span>
+        </div>
+      )}
 
-      {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-4">
-        <Card className="bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 border-emerald-500/20 pb-4">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-emerald-600 flex items-center gap-2">
-              <GitPullRequest className="size-4" />
-              Open PRs
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-emerald-600">
-              {prCounts.open}
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Active pull requests
-            </p>
-          </CardContent>
-        </Card>
-        <Card className="bg-gradient-to-br from-purple-500/10 to-purple-500/5 border-purple-500/20 pb-4">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-purple-600 flex items-center gap-2">
-              <GitMerge className="size-4" />
-              Merged
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-purple-600">
-              {prCounts.closed}
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Closed pull requests
-            </p>
-          </CardContent>
-        </Card>
-        <Card className="bg-gradient-to-br from-blue-500/10 to-blue-500/5 border-blue-500/20 pb-4">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-blue-600 flex items-center gap-2">
-              <TrendingUp className="size-4" />
-              Changes
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-blue-600">
-              +{stats?.totalAdditions ?? 0}
-              <span className="text-red-500 ml-1">
-                -{stats?.totalDeletions ?? 0}
-              </span>
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">Lines changed</p>
-          </CardContent>
-        </Card>
-        <Card className="bg-gradient-to-br from-amber-500/10 to-amber-500/5 border-amber-500/20 pb-4">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-amber-600 flex items-center gap-2">
-              <Activity className="size-4" />
-              Files
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-amber-600">
-              {stats?.totalFiles ?? 0}
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">Files modified</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-        <div className="border-b border-border/60 w-full">
-          <div className="flex items-center gap-1">
+      {/* PR filter tabs + search */}
+      <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
+        <div className="border-b border-border w-full">
+          <div className="flex items-center gap-0.5">
             {(["open", "closed", "all"] as const).map((state) => (
               <button
                 key={state}
                 onClick={() => setPrState(state)}
                 className={cn(
-                  "relative px-4 py-2.5 text-sm font-medium transition-colors",
-                  prState === state
-                    ? "text-foreground"
-                    : "text-muted-foreground hover:text-foreground",
+                  "relative px-3 py-2 text-sm font-medium transition-colors",
+                  prState === state ? "text-foreground" : "text-muted-foreground hover:text-foreground",
                 )}
               >
-                <span className="flex items-center gap-2">
-                  {state === "open" && (
-                    <GitPullRequest className="size-4 text-emerald-500" />
-                  )}
-                  {state === "closed" && (
-                    <GitMerge className="size-4 text-purple-500" />
-                  )}
-                  {state === "all" && (
-                    <GitBranch className="size-4 text-muted-foreground" />
-                  )}
+                <span className="flex items-center gap-1.5">
+                  {state === "open" && <GitPullRequest className="size-3.5 text-emerald-500" />}
+                  {state === "closed" && <GitMerge className="size-3.5 text-purple-500" />}
+                  {state === "all" && <GitBranch className="size-3.5" />}
                   {state.charAt(0).toUpperCase() + state.slice(1)}
-                  <span
-                    className={cn(
-                      "px-1.5 py-0.5 text-xs rounded-md tabular-nums",
-                      prState === state
-                        ? "bg-foreground/10 text-foreground"
-                        : "bg-muted text-muted-foreground",
-                    )}
-                  >
-                    {prCounts[state]}
-                  </span>
+                  <span className={cn("font-mono text-xs tabular-nums", prState === state ? "text-foreground" : "text-muted-foreground")}>{prCounts[state]}</span>
                 </span>
-                {prState === state && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full" />
-                )}
+                {prState === state && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full" />}
               </button>
             ))}
           </div>
         </div>
-        <div className="relative w-full sm:w-72">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-          <Input
-            placeholder="Search pull requests..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 bg-background"
-          />
+        <div className="relative w-full sm:w-64 shrink-0">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
+          <Input placeholder="Search PRs..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="pl-9 h-8 text-sm" />
         </div>
       </div>
 
       {/* PR List */}
-      <div className="space-y-3">
+      <div className="space-y-2">
         {allPullRequests.isLoading ? (
-          [...Array(3)].map((_, i) => (
-            <Skeleton key={i} className="h-32 w-full rounded-xl" />
-          ))
+          [...Array(3)].map((_, i) => <Skeleton key={i} className="h-24 w-full rounded-md" />)
         ) : allPullRequests.error ? (
-          <Card className="border-destructive/50">
-            <CardContent className="py-12 text-center">
-              <div className="mx-auto size-12 rounded-full bg-destructive/10 flex items-center justify-center">
-                <XCircle className="size-6 text-destructive" />
-              </div>
-              <p className="mt-4 font-medium text-destructive">
-                Failed to load pull requests.
-              </p>
-              <p className="text-sm text-muted-foreground mt-1">
-                {allPullRequests.error?.message}
-              </p>
-              <Button
-                variant="outline"
-                className="mt-4"
-                onClick={() => allPullRequests.refetch()}
-              >
-                <RefreshCw className="size-4 mr-2" />
-                Try again
-              </Button>
-            </CardContent>
-          </Card>
+          <div className="py-12 text-center border border-destructive/30 rounded-md">
+            <div className="mx-auto size-10 rounded-md bg-destructive/10 flex items-center justify-center mb-3">
+              <XCircle className="size-5 text-destructive" />
+            </div>
+            <p className="text-sm font-medium text-destructive">Failed to load pull requests</p>
+            <p className="text-xs text-muted-foreground mt-1">{allPullRequests.error?.message}</p>
+            <Button variant="outline" size="sm" className="mt-3" onClick={() => allPullRequests.refetch()}>
+              <RefreshCw className="size-3.5 mr-1.5" />Retry
+            </Button>
+          </div>
         ) : filteredPRs.length === 0 ? (
-          <Card>
-            <CardContent className="py-16 text-center">
-              <div className="mx-auto size-12 rounded-full bg-muted flex items-center justify-center">
-                <GitPullRequest className="size-6 text-muted-foreground" />
-              </div>
-              <p className="mt-4 font-medium">
-                {searchQuery
-                  ? "No matching pull requests"
-                  : "No pull requests found."}
-              </p>
-              <p className="text-sm text-muted-foreground mt-1">
-                {searchQuery
-                  ? `No results for "${searchQuery}"`
-                  : prState === "all"
-                    ? "This repository has no pull requests yet."
-                    : `No ${prState} pull requests found.`}
-              </p>
-              {searchQuery && (
-                <Button
-                  variant="ghost"
-                  className="mt-4"
-                  onClick={() => setSearchQuery("")}
-                >
-                  Clear search
-                </Button>
-              )}
-            </CardContent>
-          </Card>
+          <div className="py-12 text-center border border-border rounded-md">
+            <div className="mx-auto size-10 rounded-md bg-muted flex items-center justify-center mb-3">
+              <GitPullRequest className="size-5 text-muted-foreground" />
+            </div>
+            <p className="text-sm font-medium">{searchQuery ? "No matching pull requests" : "No pull requests"}</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              {searchQuery ? `No results for "${searchQuery}"` : prState === "all" ? "This repository has no pull requests yet." : `No ${prState} pull requests.`}
+            </p>
+            {searchQuery && <Button variant="ghost" size="sm" className="mt-3" onClick={() => setSearchQuery("")}>Clear search</Button>}
+          </div>
         ) : (
-          filteredPRs.map((pr) => (
-            <PullRequestCard key={pr.id} pr={pr} repositoryId={id} />
-          ))
+          filteredPRs.map((pr) => <PullRequestCard key={pr.id} pr={pr} repositoryId={id} />)
         )}
       </div>
 
-      {/* Automation */}
-      <div>
-        <h2 className="text-xl font-semibold tracking-tight mb-4 flex items-center gap-2">
-          <GitBranch className="size-5" />
-          Automation & Branch Protection
-        </h2>
-        <div className="grid gap-4 md:grid-cols-2">
-          <AutoReviewToggle
-            repositoryId={id}
-            repoFullName={repo.fullName ?? undefined}
-          />
-          <BranchProtectionCard
-            repositoryId={id}
-            repoFullName={repo.fullName ?? undefined}
-          />
-        </div>
-      </div>
+      {/* Settings & Tools */}
+      <Tabs defaultValue="automation" className="mt-2">
+        <TabsList>
+          <TabsTrigger value="automation" className="gap-1.5 text-sm">
+            <GitBranch className="size-3.5" />Automation
+          </TabsTrigger>
+          <TabsTrigger value="rules" className="gap-1.5 text-sm">
+            <ShieldCheck className="size-3.5" />Rules
+          </TabsTrigger>
+          <TabsTrigger value="diagrams" className="gap-1.5 text-sm">
+            <Network className="size-3.5" />Diagrams
+            <Badge variant="secondary" className="text-xs h-4 px-1 bg-primary/10 text-primary">Beta</Badge>
+          </TabsTrigger>
+          <TabsTrigger value="history" className="gap-1.5 text-sm">
+            <GitCommit className="size-3.5" />History
+          </TabsTrigger>
+        </TabsList>
 
-      {/* Custom Review Rules */}
-      <div>
-        <h2 className="text-xl font-semibold tracking-tight mb-4 flex items-center gap-2">
-          <ShieldCheck className="size-5" />
-          Custom Review Rules
-        </h2>
-        <RulesManagerCard repositoryId={id} />
-      </div>
+        <TabsContent value="automation" className="mt-4">
+          <div className="grid gap-4 md:grid-cols-2">
+            <AutoReviewToggle repositoryId={id} repoFullName={repo.fullName ?? undefined} />
+            <BranchProtectionCard repositoryId={id} repoFullName={repo.fullName ?? undefined} />
+          </div>
+        </TabsContent>
 
-      {/* Architecture Diagrams */}
-      <div>
-        <h2 className="text-xl font-semibold tracking-tight mb-4 flex items-center gap-2">
-          <Network className="size-5" />
-          Architecture Diagrams
-          <span className="px-1.5 py-0.5 text-[10px] font-semibold uppercase rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">BETA</span>
-        </h2>
-        <DiagramPanel
-          diagrams={diagrams.data ?? []}
-          repositoryId={id}
-          onRequestDiagram={(type) =>
-            requestDiagram.mutate({ repositoryId: id, type })
-          }
-        />
-      </div>
+        <TabsContent value="rules" className="mt-4">
+          <RulesManagerCard repositoryId={id} />
+        </TabsContent>
 
-      {/* Commit Timeline */}
-      <div>
-        <h2 className="text-xl font-semibold tracking-tight mb-4 flex items-center gap-2">
-          <GitCommit className="size-5" />
-          Commit History
-        </h2>
-        <CodeTimeline repositoryId={id} />
-      </div>
+        <TabsContent value="diagrams" className="mt-4">
+          <DiagramPanel diagrams={diagrams.data ?? []} repositoryId={id} onRequestDiagram={(type) => requestDiagram.mutate({ repositoryId: id, type })} />
+        </TabsContent>
+
+        <TabsContent value="history" className="mt-4">
+          <CodeTimeline repositoryId={id} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

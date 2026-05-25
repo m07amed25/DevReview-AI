@@ -2,38 +2,17 @@
 
 import { signOut } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { useTheme } from "next-themes";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
-  DropdownMenuLabel,
-  DropdownMenuGroup,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubTrigger,
-  DropdownMenuSubContent,
-  DropdownMenuPortal,
 } from "./ui/dropdown-menu";
-import {
-  LogOut,
-  User,
-  Settings,
-  ChevronDown,
-  CreditCard,
-  Sun,
-  Moon,
-  Monitor,
-  Shield,
-  Loader2,
-} from "lucide-react";
-import { ThemeTogglerButton } from "./animate-ui/components/buttons/theme-toggler";
+import { LogOut, User, Settings, CreditCard, Shield, Loader2, Sun, Moon, Monitor } from "lucide-react";
 
 interface UserProps {
   id: string;
@@ -44,7 +23,7 @@ interface UserProps {
   planId?: string;
 }
 
-export function UserMenu({ user }: { user: UserProps }) {
+export function UserMenu({ user, side = "bottom", compact = false, trigger }: { user: UserProps; side?: "top" | "bottom" | "left" | "right"; compact?: boolean; trigger?: React.ReactNode }) {
   const router = useRouter();
   const [isSigningOut, setIsSigningOut] = useState(false);
   const { theme, setTheme } = useTheme();
@@ -60,241 +39,75 @@ export function UserMenu({ user }: { user: UserProps }) {
   };
 
   const initials = user.name
-    ? user.name
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .toUpperCase()
-        .slice(0, 2)
-    : (user.email[0].toUpperCase() ?? "U");
+    ? user.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
+    : (user.email[0]?.toUpperCase() ?? "U");
+
+  const cycleTheme = () => {
+    if (theme === "dark") setTheme("light");
+    else if (theme === "light") setTheme("system");
+    else setTheme("dark");
+  };
+
+  const ThemeIcon = theme === "light" ? Sun : theme === "dark" ? Moon : Monitor;
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="h-9 gap-1.5 px-1.5 sm:px-2 hover:bg-muted/80 transition-all duration-200 data-[state=open]:bg-muted"
-          suppressHydrationWarning
-        >
-          <Avatar className="size-7 ring-2 ring-border transition-all duration-200 group-hover:ring-primary/20">
-            <AvatarImage
-              src={user.image ?? undefined}
-              alt={user.name ?? "User"}
-            />
-            <AvatarFallback className="text-xs font-semibold bg-primary/10 text-primary">
-              {initials}
-            </AvatarFallback>
-          </Avatar>
-          <span className="hidden md:inline-block text-sm font-medium max-w-25 truncate">
-            {user.name ?? "User"}
-          </span>
-          <ChevronDown className="hidden sm:block size-3.5 text-muted-foreground transition-transform duration-200" />
-        </Button>
+        <button className="flex items-center gap-2 px-1.5 py-1 rounded-sm hover:bg-muted transition-colors duration-150">
+          {trigger || (
+            <>
+              <Avatar className="h-7 w-7">
+                <AvatarImage src={user.image ?? undefined} alt={user.name ?? "User"} />
+                <AvatarFallback className="text-[11px] font-medium bg-muted text-muted-foreground">{initials}</AvatarFallback>
+              </Avatar>
+              {!compact && <span className="text-sm max-w-[100px] truncate hidden sm:inline">{user.name ?? "User"}</span>}
+            </>
+          )}
+        </button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="end" className="w-72 p-0" sideOffset={8}>
-        {/* ── User Profile Header ── */}
-        <div className="flex items-center gap-3 p-4 bg-muted/30">
-          <Avatar className="size-10 ring-2 ring-border shadow-sm">
-            <AvatarImage
-              src={user.image ?? undefined}
-              alt={user.name ?? "User"}
-            />
-            <AvatarFallback className="text-sm font-semibold bg-primary/10 text-primary">
-              {initials}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex flex-col gap-0.5 leading-none min-w-0">
-            <div className="flex items-center gap-2">
-              <p className="text-sm font-semibold truncate">
-                {user.name ?? "User"}
-              </p>
-              {user.planId && user.planId !== "free" && (
-                <Badge
-                  variant="secondary"
-                  className="text-[10px] px-1.5 py-0 h-4 font-medium capitalize"
-                >
-                  {user.planId === "enterprise" ? "Ultra" : user.planId}
-                </Badge>
-              )}
-            </div>
-            <p className="text-xs text-muted-foreground truncate">
-              {user.email}
-            </p>
-          </div>
+      <DropdownMenuContent align={compact ? "start" : "end"} side={side} className="w-56" sideOffset={8}>
+        {/* Header */}
+        <div className="px-3 py-2.5">
+          <p className="text-sm font-medium truncate">{user.name ?? "User"}</p>
+          <p className="text-xs text-muted-foreground truncate">{user.email}</p>
         </div>
 
-        <DropdownMenuSeparator className="my-0" />
+        <DropdownMenuSeparator />
 
-        {/* ── Account Section ── */}
-        <div className="p-1">
-          <DropdownMenuLabel className="text-[11px] uppercase tracking-wider text-muted-foreground/70 font-semibold px-2 py-1.5">
-            Account
-          </DropdownMenuLabel>
-          <DropdownMenuGroup>
-            <DropdownMenuItem
-              className="gap-3 px-2 py-2 cursor-pointer rounded-md"
-              onClick={() => router.push("/profile")}
-            >
-              <div className="flex items-center justify-center size-8 rounded-md bg-primary/10">
-                <User className="size-4 text-primary" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-sm font-medium">Profile</span>
-                <span className="text-[11px] text-muted-foreground">
-                  Manage your profile
-                </span>
-              </div>
-              <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-            </DropdownMenuItem>
-
-            <DropdownMenuItem
-              className="gap-3 px-2 py-2 cursor-pointer rounded-md"
-              onClick={() => router.push("/settings")}
-            >
-              <div className="flex items-center justify-center size-8 rounded-md bg-orange-500/10">
-                <Settings className="size-4 text-orange-500" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-sm font-medium">Settings</span>
-                <span className="text-[11px] text-muted-foreground">
-                  App preferences
-                </span>
-              </div>
-              <DropdownMenuShortcut>⌘,</DropdownMenuShortcut>
-            </DropdownMenuItem>
-
-            <DropdownMenuItem
-              className="gap-3 px-2 py-2 cursor-pointer rounded-md"
-              onClick={() => router.push("/billing")}
-            >
-              <div className="flex items-center justify-center size-8 rounded-md bg-emerald-500/10">
-                <CreditCard className="size-4 text-emerald-500" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-sm font-medium">Billing</span>
-                <span className="text-[11px] text-muted-foreground">
-                  Plans & payments
-                </span>
-              </div>
-              <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-            </DropdownMenuItem>
-
-            {user.role === "ADMIN" && (
-              <DropdownMenuItem
-                className="gap-3 px-2 py-2 cursor-pointer rounded-md"
-                onClick={() => router.push("/admin")}
-              >
-                <div className="flex items-center justify-center size-8 rounded-md bg-amber-500/10">
-                  <Shield className="size-4 text-amber-500" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium">Admin Panel</span>
-                  <span className="text-[11px] text-muted-foreground">
-                    System management
-                  </span>
-                </div>
-              </DropdownMenuItem>
-            )}
-          </DropdownMenuGroup>
-        </div>
-        <DropdownMenuSeparator className="my-0" />
-
-        {/* ── Preferences Section ── */}
-        <div className="p-1">
-          <DropdownMenuGroup>
-            <DropdownMenuItem
-              className="p-0 focus:bg-transparent"
-              onSelect={(e) => e.preventDefault()}
-              asChild
-            >
-              <ThemeTogglerButton
-                variant="ghost"
-                className="w-full justify-start h-auto p-2 hover:bg-accent group/theme"
-              >
-                <div className="flex items-center w-full justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center justify-center size-8 rounded-md bg-sky-500/10 overflow-hidden group-hover/theme:bg-sky-500/20 transition-colors">
-                      {theme === "light" ? (
-                        <Sun className="size-4 text-amber-500" />
-                      ) : theme === "dark" ? (
-                        <Moon className="size-4 text-blue-400" />
-                      ) : (
-                        <Monitor className="size-4 text-sky-500" />
-                      )}
-                    </div>
-                    <div className="flex flex-col items-start">
-                      <span className="text-sm font-medium">Theme</span>
-                      <span className="text-[11px] text-muted-foreground capitalize">
-                        {theme || "system"}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </ThemeTogglerButton>
-            </DropdownMenuItem>
-
-            {/* <DropdownMenuItem className="gap-3 px-2 py-2 cursor-pointer rounded-md">
-              <div className="flex items-center justify-center size-8 rounded-md bg-slate-500/10">
-                <Keyboard className="size-4 text-slate-500" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-sm font-medium">Keyboard shortcuts</span>
-                <span className="text-[11px] text-muted-foreground">
-                  View all shortcuts
-                </span>
-              </div>
-              <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
-            </DropdownMenuItem> */}
-          </DropdownMenuGroup>
-        </div>
-
-        {/* <DropdownMenuSeparator className="my-0" />
-
-        // ── Support Section ──
-        <div className="p-1">
-          <DropdownMenuGroup>
-            <DropdownMenuItem className="gap-3 px-2 py-2 cursor-pointer rounded-md">
-              <div className="flex items-center justify-center size-8 rounded-md bg-teal-500/10">
-                <LifeBuoy className="size-4 text-teal-500" />
-              </div>
-              <span className="text-sm font-medium">Support</span>
-              <ExternalLink className="size-3 ml-auto text-muted-foreground" />
-            </DropdownMenuItem>
-
-            <DropdownMenuItem className="gap-3 px-2 py-2 cursor-pointer rounded-md">
-              <div className="flex items-center justify-center size-8 rounded-md bg-indigo-500/10">
-                <MessageSquare className="size-4 text-indigo-500" />
-              </div>
-              <span className="text-sm font-medium">Feedback</span>
-              <ExternalLink className="size-3 ml-auto text-muted-foreground" />
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-        </div> */}
-
-        <DropdownMenuSeparator className="my-0" />
-
-        {/* ── Sign Out ── */}
-        <div className="p-1">
-          <DropdownMenuItem
-            variant="destructive"
-            className="gap-3 px-2 py-2 cursor-pointer rounded-md"
-            onClick={handleSignOut}
-            disabled={isSigningOut}
-          >
-            <div className="flex items-center justify-center size-8 rounded-md bg-destructive/10">
-              {isSigningOut ? (
-                <Loader2 className="size-4 text-destructive animate-spin" />
-              ) : (
-                <LogOut className="size-4 text-destructive" />
-              )}
-            </div>
-            <span className="text-sm font-medium">
-              {isSigningOut ? "Signing out..." : "Sign out"}
-            </span>
-            {!isSigningOut && <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>}
+        <DropdownMenuItem onClick={() => router.push("/profile")} className="gap-2 cursor-pointer">
+          <User className="h-4 w-4 text-muted-foreground" />
+          <span>Profile</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push("/settings")} className="gap-2 cursor-pointer">
+          <Settings className="h-4 w-4 text-muted-foreground" />
+          <span>Settings</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push("/billing")} className="gap-2 cursor-pointer">
+          <CreditCard className="h-4 w-4 text-muted-foreground" />
+          <span>Billing</span>
+        </DropdownMenuItem>
+        {user.role === "ADMIN" && (
+          <DropdownMenuItem onClick={() => router.push("/admin")} className="gap-2 cursor-pointer">
+            <Shield className="h-4 w-4 text-muted-foreground" />
+            <span>Admin</span>
           </DropdownMenuItem>
-        </div>
+        )}
+
+        <DropdownMenuSeparator />
+
+        <DropdownMenuItem onClick={cycleTheme} className="gap-2 cursor-pointer">
+          <ThemeIcon className="h-4 w-4 text-muted-foreground" />
+          <span>Theme</span>
+          <span className="ml-auto text-xs text-muted-foreground capitalize">{theme || "system"}</span>
+        </DropdownMenuItem>
+
+        <DropdownMenuSeparator />
+
+        <DropdownMenuItem onClick={handleSignOut} disabled={isSigningOut} className="gap-2 cursor-pointer text-destructive focus:text-destructive">
+          {isSigningOut ? <Loader2 className="h-4 w-4 animate-spin" /> : <LogOut className="h-4 w-4" />}
+          <span>{isSigningOut ? "Signing out..." : "Sign out"}</span>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

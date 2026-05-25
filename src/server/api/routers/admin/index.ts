@@ -7,6 +7,7 @@ import { adminSecurityRouter } from "./security";
 import { adminLegalRouter } from "./legal";
 import { adminMessagesRouter } from "./messages";
 import { adminNewsletterRouter } from "./newsletter";
+import { adminInvoicesRouter } from "./invoices";
 
 export const adminRouter = mergeRouters(
   adminStatsRouter,
@@ -17,4 +18,5 @@ export const adminRouter = mergeRouters(
   adminLegalRouter,
   adminMessagesRouter,
   adminNewsletterRouter,
+  adminInvoicesRouter,
 );

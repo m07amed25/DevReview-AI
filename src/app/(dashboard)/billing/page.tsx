@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, lazy, Suspense, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -10,10 +10,22 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Zap, Loader2, CheckCircle2 } from "lucide-react";
+import { Zap, Loader2, CheckCircle2, CreditCard } from "lucide-react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc/client";
-import { OverviewTab, PaymentTab, HistoryTab } from "./components";
+import { OverviewTab } from "./components";
+import { PageHeader } from "@/components/page-header";
+
+const PaymentTab = lazy(() => import("./components").then((m) => ({ default: m.PaymentTab })));
+const HistoryTab = lazy(() => import("./components").then((m) => ({ default: m.HistoryTab })));
+
+function TabFallback() {
+  return (
+    <div className="flex items-center justify-center min-h-[200px]">
+      <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+    </div>
+  );
+}
 
 export default function BillingPage() {
   const utils = trpc.useUtils();
@@ -27,10 +39,9 @@ export default function BillingPage() {
   } | null>(null);
 
   const { data: appliedPromos } = trpc.billing.getAppliedPromos.useQuery();
-  // Derive active discount from the most recent applied promo
-  const discount = appliedPromos?.[0]
+  const discount = useMemo(() => appliedPromos?.[0]
     ? { type: appliedPromos[0].type as "PERCENTAGE" | "FIXED", value: appliedPromos[0].value, planId: appliedPromos[0].planId as string | null }
-    : null;
+    : null, [appliedPromos]);
 
   const applyPromo = trpc.billing.applyPromo.useMutation({
     onSuccess: (data) => {
@@ -73,6 +84,16 @@ export default function BillingPage() {
     onError: (e) => toast.error(e.message),
   });
 
+  const handleUpgrade = useCallback(() => {
+    setShowPlanPicker(true);
+  }, []);
+
+  const handleApplyPromo = useCallback(() => {
+    if (!promoCode.trim()) return;
+    setPromoMessage(null);
+    applyPromo.mutate({ code: promoCode.trim() });
+  }, [promoCode, applyPromo]);
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -83,52 +104,39 @@ export default function BillingPage() {
 
   if (!user) return null;
 
-  const handleUpgrade = () => {
-    setShowPlanPicker(true);
-  };
-
-  const handleApplyPromo = () => {
-    if (!promoCode.trim()) return;
-    setPromoMessage(null);
-    applyPromo.mutate({ code: promoCode.trim() });
-  };
-
   return (
-    <div className="w-full max-w-6xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-12">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight bg-clip-text text-transparent bg-linear-to-r from-foreground to-foreground/70">
-            Billing & Subscription
-          </h1>
-          <p className="text-muted-foreground mt-2 text-base md:text-lg">
-            Manage your plan, payment methods, and billing history.
-          </p>
-        </div>
-        {user.planId === "free" ? (
-          <Button
-            onClick={handleUpgrade}
-            disabled={isUpgrading}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white border-0 shadow-[0_0_20px_-5px_rgba(79,70,229,0.5)] transition-all hover:shadow-[0_0_25px_-5px_rgba(79,70,229,0.7)]"
-          >
-            {isUpgrading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Zap className="mr-2 h-4 w-4" />}
-            {isUpgrading ? "Connecting..." : "Upgrade Plan"}
-          </Button>
-        ) : (
-          <Badge variant="secondary" className="h-9 px-4 text-sm bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
-            <Zap className="mr-1.5 h-3.5 w-3.5" />
-            {user.plan.name} Plan Active
-          </Badge>
-        )}
-      </div>
+    <div className="space-y-6 pb-12">
+      <PageHeader
+        icon={<CreditCard className="size-4.5 text-primary" />}
+        title="Billing & Subscription"
+        description="Manage your plan, payment methods, and billing history."
+        actions={
+          user.planId === "free" ? (
+            <Button
+              onClick={handleUpgrade}
+              disabled={isUpgrading}
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
+            >
+              {isUpgrading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Zap className="mr-2 h-4 w-4" />}
+              {isUpgrading ? "Connecting..." : "Upgrade Plan"}
+            </Button>
+          ) : (
+            <Badge variant="secondary" className="h-9 px-4 text-sm bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+              <Zap className="mr-1.5 h-3.5 w-3.5" />
+              {user.plan.name} Plan Active
+            </Badge>
+          )
+        }
+      />
 
-      <Tabs defaultValue="overview" className="w-full space-y-8">
-        <TabsList className="bg-muted/50 p-1 rounded-xl">
-          <TabsTrigger value="overview" className="rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm px-6">Overview</TabsTrigger>
-          <TabsTrigger value="payment" className="rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm px-6">Payment Methods</TabsTrigger>
-          <TabsTrigger value="history" className="rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm px-6">Billing History</TabsTrigger>
+      <Tabs defaultValue="overview" className="w-full space-y-6">
+        <TabsList className="bg-muted/50 p-1 rounded-md">
+          <TabsTrigger value="overview" className="rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm px-5 text-sm">Overview</TabsTrigger>
+          <TabsTrigger value="payment" className="rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm px-5 text-sm">Payment Methods</TabsTrigger>
+          <TabsTrigger value="history" className="rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm px-5 text-sm">Billing History</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="space-y-8 outline-none">
+        <TabsContent value="overview" className="space-y-6 outline-none">
           <OverviewTab
             plan={user.plan}
             stats={user.stats}
@@ -141,15 +149,20 @@ export default function BillingPage() {
             handleApplyPromo={handleApplyPromo}
             promoMessage={promoMessage}
             discount={discount && (!discount.planId || discount.planId === user.planId) ? discount : null}
+            accountCredit={user.accountCredit}
           />
         </TabsContent>
 
         <TabsContent value="payment" className="space-y-6 outline-none">
-          <PaymentTab />
+          <Suspense fallback={<TabFallback />}>
+            <PaymentTab />
+          </Suspense>
         </TabsContent>
 
         <TabsContent value="history" className="space-y-6 outline-none">
-          <HistoryTab />
+          <Suspense fallback={<TabFallback />}>
+            <HistoryTab />
+          </Suspense>
         </TabsContent>
       </Tabs>
 
@@ -174,23 +187,23 @@ export default function BillingPage() {
                     window.location.href = `/billing/pay?plan=${p.id}&cycle=monthly`;
                   }
                 }}
-                className="w-full p-4 rounded-lg border-2 border-border hover:border-primary/50 text-left transition-colors"
+                className="w-full p-4 rounded-md border border-border hover:border-primary/50 text-left transition-colors"
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-semibold">{p.name}</p>
-                    <p className="text-sm text-muted-foreground">{p.tagline}</p>
+                    <p className="text-[0.9375rem] font-semibold leading-tight">{p.name}</p>
+                    <p className="text-sm text-muted-foreground mt-0.5">{p.tagline}</p>
                   </div>
                   {free ? (
-                    <span className="text-lg font-bold text-emerald-500">FREE</span>
+                    <span className="font-mono text-base font-semibold text-emerald-500">FREE</span>
                   ) : discounted !== null ? (
-                    <span className="text-lg font-bold">
+                    <span className="font-mono text-base font-semibold">
                       <span className="text-emerald-500">${discounted}</span>
-                      <span className="text-sm text-muted-foreground line-through ml-1">${p.monthlyPrice}</span>
-                      <span className="text-sm text-muted-foreground">/mo</span>
+                      <span className="text-xs text-muted-foreground line-through ml-1">${p.monthlyPrice}</span>
+                      <span className="text-xs text-muted-foreground">/mo</span>
                     </span>
                   ) : (
-                    <span className="text-lg font-bold">${p.monthlyPrice}/mo</span>
+                    <span className="font-mono text-base font-semibold">${p.monthlyPrice}<span className="text-xs font-normal text-muted-foreground">/mo</span></span>
                   )}
                 </div>
                 <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">

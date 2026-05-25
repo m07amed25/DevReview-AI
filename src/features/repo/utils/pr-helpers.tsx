@@ -40,7 +40,7 @@ export function TabButton({
       <Icon className="size-4" />
       <span className="hidden sm:inline">{label}</span>
       {badge && (
-        <span className="hidden sm:inline px-1.5 py-0.5 text-[10px] font-semibold uppercase rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+        <span className="hidden sm:inline px-1.5 py-0.5 text-xs font-medium rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
           {badge}
         </span>
       )}
@@ -86,7 +86,7 @@ export function StatItem({
           {value.toLocaleString()}
         </p>
         {label && (
-          <p className="text-[11px] text-muted-foreground font-medium hidden sm:block">
+          <p className="text-xs text-muted-foreground font-medium hidden sm:block">
             {label}
           </p>
         )}

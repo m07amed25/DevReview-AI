@@ -43,11 +43,19 @@ export interface TeamCardProps {
 }
 
 const gradients = [
-  "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
-  "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
-  "bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400",
-  "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
-  "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400",
+  "bg-blue-500/15 text-blue-400",
+  "bg-emerald-500/15 text-emerald-400",
+  "bg-violet-500/15 text-violet-400",
+  "bg-amber-500/15 text-amber-400",
+  "bg-rose-500/15 text-rose-400",
+];
+
+const accentBorders = [
+  "border-t-blue-500/60",
+  "border-t-emerald-500/60",
+  "border-t-violet-500/60",
+  "border-t-amber-500/60",
+  "border-t-rose-500/60",
 ];
 
 // Format relative time
@@ -84,7 +92,9 @@ export function TeamCard({
   onSettingsClick,
 }: TeamCardProps) {
   const RoleIcon = roleIcon[role];
-  const gradient = gradients[name.length % gradients.length];
+  const colorIndex = name.length % gradients.length;
+  const gradient = gradients[colorIndex];
+  const accentBorder = accentBorders[colorIndex];
 
   return (
     <Link
@@ -92,22 +102,25 @@ export function TeamCard({
       href={`/teams/${id}`}
       className="block h-full outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg group"
     >
-      <Card className="h-full hover:border-primary/50 transition-colors bg-card shadow-sm rounded-lg flex flex-col relative">
+      <Card className={cn(
+        "h-full border-t-2 hover:border-primary/50 transition-colors bg-card shadow-sm rounded-lg flex flex-col relative",
+        accentBorder
+      )}>
         <CardHeader className="flex flex-row items-start justify-between space-y-0 p-5">
           <div className="flex items-start gap-4 min-w-0">
             <div
               className={cn(
-                "size-10 rounded-lg flex items-center justify-center font-semibold text-lg shrink-0",
+                "size-10 rounded-lg flex items-center justify-center font-bold text-lg shrink-0",
                 gradient
               )}
             >
               {name.charAt(0).toUpperCase()}
             </div>
             <div className="min-w-0 pt-0.5">
-              <CardTitle className="text-base font-semibold leading-none truncate">
+              <CardTitle className="text-[15px] font-semibold leading-tight truncate">
                 {name}
               </CardTitle>
-              <p className="text-xs text-muted-foreground mt-1.5 truncate">
+              <p className="text-[11px] text-muted-foreground mt-1.5 truncate tracking-wide font-mono">
                 /{slug}
               </p>
             </div>
@@ -129,14 +142,14 @@ export function TeamCard({
 
         <CardContent className="p-5 pt-0 flex-1 flex flex-col justify-end space-y-5">
           {/* Stats row */}
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+          <div className="flex items-center gap-4 text-[13px] text-muted-foreground">
             <div className="flex items-center gap-1.5">
-              <Users className="size-4" />
-              <span>{memberCount}</span>
+              <Users className="size-4 text-blue-400/70" />
+              <span className="font-medium text-foreground/80">{memberCount}</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <FolderGit2 className="size-4" />
-              <span>{repoCount}</span>
+              <FolderGit2 className="size-4 text-emerald-400/70" />
+              <span className="font-medium text-foreground/80">{repoCount}</span>
             </div>
           </div>
 
@@ -169,7 +182,10 @@ export function TeamCard({
 
           {/* Footer with role and time */}
           <div className="flex items-center justify-between pt-4 border-t border-border/50">
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <div className={cn(
+              "flex items-center gap-1.5 text-xs font-medium",
+              role === "OWNER" ? "text-amber-400" : role === "ADMIN" ? "text-blue-400" : "text-muted-foreground"
+            )}>
               <RoleIcon className="size-3.5" />
               <span>
                 {role === "OWNER"

@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
+import { PageHeader } from "@/components/page-header";
 import {
   TeamInviteActions,
   getNotificationIcon,
@@ -121,33 +122,32 @@ export default function NotificationsPage() {
   };
 
   return (
-    <div className="container mx-auto max-w-5xl py-8 px-4 sm:px-6 lg:px-8">
+    <div className="space-y-6 pb-12">
       {/* Header */}
-      <div className="mb-8">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight">Notifications</h1>
-            <p className="text-sm text-muted-foreground mt-1">Stay updated with your code reviews and team activities</p>
-          </div>
+      <PageHeader
+        icon={<Bell className="size-4.5 text-primary" />}
+        title="Notifications"
+        description="Stay updated with your code reviews and team activities"
+        actions={
           <Button variant="outline" size="sm" onClick={() => router.push("/settings#notifications")} className="w-fit">
             <Settings className="mr-2 size-4" />Preferences
           </Button>
-        </div>
+        }
+      />
 
-        {/* Stats */}
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="rounded-lg border bg-card p-4 flex flex-col justify-between shadow-sm">
-            <div className="flex items-center gap-2 mb-2"><Bell className="size-4 text-muted-foreground" /><span className="text-xs font-medium text-muted-foreground">Total</span></div>
-            <p className="text-2xl font-semibold">{notifications.length}</p>
-          </div>
-          <div className="rounded-lg border bg-card p-4 flex flex-col justify-between shadow-sm">
-            <div className="flex items-center gap-2 mb-2"><AlertCircle className="size-4 text-blue-500" /><span className="text-xs font-medium text-muted-foreground">Unread</span></div>
-            <p className="text-2xl font-semibold">{unreadCount}</p>
-          </div>
-          <div className="rounded-lg border bg-card p-4 flex flex-col justify-between shadow-sm">
-            <div className="flex items-center gap-2 mb-2"><Archive className="size-4 text-emerald-500" /><span className="text-xs font-medium text-muted-foreground">Read</span></div>
-            <p className="text-2xl font-semibold">{notifications.length - unreadCount}</p>
-          </div>
+      {/* Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="rounded-lg border bg-card p-4 flex flex-col justify-between shadow-sm">
+          <div className="flex items-center gap-2 mb-2"><Bell className="size-4 text-muted-foreground" /><span className="text-xs font-medium text-muted-foreground">Total</span></div>
+          <p className="text-2xl font-semibold">{notifications.length}</p>
+        </div>
+        <div className="rounded-lg border bg-card p-4 flex flex-col justify-between shadow-sm">
+          <div className="flex items-center gap-2 mb-2"><AlertCircle className="size-4 text-blue-500" /><span className="text-xs font-medium text-muted-foreground">Unread</span></div>
+          <p className="text-2xl font-semibold">{unreadCount}</p>
+        </div>
+        <div className="rounded-lg border bg-card p-4 flex flex-col justify-between shadow-sm">
+          <div className="flex items-center gap-2 mb-2"><Archive className="size-4 text-emerald-500" /><span className="text-xs font-medium text-muted-foreground">Read</span></div>
+          <p className="text-2xl font-semibold">{notifications.length - unreadCount}</p>
         </div>
       </div>
 
@@ -257,14 +257,16 @@ export default function NotificationsPage() {
                 <div key={notification.id} className={cn("flex items-stretch", itemClass)}>
                   {!isRead && <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-blue-500" />}
                   <div className="pt-2 pl-2 pr-3 shrink-0 flex items-start z-10">
-                    <input type="checkbox" checked={isSelected} onChange={(e) => { e.stopPropagation(); toggleSelect(notification.id); }} className="size-4 rounded border-border/80 bg-background text-primary focus:ring-1 focus:ring-primary focus:ring-offset-1 transition-colors cursor-pointer" aria-label="Select notification" />
+                    <label className="flex items-center justify-center size-11 cursor-pointer" onClick={(e) => e.stopPropagation()}>
+                      <input type="checkbox" checked={isSelected} onChange={() => toggleSelect(notification.id)} className="size-4 rounded border-border/80 bg-background text-primary focus:ring-1 focus:ring-primary focus:ring-offset-1 transition-colors cursor-pointer" aria-label="Select notification" />
+                    </label>
                   </div>
                   {!isInvite && hasLink && notification.link ? (
                     <Link href={notification.link} className="flex-1 min-w-0" onClick={() => { if (!isRead) markAsRead.mutate({ id: notification.id }); }}>{inner}</Link>
                   ) : (
                     <div className="flex-1 min-w-0">{inner}</div>
                   )}
-                  <div className="absolute right-4 top-4 z-10 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-background/90 backdrop-blur-xs rounded-md shadow-xs border border-border/50 p-0.5">
+                  <div className="absolute right-4 top-4 z-10 flex items-center gap-1 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity bg-background/90 backdrop-blur-xs rounded-md shadow-xs border border-border/50 p-0.5">
                     {!isRead && (
                       <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); markAsRead.mutate({ id: notification.id }); }} className="p-1.5 rounded-sm hover:bg-accent text-muted-foreground hover:text-foreground transition-colors" title="Mark as read">
                         <Check className="size-3.5" />

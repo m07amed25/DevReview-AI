@@ -1,91 +1,68 @@
-import { Github, Terminal, GitMerge } from "lucide-react";
+"use client";
+
+import { Github, GitPullRequest, MessageSquare } from "lucide-react";
+import { motion } from "motion/react";
 
 const steps = [
-  {
-    step: "01",
-    icon: Github,
-    title: "Connect GitHub",
-    description:
-      "Sign up and authorize access to your repositories in one click with zero configuration.",
-  },
-  {
-    step: "02",
-    icon: Terminal,
-    title: "Open a PR",
-    description:
-      "Code Catch AI automatically triggers on every pull request, analyzing your code in real-time.",
-  },
-  {
-    step: "03",
-    icon: GitMerge,
-    title: "Merge securely",
-    description:
-      "Review actionable AI feedback, apply inline suggestions, and ship better code.",
-  },
+  { num: "01", icon: Github, title: "Connect your GitHub", desc: "One OAuth click. No tokens to manage, no YAML to write, no CLI to install. Pick which repos to watch and you're done.", detail: "Works with public and private repos. GitHub App permissions are minimal and revocable." },
+  { num: "02", icon: GitPullRequest, title: "Open a pull request", desc: "Code Catch triggers automatically on every PR. By the time you finish writing the description, the review is already waiting.", detail: "Analyzes diffs, not entire files. Understands context from surrounding code and commit history." },
+  { num: "03", icon: MessageSquare, title: "Get actionable feedback", desc: "Inline comments appear directly on the PR. Security issues, bugs, and suggestions with fix examples. Not noise.", detail: "Severity-tagged. Filterable. Each comment links to the relevant best practice or CVE." },
 ];
+
+const stepVariant = {
+  hidden: { opacity: 0, x: -12 },
+  visible: (i: number) => ({
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.4, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] },
+  }),
+};
 
 export function HowItWorksSection() {
   return (
-    <section
-      id="how-it-works"
-      className="relative border-t border-border bg-background/50"
-      aria-labelledby="how-it-works-heading"
-    >
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
-        <div className="text-center mb-16 sm:mb-20">
-          <h2
-            id="how-it-works-heading"
-            className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground"
-          >
-            Up and running in{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-blue-400">
-              minutes
-            </span>
-          </h2>
-          <p className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Three simple steps to completely transform your engineering
-            workflow.
-          </p>
-        </div>
-
-        <div
-          className="steps-container grid gap-8 sm:grid-cols-3 relative"
-          role="list"
-          aria-label="How it works steps"
+    <section className="bg-card/50 py-20 sm:py-28" id="how-it-works" aria-labelledby="how-heading">
+      <div className="mx-auto max-w-[1100px] px-4 sm:px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2 mb-14"
         >
-          {/* Connecting Line */}
-          <div className="hidden sm:block absolute top-12 left-[16%] right-[16%] h-[2px] bg-gradient-to-r from-indigo-500/30 via-blue-500/30 to-indigo-500/30 z-0" />
+          <div>
+            <h2 id="how-heading" className="text-[clamp(1.375rem,3vw,1.75rem)] font-bold tracking-tight leading-tight">
+              Three steps. No meetings.
+            </h2>
+            <p className="mt-2 text-[0.9375rem] text-muted-foreground max-w-[45ch] leading-relaxed">
+              Most teams are reviewing code within 5 minutes of signing up.
+            </p>
+          </div>
+          <span className="text-[11px] font-mono text-muted-foreground/40 tracking-wide">AVG SETUP: 47s</span>
+        </motion.div>
 
-          {steps.map((item) => (
-            <div
-              key={item.step}
-              className="step-card relative group text-center"
-              role="listitem"
+        <div className="grid gap-0 border border-border rounded-sm overflow-hidden">
+          {steps.map((s, i) => (
+            <motion.div
+              key={s.num}
+              variants={stepVariant}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-60px" }}
+              custom={i}
+              className={`grid sm:grid-cols-[180px_1fr] gap-5 sm:gap-10 p-6 sm:py-8 sm:px-8 ${i !== steps.length - 1 ? "border-b border-border" : ""}`}
             >
-              {/* Content */}
-              <div className="relative z-10">
-                <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-background border-8 border-card transition-all duration-500 group-hover:scale-110 group-hover:border-indigo-500/20 shadow-xl">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted/30">
-                    <item.icon
-                      className="h-6 w-6 text-indigo-400"
-                      aria-hidden="true"
-                    />
-                  </div>
-                </div>
-
-                <div className="mt-8">
-                  <div className="inline-block px-3 py-1 mb-4 text-xs font-mono font-medium text-indigo-300 bg-indigo-500/10 rounded-full border border-indigo-500/20">
-                    Step {item.step}
-                  </div>
-                  <h3 className="text-xl font-semibold text-foreground mb-3">
-                    {item.title}
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed text-sm max-w-[280px] mx-auto">
-                    {item.description}
-                  </p>
+              <div className="flex sm:flex-col gap-3">
+                <span className="text-[2.5rem] font-bold leading-none text-border/60 tabular-nums tracking-tighter">{s.num}</span>
+                <div className="flex items-center gap-2 sm:mt-1">
+                  <s.icon className="h-3.5 w-3.5 text-primary/70" />
+                  <h3 className="text-base font-semibold tracking-tight">{s.title}</h3>
                 </div>
               </div>
-            </div>
+              <div className="flex flex-col justify-center gap-2">
+                <p className="text-[0.9375rem] text-muted-foreground leading-[1.65] max-w-[55ch]">{s.desc}</p>
+                <p className="text-[11px] font-mono text-muted-foreground/40 leading-relaxed tracking-wide">{s.detail}</p>
+              </div>
+            </motion.div>
           ))}
         </div>
       </div>

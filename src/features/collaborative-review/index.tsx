@@ -10,14 +10,11 @@ import {
   PUSHER_EVENTS,
 } from "@/lib/pusher/client";
 import { reviewChannel } from "@/server/pusher";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   MessageCircle,
   CheckCircle2,
   Loader2,
-  Circle,
+  Plus,
 } from "lucide-react";
 import { PresenceAvatars } from "./components/presence-avatars";
 import { NewThreadForm } from "./components/new-thread-form";
@@ -84,57 +81,48 @@ function CollaborativeReviewInner({
   const resolvedThreads = threads.filter((t) => t.resolved);
 
   return (
-    <div className="space-y-4">
-      <Card className="border-border/50 shadow-sm bg-gradient-to-br from-card to-muted/20">
-        <CardContent className="p-4">
-          <div className="flex items-center justify-between flex-wrap gap-3">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2">
-                <div className="p-1.5 bg-primary/10 rounded-md ring-1 ring-primary/20">
-                  <MessageCircle className="size-4 text-primary" />
-                </div>
-                <h3 className="text-sm font-semibold tracking-tight">Discussion</h3>
-              </div>
-              <Badge variant="secondary" className="tabular-nums text-xs font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
-                {activeThreads.length} open
-              </Badge>
-              {resolvedThreads.length > 0 && (
-                <Badge
-                  variant="outline"
-                  className="tabular-nums text-xs cursor-pointer bg-emerald-500/10 border-emerald-500/20 text-emerald-600 hover:bg-emerald-500/20 transition-colors"
-                  onClick={() => setShowResolved((v) => !v)}
-                >
-                  <CheckCircle2 className="size-3.5 mr-1" />
-                  {resolvedThreads.length} resolved
-                </Badge>
-              )}
-            </div>
-            <PresenceAvatars members={members} myId={myId} isAdmin={isAdmin} />
-          </div>
-          {typingNames.length > 0 && (
-            <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground animate-pulse">
-              <div className="flex gap-0.5">
-                {[0, 1, 2].map((i) => (
-                  <Circle key={i} className="size-1.5 fill-current" style={{ animation: "typingDot 1.4s ease-in-out infinite", animationDelay: `${i * 160}ms` }} />
-                ))}
-              </div>
-              <span>
-                {typingNames.length === 1
-                  ? `${typingNames[0]} is typing…`
-                  : `${typingNames.slice(0, -1).join(", ")} and ${typingNames[typingNames.length - 1]} are typing…`}
-              </span>
-            </div>
+    <div className="space-y-3">
+      {/* Header */}
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <span className="text-[0.8125rem] font-medium text-[oklch(0.82_0.02_250)]">
+            {activeThreads.length} <span className="text-[oklch(0.60_0.03_250)] font-normal">open</span>
+          </span>
+          {resolvedThreads.length > 0 && (
+            <button
+              onClick={() => setShowResolved((v) => !v)}
+              className="flex items-center gap-1 text-[0.8125rem] text-[oklch(0.55_0.15_155)] hover:text-[oklch(0.65_0.15_155)] transition-colors duration-150 cursor-pointer"
+            >
+              <CheckCircle2 className="size-3" />
+              <span className="font-mono tabular-nums">{resolvedThreads.length}</span>
+              <span className="font-normal">resolved</span>
+            </button>
           )}
-        </CardContent>
-      </Card>
+        </div>
+        <PresenceAvatars members={members} myId={myId} isAdmin={isAdmin} />
+      </div>
 
-      {!newThread && (
-        <Button variant="outline" size="sm" className="gap-2 w-full border-dashed border-2 hover:border-primary/50 hover:bg-primary/5 group transition-all duration-300 h-10" onClick={() => setNewThread({ file: "", line: 0 })}>
-          <MessageCircle className="size-4 text-muted-foreground group-hover:text-primary transition-colors" />
-          Start a Discussion Thread
-        </Button>
+      {/* Typing indicator */}
+      {typingNames.length > 0 && (
+        <p className="text-[0.6875rem] text-[oklch(0.40_0.03_250)]">
+          {typingNames.length === 1
+            ? `${typingNames[0]} is typing…`
+            : `${typingNames.slice(0, -1).join(", ")} and ${typingNames[typingNames.length - 1]} are typing…`}
+        </p>
       )}
 
+      {/* New thread trigger */}
+      {!newThread && (
+        <button
+          onClick={() => setNewThread({ file: "", line: 0 })}
+          className="w-full h-8 rounded-[4px] border border-[oklch(0.30_0.02_250)] text-xs font-medium text-[oklch(0.60_0.03_250)] hover:text-[oklch(0.82_0.02_250)] hover:bg-[oklch(0.20_0.02_250)] transition-colors duration-150 flex items-center justify-center gap-1.5 cursor-pointer"
+        >
+          <Plus className="size-3.5" />
+          New thread
+        </button>
+      )}
+
+      {/* New thread form */}
       {newThread && (
         <NewThreadForm
           reviewId={reviewId}
@@ -147,52 +135,39 @@ function CollaborativeReviewInner({
         />
       )}
 
+      {/* Thread list */}
       {threadsQuery.isLoading ? (
-        <div className="flex items-center justify-center py-8 gap-2 text-sm text-muted-foreground">
-          <Loader2 className="size-4 animate-spin" />
-          Loading discussions…
+        <div className="flex items-center justify-center py-8 gap-2 text-xs text-[oklch(0.40_0.03_250)]">
+          <Loader2 className="size-3.5 animate-spin" />
+          Loading…
         </div>
       ) : activeThreads.length === 0 && resolvedThreads.length === 0 ? (
-        <Card className="border-dashed bg-muted/30 border-primary/20">
-          <CardContent className="py-16 text-center flex flex-col items-center justify-center">
-            <div className="relative mb-5 group cursor-default">
-              <div className="size-16 rounded-2xl bg-primary/10 flex items-center justify-center ring-1 ring-primary/20 shadow-inner group-hover:scale-105 transition-transform duration-500">
-                <MessageCircle className="size-8 text-primary" />
-              </div>
-              <div className="absolute -top-1 -right-1 size-4 rounded-full bg-emerald-500 border-2 border-background animate-pulse" />
-            </div>
-            <p className="text-base font-semibold text-foreground tracking-tight">No discussions yet</p>
-            <p className="text-sm text-muted-foreground max-w-xs mt-2 leading-relaxed">
-              Start a thread to collaborate, ask questions, or suggest improvements.
-            </p>
-          </CardContent>
-        </Card>
+        <div className="py-10 text-center">
+          <MessageCircle className="size-5 mx-auto mb-2 text-[oklch(0.40_0.03_250)] opacity-40" />
+          <p className="text-[0.8125rem] text-[oklch(0.60_0.03_250)]">No discussions yet.</p>
+        </div>
       ) : (
-        <div className="space-y-3">
+        <div className="border border-[oklch(0.30_0.02_250)] rounded-[6px] overflow-hidden">
           {activeThreads.map((thread) => (
             <ThreadCard key={thread.id} thread={thread} currentUserId={currentUserId} currentUserName={currentUserName} triggerTyping={triggerTyping} />
           ))}
         </div>
       )}
 
+      {/* Resolved threads */}
       {showResolved && resolvedThreads.length > 0 && (
-        <div className="space-y-3 opacity-60">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground px-1">
+        <div className="space-y-0">
+          <div className="flex items-center gap-2 text-[0.6875rem] text-[oklch(0.40_0.03_250)] py-2">
             <CheckCircle2 className="size-3" />
             <span className="font-medium">Resolved</span>
           </div>
-          {resolvedThreads.map((thread) => (
-            <ThreadCard key={thread.id} thread={thread} currentUserId={currentUserId} currentUserName={currentUserName} triggerTyping={triggerTyping} />
-          ))}
+          <div className="border border-[oklch(0.30_0.02_250)] rounded-[6px] overflow-hidden opacity-60">
+            {resolvedThreads.map((thread) => (
+              <ThreadCard key={thread.id} thread={thread} currentUserId={currentUserId} currentUserName={currentUserName} triggerTyping={triggerTyping} />
+            ))}
+          </div>
         </div>
       )}
-
-      <style>{`
-        @keyframes typingDot {
-          0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
-          40% { opacity: 1; transform: scale(1.2); }
-        }
-      `}</style>
     </div>
   );
 }

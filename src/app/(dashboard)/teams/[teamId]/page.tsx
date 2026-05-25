@@ -15,7 +15,7 @@ import {
   AlertDialogFooter,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
-import { AlertTriangle, ArrowLeft, Trash2 } from "lucide-react";
+import { AlertTriangle, ArrowLeft, RefreshCw, Trash2 } from "lucide-react";
 import Link from "next/link";
 import {
   InviteMemberDialog,
@@ -41,10 +41,16 @@ export default function TeamDetailPage() {
   const [requestActionDialogOpen, setRequestActionDialogOpen] = useState(false);
 
   const team = trpc.team.get.useQuery({ teamId });
-  const myRepos = trpc.repository.list.useQuery();
-  const pendingActions = trpc.team.getPendingActions.useQuery({ teamId });
-  const myRequests = trpc.team.getMyRequestedActions.useQuery({ teamId });
-  const pendingInvites = trpc.team.getPendingInvites.useQuery({ teamId });
+  const pendingActions = trpc.team.getPendingActions.useQuery(
+    { teamId },
+    { enabled: !!team.data && (team.data.currentUserRole === "OWNER" || team.data.currentUserRole === "ADMIN") }
+  );
+  const myRequests = trpc.team.getMyRequestedActions.useQuery({ teamId }, { enabled: !!team.data });
+  const pendingInvites = trpc.team.getPendingInvites.useQuery(
+    { teamId },
+    { enabled: !!team.data && (team.data.currentUserRole === "OWNER" || team.data.currentUserRole === "ADMIN") }
+  );
+  const myRepos = trpc.repository.list.useQuery(undefined, { enabled: !!team.data });
   const utils = trpc.useUtils();
 
   const inviteMember = trpc.team.inviteMember.useMutation({
@@ -147,19 +153,35 @@ export default function TeamDetailPage() {
   if (!team.data) {
     return (
       <div className="text-center py-20">
-        <p className="text-muted-foreground">Team not found</p>
-        <Link href="/teams">
-          <Button variant="ghost" className="mt-4">
-            <ArrowLeft className="size-4 mr-2" /> Back to teams
-          </Button>
-        </Link>
+        {team.isError ? (
+          <>
+            <AlertTriangle className="size-6 text-destructive mx-auto mb-3" />
+            <p className="text-sm font-medium">Failed to load team</p>
+            <p className="text-sm text-muted-foreground mt-1 max-w-xs mx-auto">
+              {team.error?.message || "Something went wrong."}
+            </p>
+            <Button variant="outline" size="sm" className="mt-4" onClick={() => team.refetch()}>
+              <RefreshCw className="size-4 mr-2" />
+              Retry
+            </Button>
+          </>
+        ) : (
+          <>
+            <p className="text-muted-foreground">Team not found</p>
+            <Link href="/teams">
+              <Button variant="ghost" className="mt-4">
+                <ArrowLeft className="size-4 mr-2" /> Back to teams
+              </Button>
+            </Link>
+          </>
+        )}
       </div>
     );
   }
 
   return (
     <div className="flex flex-col min-h-[calc(100vh-8rem)]">
-      <div className="flex-1 space-y-6 max-w-6xl mx-auto w-full pb-12 pt-6 px-4 sm:px-6 lg:px-8">
+      <div className="flex-1 space-y-6 pb-12">
 
 
         {/* Header */}
@@ -214,7 +236,7 @@ export default function TeamDetailPage() {
                 Delete team?
               </AlertDialogTitle>
               <AlertDialogDescription>
-                This will remove all members and unlink shared repositories.
+                All members will be removed and shared repositories unlinked.
                 This cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>

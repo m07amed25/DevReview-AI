@@ -151,6 +151,9 @@ exports.Prisma.UserScalarFieldEnum = {
   notifyTeamMemberAdded: 'notifyTeamMemberAdded',
   planId: 'planId',
   planExpiresAt: 'planExpiresAt',
+  planStartedAt: 'planStartedAt',
+  billingCycle: 'billingCycle',
+  accountCredit: 'accountCredit',
   overrideReposLimit: 'overrideReposLimit',
   overrideReviewsLimit: 'overrideReviewsLimit',
   overrideSeatsLimit: 'overrideSeatsLimit'
@@ -593,6 +596,7 @@ exports.Prisma.InvoiceScalarFieldEnum = {
   amount: 'amount',
   status: 'status',
   planId: 'planId',
+  billingCycle: 'billingCycle',
   description: 'description',
   fawaterakInvoiceId: 'fawaterakInvoiceId',
   fawaterakInvoiceKey: 'fawaterakInvoiceKey',

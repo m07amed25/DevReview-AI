@@ -45,6 +45,25 @@ const defaultPreferences: NotificationPreferences = {
 };
 
 export function NotificationPreferencesCard() {
+  return (
+    <Card id="notifications">
+      <CardHeader>
+        <CardTitle className="text-base flex items-center gap-2">
+          <Bell className="size-4" />
+          Notification Preferences
+        </CardTitle>
+        <CardDescription>
+          Choose which notifications you want to receive via email and in-app
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="pb-6">
+        <NotificationPreferencesContent />
+      </CardContent>
+    </Card>
+  );
+}
+
+export function NotificationPreferencesContent() {
   // Load preferences
   const { data: preferencesData, isLoading } =
     trpc.settings.getNotificationPreferences.useQuery();
@@ -127,37 +146,16 @@ export function NotificationPreferencesCard() {
 
   if (isLoading) {
     return (
-      <Card id="notifications">
-        <CardHeader>
-          <CardTitle className="text-base flex items-center gap-2">
-            <Bell className="size-4" />
-            Notification Preferences
-          </CardTitle>
-          <CardDescription>
-            Loading preferences...
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="pb-6">
-          <div className="flex items-center justify-center py-8">
-            <Loader2 className="size-6 animate-spin text-muted-foreground" />
-          </div>
-        </CardContent>
-      </Card>
+      <div className="flex items-center justify-center py-8">
+        <Loader2 className="size-6 animate-spin text-muted-foreground" />
+      </div>
     );
   }
 
   return (
-    <Card id="notifications">
-      <CardHeader>
-        <CardTitle className="text-base flex items-center gap-2">
-          <Bell className="size-4" />
-          Notification Preferences
-        </CardTitle>
-        <CardDescription>
-          Choose which notifications you want to receive via email and in-app
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="pb-6">
+    <div className="rounded-md border border-border p-4">
+      <h3 className="text-[0.9375rem] font-semibold mb-1">Notification Preferences</h3>
+      <p className="text-sm text-muted-foreground mb-4">Choose which notifications you receive via email and in-app.</p>
         {message && (
           <div className="mb-4 flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-700 dark:border-green-800 dark:bg-green-950/30 dark:text-green-400">
             <Check className="size-4 shrink-0" />
@@ -407,7 +405,6 @@ export function NotificationPreferencesCard() {
             </Button>
           </div>
         </div>
-      </CardContent>
-    </Card>
+    </div>
   );
 }

@@ -205,7 +205,9 @@ export function generateClassDiagram(fileContents: Record<string, string>): {
 
   const lines: string[] = ["classDiagram"];
 
-  for (const node of nodes) {
+  const sortedNodes = [...nodes].sort((a, b) => a.label.localeCompare(b.label));
+
+  for (const node of sortedNodes) {
     const detail = node.detail as DiagramNodeDetailClass;
     lines.push(`  class ${node.label} {`);
     if (detail.stereotype) {
@@ -221,11 +223,15 @@ export function generateClassDiagram(fileContents: Record<string, string>): {
     lines.push("  }");
   }
 
-  for (const edge of edges) {
+  const sortedEdges = [...edges].sort((a, b) =>
+    `${a.fromId}-${a.toId}`.localeCompare(`${b.fromId}-${b.toId}`),
+  );
+
+  for (const edge of sortedEdges) {
     const from = edge.fromId.replace("class_", "");
     const to = edge.toId.replace("class_", "");
     lines.push(`  ${from} --|> ${to} : ${edge.label}`);
   }
 
-  return { definition: lines.join("\n"), nodes, edges };
+  return { definition: lines.join("\n"), nodes: sortedNodes, edges: sortedEdges };
 }

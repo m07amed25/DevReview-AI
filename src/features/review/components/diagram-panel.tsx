@@ -5,11 +5,8 @@ import type { Diagram } from "@/server/db/client";
 import { Loader2, AlertTriangle, Network, Plus, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Card, CardContent } from "@/components/ui/card";
 import type { DiagramNode } from "@/features/diagram/types";
 import DiagramViewer from "@/features/diagram/components/diagram-viewer";
-import { DiagramTriggerButton } from "@/features/diagram/components/diagram-trigger-button";
-import { Button } from "@/components/ui/button";
 
 interface DiagramPanelProps {
   diagrams: Diagram[];
@@ -18,81 +15,27 @@ interface DiagramPanelProps {
 }
 
 const DIAGRAM_LABELS: Record<"ERD" | "CLASS" | "USE_CASE" | "SEQUENCE", string> = {
-  ERD: "Entity Diagram",
-  CLASS: "Class Diagram",
+  ERD: "Entity",
+  CLASS: "Class",
   USE_CASE: "Use Case",
   SEQUENCE: "Sequence",
 };
 
 const ALL_DIAGRAM_TYPES: Array<"ERD" | "CLASS" | "USE_CASE" | "SEQUENCE"> = [
-  "ERD",
-  "CLASS",
-  "USE_CASE",
-  "SEQUENCE",
+  "ERD", "CLASS", "USE_CASE", "SEQUENCE",
 ];
 
-function DiagramTabButton({
-  label,
-  status,
-  active,
-  onClick,
-  onKeyDown,
-}: {
-  label: string;
-  status: string;
-  active: boolean;
-  onClick: () => void;
-  onKeyDown?: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
-}) {
-  return (
-    <button
-      type="button"
-      role="tab"
-      aria-selected={active}
-      tabIndex={active ? 0 : -1}
-      onClick={onClick}
-      onKeyDown={onKeyDown}
-      className={cn(
-        "flex items-center gap-2 px-3 py-2 text-sm font-medium border-b-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
-        active
-          ? "border-primary text-primary"
-          : "border-transparent text-muted-foreground hover:text-foreground hover:border-border",
-      )}
-    >
-      <span>{label}</span>
-      {status === "PENDING" && (
-        <Loader2 className="size-3 animate-spin text-muted-foreground" />
-      )}
-      {status === "FAILED" && (
-        <AlertTriangle className="size-3 text-destructive" />
-      )}
-      {status === "NONE" && (
-        <Plus className="size-3 text-muted-foreground/50" />
-      )}
-    </button>
-  );
-}
-
-export function DiagramPanel({
-  diagrams,
-  repositoryId,
-  onRequestDiagram,
-}: DiagramPanelProps) {
+export function DiagramPanel({ diagrams, repositoryId, onRequestDiagram }: DiagramPanelProps) {
   const [activeType, setActiveType] = useState<"ERD" | "CLASS" | "USE_CASE" | "SEQUENCE">(
     (diagrams[0]?.type as "ERD" | "CLASS" | "USE_CASE" | "SEQUENCE") ?? "ERD",
   );
   const [requestingType, setRequestingType] = useState<string | null>(null);
 
-  // Derived: still "requesting" only when the diagram hasn't appeared yet.
-  // This replaces the previous useEffect + setState pattern to avoid
-  // the cascading-renders lint warning.
   const isRequesting = (type: string) =>
     requestingType === type && !diagrams.find((d) => d.type === type);
 
-  // Active diagram may be undefined if that type hasn't been generated yet
   const activeDiagram = diagrams.find((d) => d.type === activeType);
 
-  // No diagrams and no way to create them → show nothing
   if (diagrams.length === 0 && !onRequestDiagram) return null;
 
   const handleRequest = (type: "ERD" | "CLASS" | "USE_CASE" | "SEQUENCE") => {
@@ -107,112 +50,88 @@ export function DiagramPanel({
       return Array.isArray(activeDiagram.nodes)
         ? (activeDiagram.nodes as unknown as DiagramNode[])
         : [];
-    } catch {
-      return [];
-    }
+    } catch { return []; }
   })();
 
   return (
     <div className="space-y-0">
       {/* Tab bar */}
-      <div
-        role="tablist"
-        aria-label="Diagram types"
-        className="flex items-center gap-1 border-b border-border/60 overflow-x-auto"
-      >
-        <div className="flex items-center gap-1 flex-1 flex-wrap">
+      <div role="tablist" aria-label="Diagram types" className="flex items-center gap-0.5 border-b border-[oklch(0.30_0.02_250)]">
+        <div className="flex items-center gap-0.5 flex-1">
           {ALL_DIAGRAM_TYPES.map((type, index) => {
             const diagram = diagrams.find((d) => d.type === type);
+            const status = diagram?.status ?? "NONE";
+            const active = activeType === type;
             return (
-              <DiagramTabButton
+              <button
                 key={type}
-                label={DIAGRAM_LABELS[type]}
-                status={diagram?.status ?? "NONE"}
-                active={activeType === type}
+                type="button"
+                role="tab"
+                aria-selected={active}
+                tabIndex={active ? 0 : -1}
                 onClick={() => setActiveType(type)}
                 onKeyDown={(e) => {
-                  if (e.key === "ArrowRight") {
-                    const next =
-                      ALL_DIAGRAM_TYPES[
-                        (index + 1) % ALL_DIAGRAM_TYPES.length
-                      ]!;
-                    setActiveType(next);
-                  } else if (e.key === "ArrowLeft") {
-                    const prev =
-                      ALL_DIAGRAM_TYPES[
-                        (index - 1 + ALL_DIAGRAM_TYPES.length) %
-                          ALL_DIAGRAM_TYPES.length
-                      ]!;
-                    setActiveType(prev);
-                  }
+                  if (e.key === "ArrowRight") setActiveType(ALL_DIAGRAM_TYPES[(index + 1) % ALL_DIAGRAM_TYPES.length]!);
+                  else if (e.key === "ArrowLeft") setActiveType(ALL_DIAGRAM_TYPES[(index - 1 + ALL_DIAGRAM_TYPES.length) % ALL_DIAGRAM_TYPES.length]!);
                 }}
-              />
+                className={cn(
+                  "relative flex items-center gap-1.5 px-3 py-2 text-xs font-medium transition-colors duration-150 cursor-pointer",
+                  active
+                    ? "text-[oklch(0.82_0.02_250)]"
+                    : "text-[oklch(0.60_0.03_250)] hover:text-[oklch(0.82_0.02_250)]",
+                )}
+              >
+                <span>{DIAGRAM_LABELS[type]}</span>
+                {status === "PENDING" && <Loader2 className="size-3 animate-spin text-[oklch(0.62_0.16_250)]" />}
+                {status === "FAILED" && <AlertTriangle className="size-3 text-[oklch(0.55_0.2_25)]" />}
+                {status === "NONE" && <Plus className="size-3 text-[oklch(0.40_0.03_250)]" />}
+                {active && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[oklch(0.62_0.16_250)] rounded-full" />}
+              </button>
             );
           })}
         </div>
         {onRequestDiagram && activeDiagram?.status === "COMPLETED" && (
-          <div className="ml-auto shrink-0 pb-1">
-            <DiagramTriggerButton
-              repositoryId={repositoryId}
-              type={activeDiagram.type as "ERD" | "CLASS" | "USE_CASE" | "SEQUENCE"}
-              onRequest={() =>
-                handleRequest(
-                  activeDiagram.type as "ERD" | "CLASS" | "USE_CASE" | "SEQUENCE",
-                )
-              }
-              isLoading={isRequesting(activeDiagram.type)}
-            />
-          </div>
+          <button
+            onClick={() => handleRequest(activeDiagram.type as "ERD" | "CLASS" | "USE_CASE" | "SEQUENCE")}
+            disabled={isRequesting(activeDiagram.type)}
+            className="h-7 px-2.5 rounded-[4px] text-[0.6875rem] font-medium text-[oklch(0.60_0.03_250)] hover:text-[oklch(0.82_0.02_250)] hover:bg-[oklch(0.20_0.02_250)] transition-colors duration-150 flex items-center gap-1.5 shrink-0 mr-1 cursor-pointer disabled:opacity-40"
+          >
+            {isRequesting(activeDiagram.type) ? <Loader2 className="size-3 animate-spin" /> : null}
+            Regenerate
+          </button>
         )}
       </div>
 
       {/* Tab panel */}
-      <div
-        role="tabpanel"
-        aria-label={DIAGRAM_LABELS[activeType]}
-        className="pt-4"
-      >
-        {/* No diagram for this type yet */}
+      <div role="tabpanel" aria-label={DIAGRAM_LABELS[activeType]} className="pt-4">
+        {/* No diagram yet */}
         {!activeDiagram && (
-          <Card>
-            <CardContent className="py-10 text-center space-y-4">
-              <div className="mx-auto size-12 rounded-full bg-muted flex items-center justify-center">
-                <Network className="size-6 text-muted-foreground" />
-              </div>
-              <div>
-                <p className="font-medium">
-                  {DIAGRAM_LABELS[activeType]} not generated yet
-                </p>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Generate this diagram for the repository.
-                </p>
-              </div>
-              {onRequestDiagram && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={isRequesting(activeType)}
-                  onClick={() => handleRequest(activeType)}
-                >
-                  {isRequesting(activeType) ? (
-                    <>
-                      <Loader2 className="size-3 mr-1.5 animate-spin" />
-                      Requesting…
-                    </>
-                  ) : (
-                    `Generate ${DIAGRAM_LABELS[activeType]}`
-                  )}
-                </Button>
-              )}
-            </CardContent>
-          </Card>
+          <div className="py-10 text-center">
+            <div className="mx-auto size-8 rounded-[4px] bg-[oklch(0.20_0.02_250)] flex items-center justify-center mb-3">
+              <Network className="size-4 text-[oklch(0.60_0.03_250)]" />
+            </div>
+            <p className="text-[0.8125rem] text-[oklch(0.60_0.03_250)]">
+              {DIAGRAM_LABELS[activeType]} not generated yet
+            </p>
+            {onRequestDiagram && (
+              <button
+                onClick={() => handleRequest(activeType)}
+                disabled={isRequesting(activeType)}
+                className="mt-3 h-7 px-3 rounded-[4px] text-xs font-medium bg-[oklch(0.62_0.16_250)] text-[oklch(0.12_0.03_250)] hover:bg-[oklch(0.55_0.14_250)] transition-colors duration-150 disabled:opacity-40 cursor-pointer inline-flex items-center gap-1.5"
+              >
+                {isRequesting(activeType) && <Loader2 className="size-3 animate-spin" />}
+                Generate
+              </button>
+            )}
+          </div>
         )}
 
+        {/* Pending */}
         {activeDiagram?.status === "PENDING" && (
-          <div className="space-y-2 p-4">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="size-4 animate-spin" />
-              <span>Generating diagram…</span>
+          <div className="space-y-2 py-4">
+            <div className="flex items-center gap-2 text-xs text-[oklch(0.60_0.03_250)]">
+              <Loader2 className="size-3.5 animate-spin text-[oklch(0.62_0.16_250)]" />
+              <span>Generating…</span>
             </div>
             <Skeleton className="h-4 w-3/4" />
             <Skeleton className="h-48 w-full" />
@@ -220,100 +139,67 @@ export function DiagramPanel({
           </div>
         )}
 
+        {/* Failed */}
         {activeDiagram?.status === "FAILED" && (
-          <Card className="border-destructive/50">
-            <CardContent className="py-10 text-center">
-              <div className="mx-auto size-12 rounded-full bg-destructive/10 flex items-center justify-center">
-                <AlertTriangle className="size-6 text-destructive" />
-              </div>
-              <p className="mt-4 font-medium text-destructive">
-                Diagram generation failed
-              </p>
-              {activeDiagram.error && (
-                <p className="mt-1 text-sm text-muted-foreground font-mono">
-                  {activeDiagram.error}
-                </p>
-              )}
-              {onRequestDiagram && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="mt-4"
-                  onClick={() =>
-                    handleRequest(
-                      activeDiagram.type as "ERD" | "CLASS" | "USE_CASE" | "SEQUENCE",
-                    )
-                  }
-                >
-                  Retry
-                </Button>
-              )}
-            </CardContent>
-          </Card>
+          <div className="py-10 text-center">
+            <div className="mx-auto size-8 rounded-[4px] bg-[oklch(0.55_0.2_25/0.12)] flex items-center justify-center mb-3">
+              <AlertTriangle className="size-4 text-[oklch(0.55_0.2_25)]" />
+            </div>
+            <p className="text-[0.8125rem] text-[oklch(0.55_0.2_25)]">Generation failed</p>
+            {activeDiagram.error && (
+              <p className="mt-1 text-xs font-mono text-[oklch(0.40_0.03_250)] max-w-md mx-auto">{activeDiagram.error}</p>
+            )}
+            {onRequestDiagram && (
+              <button
+                onClick={() => handleRequest(activeDiagram.type as "ERD" | "CLASS" | "USE_CASE" | "SEQUENCE")}
+                className="mt-3 h-7 px-3 rounded-[4px] text-xs font-medium text-[oklch(0.60_0.03_250)] border border-[oklch(0.30_0.02_250)] hover:text-[oklch(0.82_0.02_250)] hover:bg-[oklch(0.20_0.02_250)] transition-colors duration-150 cursor-pointer"
+              >
+                Retry
+              </button>
+            )}
+          </div>
         )}
 
+        {/* Completed with definition */}
         {activeDiagram?.status === "COMPLETED" && activeDiagram.definition && (
           <div className="space-y-2">
-            {/* Warning tip — shown when the generator kept the previous diagram
-                because it couldn't find relevant content (e.g. no classes). */}
             {activeDiagram.error && (
-              <div className="flex items-start gap-2.5 rounded-md border border-yellow-500/30 bg-yellow-500/10 px-3 py-2.5 text-xs text-yellow-600 dark:text-yellow-400">
+              <div className="flex items-start gap-2 rounded-[4px] border border-[oklch(0.65_0.15_75/0.3)] bg-[oklch(0.65_0.15_75/0.06)] px-3 py-2 text-xs text-[oklch(0.65_0.15_75)]">
                 <Info className="mt-0.5 size-3.5 shrink-0" />
-                <span>
-                  {activeDiagram.error} The diagram shown is from the previous
-                  successful generation.
-                </span>
+                <span>{activeDiagram.error} Showing previous generation.</span>
               </div>
             )}
             <DiagramViewer
               definition={activeDiagram.definition}
               nodes={parsedNodes}
-              onRetry={
-                onRequestDiagram
-                  ? () =>
-                      handleRequest(
-                        activeDiagram.type as "ERD" | "CLASS" | "USE_CASE" | "SEQUENCE",
-                      )
-                  : undefined
-              }
+              onRetry={onRequestDiagram ? () => handleRequest(activeDiagram.type as "ERD" | "CLASS" | "USE_CASE" | "SEQUENCE") : undefined}
             />
           </div>
         )}
 
+        {/* Completed without definition */}
         {activeDiagram?.status === "COMPLETED" && !activeDiagram.definition && (
-          <div className="space-y-2">
+          <div className="py-10 text-center">
             {activeDiagram.error && (
-              <div className="flex items-start gap-2.5 rounded-md border border-yellow-500/30 bg-yellow-500/10 px-3 py-2.5 text-xs text-yellow-600 dark:text-yellow-400">
+              <div className="flex items-start gap-2 rounded-[4px] border border-[oklch(0.65_0.15_75/0.3)] bg-[oklch(0.65_0.15_75/0.06)] px-3 py-2 text-xs text-[oklch(0.65_0.15_75)] mb-4 max-w-md mx-auto text-left">
                 <Info className="mt-0.5 size-3.5 shrink-0" />
                 <span>{activeDiagram.error}</span>
               </div>
             )}
-            <Card>
-              <CardContent className="py-10 text-center">
-                <div className="mx-auto size-12 rounded-full bg-muted flex items-center justify-center">
-                  <Network className="size-6 text-muted-foreground" />
-                </div>
-                <p className="mt-4 text-sm text-muted-foreground">
-                  {activeDiagram.error
-                    ? "No diagram could be generated from the fetched files."
-                    : "No diagram definition available."}
-                </p>
-                {onRequestDiagram && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="mt-4"
-                    onClick={() =>
-                      handleRequest(
-                        activeDiagram.type as "ERD" | "CLASS" | "USE_CASE" | "SEQUENCE",
-                      )
-                    }
-                  >
-                    Retry
-                  </Button>
-                )}
-              </CardContent>
-            </Card>
+            <div className="mx-auto size-8 rounded-[4px] bg-[oklch(0.20_0.02_250)] flex items-center justify-center mb-3">
+              <Network className="size-4 text-[oklch(0.60_0.03_250)]" />
+            </div>
+            <p className="text-[0.8125rem] text-[oklch(0.60_0.03_250)]">
+              No diagram could be generated.
+            </p>
+            {onRequestDiagram && (
+              <button
+                onClick={() => handleRequest(activeDiagram.type as "ERD" | "CLASS" | "USE_CASE" | "SEQUENCE")}
+                className="mt-3 h-7 px-3 rounded-[4px] text-xs font-medium text-[oklch(0.60_0.03_250)] border border-[oklch(0.30_0.02_250)] hover:text-[oklch(0.82_0.02_250)] hover:bg-[oklch(0.20_0.02_250)] transition-colors duration-150 cursor-pointer"
+              >
+                Retry
+              </button>
+            )}
           </div>
         )}
       </div>

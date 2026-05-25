@@ -3,7 +3,8 @@
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Bot, Shield, FileCode, Languages, RefreshCw, Sparkles } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Bot, Shield, FileCode, Languages, RefreshCw, Sparkles, HelpCircle } from "lucide-react";
 
 interface Prefs {
   reviewDepth?: "quick" | "standard" | "thorough" | null;
@@ -93,8 +94,18 @@ export function PreferencesCardContent({
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <Label className="text-xs text-muted-foreground uppercase tracking-wider">
+        <Label className="text-xs text-muted-foreground uppercase tracking-wider flex items-center gap-1">
           Review Depth
+          <TooltipProvider delayDuration={200}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <HelpCircle className="h-3 w-3 text-muted-foreground/60 cursor-help" />
+              </TooltipTrigger>
+              <TooltipContent side="top" className="max-w-[220px] text-xs">
+                Controls how thorough the AI review is. Quick gives a fast overview, Thorough examines every line in detail.
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </Label>
         <div className="grid grid-cols-3 gap-2">
           {DEPTH_OPTIONS.map((depth) => {

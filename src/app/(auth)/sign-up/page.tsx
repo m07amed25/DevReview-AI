@@ -2,51 +2,27 @@
 
 import { FaGithub } from "react-icons/fa";
 import { AlertCircle, Eye, EyeOff, Loader2, X } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn, signUp } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";import {
-  AuroraBackground,
-  GridBackground,
-} from "@/components/animations/backgrounds";
-import { AuthBackLink } from "@/components/auth-back-link";
+import { Logo } from "@/components/ui/logo";
 
-interface FieldErrors {
-  name?: string;
-  email?: string;
-  password?: string;
-  confirmPassword?: string;
-  terms?: string;
-}
+interface FieldErrors { name?: string; email?: string; password?: string; confirmPassword?: string; terms?: string; }
 
-function getPasswordStrength(password: string): {
-  score: number;
-  label: string;
-  color: string;
-} {
-  let score = 0;
-  if (password.length >= 8) score++;
-  if (password.length >= 12) score++;
-  if (/[A-Z]/.test(password)) score++;
-  if (/[0-9]/.test(password)) score++;
-  if (/[^A-Za-z0-9]/.test(password)) score++;
-
-  if (score <= 1) return { score, label: "Weak", color: "bg-red-500" };
-  if (score <= 2) return { score, label: "Fair", color: "bg-orange-500" };
-  if (score <= 3) return { score, label: "Good", color: "bg-yellow-500" };
-  if (score <= 4) return { score, label: "Strong", color: "bg-green-500" };
-  return { score, label: "Very Strong", color: "bg-emerald-500" };
+function getStrength(pw: string) {
+  let s = 0;
+  if (pw.length >= 8) s++;
+  if (pw.length >= 12) s++;
+  if (/[A-Z]/.test(pw)) s++;
+  if (/[0-9]/.test(pw)) s++;
+  if (/[^A-Za-z0-9]/.test(pw)) s++;
+  const labels = ["Weak", "Weak", "Fair", "Good", "Strong", "Strong"] as const;
+  const colors = ["bg-destructive", "bg-destructive", "bg-amber-500", "bg-amber-500", "bg-emerald-500", "bg-emerald-500"];
+  return { score: s, label: labels[s], color: colors[s] };
 }
 
 export default function SignUpPage() {
@@ -58,360 +34,138 @@ export default function SignUpPage() {
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [loading, setLoading] = useState(false);
+  const [githubLoading, setGithubLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
 
-  const validateFields = (): boolean => {
-    const errors: FieldErrors = {};
+  const busy = loading || githubLoading;
 
-    if (!name.trim()) {
-      errors.name = "Name is required.";
-    }
-
-    if (!email.trim()) {
-      errors.email = "Email is required.";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      errors.email = "Please enter a valid email address.";
-    }
-
-    if (!password) {
-      errors.password = "Password is required.";
-    } else if (password.length < 8) {
-      errors.password = "Password must be at least 8 characters.";
-    }
-
-    if (!confirmPassword) {
-      errors.confirmPassword = "Please confirm your password.";
-    } else if (password !== confirmPassword) {
-      errors.confirmPassword = "Passwords do not match.";
-    }
-
-    if (!acceptedTerms) {
-      errors.terms = "You must accept the Terms of Service and Privacy Policy.";
-    }
-
-    setFieldErrors(errors);
-    return Object.keys(errors).length === 0;
+  const validate = (): boolean => {
+    const e: FieldErrors = {};
+    if (!name.trim()) e.name = "Name is required.";
+    if (!email.trim()) e.email = "Email is required.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e.email = "Enter a valid email.";
+    if (!password) e.password = "Password is required.";
+    else if (password.length < 8) e.password = "Minimum 8 characters.";
+    if (!confirmPassword) e.confirmPassword = "Confirm your password.";
+    else if (password !== confirmPassword) e.confirmPassword = "Passwords don't match.";
+    if (!acceptedTerms) e.terms = "Accept the terms to continue.";
+    setFieldErrors(e);
+    return !Object.keys(e).length;
   };
 
-  const clearFieldError = (field: keyof FieldErrors) => {
-    setFieldErrors((prev) => {
-      const next = { ...prev };
-      delete next[field];
-      return next;
-    });
-  };
+  const clearField = (f: keyof FieldErrors) => setFieldErrors((p) => { const n = { ...p }; delete n[f]; return n; });
 
-  const handleEmailSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleEmail = async (ev: React.FormEvent) => {
+    ev.preventDefault();
     setError("");
-
-    if (!validateFields()) return;
-
+    if (!validate()) return;
     setLoading(true);
-
     try {
-      const result = await signUp.email({
-        name,
-        email,
-        password,
-      });
-
-      if (result.error) {
-        setError(result.error.message || "An error occurred during sign-up.");
-      }
-      setLoading(false);
-
-      if (!result.error) {
-        router.push("/repo");
-      }
-    } catch {
-      setError(
-        "Something went wrong. Please check your connection and try again.",
-      );
-      setLoading(false);
-    }
+      const r = await signUp.email({ name, email, password });
+      if (r.error) { setError(r.error.message || "Sign-up failed."); setLoading(false); }
+      else router.push("/repo");
+    } catch { setError("Something went wrong."); setLoading(false); }
   };
 
-  const handleGithubSignUp = async () => {
+  const handleGithub = async () => {
     setError("");
-    setLoading(true);
-
+    setGithubLoading(true);
     try {
-      await signIn.social({
-        provider: "github",
-        callbackURL: "/repo",
-      });
-    } catch {
-      setError("Failed to connect with GitHub. Please try again.");
-      setLoading(false);
-    }
+      const r = await signIn.social({ provider: "github", callbackURL: "/repo", errorCallbackURL: "/sign-up" });
+      if (r?.error) { setError(r.error.message ?? "GitHub sign-up failed."); setGithubLoading(false); }
+    } catch { setError("GitHub sign-up failed."); setGithubLoading(false); }
   };
-
-  const passwordStrength = password ? getPasswordStrength(password) : null;
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center p-4">
-      <div className="fixed inset-0 -z-10" aria-hidden="true">
-        <AuroraBackground />
-        <GridBackground />
-      </div>
+    <div className="flex min-h-dvh items-center justify-center px-5 py-10 sm:px-8">
+      <div className="w-full max-w-[360px] space-y-6">
+        <Link href="/" className="flex items-center gap-2">
+          <Logo className="h-6" />
+          <span className="text-sm font-bold tracking-tight">Code <span className="text-primary">Catch</span></span>
+        </Link>
 
-      <AuthBackLink />
+        <div>
+          <h1 className="text-lg font-semibold tracking-tight">Create an account</h1>
+          <p className="mt-1 text-[13px] text-muted-foreground">Free to start. No credit card required.</p>
+        </div>
 
-      <Card
-        ref={cardRef}
-        className="w-full max-w-md hover-lift transition-all duration-300"
-      >
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Sign Up</CardTitle>
-          <CardDescription>Create your account to get started.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex flex-col gap-2">
-            <Button
-              variant={"outline"}
-              onClick={handleGithubSignUp}
-              disabled={loading}
-              className="w-full"
-            >
-              {loading ? (
-                <Loader2 className="mr-2 size-4 animate-spin" />
-              ) : (
-                <FaGithub className="mr-2 size-4" />
-              )}
-              Sign up with GitHub
-            </Button>
-          </div>
+        <div className="space-y-3.5">
+          <Button variant="outline" onClick={handleGithub} disabled={busy} className="w-full h-9 cursor-pointer">
+            {githubLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <FaGithub className="mr-2 h-4 w-4" />}
+            Continue with GitHub
+          </Button>
 
           <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <Separator className="w-full" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-card px-2 text-muted-foreground">
-                Or continue with email
-              </span>
-            </div>
+            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-border" /></div>
+            <div className="relative flex justify-center text-[11px]"><span className="bg-background px-2 text-muted-foreground">or</span></div>
           </div>
 
           {error && (
-            <div className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 animate-in fade-in slide-in-from-top-2 duration-300 dark:border-red-800/50 dark:bg-red-950/50 dark:text-red-300">
-              <AlertCircle className="mt-0.5 size-4 shrink-0" />
-              <p className="flex-1">{error}</p>
-              <button
-                type="button"
-                onClick={() => setError("")}
-                className="shrink-0 rounded-md p-0.5 text-red-800/70 transition-colors hover:text-red-800 dark:text-red-300/70 dark:hover:text-red-300"
-              >
-                <X className="size-4" />
-              </button>
+            <div className="flex items-start gap-2 rounded-sm border border-destructive/30 bg-destructive/5 px-3 py-2.5 text-[13px] text-destructive">
+              <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
+              <span className="flex-1">{error}</span>
+              <button onClick={() => setError("")} aria-label="Dismiss" className="hover:text-destructive/70 cursor-pointer"><X className="h-3.5 w-3.5" /></button>
             </div>
           )}
 
-          <form onSubmit={handleEmailSignUp} noValidate className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
-              <Input
-                id="name"
-                type="text"
-                placeholder="John Doe"
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                  clearFieldError("name");
-                }}
-                disabled={loading}
-                aria-invalid={!!fieldErrors.name}
-              />
-              {fieldErrors.name && (
-                <p className="text-xs text-destructive animate-in fade-in slide-in-from-top-1 duration-200">
-                  {fieldErrors.name}
-                </p>
-              )}
+          <form onSubmit={handleEmail} noValidate className="space-y-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="name" className="text-[13px]">Name</Label>
+              <Input id="name" placeholder="Your name" autoComplete="name" value={name} onChange={(e) => { setName(e.target.value); clearField("name"); }} disabled={busy} aria-invalid={!!fieldErrors.name} aria-describedby={fieldErrors.name ? "name-err" : undefined} />
+              {fieldErrors.name && <p id="name-err" className="text-xs text-destructive">{fieldErrors.name}</p>}
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="name@example.com"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  clearFieldError("email");
-                }}
-                disabled={loading}
-                aria-invalid={!!fieldErrors.email}
-              />
-              {fieldErrors.email && (
-                <p className="text-xs text-destructive animate-in fade-in slide-in-from-top-1 duration-200">
-                  {fieldErrors.email}
-                </p>
-              )}
+
+            <div className="space-y-1.5">
+              <Label htmlFor="email" className="text-[13px]">Email</Label>
+              <Input id="email" type="email" placeholder="name@example.com" autoComplete="email" value={email} onChange={(e) => { setEmail(e.target.value); clearField("email"); }} disabled={busy} aria-invalid={!!fieldErrors.email} aria-describedby={fieldErrors.email ? "email-err" : undefined} />
+              {fieldErrors.email && <p id="email-err" className="text-xs text-destructive">{fieldErrors.email}</p>}
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="password" className="text-[13px]">Password</Label>
               <div className="relative">
-                <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    clearFieldError("password");
-                  }}
-                  disabled={loading}
-                  aria-invalid={!!fieldErrors.password}
-                />
-                <button
-                  type="button"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
-                  onClick={() => setShowPassword(!showPassword)}
-                  tabIndex={-1}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                >
-                  {showPassword ? (
-                    <EyeOff className="size-4" />
-                  ) : (
-                    <Eye className="size-4" />
-                  )}
+                <Input id="password" type={showPassword ? "text" : "password"} placeholder="Min 8 characters" autoComplete="new-password" value={password} onChange={(e) => { setPassword(e.target.value); clearField("password"); }} disabled={busy} aria-invalid={!!fieldErrors.password} aria-describedby={fieldErrors.password ? "pw-err" : undefined} className="pr-10" />
+                <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer" onClick={() => setShowPassword(!showPassword)} tabIndex={-1} aria-label={showPassword ? "Hide password" : "Show password"}>
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
-              {fieldErrors.password && (
-                <p className="text-xs text-destructive animate-in fade-in slide-in-from-top-1 duration-200">
-                  {fieldErrors.password}
-                </p>
-              )}
-              {passwordStrength && !fieldErrors.password && (
-                <div className="space-y-1.5 animate-in fade-in duration-300">
-                  <div className="flex gap-1">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <div
-                        key={i}
-                        className={`h-1.5 flex-1 rounded-full transition-colors duration-300 ${
-                          i < passwordStrength.score
-                            ? passwordStrength.color
-                            : "bg-muted"
-                        }`}
-                      />
+              {fieldErrors.password && <p id="pw-err" className="text-xs text-destructive">{fieldErrors.password}</p>}
+              {password && !fieldErrors.password && (
+                <div className="flex items-center gap-2">
+                  <div className="flex gap-0.5 flex-1">
+                    {Array.from({ length: 5 }, (_, i) => (
+                      <div key={i} className={`h-1 flex-1 rounded-sm transition-colors ${i < getStrength(password).score ? getStrength(password).color : "bg-border"}`} />
                     ))}
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    Password strength:{" "}
-                    <span className="font-medium">
-                      {passwordStrength.label}
-                    </span>
-                  </p>
+                  <span className="text-[11px] text-muted-foreground">{getStrength(password).label}</span>
                 </div>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
-              <div className="relative">
-                <Input
-                  id="confirmPassword"
-                  type={showConfirmPassword ? "text" : "password"}
-                  placeholder="Confirm your password"
-                  value={confirmPassword}
-                  onChange={(e) => {
-                    setConfirmPassword(e.target.value);
-                    clearFieldError("confirmPassword");
-                  }}
-                  disabled={loading}
-                  aria-invalid={!!fieldErrors.confirmPassword}
-                />
-                <button
-                  type="button"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  tabIndex={-1}
-                  aria-label={
-                    showConfirmPassword ? "Hide password" : "Show password"
-                  }
-                >
-                  {showConfirmPassword ? (
-                    <EyeOff className="size-4" />
-                  ) : (
-                    <Eye className="size-4" />
-                  )}
-                </button>
-              </div>
-              {fieldErrors.confirmPassword && (
-                <p className="text-xs text-destructive animate-in fade-in slide-in-from-top-1 duration-200">
-                  {fieldErrors.confirmPassword}
-                </p>
               )}
             </div>
 
             <div className="space-y-1.5">
-              <div className="flex items-start gap-2">
-                <input
-                  id="terms"
-                  type="checkbox"
-                  checked={acceptedTerms}
-                  onChange={(e) => {
-                    setAcceptedTerms(e.target.checked);
-                    clearFieldError("terms");
-                  }}
-                  disabled={loading}
-                  className="mt-0.5 size-4 shrink-0 accent-primary cursor-pointer"
-                />
-                <Label htmlFor="terms" className="text-sm font-normal leading-snug cursor-pointer">
-                  I agree to the{" "}
-                  <Link href="/terms" className="text-blue-500 font-medium hover:underline underline-offset-4">
-                    Terms of Service
-                  </Link>{" "}
-                  and{" "}
-                  <Link href="/privacy" className="text-blue-500 font-medium hover:underline underline-offset-4">
-                    Privacy Policy
-                  </Link>
-                </Label>
-              </div>
-              {fieldErrors.terms && (
-                <p className="text-xs text-destructive animate-in fade-in slide-in-from-top-1 duration-200">
-                  {fieldErrors.terms}
-                </p>
-              )}
+              <Label htmlFor="confirm" className="text-[13px]">Confirm password</Label>
+              <Input id="confirm" type="password" placeholder="Repeat password" autoComplete="new-password" value={confirmPassword} onChange={(e) => { setConfirmPassword(e.target.value); clearField("confirmPassword"); }} disabled={busy} aria-invalid={!!fieldErrors.confirmPassword} aria-describedby={fieldErrors.confirmPassword ? "confirm-err" : undefined} />
+              {fieldErrors.confirmPassword && <p id="confirm-err" className="text-xs text-destructive">{fieldErrors.confirmPassword}</p>}
             </div>
 
-            <Button type="submit" disabled={loading} className="w-full">
-              {loading ? (
-                <>
-                  <Loader2 className="mr-2 size-4 animate-spin" />
-                  Signing up...
-                </>
-              ) : (
-                "Sign Up"
-              )}
+            <label className="flex items-start gap-2.5 text-[12px] text-muted-foreground cursor-pointer pt-1">
+              <input type="checkbox" checked={acceptedTerms} onChange={(e) => { setAcceptedTerms(e.target.checked); clearField("terms"); }} disabled={busy} className="mt-0.5 accent-primary" aria-invalid={!!fieldErrors.terms} />
+              <span>I agree to the <Link href="/terms" className="text-foreground hover:underline">Terms</Link> and <Link href="/privacy" className="text-foreground hover:underline">Privacy Policy</Link>.</span>
+            </label>
+            {fieldErrors.terms && <p className="text-xs text-destructive">{fieldErrors.terms}</p>}
+
+            <Button type="submit" disabled={busy} className="w-full h-9 mt-1 cursor-pointer">
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Create account
             </Button>
           </form>
 
-          <p className="text-center text-sm text-muted-foreground">
-            Already have a password reset link?{" "}
-            <Link
-              href="/reset-password"
-              className="text-indigo-500 font-medium hover:text-indigo-400 underline-offset-4 hover:underline"
-            >
-              Reset password
-            </Link>
+          <p className="text-center text-[13px] text-muted-foreground pt-1">
+            Already have an account? <Link href="/sign-in" className="text-primary font-medium hover:underline">Sign in</Link>
           </p>
-
-          <p className="text-center text-sm text-muted-foreground">
-            Already have an account?{" "}
-            <Link
-              href="/sign-in"
-              className="text-blue-500 font-bold hover:underline"
-            >
-              Sign in
-            </Link>
-          </p>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

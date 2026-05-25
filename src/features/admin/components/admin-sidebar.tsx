@@ -25,6 +25,7 @@ import {
   Mail,
   FileText,
   Newspaper,
+  Receipt,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -50,6 +51,7 @@ const NAV_GROUPS = [
       { href: "/admin/messages", label: "Messages", icon: Mail },
       { href: "/admin/newsletter", label: "Newsletter", icon: Newspaper },
       { href: "/admin/pricing", label: "Pricing", icon: CreditCard },
+      { href: "/admin/invoices", label: "Invoices", icon: Receipt },
       { href: "/admin/legal", label: "Legal Pages", icon: FileText },
     ],
   },

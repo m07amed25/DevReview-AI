@@ -2,8 +2,6 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { trpc } from "@/lib/trpc/client";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { DropdownSelect } from "@/components/ui/select";
 import { FileCode2, X, Send, Loader2 } from "lucide-react";
 
@@ -35,9 +33,7 @@ export function NewThreadForm({
     onSuccess: () => onCreated(),
   });
 
-  useEffect(() => {
-    textareaRef.current?.focus();
-  }, []);
+  useEffect(() => { textareaRef.current?.focus(); }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,83 +47,56 @@ export function NewThreadForm({
   };
 
   return (
-    <Card className="border-primary/20 shadow-sm shadow-primary/5">
-      <CardContent className="p-5">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="flex items-center justify-between pb-2 border-b border-border/50">
-            <span className="text-sm font-semibold text-foreground tracking-tight">
-              Start a New Discussion
-            </span>
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="size-8 rounded-full text-muted-foreground hover:bg-muted"
-              onClick={onCancel}
-            >
-              <X className="size-4" />
-            </Button>
-          </div>
-          <div className="flex gap-3">
+    <div className="border border-[oklch(0.30_0.02_250)] rounded-[6px] bg-[oklch(0.16_0.025_250)] overflow-hidden">
+      <form onSubmit={handleSubmit}>
+        <div className="flex items-center justify-between px-3 py-2 border-b border-[oklch(0.30_0.02_250/0.6)]">
+          <span className="text-xs font-medium text-[oklch(0.82_0.02_250)]">New thread</span>
+          <button type="button" onClick={onCancel} className="size-6 rounded-[4px] flex items-center justify-center text-[oklch(0.40_0.03_250)] hover:text-[oklch(0.82_0.02_250)] hover:bg-[oklch(0.20_0.02_250)] transition-colors duration-150 cursor-pointer">
+            <X className="size-3.5" />
+          </button>
+        </div>
+        <div className="px-3 py-2.5 space-y-2.5">
+          <div className="flex gap-2">
             <div className="relative flex-1">
-              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-muted-foreground/50 z-10">
-                <FileCode2 className="size-4" />
-              </div>
+              <FileCode2 className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-[oklch(0.40_0.03_250)] pointer-events-none" />
               <DropdownSelect
                 value={file}
                 onValueChange={setFile}
-                className="w-full h-9 pl-9 pr-3 text-sm rounded-lg border border-border shadow-sm text-foreground bg-background focus:ring-2 focus:ring-primary/30 transition-shadow transition-colors"
-                placeholder="File path (optional)"
+                className="w-full h-7 pl-8 pr-2 text-xs font-mono rounded-[4px] border border-[oklch(0.30_0.02_250)] bg-[oklch(0.14_0.025_250)] text-[oklch(0.82_0.02_250)] focus:border-[oklch(0.62_0.16_250)] focus:ring-0"
+                placeholder="File (optional)"
               >
-                <option value="general">General (No specific file)</option>
-                {prFiles.map((f) => (
-                  <option key={f} value={f}>
-                    {f}
-                  </option>
-                ))}
+                <option value="general">General</option>
+                {prFiles.map((f) => <option key={f} value={f}>{f}</option>)}
               </DropdownSelect>
             </div>
-            <div className="relative w-28">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-muted-foreground/50 text-sm font-mono">
-                :
-              </span>
-              <input
-                type="number"
-                value={line}
-                onChange={(e) => setLine(e.target.value)}
-                placeholder="Line"
-                className="w-full h-9 pl-7 pr-3 text-sm rounded-lg border border-border shadow-sm bg-background placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-shadow transition-colors"
-              />
-            </div>
+            <input
+              type="number"
+              value={line}
+              onChange={(e) => setLine(e.target.value)}
+              placeholder="Line"
+              className="w-20 h-7 px-2 text-xs font-mono rounded-[4px] border border-[oklch(0.30_0.02_250)] bg-[oklch(0.14_0.025_250)] text-[oklch(0.82_0.02_250)] placeholder:text-[oklch(0.40_0.03_250)] focus:outline-none focus:border-[oklch(0.62_0.16_250)]"
+            />
           </div>
           <textarea
             ref={textareaRef}
             value={content}
-            onChange={(e) => {
-              setContent(e.target.value);
-              triggerTyping(currentUserId, currentUserName);
-            }}
+            onChange={(e) => { setContent(e.target.value); triggerTyping(currentUserId, currentUserName); }}
             placeholder="Write your comment…"
             rows={3}
-            className="w-full px-4 py-3 text-sm rounded-lg border border-border shadow-sm bg-background placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-shadow transition-colors resize-none leading-relaxed"
+            className="w-full px-3 py-2 text-[0.8125rem] rounded-[4px] border border-[oklch(0.30_0.02_250)] bg-[oklch(0.14_0.025_250)] text-[oklch(0.82_0.02_250)] placeholder:text-[oklch(0.40_0.03_250)] focus:outline-none focus:border-[oklch(0.62_0.16_250)] resize-none leading-relaxed"
           />
-          <div className="flex justify-end pt-2">
-            <Button
+          <div className="flex justify-end">
+            <button
               type="submit"
-              size="sm"
-              className="gap-2 shadow-sm px-6 font-medium"
               disabled={!content.trim() || createThread.isPending}
+              className="h-7 px-3 rounded-[4px] text-xs font-medium bg-[oklch(0.62_0.16_250)] text-[oklch(0.12_0.03_250)] hover:bg-[oklch(0.55_0.14_250)] transition-colors duration-150 disabled:opacity-40 flex items-center gap-1.5 cursor-pointer"
             >
-              {createThread.isPending ? (
-                <Loader2 className="size-4 animate-spin" />
-              ) : (
-                <Send className="size-4" />
-              )}
-              Start Discussion
-            </Button>
+              {createThread.isPending ? <Loader2 className="size-3 animate-spin" /> : <Send className="size-3" />}
+              Post
+            </button>
           </div>
-        </form>
-      </CardContent>
-    </Card>
+        </div>
+      </form>
+    </div>
   );
 }

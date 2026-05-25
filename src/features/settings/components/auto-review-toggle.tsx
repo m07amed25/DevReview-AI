@@ -15,7 +15,8 @@ import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-import { Copy, Check } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Copy, Check, HelpCircle } from "lucide-react";
 
 type AutoReviewToggleProps = {
   repositoryId: string;
@@ -79,7 +80,19 @@ export function AutoReviewToggle({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Automatic Pull Request Reviews</CardTitle>
+        <CardTitle className="flex items-center gap-1.5">
+          Automatic Pull Request Reviews
+          <TooltipProvider delayDuration={200}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <HelpCircle className="h-4 w-4 text-muted-foreground/60 cursor-help" />
+              </TooltipTrigger>
+              <TooltipContent side="top" className="max-w-[240px] text-xs">
+                Automatically runs an AI code review on every new pull request via a GitHub webhook. No manual trigger needed.
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </CardTitle>
         <CardDescription>
           When enabled, Code Catch will review every pull request and post
           results as a PR comment and a commit status check.

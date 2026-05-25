@@ -125,7 +125,7 @@ export const PLAN_DISPLAY_MAP: Record<
 > = {
   [Plan.FREE]: { icon: Zap, badge: null, cta: "Start Free", ctaVariant: "outline" },
   [Plan.PRO]: { icon: Rocket, badge: "Most Popular", cta: "Start Pro Trial", ctaVariant: "default" },
-  [Plan.ENTERPRISE]: { icon: Crown, badge: "Best Value", cta: "Go Ultra", ctaVariant: "outline" },
+  [Plan.ENTERPRISE]: { icon: Crown, badge: "Best Value", cta: "Go Enterprise", ctaVariant: "outline" },
 };
 
 function limitLabel(v: number | null): string {
@@ -156,7 +156,7 @@ export function buildComparison(plans: MergedPlan[]): PlanFeature[] {
 export const FAQS = (trialDays: number, annualDiscount: number, trialPlan: string) => [
   { q: "Can I change plans later?", a: "Absolutely. You can upgrade or downgrade your plan at any time. Changes take effect immediately and billing is prorated." },
   { q: "What counts as an AI review?", a: "Each pull request or commit batch analysed by our AI engine counts as one review. You can check your usage in your dashboard at any time." },
-  { q: "Do you offer a free trial for paid plans?", a: trialDays > 0 ? `Yes! The ${trialPlan.charAt(0) + trialPlan.slice(1).toLowerCase()} plan includes a ${trialDays}-day free trial with no credit card required. Ultra trials are available on request.` : "Trial periods are not available at this time. All paid plans can be cancelled anytime." },
+  { q: "Do you offer a free trial for paid plans?", a: trialDays > 0 ? `Yes! The ${trialPlan.charAt(0) + trialPlan.slice(1).toLowerCase()} plan includes a ${trialDays}-day free trial with no credit card required. Enterprise trials are available on request.` : "Trial periods are not available at this time. All paid plans can be cancelled anytime." },
   { q: "Is there a discount for annual billing?", a: `Yes — switching to annual billing saves you ${annualDiscount}% compared to month-to-month pricing.` },
   { q: "What happens if I exceed my review limit?", a: "We'll notify you before you hit the cap. You can upgrade instantly or wait until your next billing cycle resets." },
   { q: "Do you support self-hosted Git servers?", a: "Ultra plan supports GitHub Enterprise, GitLab Self-Managed, and Bitbucket Data Center. Contact us for custom setups." },

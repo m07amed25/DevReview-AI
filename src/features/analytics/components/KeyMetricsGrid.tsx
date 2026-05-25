@@ -64,6 +64,7 @@ export function KeyMetricsGrid({
             value={overviewData?.avgRiskScore ?? 0}
             subtitle="Out of 100"
             icon={AlertTriangle}
+            tooltip="A 0–100 score estimating how likely a PR is to introduce bugs or security issues. Higher means riskier."
             color={
               (overviewData?.avgRiskScore ?? 0) > 60
                 ? COLORS.danger

@@ -45,7 +45,7 @@ export function generateSequenceDiagram(fileContents: Record<string, string>): {
   }
 
   const allParticipants = participantSet.size > 0
-    ? [...participantSet].slice(0, 8)
+    ? [...participantSet].sort().slice(0, 8)
     : ["Client", "Server"];
 
   for (const p of allParticipants) {
@@ -53,9 +53,14 @@ export function generateSequenceDiagram(fileContents: Record<string, string>): {
     nodes.push({ id: p, label: p, type: "ACTOR", detail: { description: p, interactions: [] } });
   }
 
+  // Sort interactions for deterministic output
+  const sortedInteractions = [...interactions].sort((a, b) =>
+    `${a.from}-${a.to}-${a.label}`.localeCompare(`${b.from}-${b.to}-${b.label}`),
+  );
+
   const seen = new Set<string>();
   let edgeIdx = 0;
-  for (const { from, to, label, isAsync } of interactions) {
+  for (const { from, to, label, isAsync } of sortedInteractions) {
     if (!allParticipants.includes(from) || !allParticipants.includes(to)) continue;
     const key = `${from}->${to}:${label}`;
     if (seen.has(key)) continue;

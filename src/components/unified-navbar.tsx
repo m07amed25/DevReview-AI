@@ -1,416 +1,261 @@
 "use client";
 
-import { useState, useEffect, useSyncExternalStore } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  ArrowRight,
-  Github,
-  Menu,
-  X,
-  Star,
-  ChevronDown,
-} from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
-import { Button } from "@/components/ui/button";
+import { Menu, X, ChevronDown, FolderGit2, GitPullRequest, BarChart3, Users, CreditCard, Settings, ShieldCheck } from "lucide-react";
 import { useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/ui/logo";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { UserMenu } from "./user-menu";
 import { Notifications } from "./notifications";
-import { ThemeTogglerButton } from "./animate-ui/components/buttons/theme-toggler";
-import {
-  resourceLinks,
-  simpleLinks,
-  workspaceLinks,
-} from "@/features/home/components/header/nav-data";
+
+const navLinks = [
+  { href: "/pricing", label: "Pricing" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+];
+
+const workspaceLinks = [
+  { href: "/repo", label: "Repositories", icon: FolderGit2 },
+  { href: "/reviews", label: "Reviews", icon: GitPullRequest },
+  { href: "/analytics", label: "Analytics", icon: BarChart3 },
+  { href: "/teams", label: "Teams", icon: Users },
+  { href: "/billing", label: "Billing", icon: CreditCard },
+  { href: "/settings", label: "Settings", icon: Settings },
+];
 
 export function UnifiedNavbar() {
   const { data: session } = useSession();
   const pathname = usePathname();
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [wsOpen, setWsOpen] = useState(false);
+  const wsRef = useRef<HTMLDivElement>(null);
 
-  const isClient = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  );
+  useEffect(() => setMounted(true), []);
+
+  const isAdmin = session?.user?.role === "ADMIN";
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
-    if (mobileOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [mobileOpen]);
 
-  const user = session?.user;
+  // Close workspace dropdown on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (wsRef.current && !wsRef.current.contains(e.target as Node)) setWsOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
   return (
     <>
       <header
         className={cn(
-          "fixed top-banner-offset w-full z-50 transition-all duration-300",
-          isScrolled
-            ? "border-b border-border bg-background/80 backdrop-blur-xl shadow-lg shadow-black/5 dark:shadow-black/10"
-            : "border-b border-border/50 bg-background/50 backdrop-blur-xl",
+          "fixed top-banner-offset w-full z-50 transition-[background-color,border-color] duration-150",
+          scrolled
+            ? "border-b border-border bg-background/95 backdrop-blur-sm"
+            : "border-b border-transparent bg-transparent",
         )}
         role="banner"
       >
-        <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 gap-2">
-          {/* Logo */}
+        <nav className="mx-auto flex h-14 max-w-[1100px] items-center justify-between px-4 sm:px-6">
           <Link
             href="/"
-            className="flex shrink-0 items-center gap-2 font-semibold tracking-tight hover:opacity-80 transition-all duration-200 group"
-            aria-label="Code Catch - Home"
+            className="flex items-center gap-2 text-foreground font-semibold text-[0.9375rem] tracking-tight"
+            aria-label="Code Catch home"
           >
-            <Logo className="h-8 transition-all duration-300 group-hover:scale-105" />
-            <span className="text-base font-bold tracking-tight text-foreground">
-              Code{" "}
-              <span className="bg-linear-to-r from-indigo-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">
-                Catch
-              </span>
-            </span>
+            <Logo className="h-7 w-auto" />
+            <span>Code Catch</span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-1 lg:gap-1.5" aria-label="Main navigation">
-            {isClient && user && (
-              <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 outline-none text-muted-foreground hover:text-foreground hover:bg-accent">
-                  Workspace
-                  <ChevronDown className="h-3 w-3" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" sideOffset={8} className="w-60 p-1.5">
-                  <DropdownMenuLabel className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold px-2 py-1">
-                    Workspace
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator className="my-1" />
-                  {workspaceLinks.map((link) => {
-                    const Icon = link.icon;
-                    return (
-                      <DropdownMenuItem key={link.href} asChild>
-                        <Link href={link.href} className="flex items-start gap-3 px-2 py-2 rounded-md cursor-pointer hover:bg-accent">
-                          <div className="flex items-center justify-center size-7 rounded-md bg-indigo-500/15 mt-0.5 shrink-0">
-                            <Icon className="size-3.5 text-indigo-400" />
-                          </div>
-                          <div className="flex flex-col gap-0.5">
-                            <span className="text-sm font-medium">{link.label}</span>
-                            <span className="text-[11px] text-muted-foreground">{link.description}</span>
-                          </div>
-                        </Link>
-                      </DropdownMenuItem>
-                    );
-                  })}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
-
-            <Link href="/product" className={cn("flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200", pathname?.startsWith("/product") ? "text-foreground bg-accent" : "text-muted-foreground hover:text-foreground hover:bg-accent")}>
-              Product
-            </Link>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger className={cn("flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 outline-none", ["/docs", "/blog", "/changelog", "/status", "/contact"].some((p) => pathname?.startsWith(p)) ? "text-foreground bg-accent" : "text-muted-foreground hover:text-foreground hover:bg-accent")}>
-                Resources
-                <ChevronDown className="h-3 w-3" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" sideOffset={8} className="w-60 p-1.5">
-                <DropdownMenuLabel className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold px-2 py-1">
-                  Resources
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator className="my-1" />
-                {resourceLinks.map((link) => {
-                  const Icon = link.icon;
-                  return (
-                    <DropdownMenuItem key={link.href} asChild>
-                      <Link href={link.href} className="flex items-start gap-3 px-2 py-2 rounded-md cursor-pointer hover:bg-accent">
-                        <div className="flex items-center justify-center size-7 rounded-md bg-muted mt-0.5 shrink-0">
-                          <Icon className="size-3.5 text-muted-foreground" />
-                        </div>
-                        <div className="flex flex-col gap-0.5">
-                          <span className="text-sm font-medium">{link.label}</span>
-                          <span className="text-[11px] text-muted-foreground">{link.description}</span>
-                        </div>
-                      </Link>
-                    </DropdownMenuItem>
-                  );
-                })}
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <Link href="/pricing" className={cn("flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200", pathname === "/pricing" ? "text-foreground bg-accent" : "text-muted-foreground hover:text-foreground hover:bg-accent")}>
-              Pricing
-            </Link>
-
-            {simpleLinks.map((link) => {
-              return (
-                <Link key={link.href} href={link.href} className={cn("flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200", pathname === link.href ? "text-foreground bg-accent" : "text-muted-foreground hover:text-foreground hover:bg-accent")}>
-                  {link.label}
-                </Link>
-              );
-            })}
-
-            {isClient && user && (user as { role?: string }).role === "ADMIN" && (
-              <Link href="/admin" className={cn("flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200", pathname?.startsWith("/admin") ? "text-foreground bg-accent" : "text-muted-foreground hover:text-foreground hover:bg-accent")}>
-                Admin
+          {/* Desktop links */}
+          <div className="hidden md:flex items-center gap-1">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={cn(
+                  "px-3 py-1.5 text-sm rounded-sm transition-colors duration-150",
+                  mounted && pathname === link.href ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+                )}
+              >
+                {link.label}
               </Link>
-            )}
+            ))}
 
-            <a href="https://github.com/m07amed25/DevReview-AI" target="_blank" rel="noopener noreferrer" className="ml-1 flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-all duration-200 group">
-              <Github className="h-4 w-4 group-hover:rotate-12 transition-transform" />
-              <span className="hidden lg:inline">Star</span>
-              <Star className="h-3 w-3 fill-muted-foreground group-hover:fill-yellow-400 transition-colors" />
-            </a>
-          </nav>
+            {/* Workspace dropdown (authenticated only) */}
+            {session?.user && (
+              <div ref={wsRef} className="relative">
+                <button
+                  onClick={() => setWsOpen(!wsOpen)}
+                  className={cn(
+                    "flex items-center gap-1 px-3 py-1.5 text-sm rounded-sm transition-colors duration-150",
+                    wsOpen ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+                  )}
+                  aria-expanded={wsOpen}
+                  aria-haspopup="true"
+                >
+                  Workspace
+                  <ChevronDown className={cn("h-3.5 w-3.5 transition-transform duration-150", wsOpen && "rotate-180")} />
+                </button>
+
+                {wsOpen && (
+                  <div className="absolute top-full left-0 mt-1.5 w-48 rounded-sm border border-border bg-background shadow-md py-1 z-50">
+                    {workspaceLinks.map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        onClick={() => setWsOpen(false)}
+                        className={cn(
+                          "flex items-center gap-2.5 px-3 py-2 text-sm transition-colors duration-150",
+                          mounted && pathname?.startsWith(link.href) ? "text-foreground bg-muted/50" : "text-muted-foreground hover:text-foreground hover:bg-muted/30",
+                        )}
+                      >
+                        <link.icon className="h-3.5 w-3.5" />
+                        {link.label}
+                      </Link>
+                    ))}
+                    {isAdmin && (
+                      <>
+                        <div className="my-1 border-t border-border" />
+                        <Link
+                          href="/admin"
+                          onClick={() => setWsOpen(false)}
+                          className={cn(
+                            "flex items-center gap-2.5 px-3 py-2 text-sm transition-colors duration-150",
+                            mounted && pathname?.startsWith("/admin") ? "text-foreground bg-muted/50" : "text-muted-foreground hover:text-foreground hover:bg-muted/30",
+                          )}
+                        >
+                          <ShieldCheck className="h-3.5 w-3.5" />
+                          Admin
+                        </Link>
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
 
           {/* Right side */}
-          <div className="flex items-center gap-1 sm:gap-2">
-            <ThemeTogglerButton variant="ghost" size="sm" />
-            {isClient && user ? (
+          <div className="flex items-center gap-2">
+            {session?.user ? (
               <>
                 <Notifications />
-                <UserMenu
-                  user={{
-                    id: user.id,
-                    name: user.name ?? "User",
-                    email: user.email,
-                    image: user.image,
-                    role: (user as { role?: string }).role,
-                    planId: (user as { planId?: string }).planId,
-                  }}
-                />
+                <UserMenu user={session.user} />
               </>
             ) : (
               <>
-                <Button variant="ghost" size="sm" asChild className="hidden lg:inline-flex rounded-lg">
-                  <Link href="/sign-in">Sign In</Link>
-                </Button>
-                <Button size="sm" asChild className="hidden lg:inline-flex bg-linear-to-r from-indigo-500 to-blue-600 text-white hover:from-indigo-600 hover:to-blue-700 rounded-full font-semibold shadow-lg shadow-indigo-500/20 px-5 group">
-                  <Link href="/sign-up">
-                    Get Started
-                    <ArrowRight className="h-3.5 w-3.5 ml-1.5 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </Button>
+                <Link
+                  href="/sign-in"
+                  className="hidden sm:inline-flex px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors duration-150"
+                >
+                  Sign in
+                </Link>
+                <Link
+                  href="/sign-up"
+                  className="inline-flex items-center px-3.5 py-1.5 text-sm font-medium bg-primary text-primary-foreground rounded-sm hover:bg-primary/90 transition-colors duration-150"
+                >
+                  Get started
+                </Link>
               </>
             )}
 
-            {/* Mobile menu trigger */}
             <button
-              className="lg:hidden flex items-center justify-center h-9 w-9 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-all duration-200"
-              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              className="md:hidden p-2 text-muted-foreground hover:text-foreground"
               onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileOpen}
             >
               {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
-        </div>
+        </nav>
       </header>
 
-      {/* Mobile Navigation Panel */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm lg:hidden"
-              onClick={() => setMobileOpen(false)}
-            />
-            <motion.div
-              initial={{ y: "-100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "-100%" }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="fixed inset-x-0 top-0 z-[70] bg-background border-b border-border flex flex-col lg:hidden max-h-[85vh] overflow-hidden"
-            >
-              {/* Header */}
-              <div className="flex items-center justify-between px-5 py-4 border-b border-border">
-                <Link href="/" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 group">
-                  <Logo className="h-8 transition-all duration-300 group-hover:scale-105" />
-                  <span className="text-base font-bold tracking-tight text-foreground">
-                    Code{" "}
-                    <span className="bg-linear-to-r from-indigo-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">
-                      Catch
-                    </span>
-                  </span>
-                </Link>
-                <button onClick={() => setMobileOpen(false)} className="text-muted-foreground hover:text-foreground transition-colors">
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-
-              <div className="flex-1 overflow-y-auto relative">
-              <nav className="px-4 py-4 pb-8 space-y-5">
-                {/* Workspace */}
-                {isClient && user && (
-                  <div>
-                    <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-semibold px-3 mb-2">Workspace</p>
-                    <div className="space-y-0.5">
-                      {workspaceLinks.map((link) => {
-                        const isActive = pathname === link.href;
-                        return (
-                          <Link
-                            key={link.href}
-                            href={link.href}
-                            onClick={() => setMobileOpen(false)}
-                            className={cn(
-                              "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-150",
-                              isActive
-                                ? "bg-indigo-500/15 text-indigo-400 font-medium"
-                                : "text-muted-foreground hover:text-foreground hover:bg-accent"
-                            )}
-                          >
-                            {link.label}
-                          </Link>
-                        );
-                      })}
-                    </div>
-                  </div>
+      {/* Mobile menu */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-40 bg-background pt-14 md:hidden overflow-y-auto">
+          <nav className="flex flex-col px-6 py-6 gap-1">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileOpen(false)}
+                className={cn(
+                  "py-3 text-base border-b border-border transition-colors",
+                  mounted && pathname === link.href ? "text-foreground" : "text-muted-foreground",
                 )}
+              >
+                {link.label}
+              </Link>
+            ))}
 
-                {/* Product */}
-                <div>
-                  <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-semibold px-3 mb-2">Product</p>
-                  <div className="space-y-0.5">
-                    <Link
-                      href="/product"
-                      onClick={() => setMobileOpen(false)}
-                      className={cn(
-                        "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-150",
-                        pathname?.startsWith("/product")
-                          ? "bg-indigo-500/15 text-indigo-400 font-medium"
-                          : "text-muted-foreground hover:text-foreground hover:bg-accent"
-                      )}
-                    >
-                      Code Review
-                    </Link>
-                    <Link
-                      href="/product#security"
-                      onClick={() => setMobileOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-accent transition-all duration-150"
-                    >
-                      Security
-                    </Link>
-                    <Link
-                      href="/product#diagrams"
-                      onClick={() => setMobileOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-accent transition-all duration-150"
-                    >
-                      Diagrams
-                    </Link>
-                  </div>
-                </div>
-
-                {/* Resources */}
-                <div>
-                  <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-semibold px-3 mb-2">Resources</p>
-                  <div className="space-y-0.5">
-                    {resourceLinks.map((link) => {
-                      const isActive = pathname?.startsWith(link.href);
-                      return (
-                        <Link
-                          key={link.href}
-                          href={link.href}
-                          onClick={() => setMobileOpen(false)}
-                          className={cn(
-                            "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-150",
-                            isActive
-                              ? "bg-indigo-500/15 text-indigo-400 font-medium"
-                              : "text-muted-foreground hover:text-foreground hover:bg-accent"
-                          )}
-                        >
-                          {link.label}
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Pricing & Other */}
-                <div className="space-y-0.5">
+            {session?.user && (
+              <>
+                <span className="pt-4 pb-2 text-[11px] font-mono text-muted-foreground/50 uppercase tracking-wider">Workspace</span>
+                {workspaceLinks.map((link) => (
                   <Link
-                    href="/pricing"
+                    key={link.href}
+                    href={link.href}
                     onClick={() => setMobileOpen(false)}
                     className={cn(
-                      "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-150",
-                      pathname === "/pricing"
-                        ? "bg-indigo-500/15 text-indigo-400 font-medium"
-                        : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                      "flex items-center gap-2.5 py-2.5 text-base transition-colors",
+                      mounted && pathname?.startsWith(link.href) ? "text-foreground" : "text-muted-foreground",
                     )}
                   >
-                    Pricing
+                    <link.icon className="h-4 w-4" />
+                    {link.label}
                   </Link>
-                  {simpleLinks.map((link) => {
-                    const isActive = pathname === link.href;
-                    return (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        onClick={() => setMobileOpen(false)}
-                        className={cn(
-                          "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-150",
-                          isActive
-                            ? "bg-indigo-500/15 text-indigo-400 font-medium"
-                            : "text-muted-foreground hover:text-foreground hover:bg-accent"
-                        )}
-                      >
-                        {link.label}
-                      </Link>
-                    );
-                  })}
-                </div>
-              </nav>
-              {/* Scroll hint */}
-              <div className="sticky bottom-0 flex justify-center py-2 bg-gradient-to-t from-background via-background/80 to-transparent">
-                <ChevronDown className="h-4 w-4 text-muted-foreground animate-bounce" />
-              </div>
-              </div>
-
-              {/* Bottom */}
-              <div className="px-4 py-4 border-t border-border space-y-3">
-                <div className="flex items-center justify-between px-1">
-                  <span className="text-sm text-muted-foreground">Theme</span>
-                  <ThemeTogglerButton variant="outline" size="sm" />
-                </div>
-                {isClient && user ? (
-                  <Link href="/repo" onClick={() => setMobileOpen(false)} className="flex items-center justify-center gap-2 w-full py-2.5 rounded-full bg-indigo-500 text-white text-sm font-semibold hover:bg-indigo-600 transition-colors">
-                    <Github className="h-4 w-4" />
-                    Repositories
+                ))}
+                {isAdmin && (
+                  <Link
+                    href="/admin"
+                    onClick={() => setMobileOpen(false)}
+                    className={cn(
+                      "flex items-center gap-2.5 py-2.5 text-base transition-colors",
+                      mounted && pathname?.startsWith("/admin") ? "text-foreground" : "text-muted-foreground",
+                    )}
+                  >
+                    <ShieldCheck className="h-4 w-4" />
+                    Admin
                   </Link>
-                ) : (
-                  <div className="space-y-2">
-                    <Link href="/sign-in" onClick={() => setMobileOpen(false)} className="block text-center w-full py-2.5 rounded-lg text-sm text-muted-foreground hover:text-foreground border border-border hover:bg-accent">
-                      Sign In
-                    </Link>
-                    <Link href="/sign-up" onClick={() => setMobileOpen(false)} className="flex items-center justify-center gap-1 w-full py-2.5 rounded-full bg-indigo-500 text-white text-sm font-semibold hover:bg-indigo-600 transition-colors">
-                      Get Started
-                      <ArrowRight className="h-3.5 w-3.5" />
-                    </Link>
-                  </div>
                 )}
+              </>
+            )}
+
+            {!session?.user && (
+              <div className="flex flex-col gap-3 pt-6">
+                <Link
+                  href="/sign-in"
+                  onClick={() => setMobileOpen(false)}
+                  className="py-2.5 text-center text-sm text-muted-foreground border border-border rounded-sm"
+                >
+                  Sign in
+                </Link>
+                <Link
+                  href="/sign-up"
+                  onClick={() => setMobileOpen(false)}
+                  className="py-2.5 text-center text-sm font-medium bg-primary text-primary-foreground rounded-sm"
+                >
+                  Get started
+                </Link>
               </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+            )}
+          </nav>
+        </div>
+      )}
     </>
   );
 }

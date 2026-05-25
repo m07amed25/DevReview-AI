@@ -241,13 +241,16 @@ export function generateUseCaseDiagram(fileContents: Record<string, string>): {
   // Build Mermaid flowchart
   const lines: string[] = ["flowchart LR"];
 
-  for (const actorName of actorSet) {
+  const sortedActors = [...actorSet].sort();
+  for (const actorName of sortedActors) {
     lines.push(`  actor_${actorName}(("${actorName}"))`);
   }
 
-  for (const [groupId, group] of groups) {
+  const sortedGroups = [...groups.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+  for (const [groupId, group] of sortedGroups) {
     lines.push(`  subgraph ${groupId}["${group.label}"]`);
-    for (const ucId of group.ucIds) {
+    const sortedUcIds = [...group.ucIds].sort();
+    for (const ucId of sortedUcIds) {
       const node = nodes.find((n) => n.id === ucId);
       if (!node) continue;
       lines.push(`    ${ucId}(["${node.label}"])`);
@@ -255,10 +258,13 @@ export function generateUseCaseDiagram(fileContents: Record<string, string>): {
     lines.push("  end");
   }
 
-  for (const edge of edges) {
+  const sortedEdges = [...edges].sort((a, b) =>
+    `${a.fromId}-${a.toId}`.localeCompare(`${b.fromId}-${b.toId}`),
+  );
+  for (const edge of sortedEdges) {
     const arrow = edge.label === "runs" ? "-..->" : "-->";
     lines.push(`  ${edge.fromId} ${arrow} ${edge.toId}`);
   }
 
-  return { definition: lines.join("\n"), nodes, edges };
+  return { definition: lines.join("\n"), nodes, edges: sortedEdges };
 }

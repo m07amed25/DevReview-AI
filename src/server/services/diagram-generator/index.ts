@@ -69,23 +69,29 @@ export function matchTriggerRules(changedFiles: string[]): DiagramType[] {
  * Throws on unrecoverable parse failure so the Inngest `onFailure` handler
  * captures a structured error message.
  */
-export function generateMermaidDefinition(
+export async function generateMermaidDefinition(
   type: DiagramType,
   fileContents: Record<string, string>,
-): {
+): Promise<{
   definition: string;
   nodes: DiagramNode[];
   edges: DiagramEdge[];
   warning?: string;
-} {
+}> {
+  // Sort keys for deterministic iteration order regardless of fetch timing
+  const sorted: Record<string, string> = {};
+  for (const key of Object.keys(fileContents).sort()) {
+    sorted[key] = fileContents[key]!;
+  }
+
   switch (type) {
     case "ERD":
-      return generateERD(fileContents);
+      return generateERD(sorted);
     case "CLASS":
-      return generateClassDiagram(fileContents);
+      return generateClassDiagram(sorted);
     case "USE_CASE":
-      return generateUseCaseDiagram(fileContents);
+      return generateUseCaseDiagram(sorted);
     case "SEQUENCE":
-      return generateSequenceDiagram(fileContents);
+      return generateSequenceDiagram(sorted);
   }
 }

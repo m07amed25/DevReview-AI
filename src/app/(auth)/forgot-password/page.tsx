@@ -7,18 +7,7 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  AuroraBackground,
-  GridBackground,
-} from "@/components/animations/backgrounds";
-import { AuthBackLink } from "@/components/auth-back-link";
+import { Logo } from "@/components/ui/logo";
 
 function ForgotPasswordContent() {
   const [email, setEmail] = useState("");
@@ -33,129 +22,70 @@ function ForgotPasswordContent() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-
-    if (!email.trim()) {
-      setError("Email is required.");
-      return;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setError("Please enter a valid email address.");
-      return;
-    }
-
+    if (!email.trim()) { setError("Email is required."); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setError("Enter a valid email."); return; }
     requestReset.mutate({ email });
   };
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center p-4">
-      <div className="fixed inset-0 -z-10" aria-hidden="true">
-        <AuroraBackground />
-        <GridBackground />
-      </div>
+    <div className="flex min-h-dvh items-center justify-center px-5 py-12 sm:px-8">
+      <div className="w-full max-w-[360px] space-y-6">
+        <Link href="/" className="flex items-center gap-2">
+          <Logo className="h-6" />
+          <span className="text-sm font-bold tracking-tight">Code <span className="text-primary">Catch</span></span>
+        </Link>
 
-      <AuthBackLink />
-
-      <Card className="w-full max-w-md hover-lift transition-all duration-300">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Forgot Password</CardTitle>
-          <CardDescription>
-            Enter your email address and we&apos;ll send you a reset link.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4 py-4">
-          {success ? (
-            <div className="flex flex-col items-center gap-4 py-4">
-              <div className="flex size-14 items-center justify-center rounded-full bg-green-100 dark:bg-green-950">
-                <CheckCircle2 className="size-7 text-green-600 dark:text-green-400" />
-              </div>
-              <div className="text-center space-y-2">
-                <p className="font-medium text-foreground">Check your email</p>
-                <p className="text-sm text-muted-foreground">
-                  If an account exists for <strong>{email}</strong>, you&apos;ll
-                  receive a password reset link shortly.
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  The link expires in{" "}
-                  <span className="font-medium text-foreground">5 minutes</span>.
-                </p>
-                <p className="text-xs text-muted-foreground/70">
-                  Don&apos;t see it? Check your{" "}
-                  <span className="font-medium text-foreground">spam or junk folder</span>.
-                </p>
-              </div>
-              <Link
-                href="/sign-in"
-                className="text-sm text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
-              >
-                Back to sign in
-              </Link>
+        {success ? (
+          <div className="space-y-4">
+            <div className="flex size-9 items-center justify-center rounded-sm border border-border bg-emerald-500/5">
+              <CheckCircle2 className="size-4 text-emerald-500" />
             </div>
-          ) : (
-            <>
+            <div>
+              <h1 className="text-lg font-semibold tracking-tight">Check your email</h1>
+              <p className="mt-1.5 text-[13px] text-muted-foreground leading-relaxed">
+                If an account exists for <span className="text-foreground font-medium">{email}</span>, you will receive a reset link. It expires in 5 minutes.
+              </p>
+            </div>
+            <p className="text-[12px] text-muted-foreground">Not in your inbox? Check spam.</p>
+            <Link href="/sign-in" className="inline-block text-[13px] text-primary font-medium hover:underline">Back to sign in</Link>
+          </div>
+        ) : (
+          <>
+            <div>
+              <h1 className="text-lg font-semibold tracking-tight">Reset password</h1>
+              <p className="mt-1 text-[13px] text-muted-foreground">Enter your email to receive a reset link.</p>
+            </div>
+
+            <div className="space-y-3.5">
               {error && (
-                <div className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 animate-in fade-in slide-in-from-top-2 duration-300 dark:border-red-800/50 dark:bg-red-950/50 dark:text-red-300">
-                  <AlertCircle className="mt-0.5 size-4 shrink-0" />
-                  <p className="flex-1">{error}</p>
-                  <button
-                    type="button"
-                    aria-label="Dismiss error"
-                    onClick={() => setError("")}
-                    className="shrink-0 rounded-md p-0.5 text-red-800/70 transition-colors hover:text-red-800 dark:text-red-300/70 dark:hover:text-red-300"
-                  >
-                    <X className="size-4" aria-hidden="true" />
-                  </button>
+                <div className="flex items-start gap-2 rounded-sm border border-destructive/30 bg-destructive/5 px-3 py-2.5 text-[13px] text-destructive">
+                  <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
+                  <span className="flex-1">{error}</span>
+                  <button onClick={() => setError("")} aria-label="Dismiss" className="hover:text-destructive/70 cursor-pointer"><X className="h-3.5 w-3.5" /></button>
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} noValidate className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="name@example.com"
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      setError("");
-                    }}
-                    disabled={requestReset.isPending}
-                  />
+              <form onSubmit={handleSubmit} noValidate className="space-y-3">
+                <div className="space-y-1.5">
+                  <Label htmlFor="email" className="text-[13px]">Email</Label>
+                  <Input id="email" type="email" placeholder="name@example.com" autoComplete="email" value={email} onChange={(e) => { setEmail(e.target.value); setError(""); }} disabled={requestReset.isPending} />
                 </div>
-
-                <Button type="submit" disabled={requestReset.isPending} className="w-full">
-                  {requestReset.isPending ? (
-                    <>
-                      <Loader2 className="mr-2 size-4 animate-spin" />
-                      Sending...
-                    </>
-                  ) : (
-                    "Send Reset Link"
-                  )}
+                <Button type="submit" disabled={requestReset.isPending} className="w-full h-9 cursor-pointer">
+                  {requestReset.isPending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Sending...</> : "Send reset link"}
                 </Button>
               </form>
 
-              <p className="text-center text-sm text-muted-foreground">
-                Remember your password?{" "}
-                <Link
-                  href="/sign-in"
-                  className="font-medium text-foreground underline-offset-4 hover:underline"
-                >
-                  Sign in
-                </Link>
+              <p className="text-center text-[13px] text-muted-foreground pt-2">
+                Remember your password? <Link href="/sign-in" className="text-primary font-medium hover:underline">Sign in</Link>
               </p>
-            </>
-          )}
-        </CardContent>
-      </Card>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }
 
 export default function ForgotPasswordPage() {
-  return (
-    <Suspense>
-      <ForgotPasswordContent />
-    </Suspense>
-  );
+  return <Suspense fallback={null}><ForgotPasswordContent /></Suspense>;
 }
