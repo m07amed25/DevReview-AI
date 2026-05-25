@@ -9,6 +9,8 @@ import {
 import { auth } from "../../../auth";
 import { logAudit } from "../../../services/audit";
 import { checkRateLimit, getRateLimitRemaining } from "@/lib/rate-limiter";
+import { getPusherServer } from "../../../pusher";
+import { PUSHER_EVENTS } from "@/lib/constants";
 
 const RESET_WINDOW_MS = 5 * 60 * 1000; // 5 minutes
 
@@ -264,6 +266,12 @@ export const adminUsersRouter = createTRPCRouter({
             seats: input.overrideSeatsLimit,
           },
         }).catch((err) => console.error("Failed to send plan update email:", err));
+      }
+
+      // Notify user in real-time so their UI refreshes
+      const pusher = getPusherServer();
+      if (pusher) {
+        void pusher.trigger(`private-user-${input.userId}`, PUSHER_EVENTS.PLAN_UPDATED, { planId: input.planId });
       }
 
       return { success: true };

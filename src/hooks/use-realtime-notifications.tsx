@@ -4,6 +4,7 @@ import { useEffect, useCallback } from "react";
 import { usePusher } from "@/lib/pusher/client";
 import { trpc } from "@/lib/trpc/client";
 import { toast } from "sonner";
+import { PUSHER_EVENTS } from "@/lib/constants";
 
 interface NotificationPayload {
   id: string;
@@ -82,9 +83,13 @@ export function useRealtimeNotifications(userId: string | undefined) {
     const channel = client.subscribe(channelName);
 
     channel.bind("notification:new", handleNewNotification);
+    channel.bind(PUSHER_EVENTS.PLAN_UPDATED, () => {
+      void utils.profile.get.invalidate();
+    });
 
     return () => {
       channel.unbind("notification:new", handleNewNotification);
+      channel.unbind(PUSHER_EVENTS.PLAN_UPDATED);
       client.unsubscribe(channelName);
     };
   }, [client, userId, isConnected, handleNewNotification]);

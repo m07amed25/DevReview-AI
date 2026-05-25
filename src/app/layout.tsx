@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { PageTransitionProvider } from "@/components/animations/page-transition";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { Toaster } from "sonner";
+import { PusherProvider } from "@/lib/pusher/client";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -107,9 +108,11 @@ export default function RootLayout({
       >
         <ThemeProvider attribute="class" defaultTheme="dark">
           <TRPCProvider>
-            <PageTransitionProvider>
-              <ErrorBoundary>{children}</ErrorBoundary>
-            </PageTransitionProvider>
+            <PusherProvider>
+              <PageTransitionProvider>
+                <ErrorBoundary>{children}</ErrorBoundary>
+              </PageTransitionProvider>
+            </PusherProvider>
           </TRPCProvider>
         </ThemeProvider>
         <Toaster position="top-right" richColors closeButton />

@@ -63,6 +63,9 @@ export const PUSHER_EVENTS = {
   // Presence / cursor events (client events)
   CLIENT_TYPING: "client-typing",
   CLIENT_CURSOR: "client-cursor",
+
+  // User account events
+  PLAN_UPDATED: "plan:updated",
 } as const;
 
 export const ANIMATION = {
