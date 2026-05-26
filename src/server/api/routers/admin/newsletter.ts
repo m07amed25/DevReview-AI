@@ -37,20 +37,25 @@ export const adminNewsletterRouter = createTRPCRouter({
         target: z.enum(["ALL", "FREE", "PRO", "CUSTOM"]),
         userIds: z.array(z.string()).optional(),
         design: emailDesignSchema.optional(),
+        forceSendAll: z.boolean().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const baseWhere =
+        input.target === "FREE"
+          ? { planId: "free" as const }
+          : input.target === "PRO"
+            ? { planId: { not: "free" } }
+            : undefined;
+
+      const where = input.forceSendAll
+        ? baseWhere
+        : { ...baseWhere, emailNotifications: true };
+
       const userCount =
         input.target === "CUSTOM"
           ? input.userIds?.length ?? 0
-          : await ctx.db.user.count({
-              where:
-                input.target === "FREE"
-                  ? { planId: "free" }
-                  : input.target === "PRO"
-                    ? { planId: { not: "free" } }
-                    : undefined,
-            });
+          : await ctx.db.user.count({ where });
 
       await inngest.send({
         name: "app/email.broadcast",
@@ -60,6 +65,7 @@ export const adminNewsletterRouter = createTRPCRouter({
           target: input.target,
           userIds: input.userIds,
           design: input.design,
+          forceSendAll: input.forceSendAll ?? false,
         },
       });
 
@@ -71,20 +77,25 @@ export const adminNewsletterRouter = createTRPCRouter({
       z.object({
         target: z.enum(["ALL", "FREE", "PRO", "CUSTOM"]),
         userIds: z.array(z.string()).optional(),
+        forceSendAll: z.boolean().optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
       if (input.target === "CUSTOM") {
         return input.userIds?.length ?? 0;
       }
-      return ctx.db.user.count({
-        where:
-          input.target === "FREE"
-            ? { planId: "free" }
-            : input.target === "PRO"
-              ? { planId: { not: "free" } }
-              : undefined,
-      });
+      const baseWhere =
+        input.target === "FREE"
+          ? { planId: "free" as const }
+          : input.target === "PRO"
+            ? { planId: { not: "free" } }
+            : undefined;
+
+      const where = input.forceSendAll
+        ? baseWhere
+        : { ...baseWhere, emailNotifications: true };
+
+      return ctx.db.user.count({ where });
     }),
 
   searchUsers: adminProcedure

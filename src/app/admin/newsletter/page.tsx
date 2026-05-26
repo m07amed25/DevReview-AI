@@ -89,6 +89,7 @@ export default function AdminNewsletterPage() {
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
   const [target, setTarget] = useState<Target>("ALL");
+  const [forceSendAll, setForceSendAll] = useState(false);
   const [sent, setSent] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [showPreview, setShowPreview] = useState(true);
@@ -105,7 +106,7 @@ export default function AdminNewsletterPage() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const userIds = selectedUsers.map((u) => u.id);
-  const { data: count } = trpc.admin.recipientCount.useQuery({ target, userIds });
+  const { data: count } = trpc.admin.recipientCount.useQuery({ target, userIds, forceSendAll });
   const { data: searchResults, isFetching: searching } = trpc.admin.searchUsers.useQuery(
     { search: userSearch },
     { enabled: userSearch.length >= 2 },
@@ -249,6 +250,7 @@ export default function AdminNewsletterPage() {
       target,
       userIds: target === "CUSTOM" ? userIds : undefined,
       design,
+      forceSendAll,
     });
   };
 
@@ -466,6 +468,16 @@ export default function AdminNewsletterPage() {
                     </button>
                   ))}
                 </div>
+
+                <label className="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={forceSendAll}
+                    onChange={(e) => setForceSendAll(e.target.checked)}
+                    className="rounded border-border"
+                  />
+                  Force send to all (include unsubscribed users)
+                </label>
 
                 {target === "CUSTOM" && (
                   <div className="space-y-3">

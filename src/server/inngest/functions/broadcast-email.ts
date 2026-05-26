@@ -35,12 +35,13 @@ export const broadcastEmail = inngest.createFunction(
     triggers: [{ event: "app/email.broadcast" }]
   },
   async ({ event, step }) => {
-    const { subject, body, target, userIds, design } = event.data as {
+    const { subject, body, target, userIds, design, forceSendAll } = event.data as {
       subject: string;
       body: string;
       target: "ALL" | "FREE" | "PRO" | "CUSTOM";
       userIds?: string[];
       design?: EmailDesign;
+      forceSendAll?: boolean;
     };
 
     // 1. Fetch users based on target
@@ -48,7 +49,7 @@ export const broadcastEmail = inngest.createFunction(
       if (target === "CUSTOM" && userIds?.length) {
         return db.user.findMany({
           where: { id: { in: userIds } },
-          select: { email: true, name: true },
+          select: { id: true, email: true, name: true },
         });
       }
 
@@ -58,10 +59,13 @@ export const broadcastEmail = inngest.createFunction(
       } else if (target === "PRO") {
         where.planId = { not: "free" };
       }
+      if (!forceSendAll) {
+        where.emailNotifications = true;
+      }
 
       return db.user.findMany({
         where,
-        select: { email: true, name: true },
+        select: { id: true, email: true, name: true },
       });
     });
 
@@ -81,6 +85,7 @@ export const broadcastEmail = inngest.createFunction(
               subject,
               body,
               userName: user.name || undefined,
+              userId: user.id,
               design,
             })
           );

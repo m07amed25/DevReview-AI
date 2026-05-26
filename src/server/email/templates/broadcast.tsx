@@ -51,6 +51,7 @@ interface BroadcastEmailProps {
   userName?: string;
   appUrl: string;
   design?: EmailDesign;
+  unsubscribeUrl?: string;
 }
 
 const defaultDesign: EmailDesign = {
@@ -100,6 +101,7 @@ export const BroadcastEmail = ({
   userName,
   appUrl,
   design = defaultDesign,
+  unsubscribeUrl,
 }: BroadcastEmailProps) => {
   const d = { ...defaultDesign, ...design };
   const greeting = d.greetingText.replace("{name}", userName || "there");
@@ -194,7 +196,7 @@ export const BroadcastEmail = ({
                       Manage preferences
                     </Link>
                     {" · "}
-                    <Link href={`${appUrl}/settings`} style={{ color: d.linkColor }}>
+                    <Link href={unsubscribeUrl || `${appUrl}/settings`} style={{ color: d.linkColor }}>
                       Unsubscribe
                     </Link>
                   </Text>

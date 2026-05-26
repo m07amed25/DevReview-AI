@@ -322,6 +322,7 @@ export async function sendBroadcastEmail(params: {
   subject: string;
   body: string;
   userName?: string;
+  userId?: string;
   design?: {
     bgColor: string;
     containerBg: string;
@@ -348,16 +349,24 @@ export async function sendBroadcastEmail(params: {
     bodyImages?: string[];
   };
 }): Promise<EmailSendResult> {
-  const { to, subject, body, userName, design } = params;
+  const { to, subject, body, userName, userId, design } = params;
   const appUrl = getAppUrl();
 
   try {
+    let unsubscribeUrl: string | undefined;
+    if (userId) {
+      const { createUnsubscribeToken } = await import("@/lib/unsubscribe-token");
+      const token = createUnsubscribeToken(userId);
+      unsubscribeUrl = `${appUrl}/api/unsubscribe?uid=${userId}&token=${token}`;
+    }
+
     const html = await renderBroadcastEmail({
       subject,
       body,
       userName,
       appUrl,
       design,
+      unsubscribeUrl,
     });
 
     return await sendEmail(to, subject, html);
