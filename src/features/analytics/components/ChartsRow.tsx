@@ -73,8 +73,8 @@ export function ChartsRow({
       {/* Main Trend Chart */}
       <Card className="lg:col-span-2 p-6">
         <div className="mb-4">
-          <h3 className="text-lg font-semibold">Review Trends</h3>
-          <p className="text-sm text-muted-foreground">Volume over time</p>
+          <h3 className="text-sm font-medium">Review Trends</h3>
+          <p className="text-xs text-muted-foreground">Volume over time</p>
         </div>
         {trendsLoading ? (
           <Skeleton className="h-[300px] w-full" />
@@ -155,7 +155,7 @@ export function ChartsRow({
 
       {/* Pie / Donut Chart */}
       <Card className="p-6">
-        <h3 className="text-lg font-semibold mb-4">Review Outcomes</h3>
+        <h3 className="text-sm font-medium mb-4">Review Outcomes</h3>
         {ratesLoading ? (
           <Skeleton className="h-[250px] w-full" />
         ) : !ratesData ||

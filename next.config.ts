@@ -1,5 +1,9 @@
 import type { NextConfig } from "next";
 
+// Dev-only allowance so impeccable live mode can load. Guarded by NODE_ENV.
+const __impeccableLiveDev =
+  process.env.NODE_ENV === "development" ? " http://localhost:8400" : "";
+
 const nextConfig: NextConfig = {
   // mermaid is browser-only — never bundle it on the server.
   // isomorphic-dompurify + jsdom ARE intentionally used server-side (Inngest),
@@ -75,11 +79,11 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.pusher.com",
+              `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.pusher.com${__impeccableLiveDev}`,
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob: https://avatars.githubusercontent.com https://*.githubusercontent.com https://*.public.blob.vercel-storage.com https://lh3.googleusercontent.com https://staging.fawaterk.com https://app.fawaterk.com",
               "font-src 'self'",
-              "connect-src 'self' https://*.pusher.com wss://*.pusher.com https://api.github.com https://*.upstash.io",
+              `connect-src 'self' https://*.pusher.com wss://*.pusher.com https://api.github.com https://*.upstash.io${__impeccableLiveDev}`,
               "frame-ancestors 'none'",
               "base-uri 'self'",
               "form-action 'self'",

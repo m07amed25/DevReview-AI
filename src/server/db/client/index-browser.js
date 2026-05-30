@@ -153,6 +153,8 @@ exports.Prisma.UserScalarFieldEnum = {
   planExpiresAt: 'planExpiresAt',
   planStartedAt: 'planStartedAt',
   billingCycle: 'billingCycle',
+  pendingPlanId: 'pendingPlanId',
+  pendingBillingCycle: 'pendingBillingCycle',
   accountCredit: 'accountCredit',
   overrideReposLimit: 'overrideReposLimit',
   overrideReviewsLimit: 'overrideReviewsLimit',
@@ -571,6 +573,8 @@ exports.Prisma.PricingPlanScalarFieldEnum = {
   privateRepos: 'privateRepos',
   sortOrder: 'sortOrder',
   accentColor: 'accentColor',
+  cta: 'cta',
+  badge: 'badge',
   updatedAt: 'updatedAt'
 };
 

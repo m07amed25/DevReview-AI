@@ -83,6 +83,8 @@ const planSaveSchema = z.object({
   seatsLimit:   z.number().int().min(0).nullable(),
   privateRepos: z.boolean(),
   accentColor:  z.string().min(1).max(20).default("indigo"),
+  cta:          z.string().max(40).nullable().optional(),
+  badge:        z.string().max(40).nullable().optional(),
 });
 
 

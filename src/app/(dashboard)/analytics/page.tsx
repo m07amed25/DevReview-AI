@@ -20,8 +20,6 @@ const periods: { value: TimePeriod; label: string }[] = [
   { value: "1y", label: "1y" },
 ];
 
-const ease = [0.16, 1, 0.3, 1] as const;
-
 export default function AnalyticsPage() {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>("30d");
 
@@ -59,14 +57,9 @@ export default function AnalyticsPage() {
   }
 
   return (
-    <div className="space-y-6 pb-12">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }} className="space-y-6 pb-12">
       {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 6 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, ease }}
-        className="flex flex-col sm:flex-row sm:items-end justify-between gap-3"
-      >
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
         <div>
           <h1 className="text-lg font-semibold tracking-tight">Analytics</h1>
           <p className="text-[13px] text-muted-foreground mt-0.5">
@@ -101,7 +94,7 @@ export default function AnalyticsPage() {
             <Download className="h-3.5 w-3.5" />
           </Button>
         </div>
-      </motion.div>
+      </div>
 
       {/* Anomalies */}
       {activeAnomalies.length > 0 && (
@@ -126,10 +119,7 @@ export default function AnalyticsPage() {
           ))}
         </div>
       ) : overview && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3, delay: 0.05, ease }}
+        <div
           className="flex flex-wrap gap-x-8 gap-y-3 py-3 border-y border-border/50"
           aria-label="Key metrics"
         >
@@ -138,46 +128,21 @@ export default function AnalyticsPage() {
             { label: "Completed", value: `${overview.completionRate}%`, good: overview.completionRate >= 80 },
             { label: "Avg time", value: overview.avgCompletionTimeHours < 1 ? `${Math.round(overview.avgCompletionTimeHours * 60)}m` : `${overview.avgCompletionTimeHours.toFixed(1)}h` },
             { label: "Risk score", value: overview.avgRiskScore.toFixed(0), warn: overview.avgRiskScore > 50 },
-          ].map((m, i) => (
-            <motion.div
-              key={m.label}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.08 + i * 0.06, ease }}
-            >
-              <Metric label={m.label} value={m.value} good={"good" in m ? m.good : undefined} warn={"warn" in m ? m.warn : undefined} />
-            </motion.div>
+          ].map((m) => (
+            <Metric key={m.label} label={m.label} value={m.value} good={"good" in m ? m.good : undefined} warn={"warn" in m ? m.warn : undefined} />
           ))}
-        </motion.div>
+        </div>
       )}
 
       {/* Charts */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, delay: 0.2, ease }}
-      >
-        <ChartsRow trendsData={trends} trendsLoading={trendsLoading} ratesData={rates} ratesLoading={ratesLoading} />
-      </motion.div>
+      <ChartsRow trendsData={trends} trendsLoading={trendsLoading} ratesData={rates} ratesLoading={ratesLoading} />
 
       {/* Feedback */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, delay: 0.3, ease }}
-      >
-        <FeedbackTrendRow data={feedback} isLoading={feedbackLoading} />
-      </motion.div>
+      <FeedbackTrendRow data={feedback} isLoading={feedbackLoading} />
 
       {/* Issues */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, delay: 0.4, ease }}
-      >
-        <IssuesTablesRow issuesData={issues} issuesLoading={issuesLoading} />
-      </motion.div>
-    </div>
+      <IssuesTablesRow issuesData={issues} issuesLoading={issuesLoading} />
+    </motion.div>
   );
 }
 

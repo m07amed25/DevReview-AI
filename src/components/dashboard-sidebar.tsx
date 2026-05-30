@@ -8,11 +8,8 @@ import {
   GitPullRequest,
   Users,
   BarChart3,
-  Settings,
   Menu,
   X,
-  CreditCard,
-  User,
   ChevronRight,
   PanelLeftClose,
   PanelLeft,
@@ -20,14 +17,9 @@ import {
   BookOpen,
   History,
   Globe,
-  Shield,
-  Scale,
-  Lock,
   Mail,
   Info,
   Package,
-  Search,
-  ShieldCheck,
   MoreVertical,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -53,24 +45,14 @@ const mainNav: NavItem[] = [
   { href: "/teams", label: "Teams", icon: Users, hasSubmenu: true },
 ];
 
-const configNav: NavItem[] = [
-  { href: "/billing", label: "Billing", icon: CreditCard },
-  { href: "/settings", label: "Settings", icon: Settings },
-  { href: "/profile", label: "Profile", icon: User },
-];
-
 const resourceNav: NavItem[] = [
-  { href: "/pricing", label: "Pricing", icon: CreditCard },
+  { href: "/pricing", label: "Plans", icon: Package },
   { href: "/docs", label: "Docs", icon: BookOpen, hasSubmenu: true },
   { href: "/changelog", label: "Changelog", icon: History },
   { href: "/blog", label: "Blog", icon: FileText },
   { href: "/status", label: "Status", icon: Globe },
-  { href: "/product", label: "Product", icon: Package },
-  { href: "/about", label: "About", icon: Info },
+  { href: "/product", label: "Features", icon: Info },
   { href: "/contact", label: "Contact", icon: Mail },
-  { href: "/security", label: "Security", icon: Shield, hasSubmenu: true },
-  { href: "/privacy", label: "Privacy", icon: Lock },
-  { href: "/terms", label: "Terms", icon: Scale },
 ];
 
 const DEFAULT_WIDTH = 240;
@@ -135,24 +117,16 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [width, setWidth] = useState(DEFAULT_WIDTH);
   const [isResizing, setIsResizing] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [resourcesOpen, setResourcesOpen] = useState(false);
 
-  const isAdmin = user.role === "ADMIN";
-
-  // Keyboard shortcut: press F to focus search
+  // Close mobile menu on Escape
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "f" && !e.ctrlKey && !e.metaKey && !e.altKey) {
-        const tag = (e.target as HTMLElement).tagName;
-        if (tag === "INPUT" || tag === "TEXTAREA" || (e.target as HTMLElement).isContentEditable) return;
-        e.preventDefault();
-        const input = document.querySelector<HTMLInputElement>("[data-sidebar-search]");
-        input?.focus();
-      }
+      if (e.key === "Escape" && mobileOpen) setMobileOpen(false);
     };
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, []);
+  }, [mobileOpen]);
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
@@ -162,6 +136,7 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
 
   // Close mobile menu on route change
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- reset menu state when the route changes
     setMobileOpen(false);
   }, [pathname]);
 
@@ -204,9 +179,9 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
         href={item.href}
         onClick={() => setMobileOpen(false)}
         className={cn(
-          "flex items-center gap-2.5 rounded-md px-3 py-2 text-sm transition-colors",
+          "flex items-center gap-2.5 rounded-md px-3 py-2 text-sm transition-colors duration-150",
           isActive
-            ? "bg-accent text-foreground font-medium"
+            ? "bg-primary/10 text-primary font-medium"
             : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
         )}
         aria-current={isActive ? "page" : undefined}
@@ -251,7 +226,10 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
         <div
           className="fixed inset-0 z-50 bg-black/50 lg:hidden"
           onClick={() => setMobileOpen(false)}
-          aria-hidden="true"
+          onKeyDown={(e) => { if (e.key === "Escape") setMobileOpen(false); }}
+          role="button"
+          tabIndex={-1}
+          aria-label="Close navigation"
         />
       )}
 
@@ -286,74 +264,31 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
           </button>
         </div>
 
-        {/* Search */}
-        <div className="px-3 pb-2 shrink-0">
-          <div className="flex items-center gap-2 rounded-md border border-border bg-accent/30 px-3 py-1.5 text-sm text-muted-foreground">
-            <Search className="h-4 w-4 shrink-0" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Escape") { setSearchQuery(""); (e.target as HTMLInputElement).blur(); }
-              }}
-              placeholder="Find..."
-              data-sidebar-search
-              className="flex-1 bg-transparent outline-none placeholder:text-muted-foreground text-foreground text-sm min-w-0"
-            />
-            {searchQuery && (
-              <button onClick={() => setSearchQuery("")} className="text-muted-foreground hover:text-foreground">
-                <X className="h-3.5 w-3.5" />
-              </button>
-            )}
-          </div>
-        </div>
-
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto px-2 py-2 sidebar-scroll" aria-label="Dashboard navigation">
-          {searchQuery ? (
-            <div className="space-y-0.5">
-              {[...mainNav, ...configNav, ...(isAdmin ? [{ href: "/admin", label: "Admin", icon: ShieldCheck }] : []), ...resourceNav]
-                .filter((item) => item.label.toLowerCase().includes(searchQuery.toLowerCase()))
-                .map((item) => (
-                  <NavLink key={item.href} item={item} />
-                ))}
+          <div className="space-y-0.5">
+            {mainNav.map((item) => (
+              <NavLink key={item.href} item={item} />
+            ))}
+          </div>
+
+          <div className="my-3 mx-3 border-t border-border/50" />
+
+          <button
+            onClick={() => setResourcesOpen((v) => !v)}
+            className="flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors duration-150 hover:bg-accent/50 hover:text-foreground"
+            aria-expanded={resourcesOpen}
+          >
+            <BookOpen className="h-4 w-4 shrink-0" />
+            <span className="flex-1 text-left">Resources</span>
+            <ChevronRight className={cn("h-3.5 w-3.5 text-muted-foreground/40 transition-transform duration-200", resourcesOpen && "rotate-90")} />
+          </button>
+          {resourcesOpen && (
+            <div className="mt-0.5 space-y-0.5 pl-3">
+              {resourceNav.map((item) => (
+                <NavLink key={item.href} item={item} />
+              ))}
             </div>
-          ) : (
-            <>
-              <p className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/70">Workspace</p>
-              <div className="space-y-0.5">
-                {mainNav.map((item) => (
-                  <NavLink key={item.href} item={item} />
-                ))}
-              </div>
-
-              <div className="my-3 mx-3 border-t border-border/50" />
-
-              <p className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/70">Account</p>
-              <div className="space-y-0.5">
-                {configNav.map((item) => (
-                  <NavLink key={item.href} item={item} />
-                ))}
-              </div>
-
-              {isAdmin && (
-                <>
-                  <div className="my-3 mx-3 border-t border-border/50" />
-                  <p className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/70">System</p>
-                  <NavLink item={{ href: "/admin", label: "Admin", icon: ShieldCheck }} />
-                </>
-              )}
-
-              <div className="my-3 mx-3 border-t border-border/50" />
-
-              <p className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/70">Resources</p>
-              <div className="space-y-0.5">
-                {resourceNav.map((item) => (
-                  <NavLink key={item.href} item={item} />
-                ))}
-              </div>
-            </>
           )}
         </nav>
 

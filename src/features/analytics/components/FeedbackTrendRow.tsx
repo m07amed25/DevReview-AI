@@ -28,8 +28,8 @@ export function FeedbackTrendRow({ data, isLoading }: FeedbackTrendRowProps) {
     <div className="grid grid-cols-1 gap-6 mb-8">
       <Card className="p-6">
         <div className="mb-4">
-          <h3 className="text-lg font-semibold">Review Quality Feedback</h3>
-          <p className="text-sm text-muted-foreground">
+          <h3 className="text-sm font-medium">Review Quality Feedback</h3>
+          <p className="text-xs text-muted-foreground">
             Author sentiment over time
           </p>
         </div>

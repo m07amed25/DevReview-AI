@@ -605,6 +605,8 @@ export const adminUsersRouter = createTRPCRouter({
         desktopNotifications: z.boolean().optional(),
         emailNotifications: z.boolean().optional(),
         notificationSoundEnabled: z.boolean().optional(),
+        pendingPlanId: z.string().nullable().optional(),
+        pendingBillingCycle: z.string().nullable().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {

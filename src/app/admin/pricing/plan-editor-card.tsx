@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Reorder, useDragControls } from "framer-motion";
 import {
   Check,
   Pencil,
@@ -16,6 +17,7 @@ import {
   Bot,
   BadgeCheck,
   Loader2,
+  GripVertical,
 } from "lucide-react";
 import {
   Card,
@@ -79,6 +81,60 @@ function LimitField({
   );
 }
 
+type FeatureItem = { id: string; text: string };
+
+let featureSeq = 0;
+const makeFeature = (text: string): FeatureItem => ({
+  id: `f${featureSeq++}`,
+  text,
+});
+const toFeatureItems = (features: string[]): FeatureItem[] =>
+  features.map((t) => makeFeature(t));
+
+function FeatureRow({
+  item,
+  accentText,
+  onChange,
+  onRemove,
+}: {
+  item: FeatureItem;
+  accentText: string;
+  onChange: (text: string) => void;
+  onRemove: () => void;
+}) {
+  const controls = useDragControls();
+  return (
+    <Reorder.Item
+      value={item.id}
+      dragListener={false}
+      dragControls={controls}
+      whileDrag={{ scale: 1.02, boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}
+      className="flex items-center gap-2 rounded-md bg-background"
+    >
+      <span
+        onPointerDown={(e) => controls.start(e)}
+        title="Drag to reorder"
+        className="shrink-0 cursor-grab touch-none text-muted-foreground hover:text-foreground active:cursor-grabbing"
+      >
+        <GripVertical className="h-3.5 w-3.5" />
+      </span>
+      <Check className={cn("h-3.5 w-3.5 shrink-0", accentText)} />
+      <Input
+        value={item.text}
+        onChange={(e) => onChange(e.target.value)}
+        className="h-7 flex-1 text-sm"
+      />
+      <button
+        title="Remove feature"
+        onClick={onRemove}
+        className="rounded p-0.5 text-muted-foreground hover:text-destructive"
+      >
+        <Trash2 className="h-3.5 w-3.5" />
+      </button>
+    </Reorder.Item>
+  );
+}
+
 export function PlanEditorCard({
   plan,
   onSave,
@@ -93,6 +149,9 @@ export function PlanEditorCard({
     ...plan,
     accentColor: plan.accentColor || "indigo",
   });
+  const [featureItems, setFeatureItems] = useState<FeatureItem[]>(() =>
+    toFeatureItems(plan.features),
+  );
 
   const [prevPlan, setPrevPlan] = useState<PricingPlan | null>(null);
 
@@ -102,33 +161,43 @@ export function PlanEditorCard({
       ...plan,
       accentColor: plan.accentColor || "indigo",
     });
+    setFeatureItems(toFeatureItems(plan.features));
   }
   const [newFeature, setNewFeature] = useState("");
 
   const { icon: Icon } = PLAN_DISPLAY[plan.id] ?? PLAN_DISPLAY.free;
 
   const handleSave = () => {
-    onSave(draft);
+    onSave({
+      ...draft,
+      features: featureItems.map((f) => f.text).filter((t) => t.trim()),
+      cta: draft.cta?.trim() || null,
+      badge: draft.badge?.trim() || null,
+    });
     setEditing(false);
   };
 
   const handleCancel = () => {
     setDraft(plan);
+    setFeatureItems(toFeatureItems(plan.features));
     setEditing(false);
   };
 
   const addFeature = () => {
     const trimmed = newFeature.trim();
     if (!trimmed) return;
-    setDraft((d) => ({ ...d, features: [...d.features, trimmed] }));
+    setFeatureItems((items) => [...items, makeFeature(trimmed)]);
     setNewFeature("");
   };
 
-  const removeFeature = (index: number) => {
-    setDraft((d) => ({
-      ...d,
-      features: d.features.filter((_, i) => i !== index),
-    }));
+  const removeFeature = (id: string) => {
+    setFeatureItems((items) => items.filter((it) => it.id !== id));
+  };
+
+  const editFeature = (id: string, text: string) => {
+    setFeatureItems((items) =>
+      items.map((it) => (it.id === id ? { ...it, text } : it)),
+    );
   };
 
   const currentAccent = editing ? draft.accentColor : plan.accentColor;
@@ -232,6 +301,7 @@ export function PlanEditorCard({
                 className="h-8 gap-1.5 text-xs"
                 onClick={() => {
                   setDraft(plan);
+                  setFeatureItems(toFeatureItems(plan.features));
                   setEditing(true);
                 }}
               >
@@ -283,6 +353,22 @@ export function PlanEditorCard({
         {editing && (
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground">
+              Plan name
+            </Label>
+            <Input
+              value={draft.name}
+              onChange={(e) =>
+                setDraft((d) => ({ ...d, name: e.target.value }))
+              }
+              className="h-8 text-sm"
+              maxLength={50}
+            />
+          </div>
+        )}
+
+        {editing && (
+          <div className="space-y-1.5">
+            <Label className="text-xs font-medium text-muted-foreground">
               Tagline
             </Label>
             <Input
@@ -293,6 +379,39 @@ export function PlanEditorCard({
               className="h-8 text-sm"
               maxLength={200}
             />
+          </div>
+        )}
+
+        {editing && (
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <Label className="text-xs font-medium text-muted-foreground">
+                CTA button label
+              </Label>
+              <Input
+                value={draft.cta ?? ""}
+                placeholder="e.g. Get Started"
+                onChange={(e) =>
+                  setDraft((d) => ({ ...d, cta: e.target.value }))
+                }
+                className="h-8 text-sm"
+                maxLength={40}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-xs font-medium text-muted-foreground">
+                Badge / ribbon
+              </Label>
+              <Input
+                value={draft.badge ?? ""}
+                placeholder="e.g. Most Popular"
+                onChange={(e) =>
+                  setDraft((d) => ({ ...d, badge: e.target.value }))
+                }
+                className="h-8 text-sm"
+                maxLength={40}
+              />
+            </div>
           </div>
         )}
 
@@ -375,40 +494,39 @@ export function PlanEditorCard({
           <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Feature list
           </h4>
-          <ul className="space-y-2">
-            {(editing ? draft.features : plan.features).map((f, i) => (
-              <li key={i} className="flex items-center gap-2">
-                <Check
-                  className={cn("h-3.5 w-3.5 shrink-0", accentStyle.text)}
+          {editing ? (
+            <Reorder.Group
+              axis="y"
+              values={featureItems.map((f) => f.id)}
+              onReorder={(ids) =>
+                setFeatureItems((items) =>
+                  ids.map((id) => items.find((it) => it.id === id)!),
+                )
+              }
+              className="space-y-2"
+            >
+              {featureItems.map((item) => (
+                <FeatureRow
+                  key={item.id}
+                  item={item}
+                  accentText={accentStyle.text}
+                  onChange={(text) => editFeature(item.id, text)}
+                  onRemove={() => removeFeature(item.id)}
                 />
-                {editing ? (
-                  <Input
-                    value={f}
-                    onChange={(e) =>
-                      setDraft((d) => ({
-                        ...d,
-                        features: d.features.map((feat, idx) =>
-                          idx === i ? e.target.value : feat,
-                        ),
-                      }))
-                    }
-                    className="h-7 flex-1 text-sm"
+              ))}
+            </Reorder.Group>
+          ) : (
+            <ul className="space-y-2">
+              {plan.features.map((f, i) => (
+                <li key={i} className="flex items-center gap-2">
+                  <Check
+                    className={cn("h-3.5 w-3.5 shrink-0", accentStyle.text)}
                   />
-                ) : (
                   <span className="flex-1 text-sm">{f}</span>
-                )}
-                {editing && (
-                  <button
-                    title="Remove feature"
-                    onClick={() => removeFeature(i)}
-                    className="rounded p-0.5 text-muted-foreground hover:text-destructive"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </button>
-                )}
-              </li>
-            ))}
-          </ul>
+                </li>
+              ))}
+            </ul>
+          )}
 
           {editing && (
             <div className="mt-3 flex gap-2">

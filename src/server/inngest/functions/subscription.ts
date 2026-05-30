@@ -1,6 +1,14 @@
 import { inngest } from "../client";
 import { db } from "@/server/db";
-import { activatePaidInvoice } from "@/server/services/payment-workflow";
+import {
+  activatePaidInvoice,
+  calculateCheckoutAmount,
+  checkoutCurrency,
+  resolveExpiredSubscription,
+  toAmountString,
+} from "@/server/services/payment-workflow";
+import { tokenization } from "@/server/services/fawaterak";
+import { decryptPaymentToken } from "@/server/services/payment-tokens";
 
 export const processPaymentSuccess = inngest.createFunction(
   {
@@ -133,4 +141,140 @@ export const processRefund = inngest.createFunction(
 
     return { success: true, invoiceId };
   }
+);
+
+
+const FREE_PLAN_RESET = {
+  planId: "free",
+  planExpiresAt: null,
+  planStartedAt: null,
+  billingCycle: null,
+  pendingPlanId: null,
+  pendingBillingCycle: null,
+} as const;
+
+type ExpiredBillingInfo = {
+  fullName: string;
+  email: string;
+  paymentMethods: { fawaterakToken: string | null; cardBrand: string }[];
+} | null;
+
+/**
+ * Charges the saved default card for a scheduled paid downgrade and activates it.
+ * If the amount is fully covered (credit/discount) it activates without charging.
+ * Clears the pending change on success. Returns false on any failure.
+ */
+async function chargeAndActivatePending(
+  userId: string,
+  planId: string,
+  billingCycle: "monthly" | "yearly",
+  billingInfo: ExpiredBillingInfo,
+): Promise<boolean> {
+  const plan = await db.pricingPlan.findUnique({ where: { id: planId } });
+  if (!plan) return false;
+
+  const { finalAmount } = await calculateCheckoutAmount(db, userId, plan, billingCycle);
+  const invoice = await db.invoice.create({
+    data: {
+      userId,
+      amount: finalAmount,
+      planId,
+      billingCycle,
+      description: `${plan.name} - ${billingCycle}`,
+      currency: checkoutCurrency,
+      status: finalAmount === 0 ? "PAID" : "PENDING",
+      paidAt: finalAmount === 0 ? new Date() : null,
+    },
+  });
+
+  if (finalAmount === 0) {
+    await activatePaidInvoice(db, invoice, { paidAt: new Date() });
+    await db.user.update({ where: { id: userId }, data: { pendingPlanId: null, pendingBillingCycle: null } });
+    return true;
+  }
+
+  const card = billingInfo?.paymentMethods[0];
+  if (!billingInfo || !card?.fawaterakToken) {
+    await db.invoice.update({ where: { id: invoice.id }, data: { status: "FAILED" } });
+    return false;
+  }
+
+  try {
+    const amountMajor = toAmountString(finalAmount);
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+    const result = await tokenization.payWithToken({
+      cartTotal: amountMajor,
+      currency: checkoutCurrency,
+      customer: {
+        first_name: billingInfo.fullName.split(" ")[0] ?? billingInfo.fullName,
+        last_name: billingInfo.fullName.split(" ").slice(1).join(" ") || "User",
+        email: billingInfo.email,
+        customer_unique_id: userId,
+      },
+      cartItems: [{ name: plan.name, price: amountMajor, quantity: "1" }],
+      redirectionUrls: { webhookUrl: `${baseUrl}/api/webhooks/fawaterak_json` },
+      card_token: decryptPaymentToken(card.fawaterakToken),
+      invoice_number: invoice.id,
+    });
+
+    const paid = await db.invoice.update({
+      where: { id: invoice.id },
+      data: {
+        fawaterakInvoiceId: result.invoice_id,
+        fawaterakInvoiceKey: result.invoice_key,
+        paymentMethodUsed: card.cardBrand,
+        status: "PAID",
+        paidAt: new Date(),
+      },
+    });
+
+    await activatePaidInvoice(db, paid, { paymentMethodUsed: card.cardBrand, paidAt: paid.paidAt ?? new Date() });
+    await db.user.update({ where: { id: userId }, data: { pendingPlanId: null, pendingBillingCycle: null } });
+    return true;
+  } catch (error) {
+    console.error("Scheduled downgrade charge failed:", error);
+    await db.invoice.update({ where: { id: invoice.id }, data: { status: "FAILED" } }).catch(() => {});
+    return false;
+  }
+}
+
+export const processExpiredSubscriptions = inngest.createFunction(
+  { id: "process-expired-subscriptions", retries: 1, triggers: [{ cron: "0 6 * * *" }] },
+  async ({ step }) => {
+    const expired = await step.run("find-expired", async () =>
+      db.user.findMany({
+        where: { planId: { not: "free" }, planExpiresAt: { lte: new Date() } },
+        select: {
+          id: true,
+          pendingPlanId: true,
+          pendingBillingCycle: true,
+          billingInfo: {
+            select: {
+              fullName: true,
+              email: true,
+              paymentMethods: {
+                where: { isDefault: true },
+                select: { fawaterakToken: true, cardBrand: true },
+              },
+            },
+          },
+        },
+      }),
+    );
+
+    for (const user of expired) {
+      await step.run(`resolve-${user.id}`, async () => {
+        const result = await resolveExpiredSubscription(user, {
+          chargeAndActivatePending: (u, pendingPlanId, billingCycle) =>
+            chargeAndActivatePending(u.id, pendingPlanId, billingCycle, user.billingInfo),
+          revertToFree: async (userId) => {
+            await db.user.update({ where: { id: userId }, data: FREE_PLAN_RESET });
+          },
+        });
+        return { userId: user.id, result };
+      });
+    }
+
+    return { processed: expired.length };
+  },
 );

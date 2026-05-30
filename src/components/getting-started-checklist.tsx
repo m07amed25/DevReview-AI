@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { Github, FolderGit2, GitPullRequest, CheckCircle2, Circle } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Github, FolderGit2, GitPullRequest, CheckCircle2, Circle, X } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -40,18 +42,35 @@ const steps = [
 ];
 
 export function GettingStartedChecklist({ hasGithub, hasRepos, hasReviews }: GettingStartedChecklistProps) {
+  const pathname = usePathname();
+  const [dismissed, setDismissed] = useState(false);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- client-only dismissal read after mount to avoid hydration mismatch
+    setDismissed(localStorage.getItem("gsc-dismissed") === "1");
+  }, []);
+
   const completed = { github: hasGithub, repos: hasRepos, reviews: hasReviews };
   const completedCount = Object.values(completed).filter(Boolean).length;
 
-  if (completedCount === 3) return null;
+  if (pathname !== "/repo" || dismissed || completedCount === 3) return null;
 
   return (
     <Card className="mb-6 border-primary/20 bg-primary/[0.02]">
       <CardHeader className="pb-3">
-        <CardTitle className="text-lg flex items-center justify-between">
+        <CardTitle className="text-base flex items-center justify-between">
           <span>Getting Started</span>
-          <span className="text-sm font-normal text-muted-foreground">
-            {completedCount}/3 complete
+          <span className="flex items-center gap-3">
+            <span className="text-sm font-normal text-muted-foreground">
+              {completedCount}/3 complete
+            </span>
+            <button
+              onClick={() => { localStorage.setItem("gsc-dismissed", "1"); setDismissed(true); }}
+              aria-label="Dismiss getting started"
+              className="text-muted-foreground/60 hover:text-foreground transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
           </span>
         </CardTitle>
       </CardHeader>

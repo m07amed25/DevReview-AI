@@ -19,6 +19,8 @@ export interface PricingPlan {
   privateRepos: boolean;
   sortOrder: number;
   accentColor: string;
+  cta?: string | null;
+  badge?: string | null;
 }
 
 export const PLAN_DISPLAY: Record<

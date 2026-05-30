@@ -20,6 +20,8 @@ export interface DbPricingPlan {
   privateRepos: boolean;
   sortOrder: number;
   accentColor: string;
+  cta?: string | null;
+  badge?: string | null;
 }
 
 export interface MergedPlan extends DbPricingPlan {

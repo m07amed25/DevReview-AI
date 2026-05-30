@@ -20,7 +20,7 @@ export function IssuesTablesRow({
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
       {/* Top Issues */}
       <Card className="p-6">
-        <h3 className="text-lg font-semibold mb-4">Top Issues Detected</h3>
+        <h3 className="text-sm font-medium mb-4">Top Issues Detected</h3>
         <div className="space-y-2">
           {issuesLoading ? (
             <div className="space-y-2">
@@ -48,7 +48,7 @@ export function IssuesTablesRow({
 
       {/* Rejection Reasons */}
       <Card className="p-6">
-        <h3 className="text-lg font-semibold mb-4">Rejection Reasons</h3>
+        <h3 className="text-sm font-medium mb-4">Rejection Reasons</h3>
         <div className="space-y-2">
           {issuesLoading ? (
             <div className="space-y-2">

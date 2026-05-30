@@ -73,6 +73,8 @@ export default function AdminPricingPage() {
     privateRepos: p.privateRepos,
     sortOrder: p.sortOrder,
     accentColor: p.accentColor || "indigo",
+    cta: p.cta,
+    badge: p.badge,
   }));
 
   const handleSavePlan = (updated: PricingPlan) => {
@@ -89,6 +91,8 @@ export default function AdminPricingPage() {
       seatsLimit: updated.seatsLimit,
       privateRepos: updated.privateRepos,
       accentColor: updated.accentColor,
+      cta: updated.cta,
+      badge: updated.badge,
     });
   };
 

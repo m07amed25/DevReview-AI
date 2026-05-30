@@ -3,6 +3,63 @@ import type { PricingPlan, PrismaClient } from "@/server/db/client";
 
 export type BillingCycle = "monthly" | "yearly";
 
+export type PlanRelation = "current" | "upgrade" | "downgrade" | "cancel";
+
+/**
+ * Classifies a target plan/cycle relative to the user's current plan/cycle.
+ * "cancel" = moving to Free from a paid plan. Plan price dominates; for the
+ * same plan, yearly ranks above monthly.
+ */
+export function classifyPlanChange(
+  current: { planId: string; monthlyPrice: number; billingCycle: string | null },
+  target: { planId: string; monthlyPrice: number; billingCycle: string },
+): PlanRelation {
+  const currentlyFree = current.planId === "free" || current.monthlyPrice === 0;
+  if (target.planId === "free" || target.monthlyPrice === 0) {
+    return currentlyFree ? "current" : "cancel";
+  }
+  if (target.planId === current.planId && target.billingCycle === current.billingCycle) {
+    return "current";
+  }
+  const rank = (price: number, cycle: string | null) =>
+    price * 100 + (cycle === "yearly" ? 1 : 0);
+  const targetRank = rank(target.monthlyPrice, target.billingCycle);
+  const currentRank = currentlyFree ? -1 : rank(current.monthlyPrice, current.billingCycle);
+  return targetRank >= currentRank ? "upgrade" : "downgrade";
+}
+
+export type ResolveExpiredDeps = {
+  /** Charge the saved default card for the pending paid plan and activate it. Returns success. */
+  chargeAndActivatePending: (
+    user: { id: string },
+    pendingPlanId: string,
+    billingCycle: BillingCycle,
+  ) => Promise<boolean>;
+  /** Revert the user to the Free plan and clear any pending change. */
+  revertToFree: (userId: string) => Promise<void>;
+};
+
+/**
+ * Decides the transition for a subscription whose period has ended.
+ * A paid pending downgrade is charged + activated (revert to Free if the charge
+ * fails); "free"/no pending reverts to Free. Side effects are delegated to deps.
+ */
+export async function resolveExpiredSubscription(
+  user: { id: string; pendingPlanId: string | null; pendingBillingCycle: string | null },
+  deps: ResolveExpiredDeps,
+): Promise<"activated" | "reverted"> {
+  if (user.pendingPlanId && user.pendingPlanId !== "free") {
+    const ok = await deps.chargeAndActivatePending(
+      { id: user.id },
+      user.pendingPlanId,
+      user.pendingBillingCycle === "yearly" ? "yearly" : "monthly",
+    );
+    if (ok) return "activated";
+  }
+  await deps.revertToFree(user.id);
+  return "reverted";
+}
+
 type InvoiceForActivation = {
   id: string;
   userId: string;

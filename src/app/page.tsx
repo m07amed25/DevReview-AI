@@ -1,7 +1,10 @@
 import { UnifiedNavbar } from "@/components/unified-navbar";
 import { HomeFooter } from "@/features/home/components/HomeFooter";
 import { LandingContent } from "@/features/home/components/LandingContent";
+import { AnnouncementBanner } from "@/features/home/components/AnnouncementBanner";
 import { api, HydrateClient } from "@/lib/trpc/server";
+import { auth } from "@/server/auth";
+import { headers } from "next/headers";
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -21,6 +24,9 @@ export default async function HomePage() {
   void api.home.getStats.prefetch();
   void api.home.getRecentUsers.prefetch();
 
+  const session = await auth.api.getSession({ headers: await headers() });
+  const banner = session?.user ? null : await api.admin.getBannerSettings();
+
   return (
     <HydrateClient>
       <div className="min-h-screen bg-background text-foreground">
@@ -34,6 +40,15 @@ export default async function HomePage() {
         >
           Skip to main content
         </a>
+
+        {banner?.enabled && banner.text && (
+          <AnnouncementBanner
+            text={banner.text}
+            link={banner.link ?? undefined}
+            linkText={banner.linkText ?? undefined}
+            color={banner.color ?? undefined}
+          />
+        )}
 
         <UnifiedNavbar />
 

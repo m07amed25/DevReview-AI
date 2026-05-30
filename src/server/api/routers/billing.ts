@@ -2,6 +2,7 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { tokenization } from "../../services/fawaterak";
+import { classifyPlanChange } from "../../services/payment-workflow";
 
 const billingInfoSchema = z.object({
   fullName: z.string().min(1).max(200),
@@ -43,6 +44,107 @@ export const billingRouter = createTRPCRouter({
       select: { id: true, amount: true, status: true, planId: true, description: true, createdAt: true },
     });
   }),
+
+  getPlanOptions: protectedProcedure.query(async ({ ctx }) => {
+    const user = await ctx.db.user.findUnique({
+      where: { id: ctx.user.id },
+      select: { planId: true, billingCycle: true },
+    });
+    const plans = await ctx.db.pricingPlan.findMany({
+      where: { visible: true },
+      orderBy: { sortOrder: "asc" },
+      select: { id: true, name: true, monthlyPrice: true, tagline: true, features: true },
+    });
+    const currentPlan = plans.find((p) => p.id === user?.planId);
+    const settings = await ctx.db.pricingSettings.findUnique({
+      where: { id: "global" },
+      select: { annualDiscount: true },
+    });
+    const annualDiscount = Math.min(Math.max(settings?.annualDiscount ?? 20, 0), 80);
+    const current = {
+      planId: user?.planId ?? "free",
+      monthlyPrice: currentPlan?.monthlyPrice ?? 0,
+      billingCycle: user?.billingCycle ?? null,
+    };
+    return {
+      currentPlanId: current.planId,
+      currentBillingCycle: (user?.billingCycle as "monthly" | "yearly" | null) ?? null,
+      annualDiscount,
+      options: plans.map((p) => ({
+        ...p,
+        relationMonthly: classifyPlanChange(current, { planId: p.id, monthlyPrice: p.monthlyPrice, billingCycle: "monthly" }),
+        relationYearly: classifyPlanChange(current, { planId: p.id, monthlyPrice: p.monthlyPrice, billingCycle: "yearly" }),
+      })),
+    };
+  }),
+
+  // Self-service: schedule a revert to Free at period end. Silent (no email/Pusher).
+  cancelSubscription: protectedProcedure.mutation(async ({ ctx }) => {
+    const user = await ctx.db.user.findUnique({
+      where: { id: ctx.user.id },
+      select: { planId: true, planExpiresAt: true },
+    });
+    if (!user || user.planId === "free" || !user.planExpiresAt || user.planExpiresAt <= new Date()) {
+      throw new TRPCError({ code: "BAD_REQUEST", message: "No active paid subscription to cancel." });
+    }
+    await ctx.db.user.update({
+      where: { id: ctx.user.id },
+      data: { pendingPlanId: "free", pendingBillingCycle: null },
+    });
+    return { success: true };
+  }),
+
+  // Self-service: undo any scheduled plan change. Silent.
+  resumeSubscription: protectedProcedure.mutation(async ({ ctx }) => {
+    await ctx.db.user.update({
+      where: { id: ctx.user.id },
+      data: { pendingPlanId: null, pendingBillingCycle: null },
+    });
+    return { success: true };
+  }),
+
+  // Self-service: schedule a lower paid tier to take effect at period end.
+  // Charges nothing now; the daily cron charges the saved card at expiry. Silent.
+  scheduleDowngrade: protectedProcedure
+    .input(z.object({ planId: z.string().min(1), billingCycle: z.enum(["monthly", "yearly"]) }))
+    .mutation(async ({ ctx, input }) => {
+      const user = await ctx.db.user.findUnique({
+        where: { id: ctx.user.id },
+        select: {
+          planId: true,
+          billingCycle: true,
+          planExpiresAt: true,
+          billingInfo: {
+            select: { paymentMethods: { where: { isDefault: true }, select: { fawaterakToken: true } } },
+          },
+        },
+      });
+      if (!user || user.planId === "free" || !user.planExpiresAt || user.planExpiresAt <= new Date()) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "No active paid subscription." });
+      }
+      const [target, currentPlan] = await Promise.all([
+        ctx.db.pricingPlan.findUnique({ where: { id: input.planId } }),
+        ctx.db.pricingPlan.findUnique({ where: { id: user.planId } }),
+      ]);
+      if (!target || !target.visible) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Plan not found." });
+      }
+      const relation = classifyPlanChange(
+        { planId: user.planId, monthlyPrice: currentPlan?.monthlyPrice ?? 0, billingCycle: user.billingCycle },
+        { planId: target.id, monthlyPrice: target.monthlyPrice, billingCycle: input.billingCycle },
+      );
+      if (relation !== "downgrade") {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "This change is not a downgrade. Use checkout to upgrade." });
+      }
+      if (!user.billingInfo?.paymentMethods[0]?.fawaterakToken) {
+        throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Add a saved card before scheduling a downgrade." });
+      }
+      await ctx.db.user.update({
+        where: { id: ctx.user.id },
+        data: { pendingPlanId: target.id, pendingBillingCycle: input.billingCycle },
+      });
+      return { success: true };
+    }),
 
   upsertInfo: protectedProcedure
     .input(billingInfoSchema)

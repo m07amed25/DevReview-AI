@@ -1,266 +1,231 @@
 ---
 name: Code Catch
-description: AI-powered code review that catches what humans miss.
+description: AI code review for developers who live in the terminal. Dark, dense, engineered.
 colors:
-  background: "#09090b"
-  surface-deep: "#111113"
-  surface-raised: "#18181b"
-  surface-overlay: "#1f1f23"
-  border: "#27272a"
-  muted: "#3f3f46"
-  text-secondary: "#a1a1aa"
-  text-primary: "#e4e4e7"
-  text-bright: "#fafafa"
-  accent-blue: "#3b82f6"
-  accent-blue-muted: "#2563eb"
-  signal-red: "#ef4444"
-  signal-green: "#22c55e"
-  signal-amber: "#f59e0b"
+  signal-blue: "oklch(0.62 0.16 250)"
+  signal-blue-fg: "oklch(0.98 0.01 250)"
+  command-navy: "oklch(0.12 0.03 250)"
+  console-panel: "oklch(0.16 0.025 250)"
+  raised-panel: "oklch(0.20 0.02 250)"
+  panel-line: "oklch(0.30 0.02 250)"
+  console-white: "oklch(0.92 0.02 250)"
+  muted-steel: "oklch(0.62 0.03 250)"
+  daylight: "oklch(0.98 0.005 250)"
+  ink: "oklch(0.15 0.03 250)"
+  alert-red: "oklch(0.55 0.20 25)"
+  signal-green: "oklch(0.55 0.15 155)"
+  caution-amber: "oklch(0.65 0.15 75)"
 typography:
-  display:
-    fontFamily: "Geist, -apple-system, BlinkMacSystemFont, sans-serif"
-    fontSize: "clamp(1.75rem, 4vw, 2.5rem)"
-    fontWeight: 700
-    lineHeight: 1.1
-    letterSpacing: "-0.025em"
-  headline:
-    fontFamily: "Geist, -apple-system, BlinkMacSystemFont, sans-serif"
-    fontSize: "1.25rem"
+  heading:
+    fontFamily: "Geist Sans, system-ui, sans-serif"
     fontWeight: 600
-    lineHeight: 1.3
-    letterSpacing: "-0.015em"
-  title:
-    fontFamily: "Geist, -apple-system, BlinkMacSystemFont, sans-serif"
-    fontSize: "0.9375rem"
-    fontWeight: 600
-    lineHeight: 1.4
-    letterSpacing: "-0.01em"
+    lineHeight: 1.15
+    letterSpacing: "-0.02em"
   body:
-    fontFamily: "Geist, -apple-system, BlinkMacSystemFont, sans-serif"
+    fontFamily: "Geist Sans, system-ui, sans-serif"
     fontSize: "0.875rem"
     fontWeight: 400
     lineHeight: 1.6
-    letterSpacing: "0"
+    fontFeature: "'ss01', 'ss02', 'cv01'"
   label:
-    fontFamily: "Geist Mono, ui-monospace, monospace"
+    fontFamily: "Geist Sans, system-ui, sans-serif"
     fontSize: "0.75rem"
     fontWeight: 500
-    lineHeight: 1.4
-    letterSpacing: "0.02em"
+    letterSpacing: "0"
+  mono:
+    fontFamily: "Geist Mono, ui-monospace, SFMono-Regular, monospace"
+    fontSize: "0.8125rem"
+    lineHeight: 1.6
 rounded:
-  none: "0px"
-  sm: "4px"
-  md: "6px"
-  lg: "8px"
+  sm: "2px"
+  md: "4px"
+  lg: "6px"
+  pill: "9999px"
 spacing:
   xs: "4px"
   sm: "8px"
   md: "12px"
   lg: "16px"
   xl: "24px"
-  section: "32px"
 components:
   button-primary:
-    backgroundColor: "{colors.accent-blue}"
-    textColor: "{colors.command-navy}"
-    border: "1px solid {colors.accent-blue}"
+    backgroundColor: "{colors.signal-blue}"
+    textColor: "{colors.signal-blue-fg}"
     rounded: "{rounded.sm}"
     padding: "8px 16px"
-    cursor: "pointer"
+    height: "36px"
   button-primary-hover:
-    backgroundColor: "{colors.accent-blue-muted}"
-    textColor: "{colors.text-bright}"
-    border: "1px solid {colors.accent-blue-muted}"
+    backgroundColor: "oklch(0.62 0.16 250 / 0.85)"
+    textColor: "{colors.signal-blue-fg}"
+  button-outline:
+    backgroundColor: "{colors.console-panel}"
+    textColor: "{colors.console-white}"
+    rounded: "{rounded.sm}"
+    padding: "8px 16px"
+    height: "36px"
   button-ghost:
     backgroundColor: "transparent"
-    textColor: "{colors.text-secondary}"
-    border: "1px solid {colors.border}"
+    textColor: "{colors.muted-steel}"
     rounded: "{rounded.sm}"
-    padding: "8px 12px"
-    cursor: "pointer"
-  button-ghost-hover:
-    backgroundColor: "{colors.surface-raised}"
-    textColor: "{colors.text-primary}"
-    border: "1px solid {colors.muted}"
-  input-default:
-    backgroundColor: "{colors.surface-deep}"
-    textColor: "{colors.text-primary}"
-    border: "1px solid {colors.border}"
+    height: "36px"
+  input:
+    backgroundColor: "{colors.console-panel}"
+    textColor: "{colors.console-white}"
     rounded: "{rounded.sm}"
-    padding: "8px 12px"
-  card-surface:
-    backgroundColor: "{colors.surface-raised}"
-    textColor: "{colors.text-primary}"
-    border: "1px solid {colors.border}"
-    rounded: "{rounded.md}"
-    padding: "12px 16px"
-  nav-item:
-    backgroundColor: "transparent"
-    textColor: "{colors.text-secondary}"
-    rounded: "{rounded.sm}"
-    padding: "6px 10px"
-  nav-item-hover:
-    backgroundColor: "{colors.surface-raised}"
-    textColor: "{colors.text-bright}"
+    padding: "4px 12px"
+    height: "36px"
+  card:
+    backgroundColor: "{colors.console-panel}"
+    textColor: "{colors.console-white}"
+    rounded: "{rounded.lg}"
+    padding: "24px"
+  badge-default:
+    backgroundColor: "{colors.signal-blue}"
+    textColor: "{colors.signal-blue-fg}"
+    rounded: "{rounded.pill}"
+    padding: "2px 8px"
+  badge-success:
+    backgroundColor: "oklch(0.55 0.15 155 / 0.20)"
+    textColor: "oklch(0.72 0.12 155)"
+    rounded: "{rounded.pill}"
+    padding: "2px 8px"
 ---
 
 # Design System: Code Catch
 
 ## 1. Overview
 
-**Creative North Star: "The Control Room"**
+**Creative North Star: "THE CONTROL ROOM"**
 
-Code Catch is a mission-critical instrument panel. Every surface exists to surface signal, suppress noise, and give the developer immediate confidence in their codebase's health. The aesthetic is that of a well-engineered control room: deep, dark, precise, and utterly functional. Nothing decorates. Everything informs.
+Code Catch is the wall of screens an engineer sits in front of when the stakes are real: deep cold navy, instruments lit in a single signal blue, every readout aligned to the same grid. The interface reads as engineered, not decorated. Surfaces are dark by default (the app ships `defaultTheme="dark"`), and depth comes from stacking panels of slightly different navy, the way a console gains dimension from its bezels rather than from drop shadows. Information density is a feature, not a flaw: a developer should see more of their review, diff, or analytics in one glance than a friendlier tool would dare to show.
 
-The system rejects warmth, playfulness, and visual softness. No cream backgrounds. No rounded-everything friendliness. No lifestyle SaaS energy. No neon theatrics. The interface communicates through density, typographic precision, and tonal restraint. It earns trust the way a well-built CLI does: by being fast, predictable, and never wasting your attention.
+The system runs on one cold hue (OKLCH hue 250) for every neutral and one saturated accent (Signal Blue) for everything that demands action or attention. Warmth, playfulness, and ornament are deliberately absent. Type is a single technical grotesque (Geist Sans) with a monospace companion (Geist Mono) reserved for anything a machine produced: code, diffs, commit hashes, metrics. Motion is brisk and functional: 150ms color shifts on controls, 400ms page transitions, nothing that makes a developer wait to watch an animation finish.
+
+This system explicitly rejects the friendly-productivity-app look (Notion/Loom softness), wellness-startup and lifestyle-SaaS warmth, cream backgrounds and giant pillowy cards, and the cluttered enterprise-dashboard sprawl of Jira or Azure DevOps. It is equally not the neon-on-black hacker cliché: the accent is a precise instrument blue, never a glowing green terminal.
 
 **Key Characteristics:**
-- Dark-dominant with deep navy foundations, never pure black
-- Flat surfaces differentiated by tonal shifts, not shadows
-- Compact information density with tight, deliberate spacing
-- Monospace accents for technical data (counts, hashes, timestamps)
-- Color used sparingly and functionally: blue for action, red/green/amber for signal
+- Dark-first. Command Navy (`oklch(0.12 0.03 250)`) is the home surface; light mode is a faithful cold-tinted inversion, not the primary experience.
+- One hue, one signal. Every neutral is tinted toward hue 250; Signal Blue is the only saturated color in the chrome.
+- Sharp geometry. Controls are nearly square (2px radius); panels are barely softened (6px). Only badges go fully round.
+- Dense and aligned. Tight spacing, rigorous alignment, a fixed (non-fluid) type scale tuned for sustained reading at a desk.
+- Machine truth in mono. Geist Mono marks anything generated or quoted from the codebase.
 
 ## 2. Colors
 
-A restrained cold palette. Tinted neutrals carry the interface; the single accent (blue) marks interactive elements and nothing else. Signal colors (red, green, amber) are reserved strictly for semantic meaning.
+A single cold accent floating over a stack of hue-250 navies, with three semantic colors held in reserve to encode review state.
 
 ### Primary
-- **Command Navy** (oklch(0.12 0.03 250)): The deepest background. The foundation of every screen. Used for page-level backgrounds and the sidebar base.
-- **Accent Blue** (oklch(0.62 0.16 250)): The single interactive color. Buttons, links, active states, focus rings. Nothing else.
+- **Signal Blue** (`oklch(0.62 0.16 250)`): The only saturated hue in the interface chrome. Primary buttons, active navigation, current selection, focus rings, links, keyword syntax, and chart series one. Its scarcity is what makes it read as "act here."
+- **Signal Blue Foreground** (`oklch(0.98 0.01 250)`): Near-white text/icon color that sits on Signal Blue fills for maximum legibility.
+
+### Secondary
+Semantic state colors. They appear only to mean something, never for decoration.
+- **Signal Green** (`oklch(0.55 0.15 155)`): Success, passing checks, diff additions. Used as a 10–20% alpha tint behind text in dark mode.
+- **Caution Amber** (`oklch(0.65 0.15 75)`): Warnings, degraded states, chart series three.
+- **Alert Red** (`oklch(0.55 0.20 25)`): Destructive actions, errors, diff deletions.
 
 ### Neutral
-- **Surface Deep** (oklch(0.16 0.025 250)): Card backgrounds, input fields, secondary containers. One step above the page.
-- **Surface Raised** (oklch(0.20 0.02 250)): Hover states, active nav items, elevated containers. Two steps above the page.
-- **Surface Overlay** (oklch(0.24 0.02 250)): Dropdowns, popovers, command palettes. The highest tonal layer.
-- **Slate Border** (oklch(0.30 0.02 250)): Dividers, input borders, table rules. Visible but quiet.
-- **Slate Muted** (oklch(0.40 0.03 250)): Disabled states, placeholder text, tertiary information.
-- **Text Secondary** (oklch(0.60 0.03 250)): Labels, descriptions, metadata. Readable but recessive.
-- **Text Primary** (oklch(0.82 0.02 250)): Body copy, headings, primary content. The default reading color.
-- **Text Bright** (oklch(0.92 0.01 250)): Emphasis, active states, high-contrast elements. Used sparingly.
-
-### Signal (semantic only)
-- **Signal Red** (oklch(0.55 0.2 25)): Errors, critical severity, destructive actions.
-- **Signal Green** (oklch(0.55 0.15 155)): Success, passing checks, healthy status.
-- **Signal Amber** (oklch(0.65 0.15 75)): Warnings, medium severity, attention needed.
+The Command Navy ramp. All hue 250, chroma fading as lightness rises.
+- **Command Navy** (`oklch(0.12 0.03 250)`): The base canvas in dark mode. Deep and cold; never pure black.
+- **Console Panel** (`oklch(0.16 0.025 250)`): Cards, inputs, secondary surfaces, the first layer lifted off the canvas.
+- **Raised Panel** (`oklch(0.20 0.02 250)`): Popovers, dropdowns, accent/hover surfaces, the second layer up.
+- **Panel Line** (`oklch(0.30 0.02 250)`): Borders, dividers, grid lines between instruments.
+- **Console White** (`oklch(0.92 0.02 250)`): Primary text. Clears WCAG AA against every navy surface.
+- **Muted Steel** (`oklch(0.62 0.03 250)`): Secondary text, captions, placeholders. Still AA on Command Navy; bright enough that it is never the washed-out gray that makes a UI hard to read.
+- **Daylight** (`oklch(0.98 0.005 250)`) / **Ink** (`oklch(0.15 0.03 250)`): The light-mode surface and text anchors, both cold-tinted toward hue 250.
 
 ### Named Rules
-**The Cold Doctrine.** Every neutral is tinted toward hue 250 (cold blue). No pure grays. No warm undertones. If a surface looks gray, it's wrong; it should look slate-blue.
+**The One Signal Rule.** Signal Blue is the only saturated hue allowed in the UI chrome. If a screen has two competing accents, one is wrong. Status greens, ambers, and reds are not decoration; they appear only where they encode review state.
 
-**The Signal Scarcity Rule.** Red, green, and amber appear only with semantic meaning (error, success, warning). They are never decorative. If a color draws the eye, it must be saying something.
+**The No-Warm Rule.** Every neutral carries hue 250. No warm grays, no pure grays, no pure black, no cream. If a surface looks beige or paper-toned, it has left the system.
 
 ## 3. Typography
 
-**Display + Body Font:** Geist (with system fallback stack)
-**Label + Code Font:** Geist Mono (with monospace fallback)
+**Display / Heading Font:** Geist Sans (with `system-ui, sans-serif` fallback)
+**Body & UI Font:** Geist Sans
+**Code / Data Font:** Geist Mono (with `ui-monospace, SFMono-Regular, monospace` fallback)
 
-**Character:** Technical, tight, and confident. Geist's geometric precision matches the control-room metaphor. The mono variant appears wherever data is technical: commit hashes, file paths, timestamps, counts. This isn't decoration; it signals "this is machine-generated or machine-relevant data."
-
-### Rendering
-- **Anti-aliasing:** `-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale` on the root. Subpixel rendering makes light-on-dark text look bloated.
-- **Text rendering:** `text-rendering: optimizeLegibility` for headings (display, headline). Improves kerning pairs at larger sizes.
-- **Font feature settings:** Enable `"ss01"` (stylistic set 1) for Geist where available. Tighter, more geometric alternates.
+**Character:** One technical grotesque does all the human-readable work; weight and size carry the hierarchy, not a second typeface. The body runs with `font-feature-settings: "ss01", "ss02", "cv01"` for Geist's engineered alternates. Geist Mono is the voice of the machine: tabular, even, and unmistakably "this came from your codebase."
 
 ### Hierarchy
-- **Display** (700, clamp(1.75rem, 4vw, 2.5rem), 1.1): Page titles only. One per screen maximum. Tight letter-spacing (-0.025em) for density.
-- **Headline** (600, 1.25rem, 1.3): Section headers, card titles, modal headers. The workhorse heading.
-- **Title** (600, 0.9375rem, 1.4): Subsection labels, table column headers, sidebar group labels.
-- **Body** (400, 0.875rem, 1.6): All running text. Max line length 70ch. The 14px base keeps density high without sacrificing readability.
-- **Label** (500, 0.75rem, 1.4, Geist Mono): Metadata, timestamps, badge text, status indicators. Uppercase forbidden; the mono face provides enough differentiation.
+- **Heading** (600, 1.25–1.875rem, line-height 1.15, letter-spacing −0.02em): Page and section titles. Tight but never cramped; the −0.02em floor keeps letters from touching.
+- **Title** (600, 1rem, leading-none, tracking-tight): Card titles and panel headers.
+- **Body** (400, 0.875rem, line-height 1.6): Default UI and reading text. Prose caps at 65–75ch; data and tables may run denser.
+- **Label** (500, 0.75rem): Buttons, form labels, metadata. Sentence case, not all-caps.
+- **Mono** (400, 0.8125rem, line-height 1.6): Diffs, code blocks, hashes, metrics, syntax-highlighted output.
 
 ### Named Rules
-**The 14px Floor Rule.** Body text is 14px (0.875rem). Nothing interactive goes below 12px. The density goal is achieved through spacing compression, not type shrinking.
+**The One Family Rule.** Geist Sans carries headings, body, buttons, labels, and data. There is no display face and no third family. Hierarchy is built from weight (400/500/600) and size, never from swapping typefaces.
 
-**The Mono Signal Rule.** Geist Mono appears only for technical data: hashes, paths, counts, code, timestamps. Using mono for decorative purposes (nav labels, button text) is prohibited.
+**The Machine-Truth Rule.** Geist Mono is reserved for content a machine generated or that must be read character-exact: code, diffs, commit SHAs, tokens, numeric metrics. Prose is never set in mono for flavor.
 
 ## 4. Elevation
 
-Flat by default. Depth is communicated through tonal shifts in the navy scale, not through shadows. A surface one step above another is simply lighter (Surface Deep → Surface Raised → Surface Overlay). This creates clear hierarchy without the visual noise of drop shadows.
+Depth is built primarily from **tonal layering**, not shadows. In dark mode each surface steps up in lightness along the same hue 250 ramp (Command Navy `0.12` → Console Panel `0.16` → Raised Panel `0.20`), with Panel Line `0.30` borders drawing the edges. A panel reads as "above" the canvas because it is lighter, the way a lit instrument sits proudly on a dark console. Shadows are a quiet secondary cue, used sparingly and never as decoration.
 
-Shadows appear only as transient feedback:
-- **Hover shadow** (`0 2px 8px oklch(0.05 0.02 250 / 40%)`): Applied on interactive card hover. Subtle, cold-tinted, disappears on mouse-out.
-- **Focus shadow** (`0 0 0 2px oklch(0.62 0.16 250 / 40%)`): Ring-style focus indicator using the accent blue at reduced opacity.
-- **Overlay shadow** (`0 8px 32px oklch(0.05 0.02 250 / 60%)`): Dropdowns and popovers only. Anchors floating elements to the page.
+### Shadow Vocabulary
+- **Resting card** (`box-shadow: var(--shadow-sm)` ≈ `0 1px 2px rgb(0 0 0 / 0.05)`): Barely-there separation on default cards.
+- **Review card** (`box-shadow: 0 2px 8px oklch(0.05 0.02 250 / 0.5)`): The signature content surface at rest.
+- **Review card, hover** (`box-shadow: 0 4px 12px oklch(0.05 0.02 250 / 0.6)`): Lifts ~2px on hover, paired with a lighter border and background. The only place shadow grows in response to interaction.
 
 ### Named Rules
-**The Flat-By-Default Rule.** Surfaces are flat at rest. If you're reaching for `box-shadow` on a static element, use a tonal shift instead. Shadows are responses to interaction, not permanent decoration.
+**The Tonal Depth Rule.** Reach for a lighter navy before reaching for a shadow. Stacked panels separate by lightness step (`0.12 / 0.16 / 0.20 / 0.30`); shadow blur never exceeds 12px and never exists for ornament. If a surface needs a 24px+ glow to feel elevated, the layering is wrong.
 
 ## 5. Components
 
+Every interactive component ships the full state set: default, hover, focus-visible, active, disabled, and (where relevant) loading. Affordances are consistent surface-wide; the same button shape and the same form-control vocabulary appear on every screen.
+
 ### Buttons
-- **Shape:** Sharp corners (4px radius). Tight padding (8px 16px). `cursor: pointer` always, no exceptions.
-- **Border:** Every button variant has a visible 1px border. Primary: `1px solid accent-blue`. Ghost: `1px solid slate-border`. Destructive: `1px solid signal-red`. Borders define the element's edge; buttons without borders look unfinished.
-- **Primary:** Accent Blue background, Command Navy text. Border matches background color. The only saturated element on most screens.
-- **Hover:** Slightly muted blue (accent-blue-muted), text shifts to bright. Border darkens to match. Transition: 150ms ease-out.
-- **Ghost:** Transparent background, secondary text color, slate-border stroke. Hover fills with surface-raised and border lightens to muted. Used for secondary actions, toolbar buttons, nav items.
-- **Destructive:** Signal Red background, same shape rules. Border: `1px solid signal-red`. Reserved for irreversible actions.
-- **Disabled:** Surface-raised background, slate-muted text, slate-border stroke at 50% opacity. No pointer events, no hover. `cursor: not-allowed`.
+- **Shape:** Nearly square (2px radius, `rounded-sm`). Default height 36px (`h-9`), padding `8px 16px`, label at 0.875rem/500.
+- **Primary:** Signal Blue fill with a matching border and near-white text. Hover drops fill to 85% opacity; active to 75%.
+- **Outline:** Console Panel surface, Panel Line border, Console White text. Hover shifts to the accent/raised surface and brightens the border.
+- **Ghost:** Transparent with Muted Steel text; hover fills with the raised surface, brightens text to Console White, and reveals a border.
+- **Secondary / Link:** Secondary uses the panel surface with a border; link is text-only Signal Blue with an underline on hover.
+- **Focus:** `ring-2 ring-primary/40` plus a Signal Blue border. **Loading:** `isLoading` sets `aria-busy` and a progress cursor; the label stays put (no layout shift).
+- **Sizes:** `xs` (24px), `sm` (32px), `default` (36px), `lg` (40px), and matching square icon sizes.
 
 ### Inputs / Fields
-- **Style:** Surface-deep background, 4px radius. Text-primary for value, slate-muted for placeholder.
-- **Border:** Always visible. `1px solid slate-border` at rest. The border must be clearly distinguishable against the background; inputs without visible edges look broken. Never omit or reduce opacity on the resting border.
-- **Focus:** Border shifts to accent-blue (full opacity, sharp). Focus ring (2px accent-blue at 40% opacity). No background change.
-- **Error:** Border shifts to signal-red (full opacity). Inline error text below in signal-red, body weight.
-- **Disabled:** Reduced opacity (0.5). Border remains visible at reduced contrast.
+- **Style:** Console Panel background, Panel Line border, 2px radius, 36px height, padding `4px 12px`. Placeholder uses Muted Steel (legible, not a faint gray).
+- **Focus:** Border shifts to Signal Blue with a `ring-2 ring-primary/40` halo (color transition only, no size jump).
+- **Error:** `aria-invalid` swaps border and ring to Alert Red. **Disabled:** 50% opacity, no pointer events.
 
 ### Cards / Containers
-- **Background:** Surface-raised (one step above page).
-- **Border:** `1px solid slate-border`, always present and visible. Cards without borders dissolve into the page. The edge must be sharp and clearly defined against both the card background and the page behind it. No shadow at rest.
-- **Radius:** 6px (md). Tight, not rounded.
-- **Internal padding:** 12px 16px. Compact.
-- **Hover (when interactive):** Hover shadow appears. Border lightens one step to muted. Transition: 150ms.
-- **Nested containers:** Use surface-deep (darker than parent) to create inset appearance. Never nest cards inside cards.
+- **Corner Style:** Softened panel (6px radius, `rounded-lg`).
+- **Background:** Console Panel on the Command Navy canvas.
+- **Border:** Panel Line at ~50–60% opacity, one solid hairline. Never paired with a wide decorative shadow.
+- **Shadow Strategy:** `shadow-sm` at rest; depth comes from the tonal step, not the shadow (see Elevation).
+- **Internal Padding:** 24px (`p-6`), with a 6px header gap. **Transition:** `all 200ms ease-out`.
 
-### Navigation (Sidebar)
-- **Background:** Command-navy (same as page, no visual separation except a 1px border-right in slate-border).
-- **Items:** Ghost-button pattern. Transparent at rest, surface-raised on hover, surface-overlay when active.
-- **Active indicator:** Background fill only. No colored side-stripe. Active text shifts to text-bright.
-- **Typography:** Title weight (600) for group labels, body weight (400) for items.
-- **Density:** 6px vertical padding per item. 10px horizontal. Tight.
+### Badges / Chips
+- **Style:** Fully round pill (`rounded-full`), padding `2px 8px`, 0.75rem/500 text.
+- **Solid:** Signal Blue or Alert Red fill with contrasting text.
+- **Semantic:** Success / Warning / Info as low-alpha tints of green / amber / blue (10% light, 20% dark) with a saturated text color. State is paired with text, never carried by color alone.
 
-### Tables
-- **Header:** Title typography, text-secondary color. No background differentiation; separated by a 1px slate-border bottom.
-- **Rows:** Body typography, text-primary. Alternating rows prohibited (use consistent background). Hover: row background shifts to surface-raised.
-- **Borders:** Horizontal rules only (1px slate-border). No vertical dividers. No outer border.
+### Navigation
+- **Dashboard sidebar:** Command Navy surface, Panel Line edge, scrollable with a thin 4px Signal-Blue-tinted thumb (the one place a scrollbar is shown). Active item carries the raised surface and a Signal Blue marker; idle items sit in Muted Steel and brighten on hover.
+- **Top navbar:** Sticky, hairline-bottom-bordered, with the logo, primary nav, and user menu. Mobile collapses the sidebar behind a trigger.
 
-### Badges / Status Indicators
-- **Style:** Geist Mono label typography. Background tint of the signal color at 15% opacity. Text in the signal color at full strength. 4px radius.
-- **No border.** The tinted background is sufficient.
-- **Sizes:** One size only. No small/medium/large variants.
-
-### Tooltips / Popovers
-- **Background:** Surface-overlay.
-- **Border:** 1px slate-border.
-- **Shadow:** Overlay shadow (the only element with a persistent shadow besides dropdowns).
-- **Typography:** Body size, text-primary.
-- **Arrow:** None. Position is sufficient context.
+### Signature Component: The Diff & Review Surface
+- **Diff lines:** Additions on a Signal-Green tint (`--diff-addition-bg`) with green text; deletions on an Alert-Red tint with red text; context on a slightly darker navy. Hunk headers sit on a translucent raised surface in Muted Steel.
+- **Syntax highlighting:** Keywords in Signal Blue (600), strings in green, numbers in amber, comments in italic steel.
+- **Review card:** The recurring unit of the product (see Elevation for its shadow behavior): Console Panel, Panel Line border, lifts on hover.
 
 ## 6. Do's and Don'ts
 
 ### Do:
-- **Do** tint every neutral toward hue 250. Even the darkest background carries a cold blue undertone (chroma 0.02-0.03).
-- **Do** use tonal shifts for hierarchy. Page → Surface Deep → Surface Raised → Surface Overlay. Four levels maximum.
-- **Do** reserve Accent Blue exclusively for interactive elements. If it's not clickable, it's not blue.
-- **Do** use Geist Mono for technical data (hashes, paths, counts, code). It signals "machine-relevant."
-- **Do** keep padding tight and asymmetric where appropriate. 12px vertical, 16px horizontal is the card default; vary for rhythm.
-- **Do** use 1px borders in slate-border for separation. Thin, quiet, functional.
-- **Do** make borders on inputs, cards, and buttons always visible and sharp. If the border disappears into the background, increase contrast. Borderless interactive elements look unfinished.
-- **Do** set `cursor: pointer` on every clickable element (buttons, links, interactive cards). No exceptions.
-- **Do** apply `-webkit-font-smoothing: antialiased` globally. Light text on dark backgrounds demands it.
-- **Do** respect `prefers-reduced-motion`. Disable hover shadows and transitions; keep layout stable.
+- **Do** keep the interface dark by default. Command Navy (`oklch(0.12 0.03 250)`) is the home surface; build new screens for dark first, then verify the light inversion.
+- **Do** reserve Signal Blue for action and state. Primary action, current selection, focus, and links, nothing decorative.
+- **Do** build depth by stepping up the navy ramp (`0.12 → 0.16 → 0.20`) before adding any shadow.
+- **Do** keep controls sharp: 2px on buttons and inputs, 6px on cards, full-round only on badges.
+- **Do** set anything machine-generated (code, diffs, hashes, metrics) in Geist Mono.
+- **Do** keep body text on Console White or Muted Steel; both clear WCAG AA (4.5:1) against the navy surfaces. Pair every status color with text or an icon.
+- **Do** keep motion functional and fast: ~150ms on control color changes, ~200ms on cards, ~400ms on page transitions, all honoring `prefers-reduced-motion`.
 
 ### Don't:
-- **Don't** ship buttons without `cursor: pointer`. Default cursor on a clickable element signals broken interaction.
-- **Don't** omit borders on inputs or cards. Borderless fields on dark backgrounds are invisible; the user can't find the input.
-- **Don't** use cream backgrounds, warm tones, or any hue above 200 or below 300 in the neutral scale.
-- **Don't** use border-left or border-right greater than 1px as a colored accent stripe on any element.
-- **Don't** apply gradient text (`background-clip: text`). Emphasis is weight or size, never gradient.
-- **Don't** use glassmorphism, backdrop-blur, or frosted-glass effects.
-- **Don't** build identical card grids (same-sized cards with icon + heading + text repeated).
-- **Don't** use shadows on static elements. Shadows are transient feedback only.
-- **Don't** use bounce, elastic, or spring easing. Ease-out-quart or faster. 150ms maximum for micro-interactions.
-- **Don't** use rounded corners above 8px. This is not a friendly productivity app.
-- **Don't** use em dashes in UI copy. Commas, colons, semicolons, or periods.
-- **Don't** make the interface feel like "lifestyle SaaS, HR platforms, no-code marketing tools, or wellness startup energy." (PRODUCT.md)
-- **Don't** use decorative illustrations, mascots, or playful iconography.
-- **Don't** use the hero-metric template (big number, small label, gradient accent). Show data in context, not in vanity cards.
+- **Don't** use cream or warm backgrounds, giant rounded cards, or soft gradients everywhere. Every neutral stays on hue 250; no token should read as paper, sand, or beige.
+- **Don't** drift toward "friendly productivity app" visuals (the Notion / Loom aesthetic), lifestyle-SaaS, HR-platform, or wellness-startup warmth.
+- **Don't** ship the neon-on-black hacker look. The accent is a precise instrument blue, not a glowing terminal green.
+- **Don't** recreate cluttered enterprise-dashboard sprawl (Jira, Azure DevOps); density must stay aligned and legible, never noisy.
+- **Don't** add illustrated or playful ornament. This product is engineered, not decorated.
+- **Don't** round cards to 12px+ , pair a 1px border with a wide (16px+) drop shadow, or use a colored `border-left` stripe as an accent. Use a full hairline border and a tonal step instead.
+- **Don't** introduce a second accent hue or a second type family. One signal, one family.

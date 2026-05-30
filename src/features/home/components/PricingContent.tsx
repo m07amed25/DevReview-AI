@@ -42,10 +42,13 @@ export function PricingContent({
 
   const mergedPlans: MergedPlan[] = dbPlans.map((p) => {
     const theme = ACCENT_THEMES[p.accentColor] ?? ACCENT_THEMES.slate!;
+    const display = PLAN_DISPLAY_MAP[p.id as Plan] ?? PLAN_DISPLAY_MAP[Plan.FREE]!;
     return {
       ...p,
-      ...(PLAN_DISPLAY_MAP[p.id as Plan] ?? PLAN_DISPLAY_MAP[Plan.FREE]!),
+      ...display,
       ...theme,
+      cta: p.cta || display.cta,
+      badge: p.badge ?? null,
     };
   });
 
@@ -82,7 +85,7 @@ export function PricingContent({
           initial="hidden"
           animate="visible"
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.12, delayChildren: 0.25 } } }}
-          className="mt-10 grid gap-px bg-border sm:grid-cols-3 border border-border rounded-sm overflow-hidden"
+          className="mt-10 grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-4 border border-border rounded-sm overflow-hidden"
         >
           {mergedPlans.map((plan) => {
             const price = yearly

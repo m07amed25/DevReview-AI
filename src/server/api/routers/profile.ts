@@ -113,6 +113,8 @@ export const profileRouter = createTRPCRouter({
       accounts: user.accounts,
       planId: user.planId,
       planExpiresAt: user.planExpiresAt,
+      pendingPlanId: user.pendingPlanId,
+      pendingBillingCycle: user.pendingBillingCycle,
       accountCredit: user.accountCredit,
       // Overrides
       overrideReposLimit: user.overrideReposLimit,

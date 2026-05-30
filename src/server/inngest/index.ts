@@ -13,6 +13,7 @@ export {
   processPaymentSuccess,
   processPaymentFailed,
   processRefund,
+  processExpiredSubscriptions,
 } from "./functions/subscription";
 
 import { reviewPR } from "./functions/review-pr";
@@ -29,6 +30,7 @@ import {
   processPaymentSuccess,
   processPaymentFailed,
   processRefund,
+  processExpiredSubscriptions,
 } from "./functions/subscription";
 
 export const functions = [
@@ -43,4 +45,5 @@ export const functions = [
   processPaymentSuccess,
   processPaymentFailed,
   processRefund,
+  processExpiredSubscriptions,
 ];

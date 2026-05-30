@@ -41,6 +41,8 @@ model User {
   planExpiresAt                DateTime?
   planStartedAt                DateTime?
   billingCycle                 String? /// "monthly" | "yearly"
+  pendingPlanId                String? /// scheduled plan applied at period end ("free" = cancel)
+  pendingBillingCycle          String? /// "monthly" | "yearly" for a scheduled paid downgrade
   accountCredit                Int                           @default(0) /// Non-withdrawable credit in cents for future payments
   overrideReposLimit           Int?
   overrideReviewsLimit         Int?
@@ -662,6 +664,8 @@ model PricingPlan {
   privateRepos Boolean  @default(false)
   sortOrder    Int      @default(0)
   accentColor  String   @default("indigo")
+  cta          String? /// custom CTA button label (falls back to a default)
+  badge        String? /// custom ribbon/badge label (e.g. "Most Popular")
   updatedAt    DateTime @updatedAt
 
   @@map("pricing_plan")

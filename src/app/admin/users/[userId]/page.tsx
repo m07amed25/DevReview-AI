@@ -65,6 +65,8 @@ export default function AdminUserDetailPage() {
     desktopNotifications: true,
     emailNotifications: true,
     notificationSoundEnabled: false,
+    pendingPlanId: "none",
+    pendingBillingCycle: "monthly",
   });
 
   useEffect(() => {
@@ -88,6 +90,8 @@ export default function AdminUserDetailPage() {
         desktopNotifications: user.desktopNotifications,
         emailNotifications: user.emailNotifications,
         notificationSoundEnabled: user.notificationSoundEnabled,
+        pendingPlanId: user.pendingPlanId ?? "none",
+        pendingBillingCycle: user.pendingBillingCycle ?? "monthly",
       });
     }
   }, [user]);
@@ -113,6 +117,9 @@ export default function AdminUserDetailPage() {
       desktopNotifications: form.desktopNotifications,
       emailNotifications: form.emailNotifications,
       notificationSoundEnabled: form.notificationSoundEnabled,
+      pendingPlanId: form.pendingPlanId === "none" ? null : form.pendingPlanId,
+      pendingBillingCycle:
+        form.pendingPlanId !== "none" && form.pendingPlanId !== "free" ? form.pendingBillingCycle : null,
     });
   };
 
@@ -226,6 +233,24 @@ export default function AdminUserDetailPage() {
             <Label>Plan Expires At</Label>
             <Input type="date" value={form.planExpiresAt} disabled={!editing} onChange={(e) => setForm({ ...form, planExpiresAt: e.target.value })} />
           </div>
+          <div className="space-y-1.5">
+            <Label>Scheduled Change (pending)</Label>
+            <SelectRoot value={form.pendingPlanId} onValueChange={(v) => setForm({ ...form, pendingPlanId: v })}>
+              <SelectItem value="none">None</SelectItem>
+              <SelectItem value="free">Cancel → Free</SelectItem>
+              <SelectItem value="pro">Pro</SelectItem>
+              <SelectItem value="enterprise">Enterprise</SelectItem>
+            </SelectRoot>
+          </div>
+          {form.pendingPlanId !== "none" && form.pendingPlanId !== "free" && (
+            <div className="space-y-1.5">
+              <Label>Pending Cycle</Label>
+              <SelectRoot value={form.pendingBillingCycle} onValueChange={(v) => setForm({ ...form, pendingBillingCycle: v })}>
+                <SelectItem value="monthly">Monthly</SelectItem>
+                <SelectItem value="yearly">Yearly</SelectItem>
+              </SelectRoot>
+            </div>
+          )}
           <div className="space-y-1.5">
             <Label>Ban Reason</Label>
             <Input value={form.bannedReason} disabled={!editing} onChange={(e) => setForm({ ...form, bannedReason: e.target.value })} placeholder="Optional" />

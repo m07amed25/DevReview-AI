@@ -5467,6 +5467,8 @@ export namespace Prisma {
     planExpiresAt: Date | null
     planStartedAt: Date | null
     billingCycle: string | null
+    pendingPlanId: string | null
+    pendingBillingCycle: string | null
     accountCredit: number | null
     overrideReposLimit: number | null
     overrideReviewsLimit: number | null
@@ -5505,6 +5507,8 @@ export namespace Prisma {
     planExpiresAt: Date | null
     planStartedAt: Date | null
     billingCycle: string | null
+    pendingPlanId: string | null
+    pendingBillingCycle: string | null
     accountCredit: number | null
     overrideReposLimit: number | null
     overrideReviewsLimit: number | null
@@ -5543,6 +5547,8 @@ export namespace Prisma {
     planExpiresAt: number
     planStartedAt: number
     billingCycle: number
+    pendingPlanId: number
+    pendingBillingCycle: number
     accountCredit: number
     overrideReposLimit: number
     overrideReviewsLimit: number
@@ -5597,6 +5603,8 @@ export namespace Prisma {
     planExpiresAt?: true
     planStartedAt?: true
     billingCycle?: true
+    pendingPlanId?: true
+    pendingBillingCycle?: true
     accountCredit?: true
     overrideReposLimit?: true
     overrideReviewsLimit?: true
@@ -5635,6 +5643,8 @@ export namespace Prisma {
     planExpiresAt?: true
     planStartedAt?: true
     billingCycle?: true
+    pendingPlanId?: true
+    pendingBillingCycle?: true
     accountCredit?: true
     overrideReposLimit?: true
     overrideReviewsLimit?: true
@@ -5673,6 +5683,8 @@ export namespace Prisma {
     planExpiresAt?: true
     planStartedAt?: true
     billingCycle?: true
+    pendingPlanId?: true
+    pendingBillingCycle?: true
     accountCredit?: true
     overrideReposLimit?: true
     overrideReviewsLimit?: true
@@ -5798,6 +5810,8 @@ export namespace Prisma {
     planExpiresAt: Date | null
     planStartedAt: Date | null
     billingCycle: string | null
+    pendingPlanId: string | null
+    pendingBillingCycle: string | null
     accountCredit: number
     overrideReposLimit: number | null
     overrideReviewsLimit: number | null
@@ -5855,6 +5869,8 @@ export namespace Prisma {
     planExpiresAt?: boolean
     planStartedAt?: boolean
     billingCycle?: boolean
+    pendingPlanId?: boolean
+    pendingBillingCycle?: boolean
     accountCredit?: boolean
     overrideReposLimit?: boolean
     overrideReviewsLimit?: boolean
@@ -5911,6 +5927,8 @@ export namespace Prisma {
     planExpiresAt?: boolean
     planStartedAt?: boolean
     billingCycle?: boolean
+    pendingPlanId?: boolean
+    pendingBillingCycle?: boolean
     accountCredit?: boolean
     overrideReposLimit?: boolean
     overrideReviewsLimit?: boolean
@@ -5949,6 +5967,8 @@ export namespace Prisma {
     planExpiresAt?: boolean
     planStartedAt?: boolean
     billingCycle?: boolean
+    pendingPlanId?: boolean
+    pendingBillingCycle?: boolean
     accountCredit?: boolean
     overrideReposLimit?: boolean
     overrideReviewsLimit?: boolean
@@ -5987,13 +6007,15 @@ export namespace Prisma {
     planExpiresAt?: boolean
     planStartedAt?: boolean
     billingCycle?: boolean
+    pendingPlanId?: boolean
+    pendingBillingCycle?: boolean
     accountCredit?: boolean
     overrideReposLimit?: boolean
     overrideReviewsLimit?: boolean
     overrideSeatsLimit?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "createdAt" | "updatedAt" | "reviewDepth" | "defaultLanguage" | "autoReview" | "includeSecurityChecks" | "includePerfSuggestions" | "preferredModel" | "banned" | "bannedReason" | "desktopNotifications" | "emailNotifications" | "notificationSoundEnabled" | "notifyReviewApproved" | "notifyReviewAssigned" | "notifyReviewChangesRequested" | "notifyReviewCompleted" | "notifyReviewFailed" | "notifyScheduledScanCompleted" | "notifyTeamInvites" | "notifyTeamMemberAdded" | "planId" | "planExpiresAt" | "planStartedAt" | "billingCycle" | "accountCredit" | "overrideReposLimit" | "overrideReviewsLimit" | "overrideSeatsLimit", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "createdAt" | "updatedAt" | "reviewDepth" | "defaultLanguage" | "autoReview" | "includeSecurityChecks" | "includePerfSuggestions" | "preferredModel" | "banned" | "bannedReason" | "desktopNotifications" | "emailNotifications" | "notificationSoundEnabled" | "notifyReviewApproved" | "notifyReviewAssigned" | "notifyReviewChangesRequested" | "notifyReviewCompleted" | "notifyReviewFailed" | "notifyScheduledScanCompleted" | "notifyTeamInvites" | "notifyTeamMemberAdded" | "planId" | "planExpiresAt" | "planStartedAt" | "billingCycle" | "pendingPlanId" | "pendingBillingCycle" | "accountCredit" | "overrideReposLimit" | "overrideReviewsLimit" | "overrideSeatsLimit", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     notifications?: boolean | User$notificationsArgs<ExtArgs>
     repositories?: boolean | User$repositoriesArgs<ExtArgs>
@@ -6073,6 +6095,14 @@ export namespace Prisma {
        * "monthly" | "yearly"
        */
       billingCycle: string | null
+      /**
+       * scheduled plan applied at period end ("free" = cancel)
+       */
+      pendingPlanId: string | null
+      /**
+       * "monthly" | "yearly" for a scheduled paid downgrade
+       */
+      pendingBillingCycle: string | null
       /**
        * Non-withdrawable credit in cents for future payments
        */
@@ -6551,6 +6581,8 @@ export namespace Prisma {
     readonly planExpiresAt: FieldRef<"User", 'DateTime'>
     readonly planStartedAt: FieldRef<"User", 'DateTime'>
     readonly billingCycle: FieldRef<"User", 'String'>
+    readonly pendingPlanId: FieldRef<"User", 'String'>
+    readonly pendingBillingCycle: FieldRef<"User", 'String'>
     readonly accountCredit: FieldRef<"User", 'Int'>
     readonly overrideReposLimit: FieldRef<"User", 'Int'>
     readonly overrideReviewsLimit: FieldRef<"User", 'Int'>
@@ -44837,6 +44869,8 @@ export namespace Prisma {
     privateRepos: boolean | null
     sortOrder: number | null
     accentColor: string | null
+    cta: string | null
+    badge: string | null
     updatedAt: Date | null
   }
 
@@ -44853,6 +44887,8 @@ export namespace Prisma {
     privateRepos: boolean | null
     sortOrder: number | null
     accentColor: string | null
+    cta: string | null
+    badge: string | null
     updatedAt: Date | null
   }
 
@@ -44870,6 +44906,8 @@ export namespace Prisma {
     privateRepos: number
     sortOrder: number
     accentColor: number
+    cta: number
+    badge: number
     updatedAt: number
     _all: number
   }
@@ -44904,6 +44942,8 @@ export namespace Prisma {
     privateRepos?: true
     sortOrder?: true
     accentColor?: true
+    cta?: true
+    badge?: true
     updatedAt?: true
   }
 
@@ -44920,6 +44960,8 @@ export namespace Prisma {
     privateRepos?: true
     sortOrder?: true
     accentColor?: true
+    cta?: true
+    badge?: true
     updatedAt?: true
   }
 
@@ -44937,6 +44979,8 @@ export namespace Prisma {
     privateRepos?: true
     sortOrder?: true
     accentColor?: true
+    cta?: true
+    badge?: true
     updatedAt?: true
     _all?: true
   }
@@ -45041,6 +45085,8 @@ export namespace Prisma {
     privateRepos: boolean
     sortOrder: number
     accentColor: string
+    cta: string | null
+    badge: string | null
     updatedAt: Date
     _count: PricingPlanCountAggregateOutputType | null
     _avg: PricingPlanAvgAggregateOutputType | null
@@ -45077,6 +45123,8 @@ export namespace Prisma {
     privateRepos?: boolean
     sortOrder?: boolean
     accentColor?: boolean
+    cta?: boolean
+    badge?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["pricingPlan"]>
 
@@ -45094,6 +45142,8 @@ export namespace Prisma {
     privateRepos?: boolean
     sortOrder?: boolean
     accentColor?: boolean
+    cta?: boolean
+    badge?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["pricingPlan"]>
 
@@ -45111,6 +45161,8 @@ export namespace Prisma {
     privateRepos?: boolean
     sortOrder?: boolean
     accentColor?: boolean
+    cta?: boolean
+    badge?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["pricingPlan"]>
 
@@ -45128,10 +45180,12 @@ export namespace Prisma {
     privateRepos?: boolean
     sortOrder?: boolean
     accentColor?: boolean
+    cta?: boolean
+    badge?: boolean
     updatedAt?: boolean
   }
 
-  export type PricingPlanOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "tagline" | "monthlyPrice" | "visible" | "highlight" | "features" | "reposLimit" | "reviewsLimit" | "seatsLimit" | "privateRepos" | "sortOrder" | "accentColor" | "updatedAt", ExtArgs["result"]["pricingPlan"]>
+  export type PricingPlanOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "tagline" | "monthlyPrice" | "visible" | "highlight" | "features" | "reposLimit" | "reviewsLimit" | "seatsLimit" | "privateRepos" | "sortOrder" | "accentColor" | "cta" | "badge" | "updatedAt", ExtArgs["result"]["pricingPlan"]>
 
   export type $PricingPlanPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "PricingPlan"
@@ -45150,6 +45204,14 @@ export namespace Prisma {
       privateRepos: boolean
       sortOrder: number
       accentColor: string
+      /**
+       * custom CTA button label (falls back to a default)
+       */
+      cta: string | null
+      /**
+       * custom ribbon/badge label (e.g. "Most Popular")
+       */
+      badge: string | null
       updatedAt: Date
     }, ExtArgs["result"]["pricingPlan"]>
     composites: {}
@@ -45587,6 +45649,8 @@ export namespace Prisma {
     readonly privateRepos: FieldRef<"PricingPlan", 'Boolean'>
     readonly sortOrder: FieldRef<"PricingPlan", 'Int'>
     readonly accentColor: FieldRef<"PricingPlan", 'String'>
+    readonly cta: FieldRef<"PricingPlan", 'String'>
+    readonly badge: FieldRef<"PricingPlan", 'String'>
     readonly updatedAt: FieldRef<"PricingPlan", 'DateTime'>
   }
     
@@ -53776,6 +53840,8 @@ export namespace Prisma {
     planExpiresAt: 'planExpiresAt',
     planStartedAt: 'planStartedAt',
     billingCycle: 'billingCycle',
+    pendingPlanId: 'pendingPlanId',
+    pendingBillingCycle: 'pendingBillingCycle',
     accountCredit: 'accountCredit',
     overrideReposLimit: 'overrideReposLimit',
     overrideReviewsLimit: 'overrideReviewsLimit',
@@ -54296,6 +54362,8 @@ export namespace Prisma {
     privateRepos: 'privateRepos',
     sortOrder: 'sortOrder',
     accentColor: 'accentColor',
+    cta: 'cta',
+    badge: 'badge',
     updatedAt: 'updatedAt'
   };
 
@@ -54889,6 +54957,8 @@ export namespace Prisma {
     planExpiresAt?: DateTimeNullableFilter<"User"> | Date | string | null
     planStartedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     billingCycle?: StringNullableFilter<"User"> | string | null
+    pendingPlanId?: StringNullableFilter<"User"> | string | null
+    pendingBillingCycle?: StringNullableFilter<"User"> | string | null
     accountCredit?: IntFilter<"User"> | number
     overrideReposLimit?: IntNullableFilter<"User"> | number | null
     overrideReviewsLimit?: IntNullableFilter<"User"> | number | null
@@ -54944,6 +55014,8 @@ export namespace Prisma {
     planExpiresAt?: SortOrderInput | SortOrder
     planStartedAt?: SortOrderInput | SortOrder
     billingCycle?: SortOrderInput | SortOrder
+    pendingPlanId?: SortOrderInput | SortOrder
+    pendingBillingCycle?: SortOrderInput | SortOrder
     accountCredit?: SortOrder
     overrideReposLimit?: SortOrderInput | SortOrder
     overrideReviewsLimit?: SortOrderInput | SortOrder
@@ -55002,6 +55074,8 @@ export namespace Prisma {
     planExpiresAt?: DateTimeNullableFilter<"User"> | Date | string | null
     planStartedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     billingCycle?: StringNullableFilter<"User"> | string | null
+    pendingPlanId?: StringNullableFilter<"User"> | string | null
+    pendingBillingCycle?: StringNullableFilter<"User"> | string | null
     accountCredit?: IntFilter<"User"> | number
     overrideReposLimit?: IntNullableFilter<"User"> | number | null
     overrideReviewsLimit?: IntNullableFilter<"User"> | number | null
@@ -55057,6 +55131,8 @@ export namespace Prisma {
     planExpiresAt?: SortOrderInput | SortOrder
     planStartedAt?: SortOrderInput | SortOrder
     billingCycle?: SortOrderInput | SortOrder
+    pendingPlanId?: SortOrderInput | SortOrder
+    pendingBillingCycle?: SortOrderInput | SortOrder
     accountCredit?: SortOrder
     overrideReposLimit?: SortOrderInput | SortOrder
     overrideReviewsLimit?: SortOrderInput | SortOrder
@@ -55103,6 +55179,8 @@ export namespace Prisma {
     planExpiresAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     planStartedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     billingCycle?: StringNullableWithAggregatesFilter<"User"> | string | null
+    pendingPlanId?: StringNullableWithAggregatesFilter<"User"> | string | null
+    pendingBillingCycle?: StringNullableWithAggregatesFilter<"User"> | string | null
     accountCredit?: IntWithAggregatesFilter<"User"> | number
     overrideReposLimit?: IntNullableWithAggregatesFilter<"User"> | number | null
     overrideReviewsLimit?: IntNullableWithAggregatesFilter<"User"> | number | null
@@ -57726,6 +57804,8 @@ export namespace Prisma {
     privateRepos?: BoolFilter<"PricingPlan"> | boolean
     sortOrder?: IntFilter<"PricingPlan"> | number
     accentColor?: StringFilter<"PricingPlan"> | string
+    cta?: StringNullableFilter<"PricingPlan"> | string | null
+    badge?: StringNullableFilter<"PricingPlan"> | string | null
     updatedAt?: DateTimeFilter<"PricingPlan"> | Date | string
   }
 
@@ -57743,6 +57823,8 @@ export namespace Prisma {
     privateRepos?: SortOrder
     sortOrder?: SortOrder
     accentColor?: SortOrder
+    cta?: SortOrderInput | SortOrder
+    badge?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
   }
 
@@ -57763,6 +57845,8 @@ export namespace Prisma {
     privateRepos?: BoolFilter<"PricingPlan"> | boolean
     sortOrder?: IntFilter<"PricingPlan"> | number
     accentColor?: StringFilter<"PricingPlan"> | string
+    cta?: StringNullableFilter<"PricingPlan"> | string | null
+    badge?: StringNullableFilter<"PricingPlan"> | string | null
     updatedAt?: DateTimeFilter<"PricingPlan"> | Date | string
   }, "id">
 
@@ -57780,6 +57864,8 @@ export namespace Prisma {
     privateRepos?: SortOrder
     sortOrder?: SortOrder
     accentColor?: SortOrder
+    cta?: SortOrderInput | SortOrder
+    badge?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
     _count?: PricingPlanCountOrderByAggregateInput
     _avg?: PricingPlanAvgOrderByAggregateInput
@@ -57805,6 +57891,8 @@ export namespace Prisma {
     privateRepos?: BoolWithAggregatesFilter<"PricingPlan"> | boolean
     sortOrder?: IntWithAggregatesFilter<"PricingPlan"> | number
     accentColor?: StringWithAggregatesFilter<"PricingPlan"> | string
+    cta?: StringNullableWithAggregatesFilter<"PricingPlan"> | string | null
+    badge?: StringNullableWithAggregatesFilter<"PricingPlan"> | string | null
     updatedAt?: DateTimeWithAggregatesFilter<"PricingPlan"> | Date | string
   }
 
@@ -58393,6 +58481,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -58448,6 +58538,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -58503,6 +58595,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -58558,6 +58652,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -58613,6 +58709,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -58651,6 +58749,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -58689,6 +58789,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -61549,6 +61651,8 @@ export namespace Prisma {
     privateRepos?: boolean
     sortOrder?: number
     accentColor?: string
+    cta?: string | null
+    badge?: string | null
     updatedAt?: Date | string
   }
 
@@ -61566,6 +61670,8 @@ export namespace Prisma {
     privateRepos?: boolean
     sortOrder?: number
     accentColor?: string
+    cta?: string | null
+    badge?: string | null
     updatedAt?: Date | string
   }
 
@@ -61583,6 +61689,8 @@ export namespace Prisma {
     privateRepos?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     accentColor?: StringFieldUpdateOperationsInput | string
+    cta?: NullableStringFieldUpdateOperationsInput | string | null
+    badge?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -61600,6 +61708,8 @@ export namespace Prisma {
     privateRepos?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     accentColor?: StringFieldUpdateOperationsInput | string
+    cta?: NullableStringFieldUpdateOperationsInput | string | null
+    badge?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -61617,6 +61727,8 @@ export namespace Prisma {
     privateRepos?: boolean
     sortOrder?: number
     accentColor?: string
+    cta?: string | null
+    badge?: string | null
     updatedAt?: Date | string
   }
 
@@ -61634,6 +61746,8 @@ export namespace Prisma {
     privateRepos?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     accentColor?: StringFieldUpdateOperationsInput | string
+    cta?: NullableStringFieldUpdateOperationsInput | string | null
+    badge?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -61651,6 +61765,8 @@ export namespace Prisma {
     privateRepos?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     accentColor?: StringFieldUpdateOperationsInput | string
+    cta?: NullableStringFieldUpdateOperationsInput | string | null
+    badge?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -62563,6 +62679,8 @@ export namespace Prisma {
     planExpiresAt?: SortOrder
     planStartedAt?: SortOrder
     billingCycle?: SortOrder
+    pendingPlanId?: SortOrder
+    pendingBillingCycle?: SortOrder
     accountCredit?: SortOrder
     overrideReposLimit?: SortOrder
     overrideReviewsLimit?: SortOrder
@@ -62608,6 +62726,8 @@ export namespace Prisma {
     planExpiresAt?: SortOrder
     planStartedAt?: SortOrder
     billingCycle?: SortOrder
+    pendingPlanId?: SortOrder
+    pendingBillingCycle?: SortOrder
     accountCredit?: SortOrder
     overrideReposLimit?: SortOrder
     overrideReviewsLimit?: SortOrder
@@ -62646,6 +62766,8 @@ export namespace Prisma {
     planExpiresAt?: SortOrder
     planStartedAt?: SortOrder
     billingCycle?: SortOrder
+    pendingPlanId?: SortOrder
+    pendingBillingCycle?: SortOrder
     accountCredit?: SortOrder
     overrideReposLimit?: SortOrder
     overrideReviewsLimit?: SortOrder
@@ -64762,6 +64884,8 @@ export namespace Prisma {
     privateRepos?: SortOrder
     sortOrder?: SortOrder
     accentColor?: SortOrder
+    cta?: SortOrder
+    badge?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -64786,6 +64910,8 @@ export namespace Prisma {
     privateRepos?: SortOrder
     sortOrder?: SortOrder
     accentColor?: SortOrder
+    cta?: SortOrder
+    badge?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -64802,6 +64928,8 @@ export namespace Prisma {
     privateRepos?: SortOrder
     sortOrder?: SortOrder
     accentColor?: SortOrder
+    cta?: SortOrder
+    badge?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -69385,6 +69513,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -69439,6 +69569,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -69509,6 +69641,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -69563,6 +69697,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -69617,6 +69753,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -69671,6 +69809,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -69741,6 +69881,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -69795,6 +69937,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -69914,6 +70058,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -69968,6 +70114,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -70310,6 +70458,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -70364,6 +70514,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -70730,6 +70882,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -70784,6 +70938,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -71196,6 +71352,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -71250,6 +71408,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -71536,6 +71696,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -71590,6 +71752,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -71723,6 +71887,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -71777,6 +71943,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -72140,6 +72308,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -72194,6 +72364,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -72319,6 +72491,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -72373,6 +72547,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -72466,6 +72642,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -72520,6 +72698,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -72619,6 +72799,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -72673,6 +72855,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -72784,6 +72968,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -72838,6 +73024,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -72971,6 +73159,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -73025,6 +73215,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -73079,6 +73271,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -73133,6 +73327,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -73192,6 +73388,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -73246,6 +73444,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -73373,6 +73573,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -73427,6 +73629,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -73492,6 +73696,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -73546,6 +73752,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -73920,6 +74128,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -73974,6 +74184,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -74079,6 +74291,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -74133,6 +74347,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -74251,6 +74467,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -74305,6 +74523,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -74375,6 +74595,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -74429,6 +74651,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -75364,6 +75588,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -75418,6 +75644,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -75572,6 +75800,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -75626,6 +75856,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -75680,6 +75912,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -75734,6 +75968,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -75804,6 +76040,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -75858,6 +76096,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -75985,6 +76225,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -76039,6 +76281,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -76150,6 +76394,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -76204,6 +76450,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -76258,6 +76506,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -76312,6 +76562,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -76382,6 +76634,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -76436,6 +76690,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -76490,6 +76746,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -76544,6 +76802,8 @@ export namespace Prisma {
     planExpiresAt?: Date | string | null
     planStartedAt?: Date | string | null
     billingCycle?: string | null
+    pendingPlanId?: string | null
+    pendingBillingCycle?: string | null
     accountCredit?: number
     overrideReposLimit?: number | null
     overrideReviewsLimit?: number | null
@@ -76654,6 +76914,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
@@ -76708,6 +76970,8 @@ export namespace Prisma {
     planExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     planStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    pendingBillingCycle?: NullableStringFieldUpdateOperationsInput | string | null
     accountCredit?: IntFieldUpdateOperationsInput | number
     overrideReposLimit?: NullableIntFieldUpdateOperationsInput | number | null
     overrideReviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
