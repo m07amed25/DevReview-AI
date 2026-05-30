@@ -30,7 +30,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { PricingPlan, PLAN_DISPLAY, ACCENT_STYLES } from "./types";
@@ -469,22 +468,6 @@ export function PlanEditorCard({
                 editing && setDraft((d) => ({ ...d, seatsLimit: v }))
               }
             />
-            <div className="space-y-1.5">
-              <Label className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-                <GitBranch className="h-3.5 w-3.5" />
-                Private repos
-              </Label>
-              <div className="flex h-8 items-center">
-                <Switch
-                  checked={editing ? draft.privateRepos : plan.privateRepos}
-                  disabled={!editing}
-                  onCheckedChange={(v) =>
-                    editing && setDraft((d) => ({ ...d, privateRepos: v }))
-                  }
-                  className="data-[state=checked]:bg-indigo-500"
-                />
-              </div>
-            </div>
           </div>
         </div>
 

@@ -168,6 +168,7 @@ export type ReviewPayloadOptions = {
   qualityMetrics?: unknown;
   overallStatus?: "COMPLETED" | "FAILED";
   hasHighSeverity?: boolean;
+  includeInline?: boolean;
 };
 
 export function mapFindingsToReviewPayload(
@@ -201,13 +202,14 @@ export function mapFindingsToReviewPayload(
       : null;
 
   // ── Categorise findings ──────────────────────────────────────────────────
+  const includeInline = options?.includeInline ?? true;
   const inlineComments: ReviewComment[] = [];
   const summaryFindings: StoredFinding[] = [];
 
   for (const finding of values) {
     const path =
       finding.filePath ?? finding.filename ?? finding.file ?? finding.path;
-    if (path && typeof finding.line === "number" && finding.line > 0) {
+    if (includeInline && path && typeof finding.line === "number" && finding.line > 0) {
       const severity = (
         finding.severity ??
         finding.severityLevel ??

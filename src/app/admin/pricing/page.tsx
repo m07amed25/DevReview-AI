@@ -1,8 +1,8 @@
 "use client";
 
 import { Suspense } from "react";
+import Link from "next/link";
 import {
-  Check,
   Eye,
   DollarSign,
   Bot,
@@ -13,6 +13,8 @@ import {
   Loader2,
   Building2,
   Crown,
+  SlidersHorizontal,
+  ExternalLink,
 } from "lucide-react";
 import {
   Card,
@@ -32,6 +34,7 @@ import { DiscountsTab } from "./discounts-tab";
 import { OverridesTab } from "./overrides-tab";
 import { PartnersTab } from "./partners-tab";
 import { GlobalSettingsTab } from "./global-settings-tab";
+import { CapabilitiesManager } from "../capabilities/capabilities-manager";
 
 export default function AdminPricingPage() {
   const utils = trpc.useUtils();
@@ -111,13 +114,11 @@ export default function AdminPricingPage() {
             Configure plans, discount codes, and per-user price overrides.
           </p>
         </div>
-        <Button
-          variant="default"
-          className="gap-2"
-          onClick={() => toast.success("Pricing configuration published!")}
-        >
-          <Check className="h-4 w-4" />
-          Publish Changes
+        <Button variant="outline" className="gap-2" asChild>
+          <Link href="/pricing" target="_blank" rel="noreferrer">
+            <ExternalLink className="h-4 w-4" />
+            View live page
+          </Link>
         </Button>
       </div>
 
@@ -169,6 +170,10 @@ export default function AdminPricingPage() {
             <Crown className="h-3.5 w-3.5" />
             Plans
           </TabsTrigger>
+          <TabsTrigger value="capabilities" className="gap-2 text-sm">
+            <SlidersHorizontal className="h-3.5 w-3.5" />
+            Capabilities
+          </TabsTrigger>
           <TabsTrigger value="discounts" className="gap-2 text-sm">
             <Tag className="h-3.5 w-3.5" />
             Discounts
@@ -208,6 +213,11 @@ export default function AdminPricingPage() {
               />
             ))}
           </div>
+        </TabsContent>
+
+        {/* ── Capabilities tab ── */}
+        <TabsContent value="capabilities" className="mt-6">
+          <CapabilitiesManager embedded />
         </TabsContent>
 
         {/* ── Discounts tab ── */}

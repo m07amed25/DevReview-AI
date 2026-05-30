@@ -668,7 +668,36 @@ model PricingPlan {
   badge        String?  /// custom ribbon/badge label (e.g. "Most Popular")
   updatedAt    DateTime @updatedAt
 
+  planCapabilities PlanCapability[]
+
   @@map("pricing_plan")
+}
+
+/// Admin-managed capability catalog (feature flags). `key` is referenced by server enforcement hooks.
+model Capability {
+  id          String           @id @default(cuid())
+  key         String           @unique
+  label       String
+  description String?
+  kind        String           @default("display") /// "enforced" | "display"
+  sortOrder   Int              @default(0)
+  plans       PlanCapability[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@map("capability")
+}
+
+/// Per-plan enablement of a capability.
+model PlanCapability {
+  planId       String
+  capabilityId String
+  enabled      Boolean     @default(false)
+  plan         PricingPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  capability   Capability  @relation(fields: [capabilityId], references: [id], onDelete: Cascade)
+
+  @@id([planId, capabilityId])
+  @@map("plan_capability")
 }
 
 /// Single-row global pricing configuration (id is always "global").

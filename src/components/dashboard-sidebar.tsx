@@ -21,6 +21,7 @@ import {
   Info,
   Package,
   MoreVertical,
+  Lock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/ui/logo";
@@ -44,6 +45,11 @@ const mainNav: NavItem[] = [
   { href: "/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/teams", label: "Teams", icon: Users, hasSubmenu: true },
 ];
+
+// Nav items gated by a plan capability (key) — locked items link to pricing.
+const NAV_CAPABILITY: Record<string, string> = {
+  "/analytics": "advanced_analytics",
+};
 
 const resourceNav: NavItem[] = [
   { href: "/pricing", label: "Plans", icon: Package },
@@ -113,6 +119,7 @@ function TeamsHoverNav({ children }: { children: React.ReactNode }) {
 
 export function DashboardSidebar({ user }: DashboardSidebarProps) {
   const pathname = usePathname();
+  const { data: caps } = trpc.profile.getCapabilities.useQuery(undefined, { staleTime: 60_000 });
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [width, setWidth] = useState(DEFAULT_WIDTH);
@@ -174,6 +181,27 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
   const NavLink = ({ item }: { item: NavItem }) => {
     const Icon = item.icon;
     const isActive = pathname === item.href || pathname?.startsWith(item.href + "/");
+
+    const capKey = NAV_CAPABILITY[item.href];
+    const locked = capKey
+      ? (caps?.some((c) => c.key === capKey && !c.enabled) ?? false)
+      : false;
+
+    if (locked) {
+      return (
+        <Link
+          href="/pricing"
+          onClick={() => setMobileOpen(false)}
+          title="Upgrade to unlock"
+          className="flex items-center gap-2.5 rounded-md px-3 py-2 text-sm text-muted-foreground/60 transition-colors duration-150 hover:bg-accent/50 hover:text-foreground"
+        >
+          <Icon className="h-4 w-4 shrink-0" />
+          <span className="flex-1 truncate">{item.label}</span>
+          <Lock className="h-3 w-3 text-muted-foreground/40" />
+        </Link>
+      );
+    }
+
     const link = (
       <Link
         href={item.href}

@@ -1,6 +1,14 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import type { PrismaClient } from "@/server/db/client";
+import { protectedProcedure } from "../../trpc";
+import { checkFeature } from "@/lib/capabilities";
+
+/** Protected procedure gated by the `advanced_analytics` capability. */
+export const analyticsProcedure = protectedProcedure.use(async ({ ctx, next }) => {
+  await checkFeature(ctx.db, ctx.user.id, "advanced_analytics");
+  return next();
+});
 
 export const DateRangeSchema = z.object({
   startDate: z.date().optional(),

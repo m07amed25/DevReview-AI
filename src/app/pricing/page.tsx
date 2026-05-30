@@ -14,7 +14,7 @@ export const metadata = {
 };
 
 export default async function PricingPage() {
-  const [settings, plans] = await Promise.all([
+  const [settings, plans, capabilities] = await Promise.all([
     db.pricingSettings.upsert({
       where: { id: "global" },
       create: { id: "global" },
@@ -23,6 +23,10 @@ export default async function PricingPage() {
     db.pricingPlan.findMany({
       where: { visible: true },
       orderBy: { sortOrder: "asc" },
+    }),
+    db.capability.findMany({
+      orderBy: { sortOrder: "asc" },
+      include: { plans: { select: { planId: true, enabled: true } } },
     }),
   ]);
 
@@ -36,7 +40,11 @@ export default async function PricingPage() {
     <HydrateClient>
       <div className="min-h-screen bg-background">
         <UnifiedNavbar />
-        <PricingContent settings={settings} plans={plans} />
+        <PricingContent
+          settings={settings}
+          plans={plans}
+          capabilities={capabilities}
+        />
         <HomeFooter />
       </div>
     </HydrateClient>

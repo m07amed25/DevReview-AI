@@ -20,6 +20,46 @@ export const profileRouter = createTRPCRouter({
     return available;
   }),
 
+  // Lightweight onboarding state for the realtime "Getting Started" card.
+  onboardingStatus: protectedProcedure.query(async ({ ctx }) => {
+    const user = await ctx.db.user.findUnique({
+      where: { id: ctx.user.id },
+      select: {
+        accounts: { where: { providerId: "github" }, select: { id: true } },
+        _count: { select: { repositories: true, reviews: true } },
+      },
+    });
+
+    return {
+      hasGithub: (user?.accounts?.length ?? 0) > 0,
+      hasRepos: (user?._count?.repositories ?? 0) > 0,
+      hasReviews: (user?._count?.reviews ?? 0) > 0,
+    };
+  }),
+
+  getCapabilities: protectedProcedure.query(async ({ ctx }) => {
+    const user = await ctx.db.user.findUnique({
+      where: { id: ctx.user.id },
+      select: { planId: true, planExpiresAt: true },
+    });
+    const expired =
+      user?.planExpiresAt && new Date(user.planExpiresAt) < new Date();
+    const planId = expired ? "free" : (user?.planId ?? "free");
+
+    const caps = await ctx.db.capability.findMany({
+      orderBy: { sortOrder: "asc" },
+      include: { plans: { where: { planId } } },
+    });
+
+    return caps.map((c) => ({
+      key: c.key,
+      label: c.label,
+      description: c.description,
+      kind: c.kind,
+      enabled: c.plans[0]?.enabled ?? false,
+    }));
+  }),
+
   get: protectedProcedure.query(async ({ ctx }) => {
     const user = await ctx.db.user.findUnique({
       where: { id: ctx.user.id },

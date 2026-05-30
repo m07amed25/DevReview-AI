@@ -578,6 +578,23 @@ exports.Prisma.PricingPlanScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.CapabilityScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  label: 'label',
+  description: 'description',
+  kind: 'kind',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PlanCapabilityScalarFieldEnum = {
+  planId: 'planId',
+  capabilityId: 'capabilityId',
+  enabled: 'enabled'
+};
+
 exports.Prisma.PricingSettingsScalarFieldEnum = {
   id: 'id',
   pricingEnabled: 'pricingEnabled',
@@ -877,6 +894,8 @@ exports.Prisma.ModelName = {
   UserPriceOverride: 'UserPriceOverride',
   PartnerDomain: 'PartnerDomain',
   PricingPlan: 'PricingPlan',
+  Capability: 'Capability',
+  PlanCapability: 'PlanCapability',
   PricingSettings: 'PricingSettings',
   Invoice: 'Invoice',
   UserDiscount: 'UserDiscount',

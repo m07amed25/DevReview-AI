@@ -1,9 +1,9 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "../../trpc";
-import { TimePeriodSchema, assertTeamMembership, getStartDate } from "./helpers";
+import { createTRPCRouter } from "../../trpc";
+import { TimePeriodSchema, assertTeamMembership, getStartDate, analyticsProcedure } from "./helpers";
 
 export const analyticsAggregationsRouter = createTRPCRouter({
-  getReviewerWorkload: protectedProcedure
+  getReviewerWorkload: analyticsProcedure
     .input(
       z.object({
         timePeriod: TimePeriodSchema.default("30d"),
@@ -106,7 +106,7 @@ export const analyticsAggregationsRouter = createTRPCRouter({
       };
     }),
 
-  getQualityScores: protectedProcedure
+  getQualityScores: analyticsProcedure
     .input(
       z.object({
         timePeriod: TimePeriodSchema.default("30d"),
@@ -210,7 +210,7 @@ export const analyticsAggregationsRouter = createTRPCRouter({
       };
     }),
 
-  getTopIssues: protectedProcedure
+  getTopIssues: analyticsProcedure
     .input(
       z.object({
         timePeriod: TimePeriodSchema.default("30d"),
@@ -331,7 +331,7 @@ export const analyticsAggregationsRouter = createTRPCRouter({
       };
     }),
 
-  getAnomalies: protectedProcedure
+  getAnomalies: analyticsProcedure
     .input(
       z.object({
         timePeriod: TimePeriodSchema.default("30d"),

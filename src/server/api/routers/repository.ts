@@ -14,6 +14,7 @@ import {
 } from "@/server/services/github";
 import { getAccessibleRepository } from "@/lib/repository";
 import { checkUserLimit } from "@/lib/limits";
+import { checkFeature } from "@/lib/capabilities";
 
 const sortOptions = ["name", "updatedAt", "createdAt"] as const;
 export type SortOption = (typeof sortOptions)[number];
@@ -92,6 +93,11 @@ export const repositoryRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       // Check repository limit
       await checkUserLimit(ctx.db, ctx.user.id, "reposLimit", input.repos.length);
+
+      // Connecting a private repo requires the private_repos capability
+      if (input.repos.some((r) => r.private)) {
+        await checkFeature(ctx.db, ctx.user.id, "private_repos");
+      }
 
       const result = await Promise.all(
         input.repos.map(async (repo) => {

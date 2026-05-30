@@ -1,14 +1,15 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "../../trpc";
+import { createTRPCRouter } from "../../trpc";
 import {
   TimePeriodSchema,
   assertTeamMembership,
   getStartDate,
   groupReviewsByTime,
+  analyticsProcedure,
 } from "./helpers";
 
 export const analyticsQueriesRouter = createTRPCRouter({
-  getOverview: protectedProcedure
+  getOverview: analyticsProcedure
     .input(
       z.object({
         timePeriod: TimePeriodSchema.default("30d"),
@@ -139,7 +140,7 @@ export const analyticsQueriesRouter = createTRPCRouter({
       };
     }),
 
-  getTrends: protectedProcedure
+  getTrends: analyticsProcedure
     .input(
       z.object({
         timePeriod: TimePeriodSchema.default("30d"),
@@ -181,7 +182,7 @@ export const analyticsQueriesRouter = createTRPCRouter({
       return groupReviewsByTime(reviews, granularity, startDate, now);
     }),
 
-  getApprovalRejectionRates: protectedProcedure
+  getApprovalRejectionRates: analyticsProcedure
     .input(
       z.object({
         timePeriod: TimePeriodSchema.default("30d"),
@@ -271,7 +272,7 @@ export const analyticsQueriesRouter = createTRPCRouter({
       };
     }),
 
-  getReviewerPerformance: protectedProcedure
+  getReviewerPerformance: analyticsProcedure
     .input(
       z.object({
         reviewerId: z.string().max(255),

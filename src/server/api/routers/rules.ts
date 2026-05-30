@@ -2,6 +2,7 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { getAccessibleRepository } from "@/lib/repository";
+import { checkFeature } from "@/lib/capabilities";
 
 const severityEnum = z.enum(["CRITICAL", "HIGH", "MEDIUM", "LOW"]);
 
@@ -19,6 +20,8 @@ export const rulesRouter = createTRPCRouter({
   create: protectedProcedure
     .input(ruleInput)
     .mutation(async ({ ctx, input }) => {
+      await checkFeature(ctx.db, ctx.user.id, "custom_review_rules");
+
       if (input.repositoryId) {
         await getAccessibleRepository(ctx.db, ctx.user.id, input.repositoryId);
       }

@@ -6,16 +6,13 @@ import { redirect } from "next/navigation";
 import { FeedbackButton } from "@/components/feedback/feedback-button";
 import { DashboardSidebar } from "@/components/dashboard-sidebar";
 import { Breadcrumbs } from "@/components/breadcrumbs";
-import { GettingStartedChecklist } from "@/components/getting-started-checklist";
 
 function DashboardContent({
   children,
   user,
-  onboarding,
 }: {
   children: React.ReactNode;
   user: { id: string; name: string; email: string; image?: string | null; role?: string; planId?: string };
-  onboarding: { hasGithub: boolean; hasRepos: boolean; hasReviews: boolean };
 }) {
   return (
     <ErrorBoundary>
@@ -24,11 +21,6 @@ function DashboardContent({
         <div className="flex-1 min-w-0 pt-14 lg:pt-0">
           <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
             <Breadcrumbs />
-            <GettingStartedChecklist
-              hasGithub={onboarding.hasGithub}
-              hasRepos={onboarding.hasRepos}
-              hasReviews={onboarding.hasReviews}
-            />
             {children}
           </main>
           <FeedbackButton />
@@ -63,10 +55,6 @@ export default async function DashboardLayout({
     },
   });
 
-  const hasGithub = (dbUser?.accounts?.length ?? 0) > 0;
-  const hasRepos = (dbUser?._count?.repositories ?? 0) > 0;
-  const hasReviews = (dbUser?._count?.reviews ?? 0) > 0;
-
   return (
     <DashboardContent
       user={{
@@ -77,7 +65,6 @@ export default async function DashboardLayout({
         role: dbUser?.role ?? undefined,
         planId: dbUser?.planId ?? "free",
       }}
-      onboarding={{ hasGithub, hasRepos, hasReviews }}
     >
       {children}
     </DashboardContent>

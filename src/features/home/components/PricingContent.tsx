@@ -12,7 +12,7 @@ import {
   buildComparison,
   FAQS,
 } from "./pricing";
-import type { PricingSettings, DbPricingPlan, MergedPlan } from "./pricing";
+import type { PricingSettings, DbPricingPlan, MergedPlan, CapabilityRow } from "./pricing";
 
 export type { PricingSettings, DbPricingPlan } from "./pricing";
 
@@ -33,9 +33,11 @@ const cardReveal = {
 export function PricingContent({
   settings,
   plans: dbPlans,
+  capabilities = [],
 }: {
   settings: PricingSettings;
   plans: DbPricingPlan[];
+  capabilities?: CapabilityRow[];
 }) {
   const { annualDiscount, trialDays, trialPlan } = settings;
   const [yearly, setYearly] = useState(true);
@@ -52,7 +54,7 @@ export function PricingContent({
     };
   });
 
-  const comparison = buildComparison(mergedPlans);
+  const comparison = buildComparison(mergedPlans, capabilities);
   const faqs = FAQS(trialDays, annualDiscount, trialPlan);
 
   return (
@@ -200,7 +202,7 @@ export function PricingContent({
                 {comparison.map((row) => (
                   <tr key={row.label} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
                     <td className="py-3 pr-4 text-muted-foreground">{row.label}</td>
-                    {[row.free, row.pro, row.enterprise].map((val, i) => (
+                    {row.values.map((val, i) => (
                       <td key={i} className="py-3 px-4">
                         {val === true ? <Check className="h-3.5 w-3.5 text-primary" /> :
                          val === false ? <XIcon className="h-3.5 w-3.5 text-muted-foreground/30" /> :

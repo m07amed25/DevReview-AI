@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "motion/react";
 import { BarChart3, Download, AlertTriangle } from "lucide-react";
+import { UpgradePrompt } from "@/components/upgrade-prompt";
 import { type TimePeriod } from "@/features/analytics/types";
 import { ChartsRow } from "@/features/analytics/components/ChartsRow";
 import { IssuesTablesRow } from "@/features/analytics/components/IssuesTablesRow";
@@ -23,11 +24,14 @@ const periods: { value: TimePeriod; label: string }[] = [
 export default function AnalyticsPage() {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>("30d");
 
-  const { data: overview, isLoading: overviewLoading } = trpc.analytics.getOverview.useQuery({ timePeriod }, { staleTime: 30_000 });
-  const { data: trends, isLoading: trendsLoading } = trpc.analytics.getTrends.useQuery({ timePeriod, granularity: "daily" }, { staleTime: 30_000 });
-  const { data: rates, isLoading: ratesLoading } = trpc.analytics.getApprovalRejectionRates.useQuery({ timePeriod }, { staleTime: 30_000 });
-  const { data: issues, isLoading: issuesLoading } = trpc.analytics.getTopIssues.useQuery({ timePeriod, limit: 10 }, { staleTime: 30_000 });
-  const { data: anomalies } = trpc.analytics.getAnomalies.useQuery({ timePeriod }, { staleTime: 60_000 });
+  const { data: caps } = trpc.profile.getCapabilities.useQuery(undefined, { staleTime: 60_000 });
+  const analyticsLocked = caps?.some((c) => c.key === "advanced_analytics" && !c.enabled) ?? false;
+
+  const { data: overview, isLoading: overviewLoading } = trpc.analytics.getOverview.useQuery({ timePeriod }, { staleTime: 30_000, enabled: !analyticsLocked });
+  const { data: trends, isLoading: trendsLoading } = trpc.analytics.getTrends.useQuery({ timePeriod, granularity: "daily" }, { staleTime: 30_000, enabled: !analyticsLocked });
+  const { data: rates, isLoading: ratesLoading } = trpc.analytics.getApprovalRejectionRates.useQuery({ timePeriod }, { staleTime: 30_000, enabled: !analyticsLocked });
+  const { data: issues, isLoading: issuesLoading } = trpc.analytics.getTopIssues.useQuery({ timePeriod, limit: 10 }, { staleTime: 30_000, enabled: !analyticsLocked });
+  const { data: anomalies } = trpc.analytics.getAnomalies.useQuery({ timePeriod }, { staleTime: 60_000, enabled: !analyticsLocked });
   const { data: feedback, isLoading: feedbackLoading } = trpc.review.getFeedbackStats.useQuery({}, { staleTime: 60_000 });
 
   const handleExport = useCallback(() => {
@@ -40,6 +44,15 @@ export default function AnalyticsPage() {
 
   const activeAnomalies = useMemo(() => anomalies?.anomalies?.filter((a) => a.severity === "critical") ?? [], [anomalies]);
   const hasData = overview && overview.totalReviews > 0;
+
+  if (analyticsLocked) {
+    return (
+      <UpgradePrompt
+        title="Analytics is a premium feature"
+        description="Upgrade your plan to unlock review analytics, trends, and recurring issue insights."
+      />
+    );
+  }
 
   if (!overviewLoading && !hasData) {
     return (
