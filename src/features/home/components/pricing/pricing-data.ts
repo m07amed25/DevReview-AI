@@ -1,6 +1,6 @@
 import { Zap, Rocket, Crown } from "lucide-react";
 import { Plan } from "@/lib/plan";
-import type { MergedPlan, PlanFeature } from "./pricing-types";
+import type { MergedPlan, PlanFeature, CapabilityRow } from "./pricing-types";
 
 export const ACCENT_THEMES: Record<
   string,
@@ -132,24 +132,20 @@ function limitLabel(v: number | null): string {
   return v === null ? "Unlimited" : v.toString();
 }
 
-export function buildComparison(plans: MergedPlan[]): PlanFeature[] {
-  const get = (id: Plan) => plans.find((p) => p.id === id);
-  const f = get(Plan.FREE);
-  const p = get(Plan.PRO);
-  const e = get(Plan.ENTERPRISE);
+export function buildComparison(
+  plans: MergedPlan[],
+  capabilities: CapabilityRow[] = [],
+): PlanFeature[] {
   return [
-    { label: "Repositories", free: limitLabel(f?.reposLimit ?? 1), pro: limitLabel(p?.reposLimit ?? 10), enterprise: limitLabel(e?.reposLimit ?? 500) },
-    { label: "AI Reviews / month", free: limitLabel(f?.reviewsLimit ?? 5), pro: limitLabel(p?.reviewsLimit ?? 100), enterprise: limitLabel(e?.reviewsLimit ?? 500) },
-    { label: "Team seats", free: limitLabel(f?.seatsLimit ?? 1), pro: limitLabel(p?.seatsLimit ?? 5), enterprise: limitLabel(e?.seatsLimit ?? 500) },
-    { label: "Private repos", free: f?.privateRepos ?? false, pro: p?.privateRepos ?? true, enterprise: e?.privateRepos ?? true },
-    { label: "Custom review rules", free: false, pro: true, enterprise: true },
-    { label: "PR inline comments", free: false, pro: true, enterprise: true },
-    { label: "Advanced analytics", free: false, pro: false, enterprise: true },
-    { label: "SSO / SAML", free: false, pro: false, enterprise: true },
-    { label: "Custom webhooks", free: false, pro: false, enterprise: true },
-    { label: "Audit logs", free: false, pro: false, enterprise: true },
-    { label: "Dedicated support", free: false, pro: false, enterprise: true },
-    { label: "99.9% SLA", free: false, pro: false, enterprise: true },
+    { label: "Repositories", values: plans.map((p) => limitLabel(p.reposLimit)) },
+    { label: "AI Reviews / month", values: plans.map((p) => limitLabel(p.reviewsLimit)) },
+    { label: "Team seats", values: plans.map((p) => limitLabel(p.seatsLimit)) },
+    ...capabilities.map((c) => ({
+      label: c.label,
+      values: plans.map((pl) =>
+        c.plans.some((pc) => pc.planId === pl.id && pc.enabled),
+      ),
+    })),
   ];
 }
 

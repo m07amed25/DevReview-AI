@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Check } from "lucide-react";
 import { motion, useInView } from "motion/react";
+import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
 import { useRef, useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc/client";
 
@@ -18,12 +19,12 @@ const reasons = [
 function AnimatedStat({ value, suffix = "" }: { value: string; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true });
+  const reduceMotion = usePrefersReducedMotion();
+  const num = parseFloat(value);
   const [display, setDisplay] = useState("0");
 
   useEffect(() => {
-    if (!inView) return;
-    const num = parseFloat(value);
-    if (isNaN(num)) { setDisplay(value); return; }
+    if (!inView || reduceMotion || isNaN(num)) return;
     const duration = 600;
     const start = performance.now();
     const tick = (now: number) => {
@@ -33,9 +34,9 @@ function AnimatedStat({ value, suffix = "" }: { value: string; suffix?: string }
       if (t < 1) requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
-  }, [inView, value]);
+  }, [inView, reduceMotion, num]);
 
-  return <span ref={ref} className="font-mono font-medium">{display}{suffix}</span>;
+  return <span ref={ref} className="font-mono font-medium">{reduceMotion || isNaN(num) ? value : display}{suffix}</span>;
 }
 
 export function CtaSection() {

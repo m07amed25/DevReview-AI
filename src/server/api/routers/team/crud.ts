@@ -2,6 +2,7 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 import { checkUserLimit } from "@/lib/limits";
+import { checkFeature } from "@/lib/capabilities";
 import { assertRole, slugify } from "./helpers";
 
 export const teamCrudRouter = createTRPCRouter({
@@ -69,6 +70,7 @@ export const teamCrudRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       await checkUserLimit(ctx.db, ctx.user.id, "seatsLimit");
+      await checkFeature(ctx.db, ctx.user.id, "team_collaboration");
 
       const baseSlug = slugify(input.name);
 

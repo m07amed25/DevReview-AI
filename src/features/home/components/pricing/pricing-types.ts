@@ -45,7 +45,13 @@ export interface MergedPlan extends DbPricingPlan {
 
 export interface PlanFeature {
   label: string;
-  free: boolean | string;
-  pro: boolean | string;
-  enterprise: boolean | string;
+  values: (boolean | string)[];
+}
+
+export interface CapabilityRow {
+  key: string;
+  label: string;
+  kind: string;
+  sortOrder: number;
+  plans: { planId: string; enabled: boolean }[];
 }

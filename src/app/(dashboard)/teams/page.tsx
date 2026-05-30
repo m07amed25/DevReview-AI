@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +14,7 @@ import {
   AlertDialogFooter,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
-import { Users, Plus, Search, RefreshCw, AlertTriangle } from "lucide-react";
+import { Users, Plus, Search, RefreshCw, AlertTriangle, Lock } from "lucide-react";
 import {
   TeamCard,
   TeamCardSkeleton,
@@ -26,6 +27,9 @@ import { PageHeader } from "@/components/page-header";
 export default function TeamsPage() {
   const [creating, setCreating] = useState(false);
   const [teamName, setTeamName] = useState("");
+
+  const { data: caps } = trpc.profile.getCapabilities.useQuery(undefined, { staleTime: 60_000 });
+  const teamsLocked = caps?.some((c) => c.key === "team_collaboration" && !c.enabled) ?? false;
 
   const {
     searchQuery,
@@ -64,10 +68,19 @@ export default function TeamsPage() {
           title="Teams"
           description="Group members, share repositories, collaborate on reviews."
           actions={
-            <Button onClick={() => setCreating(true)} size="sm" className="shadow-none">
-              <Plus className="size-4 mr-2" />
-              New Team
-            </Button>
+            teamsLocked ? (
+              <Button size="sm" className="shadow-none" asChild>
+                <Link href="/pricing">
+                  <Lock className="size-4 mr-2" />
+                  Upgrade for Teams
+                </Link>
+              </Button>
+            ) : (
+              <Button onClick={() => setCreating(true)} size="sm" className="shadow-none">
+                <Plus className="size-4 mr-2" />
+                New Team
+              </Button>
+            )
           }
         />
 
@@ -176,10 +189,19 @@ export default function TeamsPage() {
             <p className="text-[13px] text-muted-foreground mb-4 max-w-[280px]">
               Teams let you share repositories and review code together.
             </p>
-            <Button onClick={() => setCreating(true)} size="sm">
-              <Plus className="size-4 mr-2" />
-              New Team
-            </Button>
+            {teamsLocked ? (
+              <Button size="sm" asChild>
+                <Link href="/pricing">
+                  <Lock className="size-4 mr-2" />
+                  Upgrade for Teams
+                </Link>
+              </Button>
+            ) : (
+              <Button onClick={() => setCreating(true)} size="sm">
+                <Plus className="size-4 mr-2" />
+                New Team
+              </Button>
+            )}
           </div>
         )}
 

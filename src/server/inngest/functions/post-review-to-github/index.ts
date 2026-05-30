@@ -8,6 +8,7 @@ import {
 } from "@/server/services/github";
 import { generateRepositoryRecommendations } from "@/server/api/routers/automation";
 import { mapFindingsToReviewPayload } from "./helpers";
+import { hasFeature } from "@/lib/capabilities";
 
 export type { ReviewPayloadOptions } from "./helpers";
 export { mapFindingsToReviewPayload } from "./helpers";
@@ -158,6 +159,11 @@ export async function runPostReviewToGitHub(
   });
 
   await step.run("post-pr-review", async () => {
+    const canInline = await hasFeature(
+      dbClient,
+      completedEvent.data.userId,
+      "pr_inline_comments",
+    );
     const payload = mapFindingsToReviewPayload(
       review.comments,
       review.repositoryId,
@@ -171,6 +177,7 @@ export async function runPostReviewToGitHub(
         qualityMetrics: review.qualityMetrics,
         overallStatus: completedEvent.data.status,
         hasHighSeverity: completedEvent.data.hasHighSeverity,
+        includeInline: canInline,
       },
     );
 

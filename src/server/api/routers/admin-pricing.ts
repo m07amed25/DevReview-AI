@@ -3,6 +3,18 @@ import { revalidatePath } from "next/cache";
 import { createTRPCRouter, adminProcedure } from "../trpc";
 import { DiscountType } from "../../db/client";
 
+const slugifyKey = (k: string) =>
+  k.trim().toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
+
+function revalidatePublic() {
+  try {
+    revalidatePath("/pricing");
+    revalidatePath("/");
+  } catch {
+    // ignore
+  }
+}
+
 
 const discountCreateSchema = z.object({
   code: z
@@ -319,6 +331,102 @@ export const adminPricingRouter = createTRPCRouter({
         // console.error("Failed to revalidate path", e);
       }
       
+      return result;
+    }),
+
+  listCapabilities: adminProcedure.query(async ({ ctx }) => {
+    return ctx.db.capability.findMany({
+      orderBy: { sortOrder: "asc" },
+      include: { plans: true },
+    });
+  }),
+
+  createCapability: adminProcedure
+    .input(
+      z.object({
+        key: z.string().min(2).max(50),
+        label: z.string().min(1).max(80),
+        description: z.string().max(300).optional(),
+        kind: z.enum(["enforced", "display"]).default("display"),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const key = slugifyKey(input.key);
+      if (!key) throw new Error("Invalid capability key");
+      const existing = await ctx.db.capability.findUnique({ where: { key } });
+      if (existing) throw new Error(`Capability "${key}" already exists`);
+      const { _max } = await ctx.db.capability.aggregate({
+        _max: { sortOrder: true },
+      });
+      const result = await ctx.db.capability.create({
+        data: {
+          ...input,
+          key,
+          sortOrder: (_max.sortOrder ?? -1) + 1,
+          description: input.description ?? null,
+        },
+      });
+      revalidatePublic();
+      return result;
+    }),
+
+  updateCapability: adminProcedure
+    .input(
+      z.object({
+        id: z.string().min(1),
+        key: z.string().min(2).max(50).optional(),
+        label: z.string().min(1).max(80).optional(),
+        description: z.string().max(300).nullable().optional(),
+        kind: z.enum(["enforced", "display"]).optional(),
+        sortOrder: z.number().int().min(0).optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, key, ...rest } = input;
+      const data: Record<string, unknown> = { ...rest };
+      if (!ctx.isOwner) delete data.sortOrder;
+      if (key !== undefined) {
+        const norm = slugifyKey(key);
+        if (!norm) throw new Error("Invalid capability key");
+        const conflict = await ctx.db.capability.findFirst({
+          where: { key: norm, NOT: { id } },
+        });
+        if (conflict) throw new Error(`Capability "${norm}" already exists`);
+        data.key = norm;
+      }
+      const result = await ctx.db.capability.update({ where: { id }, data });
+      revalidatePublic();
+      return result;
+    }),
+
+  deleteCapability: adminProcedure
+    .input(z.object({ id: z.string().min(1) }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.capability.delete({ where: { id: input.id } });
+      revalidatePublic();
+      return { success: true };
+    }),
+
+  setPlanCapability: adminProcedure
+    .input(
+      z.object({
+        planId: z.string().min(1),
+        capabilityId: z.string().min(1),
+        enabled: z.boolean(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const result = await ctx.db.planCapability.upsert({
+        where: {
+          planId_capabilityId: {
+            planId: input.planId,
+            capabilityId: input.capabilityId,
+          },
+        },
+        create: input,
+        update: { enabled: input.enabled },
+      });
+      revalidatePublic();
       return result;
     }),
 });

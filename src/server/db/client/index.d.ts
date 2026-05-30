@@ -189,6 +189,16 @@ export type PartnerDomain = $Result.DefaultSelection<Prisma.$PartnerDomainPayloa
  */
 export type PricingPlan = $Result.DefaultSelection<Prisma.$PricingPlanPayload>
 /**
+ * Model Capability
+ * Admin-managed capability catalog (feature flags). `key` is referenced by server enforcement hooks.
+ */
+export type Capability = $Result.DefaultSelection<Prisma.$CapabilityPayload>
+/**
+ * Model PlanCapability
+ * Per-plan enablement of a capability.
+ */
+export type PlanCapability = $Result.DefaultSelection<Prisma.$PlanCapabilityPayload>
+/**
  * Model PricingSettings
  * Single-row global pricing configuration (id is always "global").
  */
@@ -989,6 +999,26 @@ export class PrismaClient<
   get pricingPlan(): Prisma.PricingPlanDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.capability`: Exposes CRUD operations for the **Capability** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Capabilities
+    * const capabilities = await prisma.capability.findMany()
+    * ```
+    */
+  get capability(): Prisma.CapabilityDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.planCapability`: Exposes CRUD operations for the **PlanCapability** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PlanCapabilities
+    * const planCapabilities = await prisma.planCapability.findMany()
+    * ```
+    */
+  get planCapability(): Prisma.PlanCapabilityDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.pricingSettings`: Exposes CRUD operations for the **PricingSettings** model.
     * Example usage:
     * ```ts
@@ -1533,6 +1563,8 @@ export namespace Prisma {
     UserPriceOverride: 'UserPriceOverride',
     PartnerDomain: 'PartnerDomain',
     PricingPlan: 'PricingPlan',
+    Capability: 'Capability',
+    PlanCapability: 'PlanCapability',
     PricingSettings: 'PricingSettings',
     Invoice: 'Invoice',
     UserDiscount: 'UserDiscount',
@@ -1558,7 +1590,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "repository" | "review" | "reviewFeedback" | "securityIssue" | "reviewThread" | "reviewThreadComment" | "reviewThreadCommentReaction" | "reviewApproval" | "reviewAssignment" | "team" | "teamMember" | "teamAction" | "notification" | "webhookConfig" | "scheduledScanConfig" | "scheduledScanRun" | "gitHubComment" | "gitHubStatusCheck" | "branchProtectionRecommendation" | "diagram" | "reviewRule" | "systemSettings" | "supportMessage" | "auditLog" | "ssoProvider" | "customRole" | "userCustomRole" | "discount" | "userPriceOverride" | "partnerDomain" | "pricingPlan" | "pricingSettings" | "invoice" | "userDiscount" | "billingInfo" | "paymentMethod" | "legalPage" | "contactMessage"
+      modelProps: "user" | "session" | "account" | "verification" | "repository" | "review" | "reviewFeedback" | "securityIssue" | "reviewThread" | "reviewThreadComment" | "reviewThreadCommentReaction" | "reviewApproval" | "reviewAssignment" | "team" | "teamMember" | "teamAction" | "notification" | "webhookConfig" | "scheduledScanConfig" | "scheduledScanRun" | "gitHubComment" | "gitHubStatusCheck" | "branchProtectionRecommendation" | "diagram" | "reviewRule" | "systemSettings" | "supportMessage" | "auditLog" | "ssoProvider" | "customRole" | "userCustomRole" | "discount" | "userPriceOverride" | "partnerDomain" | "pricingPlan" | "capability" | "planCapability" | "pricingSettings" | "invoice" | "userDiscount" | "billingInfo" | "paymentMethod" | "legalPage" | "contactMessage"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4152,6 +4184,154 @@ export namespace Prisma {
           }
         }
       }
+      Capability: {
+        payload: Prisma.$CapabilityPayload<ExtArgs>
+        fields: Prisma.CapabilityFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CapabilityFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CapabilityPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CapabilityFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CapabilityPayload>
+          }
+          findFirst: {
+            args: Prisma.CapabilityFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CapabilityPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CapabilityFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CapabilityPayload>
+          }
+          findMany: {
+            args: Prisma.CapabilityFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CapabilityPayload>[]
+          }
+          create: {
+            args: Prisma.CapabilityCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CapabilityPayload>
+          }
+          createMany: {
+            args: Prisma.CapabilityCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CapabilityCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CapabilityPayload>[]
+          }
+          delete: {
+            args: Prisma.CapabilityDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CapabilityPayload>
+          }
+          update: {
+            args: Prisma.CapabilityUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CapabilityPayload>
+          }
+          deleteMany: {
+            args: Prisma.CapabilityDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CapabilityUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CapabilityUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CapabilityPayload>[]
+          }
+          upsert: {
+            args: Prisma.CapabilityUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CapabilityPayload>
+          }
+          aggregate: {
+            args: Prisma.CapabilityAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCapability>
+          }
+          groupBy: {
+            args: Prisma.CapabilityGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CapabilityGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CapabilityCountArgs<ExtArgs>
+            result: $Utils.Optional<CapabilityCountAggregateOutputType> | number
+          }
+        }
+      }
+      PlanCapability: {
+        payload: Prisma.$PlanCapabilityPayload<ExtArgs>
+        fields: Prisma.PlanCapabilityFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PlanCapabilityFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlanCapabilityPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PlanCapabilityFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlanCapabilityPayload>
+          }
+          findFirst: {
+            args: Prisma.PlanCapabilityFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlanCapabilityPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PlanCapabilityFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlanCapabilityPayload>
+          }
+          findMany: {
+            args: Prisma.PlanCapabilityFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlanCapabilityPayload>[]
+          }
+          create: {
+            args: Prisma.PlanCapabilityCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlanCapabilityPayload>
+          }
+          createMany: {
+            args: Prisma.PlanCapabilityCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PlanCapabilityCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlanCapabilityPayload>[]
+          }
+          delete: {
+            args: Prisma.PlanCapabilityDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlanCapabilityPayload>
+          }
+          update: {
+            args: Prisma.PlanCapabilityUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlanCapabilityPayload>
+          }
+          deleteMany: {
+            args: Prisma.PlanCapabilityDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PlanCapabilityUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PlanCapabilityUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlanCapabilityPayload>[]
+          }
+          upsert: {
+            args: Prisma.PlanCapabilityUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlanCapabilityPayload>
+          }
+          aggregate: {
+            args: Prisma.PlanCapabilityAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePlanCapability>
+          }
+          groupBy: {
+            args: Prisma.PlanCapabilityGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PlanCapabilityGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PlanCapabilityCountArgs<ExtArgs>
+            result: $Utils.Optional<PlanCapabilityCountAggregateOutputType> | number
+          }
+        }
+      }
       PricingSettings: {
         payload: Prisma.$PricingSettingsPayload<ExtArgs>
         fields: Prisma.PricingSettingsFieldRefs
@@ -4801,6 +4981,8 @@ export namespace Prisma {
     userPriceOverride?: UserPriceOverrideOmit
     partnerDomain?: PartnerDomainOmit
     pricingPlan?: PricingPlanOmit
+    capability?: CapabilityOmit
+    planCapability?: PlanCapabilityOmit
     pricingSettings?: PricingSettingsOmit
     invoice?: InvoiceOmit
     userDiscount?: UserDiscountOmit
@@ -5371,6 +5553,68 @@ export namespace Prisma {
    */
   export type CustomRoleCountOutputTypeCountUserRolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserCustomRoleWhereInput
+  }
+
+
+  /**
+   * Count Type PricingPlanCountOutputType
+   */
+
+  export type PricingPlanCountOutputType = {
+    planCapabilities: number
+  }
+
+  export type PricingPlanCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    planCapabilities?: boolean | PricingPlanCountOutputTypeCountPlanCapabilitiesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * PricingPlanCountOutputType without action
+   */
+  export type PricingPlanCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PricingPlanCountOutputType
+     */
+    select?: PricingPlanCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * PricingPlanCountOutputType without action
+   */
+  export type PricingPlanCountOutputTypeCountPlanCapabilitiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PlanCapabilityWhereInput
+  }
+
+
+  /**
+   * Count Type CapabilityCountOutputType
+   */
+
+  export type CapabilityCountOutputType = {
+    plans: number
+  }
+
+  export type CapabilityCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    plans?: boolean | CapabilityCountOutputTypeCountPlansArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * CapabilityCountOutputType without action
+   */
+  export type CapabilityCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CapabilityCountOutputType
+     */
+    select?: CapabilityCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * CapabilityCountOutputType without action
+   */
+  export type CapabilityCountOutputTypeCountPlansArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PlanCapabilityWhereInput
   }
 
 
@@ -45126,6 +45370,8 @@ export namespace Prisma {
     cta?: boolean
     badge?: boolean
     updatedAt?: boolean
+    planCapabilities?: boolean | PricingPlan$planCapabilitiesArgs<ExtArgs>
+    _count?: boolean | PricingPlanCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["pricingPlan"]>
 
   export type PricingPlanSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -45186,10 +45432,18 @@ export namespace Prisma {
   }
 
   export type PricingPlanOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "tagline" | "monthlyPrice" | "visible" | "highlight" | "features" | "reposLimit" | "reviewsLimit" | "seatsLimit" | "privateRepos" | "sortOrder" | "accentColor" | "cta" | "badge" | "updatedAt", ExtArgs["result"]["pricingPlan"]>
+  export type PricingPlanInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    planCapabilities?: boolean | PricingPlan$planCapabilitiesArgs<ExtArgs>
+    _count?: boolean | PricingPlanCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type PricingPlanIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type PricingPlanIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $PricingPlanPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "PricingPlan"
-    objects: {}
+    objects: {
+      planCapabilities: Prisma.$PlanCapabilityPayload<ExtArgs>[]
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
@@ -45607,6 +45861,7 @@ export namespace Prisma {
    */
   export interface Prisma__PricingPlanClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    planCapabilities<T extends PricingPlan$planCapabilitiesArgs<ExtArgs> = {}>(args?: Subset<T, PricingPlan$planCapabilitiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlanCapabilityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -45669,6 +45924,10 @@ export namespace Prisma {
      */
     omit?: PricingPlanOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PricingPlanInclude<ExtArgs> | null
+    /**
      * Filter, which PricingPlan to fetch.
      */
     where: PricingPlanWhereUniqueInput
@@ -45687,6 +45946,10 @@ export namespace Prisma {
      */
     omit?: PricingPlanOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PricingPlanInclude<ExtArgs> | null
+    /**
      * Filter, which PricingPlan to fetch.
      */
     where: PricingPlanWhereUniqueInput
@@ -45704,6 +45967,10 @@ export namespace Prisma {
      * Omit specific fields from the PricingPlan
      */
     omit?: PricingPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PricingPlanInclude<ExtArgs> | null
     /**
      * Filter, which PricingPlan to fetch.
      */
@@ -45753,6 +46020,10 @@ export namespace Prisma {
      */
     omit?: PricingPlanOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PricingPlanInclude<ExtArgs> | null
+    /**
      * Filter, which PricingPlan to fetch.
      */
     where?: PricingPlanWhereInput
@@ -45801,6 +46072,10 @@ export namespace Prisma {
      */
     omit?: PricingPlanOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PricingPlanInclude<ExtArgs> | null
+    /**
      * Filter, which PricingPlans to fetch.
      */
     where?: PricingPlanWhereInput
@@ -45843,6 +46118,10 @@ export namespace Prisma {
      * Omit specific fields from the PricingPlan
      */
     omit?: PricingPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PricingPlanInclude<ExtArgs> | null
     /**
      * The data needed to create a PricingPlan.
      */
@@ -45891,6 +46170,10 @@ export namespace Prisma {
      * Omit specific fields from the PricingPlan
      */
     omit?: PricingPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PricingPlanInclude<ExtArgs> | null
     /**
      * The data needed to update a PricingPlan.
      */
@@ -45958,6 +46241,10 @@ export namespace Prisma {
      */
     omit?: PricingPlanOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PricingPlanInclude<ExtArgs> | null
+    /**
      * The filter to search for the PricingPlan to update in case it exists.
      */
     where: PricingPlanWhereUniqueInput
@@ -45984,6 +46271,10 @@ export namespace Prisma {
      */
     omit?: PricingPlanOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PricingPlanInclude<ExtArgs> | null
+    /**
      * Filter which PricingPlan to delete.
      */
     where: PricingPlanWhereUniqueInput
@@ -46004,6 +46295,30 @@ export namespace Prisma {
   }
 
   /**
+   * PricingPlan.planCapabilities
+   */
+  export type PricingPlan$planCapabilitiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlanCapability
+     */
+    select?: PlanCapabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlanCapability
+     */
+    omit?: PlanCapabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlanCapabilityInclude<ExtArgs> | null
+    where?: PlanCapabilityWhereInput
+    orderBy?: PlanCapabilityOrderByWithRelationInput | PlanCapabilityOrderByWithRelationInput[]
+    cursor?: PlanCapabilityWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PlanCapabilityScalarFieldEnum | PlanCapabilityScalarFieldEnum[]
+  }
+
+  /**
    * PricingPlan without action
    */
   export type PricingPlanDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -46015,6 +46330,2196 @@ export namespace Prisma {
      * Omit specific fields from the PricingPlan
      */
     omit?: PricingPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PricingPlanInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Capability
+   */
+
+  export type AggregateCapability = {
+    _count: CapabilityCountAggregateOutputType | null
+    _avg: CapabilityAvgAggregateOutputType | null
+    _sum: CapabilitySumAggregateOutputType | null
+    _min: CapabilityMinAggregateOutputType | null
+    _max: CapabilityMaxAggregateOutputType | null
+  }
+
+  export type CapabilityAvgAggregateOutputType = {
+    sortOrder: number | null
+  }
+
+  export type CapabilitySumAggregateOutputType = {
+    sortOrder: number | null
+  }
+
+  export type CapabilityMinAggregateOutputType = {
+    id: string | null
+    key: string | null
+    label: string | null
+    description: string | null
+    kind: string | null
+    sortOrder: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CapabilityMaxAggregateOutputType = {
+    id: string | null
+    key: string | null
+    label: string | null
+    description: string | null
+    kind: string | null
+    sortOrder: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CapabilityCountAggregateOutputType = {
+    id: number
+    key: number
+    label: number
+    description: number
+    kind: number
+    sortOrder: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type CapabilityAvgAggregateInputType = {
+    sortOrder?: true
+  }
+
+  export type CapabilitySumAggregateInputType = {
+    sortOrder?: true
+  }
+
+  export type CapabilityMinAggregateInputType = {
+    id?: true
+    key?: true
+    label?: true
+    description?: true
+    kind?: true
+    sortOrder?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CapabilityMaxAggregateInputType = {
+    id?: true
+    key?: true
+    label?: true
+    description?: true
+    kind?: true
+    sortOrder?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CapabilityCountAggregateInputType = {
+    id?: true
+    key?: true
+    label?: true
+    description?: true
+    kind?: true
+    sortOrder?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type CapabilityAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Capability to aggregate.
+     */
+    where?: CapabilityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Capabilities to fetch.
+     */
+    orderBy?: CapabilityOrderByWithRelationInput | CapabilityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CapabilityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Capabilities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Capabilities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Capabilities
+    **/
+    _count?: true | CapabilityCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CapabilityAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CapabilitySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CapabilityMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CapabilityMaxAggregateInputType
+  }
+
+  export type GetCapabilityAggregateType<T extends CapabilityAggregateArgs> = {
+        [P in keyof T & keyof AggregateCapability]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCapability[P]>
+      : GetScalarType<T[P], AggregateCapability[P]>
+  }
+
+
+
+
+  export type CapabilityGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CapabilityWhereInput
+    orderBy?: CapabilityOrderByWithAggregationInput | CapabilityOrderByWithAggregationInput[]
+    by: CapabilityScalarFieldEnum[] | CapabilityScalarFieldEnum
+    having?: CapabilityScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CapabilityCountAggregateInputType | true
+    _avg?: CapabilityAvgAggregateInputType
+    _sum?: CapabilitySumAggregateInputType
+    _min?: CapabilityMinAggregateInputType
+    _max?: CapabilityMaxAggregateInputType
+  }
+
+  export type CapabilityGroupByOutputType = {
+    id: string
+    key: string
+    label: string
+    description: string | null
+    kind: string
+    sortOrder: number
+    createdAt: Date
+    updatedAt: Date
+    _count: CapabilityCountAggregateOutputType | null
+    _avg: CapabilityAvgAggregateOutputType | null
+    _sum: CapabilitySumAggregateOutputType | null
+    _min: CapabilityMinAggregateOutputType | null
+    _max: CapabilityMaxAggregateOutputType | null
+  }
+
+  type GetCapabilityGroupByPayload<T extends CapabilityGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CapabilityGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CapabilityGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CapabilityGroupByOutputType[P]>
+            : GetScalarType<T[P], CapabilityGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CapabilitySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    key?: boolean
+    label?: boolean
+    description?: boolean
+    kind?: boolean
+    sortOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    plans?: boolean | Capability$plansArgs<ExtArgs>
+    _count?: boolean | CapabilityCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["capability"]>
+
+  export type CapabilitySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    key?: boolean
+    label?: boolean
+    description?: boolean
+    kind?: boolean
+    sortOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["capability"]>
+
+  export type CapabilitySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    key?: boolean
+    label?: boolean
+    description?: boolean
+    kind?: boolean
+    sortOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["capability"]>
+
+  export type CapabilitySelectScalar = {
+    id?: boolean
+    key?: boolean
+    label?: boolean
+    description?: boolean
+    kind?: boolean
+    sortOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type CapabilityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "key" | "label" | "description" | "kind" | "sortOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["capability"]>
+  export type CapabilityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    plans?: boolean | Capability$plansArgs<ExtArgs>
+    _count?: boolean | CapabilityCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type CapabilityIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type CapabilityIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $CapabilityPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Capability"
+    objects: {
+      plans: Prisma.$PlanCapabilityPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      key: string
+      label: string
+      description: string | null
+      /**
+       * "enforced" | "display"
+       */
+      kind: string
+      sortOrder: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["capability"]>
+    composites: {}
+  }
+
+  type CapabilityGetPayload<S extends boolean | null | undefined | CapabilityDefaultArgs> = $Result.GetResult<Prisma.$CapabilityPayload, S>
+
+  type CapabilityCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CapabilityFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CapabilityCountAggregateInputType | true
+    }
+
+  export interface CapabilityDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Capability'], meta: { name: 'Capability' } }
+    /**
+     * Find zero or one Capability that matches the filter.
+     * @param {CapabilityFindUniqueArgs} args - Arguments to find a Capability
+     * @example
+     * // Get one Capability
+     * const capability = await prisma.capability.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CapabilityFindUniqueArgs>(args: SelectSubset<T, CapabilityFindUniqueArgs<ExtArgs>>): Prisma__CapabilityClient<$Result.GetResult<Prisma.$CapabilityPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Capability that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CapabilityFindUniqueOrThrowArgs} args - Arguments to find a Capability
+     * @example
+     * // Get one Capability
+     * const capability = await prisma.capability.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CapabilityFindUniqueOrThrowArgs>(args: SelectSubset<T, CapabilityFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CapabilityClient<$Result.GetResult<Prisma.$CapabilityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Capability that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CapabilityFindFirstArgs} args - Arguments to find a Capability
+     * @example
+     * // Get one Capability
+     * const capability = await prisma.capability.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CapabilityFindFirstArgs>(args?: SelectSubset<T, CapabilityFindFirstArgs<ExtArgs>>): Prisma__CapabilityClient<$Result.GetResult<Prisma.$CapabilityPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Capability that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CapabilityFindFirstOrThrowArgs} args - Arguments to find a Capability
+     * @example
+     * // Get one Capability
+     * const capability = await prisma.capability.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CapabilityFindFirstOrThrowArgs>(args?: SelectSubset<T, CapabilityFindFirstOrThrowArgs<ExtArgs>>): Prisma__CapabilityClient<$Result.GetResult<Prisma.$CapabilityPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Capabilities that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CapabilityFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Capabilities
+     * const capabilities = await prisma.capability.findMany()
+     * 
+     * // Get first 10 Capabilities
+     * const capabilities = await prisma.capability.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const capabilityWithIdOnly = await prisma.capability.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CapabilityFindManyArgs>(args?: SelectSubset<T, CapabilityFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CapabilityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Capability.
+     * @param {CapabilityCreateArgs} args - Arguments to create a Capability.
+     * @example
+     * // Create one Capability
+     * const Capability = await prisma.capability.create({
+     *   data: {
+     *     // ... data to create a Capability
+     *   }
+     * })
+     * 
+     */
+    create<T extends CapabilityCreateArgs>(args: SelectSubset<T, CapabilityCreateArgs<ExtArgs>>): Prisma__CapabilityClient<$Result.GetResult<Prisma.$CapabilityPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Capabilities.
+     * @param {CapabilityCreateManyArgs} args - Arguments to create many Capabilities.
+     * @example
+     * // Create many Capabilities
+     * const capability = await prisma.capability.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CapabilityCreateManyArgs>(args?: SelectSubset<T, CapabilityCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Capabilities and returns the data saved in the database.
+     * @param {CapabilityCreateManyAndReturnArgs} args - Arguments to create many Capabilities.
+     * @example
+     * // Create many Capabilities
+     * const capability = await prisma.capability.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Capabilities and only return the `id`
+     * const capabilityWithIdOnly = await prisma.capability.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CapabilityCreateManyAndReturnArgs>(args?: SelectSubset<T, CapabilityCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CapabilityPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Capability.
+     * @param {CapabilityDeleteArgs} args - Arguments to delete one Capability.
+     * @example
+     * // Delete one Capability
+     * const Capability = await prisma.capability.delete({
+     *   where: {
+     *     // ... filter to delete one Capability
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CapabilityDeleteArgs>(args: SelectSubset<T, CapabilityDeleteArgs<ExtArgs>>): Prisma__CapabilityClient<$Result.GetResult<Prisma.$CapabilityPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Capability.
+     * @param {CapabilityUpdateArgs} args - Arguments to update one Capability.
+     * @example
+     * // Update one Capability
+     * const capability = await prisma.capability.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CapabilityUpdateArgs>(args: SelectSubset<T, CapabilityUpdateArgs<ExtArgs>>): Prisma__CapabilityClient<$Result.GetResult<Prisma.$CapabilityPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Capabilities.
+     * @param {CapabilityDeleteManyArgs} args - Arguments to filter Capabilities to delete.
+     * @example
+     * // Delete a few Capabilities
+     * const { count } = await prisma.capability.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CapabilityDeleteManyArgs>(args?: SelectSubset<T, CapabilityDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Capabilities.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CapabilityUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Capabilities
+     * const capability = await prisma.capability.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CapabilityUpdateManyArgs>(args: SelectSubset<T, CapabilityUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Capabilities and returns the data updated in the database.
+     * @param {CapabilityUpdateManyAndReturnArgs} args - Arguments to update many Capabilities.
+     * @example
+     * // Update many Capabilities
+     * const capability = await prisma.capability.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Capabilities and only return the `id`
+     * const capabilityWithIdOnly = await prisma.capability.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CapabilityUpdateManyAndReturnArgs>(args: SelectSubset<T, CapabilityUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CapabilityPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Capability.
+     * @param {CapabilityUpsertArgs} args - Arguments to update or create a Capability.
+     * @example
+     * // Update or create a Capability
+     * const capability = await prisma.capability.upsert({
+     *   create: {
+     *     // ... data to create a Capability
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Capability we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CapabilityUpsertArgs>(args: SelectSubset<T, CapabilityUpsertArgs<ExtArgs>>): Prisma__CapabilityClient<$Result.GetResult<Prisma.$CapabilityPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Capabilities.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CapabilityCountArgs} args - Arguments to filter Capabilities to count.
+     * @example
+     * // Count the number of Capabilities
+     * const count = await prisma.capability.count({
+     *   where: {
+     *     // ... the filter for the Capabilities we want to count
+     *   }
+     * })
+    **/
+    count<T extends CapabilityCountArgs>(
+      args?: Subset<T, CapabilityCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CapabilityCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Capability.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CapabilityAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CapabilityAggregateArgs>(args: Subset<T, CapabilityAggregateArgs>): Prisma.PrismaPromise<GetCapabilityAggregateType<T>>
+
+    /**
+     * Group by Capability.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CapabilityGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CapabilityGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CapabilityGroupByArgs['orderBy'] }
+        : { orderBy?: CapabilityGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CapabilityGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCapabilityGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Capability model
+   */
+  readonly fields: CapabilityFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Capability.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CapabilityClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    plans<T extends Capability$plansArgs<ExtArgs> = {}>(args?: Subset<T, Capability$plansArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlanCapabilityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Capability model
+   */
+  interface CapabilityFieldRefs {
+    readonly id: FieldRef<"Capability", 'String'>
+    readonly key: FieldRef<"Capability", 'String'>
+    readonly label: FieldRef<"Capability", 'String'>
+    readonly description: FieldRef<"Capability", 'String'>
+    readonly kind: FieldRef<"Capability", 'String'>
+    readonly sortOrder: FieldRef<"Capability", 'Int'>
+    readonly createdAt: FieldRef<"Capability", 'DateTime'>
+    readonly updatedAt: FieldRef<"Capability", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Capability findUnique
+   */
+  export type CapabilityFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Capability
+     */
+    select?: CapabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Capability
+     */
+    omit?: CapabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CapabilityInclude<ExtArgs> | null
+    /**
+     * Filter, which Capability to fetch.
+     */
+    where: CapabilityWhereUniqueInput
+  }
+
+  /**
+   * Capability findUniqueOrThrow
+   */
+  export type CapabilityFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Capability
+     */
+    select?: CapabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Capability
+     */
+    omit?: CapabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CapabilityInclude<ExtArgs> | null
+    /**
+     * Filter, which Capability to fetch.
+     */
+    where: CapabilityWhereUniqueInput
+  }
+
+  /**
+   * Capability findFirst
+   */
+  export type CapabilityFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Capability
+     */
+    select?: CapabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Capability
+     */
+    omit?: CapabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CapabilityInclude<ExtArgs> | null
+    /**
+     * Filter, which Capability to fetch.
+     */
+    where?: CapabilityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Capabilities to fetch.
+     */
+    orderBy?: CapabilityOrderByWithRelationInput | CapabilityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Capabilities.
+     */
+    cursor?: CapabilityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Capabilities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Capabilities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Capabilities.
+     */
+    distinct?: CapabilityScalarFieldEnum | CapabilityScalarFieldEnum[]
+  }
+
+  /**
+   * Capability findFirstOrThrow
+   */
+  export type CapabilityFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Capability
+     */
+    select?: CapabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Capability
+     */
+    omit?: CapabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CapabilityInclude<ExtArgs> | null
+    /**
+     * Filter, which Capability to fetch.
+     */
+    where?: CapabilityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Capabilities to fetch.
+     */
+    orderBy?: CapabilityOrderByWithRelationInput | CapabilityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Capabilities.
+     */
+    cursor?: CapabilityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Capabilities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Capabilities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Capabilities.
+     */
+    distinct?: CapabilityScalarFieldEnum | CapabilityScalarFieldEnum[]
+  }
+
+  /**
+   * Capability findMany
+   */
+  export type CapabilityFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Capability
+     */
+    select?: CapabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Capability
+     */
+    omit?: CapabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CapabilityInclude<ExtArgs> | null
+    /**
+     * Filter, which Capabilities to fetch.
+     */
+    where?: CapabilityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Capabilities to fetch.
+     */
+    orderBy?: CapabilityOrderByWithRelationInput | CapabilityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Capabilities.
+     */
+    cursor?: CapabilityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Capabilities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Capabilities.
+     */
+    skip?: number
+    distinct?: CapabilityScalarFieldEnum | CapabilityScalarFieldEnum[]
+  }
+
+  /**
+   * Capability create
+   */
+  export type CapabilityCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Capability
+     */
+    select?: CapabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Capability
+     */
+    omit?: CapabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CapabilityInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Capability.
+     */
+    data: XOR<CapabilityCreateInput, CapabilityUncheckedCreateInput>
+  }
+
+  /**
+   * Capability createMany
+   */
+  export type CapabilityCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Capabilities.
+     */
+    data: CapabilityCreateManyInput | CapabilityCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Capability createManyAndReturn
+   */
+  export type CapabilityCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Capability
+     */
+    select?: CapabilitySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Capability
+     */
+    omit?: CapabilityOmit<ExtArgs> | null
+    /**
+     * The data used to create many Capabilities.
+     */
+    data: CapabilityCreateManyInput | CapabilityCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Capability update
+   */
+  export type CapabilityUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Capability
+     */
+    select?: CapabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Capability
+     */
+    omit?: CapabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CapabilityInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Capability.
+     */
+    data: XOR<CapabilityUpdateInput, CapabilityUncheckedUpdateInput>
+    /**
+     * Choose, which Capability to update.
+     */
+    where: CapabilityWhereUniqueInput
+  }
+
+  /**
+   * Capability updateMany
+   */
+  export type CapabilityUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Capabilities.
+     */
+    data: XOR<CapabilityUpdateManyMutationInput, CapabilityUncheckedUpdateManyInput>
+    /**
+     * Filter which Capabilities to update
+     */
+    where?: CapabilityWhereInput
+    /**
+     * Limit how many Capabilities to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Capability updateManyAndReturn
+   */
+  export type CapabilityUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Capability
+     */
+    select?: CapabilitySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Capability
+     */
+    omit?: CapabilityOmit<ExtArgs> | null
+    /**
+     * The data used to update Capabilities.
+     */
+    data: XOR<CapabilityUpdateManyMutationInput, CapabilityUncheckedUpdateManyInput>
+    /**
+     * Filter which Capabilities to update
+     */
+    where?: CapabilityWhereInput
+    /**
+     * Limit how many Capabilities to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Capability upsert
+   */
+  export type CapabilityUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Capability
+     */
+    select?: CapabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Capability
+     */
+    omit?: CapabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CapabilityInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Capability to update in case it exists.
+     */
+    where: CapabilityWhereUniqueInput
+    /**
+     * In case the Capability found by the `where` argument doesn't exist, create a new Capability with this data.
+     */
+    create: XOR<CapabilityCreateInput, CapabilityUncheckedCreateInput>
+    /**
+     * In case the Capability was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CapabilityUpdateInput, CapabilityUncheckedUpdateInput>
+  }
+
+  /**
+   * Capability delete
+   */
+  export type CapabilityDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Capability
+     */
+    select?: CapabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Capability
+     */
+    omit?: CapabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CapabilityInclude<ExtArgs> | null
+    /**
+     * Filter which Capability to delete.
+     */
+    where: CapabilityWhereUniqueInput
+  }
+
+  /**
+   * Capability deleteMany
+   */
+  export type CapabilityDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Capabilities to delete
+     */
+    where?: CapabilityWhereInput
+    /**
+     * Limit how many Capabilities to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Capability.plans
+   */
+  export type Capability$plansArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlanCapability
+     */
+    select?: PlanCapabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlanCapability
+     */
+    omit?: PlanCapabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlanCapabilityInclude<ExtArgs> | null
+    where?: PlanCapabilityWhereInput
+    orderBy?: PlanCapabilityOrderByWithRelationInput | PlanCapabilityOrderByWithRelationInput[]
+    cursor?: PlanCapabilityWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PlanCapabilityScalarFieldEnum | PlanCapabilityScalarFieldEnum[]
+  }
+
+  /**
+   * Capability without action
+   */
+  export type CapabilityDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Capability
+     */
+    select?: CapabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Capability
+     */
+    omit?: CapabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CapabilityInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PlanCapability
+   */
+
+  export type AggregatePlanCapability = {
+    _count: PlanCapabilityCountAggregateOutputType | null
+    _min: PlanCapabilityMinAggregateOutputType | null
+    _max: PlanCapabilityMaxAggregateOutputType | null
+  }
+
+  export type PlanCapabilityMinAggregateOutputType = {
+    planId: string | null
+    capabilityId: string | null
+    enabled: boolean | null
+  }
+
+  export type PlanCapabilityMaxAggregateOutputType = {
+    planId: string | null
+    capabilityId: string | null
+    enabled: boolean | null
+  }
+
+  export type PlanCapabilityCountAggregateOutputType = {
+    planId: number
+    capabilityId: number
+    enabled: number
+    _all: number
+  }
+
+
+  export type PlanCapabilityMinAggregateInputType = {
+    planId?: true
+    capabilityId?: true
+    enabled?: true
+  }
+
+  export type PlanCapabilityMaxAggregateInputType = {
+    planId?: true
+    capabilityId?: true
+    enabled?: true
+  }
+
+  export type PlanCapabilityCountAggregateInputType = {
+    planId?: true
+    capabilityId?: true
+    enabled?: true
+    _all?: true
+  }
+
+  export type PlanCapabilityAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PlanCapability to aggregate.
+     */
+    where?: PlanCapabilityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PlanCapabilities to fetch.
+     */
+    orderBy?: PlanCapabilityOrderByWithRelationInput | PlanCapabilityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PlanCapabilityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PlanCapabilities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PlanCapabilities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PlanCapabilities
+    **/
+    _count?: true | PlanCapabilityCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PlanCapabilityMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PlanCapabilityMaxAggregateInputType
+  }
+
+  export type GetPlanCapabilityAggregateType<T extends PlanCapabilityAggregateArgs> = {
+        [P in keyof T & keyof AggregatePlanCapability]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePlanCapability[P]>
+      : GetScalarType<T[P], AggregatePlanCapability[P]>
+  }
+
+
+
+
+  export type PlanCapabilityGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PlanCapabilityWhereInput
+    orderBy?: PlanCapabilityOrderByWithAggregationInput | PlanCapabilityOrderByWithAggregationInput[]
+    by: PlanCapabilityScalarFieldEnum[] | PlanCapabilityScalarFieldEnum
+    having?: PlanCapabilityScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PlanCapabilityCountAggregateInputType | true
+    _min?: PlanCapabilityMinAggregateInputType
+    _max?: PlanCapabilityMaxAggregateInputType
+  }
+
+  export type PlanCapabilityGroupByOutputType = {
+    planId: string
+    capabilityId: string
+    enabled: boolean
+    _count: PlanCapabilityCountAggregateOutputType | null
+    _min: PlanCapabilityMinAggregateOutputType | null
+    _max: PlanCapabilityMaxAggregateOutputType | null
+  }
+
+  type GetPlanCapabilityGroupByPayload<T extends PlanCapabilityGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PlanCapabilityGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PlanCapabilityGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PlanCapabilityGroupByOutputType[P]>
+            : GetScalarType<T[P], PlanCapabilityGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PlanCapabilitySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    planId?: boolean
+    capabilityId?: boolean
+    enabled?: boolean
+    plan?: boolean | PricingPlanDefaultArgs<ExtArgs>
+    capability?: boolean | CapabilityDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["planCapability"]>
+
+  export type PlanCapabilitySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    planId?: boolean
+    capabilityId?: boolean
+    enabled?: boolean
+    plan?: boolean | PricingPlanDefaultArgs<ExtArgs>
+    capability?: boolean | CapabilityDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["planCapability"]>
+
+  export type PlanCapabilitySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    planId?: boolean
+    capabilityId?: boolean
+    enabled?: boolean
+    plan?: boolean | PricingPlanDefaultArgs<ExtArgs>
+    capability?: boolean | CapabilityDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["planCapability"]>
+
+  export type PlanCapabilitySelectScalar = {
+    planId?: boolean
+    capabilityId?: boolean
+    enabled?: boolean
+  }
+
+  export type PlanCapabilityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"planId" | "capabilityId" | "enabled", ExtArgs["result"]["planCapability"]>
+  export type PlanCapabilityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    plan?: boolean | PricingPlanDefaultArgs<ExtArgs>
+    capability?: boolean | CapabilityDefaultArgs<ExtArgs>
+  }
+  export type PlanCapabilityIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    plan?: boolean | PricingPlanDefaultArgs<ExtArgs>
+    capability?: boolean | CapabilityDefaultArgs<ExtArgs>
+  }
+  export type PlanCapabilityIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    plan?: boolean | PricingPlanDefaultArgs<ExtArgs>
+    capability?: boolean | CapabilityDefaultArgs<ExtArgs>
+  }
+
+  export type $PlanCapabilityPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PlanCapability"
+    objects: {
+      plan: Prisma.$PricingPlanPayload<ExtArgs>
+      capability: Prisma.$CapabilityPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      planId: string
+      capabilityId: string
+      enabled: boolean
+    }, ExtArgs["result"]["planCapability"]>
+    composites: {}
+  }
+
+  type PlanCapabilityGetPayload<S extends boolean | null | undefined | PlanCapabilityDefaultArgs> = $Result.GetResult<Prisma.$PlanCapabilityPayload, S>
+
+  type PlanCapabilityCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PlanCapabilityFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PlanCapabilityCountAggregateInputType | true
+    }
+
+  export interface PlanCapabilityDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PlanCapability'], meta: { name: 'PlanCapability' } }
+    /**
+     * Find zero or one PlanCapability that matches the filter.
+     * @param {PlanCapabilityFindUniqueArgs} args - Arguments to find a PlanCapability
+     * @example
+     * // Get one PlanCapability
+     * const planCapability = await prisma.planCapability.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PlanCapabilityFindUniqueArgs>(args: SelectSubset<T, PlanCapabilityFindUniqueArgs<ExtArgs>>): Prisma__PlanCapabilityClient<$Result.GetResult<Prisma.$PlanCapabilityPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PlanCapability that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PlanCapabilityFindUniqueOrThrowArgs} args - Arguments to find a PlanCapability
+     * @example
+     * // Get one PlanCapability
+     * const planCapability = await prisma.planCapability.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PlanCapabilityFindUniqueOrThrowArgs>(args: SelectSubset<T, PlanCapabilityFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PlanCapabilityClient<$Result.GetResult<Prisma.$PlanCapabilityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PlanCapability that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlanCapabilityFindFirstArgs} args - Arguments to find a PlanCapability
+     * @example
+     * // Get one PlanCapability
+     * const planCapability = await prisma.planCapability.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PlanCapabilityFindFirstArgs>(args?: SelectSubset<T, PlanCapabilityFindFirstArgs<ExtArgs>>): Prisma__PlanCapabilityClient<$Result.GetResult<Prisma.$PlanCapabilityPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PlanCapability that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlanCapabilityFindFirstOrThrowArgs} args - Arguments to find a PlanCapability
+     * @example
+     * // Get one PlanCapability
+     * const planCapability = await prisma.planCapability.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PlanCapabilityFindFirstOrThrowArgs>(args?: SelectSubset<T, PlanCapabilityFindFirstOrThrowArgs<ExtArgs>>): Prisma__PlanCapabilityClient<$Result.GetResult<Prisma.$PlanCapabilityPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PlanCapabilities that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlanCapabilityFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PlanCapabilities
+     * const planCapabilities = await prisma.planCapability.findMany()
+     * 
+     * // Get first 10 PlanCapabilities
+     * const planCapabilities = await prisma.planCapability.findMany({ take: 10 })
+     * 
+     * // Only select the `planId`
+     * const planCapabilityWithPlanIdOnly = await prisma.planCapability.findMany({ select: { planId: true } })
+     * 
+     */
+    findMany<T extends PlanCapabilityFindManyArgs>(args?: SelectSubset<T, PlanCapabilityFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlanCapabilityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PlanCapability.
+     * @param {PlanCapabilityCreateArgs} args - Arguments to create a PlanCapability.
+     * @example
+     * // Create one PlanCapability
+     * const PlanCapability = await prisma.planCapability.create({
+     *   data: {
+     *     // ... data to create a PlanCapability
+     *   }
+     * })
+     * 
+     */
+    create<T extends PlanCapabilityCreateArgs>(args: SelectSubset<T, PlanCapabilityCreateArgs<ExtArgs>>): Prisma__PlanCapabilityClient<$Result.GetResult<Prisma.$PlanCapabilityPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PlanCapabilities.
+     * @param {PlanCapabilityCreateManyArgs} args - Arguments to create many PlanCapabilities.
+     * @example
+     * // Create many PlanCapabilities
+     * const planCapability = await prisma.planCapability.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PlanCapabilityCreateManyArgs>(args?: SelectSubset<T, PlanCapabilityCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PlanCapabilities and returns the data saved in the database.
+     * @param {PlanCapabilityCreateManyAndReturnArgs} args - Arguments to create many PlanCapabilities.
+     * @example
+     * // Create many PlanCapabilities
+     * const planCapability = await prisma.planCapability.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PlanCapabilities and only return the `planId`
+     * const planCapabilityWithPlanIdOnly = await prisma.planCapability.createManyAndReturn({
+     *   select: { planId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PlanCapabilityCreateManyAndReturnArgs>(args?: SelectSubset<T, PlanCapabilityCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlanCapabilityPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a PlanCapability.
+     * @param {PlanCapabilityDeleteArgs} args - Arguments to delete one PlanCapability.
+     * @example
+     * // Delete one PlanCapability
+     * const PlanCapability = await prisma.planCapability.delete({
+     *   where: {
+     *     // ... filter to delete one PlanCapability
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PlanCapabilityDeleteArgs>(args: SelectSubset<T, PlanCapabilityDeleteArgs<ExtArgs>>): Prisma__PlanCapabilityClient<$Result.GetResult<Prisma.$PlanCapabilityPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PlanCapability.
+     * @param {PlanCapabilityUpdateArgs} args - Arguments to update one PlanCapability.
+     * @example
+     * // Update one PlanCapability
+     * const planCapability = await prisma.planCapability.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PlanCapabilityUpdateArgs>(args: SelectSubset<T, PlanCapabilityUpdateArgs<ExtArgs>>): Prisma__PlanCapabilityClient<$Result.GetResult<Prisma.$PlanCapabilityPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PlanCapabilities.
+     * @param {PlanCapabilityDeleteManyArgs} args - Arguments to filter PlanCapabilities to delete.
+     * @example
+     * // Delete a few PlanCapabilities
+     * const { count } = await prisma.planCapability.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PlanCapabilityDeleteManyArgs>(args?: SelectSubset<T, PlanCapabilityDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PlanCapabilities.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlanCapabilityUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PlanCapabilities
+     * const planCapability = await prisma.planCapability.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PlanCapabilityUpdateManyArgs>(args: SelectSubset<T, PlanCapabilityUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PlanCapabilities and returns the data updated in the database.
+     * @param {PlanCapabilityUpdateManyAndReturnArgs} args - Arguments to update many PlanCapabilities.
+     * @example
+     * // Update many PlanCapabilities
+     * const planCapability = await prisma.planCapability.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more PlanCapabilities and only return the `planId`
+     * const planCapabilityWithPlanIdOnly = await prisma.planCapability.updateManyAndReturn({
+     *   select: { planId: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PlanCapabilityUpdateManyAndReturnArgs>(args: SelectSubset<T, PlanCapabilityUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlanCapabilityPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one PlanCapability.
+     * @param {PlanCapabilityUpsertArgs} args - Arguments to update or create a PlanCapability.
+     * @example
+     * // Update or create a PlanCapability
+     * const planCapability = await prisma.planCapability.upsert({
+     *   create: {
+     *     // ... data to create a PlanCapability
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PlanCapability we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PlanCapabilityUpsertArgs>(args: SelectSubset<T, PlanCapabilityUpsertArgs<ExtArgs>>): Prisma__PlanCapabilityClient<$Result.GetResult<Prisma.$PlanCapabilityPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PlanCapabilities.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlanCapabilityCountArgs} args - Arguments to filter PlanCapabilities to count.
+     * @example
+     * // Count the number of PlanCapabilities
+     * const count = await prisma.planCapability.count({
+     *   where: {
+     *     // ... the filter for the PlanCapabilities we want to count
+     *   }
+     * })
+    **/
+    count<T extends PlanCapabilityCountArgs>(
+      args?: Subset<T, PlanCapabilityCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PlanCapabilityCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PlanCapability.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlanCapabilityAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PlanCapabilityAggregateArgs>(args: Subset<T, PlanCapabilityAggregateArgs>): Prisma.PrismaPromise<GetPlanCapabilityAggregateType<T>>
+
+    /**
+     * Group by PlanCapability.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlanCapabilityGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PlanCapabilityGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PlanCapabilityGroupByArgs['orderBy'] }
+        : { orderBy?: PlanCapabilityGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PlanCapabilityGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPlanCapabilityGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PlanCapability model
+   */
+  readonly fields: PlanCapabilityFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PlanCapability.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PlanCapabilityClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    plan<T extends PricingPlanDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PricingPlanDefaultArgs<ExtArgs>>): Prisma__PricingPlanClient<$Result.GetResult<Prisma.$PricingPlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    capability<T extends CapabilityDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CapabilityDefaultArgs<ExtArgs>>): Prisma__CapabilityClient<$Result.GetResult<Prisma.$CapabilityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PlanCapability model
+   */
+  interface PlanCapabilityFieldRefs {
+    readonly planId: FieldRef<"PlanCapability", 'String'>
+    readonly capabilityId: FieldRef<"PlanCapability", 'String'>
+    readonly enabled: FieldRef<"PlanCapability", 'Boolean'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PlanCapability findUnique
+   */
+  export type PlanCapabilityFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlanCapability
+     */
+    select?: PlanCapabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlanCapability
+     */
+    omit?: PlanCapabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlanCapabilityInclude<ExtArgs> | null
+    /**
+     * Filter, which PlanCapability to fetch.
+     */
+    where: PlanCapabilityWhereUniqueInput
+  }
+
+  /**
+   * PlanCapability findUniqueOrThrow
+   */
+  export type PlanCapabilityFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlanCapability
+     */
+    select?: PlanCapabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlanCapability
+     */
+    omit?: PlanCapabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlanCapabilityInclude<ExtArgs> | null
+    /**
+     * Filter, which PlanCapability to fetch.
+     */
+    where: PlanCapabilityWhereUniqueInput
+  }
+
+  /**
+   * PlanCapability findFirst
+   */
+  export type PlanCapabilityFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlanCapability
+     */
+    select?: PlanCapabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlanCapability
+     */
+    omit?: PlanCapabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlanCapabilityInclude<ExtArgs> | null
+    /**
+     * Filter, which PlanCapability to fetch.
+     */
+    where?: PlanCapabilityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PlanCapabilities to fetch.
+     */
+    orderBy?: PlanCapabilityOrderByWithRelationInput | PlanCapabilityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PlanCapabilities.
+     */
+    cursor?: PlanCapabilityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PlanCapabilities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PlanCapabilities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PlanCapabilities.
+     */
+    distinct?: PlanCapabilityScalarFieldEnum | PlanCapabilityScalarFieldEnum[]
+  }
+
+  /**
+   * PlanCapability findFirstOrThrow
+   */
+  export type PlanCapabilityFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlanCapability
+     */
+    select?: PlanCapabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlanCapability
+     */
+    omit?: PlanCapabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlanCapabilityInclude<ExtArgs> | null
+    /**
+     * Filter, which PlanCapability to fetch.
+     */
+    where?: PlanCapabilityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PlanCapabilities to fetch.
+     */
+    orderBy?: PlanCapabilityOrderByWithRelationInput | PlanCapabilityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PlanCapabilities.
+     */
+    cursor?: PlanCapabilityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PlanCapabilities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PlanCapabilities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PlanCapabilities.
+     */
+    distinct?: PlanCapabilityScalarFieldEnum | PlanCapabilityScalarFieldEnum[]
+  }
+
+  /**
+   * PlanCapability findMany
+   */
+  export type PlanCapabilityFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlanCapability
+     */
+    select?: PlanCapabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlanCapability
+     */
+    omit?: PlanCapabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlanCapabilityInclude<ExtArgs> | null
+    /**
+     * Filter, which PlanCapabilities to fetch.
+     */
+    where?: PlanCapabilityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PlanCapabilities to fetch.
+     */
+    orderBy?: PlanCapabilityOrderByWithRelationInput | PlanCapabilityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PlanCapabilities.
+     */
+    cursor?: PlanCapabilityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PlanCapabilities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PlanCapabilities.
+     */
+    skip?: number
+    distinct?: PlanCapabilityScalarFieldEnum | PlanCapabilityScalarFieldEnum[]
+  }
+
+  /**
+   * PlanCapability create
+   */
+  export type PlanCapabilityCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlanCapability
+     */
+    select?: PlanCapabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlanCapability
+     */
+    omit?: PlanCapabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlanCapabilityInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PlanCapability.
+     */
+    data: XOR<PlanCapabilityCreateInput, PlanCapabilityUncheckedCreateInput>
+  }
+
+  /**
+   * PlanCapability createMany
+   */
+  export type PlanCapabilityCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PlanCapabilities.
+     */
+    data: PlanCapabilityCreateManyInput | PlanCapabilityCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PlanCapability createManyAndReturn
+   */
+  export type PlanCapabilityCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlanCapability
+     */
+    select?: PlanCapabilitySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlanCapability
+     */
+    omit?: PlanCapabilityOmit<ExtArgs> | null
+    /**
+     * The data used to create many PlanCapabilities.
+     */
+    data: PlanCapabilityCreateManyInput | PlanCapabilityCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlanCapabilityIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PlanCapability update
+   */
+  export type PlanCapabilityUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlanCapability
+     */
+    select?: PlanCapabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlanCapability
+     */
+    omit?: PlanCapabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlanCapabilityInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PlanCapability.
+     */
+    data: XOR<PlanCapabilityUpdateInput, PlanCapabilityUncheckedUpdateInput>
+    /**
+     * Choose, which PlanCapability to update.
+     */
+    where: PlanCapabilityWhereUniqueInput
+  }
+
+  /**
+   * PlanCapability updateMany
+   */
+  export type PlanCapabilityUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PlanCapabilities.
+     */
+    data: XOR<PlanCapabilityUpdateManyMutationInput, PlanCapabilityUncheckedUpdateManyInput>
+    /**
+     * Filter which PlanCapabilities to update
+     */
+    where?: PlanCapabilityWhereInput
+    /**
+     * Limit how many PlanCapabilities to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PlanCapability updateManyAndReturn
+   */
+  export type PlanCapabilityUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlanCapability
+     */
+    select?: PlanCapabilitySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlanCapability
+     */
+    omit?: PlanCapabilityOmit<ExtArgs> | null
+    /**
+     * The data used to update PlanCapabilities.
+     */
+    data: XOR<PlanCapabilityUpdateManyMutationInput, PlanCapabilityUncheckedUpdateManyInput>
+    /**
+     * Filter which PlanCapabilities to update
+     */
+    where?: PlanCapabilityWhereInput
+    /**
+     * Limit how many PlanCapabilities to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlanCapabilityIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PlanCapability upsert
+   */
+  export type PlanCapabilityUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlanCapability
+     */
+    select?: PlanCapabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlanCapability
+     */
+    omit?: PlanCapabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlanCapabilityInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PlanCapability to update in case it exists.
+     */
+    where: PlanCapabilityWhereUniqueInput
+    /**
+     * In case the PlanCapability found by the `where` argument doesn't exist, create a new PlanCapability with this data.
+     */
+    create: XOR<PlanCapabilityCreateInput, PlanCapabilityUncheckedCreateInput>
+    /**
+     * In case the PlanCapability was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PlanCapabilityUpdateInput, PlanCapabilityUncheckedUpdateInput>
+  }
+
+  /**
+   * PlanCapability delete
+   */
+  export type PlanCapabilityDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlanCapability
+     */
+    select?: PlanCapabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlanCapability
+     */
+    omit?: PlanCapabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlanCapabilityInclude<ExtArgs> | null
+    /**
+     * Filter which PlanCapability to delete.
+     */
+    where: PlanCapabilityWhereUniqueInput
+  }
+
+  /**
+   * PlanCapability deleteMany
+   */
+  export type PlanCapabilityDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PlanCapabilities to delete
+     */
+    where?: PlanCapabilityWhereInput
+    /**
+     * Limit how many PlanCapabilities to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PlanCapability without action
+   */
+  export type PlanCapabilityDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlanCapability
+     */
+    select?: PlanCapabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlanCapability
+     */
+    omit?: PlanCapabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlanCapabilityInclude<ExtArgs> | null
   }
 
 
@@ -54370,6 +56875,29 @@ export namespace Prisma {
   export type PricingPlanScalarFieldEnum = (typeof PricingPlanScalarFieldEnum)[keyof typeof PricingPlanScalarFieldEnum]
 
 
+  export const CapabilityScalarFieldEnum: {
+    id: 'id',
+    key: 'key',
+    label: 'label',
+    description: 'description',
+    kind: 'kind',
+    sortOrder: 'sortOrder',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type CapabilityScalarFieldEnum = (typeof CapabilityScalarFieldEnum)[keyof typeof CapabilityScalarFieldEnum]
+
+
+  export const PlanCapabilityScalarFieldEnum: {
+    planId: 'planId',
+    capabilityId: 'capabilityId',
+    enabled: 'enabled'
+  };
+
+  export type PlanCapabilityScalarFieldEnum = (typeof PlanCapabilityScalarFieldEnum)[keyof typeof PlanCapabilityScalarFieldEnum]
+
+
   export const PricingSettingsScalarFieldEnum: {
     id: 'id',
     pricingEnabled: 'pricingEnabled',
@@ -57807,6 +60335,7 @@ export namespace Prisma {
     cta?: StringNullableFilter<"PricingPlan"> | string | null
     badge?: StringNullableFilter<"PricingPlan"> | string | null
     updatedAt?: DateTimeFilter<"PricingPlan"> | Date | string
+    planCapabilities?: PlanCapabilityListRelationFilter
   }
 
   export type PricingPlanOrderByWithRelationInput = {
@@ -57826,6 +60355,7 @@ export namespace Prisma {
     cta?: SortOrderInput | SortOrder
     badge?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
+    planCapabilities?: PlanCapabilityOrderByRelationAggregateInput
   }
 
   export type PricingPlanWhereUniqueInput = Prisma.AtLeast<{
@@ -57848,6 +60378,7 @@ export namespace Prisma {
     cta?: StringNullableFilter<"PricingPlan"> | string | null
     badge?: StringNullableFilter<"PricingPlan"> | string | null
     updatedAt?: DateTimeFilter<"PricingPlan"> | Date | string
+    planCapabilities?: PlanCapabilityListRelationFilter
   }, "id">
 
   export type PricingPlanOrderByWithAggregationInput = {
@@ -57894,6 +60425,127 @@ export namespace Prisma {
     cta?: StringNullableWithAggregatesFilter<"PricingPlan"> | string | null
     badge?: StringNullableWithAggregatesFilter<"PricingPlan"> | string | null
     updatedAt?: DateTimeWithAggregatesFilter<"PricingPlan"> | Date | string
+  }
+
+  export type CapabilityWhereInput = {
+    AND?: CapabilityWhereInput | CapabilityWhereInput[]
+    OR?: CapabilityWhereInput[]
+    NOT?: CapabilityWhereInput | CapabilityWhereInput[]
+    id?: StringFilter<"Capability"> | string
+    key?: StringFilter<"Capability"> | string
+    label?: StringFilter<"Capability"> | string
+    description?: StringNullableFilter<"Capability"> | string | null
+    kind?: StringFilter<"Capability"> | string
+    sortOrder?: IntFilter<"Capability"> | number
+    createdAt?: DateTimeFilter<"Capability"> | Date | string
+    updatedAt?: DateTimeFilter<"Capability"> | Date | string
+    plans?: PlanCapabilityListRelationFilter
+  }
+
+  export type CapabilityOrderByWithRelationInput = {
+    id?: SortOrder
+    key?: SortOrder
+    label?: SortOrder
+    description?: SortOrderInput | SortOrder
+    kind?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    plans?: PlanCapabilityOrderByRelationAggregateInput
+  }
+
+  export type CapabilityWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    key?: string
+    AND?: CapabilityWhereInput | CapabilityWhereInput[]
+    OR?: CapabilityWhereInput[]
+    NOT?: CapabilityWhereInput | CapabilityWhereInput[]
+    label?: StringFilter<"Capability"> | string
+    description?: StringNullableFilter<"Capability"> | string | null
+    kind?: StringFilter<"Capability"> | string
+    sortOrder?: IntFilter<"Capability"> | number
+    createdAt?: DateTimeFilter<"Capability"> | Date | string
+    updatedAt?: DateTimeFilter<"Capability"> | Date | string
+    plans?: PlanCapabilityListRelationFilter
+  }, "id" | "key">
+
+  export type CapabilityOrderByWithAggregationInput = {
+    id?: SortOrder
+    key?: SortOrder
+    label?: SortOrder
+    description?: SortOrderInput | SortOrder
+    kind?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: CapabilityCountOrderByAggregateInput
+    _avg?: CapabilityAvgOrderByAggregateInput
+    _max?: CapabilityMaxOrderByAggregateInput
+    _min?: CapabilityMinOrderByAggregateInput
+    _sum?: CapabilitySumOrderByAggregateInput
+  }
+
+  export type CapabilityScalarWhereWithAggregatesInput = {
+    AND?: CapabilityScalarWhereWithAggregatesInput | CapabilityScalarWhereWithAggregatesInput[]
+    OR?: CapabilityScalarWhereWithAggregatesInput[]
+    NOT?: CapabilityScalarWhereWithAggregatesInput | CapabilityScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Capability"> | string
+    key?: StringWithAggregatesFilter<"Capability"> | string
+    label?: StringWithAggregatesFilter<"Capability"> | string
+    description?: StringNullableWithAggregatesFilter<"Capability"> | string | null
+    kind?: StringWithAggregatesFilter<"Capability"> | string
+    sortOrder?: IntWithAggregatesFilter<"Capability"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"Capability"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Capability"> | Date | string
+  }
+
+  export type PlanCapabilityWhereInput = {
+    AND?: PlanCapabilityWhereInput | PlanCapabilityWhereInput[]
+    OR?: PlanCapabilityWhereInput[]
+    NOT?: PlanCapabilityWhereInput | PlanCapabilityWhereInput[]
+    planId?: StringFilter<"PlanCapability"> | string
+    capabilityId?: StringFilter<"PlanCapability"> | string
+    enabled?: BoolFilter<"PlanCapability"> | boolean
+    plan?: XOR<PricingPlanScalarRelationFilter, PricingPlanWhereInput>
+    capability?: XOR<CapabilityScalarRelationFilter, CapabilityWhereInput>
+  }
+
+  export type PlanCapabilityOrderByWithRelationInput = {
+    planId?: SortOrder
+    capabilityId?: SortOrder
+    enabled?: SortOrder
+    plan?: PricingPlanOrderByWithRelationInput
+    capability?: CapabilityOrderByWithRelationInput
+  }
+
+  export type PlanCapabilityWhereUniqueInput = Prisma.AtLeast<{
+    planId_capabilityId?: PlanCapabilityPlanIdCapabilityIdCompoundUniqueInput
+    AND?: PlanCapabilityWhereInput | PlanCapabilityWhereInput[]
+    OR?: PlanCapabilityWhereInput[]
+    NOT?: PlanCapabilityWhereInput | PlanCapabilityWhereInput[]
+    planId?: StringFilter<"PlanCapability"> | string
+    capabilityId?: StringFilter<"PlanCapability"> | string
+    enabled?: BoolFilter<"PlanCapability"> | boolean
+    plan?: XOR<PricingPlanScalarRelationFilter, PricingPlanWhereInput>
+    capability?: XOR<CapabilityScalarRelationFilter, CapabilityWhereInput>
+  }, "planId_capabilityId">
+
+  export type PlanCapabilityOrderByWithAggregationInput = {
+    planId?: SortOrder
+    capabilityId?: SortOrder
+    enabled?: SortOrder
+    _count?: PlanCapabilityCountOrderByAggregateInput
+    _max?: PlanCapabilityMaxOrderByAggregateInput
+    _min?: PlanCapabilityMinOrderByAggregateInput
+  }
+
+  export type PlanCapabilityScalarWhereWithAggregatesInput = {
+    AND?: PlanCapabilityScalarWhereWithAggregatesInput | PlanCapabilityScalarWhereWithAggregatesInput[]
+    OR?: PlanCapabilityScalarWhereWithAggregatesInput[]
+    NOT?: PlanCapabilityScalarWhereWithAggregatesInput | PlanCapabilityScalarWhereWithAggregatesInput[]
+    planId?: StringWithAggregatesFilter<"PlanCapability"> | string
+    capabilityId?: StringWithAggregatesFilter<"PlanCapability"> | string
+    enabled?: BoolWithAggregatesFilter<"PlanCapability"> | boolean
   }
 
   export type PricingSettingsWhereInput = {
@@ -61654,6 +64306,7 @@ export namespace Prisma {
     cta?: string | null
     badge?: string | null
     updatedAt?: Date | string
+    planCapabilities?: PlanCapabilityCreateNestedManyWithoutPlanInput
   }
 
   export type PricingPlanUncheckedCreateInput = {
@@ -61673,6 +64326,7 @@ export namespace Prisma {
     cta?: string | null
     badge?: string | null
     updatedAt?: Date | string
+    planCapabilities?: PlanCapabilityUncheckedCreateNestedManyWithoutPlanInput
   }
 
   export type PricingPlanUpdateInput = {
@@ -61692,6 +64346,7 @@ export namespace Prisma {
     cta?: NullableStringFieldUpdateOperationsInput | string | null
     badge?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    planCapabilities?: PlanCapabilityUpdateManyWithoutPlanNestedInput
   }
 
   export type PricingPlanUncheckedUpdateInput = {
@@ -61711,6 +64366,7 @@ export namespace Prisma {
     cta?: NullableStringFieldUpdateOperationsInput | string | null
     badge?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    planCapabilities?: PlanCapabilityUncheckedUpdateManyWithoutPlanNestedInput
   }
 
   export type PricingPlanCreateManyInput = {
@@ -61768,6 +64424,127 @@ export namespace Prisma {
     cta?: NullableStringFieldUpdateOperationsInput | string | null
     badge?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CapabilityCreateInput = {
+    id?: string
+    key: string
+    label: string
+    description?: string | null
+    kind?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    plans?: PlanCapabilityCreateNestedManyWithoutCapabilityInput
+  }
+
+  export type CapabilityUncheckedCreateInput = {
+    id?: string
+    key: string
+    label: string
+    description?: string | null
+    kind?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    plans?: PlanCapabilityUncheckedCreateNestedManyWithoutCapabilityInput
+  }
+
+  export type CapabilityUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    kind?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    plans?: PlanCapabilityUpdateManyWithoutCapabilityNestedInput
+  }
+
+  export type CapabilityUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    kind?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    plans?: PlanCapabilityUncheckedUpdateManyWithoutCapabilityNestedInput
+  }
+
+  export type CapabilityCreateManyInput = {
+    id?: string
+    key: string
+    label: string
+    description?: string | null
+    kind?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CapabilityUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    kind?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CapabilityUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    kind?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PlanCapabilityCreateInput = {
+    enabled?: boolean
+    plan: PricingPlanCreateNestedOneWithoutPlanCapabilitiesInput
+    capability: CapabilityCreateNestedOneWithoutPlansInput
+  }
+
+  export type PlanCapabilityUncheckedCreateInput = {
+    planId: string
+    capabilityId: string
+    enabled?: boolean
+  }
+
+  export type PlanCapabilityUpdateInput = {
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    plan?: PricingPlanUpdateOneRequiredWithoutPlanCapabilitiesNestedInput
+    capability?: CapabilityUpdateOneRequiredWithoutPlansNestedInput
+  }
+
+  export type PlanCapabilityUncheckedUpdateInput = {
+    planId?: StringFieldUpdateOperationsInput | string
+    capabilityId?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type PlanCapabilityCreateManyInput = {
+    planId: string
+    capabilityId: string
+    enabled?: boolean
+  }
+
+  export type PlanCapabilityUpdateManyMutationInput = {
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type PlanCapabilityUncheckedUpdateManyInput = {
+    planId?: StringFieldUpdateOperationsInput | string
+    capabilityId?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type PricingSettingsCreateInput = {
@@ -64870,6 +67647,16 @@ export namespace Prisma {
     overrideYearlyPrice?: SortOrder
   }
 
+  export type PlanCapabilityListRelationFilter = {
+    every?: PlanCapabilityWhereInput
+    some?: PlanCapabilityWhereInput
+    none?: PlanCapabilityWhereInput
+  }
+
+  export type PlanCapabilityOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type PricingPlanCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -64939,6 +67726,80 @@ export namespace Prisma {
     reviewsLimit?: SortOrder
     seatsLimit?: SortOrder
     sortOrder?: SortOrder
+  }
+
+  export type CapabilityCountOrderByAggregateInput = {
+    id?: SortOrder
+    key?: SortOrder
+    label?: SortOrder
+    description?: SortOrder
+    kind?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CapabilityAvgOrderByAggregateInput = {
+    sortOrder?: SortOrder
+  }
+
+  export type CapabilityMaxOrderByAggregateInput = {
+    id?: SortOrder
+    key?: SortOrder
+    label?: SortOrder
+    description?: SortOrder
+    kind?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CapabilityMinOrderByAggregateInput = {
+    id?: SortOrder
+    key?: SortOrder
+    label?: SortOrder
+    description?: SortOrder
+    kind?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CapabilitySumOrderByAggregateInput = {
+    sortOrder?: SortOrder
+  }
+
+  export type PricingPlanScalarRelationFilter = {
+    is?: PricingPlanWhereInput
+    isNot?: PricingPlanWhereInput
+  }
+
+  export type CapabilityScalarRelationFilter = {
+    is?: CapabilityWhereInput
+    isNot?: CapabilityWhereInput
+  }
+
+  export type PlanCapabilityPlanIdCapabilityIdCompoundUniqueInput = {
+    planId: string
+    capabilityId: string
+  }
+
+  export type PlanCapabilityCountOrderByAggregateInput = {
+    planId?: SortOrder
+    capabilityId?: SortOrder
+    enabled?: SortOrder
+  }
+
+  export type PlanCapabilityMaxOrderByAggregateInput = {
+    planId?: SortOrder
+    capabilityId?: SortOrder
+    enabled?: SortOrder
+  }
+
+  export type PlanCapabilityMinOrderByAggregateInput = {
+    planId?: SortOrder
+    capabilityId?: SortOrder
+    enabled?: SortOrder
   }
 
   export type PricingSettingsCountOrderByAggregateInput = {
@@ -67622,9 +70483,121 @@ export namespace Prisma {
     set: string[]
   }
 
+  export type PlanCapabilityCreateNestedManyWithoutPlanInput = {
+    create?: XOR<PlanCapabilityCreateWithoutPlanInput, PlanCapabilityUncheckedCreateWithoutPlanInput> | PlanCapabilityCreateWithoutPlanInput[] | PlanCapabilityUncheckedCreateWithoutPlanInput[]
+    connectOrCreate?: PlanCapabilityCreateOrConnectWithoutPlanInput | PlanCapabilityCreateOrConnectWithoutPlanInput[]
+    createMany?: PlanCapabilityCreateManyPlanInputEnvelope
+    connect?: PlanCapabilityWhereUniqueInput | PlanCapabilityWhereUniqueInput[]
+  }
+
+  export type PlanCapabilityUncheckedCreateNestedManyWithoutPlanInput = {
+    create?: XOR<PlanCapabilityCreateWithoutPlanInput, PlanCapabilityUncheckedCreateWithoutPlanInput> | PlanCapabilityCreateWithoutPlanInput[] | PlanCapabilityUncheckedCreateWithoutPlanInput[]
+    connectOrCreate?: PlanCapabilityCreateOrConnectWithoutPlanInput | PlanCapabilityCreateOrConnectWithoutPlanInput[]
+    createMany?: PlanCapabilityCreateManyPlanInputEnvelope
+    connect?: PlanCapabilityWhereUniqueInput | PlanCapabilityWhereUniqueInput[]
+  }
+
   export type PricingPlanUpdatefeaturesInput = {
     set?: string[]
     push?: string | string[]
+  }
+
+  export type PlanCapabilityUpdateManyWithoutPlanNestedInput = {
+    create?: XOR<PlanCapabilityCreateWithoutPlanInput, PlanCapabilityUncheckedCreateWithoutPlanInput> | PlanCapabilityCreateWithoutPlanInput[] | PlanCapabilityUncheckedCreateWithoutPlanInput[]
+    connectOrCreate?: PlanCapabilityCreateOrConnectWithoutPlanInput | PlanCapabilityCreateOrConnectWithoutPlanInput[]
+    upsert?: PlanCapabilityUpsertWithWhereUniqueWithoutPlanInput | PlanCapabilityUpsertWithWhereUniqueWithoutPlanInput[]
+    createMany?: PlanCapabilityCreateManyPlanInputEnvelope
+    set?: PlanCapabilityWhereUniqueInput | PlanCapabilityWhereUniqueInput[]
+    disconnect?: PlanCapabilityWhereUniqueInput | PlanCapabilityWhereUniqueInput[]
+    delete?: PlanCapabilityWhereUniqueInput | PlanCapabilityWhereUniqueInput[]
+    connect?: PlanCapabilityWhereUniqueInput | PlanCapabilityWhereUniqueInput[]
+    update?: PlanCapabilityUpdateWithWhereUniqueWithoutPlanInput | PlanCapabilityUpdateWithWhereUniqueWithoutPlanInput[]
+    updateMany?: PlanCapabilityUpdateManyWithWhereWithoutPlanInput | PlanCapabilityUpdateManyWithWhereWithoutPlanInput[]
+    deleteMany?: PlanCapabilityScalarWhereInput | PlanCapabilityScalarWhereInput[]
+  }
+
+  export type PlanCapabilityUncheckedUpdateManyWithoutPlanNestedInput = {
+    create?: XOR<PlanCapabilityCreateWithoutPlanInput, PlanCapabilityUncheckedCreateWithoutPlanInput> | PlanCapabilityCreateWithoutPlanInput[] | PlanCapabilityUncheckedCreateWithoutPlanInput[]
+    connectOrCreate?: PlanCapabilityCreateOrConnectWithoutPlanInput | PlanCapabilityCreateOrConnectWithoutPlanInput[]
+    upsert?: PlanCapabilityUpsertWithWhereUniqueWithoutPlanInput | PlanCapabilityUpsertWithWhereUniqueWithoutPlanInput[]
+    createMany?: PlanCapabilityCreateManyPlanInputEnvelope
+    set?: PlanCapabilityWhereUniqueInput | PlanCapabilityWhereUniqueInput[]
+    disconnect?: PlanCapabilityWhereUniqueInput | PlanCapabilityWhereUniqueInput[]
+    delete?: PlanCapabilityWhereUniqueInput | PlanCapabilityWhereUniqueInput[]
+    connect?: PlanCapabilityWhereUniqueInput | PlanCapabilityWhereUniqueInput[]
+    update?: PlanCapabilityUpdateWithWhereUniqueWithoutPlanInput | PlanCapabilityUpdateWithWhereUniqueWithoutPlanInput[]
+    updateMany?: PlanCapabilityUpdateManyWithWhereWithoutPlanInput | PlanCapabilityUpdateManyWithWhereWithoutPlanInput[]
+    deleteMany?: PlanCapabilityScalarWhereInput | PlanCapabilityScalarWhereInput[]
+  }
+
+  export type PlanCapabilityCreateNestedManyWithoutCapabilityInput = {
+    create?: XOR<PlanCapabilityCreateWithoutCapabilityInput, PlanCapabilityUncheckedCreateWithoutCapabilityInput> | PlanCapabilityCreateWithoutCapabilityInput[] | PlanCapabilityUncheckedCreateWithoutCapabilityInput[]
+    connectOrCreate?: PlanCapabilityCreateOrConnectWithoutCapabilityInput | PlanCapabilityCreateOrConnectWithoutCapabilityInput[]
+    createMany?: PlanCapabilityCreateManyCapabilityInputEnvelope
+    connect?: PlanCapabilityWhereUniqueInput | PlanCapabilityWhereUniqueInput[]
+  }
+
+  export type PlanCapabilityUncheckedCreateNestedManyWithoutCapabilityInput = {
+    create?: XOR<PlanCapabilityCreateWithoutCapabilityInput, PlanCapabilityUncheckedCreateWithoutCapabilityInput> | PlanCapabilityCreateWithoutCapabilityInput[] | PlanCapabilityUncheckedCreateWithoutCapabilityInput[]
+    connectOrCreate?: PlanCapabilityCreateOrConnectWithoutCapabilityInput | PlanCapabilityCreateOrConnectWithoutCapabilityInput[]
+    createMany?: PlanCapabilityCreateManyCapabilityInputEnvelope
+    connect?: PlanCapabilityWhereUniqueInput | PlanCapabilityWhereUniqueInput[]
+  }
+
+  export type PlanCapabilityUpdateManyWithoutCapabilityNestedInput = {
+    create?: XOR<PlanCapabilityCreateWithoutCapabilityInput, PlanCapabilityUncheckedCreateWithoutCapabilityInput> | PlanCapabilityCreateWithoutCapabilityInput[] | PlanCapabilityUncheckedCreateWithoutCapabilityInput[]
+    connectOrCreate?: PlanCapabilityCreateOrConnectWithoutCapabilityInput | PlanCapabilityCreateOrConnectWithoutCapabilityInput[]
+    upsert?: PlanCapabilityUpsertWithWhereUniqueWithoutCapabilityInput | PlanCapabilityUpsertWithWhereUniqueWithoutCapabilityInput[]
+    createMany?: PlanCapabilityCreateManyCapabilityInputEnvelope
+    set?: PlanCapabilityWhereUniqueInput | PlanCapabilityWhereUniqueInput[]
+    disconnect?: PlanCapabilityWhereUniqueInput | PlanCapabilityWhereUniqueInput[]
+    delete?: PlanCapabilityWhereUniqueInput | PlanCapabilityWhereUniqueInput[]
+    connect?: PlanCapabilityWhereUniqueInput | PlanCapabilityWhereUniqueInput[]
+    update?: PlanCapabilityUpdateWithWhereUniqueWithoutCapabilityInput | PlanCapabilityUpdateWithWhereUniqueWithoutCapabilityInput[]
+    updateMany?: PlanCapabilityUpdateManyWithWhereWithoutCapabilityInput | PlanCapabilityUpdateManyWithWhereWithoutCapabilityInput[]
+    deleteMany?: PlanCapabilityScalarWhereInput | PlanCapabilityScalarWhereInput[]
+  }
+
+  export type PlanCapabilityUncheckedUpdateManyWithoutCapabilityNestedInput = {
+    create?: XOR<PlanCapabilityCreateWithoutCapabilityInput, PlanCapabilityUncheckedCreateWithoutCapabilityInput> | PlanCapabilityCreateWithoutCapabilityInput[] | PlanCapabilityUncheckedCreateWithoutCapabilityInput[]
+    connectOrCreate?: PlanCapabilityCreateOrConnectWithoutCapabilityInput | PlanCapabilityCreateOrConnectWithoutCapabilityInput[]
+    upsert?: PlanCapabilityUpsertWithWhereUniqueWithoutCapabilityInput | PlanCapabilityUpsertWithWhereUniqueWithoutCapabilityInput[]
+    createMany?: PlanCapabilityCreateManyCapabilityInputEnvelope
+    set?: PlanCapabilityWhereUniqueInput | PlanCapabilityWhereUniqueInput[]
+    disconnect?: PlanCapabilityWhereUniqueInput | PlanCapabilityWhereUniqueInput[]
+    delete?: PlanCapabilityWhereUniqueInput | PlanCapabilityWhereUniqueInput[]
+    connect?: PlanCapabilityWhereUniqueInput | PlanCapabilityWhereUniqueInput[]
+    update?: PlanCapabilityUpdateWithWhereUniqueWithoutCapabilityInput | PlanCapabilityUpdateWithWhereUniqueWithoutCapabilityInput[]
+    updateMany?: PlanCapabilityUpdateManyWithWhereWithoutCapabilityInput | PlanCapabilityUpdateManyWithWhereWithoutCapabilityInput[]
+    deleteMany?: PlanCapabilityScalarWhereInput | PlanCapabilityScalarWhereInput[]
+  }
+
+  export type PricingPlanCreateNestedOneWithoutPlanCapabilitiesInput = {
+    create?: XOR<PricingPlanCreateWithoutPlanCapabilitiesInput, PricingPlanUncheckedCreateWithoutPlanCapabilitiesInput>
+    connectOrCreate?: PricingPlanCreateOrConnectWithoutPlanCapabilitiesInput
+    connect?: PricingPlanWhereUniqueInput
+  }
+
+  export type CapabilityCreateNestedOneWithoutPlansInput = {
+    create?: XOR<CapabilityCreateWithoutPlansInput, CapabilityUncheckedCreateWithoutPlansInput>
+    connectOrCreate?: CapabilityCreateOrConnectWithoutPlansInput
+    connect?: CapabilityWhereUniqueInput
+  }
+
+  export type PricingPlanUpdateOneRequiredWithoutPlanCapabilitiesNestedInput = {
+    create?: XOR<PricingPlanCreateWithoutPlanCapabilitiesInput, PricingPlanUncheckedCreateWithoutPlanCapabilitiesInput>
+    connectOrCreate?: PricingPlanCreateOrConnectWithoutPlanCapabilitiesInput
+    upsert?: PricingPlanUpsertWithoutPlanCapabilitiesInput
+    connect?: PricingPlanWhereUniqueInput
+    update?: XOR<XOR<PricingPlanUpdateToOneWithWhereWithoutPlanCapabilitiesInput, PricingPlanUpdateWithoutPlanCapabilitiesInput>, PricingPlanUncheckedUpdateWithoutPlanCapabilitiesInput>
+  }
+
+  export type CapabilityUpdateOneRequiredWithoutPlansNestedInput = {
+    create?: XOR<CapabilityCreateWithoutPlansInput, CapabilityUncheckedCreateWithoutPlansInput>
+    connectOrCreate?: CapabilityCreateOrConnectWithoutPlansInput
+    upsert?: CapabilityUpsertWithoutPlansInput
+    connect?: CapabilityWhereUniqueInput
+    update?: XOR<XOR<CapabilityUpdateToOneWithWhereWithoutPlansInput, CapabilityUpdateWithoutPlansInput>, CapabilityUncheckedUpdateWithoutPlansInput>
   }
 
   export type UserCreateNestedOneWithoutInvoicesInput = {
@@ -76474,6 +79447,239 @@ export namespace Prisma {
     invoices?: InvoiceUncheckedUpdateManyWithoutUserNestedInput
   }
 
+  export type PlanCapabilityCreateWithoutPlanInput = {
+    enabled?: boolean
+    capability: CapabilityCreateNestedOneWithoutPlansInput
+  }
+
+  export type PlanCapabilityUncheckedCreateWithoutPlanInput = {
+    capabilityId: string
+    enabled?: boolean
+  }
+
+  export type PlanCapabilityCreateOrConnectWithoutPlanInput = {
+    where: PlanCapabilityWhereUniqueInput
+    create: XOR<PlanCapabilityCreateWithoutPlanInput, PlanCapabilityUncheckedCreateWithoutPlanInput>
+  }
+
+  export type PlanCapabilityCreateManyPlanInputEnvelope = {
+    data: PlanCapabilityCreateManyPlanInput | PlanCapabilityCreateManyPlanInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PlanCapabilityUpsertWithWhereUniqueWithoutPlanInput = {
+    where: PlanCapabilityWhereUniqueInput
+    update: XOR<PlanCapabilityUpdateWithoutPlanInput, PlanCapabilityUncheckedUpdateWithoutPlanInput>
+    create: XOR<PlanCapabilityCreateWithoutPlanInput, PlanCapabilityUncheckedCreateWithoutPlanInput>
+  }
+
+  export type PlanCapabilityUpdateWithWhereUniqueWithoutPlanInput = {
+    where: PlanCapabilityWhereUniqueInput
+    data: XOR<PlanCapabilityUpdateWithoutPlanInput, PlanCapabilityUncheckedUpdateWithoutPlanInput>
+  }
+
+  export type PlanCapabilityUpdateManyWithWhereWithoutPlanInput = {
+    where: PlanCapabilityScalarWhereInput
+    data: XOR<PlanCapabilityUpdateManyMutationInput, PlanCapabilityUncheckedUpdateManyWithoutPlanInput>
+  }
+
+  export type PlanCapabilityScalarWhereInput = {
+    AND?: PlanCapabilityScalarWhereInput | PlanCapabilityScalarWhereInput[]
+    OR?: PlanCapabilityScalarWhereInput[]
+    NOT?: PlanCapabilityScalarWhereInput | PlanCapabilityScalarWhereInput[]
+    planId?: StringFilter<"PlanCapability"> | string
+    capabilityId?: StringFilter<"PlanCapability"> | string
+    enabled?: BoolFilter<"PlanCapability"> | boolean
+  }
+
+  export type PlanCapabilityCreateWithoutCapabilityInput = {
+    enabled?: boolean
+    plan: PricingPlanCreateNestedOneWithoutPlanCapabilitiesInput
+  }
+
+  export type PlanCapabilityUncheckedCreateWithoutCapabilityInput = {
+    planId: string
+    enabled?: boolean
+  }
+
+  export type PlanCapabilityCreateOrConnectWithoutCapabilityInput = {
+    where: PlanCapabilityWhereUniqueInput
+    create: XOR<PlanCapabilityCreateWithoutCapabilityInput, PlanCapabilityUncheckedCreateWithoutCapabilityInput>
+  }
+
+  export type PlanCapabilityCreateManyCapabilityInputEnvelope = {
+    data: PlanCapabilityCreateManyCapabilityInput | PlanCapabilityCreateManyCapabilityInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PlanCapabilityUpsertWithWhereUniqueWithoutCapabilityInput = {
+    where: PlanCapabilityWhereUniqueInput
+    update: XOR<PlanCapabilityUpdateWithoutCapabilityInput, PlanCapabilityUncheckedUpdateWithoutCapabilityInput>
+    create: XOR<PlanCapabilityCreateWithoutCapabilityInput, PlanCapabilityUncheckedCreateWithoutCapabilityInput>
+  }
+
+  export type PlanCapabilityUpdateWithWhereUniqueWithoutCapabilityInput = {
+    where: PlanCapabilityWhereUniqueInput
+    data: XOR<PlanCapabilityUpdateWithoutCapabilityInput, PlanCapabilityUncheckedUpdateWithoutCapabilityInput>
+  }
+
+  export type PlanCapabilityUpdateManyWithWhereWithoutCapabilityInput = {
+    where: PlanCapabilityScalarWhereInput
+    data: XOR<PlanCapabilityUpdateManyMutationInput, PlanCapabilityUncheckedUpdateManyWithoutCapabilityInput>
+  }
+
+  export type PricingPlanCreateWithoutPlanCapabilitiesInput = {
+    id: string
+    name: string
+    tagline: string
+    monthlyPrice: number
+    visible?: boolean
+    highlight?: boolean
+    features?: PricingPlanCreatefeaturesInput | string[]
+    reposLimit?: number | null
+    reviewsLimit?: number | null
+    seatsLimit?: number | null
+    privateRepos?: boolean
+    sortOrder?: number
+    accentColor?: string
+    cta?: string | null
+    badge?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type PricingPlanUncheckedCreateWithoutPlanCapabilitiesInput = {
+    id: string
+    name: string
+    tagline: string
+    monthlyPrice: number
+    visible?: boolean
+    highlight?: boolean
+    features?: PricingPlanCreatefeaturesInput | string[]
+    reposLimit?: number | null
+    reviewsLimit?: number | null
+    seatsLimit?: number | null
+    privateRepos?: boolean
+    sortOrder?: number
+    accentColor?: string
+    cta?: string | null
+    badge?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type PricingPlanCreateOrConnectWithoutPlanCapabilitiesInput = {
+    where: PricingPlanWhereUniqueInput
+    create: XOR<PricingPlanCreateWithoutPlanCapabilitiesInput, PricingPlanUncheckedCreateWithoutPlanCapabilitiesInput>
+  }
+
+  export type CapabilityCreateWithoutPlansInput = {
+    id?: string
+    key: string
+    label: string
+    description?: string | null
+    kind?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CapabilityUncheckedCreateWithoutPlansInput = {
+    id?: string
+    key: string
+    label: string
+    description?: string | null
+    kind?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CapabilityCreateOrConnectWithoutPlansInput = {
+    where: CapabilityWhereUniqueInput
+    create: XOR<CapabilityCreateWithoutPlansInput, CapabilityUncheckedCreateWithoutPlansInput>
+  }
+
+  export type PricingPlanUpsertWithoutPlanCapabilitiesInput = {
+    update: XOR<PricingPlanUpdateWithoutPlanCapabilitiesInput, PricingPlanUncheckedUpdateWithoutPlanCapabilitiesInput>
+    create: XOR<PricingPlanCreateWithoutPlanCapabilitiesInput, PricingPlanUncheckedCreateWithoutPlanCapabilitiesInput>
+    where?: PricingPlanWhereInput
+  }
+
+  export type PricingPlanUpdateToOneWithWhereWithoutPlanCapabilitiesInput = {
+    where?: PricingPlanWhereInput
+    data: XOR<PricingPlanUpdateWithoutPlanCapabilitiesInput, PricingPlanUncheckedUpdateWithoutPlanCapabilitiesInput>
+  }
+
+  export type PricingPlanUpdateWithoutPlanCapabilitiesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    tagline?: StringFieldUpdateOperationsInput | string
+    monthlyPrice?: IntFieldUpdateOperationsInput | number
+    visible?: BoolFieldUpdateOperationsInput | boolean
+    highlight?: BoolFieldUpdateOperationsInput | boolean
+    features?: PricingPlanUpdatefeaturesInput | string[]
+    reposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    reviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    seatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    privateRepos?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    accentColor?: StringFieldUpdateOperationsInput | string
+    cta?: NullableStringFieldUpdateOperationsInput | string | null
+    badge?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PricingPlanUncheckedUpdateWithoutPlanCapabilitiesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    tagline?: StringFieldUpdateOperationsInput | string
+    monthlyPrice?: IntFieldUpdateOperationsInput | number
+    visible?: BoolFieldUpdateOperationsInput | boolean
+    highlight?: BoolFieldUpdateOperationsInput | boolean
+    features?: PricingPlanUpdatefeaturesInput | string[]
+    reposLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    reviewsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    seatsLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    privateRepos?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    accentColor?: StringFieldUpdateOperationsInput | string
+    cta?: NullableStringFieldUpdateOperationsInput | string | null
+    badge?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CapabilityUpsertWithoutPlansInput = {
+    update: XOR<CapabilityUpdateWithoutPlansInput, CapabilityUncheckedUpdateWithoutPlansInput>
+    create: XOR<CapabilityCreateWithoutPlansInput, CapabilityUncheckedCreateWithoutPlansInput>
+    where?: CapabilityWhereInput
+  }
+
+  export type CapabilityUpdateToOneWithWhereWithoutPlansInput = {
+    where?: CapabilityWhereInput
+    data: XOR<CapabilityUpdateWithoutPlansInput, CapabilityUncheckedUpdateWithoutPlansInput>
+  }
+
+  export type CapabilityUpdateWithoutPlansInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    kind?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CapabilityUncheckedUpdateWithoutPlansInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    kind?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type UserCreateWithoutInvoicesInput = {
     id: string
     name: string
@@ -78753,6 +81959,46 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PlanCapabilityCreateManyPlanInput = {
+    capabilityId: string
+    enabled?: boolean
+  }
+
+  export type PlanCapabilityUpdateWithoutPlanInput = {
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    capability?: CapabilityUpdateOneRequiredWithoutPlansNestedInput
+  }
+
+  export type PlanCapabilityUncheckedUpdateWithoutPlanInput = {
+    capabilityId?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type PlanCapabilityUncheckedUpdateManyWithoutPlanInput = {
+    capabilityId?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type PlanCapabilityCreateManyCapabilityInput = {
+    planId: string
+    enabled?: boolean
+  }
+
+  export type PlanCapabilityUpdateWithoutCapabilityInput = {
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    plan?: PricingPlanUpdateOneRequiredWithoutPlanCapabilitiesNestedInput
+  }
+
+  export type PlanCapabilityUncheckedUpdateWithoutCapabilityInput = {
+    planId?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type PlanCapabilityUncheckedUpdateManyWithoutCapabilityInput = {
+    planId?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type PaymentMethodCreateManyBillingInfoInput = {

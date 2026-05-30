@@ -61,9 +61,9 @@ export function ComparisonTable({
             {comparison.map((row, i) => (
               <tr key={row.label} className={cn("border-b last:border-0 transition-colors hover:bg-muted/30", i % 2 === 0 && "bg-muted/10")}>
                 <td className="px-6 py-4 text-sm font-medium">{row.label}</td>
-                <ComparisonCell value={row.free} />
-                <ComparisonCell value={row.pro} />
-                <ComparisonCell value={row.enterprise} />
+                {row.values.map((v, idx) => (
+                  <ComparisonCell key={idx} value={v} />
+                ))}
               </tr>
             ))}
           </tbody>

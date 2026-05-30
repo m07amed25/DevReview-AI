@@ -274,6 +274,7 @@ export const adminProcedure = t.procedure.use(async ({ ctx, next, path }) => {
       ...ctx,
       session: ctx.session,
       user: ctx.session.user,
+      isOwner,
     },
   });
 });
