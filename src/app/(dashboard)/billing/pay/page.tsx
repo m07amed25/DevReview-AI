@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { v4 as uuidv4 } from "uuid";
 import { motion } from "framer-motion";
 import {
   CreditCard,
@@ -56,7 +57,7 @@ export default function PayPage() {
   const [selectedMethod, setSelectedMethod] = useState<number | null>(null);
   const [savedCardId, setSavedCardId] = useState<string | null>(null);
   // Stable idempotency key — regenerated only when the user navigates away and back
-  const idempotencyKeyRef = useRef<string>(crypto.randomUUID());
+  const idempotencyKeyRef = useRef<string>(uuidv4());
 
   const { data: plans, isLoading: loadingPlans } =
     trpc.payment.getUpgradePlans.useQuery();
