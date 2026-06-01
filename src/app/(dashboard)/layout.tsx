@@ -1,6 +1,6 @@
 import { ErrorBoundary } from "@/components/error-boundary";
 import { auth } from "@/server/auth";
-import { db } from "@/server/db";
+import { db, withDbRetry } from "@/server/db";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { FeedbackButton } from "@/components/feedback/feedback-button";
@@ -40,20 +40,22 @@ export default async function DashboardLayout({
     redirect("/sign-in");
   }
 
-  const dbUser = await db.user.findUnique({
-    where: { id: session.user.id },
-    select: {
-      role: true,
-      planId: true,
-      accounts: {
-        where: { providerId: "github" },
-        select: { id: true },
+  const dbUser = await withDbRetry(() =>
+    db.user.findUnique({
+      where: { id: session.user.id },
+      select: {
+        role: true,
+        planId: true,
+        accounts: {
+          where: { providerId: "github" },
+          select: { id: true },
+        },
+        _count: {
+          select: { teamMembers: true, repositories: true, reviews: true },
+        },
       },
-      _count: {
-        select: { teamMembers: true, repositories: true, reviews: true },
-      },
-    },
-  });
+    })
+  );
 
   return (
     <DashboardContent
