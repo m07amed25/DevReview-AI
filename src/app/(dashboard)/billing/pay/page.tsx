@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import {
@@ -55,6 +55,8 @@ export default function PayPage() {
   );
   const [selectedMethod, setSelectedMethod] = useState<number | null>(null);
   const [savedCardId, setSavedCardId] = useState<string | null>(null);
+  // Stable idempotency key — regenerated only when the user navigates away and back
+  const idempotencyKeyRef = useRef<string>(crypto.randomUUID());
 
   const { data: plans, isLoading: loadingPlans } =
     trpc.payment.getUpgradePlans.useQuery();
@@ -135,6 +137,7 @@ export default function PayPage() {
         planId,
         billingCycle,
         paymentMethodId: selectedMethod,
+        idempotencyKey: idempotencyKeyRef.current,
       });
     }
   };
