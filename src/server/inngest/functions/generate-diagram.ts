@@ -138,17 +138,9 @@ export const generateDiagram = inngest.createFunction(
     }
 
     // ── Step 3: Fetch files to map ────────────────────────────────────────────
+    // All diagram types always scan the full codebase so the generated diagram
+    // reflects the entire system, not just the files changed in a single PR.
     const changedFiles = await step.run("fetch-files", async () => {
-      if (prNumber) {
-        const prFiles = await fetchPullRequestFiles(
-          accessToken,
-          owner,
-          repo,
-          prNumber,
-        );
-        return prFiles.map((f) => ({ filename: f.filename }));
-      }
-
       const repoFiles = await fetchRepositoryFiles(accessToken, owner, repo);
       // Score files differently depending on what diagram we're generating
       const scoreFile = (path: string) => {
@@ -203,26 +195,60 @@ export const generateDiagram = inngest.createFunction(
           return 0;
         }
         // ── USE_CASE: prioritise route / controller / handler / API files ─────
+        // Immediately discard files that can never contain use-case patterns
+        if (/\.(test|spec)\.(ts|tsx|js|jsx)$/.test(path)) return 0;
+        if (/node_modules|\.next|prisma\/migrations/.test(path)) return 0;
+        if (/\.(css|scss|sass|less|svg|png|jpg|gif|ico|md)$/.test(path))
+          return 0;
+        if (
+          /(layout|not-found|error|loading|template)\.(tsx|jsx)$/.test(path)
+        )
+          return 0;
+        if (/\.(config|setup)\.(ts|js)$/.test(path)) return 0;
+        // Route handlers (highest value)
         if (/route\.(ts|js)$/.test(path)) return 100;
         if (/\.(controller|router|handler|endpoint)\.(ts|js)$/.test(path))
           return 100;
+        // tRPC routers
+        if (/\/routers?\/[^/]+\.(ts|js)$/.test(path)) return 95;
+        // Route directories
         if (/routes?\/|controllers?\/|handlers?\/|endpoints?\//i.test(path))
           return 90;
+        // API directory files
         if (
-          /api\//i.test(path) &&
+          /\/app\/api\//i.test(path) &&
+          (path.endsWith(".ts") || path.endsWith(".js"))
+        )
+          return 88;
+        // Server action files
+        if (
+          /\/actions?\//i.test(path) &&
           (path.endsWith(".ts") || path.endsWith(".js"))
         )
           return 85;
-        if (/inngest/i.test(path)) return 80;
+        if (/\.(action|actions)\.(ts|js)$/.test(path)) return 85;
+        // Inngest / webhook / cron files
+        if (/inngest/i.test(path)) return 82;
         if (/webhook/i.test(path)) return 80;
-        if (path.endsWith("package.json")) return 30;
-        if (path.endsWith(".ts") || path.endsWith(".tsx")) return 20;
-        if (path.endsWith(".js") || path.endsWith(".jsx")) return 10;
+        if (/cron|schedule/i.test(path)) return 78;
+        // Next.js pages (navigation use cases)
+        if (/\/page\.(tsx|jsx)$/.test(path)) return 70;
+        // Server-side files that may contain procedures / actions
+        if (
+          /\/server\//i.test(path) &&
+          (path.endsWith(".ts") || path.endsWith(".js"))
+        )
+          return 40;
+        // Generic TypeScript — may have tRPC procedures or server actions
+        if (path.endsWith(".ts")) return 15;
+        if (path.endsWith(".tsx")) return 8;
+        if (path.endsWith(".js") || path.endsWith(".jsx")) return 5;
         return 0;
       };
 
       return repoFiles
         .map((f) => ({ filename: f.path, score: scoreFile(f.path) }))
+        .filter((f) => f.score > 0)
         .sort((a, b) => b.score - a.score)
         .map((f) => ({ filename: f.filename }));
     });
@@ -231,8 +257,9 @@ export const generateDiagram = inngest.createFunction(
     const fileContents = await step.run("fetch-file-contents", async () => {
       const contents: Record<string, string> = {};
 
-      // Limit to reasonable number of files to avoid token/time explosion
-      const MAX_FILES = 20;
+      // Limit to reasonable number of files to avoid token/time explosion.
+      // USE_CASE needs a wide scan of the whole codebase; CLASS also needs many files.
+      const MAX_FILES = type === "CLASS" ? 60 : type === "USE_CASE" ? 80 : 20;
       const relevant = changedFiles.slice(0, MAX_FILES);
 
       await Promise.all(
@@ -303,12 +330,27 @@ export const generateDiagram = inngest.createFunction(
         return;
       }
 
+      // Flag nodes that didn't exist in the previous generation (skip on first run).
+      const prev = await db.diagram.findUnique({
+        where: { id: diagramId },
+        select: { nodes: true },
+      });
+      const prevIds = new Set(
+        (Array.isArray(prev?.nodes) ? (prev.nodes as Array<{ id?: string }>) : [])
+          .map((n) => n?.id)
+          .filter(Boolean),
+      );
+      const nodes =
+        prevIds.size > 0
+          ? generated.nodes.map((n) => (prevIds.has(n.id) ? n : { ...n, isNew: true }))
+          : generated.nodes;
+
       await db.diagram.update({
         where: { id: diagramId },
         data: {
           status: "COMPLETED",
           definition: generated.definition,
-          nodes: generated.nodes as object[],
+          nodes: nodes as object[],
           edges: generated.edges as object[],
           error: null,
           generatedAt: new Date(),

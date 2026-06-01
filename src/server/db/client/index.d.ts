@@ -401,7 +401,8 @@ export type DiagramType = (typeof DiagramType)[keyof typeof DiagramType]
 export const DiagramStatus: {
   PENDING: 'PENDING',
   COMPLETED: 'COMPLETED',
-  FAILED: 'FAILED'
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED'
 };
 
 export type DiagramStatus = (typeof DiagramStatus)[keyof typeof DiagramStatus]

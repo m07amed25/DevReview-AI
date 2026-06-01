@@ -133,8 +133,21 @@ function DiagramViewer({ definition, nodes, onNodeClick, onRetry }: DiagramViewe
       ctx.fillStyle = "hsl(222.2 84% 4.9%)";
       ctx.fillRect(0, 0, w, h);
       ctx.drawImage(img, 0, 0, w, h);
-      const a = document.createElement("a");
-      a.href = canvas.toDataURL("image/png"); a.download = "diagram.png"; a.click();
+      const save = () => {
+        const a = document.createElement("a");
+        a.href = canvas.toDataURL("image/png"); a.download = "diagram.png"; a.click();
+      };
+      const logo = new Image();
+      logo.onload = () => {
+        const lw = Math.min(w * 0.15, 110);
+        const lh = (logo.height / logo.width) * lw;
+        ctx.globalAlpha = 0.55;
+        ctx.drawImage(logo, w - lw - 16, h - lh - 16, lw, lh);
+        ctx.globalAlpha = 1;
+        save();
+      };
+      logo.onerror = save;
+      logo.src = "/logo-noback.png";
     };
     img.src = svgDataUrl;
   }, []);

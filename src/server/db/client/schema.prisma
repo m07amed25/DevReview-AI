@@ -835,6 +835,7 @@ enum DiagramStatus {
   PENDING
   COMPLETED
   FAILED
+  CANCELLED
 }
 
 enum RuleSeverity {
