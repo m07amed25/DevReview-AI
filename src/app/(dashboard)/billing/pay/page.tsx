@@ -15,6 +15,7 @@ import {
   Rocket,
   Crown,
 } from "lucide-react";
+import Image from "next/image";
 import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
 import {
@@ -352,10 +353,12 @@ export default function PayPage() {
                             {method.name_en}
                           </p>
                           {method.logo && (
-                            <img
+                            <Image
                               src={method.logo}
                               alt={method.name_en}
-                              className="h-6 w-auto"
+                              width={48}
+                              height={24}
+                              className="h-6 w-auto object-contain"
                             />
                           )}
                         </div>
