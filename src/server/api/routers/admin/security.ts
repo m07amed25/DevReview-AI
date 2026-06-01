@@ -9,25 +9,44 @@ export const adminSecurityRouter = createTRPCRouter({
         page: z.number().min(1).default(1),
         limit: z.number().min(1).max(100).default(20),
         search: z.string().max(100).trim().optional(),
+        // legacy single-resource filter kept for back-compat
         resource: z.string().max(50).optional(),
+        // new: multi-resource for tab-based filtering
+        resources: z.array(z.string().max(50)).optional(),
+        actorId: z.string().max(255).optional(),
+        fromDate: z.string().datetime().optional(),
+        toDate: z.string().datetime().optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
-      const { page, limit, search, resource } = input;
+      const { page, limit, search, resource, resources, actorId, fromDate, toDate } = input;
       const skip = (page - 1) * limit;
 
+      // Merge single + multi resource filters
+      const resourceSet = [
+        ...(resources ?? []),
+        ...(resource ? [resource] : []),
+      ].filter(Boolean);
+
       const auditWhere = {
-        ...(resource ? { resource } : {}),
+        ...(resourceSet.length ? { resource: { in: resourceSet } } : {}),
+        ...(actorId ? { actorId } : {}),
+        ...((fromDate ?? toDate)
+          ? {
+              createdAt: {
+                ...(fromDate ? { gte: new Date(fromDate) } : {}),
+                ...(toDate ? { lte: new Date(toDate) } : {}),
+              },
+            }
+          : {}),
         ...(search
           ? {
               OR: [
                 { action: { contains: search, mode: "insensitive" as const } },
-                {
-                  resource: { contains: search, mode: "insensitive" as const },
-                },
-                {
-                  ipAddress: { contains: search, mode: "insensitive" as const },
-                },
+                { resource: { contains: search, mode: "insensitive" as const } },
+                { ipAddress: { contains: search, mode: "insensitive" as const } },
+                { actor: { name: { contains: search, mode: "insensitive" as const } } },
+                { actor: { email: { contains: search, mode: "insensitive" as const } } },
               ],
             }
           : {}),
@@ -66,28 +85,66 @@ export const adminSecurityRouter = createTRPCRouter({
       };
     }),
 
+  getAuditStats: adminProcedure.query(async ({ ctx }) => {
+    const since24h = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const since7d = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+    const [total, last24h, last7d, byResource] = await Promise.all([
+      ctx.db.auditLog.count(),
+      ctx.db.auditLog.count({ where: { createdAt: { gte: since24h } } }),
+      ctx.db.auditLog.count({ where: { createdAt: { gte: since7d } } }),
+      ctx.db.auditLog.groupBy({
+        by: ["resource"],
+        _count: { resource: true },
+      }),
+    ]);
+
+    return {
+      total,
+      last24h,
+      last7d,
+      byResource: Object.fromEntries(
+        byResource.map((r) => [r.resource ?? "UNKNOWN", r._count.resource]),
+      ),
+    };
+  }),
+
   exportAuditLogs: adminProcedure
     .input(
       z.object({
         resource: z.string().max(50).optional(),
+        resources: z.array(z.string().max(50)).optional(),
         search: z.string().max(100).trim().optional(),
+        actorId: z.string().max(255).optional(),
+        fromDate: z.string().datetime().optional(),
+        toDate: z.string().datetime().optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
-      const { resource, search } = input;
+      const { resource, resources, search, actorId, fromDate, toDate } = input;
+
+      const resourceSet = [
+        ...(resources ?? []),
+        ...(resource ? [resource] : []),
+      ].filter(Boolean);
 
       const where = {
-        ...(resource ? { resource } : {}),
+        ...(resourceSet.length ? { resource: { in: resourceSet } } : {}),
+        ...(actorId ? { actorId } : {}),
+        ...((fromDate ?? toDate)
+          ? {
+              createdAt: {
+                ...(fromDate ? { gte: new Date(fromDate) } : {}),
+                ...(toDate ? { lte: new Date(toDate) } : {}),
+              },
+            }
+          : {}),
         ...(search
           ? {
               OR: [
                 { action: { contains: search, mode: "insensitive" as const } },
-                {
-                  resource: { contains: search, mode: "insensitive" as const },
-                },
-                {
-                  ipAddress: { contains: search, mode: "insensitive" as const },
-                },
+                { resource: { contains: search, mode: "insensitive" as const } },
+                { ipAddress: { contains: search, mode: "insensitive" as const } },
               ],
             }
           : {}),
