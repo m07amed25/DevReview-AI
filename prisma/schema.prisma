@@ -850,22 +850,27 @@ enum DiscountType {
 }
 
 model Invoice {
-  id                  String        @id @default(cuid())
+  id                  String         @id @default(cuid())
   userId              String
   amount              Int
-  status              InvoiceStatus @default(PENDING)
+  status              InvoiceStatus  @default(PENDING)
   planId              String?
-  billingCycle        String?       /// "monthly" | "yearly"
+  billingCycle        String?        /// "monthly" | "yearly"
   description         String?
-  fawaterakInvoiceId  Int?          @unique
+  fawaterakInvoiceId  Int?           @unique
   fawaterakInvoiceKey String?
-  paymentMethodUsed   String? /// "Visa-Mastercard", "Fawry", etc.
-  referenceNumber     String? /// Fawry code, Aman code, etc.
-  successToken        String? /// Secret token to verify success redirect
-  currency            String        @default("EGP")
+  paymentMethodUsed   String?        /// "Visa-Mastercard", "Fawry", etc.
+  referenceNumber     String?        /// Fawry code, Aman code, etc.
+  successToken        String?        /// Secret token to verify success redirect
+  currency            String         @default("EGP")
   paidAt              DateTime?
-  createdAt           DateTime      @default(now())
-  user                User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt           DateTime       @default(now())
+  /// Idempotency key supplied by client (UUID v4) — prevents duplicate charges.
+  idempotencyKey      String?        @unique
+  /// Optimistic concurrency version — every update must supply expected version.
+  version             Int            @default(1)
+  user                User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  paymentEvents       PaymentEvent[]
 
   @@index([userId])
   @@index([fawaterakInvoiceId])
@@ -877,6 +882,57 @@ enum InvoiceStatus {
   PENDING
   FAILED
   REFUNDED
+  PROCESSING
+  AUTHORIZED
+  PARTIALLY_REFUNDED
+  DISPUTED
+  CANCELLED
+  INITIATED
+}
+
+/// Append-only payment ledger — never update, never delete.
+/// Every state transition appends a new row.
+model PaymentEvent {
+  id          String           @id @default(cuid())
+  invoiceId   String
+  eventType   PaymentEventType
+  source      String           @default("system") /// "fawaterak" | "stripe" | "system" | "admin"
+  metadata    Json?
+  rawPayload  Json?            /// Raw gateway payload stored verbatim for reconciliation
+  createdAt   DateTime         @default(now())
+  invoice     Invoice          @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceId])
+  @@index([invoiceId, eventType])
+  @@index([createdAt])
+  @@map("payment_event")
+}
+
+enum PaymentEventType {
+  PAYMENT_INITIATED
+  PAYMENT_PROCESSING
+  PAYMENT_AUTHORIZED
+  PAYMENT_CAPTURED
+  PAYMENT_SUCCEEDED
+  PAYMENT_FAILED
+  REFUND_REQUESTED
+  REFUND_SUCCEEDED
+  REFUND_FAILED
+  DISPUTE_OPENED
+  DISPUTE_RESOLVED
+  PAYMENT_CANCELLED
+  CREDIT_APPLIED
+}
+
+/// Webhook idempotency table — prevents processing the same gateway event twice.
+model WebhookDedup {
+  id             String   @id @default(cuid())
+  gatewayEventId String   @unique /// Composite key: "{gateway}:{invoiceId}:{status}"
+  eventType      String
+  receivedAt     DateTime @default(now())
+
+  @@index([gatewayEventId])
+  @@map("webhook_dedup")
 }
 
 model UserDiscount {

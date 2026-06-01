@@ -12,6 +12,11 @@ import {
   timingSafeStringEqual,
   toAmountString,
 } from "../../services/payment-workflow";
+import {
+  acquireIdempotencyLock,
+  releaseIdempotencyLock,
+} from "../../services/payment-idempotency";
+import { appendPaymentEvent } from "../../services/payment-ledger";
 
 const safeInvoiceSelect = {
   id: true,
@@ -22,6 +27,7 @@ const safeInvoiceSelect = {
   currency: true,
   paidAt: true,
   createdAt: true,
+  idempotencyKey: true,
 } as const;
 
 export const paymentRouter = createTRPCRouter({
@@ -41,137 +47,183 @@ export const paymentRouter = createTRPCRouter({
         planId: z.string(),
         billingCycle: z.enum(["monthly", "yearly"]),
         paymentMethodId: z.number(),
+        /** UUID v4 — client must generate and store for retry-safe idempotency. */
+        idempotencyKey: z.string().uuid(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const billing = await ctx.db.billingInfo.findUnique({
-        where: { userId: ctx.user.id },
+      // ── Idempotency: return existing invoice if already created ──
+      const existingInvoice = await ctx.db.invoice.findUnique({
+        where: { idempotencyKey: input.idempotencyKey },
       });
-      if (!billing) {
+      if (existingInvoice && existingInvoice.userId === ctx.user.id) {
+        return {
+          invoiceId: existingInvoice.id,
+          redirectTo: null,
+          referenceCode: null,
+          paidWithCredit: existingInvoice.status === "PAID",
+        };
+      }
+
+      // ── Distributed lock to prevent concurrent duplicate initiations ──
+      const lockAcquired = await acquireIdempotencyLock(ctx.user.id, input.idempotencyKey);
+      if (!lockAcquired) {
         throw new TRPCError({
-          code: "PRECONDITION_FAILED",
-          message: "Please add billing information first.",
+          code: "TOO_MANY_REQUESTS",
+          message: "A payment with this idempotency key is already in progress. Please retry in a moment.",
         });
       }
 
-      const plan = await ctx.db.pricingPlan.findUnique({
-        where: { id: input.planId },
-      });
-      if (!plan) throw new TRPCError({ code: "NOT_FOUND", message: "Plan not found" });
+      try {
+        const billing = await ctx.db.billingInfo.findUnique({
+          where: { userId: ctx.user.id },
+        });
+        if (!billing) {
+          throw new TRPCError({
+            code: "PRECONDITION_FAILED",
+            message: "Please add billing information first.",
+          });
+        }
 
-      const { finalAmount, creditUsed } = await calculateCheckoutAmount(
-        ctx.db,
-        ctx.user.id,
-        plan,
-        input.billingCycle,
-      );
+        const plan = await ctx.db.pricingPlan.findUnique({
+          where: { id: input.planId },
+        });
+        if (!plan) throw new TRPCError({ code: "NOT_FOUND", message: "Plan not found" });
 
-      // If credit covers the full amount, activate immediately without payment gateway
-      if (finalAmount === 0 && creditUsed > 0) {
-        const planExpiresAt = new Date();
-        planExpiresAt.setMonth(planExpiresAt.getMonth() + (input.billingCycle === "yearly" ? 12 : 1));
+        const { finalAmount, creditUsed } = await calculateCheckoutAmount(
+          ctx.db,
+          ctx.user.id,
+          plan,
+          input.billingCycle,
+        );
 
+        // If credit covers the full amount, activate immediately without payment gateway
+        if (finalAmount === 0 && creditUsed > 0) {
+          const planExpiresAt = new Date();
+          planExpiresAt.setMonth(planExpiresAt.getMonth() + (input.billingCycle === "yearly" ? 12 : 1));
+
+          const invoice = await ctx.db.invoice.create({
+            data: {
+              userId: ctx.user.id,
+              amount: 0,
+              planId: input.planId,
+              billingCycle: input.billingCycle,
+              description: `${plan.name} - ${input.billingCycle} (paid with credit)`,
+              currency: checkoutCurrency,
+              status: "PAID",
+              paidAt: new Date(),
+              idempotencyKey: input.idempotencyKey,
+            },
+          });
+
+          await ctx.db.user.update({
+            where: { id: ctx.user.id },
+            data: {
+              planId: input.planId,
+              planExpiresAt,
+              planStartedAt: new Date(),
+              billingCycle: input.billingCycle,
+              accountCredit: { decrement: creditUsed },
+            },
+          });
+
+          await releaseIdempotencyLock(ctx.user.id, input.idempotencyKey);
+          return { invoiceId: invoice.id, redirectTo: null, referenceCode: null, paidWithCredit: true };
+        }
+
+        const amountMajor = toAmountString(finalAmount);
+
+        const successToken = crypto.randomBytes(32).toString("hex");
         const invoice = await ctx.db.invoice.create({
           data: {
             userId: ctx.user.id,
-            amount: 0,
+            amount: finalAmount,
             planId: input.planId,
             billingCycle: input.billingCycle,
-            description: `${plan.name} - ${input.billingCycle} (paid with credit)`,
+            description: `${plan.name} - ${input.billingCycle}`,
             currency: checkoutCurrency,
-            status: "PAID",
-            paidAt: new Date(),
+            successToken,
+            idempotencyKey: input.idempotencyKey,
           },
         });
 
-        await ctx.db.user.update({
-          where: { id: ctx.user.id },
-          data: {
-            planId: input.planId,
-            planExpiresAt,
-            planStartedAt: new Date(),
-            billingCycle: input.billingCycle,
-            accountCredit: { decrement: creditUsed },
-          },
+        // Record initiation in the append-only event ledger
+        await ctx.db.$transaction(async (tx) => {
+          await appendPaymentEvent(tx, {
+            invoiceId: invoice.id,
+            eventType: "PAYMENT_INITIATED",
+            source: "tRPC.initiatePayment",
+          });
+          await tx.invoice.update({
+            where: { id: invoice.id },
+            data: { status: "INITIATED", version: { increment: 1 } },
+          });
         });
 
-        return { invoiceId: invoice.id, redirectTo: null, referenceCode: null, paidWithCredit: true };
-      }
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
-      const amountMajor = toAmountString(finalAmount);
+        try {
+          const result = await payments.executePayment({
+            payment_method_id: input.paymentMethodId,
+            cartTotal: amountMajor,
+            currency: checkoutCurrency,
+            customer: {
+              first_name: billing.fullName.split(" ")[0] ?? billing.fullName,
+              last_name: billing.fullName.split(" ").slice(1).join(" ") || "User",
+              email: billing.email,
+              address: billing.address ?? undefined,
+              customer_unique_id: ctx.user.id,
+            },
+            cartItems: [{ name: plan.name, price: amountMajor, quantity: "1" }],
+            redirectionUrls: {
+              successUrl: `${baseUrl}/billing/success?invoice=${invoice.id}&token=${successToken}`,
+              failUrl: `${baseUrl}/billing/failed?invoice=${invoice.id}`,
+              pendingUrl: `${baseUrl}/billing/pending?invoice=${invoice.id}`,
+              webhookUrl: `${baseUrl}/api/webhooks/fawaterak_json`,
+            },
+            invoice_number: invoice.id,
+          });
 
-      const successToken = crypto.randomBytes(32).toString("hex");
-      const invoice = await ctx.db.invoice.create({
-        data: {
-          userId: ctx.user.id,
-          amount: finalAmount,
-          planId: input.planId,
-          billingCycle: input.billingCycle,
-          description: `${plan.name} - ${input.billingCycle}`,
-          currency: checkoutCurrency,
-          successToken,
-        },
-      });
+          await ctx.db.invoice.update({
+            where: { id: invoice.id },
+            data: {
+              fawaterakInvoiceId: result.invoice_id,
+              fawaterakInvoiceKey: result.invoice_key,
+            },
+          }).catch(async (err) => {
+            if (err?.code === "P2002") {
+              await ctx.db.invoice.updateMany({
+                where: { fawaterakInvoiceId: result.invoice_id, id: { not: invoice.id } },
+                data: { fawaterakInvoiceId: null, fawaterakInvoiceKey: null },
+              });
+              await ctx.db.invoice.update({
+                where: { id: invoice.id },
+                data: { fawaterakInvoiceId: result.invoice_id, fawaterakInvoiceKey: result.invoice_key },
+              });
+            } else throw err;
+          });
 
-      const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+          await releaseIdempotencyLock(ctx.user.id, input.idempotencyKey);
 
-      try {
-        const result = await payments.executePayment({
-          payment_method_id: input.paymentMethodId,
-          cartTotal: amountMajor,
-          currency: checkoutCurrency,
-          customer: {
-            first_name: billing.fullName.split(" ")[0] ?? billing.fullName,
-            last_name: billing.fullName.split(" ").slice(1).join(" ") || "User",
-            email: billing.email,
-            address: billing.address ?? undefined,
-            customer_unique_id: ctx.user.id,
-          },
-          cartItems: [{ name: plan.name, price: amountMajor, quantity: "1" }],
-          redirectionUrls: {
-            successUrl: `${baseUrl}/billing/success?invoice=${invoice.id}&token=${successToken}`,
-            failUrl: `${baseUrl}/billing/failed?invoice=${invoice.id}`,
-            pendingUrl: `${baseUrl}/billing/pending?invoice=${invoice.id}`,
-            webhookUrl: `${baseUrl}/api/webhooks/fawaterak_json`,
-          },
-          invoice_number: invoice.id,
-        });
-
-        await ctx.db.invoice.update({
-          where: { id: invoice.id },
-          data: {
-            fawaterakInvoiceId: result.invoice_id,
-            fawaterakInvoiceKey: result.invoice_key,
-          },
-        }).catch(async (err) => {
-          // Handle unique constraint on fawaterakInvoiceId (stale failed invoice)
-          if (err?.code === "P2002") {
-            await ctx.db.invoice.updateMany({
-              where: { fawaterakInvoiceId: result.invoice_id, id: { not: invoice.id } },
-              data: { fawaterakInvoiceId: null, fawaterakInvoiceKey: null },
-            });
-            await ctx.db.invoice.update({
-              where: { id: invoice.id },
-              data: { fawaterakInvoiceId: result.invoice_id, fawaterakInvoiceKey: result.invoice_key },
-            });
-          } else throw err;
-        });
-
-        return {
-          invoiceId: invoice.id,
-          redirectTo: result.payment_data.redirectTo,
-          referenceCode:
-            result.payment_data.fawryCode ??
-            result.payment_data.amanCode ??
-            result.payment_data.masaryCode ??
-            result.payment_data.meezaReference?.toString(),
-        };
-      } catch (error) {
-        await ctx.db.invoice.update({
-          where: { id: invoice.id },
-          data: { status: "FAILED" },
-        });
-        throw error;
+          return {
+            invoiceId: invoice.id,
+            redirectTo: result.payment_data.redirectTo,
+            referenceCode:
+              result.payment_data.fawryCode ??
+              result.payment_data.amanCode ??
+              result.payment_data.masaryCode ??
+              result.payment_data.meezaReference?.toString(),
+          };
+        } catch (error) {
+          await ctx.db.invoice.update({
+            where: { id: invoice.id },
+            data: { status: "FAILED" },
+          });
+          throw error;
+        }
+      } finally {
+        // Always release the lock (no-op if already released above)
+        await releaseIdempotencyLock(ctx.user.id, input.idempotencyKey).catch(() => undefined);
       }
     }),
 
@@ -511,4 +563,71 @@ export const paymentRouter = createTRPCRouter({
       select: { id: true, name: true, monthlyPrice: true, tagline: true, features: true },
     });
   }),
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // NEW: payment history — returns all invoices with their event ledger.
+  // ─────────────────────────────────────────────────────────────────────────
+  getHistory: protectedProcedure
+    .input(
+      z.object({
+        limit:  z.number().int().min(1).max(100).default(20),
+        cursor: z.string().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const invoices = await ctx.db.invoice.findMany({
+        where: { userId: ctx.user.id },
+        orderBy: { createdAt: "desc" },
+        take: input.limit + 1,
+        ...(input.cursor ? { cursor: { id: input.cursor }, skip: 1 } : {}),
+        select: {
+          id: true,
+          amount: true,
+          currency: true,
+          status: true,
+          planId: true,
+          billingCycle: true,
+          description: true,
+          paidAt: true,
+          createdAt: true,
+          paymentMethodUsed: true,
+          referenceNumber: true,
+        },
+      });
+
+      let nextCursor: string | undefined;
+      if (invoices.length > input.limit) {
+        const next = invoices.pop();
+        nextCursor = next?.id;
+      }
+
+      return { invoices, nextCursor };
+    }),
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // NEW: invoice detail — returns full Invoice + PaymentEvent ledger.
+  // ─────────────────────────────────────────────────────────────────────────
+  getInvoiceDetail: protectedProcedure
+    .input(z.object({ invoiceId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const invoice = await ctx.db.invoice.findFirst({
+        where: { id: input.invoiceId, userId: ctx.user.id },
+        include: {
+          paymentEvents: {
+            orderBy: { createdAt: "asc" },
+            select: {
+              id: true,
+              eventType: true,
+              source: true,
+              metadata: true,
+              createdAt: true,
+            },
+          },
+        },
+      });
+
+      if (!invoice) throw new TRPCError({ code: "NOT_FOUND" });
+
+      return invoice;
+    }),
 });
