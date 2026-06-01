@@ -15,6 +15,11 @@ const nextConfig: NextConfig = {
     "@google/generative-ai",
     "@huggingface/inference",
     "nodemailer",
+    // better-auth pulls in Kysely SQLite dialects which use ESM-only syntax
+    // that Turbopack cannot bundle — keep them as native CJS requires.
+    "@electric-sql/pglite",
+    "better-sqlite3",
+    "kysely",
   ],
   // Exclude browser-only packages and large non-Linux binaries from server
   // function traces to stay under Vercel's 250 MB per-function limit.
@@ -111,6 +116,14 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "app.fawaterk.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.fawaterk.com",
       },
     ],
   },

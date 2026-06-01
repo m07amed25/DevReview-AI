@@ -84,6 +84,7 @@ export type GatewayPaymentStatus =
   | "processing"
   | "failed"
   | "expired"
+  | "refund"
   | "refunded"
   | "disputed"
   | "cancelled";

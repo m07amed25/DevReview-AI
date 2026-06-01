@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { v4 as uuidv4 } from "uuid";
 import { motion } from "framer-motion";
 import {
   CreditCard,
@@ -14,6 +15,7 @@ import {
   Rocket,
   Crown,
 } from "lucide-react";
+import Image from "next/image";
 import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
 import {
@@ -55,6 +57,8 @@ export default function PayPage() {
   );
   const [selectedMethod, setSelectedMethod] = useState<number | null>(null);
   const [savedCardId, setSavedCardId] = useState<string | null>(null);
+  // Stable idempotency key — regenerated only when the user navigates away and back
+  const idempotencyKeyRef = useRef<string>(uuidv4());
 
   const { data: plans, isLoading: loadingPlans } =
     trpc.payment.getUpgradePlans.useQuery();
@@ -135,6 +139,7 @@ export default function PayPage() {
         planId,
         billingCycle,
         paymentMethodId: selectedMethod,
+        idempotencyKey: idempotencyKeyRef.current,
       });
     }
   };
@@ -348,10 +353,12 @@ export default function PayPage() {
                             {method.name_en}
                           </p>
                           {method.logo && (
-                            <img
+                            <Image
                               src={method.logo}
                               alt={method.name_en}
-                              className="h-6 w-auto"
+                              width={48}
+                              height={24}
+                              className="h-6 w-auto object-contain"
                             />
                           )}
                         </div>
