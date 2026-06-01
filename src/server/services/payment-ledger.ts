@@ -17,8 +17,8 @@ export type AppendPaymentEventInput = {
   invoiceId: string;
   eventType: PaymentEventType;
   source?: string;
-  metadata?: Record<string, unknown>;
-  rawPayload?: Record<string, unknown>;
+  metadata?: Prisma.InputJsonValue;
+  rawPayload?: Prisma.InputJsonValue;
 };
 
 /**
@@ -40,8 +40,8 @@ export async function appendPaymentEvent(
       invoiceId: input.invoiceId,
       eventType: input.eventType,
       source: input.source ?? "system",
-      metadata: input.metadata ?? undefined,
-      rawPayload: input.rawPayload ?? undefined,
+      metadata: input.metadata as unknown as Prisma.InputJsonValue,
+      rawPayload: input.rawPayload as unknown as Prisma.InputJsonValue,
     },
   });
 }
