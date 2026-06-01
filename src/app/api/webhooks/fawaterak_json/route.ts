@@ -14,6 +14,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { type Prisma } from "@/server/db/client";
 import { db } from "@/server/db";
 import { inngest } from "@/server/inngest";
 import {
@@ -202,7 +203,7 @@ export async function POST(request: NextRequest) {
             invoiceId: invoice.id,
             eventType: "PAYMENT_SUCCEEDED",
             source: "fawaterak",
-            rawPayload: body,
+            rawPayload: body as unknown as Prisma.InputJsonValue,
           });
           break;
         }
@@ -222,7 +223,7 @@ export async function POST(request: NextRequest) {
             invoiceId: invoice.id,
             eventType: "PAYMENT_FAILED",
             source: "fawaterak",
-            rawPayload: body,
+            rawPayload: body as unknown as Prisma.InputJsonValue,
           });
           break;
         }
@@ -241,7 +242,7 @@ export async function POST(request: NextRequest) {
             invoiceId: invoice.id,
             eventType: "REFUND_SUCCEEDED",
             source: "fawaterak",
-            rawPayload: body,
+            rawPayload: body as unknown as Prisma.InputJsonValue,
           });
           break;
         }
@@ -259,7 +260,7 @@ export async function POST(request: NextRequest) {
             invoiceId: invoice.id,
             eventType: "DISPUTE_OPENED",
             source: "fawaterak",
-            rawPayload: body,
+            rawPayload: body as unknown as Prisma.InputJsonValue,
           });
           break;
         }
