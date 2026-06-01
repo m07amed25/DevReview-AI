@@ -302,6 +302,8 @@ const IGNORED_FILE_PATTERNS = [
   /schema\.prisma$/,
   /\/migrations?\//,
   /\.sql$/,
+  // Any folder starting with "." (e.g. .kiro, .vscode, .agent, .github)
+  /(^|\/)\.[^/]+\//,
 ];
 
 export async function reviewCode(

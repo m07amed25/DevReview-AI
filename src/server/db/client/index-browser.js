@@ -829,7 +829,8 @@ exports.DiagramType = exports.$Enums.DiagramType = {
 exports.DiagramStatus = exports.$Enums.DiagramStatus = {
   PENDING: 'PENDING',
   COMPLETED: 'COMPLETED',
-  FAILED: 'FAILED'
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED'
 };
 
 exports.RuleSeverity = exports.$Enums.RuleSeverity = {

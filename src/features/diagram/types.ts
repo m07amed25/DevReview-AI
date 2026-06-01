@@ -46,6 +46,8 @@ export interface DiagramNode {
   label: string;
   type: "TABLE" | "CLASS" | "ACTOR" | "USE_CASE";
   detail: DiagramNodeDetail;
+  /** Set when the node first appeared in the latest regeneration (for highlighting). */
+  isNew?: boolean;
 }
 
 export interface DiagramEdge {
@@ -57,7 +59,13 @@ export interface DiagramEdge {
     | "ONE_TO_MANY"
     | "MANY_TO_MANY"
     | "INHERITS"
-    | "ASSOCIATES";
+    | "IMPLEMENTS"
+    | "COMPOSES"
+    | "AGGREGATES"
+    | "ASSOCIATES"
+    | "DEPENDS"
+    | "INCLUDES"
+    | "EXTENDS";
 }
 
 export interface DiagramTriggerRule {

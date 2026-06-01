@@ -224,7 +224,7 @@ export default function PullRequestPage({ params }: PageProps) {
             <TabButton active={activeTab === "compare"} onClick={() => { setActiveTab("compare"); if (!compareCurrentId && completedReviews.length >= 2) { setCompareCurrentId(completedReviews[0].id); setComparePreviousId(completedReviews[1].id); } }} icon={ArrowLeftRight} label="Compare" />
           )}
           <TabButton active={activeTab === "security"} onClick={() => setActiveTab("security")} icon={ScanSearch} label="Security" />
-          <TabButton active={activeTab === "diagrams"} onClick={() => setActiveTab("diagrams")} icon={Network} label="Diagrams" badge="Beta" count={diagrams.data?.length ?? 0} />
+          <TabButton active={activeTab === "diagrams"} onClick={() => setActiveTab("diagrams")} icon={Network} label="Diagrams" count={diagrams.data?.length ?? 0} />
         </div>
       </div>
 

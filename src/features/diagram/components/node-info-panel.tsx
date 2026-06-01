@@ -150,9 +150,9 @@ function ClassDetail({ detail }: { detail: DiagramNodeDetailClass }) {
           <p className="text-xs font-semibold text-muted-foreground mb-1">
             Properties
           </p>
-          {detail.properties.map((p) => (
+          {detail.properties.map((p, i) => (
             <div
-              key={p.name}
+              key={i}
               className="text-xs font-mono text-muted-foreground/80"
             >
               <Badge variant="outline" className="text-[10px] px-1 py-0 mr-1">

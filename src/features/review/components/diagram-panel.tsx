@@ -1,12 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import type { Diagram } from "@/server/db/client";
 import { Loader2, AlertTriangle, Network, Plus, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { DiagramNode } from "@/features/diagram/types";
+import type { DiagramNode, DiagramEdge } from "@/features/diagram/types";
 import DiagramViewer from "@/features/diagram/components/diagram-viewer";
+
+const DiagramFlow = dynamic(() => import("@/features/diagram/components/erd-flow"), {
+  ssr: false,
+  loading: () => <Skeleton className="h-[600px] w-full rounded-md" />,
+});
 
 interface DiagramPanelProps {
   diagrams: Diagram[];
@@ -53,6 +59,10 @@ export function DiagramPanel({ diagrams, repositoryId, onRequestDiagram }: Diagr
     } catch { return []; }
   })();
 
+  const parsedEdges: DiagramEdge[] = Array.isArray(activeDiagram?.edges)
+    ? (activeDiagram.edges as unknown as DiagramEdge[])
+    : [];
+
   return (
     <div className="space-y-0">
       {/* Tab bar */}
@@ -82,6 +92,11 @@ export function DiagramPanel({ diagrams, repositoryId, onRequestDiagram }: Diagr
                 )}
               >
                 <span>{DIAGRAM_LABELS[type]}</span>
+                {(type === "USE_CASE" || type === "SEQUENCE") && (
+                  <span className="px-1 py-0.5 text-[0.6rem] font-semibold leading-none rounded bg-[oklch(0.25_0.08_250)] text-[oklch(0.62_0.16_250)] border border-[oklch(0.35_0.10_250)]">
+                    Beta
+                  </span>
+                )}
                 {status === "PENDING" && <Loader2 className="size-3 animate-spin text-[oklch(0.62_0.16_250)]" />}
                 {status === "FAILED" && <AlertTriangle className="size-3 text-[oklch(0.55_0.2_25)]" />}
                 {status === "NONE" && <Plus className="size-3 text-[oklch(0.40_0.03_250)]" />}
@@ -169,11 +184,15 @@ export function DiagramPanel({ diagrams, repositoryId, onRequestDiagram }: Diagr
                 <span>{activeDiagram.error} Showing previous generation.</span>
               </div>
             )}
-            <DiagramViewer
-              definition={activeDiagram.definition}
-              nodes={parsedNodes}
-              onRetry={onRequestDiagram ? () => handleRequest(activeDiagram.type as "ERD" | "CLASS" | "USE_CASE" | "SEQUENCE") : undefined}
-            />
+            {(activeType === "ERD" || activeType === "CLASS" || activeType === "USE_CASE") && parsedNodes.length > 0 ? (
+              <DiagramFlow nodes={parsedNodes} edges={parsedEdges} />
+            ) : (
+              <DiagramViewer
+                definition={activeDiagram.definition}
+                nodes={parsedNodes}
+                onRetry={onRequestDiagram ? () => handleRequest(activeDiagram.type as "ERD" | "CLASS" | "USE_CASE" | "SEQUENCE") : undefined}
+              />
+            )}
           </div>
         )}
 
