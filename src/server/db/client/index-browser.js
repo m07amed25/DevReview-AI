@@ -626,7 +626,26 @@ exports.Prisma.InvoiceScalarFieldEnum = {
   successToken: 'successToken',
   currency: 'currency',
   paidAt: 'paidAt',
+  createdAt: 'createdAt',
+  idempotencyKey: 'idempotencyKey',
+  version: 'version'
+};
+
+exports.Prisma.PaymentEventScalarFieldEnum = {
+  id: 'id',
+  invoiceId: 'invoiceId',
+  eventType: 'eventType',
+  source: 'source',
+  metadata: 'metadata',
+  rawPayload: 'rawPayload',
   createdAt: 'createdAt'
+};
+
+exports.Prisma.WebhookDedupScalarFieldEnum = {
+  id: 'id',
+  gatewayEventId: 'gatewayEventId',
+  eventType: 'eventType',
+  receivedAt: 'receivedAt'
 };
 
 exports.Prisma.UserDiscountScalarFieldEnum = {
@@ -829,8 +848,7 @@ exports.DiagramType = exports.$Enums.DiagramType = {
 exports.DiagramStatus = exports.$Enums.DiagramStatus = {
   PENDING: 'PENDING',
   COMPLETED: 'COMPLETED',
-  FAILED: 'FAILED',
-  CANCELLED: 'CANCELLED'
+  FAILED: 'FAILED'
 };
 
 exports.RuleSeverity = exports.$Enums.RuleSeverity = {
@@ -849,7 +867,29 @@ exports.InvoiceStatus = exports.$Enums.InvoiceStatus = {
   PAID: 'PAID',
   PENDING: 'PENDING',
   FAILED: 'FAILED',
-  REFUNDED: 'REFUNDED'
+  REFUNDED: 'REFUNDED',
+  PROCESSING: 'PROCESSING',
+  AUTHORIZED: 'AUTHORIZED',
+  PARTIALLY_REFUNDED: 'PARTIALLY_REFUNDED',
+  DISPUTED: 'DISPUTED',
+  CANCELLED: 'CANCELLED',
+  INITIATED: 'INITIATED'
+};
+
+exports.PaymentEventType = exports.$Enums.PaymentEventType = {
+  PAYMENT_INITIATED: 'PAYMENT_INITIATED',
+  PAYMENT_PROCESSING: 'PAYMENT_PROCESSING',
+  PAYMENT_AUTHORIZED: 'PAYMENT_AUTHORIZED',
+  PAYMENT_CAPTURED: 'PAYMENT_CAPTURED',
+  PAYMENT_SUCCEEDED: 'PAYMENT_SUCCEEDED',
+  PAYMENT_FAILED: 'PAYMENT_FAILED',
+  REFUND_REQUESTED: 'REFUND_REQUESTED',
+  REFUND_SUCCEEDED: 'REFUND_SUCCEEDED',
+  REFUND_FAILED: 'REFUND_FAILED',
+  DISPUTE_OPENED: 'DISPUTE_OPENED',
+  DISPUTE_RESOLVED: 'DISPUTE_RESOLVED',
+  PAYMENT_CANCELLED: 'PAYMENT_CANCELLED',
+  CREDIT_APPLIED: 'CREDIT_APPLIED'
 };
 
 exports.MessageCategory = exports.$Enums.MessageCategory = {
@@ -899,6 +939,8 @@ exports.Prisma.ModelName = {
   PlanCapability: 'PlanCapability',
   PricingSettings: 'PricingSettings',
   Invoice: 'Invoice',
+  PaymentEvent: 'PaymentEvent',
+  WebhookDedup: 'WebhookDedup',
   UserDiscount: 'UserDiscount',
   BillingInfo: 'BillingInfo',
   PaymentMethod: 'PaymentMethod',

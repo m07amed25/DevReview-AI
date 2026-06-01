@@ -278,3 +278,52 @@ export const processExpiredSubscriptions = inngest.createFunction(
     return { processed: expired.length };
   },
 );
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Handle disputed payments — flag invoice, notify user, alert team.
+// ─────────────────────────────────────────────────────────────────────────────
+export const handlePaymentDisputed = inngest.createFunction(
+  {
+    id: "handle-payment-disputed",
+    triggers: [{ event: "payment.disputed" }],
+    retries: 3,
+  },
+  async ({ event, step }) => {
+    const { invoiceId, gatewayEventId } = event.data as {
+      invoiceId: string;
+      gatewayEventId: string;
+    };
+
+    const invoice = await step.run("fetch-disputed-invoice", async () => {
+      return db.invoice.findUnique({
+        where: { id: invoiceId },
+        include: { user: true },
+      });
+    });
+
+    if (!invoice) {
+      throw new Error(`Disputed invoice not found: ${invoiceId}`);
+    }
+
+    await step.run("update-invoice-disputed", async () => {
+      await db.invoice.update({
+        where: { id: invoiceId },
+        data: { status: "DISPUTED" },
+      });
+    });
+
+    // TODO: integrate with email/notification service when available
+    await step.run("log-dispute-alert", async () => {
+      console.warn("[payment.disputed] Dispute received", {
+        invoiceId,
+        gatewayEventId,
+        userId: invoice.userId,
+        amount: invoice.amount,
+        currency: invoice.currency,
+      });
+      return { alerted: true };
+    });
+
+    return { invoiceId, handled: true };
+  },
+);

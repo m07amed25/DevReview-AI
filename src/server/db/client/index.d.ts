@@ -209,6 +209,17 @@ export type PricingSettings = $Result.DefaultSelection<Prisma.$PricingSettingsPa
  */
 export type Invoice = $Result.DefaultSelection<Prisma.$InvoicePayload>
 /**
+ * Model PaymentEvent
+ * Append-only payment ledger — never update, never delete.
+ * Every state transition appends a new row.
+ */
+export type PaymentEvent = $Result.DefaultSelection<Prisma.$PaymentEventPayload>
+/**
+ * Model WebhookDedup
+ * Webhook idempotency table — prevents processing the same gateway event twice.
+ */
+export type WebhookDedup = $Result.DefaultSelection<Prisma.$WebhookDedupPayload>
+/**
  * Model UserDiscount
  * 
  */
@@ -401,8 +412,7 @@ export type DiagramType = (typeof DiagramType)[keyof typeof DiagramType]
 export const DiagramStatus: {
   PENDING: 'PENDING',
   COMPLETED: 'COMPLETED',
-  FAILED: 'FAILED',
-  CANCELLED: 'CANCELLED'
+  FAILED: 'FAILED'
 };
 
 export type DiagramStatus = (typeof DiagramStatus)[keyof typeof DiagramStatus]
@@ -430,10 +440,35 @@ export const InvoiceStatus: {
   PAID: 'PAID',
   PENDING: 'PENDING',
   FAILED: 'FAILED',
-  REFUNDED: 'REFUNDED'
+  REFUNDED: 'REFUNDED',
+  PROCESSING: 'PROCESSING',
+  AUTHORIZED: 'AUTHORIZED',
+  PARTIALLY_REFUNDED: 'PARTIALLY_REFUNDED',
+  DISPUTED: 'DISPUTED',
+  CANCELLED: 'CANCELLED',
+  INITIATED: 'INITIATED'
 };
 
 export type InvoiceStatus = (typeof InvoiceStatus)[keyof typeof InvoiceStatus]
+
+
+export const PaymentEventType: {
+  PAYMENT_INITIATED: 'PAYMENT_INITIATED',
+  PAYMENT_PROCESSING: 'PAYMENT_PROCESSING',
+  PAYMENT_AUTHORIZED: 'PAYMENT_AUTHORIZED',
+  PAYMENT_CAPTURED: 'PAYMENT_CAPTURED',
+  PAYMENT_SUCCEEDED: 'PAYMENT_SUCCEEDED',
+  PAYMENT_FAILED: 'PAYMENT_FAILED',
+  REFUND_REQUESTED: 'REFUND_REQUESTED',
+  REFUND_SUCCEEDED: 'REFUND_SUCCEEDED',
+  REFUND_FAILED: 'REFUND_FAILED',
+  DISPUTE_OPENED: 'DISPUTE_OPENED',
+  DISPUTE_RESOLVED: 'DISPUTE_RESOLVED',
+  PAYMENT_CANCELLED: 'PAYMENT_CANCELLED',
+  CREDIT_APPLIED: 'CREDIT_APPLIED'
+};
+
+export type PaymentEventType = (typeof PaymentEventType)[keyof typeof PaymentEventType]
 
 
 export const MessageCategory: {
@@ -526,6 +561,10 @@ export const DiscountType: typeof $Enums.DiscountType
 export type InvoiceStatus = $Enums.InvoiceStatus
 
 export const InvoiceStatus: typeof $Enums.InvoiceStatus
+
+export type PaymentEventType = $Enums.PaymentEventType
+
+export const PaymentEventType: typeof $Enums.PaymentEventType
 
 export type MessageCategory = $Enums.MessageCategory
 
@@ -1038,6 +1077,26 @@ export class PrismaClient<
     * ```
     */
   get invoice(): Prisma.InvoiceDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.paymentEvent`: Exposes CRUD operations for the **PaymentEvent** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PaymentEvents
+    * const paymentEvents = await prisma.paymentEvent.findMany()
+    * ```
+    */
+  get paymentEvent(): Prisma.PaymentEventDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.webhookDedup`: Exposes CRUD operations for the **WebhookDedup** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more WebhookDedups
+    * const webhookDedups = await prisma.webhookDedup.findMany()
+    * ```
+    */
+  get webhookDedup(): Prisma.WebhookDedupDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.userDiscount`: Exposes CRUD operations for the **UserDiscount** model.
@@ -1568,6 +1627,8 @@ export namespace Prisma {
     PlanCapability: 'PlanCapability',
     PricingSettings: 'PricingSettings',
     Invoice: 'Invoice',
+    PaymentEvent: 'PaymentEvent',
+    WebhookDedup: 'WebhookDedup',
     UserDiscount: 'UserDiscount',
     BillingInfo: 'BillingInfo',
     PaymentMethod: 'PaymentMethod',
@@ -1591,7 +1652,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "repository" | "review" | "reviewFeedback" | "securityIssue" | "reviewThread" | "reviewThreadComment" | "reviewThreadCommentReaction" | "reviewApproval" | "reviewAssignment" | "team" | "teamMember" | "teamAction" | "notification" | "webhookConfig" | "scheduledScanConfig" | "scheduledScanRun" | "gitHubComment" | "gitHubStatusCheck" | "branchProtectionRecommendation" | "diagram" | "reviewRule" | "systemSettings" | "supportMessage" | "auditLog" | "ssoProvider" | "customRole" | "userCustomRole" | "discount" | "userPriceOverride" | "partnerDomain" | "pricingPlan" | "capability" | "planCapability" | "pricingSettings" | "invoice" | "userDiscount" | "billingInfo" | "paymentMethod" | "legalPage" | "contactMessage"
+      modelProps: "user" | "session" | "account" | "verification" | "repository" | "review" | "reviewFeedback" | "securityIssue" | "reviewThread" | "reviewThreadComment" | "reviewThreadCommentReaction" | "reviewApproval" | "reviewAssignment" | "team" | "teamMember" | "teamAction" | "notification" | "webhookConfig" | "scheduledScanConfig" | "scheduledScanRun" | "gitHubComment" | "gitHubStatusCheck" | "branchProtectionRecommendation" | "diagram" | "reviewRule" | "systemSettings" | "supportMessage" | "auditLog" | "ssoProvider" | "customRole" | "userCustomRole" | "discount" | "userPriceOverride" | "partnerDomain" | "pricingPlan" | "capability" | "planCapability" | "pricingSettings" | "invoice" | "paymentEvent" | "webhookDedup" | "userDiscount" | "billingInfo" | "paymentMethod" | "legalPage" | "contactMessage"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4481,6 +4542,154 @@ export namespace Prisma {
           }
         }
       }
+      PaymentEvent: {
+        payload: Prisma.$PaymentEventPayload<ExtArgs>
+        fields: Prisma.PaymentEventFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PaymentEventFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentEventPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PaymentEventFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentEventPayload>
+          }
+          findFirst: {
+            args: Prisma.PaymentEventFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentEventPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PaymentEventFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentEventPayload>
+          }
+          findMany: {
+            args: Prisma.PaymentEventFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentEventPayload>[]
+          }
+          create: {
+            args: Prisma.PaymentEventCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentEventPayload>
+          }
+          createMany: {
+            args: Prisma.PaymentEventCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PaymentEventCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentEventPayload>[]
+          }
+          delete: {
+            args: Prisma.PaymentEventDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentEventPayload>
+          }
+          update: {
+            args: Prisma.PaymentEventUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentEventPayload>
+          }
+          deleteMany: {
+            args: Prisma.PaymentEventDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PaymentEventUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PaymentEventUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentEventPayload>[]
+          }
+          upsert: {
+            args: Prisma.PaymentEventUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentEventPayload>
+          }
+          aggregate: {
+            args: Prisma.PaymentEventAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePaymentEvent>
+          }
+          groupBy: {
+            args: Prisma.PaymentEventGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PaymentEventGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PaymentEventCountArgs<ExtArgs>
+            result: $Utils.Optional<PaymentEventCountAggregateOutputType> | number
+          }
+        }
+      }
+      WebhookDedup: {
+        payload: Prisma.$WebhookDedupPayload<ExtArgs>
+        fields: Prisma.WebhookDedupFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.WebhookDedupFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebhookDedupPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.WebhookDedupFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebhookDedupPayload>
+          }
+          findFirst: {
+            args: Prisma.WebhookDedupFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebhookDedupPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.WebhookDedupFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebhookDedupPayload>
+          }
+          findMany: {
+            args: Prisma.WebhookDedupFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebhookDedupPayload>[]
+          }
+          create: {
+            args: Prisma.WebhookDedupCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebhookDedupPayload>
+          }
+          createMany: {
+            args: Prisma.WebhookDedupCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.WebhookDedupCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebhookDedupPayload>[]
+          }
+          delete: {
+            args: Prisma.WebhookDedupDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebhookDedupPayload>
+          }
+          update: {
+            args: Prisma.WebhookDedupUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebhookDedupPayload>
+          }
+          deleteMany: {
+            args: Prisma.WebhookDedupDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.WebhookDedupUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.WebhookDedupUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebhookDedupPayload>[]
+          }
+          upsert: {
+            args: Prisma.WebhookDedupUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebhookDedupPayload>
+          }
+          aggregate: {
+            args: Prisma.WebhookDedupAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateWebhookDedup>
+          }
+          groupBy: {
+            args: Prisma.WebhookDedupGroupByArgs<ExtArgs>
+            result: $Utils.Optional<WebhookDedupGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.WebhookDedupCountArgs<ExtArgs>
+            result: $Utils.Optional<WebhookDedupCountAggregateOutputType> | number
+          }
+        }
+      }
       UserDiscount: {
         payload: Prisma.$UserDiscountPayload<ExtArgs>
         fields: Prisma.UserDiscountFieldRefs
@@ -4986,6 +5195,8 @@ export namespace Prisma {
     planCapability?: PlanCapabilityOmit
     pricingSettings?: PricingSettingsOmit
     invoice?: InvoiceOmit
+    paymentEvent?: PaymentEventOmit
+    webhookDedup?: WebhookDedupOmit
     userDiscount?: UserDiscountOmit
     billingInfo?: BillingInfoOmit
     paymentMethod?: PaymentMethodOmit
@@ -5616,6 +5827,37 @@ export namespace Prisma {
    */
   export type CapabilityCountOutputTypeCountPlansArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PlanCapabilityWhereInput
+  }
+
+
+  /**
+   * Count Type InvoiceCountOutputType
+   */
+
+  export type InvoiceCountOutputType = {
+    paymentEvents: number
+  }
+
+  export type InvoiceCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    paymentEvents?: boolean | InvoiceCountOutputTypeCountPaymentEventsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * InvoiceCountOutputType without action
+   */
+  export type InvoiceCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InvoiceCountOutputType
+     */
+    select?: InvoiceCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * InvoiceCountOutputType without action
+   */
+  export type InvoiceCountOutputTypeCountPaymentEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PaymentEventWhereInput
   }
 
 
@@ -49688,11 +49930,13 @@ export namespace Prisma {
   export type InvoiceAvgAggregateOutputType = {
     amount: number | null
     fawaterakInvoiceId: number | null
+    version: number | null
   }
 
   export type InvoiceSumAggregateOutputType = {
     amount: number | null
     fawaterakInvoiceId: number | null
+    version: number | null
   }
 
   export type InvoiceMinAggregateOutputType = {
@@ -49711,6 +49955,8 @@ export namespace Prisma {
     currency: string | null
     paidAt: Date | null
     createdAt: Date | null
+    idempotencyKey: string | null
+    version: number | null
   }
 
   export type InvoiceMaxAggregateOutputType = {
@@ -49729,6 +49975,8 @@ export namespace Prisma {
     currency: string | null
     paidAt: Date | null
     createdAt: Date | null
+    idempotencyKey: string | null
+    version: number | null
   }
 
   export type InvoiceCountAggregateOutputType = {
@@ -49747,6 +49995,8 @@ export namespace Prisma {
     currency: number
     paidAt: number
     createdAt: number
+    idempotencyKey: number
+    version: number
     _all: number
   }
 
@@ -49754,11 +50004,13 @@ export namespace Prisma {
   export type InvoiceAvgAggregateInputType = {
     amount?: true
     fawaterakInvoiceId?: true
+    version?: true
   }
 
   export type InvoiceSumAggregateInputType = {
     amount?: true
     fawaterakInvoiceId?: true
+    version?: true
   }
 
   export type InvoiceMinAggregateInputType = {
@@ -49777,6 +50029,8 @@ export namespace Prisma {
     currency?: true
     paidAt?: true
     createdAt?: true
+    idempotencyKey?: true
+    version?: true
   }
 
   export type InvoiceMaxAggregateInputType = {
@@ -49795,6 +50049,8 @@ export namespace Prisma {
     currency?: true
     paidAt?: true
     createdAt?: true
+    idempotencyKey?: true
+    version?: true
   }
 
   export type InvoiceCountAggregateInputType = {
@@ -49813,6 +50069,8 @@ export namespace Prisma {
     currency?: true
     paidAt?: true
     createdAt?: true
+    idempotencyKey?: true
+    version?: true
     _all?: true
   }
 
@@ -49918,6 +50176,8 @@ export namespace Prisma {
     currency: string
     paidAt: Date | null
     createdAt: Date
+    idempotencyKey: string | null
+    version: number
     _count: InvoiceCountAggregateOutputType | null
     _avg: InvoiceAvgAggregateOutputType | null
     _sum: InvoiceSumAggregateOutputType | null
@@ -49955,7 +50215,11 @@ export namespace Prisma {
     currency?: boolean
     paidAt?: boolean
     createdAt?: boolean
+    idempotencyKey?: boolean
+    version?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
+    paymentEvents?: boolean | Invoice$paymentEventsArgs<ExtArgs>
+    _count?: boolean | InvoiceCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["invoice"]>
 
   export type InvoiceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -49974,6 +50238,8 @@ export namespace Prisma {
     currency?: boolean
     paidAt?: boolean
     createdAt?: boolean
+    idempotencyKey?: boolean
+    version?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["invoice"]>
 
@@ -49993,6 +50259,8 @@ export namespace Prisma {
     currency?: boolean
     paidAt?: boolean
     createdAt?: boolean
+    idempotencyKey?: boolean
+    version?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["invoice"]>
 
@@ -50012,11 +50280,15 @@ export namespace Prisma {
     currency?: boolean
     paidAt?: boolean
     createdAt?: boolean
+    idempotencyKey?: boolean
+    version?: boolean
   }
 
-  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "amount" | "status" | "planId" | "billingCycle" | "description" | "fawaterakInvoiceId" | "fawaterakInvoiceKey" | "paymentMethodUsed" | "referenceNumber" | "successToken" | "currency" | "paidAt" | "createdAt", ExtArgs["result"]["invoice"]>
+  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "amount" | "status" | "planId" | "billingCycle" | "description" | "fawaterakInvoiceId" | "fawaterakInvoiceKey" | "paymentMethodUsed" | "referenceNumber" | "successToken" | "currency" | "paidAt" | "createdAt" | "idempotencyKey" | "version", ExtArgs["result"]["invoice"]>
   export type InvoiceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
+    paymentEvents?: boolean | Invoice$paymentEventsArgs<ExtArgs>
+    _count?: boolean | InvoiceCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type InvoiceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -50029,6 +50301,7 @@ export namespace Prisma {
     name: "Invoice"
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
+      paymentEvents: Prisma.$PaymentEventPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -50058,6 +50331,14 @@ export namespace Prisma {
       currency: string
       paidAt: Date | null
       createdAt: Date
+      /**
+       * Idempotency key supplied by client (UUID v4) — prevents duplicate charges.
+       */
+      idempotencyKey: string | null
+      /**
+       * Optimistic concurrency version — every update must supply expected version.
+       */
+      version: number
     }, ExtArgs["result"]["invoice"]>
     composites: {}
   }
@@ -50453,6 +50734,7 @@ export namespace Prisma {
   export interface Prisma__InvoiceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    paymentEvents<T extends Invoice$paymentEventsArgs<ExtArgs> = {}>(args?: Subset<T, Invoice$paymentEventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -50497,6 +50779,8 @@ export namespace Prisma {
     readonly currency: FieldRef<"Invoice", 'String'>
     readonly paidAt: FieldRef<"Invoice", 'DateTime'>
     readonly createdAt: FieldRef<"Invoice", 'DateTime'>
+    readonly idempotencyKey: FieldRef<"Invoice", 'String'>
+    readonly version: FieldRef<"Invoice", 'Int'>
   }
     
 
@@ -50893,6 +51177,30 @@ export namespace Prisma {
   }
 
   /**
+   * Invoice.paymentEvents
+   */
+  export type Invoice$paymentEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentEvent
+     */
+    select?: PaymentEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentEvent
+     */
+    omit?: PaymentEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentEventInclude<ExtArgs> | null
+    where?: PaymentEventWhereInput
+    orderBy?: PaymentEventOrderByWithRelationInput | PaymentEventOrderByWithRelationInput[]
+    cursor?: PaymentEventWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PaymentEventScalarFieldEnum | PaymentEventScalarFieldEnum[]
+  }
+
+  /**
    * Invoice without action
    */
   export type InvoiceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -50908,6 +51216,2073 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: InvoiceInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PaymentEvent
+   */
+
+  export type AggregatePaymentEvent = {
+    _count: PaymentEventCountAggregateOutputType | null
+    _min: PaymentEventMinAggregateOutputType | null
+    _max: PaymentEventMaxAggregateOutputType | null
+  }
+
+  export type PaymentEventMinAggregateOutputType = {
+    id: string | null
+    invoiceId: string | null
+    eventType: $Enums.PaymentEventType | null
+    source: string | null
+    createdAt: Date | null
+  }
+
+  export type PaymentEventMaxAggregateOutputType = {
+    id: string | null
+    invoiceId: string | null
+    eventType: $Enums.PaymentEventType | null
+    source: string | null
+    createdAt: Date | null
+  }
+
+  export type PaymentEventCountAggregateOutputType = {
+    id: number
+    invoiceId: number
+    eventType: number
+    source: number
+    metadata: number
+    rawPayload: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type PaymentEventMinAggregateInputType = {
+    id?: true
+    invoiceId?: true
+    eventType?: true
+    source?: true
+    createdAt?: true
+  }
+
+  export type PaymentEventMaxAggregateInputType = {
+    id?: true
+    invoiceId?: true
+    eventType?: true
+    source?: true
+    createdAt?: true
+  }
+
+  export type PaymentEventCountAggregateInputType = {
+    id?: true
+    invoiceId?: true
+    eventType?: true
+    source?: true
+    metadata?: true
+    rawPayload?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type PaymentEventAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PaymentEvent to aggregate.
+     */
+    where?: PaymentEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PaymentEvents to fetch.
+     */
+    orderBy?: PaymentEventOrderByWithRelationInput | PaymentEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PaymentEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PaymentEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PaymentEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PaymentEvents
+    **/
+    _count?: true | PaymentEventCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PaymentEventMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PaymentEventMaxAggregateInputType
+  }
+
+  export type GetPaymentEventAggregateType<T extends PaymentEventAggregateArgs> = {
+        [P in keyof T & keyof AggregatePaymentEvent]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePaymentEvent[P]>
+      : GetScalarType<T[P], AggregatePaymentEvent[P]>
+  }
+
+
+
+
+  export type PaymentEventGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PaymentEventWhereInput
+    orderBy?: PaymentEventOrderByWithAggregationInput | PaymentEventOrderByWithAggregationInput[]
+    by: PaymentEventScalarFieldEnum[] | PaymentEventScalarFieldEnum
+    having?: PaymentEventScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PaymentEventCountAggregateInputType | true
+    _min?: PaymentEventMinAggregateInputType
+    _max?: PaymentEventMaxAggregateInputType
+  }
+
+  export type PaymentEventGroupByOutputType = {
+    id: string
+    invoiceId: string
+    eventType: $Enums.PaymentEventType
+    source: string
+    metadata: JsonValue | null
+    rawPayload: JsonValue | null
+    createdAt: Date
+    _count: PaymentEventCountAggregateOutputType | null
+    _min: PaymentEventMinAggregateOutputType | null
+    _max: PaymentEventMaxAggregateOutputType | null
+  }
+
+  type GetPaymentEventGroupByPayload<T extends PaymentEventGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PaymentEventGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PaymentEventGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PaymentEventGroupByOutputType[P]>
+            : GetScalarType<T[P], PaymentEventGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PaymentEventSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    invoiceId?: boolean
+    eventType?: boolean
+    source?: boolean
+    metadata?: boolean
+    rawPayload?: boolean
+    createdAt?: boolean
+    invoice?: boolean | InvoiceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["paymentEvent"]>
+
+  export type PaymentEventSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    invoiceId?: boolean
+    eventType?: boolean
+    source?: boolean
+    metadata?: boolean
+    rawPayload?: boolean
+    createdAt?: boolean
+    invoice?: boolean | InvoiceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["paymentEvent"]>
+
+  export type PaymentEventSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    invoiceId?: boolean
+    eventType?: boolean
+    source?: boolean
+    metadata?: boolean
+    rawPayload?: boolean
+    createdAt?: boolean
+    invoice?: boolean | InvoiceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["paymentEvent"]>
+
+  export type PaymentEventSelectScalar = {
+    id?: boolean
+    invoiceId?: boolean
+    eventType?: boolean
+    source?: boolean
+    metadata?: boolean
+    rawPayload?: boolean
+    createdAt?: boolean
+  }
+
+  export type PaymentEventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "invoiceId" | "eventType" | "source" | "metadata" | "rawPayload" | "createdAt", ExtArgs["result"]["paymentEvent"]>
+  export type PaymentEventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    invoice?: boolean | InvoiceDefaultArgs<ExtArgs>
+  }
+  export type PaymentEventIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    invoice?: boolean | InvoiceDefaultArgs<ExtArgs>
+  }
+  export type PaymentEventIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    invoice?: boolean | InvoiceDefaultArgs<ExtArgs>
+  }
+
+  export type $PaymentEventPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PaymentEvent"
+    objects: {
+      invoice: Prisma.$InvoicePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      invoiceId: string
+      eventType: $Enums.PaymentEventType
+      /**
+       * "fawaterak" | "stripe" | "system" | "admin"
+       */
+      source: string
+      metadata: Prisma.JsonValue | null
+      /**
+       * Raw gateway payload stored verbatim for reconciliation
+       */
+      rawPayload: Prisma.JsonValue | null
+      createdAt: Date
+    }, ExtArgs["result"]["paymentEvent"]>
+    composites: {}
+  }
+
+  type PaymentEventGetPayload<S extends boolean | null | undefined | PaymentEventDefaultArgs> = $Result.GetResult<Prisma.$PaymentEventPayload, S>
+
+  type PaymentEventCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PaymentEventFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PaymentEventCountAggregateInputType | true
+    }
+
+  export interface PaymentEventDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PaymentEvent'], meta: { name: 'PaymentEvent' } }
+    /**
+     * Find zero or one PaymentEvent that matches the filter.
+     * @param {PaymentEventFindUniqueArgs} args - Arguments to find a PaymentEvent
+     * @example
+     * // Get one PaymentEvent
+     * const paymentEvent = await prisma.paymentEvent.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PaymentEventFindUniqueArgs>(args: SelectSubset<T, PaymentEventFindUniqueArgs<ExtArgs>>): Prisma__PaymentEventClient<$Result.GetResult<Prisma.$PaymentEventPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PaymentEvent that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PaymentEventFindUniqueOrThrowArgs} args - Arguments to find a PaymentEvent
+     * @example
+     * // Get one PaymentEvent
+     * const paymentEvent = await prisma.paymentEvent.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PaymentEventFindUniqueOrThrowArgs>(args: SelectSubset<T, PaymentEventFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PaymentEventClient<$Result.GetResult<Prisma.$PaymentEventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PaymentEvent that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentEventFindFirstArgs} args - Arguments to find a PaymentEvent
+     * @example
+     * // Get one PaymentEvent
+     * const paymentEvent = await prisma.paymentEvent.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PaymentEventFindFirstArgs>(args?: SelectSubset<T, PaymentEventFindFirstArgs<ExtArgs>>): Prisma__PaymentEventClient<$Result.GetResult<Prisma.$PaymentEventPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PaymentEvent that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentEventFindFirstOrThrowArgs} args - Arguments to find a PaymentEvent
+     * @example
+     * // Get one PaymentEvent
+     * const paymentEvent = await prisma.paymentEvent.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PaymentEventFindFirstOrThrowArgs>(args?: SelectSubset<T, PaymentEventFindFirstOrThrowArgs<ExtArgs>>): Prisma__PaymentEventClient<$Result.GetResult<Prisma.$PaymentEventPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PaymentEvents that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentEventFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PaymentEvents
+     * const paymentEvents = await prisma.paymentEvent.findMany()
+     * 
+     * // Get first 10 PaymentEvents
+     * const paymentEvents = await prisma.paymentEvent.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const paymentEventWithIdOnly = await prisma.paymentEvent.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PaymentEventFindManyArgs>(args?: SelectSubset<T, PaymentEventFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PaymentEvent.
+     * @param {PaymentEventCreateArgs} args - Arguments to create a PaymentEvent.
+     * @example
+     * // Create one PaymentEvent
+     * const PaymentEvent = await prisma.paymentEvent.create({
+     *   data: {
+     *     // ... data to create a PaymentEvent
+     *   }
+     * })
+     * 
+     */
+    create<T extends PaymentEventCreateArgs>(args: SelectSubset<T, PaymentEventCreateArgs<ExtArgs>>): Prisma__PaymentEventClient<$Result.GetResult<Prisma.$PaymentEventPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PaymentEvents.
+     * @param {PaymentEventCreateManyArgs} args - Arguments to create many PaymentEvents.
+     * @example
+     * // Create many PaymentEvents
+     * const paymentEvent = await prisma.paymentEvent.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PaymentEventCreateManyArgs>(args?: SelectSubset<T, PaymentEventCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PaymentEvents and returns the data saved in the database.
+     * @param {PaymentEventCreateManyAndReturnArgs} args - Arguments to create many PaymentEvents.
+     * @example
+     * // Create many PaymentEvents
+     * const paymentEvent = await prisma.paymentEvent.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PaymentEvents and only return the `id`
+     * const paymentEventWithIdOnly = await prisma.paymentEvent.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PaymentEventCreateManyAndReturnArgs>(args?: SelectSubset<T, PaymentEventCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentEventPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a PaymentEvent.
+     * @param {PaymentEventDeleteArgs} args - Arguments to delete one PaymentEvent.
+     * @example
+     * // Delete one PaymentEvent
+     * const PaymentEvent = await prisma.paymentEvent.delete({
+     *   where: {
+     *     // ... filter to delete one PaymentEvent
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PaymentEventDeleteArgs>(args: SelectSubset<T, PaymentEventDeleteArgs<ExtArgs>>): Prisma__PaymentEventClient<$Result.GetResult<Prisma.$PaymentEventPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PaymentEvent.
+     * @param {PaymentEventUpdateArgs} args - Arguments to update one PaymentEvent.
+     * @example
+     * // Update one PaymentEvent
+     * const paymentEvent = await prisma.paymentEvent.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PaymentEventUpdateArgs>(args: SelectSubset<T, PaymentEventUpdateArgs<ExtArgs>>): Prisma__PaymentEventClient<$Result.GetResult<Prisma.$PaymentEventPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PaymentEvents.
+     * @param {PaymentEventDeleteManyArgs} args - Arguments to filter PaymentEvents to delete.
+     * @example
+     * // Delete a few PaymentEvents
+     * const { count } = await prisma.paymentEvent.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PaymentEventDeleteManyArgs>(args?: SelectSubset<T, PaymentEventDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PaymentEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentEventUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PaymentEvents
+     * const paymentEvent = await prisma.paymentEvent.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PaymentEventUpdateManyArgs>(args: SelectSubset<T, PaymentEventUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PaymentEvents and returns the data updated in the database.
+     * @param {PaymentEventUpdateManyAndReturnArgs} args - Arguments to update many PaymentEvents.
+     * @example
+     * // Update many PaymentEvents
+     * const paymentEvent = await prisma.paymentEvent.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more PaymentEvents and only return the `id`
+     * const paymentEventWithIdOnly = await prisma.paymentEvent.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PaymentEventUpdateManyAndReturnArgs>(args: SelectSubset<T, PaymentEventUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentEventPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one PaymentEvent.
+     * @param {PaymentEventUpsertArgs} args - Arguments to update or create a PaymentEvent.
+     * @example
+     * // Update or create a PaymentEvent
+     * const paymentEvent = await prisma.paymentEvent.upsert({
+     *   create: {
+     *     // ... data to create a PaymentEvent
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PaymentEvent we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PaymentEventUpsertArgs>(args: SelectSubset<T, PaymentEventUpsertArgs<ExtArgs>>): Prisma__PaymentEventClient<$Result.GetResult<Prisma.$PaymentEventPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PaymentEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentEventCountArgs} args - Arguments to filter PaymentEvents to count.
+     * @example
+     * // Count the number of PaymentEvents
+     * const count = await prisma.paymentEvent.count({
+     *   where: {
+     *     // ... the filter for the PaymentEvents we want to count
+     *   }
+     * })
+    **/
+    count<T extends PaymentEventCountArgs>(
+      args?: Subset<T, PaymentEventCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PaymentEventCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PaymentEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentEventAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PaymentEventAggregateArgs>(args: Subset<T, PaymentEventAggregateArgs>): Prisma.PrismaPromise<GetPaymentEventAggregateType<T>>
+
+    /**
+     * Group by PaymentEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentEventGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PaymentEventGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PaymentEventGroupByArgs['orderBy'] }
+        : { orderBy?: PaymentEventGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PaymentEventGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPaymentEventGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PaymentEvent model
+   */
+  readonly fields: PaymentEventFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PaymentEvent.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PaymentEventClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    invoice<T extends InvoiceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, InvoiceDefaultArgs<ExtArgs>>): Prisma__InvoiceClient<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PaymentEvent model
+   */
+  interface PaymentEventFieldRefs {
+    readonly id: FieldRef<"PaymentEvent", 'String'>
+    readonly invoiceId: FieldRef<"PaymentEvent", 'String'>
+    readonly eventType: FieldRef<"PaymentEvent", 'PaymentEventType'>
+    readonly source: FieldRef<"PaymentEvent", 'String'>
+    readonly metadata: FieldRef<"PaymentEvent", 'Json'>
+    readonly rawPayload: FieldRef<"PaymentEvent", 'Json'>
+    readonly createdAt: FieldRef<"PaymentEvent", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PaymentEvent findUnique
+   */
+  export type PaymentEventFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentEvent
+     */
+    select?: PaymentEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentEvent
+     */
+    omit?: PaymentEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentEventInclude<ExtArgs> | null
+    /**
+     * Filter, which PaymentEvent to fetch.
+     */
+    where: PaymentEventWhereUniqueInput
+  }
+
+  /**
+   * PaymentEvent findUniqueOrThrow
+   */
+  export type PaymentEventFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentEvent
+     */
+    select?: PaymentEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentEvent
+     */
+    omit?: PaymentEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentEventInclude<ExtArgs> | null
+    /**
+     * Filter, which PaymentEvent to fetch.
+     */
+    where: PaymentEventWhereUniqueInput
+  }
+
+  /**
+   * PaymentEvent findFirst
+   */
+  export type PaymentEventFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentEvent
+     */
+    select?: PaymentEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentEvent
+     */
+    omit?: PaymentEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentEventInclude<ExtArgs> | null
+    /**
+     * Filter, which PaymentEvent to fetch.
+     */
+    where?: PaymentEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PaymentEvents to fetch.
+     */
+    orderBy?: PaymentEventOrderByWithRelationInput | PaymentEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PaymentEvents.
+     */
+    cursor?: PaymentEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PaymentEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PaymentEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PaymentEvents.
+     */
+    distinct?: PaymentEventScalarFieldEnum | PaymentEventScalarFieldEnum[]
+  }
+
+  /**
+   * PaymentEvent findFirstOrThrow
+   */
+  export type PaymentEventFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentEvent
+     */
+    select?: PaymentEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentEvent
+     */
+    omit?: PaymentEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentEventInclude<ExtArgs> | null
+    /**
+     * Filter, which PaymentEvent to fetch.
+     */
+    where?: PaymentEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PaymentEvents to fetch.
+     */
+    orderBy?: PaymentEventOrderByWithRelationInput | PaymentEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PaymentEvents.
+     */
+    cursor?: PaymentEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PaymentEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PaymentEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PaymentEvents.
+     */
+    distinct?: PaymentEventScalarFieldEnum | PaymentEventScalarFieldEnum[]
+  }
+
+  /**
+   * PaymentEvent findMany
+   */
+  export type PaymentEventFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentEvent
+     */
+    select?: PaymentEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentEvent
+     */
+    omit?: PaymentEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentEventInclude<ExtArgs> | null
+    /**
+     * Filter, which PaymentEvents to fetch.
+     */
+    where?: PaymentEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PaymentEvents to fetch.
+     */
+    orderBy?: PaymentEventOrderByWithRelationInput | PaymentEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PaymentEvents.
+     */
+    cursor?: PaymentEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PaymentEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PaymentEvents.
+     */
+    skip?: number
+    distinct?: PaymentEventScalarFieldEnum | PaymentEventScalarFieldEnum[]
+  }
+
+  /**
+   * PaymentEvent create
+   */
+  export type PaymentEventCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentEvent
+     */
+    select?: PaymentEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentEvent
+     */
+    omit?: PaymentEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentEventInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PaymentEvent.
+     */
+    data: XOR<PaymentEventCreateInput, PaymentEventUncheckedCreateInput>
+  }
+
+  /**
+   * PaymentEvent createMany
+   */
+  export type PaymentEventCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PaymentEvents.
+     */
+    data: PaymentEventCreateManyInput | PaymentEventCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PaymentEvent createManyAndReturn
+   */
+  export type PaymentEventCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentEvent
+     */
+    select?: PaymentEventSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentEvent
+     */
+    omit?: PaymentEventOmit<ExtArgs> | null
+    /**
+     * The data used to create many PaymentEvents.
+     */
+    data: PaymentEventCreateManyInput | PaymentEventCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentEventIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PaymentEvent update
+   */
+  export type PaymentEventUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentEvent
+     */
+    select?: PaymentEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentEvent
+     */
+    omit?: PaymentEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentEventInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PaymentEvent.
+     */
+    data: XOR<PaymentEventUpdateInput, PaymentEventUncheckedUpdateInput>
+    /**
+     * Choose, which PaymentEvent to update.
+     */
+    where: PaymentEventWhereUniqueInput
+  }
+
+  /**
+   * PaymentEvent updateMany
+   */
+  export type PaymentEventUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PaymentEvents.
+     */
+    data: XOR<PaymentEventUpdateManyMutationInput, PaymentEventUncheckedUpdateManyInput>
+    /**
+     * Filter which PaymentEvents to update
+     */
+    where?: PaymentEventWhereInput
+    /**
+     * Limit how many PaymentEvents to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PaymentEvent updateManyAndReturn
+   */
+  export type PaymentEventUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentEvent
+     */
+    select?: PaymentEventSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentEvent
+     */
+    omit?: PaymentEventOmit<ExtArgs> | null
+    /**
+     * The data used to update PaymentEvents.
+     */
+    data: XOR<PaymentEventUpdateManyMutationInput, PaymentEventUncheckedUpdateManyInput>
+    /**
+     * Filter which PaymentEvents to update
+     */
+    where?: PaymentEventWhereInput
+    /**
+     * Limit how many PaymentEvents to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentEventIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PaymentEvent upsert
+   */
+  export type PaymentEventUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentEvent
+     */
+    select?: PaymentEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentEvent
+     */
+    omit?: PaymentEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentEventInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PaymentEvent to update in case it exists.
+     */
+    where: PaymentEventWhereUniqueInput
+    /**
+     * In case the PaymentEvent found by the `where` argument doesn't exist, create a new PaymentEvent with this data.
+     */
+    create: XOR<PaymentEventCreateInput, PaymentEventUncheckedCreateInput>
+    /**
+     * In case the PaymentEvent was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PaymentEventUpdateInput, PaymentEventUncheckedUpdateInput>
+  }
+
+  /**
+   * PaymentEvent delete
+   */
+  export type PaymentEventDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentEvent
+     */
+    select?: PaymentEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentEvent
+     */
+    omit?: PaymentEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentEventInclude<ExtArgs> | null
+    /**
+     * Filter which PaymentEvent to delete.
+     */
+    where: PaymentEventWhereUniqueInput
+  }
+
+  /**
+   * PaymentEvent deleteMany
+   */
+  export type PaymentEventDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PaymentEvents to delete
+     */
+    where?: PaymentEventWhereInput
+    /**
+     * Limit how many PaymentEvents to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PaymentEvent without action
+   */
+  export type PaymentEventDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentEvent
+     */
+    select?: PaymentEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentEvent
+     */
+    omit?: PaymentEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentEventInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model WebhookDedup
+   */
+
+  export type AggregateWebhookDedup = {
+    _count: WebhookDedupCountAggregateOutputType | null
+    _min: WebhookDedupMinAggregateOutputType | null
+    _max: WebhookDedupMaxAggregateOutputType | null
+  }
+
+  export type WebhookDedupMinAggregateOutputType = {
+    id: string | null
+    gatewayEventId: string | null
+    eventType: string | null
+    receivedAt: Date | null
+  }
+
+  export type WebhookDedupMaxAggregateOutputType = {
+    id: string | null
+    gatewayEventId: string | null
+    eventType: string | null
+    receivedAt: Date | null
+  }
+
+  export type WebhookDedupCountAggregateOutputType = {
+    id: number
+    gatewayEventId: number
+    eventType: number
+    receivedAt: number
+    _all: number
+  }
+
+
+  export type WebhookDedupMinAggregateInputType = {
+    id?: true
+    gatewayEventId?: true
+    eventType?: true
+    receivedAt?: true
+  }
+
+  export type WebhookDedupMaxAggregateInputType = {
+    id?: true
+    gatewayEventId?: true
+    eventType?: true
+    receivedAt?: true
+  }
+
+  export type WebhookDedupCountAggregateInputType = {
+    id?: true
+    gatewayEventId?: true
+    eventType?: true
+    receivedAt?: true
+    _all?: true
+  }
+
+  export type WebhookDedupAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WebhookDedup to aggregate.
+     */
+    where?: WebhookDedupWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WebhookDedups to fetch.
+     */
+    orderBy?: WebhookDedupOrderByWithRelationInput | WebhookDedupOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: WebhookDedupWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WebhookDedups from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WebhookDedups.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned WebhookDedups
+    **/
+    _count?: true | WebhookDedupCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: WebhookDedupMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: WebhookDedupMaxAggregateInputType
+  }
+
+  export type GetWebhookDedupAggregateType<T extends WebhookDedupAggregateArgs> = {
+        [P in keyof T & keyof AggregateWebhookDedup]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateWebhookDedup[P]>
+      : GetScalarType<T[P], AggregateWebhookDedup[P]>
+  }
+
+
+
+
+  export type WebhookDedupGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WebhookDedupWhereInput
+    orderBy?: WebhookDedupOrderByWithAggregationInput | WebhookDedupOrderByWithAggregationInput[]
+    by: WebhookDedupScalarFieldEnum[] | WebhookDedupScalarFieldEnum
+    having?: WebhookDedupScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: WebhookDedupCountAggregateInputType | true
+    _min?: WebhookDedupMinAggregateInputType
+    _max?: WebhookDedupMaxAggregateInputType
+  }
+
+  export type WebhookDedupGroupByOutputType = {
+    id: string
+    gatewayEventId: string
+    eventType: string
+    receivedAt: Date
+    _count: WebhookDedupCountAggregateOutputType | null
+    _min: WebhookDedupMinAggregateOutputType | null
+    _max: WebhookDedupMaxAggregateOutputType | null
+  }
+
+  type GetWebhookDedupGroupByPayload<T extends WebhookDedupGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<WebhookDedupGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof WebhookDedupGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], WebhookDedupGroupByOutputType[P]>
+            : GetScalarType<T[P], WebhookDedupGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type WebhookDedupSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    gatewayEventId?: boolean
+    eventType?: boolean
+    receivedAt?: boolean
+  }, ExtArgs["result"]["webhookDedup"]>
+
+  export type WebhookDedupSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    gatewayEventId?: boolean
+    eventType?: boolean
+    receivedAt?: boolean
+  }, ExtArgs["result"]["webhookDedup"]>
+
+  export type WebhookDedupSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    gatewayEventId?: boolean
+    eventType?: boolean
+    receivedAt?: boolean
+  }, ExtArgs["result"]["webhookDedup"]>
+
+  export type WebhookDedupSelectScalar = {
+    id?: boolean
+    gatewayEventId?: boolean
+    eventType?: boolean
+    receivedAt?: boolean
+  }
+
+  export type WebhookDedupOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "gatewayEventId" | "eventType" | "receivedAt", ExtArgs["result"]["webhookDedup"]>
+
+  export type $WebhookDedupPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "WebhookDedup"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      /**
+       * Composite key: "{gateway}:{invoiceId}:{status}"
+       */
+      gatewayEventId: string
+      eventType: string
+      receivedAt: Date
+    }, ExtArgs["result"]["webhookDedup"]>
+    composites: {}
+  }
+
+  type WebhookDedupGetPayload<S extends boolean | null | undefined | WebhookDedupDefaultArgs> = $Result.GetResult<Prisma.$WebhookDedupPayload, S>
+
+  type WebhookDedupCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<WebhookDedupFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: WebhookDedupCountAggregateInputType | true
+    }
+
+  export interface WebhookDedupDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['WebhookDedup'], meta: { name: 'WebhookDedup' } }
+    /**
+     * Find zero or one WebhookDedup that matches the filter.
+     * @param {WebhookDedupFindUniqueArgs} args - Arguments to find a WebhookDedup
+     * @example
+     * // Get one WebhookDedup
+     * const webhookDedup = await prisma.webhookDedup.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends WebhookDedupFindUniqueArgs>(args: SelectSubset<T, WebhookDedupFindUniqueArgs<ExtArgs>>): Prisma__WebhookDedupClient<$Result.GetResult<Prisma.$WebhookDedupPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one WebhookDedup that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {WebhookDedupFindUniqueOrThrowArgs} args - Arguments to find a WebhookDedup
+     * @example
+     * // Get one WebhookDedup
+     * const webhookDedup = await prisma.webhookDedup.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends WebhookDedupFindUniqueOrThrowArgs>(args: SelectSubset<T, WebhookDedupFindUniqueOrThrowArgs<ExtArgs>>): Prisma__WebhookDedupClient<$Result.GetResult<Prisma.$WebhookDedupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WebhookDedup that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WebhookDedupFindFirstArgs} args - Arguments to find a WebhookDedup
+     * @example
+     * // Get one WebhookDedup
+     * const webhookDedup = await prisma.webhookDedup.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends WebhookDedupFindFirstArgs>(args?: SelectSubset<T, WebhookDedupFindFirstArgs<ExtArgs>>): Prisma__WebhookDedupClient<$Result.GetResult<Prisma.$WebhookDedupPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WebhookDedup that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WebhookDedupFindFirstOrThrowArgs} args - Arguments to find a WebhookDedup
+     * @example
+     * // Get one WebhookDedup
+     * const webhookDedup = await prisma.webhookDedup.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends WebhookDedupFindFirstOrThrowArgs>(args?: SelectSubset<T, WebhookDedupFindFirstOrThrowArgs<ExtArgs>>): Prisma__WebhookDedupClient<$Result.GetResult<Prisma.$WebhookDedupPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more WebhookDedups that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WebhookDedupFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all WebhookDedups
+     * const webhookDedups = await prisma.webhookDedup.findMany()
+     * 
+     * // Get first 10 WebhookDedups
+     * const webhookDedups = await prisma.webhookDedup.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const webhookDedupWithIdOnly = await prisma.webhookDedup.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends WebhookDedupFindManyArgs>(args?: SelectSubset<T, WebhookDedupFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WebhookDedupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a WebhookDedup.
+     * @param {WebhookDedupCreateArgs} args - Arguments to create a WebhookDedup.
+     * @example
+     * // Create one WebhookDedup
+     * const WebhookDedup = await prisma.webhookDedup.create({
+     *   data: {
+     *     // ... data to create a WebhookDedup
+     *   }
+     * })
+     * 
+     */
+    create<T extends WebhookDedupCreateArgs>(args: SelectSubset<T, WebhookDedupCreateArgs<ExtArgs>>): Prisma__WebhookDedupClient<$Result.GetResult<Prisma.$WebhookDedupPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many WebhookDedups.
+     * @param {WebhookDedupCreateManyArgs} args - Arguments to create many WebhookDedups.
+     * @example
+     * // Create many WebhookDedups
+     * const webhookDedup = await prisma.webhookDedup.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends WebhookDedupCreateManyArgs>(args?: SelectSubset<T, WebhookDedupCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many WebhookDedups and returns the data saved in the database.
+     * @param {WebhookDedupCreateManyAndReturnArgs} args - Arguments to create many WebhookDedups.
+     * @example
+     * // Create many WebhookDedups
+     * const webhookDedup = await prisma.webhookDedup.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many WebhookDedups and only return the `id`
+     * const webhookDedupWithIdOnly = await prisma.webhookDedup.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends WebhookDedupCreateManyAndReturnArgs>(args?: SelectSubset<T, WebhookDedupCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WebhookDedupPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a WebhookDedup.
+     * @param {WebhookDedupDeleteArgs} args - Arguments to delete one WebhookDedup.
+     * @example
+     * // Delete one WebhookDedup
+     * const WebhookDedup = await prisma.webhookDedup.delete({
+     *   where: {
+     *     // ... filter to delete one WebhookDedup
+     *   }
+     * })
+     * 
+     */
+    delete<T extends WebhookDedupDeleteArgs>(args: SelectSubset<T, WebhookDedupDeleteArgs<ExtArgs>>): Prisma__WebhookDedupClient<$Result.GetResult<Prisma.$WebhookDedupPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one WebhookDedup.
+     * @param {WebhookDedupUpdateArgs} args - Arguments to update one WebhookDedup.
+     * @example
+     * // Update one WebhookDedup
+     * const webhookDedup = await prisma.webhookDedup.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends WebhookDedupUpdateArgs>(args: SelectSubset<T, WebhookDedupUpdateArgs<ExtArgs>>): Prisma__WebhookDedupClient<$Result.GetResult<Prisma.$WebhookDedupPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more WebhookDedups.
+     * @param {WebhookDedupDeleteManyArgs} args - Arguments to filter WebhookDedups to delete.
+     * @example
+     * // Delete a few WebhookDedups
+     * const { count } = await prisma.webhookDedup.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends WebhookDedupDeleteManyArgs>(args?: SelectSubset<T, WebhookDedupDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WebhookDedups.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WebhookDedupUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many WebhookDedups
+     * const webhookDedup = await prisma.webhookDedup.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends WebhookDedupUpdateManyArgs>(args: SelectSubset<T, WebhookDedupUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WebhookDedups and returns the data updated in the database.
+     * @param {WebhookDedupUpdateManyAndReturnArgs} args - Arguments to update many WebhookDedups.
+     * @example
+     * // Update many WebhookDedups
+     * const webhookDedup = await prisma.webhookDedup.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more WebhookDedups and only return the `id`
+     * const webhookDedupWithIdOnly = await prisma.webhookDedup.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends WebhookDedupUpdateManyAndReturnArgs>(args: SelectSubset<T, WebhookDedupUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WebhookDedupPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one WebhookDedup.
+     * @param {WebhookDedupUpsertArgs} args - Arguments to update or create a WebhookDedup.
+     * @example
+     * // Update or create a WebhookDedup
+     * const webhookDedup = await prisma.webhookDedup.upsert({
+     *   create: {
+     *     // ... data to create a WebhookDedup
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the WebhookDedup we want to update
+     *   }
+     * })
+     */
+    upsert<T extends WebhookDedupUpsertArgs>(args: SelectSubset<T, WebhookDedupUpsertArgs<ExtArgs>>): Prisma__WebhookDedupClient<$Result.GetResult<Prisma.$WebhookDedupPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of WebhookDedups.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WebhookDedupCountArgs} args - Arguments to filter WebhookDedups to count.
+     * @example
+     * // Count the number of WebhookDedups
+     * const count = await prisma.webhookDedup.count({
+     *   where: {
+     *     // ... the filter for the WebhookDedups we want to count
+     *   }
+     * })
+    **/
+    count<T extends WebhookDedupCountArgs>(
+      args?: Subset<T, WebhookDedupCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], WebhookDedupCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a WebhookDedup.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WebhookDedupAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends WebhookDedupAggregateArgs>(args: Subset<T, WebhookDedupAggregateArgs>): Prisma.PrismaPromise<GetWebhookDedupAggregateType<T>>
+
+    /**
+     * Group by WebhookDedup.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WebhookDedupGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends WebhookDedupGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: WebhookDedupGroupByArgs['orderBy'] }
+        : { orderBy?: WebhookDedupGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, WebhookDedupGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetWebhookDedupGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the WebhookDedup model
+   */
+  readonly fields: WebhookDedupFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for WebhookDedup.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__WebhookDedupClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the WebhookDedup model
+   */
+  interface WebhookDedupFieldRefs {
+    readonly id: FieldRef<"WebhookDedup", 'String'>
+    readonly gatewayEventId: FieldRef<"WebhookDedup", 'String'>
+    readonly eventType: FieldRef<"WebhookDedup", 'String'>
+    readonly receivedAt: FieldRef<"WebhookDedup", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * WebhookDedup findUnique
+   */
+  export type WebhookDedupFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebhookDedup
+     */
+    select?: WebhookDedupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebhookDedup
+     */
+    omit?: WebhookDedupOmit<ExtArgs> | null
+    /**
+     * Filter, which WebhookDedup to fetch.
+     */
+    where: WebhookDedupWhereUniqueInput
+  }
+
+  /**
+   * WebhookDedup findUniqueOrThrow
+   */
+  export type WebhookDedupFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebhookDedup
+     */
+    select?: WebhookDedupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebhookDedup
+     */
+    omit?: WebhookDedupOmit<ExtArgs> | null
+    /**
+     * Filter, which WebhookDedup to fetch.
+     */
+    where: WebhookDedupWhereUniqueInput
+  }
+
+  /**
+   * WebhookDedup findFirst
+   */
+  export type WebhookDedupFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebhookDedup
+     */
+    select?: WebhookDedupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebhookDedup
+     */
+    omit?: WebhookDedupOmit<ExtArgs> | null
+    /**
+     * Filter, which WebhookDedup to fetch.
+     */
+    where?: WebhookDedupWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WebhookDedups to fetch.
+     */
+    orderBy?: WebhookDedupOrderByWithRelationInput | WebhookDedupOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WebhookDedups.
+     */
+    cursor?: WebhookDedupWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WebhookDedups from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WebhookDedups.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WebhookDedups.
+     */
+    distinct?: WebhookDedupScalarFieldEnum | WebhookDedupScalarFieldEnum[]
+  }
+
+  /**
+   * WebhookDedup findFirstOrThrow
+   */
+  export type WebhookDedupFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebhookDedup
+     */
+    select?: WebhookDedupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebhookDedup
+     */
+    omit?: WebhookDedupOmit<ExtArgs> | null
+    /**
+     * Filter, which WebhookDedup to fetch.
+     */
+    where?: WebhookDedupWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WebhookDedups to fetch.
+     */
+    orderBy?: WebhookDedupOrderByWithRelationInput | WebhookDedupOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WebhookDedups.
+     */
+    cursor?: WebhookDedupWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WebhookDedups from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WebhookDedups.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WebhookDedups.
+     */
+    distinct?: WebhookDedupScalarFieldEnum | WebhookDedupScalarFieldEnum[]
+  }
+
+  /**
+   * WebhookDedup findMany
+   */
+  export type WebhookDedupFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebhookDedup
+     */
+    select?: WebhookDedupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebhookDedup
+     */
+    omit?: WebhookDedupOmit<ExtArgs> | null
+    /**
+     * Filter, which WebhookDedups to fetch.
+     */
+    where?: WebhookDedupWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WebhookDedups to fetch.
+     */
+    orderBy?: WebhookDedupOrderByWithRelationInput | WebhookDedupOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing WebhookDedups.
+     */
+    cursor?: WebhookDedupWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WebhookDedups from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WebhookDedups.
+     */
+    skip?: number
+    distinct?: WebhookDedupScalarFieldEnum | WebhookDedupScalarFieldEnum[]
+  }
+
+  /**
+   * WebhookDedup create
+   */
+  export type WebhookDedupCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebhookDedup
+     */
+    select?: WebhookDedupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebhookDedup
+     */
+    omit?: WebhookDedupOmit<ExtArgs> | null
+    /**
+     * The data needed to create a WebhookDedup.
+     */
+    data: XOR<WebhookDedupCreateInput, WebhookDedupUncheckedCreateInput>
+  }
+
+  /**
+   * WebhookDedup createMany
+   */
+  export type WebhookDedupCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many WebhookDedups.
+     */
+    data: WebhookDedupCreateManyInput | WebhookDedupCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * WebhookDedup createManyAndReturn
+   */
+  export type WebhookDedupCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebhookDedup
+     */
+    select?: WebhookDedupSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebhookDedup
+     */
+    omit?: WebhookDedupOmit<ExtArgs> | null
+    /**
+     * The data used to create many WebhookDedups.
+     */
+    data: WebhookDedupCreateManyInput | WebhookDedupCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * WebhookDedup update
+   */
+  export type WebhookDedupUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebhookDedup
+     */
+    select?: WebhookDedupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebhookDedup
+     */
+    omit?: WebhookDedupOmit<ExtArgs> | null
+    /**
+     * The data needed to update a WebhookDedup.
+     */
+    data: XOR<WebhookDedupUpdateInput, WebhookDedupUncheckedUpdateInput>
+    /**
+     * Choose, which WebhookDedup to update.
+     */
+    where: WebhookDedupWhereUniqueInput
+  }
+
+  /**
+   * WebhookDedup updateMany
+   */
+  export type WebhookDedupUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update WebhookDedups.
+     */
+    data: XOR<WebhookDedupUpdateManyMutationInput, WebhookDedupUncheckedUpdateManyInput>
+    /**
+     * Filter which WebhookDedups to update
+     */
+    where?: WebhookDedupWhereInput
+    /**
+     * Limit how many WebhookDedups to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * WebhookDedup updateManyAndReturn
+   */
+  export type WebhookDedupUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebhookDedup
+     */
+    select?: WebhookDedupSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebhookDedup
+     */
+    omit?: WebhookDedupOmit<ExtArgs> | null
+    /**
+     * The data used to update WebhookDedups.
+     */
+    data: XOR<WebhookDedupUpdateManyMutationInput, WebhookDedupUncheckedUpdateManyInput>
+    /**
+     * Filter which WebhookDedups to update
+     */
+    where?: WebhookDedupWhereInput
+    /**
+     * Limit how many WebhookDedups to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * WebhookDedup upsert
+   */
+  export type WebhookDedupUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebhookDedup
+     */
+    select?: WebhookDedupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebhookDedup
+     */
+    omit?: WebhookDedupOmit<ExtArgs> | null
+    /**
+     * The filter to search for the WebhookDedup to update in case it exists.
+     */
+    where: WebhookDedupWhereUniqueInput
+    /**
+     * In case the WebhookDedup found by the `where` argument doesn't exist, create a new WebhookDedup with this data.
+     */
+    create: XOR<WebhookDedupCreateInput, WebhookDedupUncheckedCreateInput>
+    /**
+     * In case the WebhookDedup was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<WebhookDedupUpdateInput, WebhookDedupUncheckedUpdateInput>
+  }
+
+  /**
+   * WebhookDedup delete
+   */
+  export type WebhookDedupDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebhookDedup
+     */
+    select?: WebhookDedupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebhookDedup
+     */
+    omit?: WebhookDedupOmit<ExtArgs> | null
+    /**
+     * Filter which WebhookDedup to delete.
+     */
+    where: WebhookDedupWhereUniqueInput
+  }
+
+  /**
+   * WebhookDedup deleteMany
+   */
+  export type WebhookDedupDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WebhookDedups to delete
+     */
+    where?: WebhookDedupWhereInput
+    /**
+     * Limit how many WebhookDedups to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * WebhookDedup without action
+   */
+  export type WebhookDedupDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebhookDedup
+     */
+    select?: WebhookDedupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebhookDedup
+     */
+    omit?: WebhookDedupOmit<ExtArgs> | null
   }
 
 
@@ -56933,10 +59308,35 @@ export namespace Prisma {
     successToken: 'successToken',
     currency: 'currency',
     paidAt: 'paidAt',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    idempotencyKey: 'idempotencyKey',
+    version: 'version'
   };
 
   export type InvoiceScalarFieldEnum = (typeof InvoiceScalarFieldEnum)[keyof typeof InvoiceScalarFieldEnum]
+
+
+  export const PaymentEventScalarFieldEnum: {
+    id: 'id',
+    invoiceId: 'invoiceId',
+    eventType: 'eventType',
+    source: 'source',
+    metadata: 'metadata',
+    rawPayload: 'rawPayload',
+    createdAt: 'createdAt'
+  };
+
+  export type PaymentEventScalarFieldEnum = (typeof PaymentEventScalarFieldEnum)[keyof typeof PaymentEventScalarFieldEnum]
+
+
+  export const WebhookDedupScalarFieldEnum: {
+    id: 'id',
+    gatewayEventId: 'gatewayEventId',
+    eventType: 'eventType',
+    receivedAt: 'receivedAt'
+  };
+
+  export type WebhookDedupScalarFieldEnum = (typeof WebhookDedupScalarFieldEnum)[keyof typeof WebhookDedupScalarFieldEnum]
 
 
   export const UserDiscountScalarFieldEnum: {
@@ -57431,6 +59831,20 @@ export namespace Prisma {
    * Reference to a field of type 'InvoiceStatus[]'
    */
   export type ListEnumInvoiceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InvoiceStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PaymentEventType'
+   */
+  export type EnumPaymentEventTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentEventType'>
+    
+
+
+  /**
+   * Reference to a field of type 'PaymentEventType[]'
+   */
+  export type ListEnumPaymentEventTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentEventType[]'>
     
 
 
@@ -60662,7 +63076,10 @@ export namespace Prisma {
     currency?: StringFilter<"Invoice"> | string
     paidAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     createdAt?: DateTimeFilter<"Invoice"> | Date | string
+    idempotencyKey?: StringNullableFilter<"Invoice"> | string | null
+    version?: IntFilter<"Invoice"> | number
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    paymentEvents?: PaymentEventListRelationFilter
   }
 
   export type InvoiceOrderByWithRelationInput = {
@@ -60681,12 +63098,16 @@ export namespace Prisma {
     currency?: SortOrder
     paidAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    idempotencyKey?: SortOrderInput | SortOrder
+    version?: SortOrder
     user?: UserOrderByWithRelationInput
+    paymentEvents?: PaymentEventOrderByRelationAggregateInput
   }
 
   export type InvoiceWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     fawaterakInvoiceId?: number
+    idempotencyKey?: string
     AND?: InvoiceWhereInput | InvoiceWhereInput[]
     OR?: InvoiceWhereInput[]
     NOT?: InvoiceWhereInput | InvoiceWhereInput[]
@@ -60703,8 +63124,10 @@ export namespace Prisma {
     currency?: StringFilter<"Invoice"> | string
     paidAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     createdAt?: DateTimeFilter<"Invoice"> | Date | string
+    version?: IntFilter<"Invoice"> | number
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }, "id" | "fawaterakInvoiceId">
+    paymentEvents?: PaymentEventListRelationFilter
+  }, "id" | "fawaterakInvoiceId" | "idempotencyKey">
 
   export type InvoiceOrderByWithAggregationInput = {
     id?: SortOrder
@@ -60722,6 +63145,8 @@ export namespace Prisma {
     currency?: SortOrder
     paidAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    idempotencyKey?: SortOrderInput | SortOrder
+    version?: SortOrder
     _count?: InvoiceCountOrderByAggregateInput
     _avg?: InvoiceAvgOrderByAggregateInput
     _max?: InvoiceMaxOrderByAggregateInput
@@ -60748,6 +63173,120 @@ export namespace Prisma {
     currency?: StringWithAggregatesFilter<"Invoice"> | string
     paidAt?: DateTimeNullableWithAggregatesFilter<"Invoice"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Invoice"> | Date | string
+    idempotencyKey?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
+    version?: IntWithAggregatesFilter<"Invoice"> | number
+  }
+
+  export type PaymentEventWhereInput = {
+    AND?: PaymentEventWhereInput | PaymentEventWhereInput[]
+    OR?: PaymentEventWhereInput[]
+    NOT?: PaymentEventWhereInput | PaymentEventWhereInput[]
+    id?: StringFilter<"PaymentEvent"> | string
+    invoiceId?: StringFilter<"PaymentEvent"> | string
+    eventType?: EnumPaymentEventTypeFilter<"PaymentEvent"> | $Enums.PaymentEventType
+    source?: StringFilter<"PaymentEvent"> | string
+    metadata?: JsonNullableFilter<"PaymentEvent">
+    rawPayload?: JsonNullableFilter<"PaymentEvent">
+    createdAt?: DateTimeFilter<"PaymentEvent"> | Date | string
+    invoice?: XOR<InvoiceScalarRelationFilter, InvoiceWhereInput>
+  }
+
+  export type PaymentEventOrderByWithRelationInput = {
+    id?: SortOrder
+    invoiceId?: SortOrder
+    eventType?: SortOrder
+    source?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+    rawPayload?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    invoice?: InvoiceOrderByWithRelationInput
+  }
+
+  export type PaymentEventWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: PaymentEventWhereInput | PaymentEventWhereInput[]
+    OR?: PaymentEventWhereInput[]
+    NOT?: PaymentEventWhereInput | PaymentEventWhereInput[]
+    invoiceId?: StringFilter<"PaymentEvent"> | string
+    eventType?: EnumPaymentEventTypeFilter<"PaymentEvent"> | $Enums.PaymentEventType
+    source?: StringFilter<"PaymentEvent"> | string
+    metadata?: JsonNullableFilter<"PaymentEvent">
+    rawPayload?: JsonNullableFilter<"PaymentEvent">
+    createdAt?: DateTimeFilter<"PaymentEvent"> | Date | string
+    invoice?: XOR<InvoiceScalarRelationFilter, InvoiceWhereInput>
+  }, "id">
+
+  export type PaymentEventOrderByWithAggregationInput = {
+    id?: SortOrder
+    invoiceId?: SortOrder
+    eventType?: SortOrder
+    source?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+    rawPayload?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: PaymentEventCountOrderByAggregateInput
+    _max?: PaymentEventMaxOrderByAggregateInput
+    _min?: PaymentEventMinOrderByAggregateInput
+  }
+
+  export type PaymentEventScalarWhereWithAggregatesInput = {
+    AND?: PaymentEventScalarWhereWithAggregatesInput | PaymentEventScalarWhereWithAggregatesInput[]
+    OR?: PaymentEventScalarWhereWithAggregatesInput[]
+    NOT?: PaymentEventScalarWhereWithAggregatesInput | PaymentEventScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PaymentEvent"> | string
+    invoiceId?: StringWithAggregatesFilter<"PaymentEvent"> | string
+    eventType?: EnumPaymentEventTypeWithAggregatesFilter<"PaymentEvent"> | $Enums.PaymentEventType
+    source?: StringWithAggregatesFilter<"PaymentEvent"> | string
+    metadata?: JsonNullableWithAggregatesFilter<"PaymentEvent">
+    rawPayload?: JsonNullableWithAggregatesFilter<"PaymentEvent">
+    createdAt?: DateTimeWithAggregatesFilter<"PaymentEvent"> | Date | string
+  }
+
+  export type WebhookDedupWhereInput = {
+    AND?: WebhookDedupWhereInput | WebhookDedupWhereInput[]
+    OR?: WebhookDedupWhereInput[]
+    NOT?: WebhookDedupWhereInput | WebhookDedupWhereInput[]
+    id?: StringFilter<"WebhookDedup"> | string
+    gatewayEventId?: StringFilter<"WebhookDedup"> | string
+    eventType?: StringFilter<"WebhookDedup"> | string
+    receivedAt?: DateTimeFilter<"WebhookDedup"> | Date | string
+  }
+
+  export type WebhookDedupOrderByWithRelationInput = {
+    id?: SortOrder
+    gatewayEventId?: SortOrder
+    eventType?: SortOrder
+    receivedAt?: SortOrder
+  }
+
+  export type WebhookDedupWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    gatewayEventId?: string
+    AND?: WebhookDedupWhereInput | WebhookDedupWhereInput[]
+    OR?: WebhookDedupWhereInput[]
+    NOT?: WebhookDedupWhereInput | WebhookDedupWhereInput[]
+    eventType?: StringFilter<"WebhookDedup"> | string
+    receivedAt?: DateTimeFilter<"WebhookDedup"> | Date | string
+  }, "id" | "gatewayEventId">
+
+  export type WebhookDedupOrderByWithAggregationInput = {
+    id?: SortOrder
+    gatewayEventId?: SortOrder
+    eventType?: SortOrder
+    receivedAt?: SortOrder
+    _count?: WebhookDedupCountOrderByAggregateInput
+    _max?: WebhookDedupMaxOrderByAggregateInput
+    _min?: WebhookDedupMinOrderByAggregateInput
+  }
+
+  export type WebhookDedupScalarWhereWithAggregatesInput = {
+    AND?: WebhookDedupScalarWhereWithAggregatesInput | WebhookDedupScalarWhereWithAggregatesInput[]
+    OR?: WebhookDedupScalarWhereWithAggregatesInput[]
+    NOT?: WebhookDedupScalarWhereWithAggregatesInput | WebhookDedupScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"WebhookDedup"> | string
+    gatewayEventId?: StringWithAggregatesFilter<"WebhookDedup"> | string
+    eventType?: StringWithAggregatesFilter<"WebhookDedup"> | string
+    receivedAt?: DateTimeWithAggregatesFilter<"WebhookDedup"> | Date | string
   }
 
   export type UserDiscountWhereInput = {
@@ -64675,7 +67214,10 @@ export namespace Prisma {
     currency?: string
     paidAt?: Date | string | null
     createdAt?: Date | string
+    idempotencyKey?: string | null
+    version?: number
     user: UserCreateNestedOneWithoutInvoicesInput
+    paymentEvents?: PaymentEventCreateNestedManyWithoutInvoiceInput
   }
 
   export type InvoiceUncheckedCreateInput = {
@@ -64694,6 +67236,9 @@ export namespace Prisma {
     currency?: string
     paidAt?: Date | string | null
     createdAt?: Date | string
+    idempotencyKey?: string | null
+    version?: number
+    paymentEvents?: PaymentEventUncheckedCreateNestedManyWithoutInvoiceInput
   }
 
   export type InvoiceUpdateInput = {
@@ -64711,7 +67256,10 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
     user?: UserUpdateOneRequiredWithoutInvoicesNestedInput
+    paymentEvents?: PaymentEventUpdateManyWithoutInvoiceNestedInput
   }
 
   export type InvoiceUncheckedUpdateInput = {
@@ -64730,6 +67278,9 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    paymentEvents?: PaymentEventUncheckedUpdateManyWithoutInvoiceNestedInput
   }
 
   export type InvoiceCreateManyInput = {
@@ -64748,6 +67299,8 @@ export namespace Prisma {
     currency?: string
     paidAt?: Date | string | null
     createdAt?: Date | string
+    idempotencyKey?: string | null
+    version?: number
   }
 
   export type InvoiceUpdateManyMutationInput = {
@@ -64765,6 +67318,8 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
   }
 
   export type InvoiceUncheckedUpdateManyInput = {
@@ -64783,6 +67338,126 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type PaymentEventCreateInput = {
+    id?: string
+    eventType: $Enums.PaymentEventType
+    source?: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    invoice: InvoiceCreateNestedOneWithoutPaymentEventsInput
+  }
+
+  export type PaymentEventUncheckedCreateInput = {
+    id?: string
+    invoiceId: string
+    eventType: $Enums.PaymentEventType
+    source?: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type PaymentEventUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventType?: EnumPaymentEventTypeFieldUpdateOperationsInput | $Enums.PaymentEventType
+    source?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoice?: InvoiceUpdateOneRequiredWithoutPaymentEventsNestedInput
+  }
+
+  export type PaymentEventUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    invoiceId?: StringFieldUpdateOperationsInput | string
+    eventType?: EnumPaymentEventTypeFieldUpdateOperationsInput | $Enums.PaymentEventType
+    source?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PaymentEventCreateManyInput = {
+    id?: string
+    invoiceId: string
+    eventType: $Enums.PaymentEventType
+    source?: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type PaymentEventUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventType?: EnumPaymentEventTypeFieldUpdateOperationsInput | $Enums.PaymentEventType
+    source?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PaymentEventUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    invoiceId?: StringFieldUpdateOperationsInput | string
+    eventType?: EnumPaymentEventTypeFieldUpdateOperationsInput | $Enums.PaymentEventType
+    source?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WebhookDedupCreateInput = {
+    id?: string
+    gatewayEventId: string
+    eventType: string
+    receivedAt?: Date | string
+  }
+
+  export type WebhookDedupUncheckedCreateInput = {
+    id?: string
+    gatewayEventId: string
+    eventType: string
+    receivedAt?: Date | string
+  }
+
+  export type WebhookDedupUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    gatewayEventId?: StringFieldUpdateOperationsInput | string
+    eventType?: StringFieldUpdateOperationsInput | string
+    receivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WebhookDedupUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    gatewayEventId?: StringFieldUpdateOperationsInput | string
+    eventType?: StringFieldUpdateOperationsInput | string
+    receivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WebhookDedupCreateManyInput = {
+    id?: string
+    gatewayEventId: string
+    eventType: string
+    receivedAt?: Date | string
+  }
+
+  export type WebhookDedupUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    gatewayEventId?: StringFieldUpdateOperationsInput | string
+    eventType?: StringFieldUpdateOperationsInput | string
+    receivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WebhookDedupUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    gatewayEventId?: StringFieldUpdateOperationsInput | string
+    eventType?: StringFieldUpdateOperationsInput | string
+    receivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserDiscountCreateInput = {
@@ -67874,6 +70549,16 @@ export namespace Prisma {
     not?: NestedEnumInvoiceStatusFilter<$PrismaModel> | $Enums.InvoiceStatus
   }
 
+  export type PaymentEventListRelationFilter = {
+    every?: PaymentEventWhereInput
+    some?: PaymentEventWhereInput
+    none?: PaymentEventWhereInput
+  }
+
+  export type PaymentEventOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type InvoiceCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -67890,11 +70575,14 @@ export namespace Prisma {
     currency?: SortOrder
     paidAt?: SortOrder
     createdAt?: SortOrder
+    idempotencyKey?: SortOrder
+    version?: SortOrder
   }
 
   export type InvoiceAvgOrderByAggregateInput = {
     amount?: SortOrder
     fawaterakInvoiceId?: SortOrder
+    version?: SortOrder
   }
 
   export type InvoiceMaxOrderByAggregateInput = {
@@ -67913,6 +70601,8 @@ export namespace Prisma {
     currency?: SortOrder
     paidAt?: SortOrder
     createdAt?: SortOrder
+    idempotencyKey?: SortOrder
+    version?: SortOrder
   }
 
   export type InvoiceMinOrderByAggregateInput = {
@@ -67931,11 +70621,14 @@ export namespace Prisma {
     currency?: SortOrder
     paidAt?: SortOrder
     createdAt?: SortOrder
+    idempotencyKey?: SortOrder
+    version?: SortOrder
   }
 
   export type InvoiceSumOrderByAggregateInput = {
     amount?: SortOrder
     fawaterakInvoiceId?: SortOrder
+    version?: SortOrder
   }
 
   export type EnumInvoiceStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -67946,6 +70639,75 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumInvoiceStatusFilter<$PrismaModel>
     _max?: NestedEnumInvoiceStatusFilter<$PrismaModel>
+  }
+
+  export type EnumPaymentEventTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentEventType | EnumPaymentEventTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentEventType[] | ListEnumPaymentEventTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentEventType[] | ListEnumPaymentEventTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentEventTypeFilter<$PrismaModel> | $Enums.PaymentEventType
+  }
+
+  export type InvoiceScalarRelationFilter = {
+    is?: InvoiceWhereInput
+    isNot?: InvoiceWhereInput
+  }
+
+  export type PaymentEventCountOrderByAggregateInput = {
+    id?: SortOrder
+    invoiceId?: SortOrder
+    eventType?: SortOrder
+    source?: SortOrder
+    metadata?: SortOrder
+    rawPayload?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PaymentEventMaxOrderByAggregateInput = {
+    id?: SortOrder
+    invoiceId?: SortOrder
+    eventType?: SortOrder
+    source?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PaymentEventMinOrderByAggregateInput = {
+    id?: SortOrder
+    invoiceId?: SortOrder
+    eventType?: SortOrder
+    source?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EnumPaymentEventTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentEventType | EnumPaymentEventTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentEventType[] | ListEnumPaymentEventTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentEventType[] | ListEnumPaymentEventTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentEventTypeWithAggregatesFilter<$PrismaModel> | $Enums.PaymentEventType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPaymentEventTypeFilter<$PrismaModel>
+    _max?: NestedEnumPaymentEventTypeFilter<$PrismaModel>
+  }
+
+  export type WebhookDedupCountOrderByAggregateInput = {
+    id?: SortOrder
+    gatewayEventId?: SortOrder
+    eventType?: SortOrder
+    receivedAt?: SortOrder
+  }
+
+  export type WebhookDedupMaxOrderByAggregateInput = {
+    id?: SortOrder
+    gatewayEventId?: SortOrder
+    eventType?: SortOrder
+    receivedAt?: SortOrder
+  }
+
+  export type WebhookDedupMinOrderByAggregateInput = {
+    id?: SortOrder
+    gatewayEventId?: SortOrder
+    eventType?: SortOrder
+    receivedAt?: SortOrder
   }
 
   export type UserDiscountUserIdDiscountIdCompoundUniqueInput = {
@@ -70607,6 +73369,20 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type PaymentEventCreateNestedManyWithoutInvoiceInput = {
+    create?: XOR<PaymentEventCreateWithoutInvoiceInput, PaymentEventUncheckedCreateWithoutInvoiceInput> | PaymentEventCreateWithoutInvoiceInput[] | PaymentEventUncheckedCreateWithoutInvoiceInput[]
+    connectOrCreate?: PaymentEventCreateOrConnectWithoutInvoiceInput | PaymentEventCreateOrConnectWithoutInvoiceInput[]
+    createMany?: PaymentEventCreateManyInvoiceInputEnvelope
+    connect?: PaymentEventWhereUniqueInput | PaymentEventWhereUniqueInput[]
+  }
+
+  export type PaymentEventUncheckedCreateNestedManyWithoutInvoiceInput = {
+    create?: XOR<PaymentEventCreateWithoutInvoiceInput, PaymentEventUncheckedCreateWithoutInvoiceInput> | PaymentEventCreateWithoutInvoiceInput[] | PaymentEventUncheckedCreateWithoutInvoiceInput[]
+    connectOrCreate?: PaymentEventCreateOrConnectWithoutInvoiceInput | PaymentEventCreateOrConnectWithoutInvoiceInput[]
+    createMany?: PaymentEventCreateManyInvoiceInputEnvelope
+    connect?: PaymentEventWhereUniqueInput | PaymentEventWhereUniqueInput[]
+  }
+
   export type EnumInvoiceStatusFieldUpdateOperationsInput = {
     set?: $Enums.InvoiceStatus
   }
@@ -70617,6 +73393,52 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutInvoicesInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutInvoicesInput, UserUpdateWithoutInvoicesInput>, UserUncheckedUpdateWithoutInvoicesInput>
+  }
+
+  export type PaymentEventUpdateManyWithoutInvoiceNestedInput = {
+    create?: XOR<PaymentEventCreateWithoutInvoiceInput, PaymentEventUncheckedCreateWithoutInvoiceInput> | PaymentEventCreateWithoutInvoiceInput[] | PaymentEventUncheckedCreateWithoutInvoiceInput[]
+    connectOrCreate?: PaymentEventCreateOrConnectWithoutInvoiceInput | PaymentEventCreateOrConnectWithoutInvoiceInput[]
+    upsert?: PaymentEventUpsertWithWhereUniqueWithoutInvoiceInput | PaymentEventUpsertWithWhereUniqueWithoutInvoiceInput[]
+    createMany?: PaymentEventCreateManyInvoiceInputEnvelope
+    set?: PaymentEventWhereUniqueInput | PaymentEventWhereUniqueInput[]
+    disconnect?: PaymentEventWhereUniqueInput | PaymentEventWhereUniqueInput[]
+    delete?: PaymentEventWhereUniqueInput | PaymentEventWhereUniqueInput[]
+    connect?: PaymentEventWhereUniqueInput | PaymentEventWhereUniqueInput[]
+    update?: PaymentEventUpdateWithWhereUniqueWithoutInvoiceInput | PaymentEventUpdateWithWhereUniqueWithoutInvoiceInput[]
+    updateMany?: PaymentEventUpdateManyWithWhereWithoutInvoiceInput | PaymentEventUpdateManyWithWhereWithoutInvoiceInput[]
+    deleteMany?: PaymentEventScalarWhereInput | PaymentEventScalarWhereInput[]
+  }
+
+  export type PaymentEventUncheckedUpdateManyWithoutInvoiceNestedInput = {
+    create?: XOR<PaymentEventCreateWithoutInvoiceInput, PaymentEventUncheckedCreateWithoutInvoiceInput> | PaymentEventCreateWithoutInvoiceInput[] | PaymentEventUncheckedCreateWithoutInvoiceInput[]
+    connectOrCreate?: PaymentEventCreateOrConnectWithoutInvoiceInput | PaymentEventCreateOrConnectWithoutInvoiceInput[]
+    upsert?: PaymentEventUpsertWithWhereUniqueWithoutInvoiceInput | PaymentEventUpsertWithWhereUniqueWithoutInvoiceInput[]
+    createMany?: PaymentEventCreateManyInvoiceInputEnvelope
+    set?: PaymentEventWhereUniqueInput | PaymentEventWhereUniqueInput[]
+    disconnect?: PaymentEventWhereUniqueInput | PaymentEventWhereUniqueInput[]
+    delete?: PaymentEventWhereUniqueInput | PaymentEventWhereUniqueInput[]
+    connect?: PaymentEventWhereUniqueInput | PaymentEventWhereUniqueInput[]
+    update?: PaymentEventUpdateWithWhereUniqueWithoutInvoiceInput | PaymentEventUpdateWithWhereUniqueWithoutInvoiceInput[]
+    updateMany?: PaymentEventUpdateManyWithWhereWithoutInvoiceInput | PaymentEventUpdateManyWithWhereWithoutInvoiceInput[]
+    deleteMany?: PaymentEventScalarWhereInput | PaymentEventScalarWhereInput[]
+  }
+
+  export type InvoiceCreateNestedOneWithoutPaymentEventsInput = {
+    create?: XOR<InvoiceCreateWithoutPaymentEventsInput, InvoiceUncheckedCreateWithoutPaymentEventsInput>
+    connectOrCreate?: InvoiceCreateOrConnectWithoutPaymentEventsInput
+    connect?: InvoiceWhereUniqueInput
+  }
+
+  export type EnumPaymentEventTypeFieldUpdateOperationsInput = {
+    set?: $Enums.PaymentEventType
+  }
+
+  export type InvoiceUpdateOneRequiredWithoutPaymentEventsNestedInput = {
+    create?: XOR<InvoiceCreateWithoutPaymentEventsInput, InvoiceUncheckedCreateWithoutPaymentEventsInput>
+    connectOrCreate?: InvoiceCreateOrConnectWithoutPaymentEventsInput
+    upsert?: InvoiceUpsertWithoutPaymentEventsInput
+    connect?: InvoiceWhereUniqueInput
+    update?: XOR<XOR<InvoiceUpdateToOneWithWhereWithoutPaymentEventsInput, InvoiceUpdateWithoutPaymentEventsInput>, InvoiceUncheckedUpdateWithoutPaymentEventsInput>
   }
 
   export type UserCreateNestedOneWithoutBillingInfoInput = {
@@ -71339,6 +74161,23 @@ export namespace Prisma {
     _max?: NestedEnumInvoiceStatusFilter<$PrismaModel>
   }
 
+  export type NestedEnumPaymentEventTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentEventType | EnumPaymentEventTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentEventType[] | ListEnumPaymentEventTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentEventType[] | ListEnumPaymentEventTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentEventTypeFilter<$PrismaModel> | $Enums.PaymentEventType
+  }
+
+  export type NestedEnumPaymentEventTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentEventType | EnumPaymentEventTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentEventType[] | ListEnumPaymentEventTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentEventType[] | ListEnumPaymentEventTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentEventTypeWithAggregatesFilter<$PrismaModel> | $Enums.PaymentEventType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPaymentEventTypeFilter<$PrismaModel>
+    _max?: NestedEnumPaymentEventTypeFilter<$PrismaModel>
+  }
+
   export type NestedEnumMessageCategoryFilter<$PrismaModel = never> = {
     equals?: $Enums.MessageCategory | EnumMessageCategoryFieldRefInput<$PrismaModel>
     in?: $Enums.MessageCategory[] | ListEnumMessageCategoryFieldRefInput<$PrismaModel>
@@ -71906,6 +74745,9 @@ export namespace Prisma {
     currency?: string
     paidAt?: Date | string | null
     createdAt?: Date | string
+    idempotencyKey?: string | null
+    version?: number
+    paymentEvents?: PaymentEventCreateNestedManyWithoutInvoiceInput
   }
 
   export type InvoiceUncheckedCreateWithoutUserInput = {
@@ -71923,6 +74765,9 @@ export namespace Prisma {
     currency?: string
     paidAt?: Date | string | null
     createdAt?: Date | string
+    idempotencyKey?: string | null
+    version?: number
+    paymentEvents?: PaymentEventUncheckedCreateNestedManyWithoutInvoiceInput
   }
 
   export type InvoiceCreateOrConnectWithoutUserInput = {
@@ -72453,6 +75298,8 @@ export namespace Prisma {
     currency?: StringFilter<"Invoice"> | string
     paidAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     createdAt?: DateTimeFilter<"Invoice"> | Date | string
+    idempotencyKey?: StringNullableFilter<"Invoice"> | string | null
+    version?: IntFilter<"Invoice"> | number
   }
 
   export type UserCreateWithoutSessionsInput = {
@@ -79798,6 +82645,34 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutInvoicesInput, UserUncheckedCreateWithoutInvoicesInput>
   }
 
+  export type PaymentEventCreateWithoutInvoiceInput = {
+    id?: string
+    eventType: $Enums.PaymentEventType
+    source?: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type PaymentEventUncheckedCreateWithoutInvoiceInput = {
+    id?: string
+    eventType: $Enums.PaymentEventType
+    source?: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type PaymentEventCreateOrConnectWithoutInvoiceInput = {
+    where: PaymentEventWhereUniqueInput
+    create: XOR<PaymentEventCreateWithoutInvoiceInput, PaymentEventUncheckedCreateWithoutInvoiceInput>
+  }
+
+  export type PaymentEventCreateManyInvoiceInputEnvelope = {
+    data: PaymentEventCreateManyInvoiceInput | PaymentEventCreateManyInvoiceInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutInvoicesInput = {
     update: XOR<UserUpdateWithoutInvoicesInput, UserUncheckedUpdateWithoutInvoicesInput>
     create: XOR<UserCreateWithoutInvoicesInput, UserUncheckedCreateWithoutInvoicesInput>
@@ -79919,6 +82794,131 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     customRoles?: UserCustomRoleUncheckedUpdateManyWithoutUserNestedInput
     billingInfo?: BillingInfoUncheckedUpdateOneWithoutUserNestedInput
+  }
+
+  export type PaymentEventUpsertWithWhereUniqueWithoutInvoiceInput = {
+    where: PaymentEventWhereUniqueInput
+    update: XOR<PaymentEventUpdateWithoutInvoiceInput, PaymentEventUncheckedUpdateWithoutInvoiceInput>
+    create: XOR<PaymentEventCreateWithoutInvoiceInput, PaymentEventUncheckedCreateWithoutInvoiceInput>
+  }
+
+  export type PaymentEventUpdateWithWhereUniqueWithoutInvoiceInput = {
+    where: PaymentEventWhereUniqueInput
+    data: XOR<PaymentEventUpdateWithoutInvoiceInput, PaymentEventUncheckedUpdateWithoutInvoiceInput>
+  }
+
+  export type PaymentEventUpdateManyWithWhereWithoutInvoiceInput = {
+    where: PaymentEventScalarWhereInput
+    data: XOR<PaymentEventUpdateManyMutationInput, PaymentEventUncheckedUpdateManyWithoutInvoiceInput>
+  }
+
+  export type PaymentEventScalarWhereInput = {
+    AND?: PaymentEventScalarWhereInput | PaymentEventScalarWhereInput[]
+    OR?: PaymentEventScalarWhereInput[]
+    NOT?: PaymentEventScalarWhereInput | PaymentEventScalarWhereInput[]
+    id?: StringFilter<"PaymentEvent"> | string
+    invoiceId?: StringFilter<"PaymentEvent"> | string
+    eventType?: EnumPaymentEventTypeFilter<"PaymentEvent"> | $Enums.PaymentEventType
+    source?: StringFilter<"PaymentEvent"> | string
+    metadata?: JsonNullableFilter<"PaymentEvent">
+    rawPayload?: JsonNullableFilter<"PaymentEvent">
+    createdAt?: DateTimeFilter<"PaymentEvent"> | Date | string
+  }
+
+  export type InvoiceCreateWithoutPaymentEventsInput = {
+    id?: string
+    amount: number
+    status?: $Enums.InvoiceStatus
+    planId?: string | null
+    billingCycle?: string | null
+    description?: string | null
+    fawaterakInvoiceId?: number | null
+    fawaterakInvoiceKey?: string | null
+    paymentMethodUsed?: string | null
+    referenceNumber?: string | null
+    successToken?: string | null
+    currency?: string
+    paidAt?: Date | string | null
+    createdAt?: Date | string
+    idempotencyKey?: string | null
+    version?: number
+    user: UserCreateNestedOneWithoutInvoicesInput
+  }
+
+  export type InvoiceUncheckedCreateWithoutPaymentEventsInput = {
+    id?: string
+    userId: string
+    amount: number
+    status?: $Enums.InvoiceStatus
+    planId?: string | null
+    billingCycle?: string | null
+    description?: string | null
+    fawaterakInvoiceId?: number | null
+    fawaterakInvoiceKey?: string | null
+    paymentMethodUsed?: string | null
+    referenceNumber?: string | null
+    successToken?: string | null
+    currency?: string
+    paidAt?: Date | string | null
+    createdAt?: Date | string
+    idempotencyKey?: string | null
+    version?: number
+  }
+
+  export type InvoiceCreateOrConnectWithoutPaymentEventsInput = {
+    where: InvoiceWhereUniqueInput
+    create: XOR<InvoiceCreateWithoutPaymentEventsInput, InvoiceUncheckedCreateWithoutPaymentEventsInput>
+  }
+
+  export type InvoiceUpsertWithoutPaymentEventsInput = {
+    update: XOR<InvoiceUpdateWithoutPaymentEventsInput, InvoiceUncheckedUpdateWithoutPaymentEventsInput>
+    create: XOR<InvoiceCreateWithoutPaymentEventsInput, InvoiceUncheckedCreateWithoutPaymentEventsInput>
+    where?: InvoiceWhereInput
+  }
+
+  export type InvoiceUpdateToOneWithWhereWithoutPaymentEventsInput = {
+    where?: InvoiceWhereInput
+    data: XOR<InvoiceUpdateWithoutPaymentEventsInput, InvoiceUncheckedUpdateWithoutPaymentEventsInput>
+  }
+
+  export type InvoiceUpdateWithoutPaymentEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+    planId?: NullableStringFieldUpdateOperationsInput | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    fawaterakInvoiceId?: NullableIntFieldUpdateOperationsInput | number | null
+    fawaterakInvoiceKey?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentMethodUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    successToken?: NullableStringFieldUpdateOperationsInput | string | null
+    currency?: StringFieldUpdateOperationsInput | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    user?: UserUpdateOneRequiredWithoutInvoicesNestedInput
+  }
+
+  export type InvoiceUncheckedUpdateWithoutPaymentEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+    planId?: NullableStringFieldUpdateOperationsInput | string | null
+    billingCycle?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    fawaterakInvoiceId?: NullableIntFieldUpdateOperationsInput | number | null
+    fawaterakInvoiceKey?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentMethodUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    successToken?: NullableStringFieldUpdateOperationsInput | string | null
+    currency?: StringFieldUpdateOperationsInput | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
   }
 
   export type UserCreateWithoutBillingInfoInput = {
@@ -80483,6 +83483,8 @@ export namespace Prisma {
     currency?: string
     paidAt?: Date | string | null
     createdAt?: Date | string
+    idempotencyKey?: string | null
+    version?: number
   }
 
   export type NotificationUpdateWithoutUserInput = {
@@ -81012,6 +84014,9 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    paymentEvents?: PaymentEventUpdateManyWithoutInvoiceNestedInput
   }
 
   export type InvoiceUncheckedUpdateWithoutUserInput = {
@@ -81029,6 +84034,9 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    paymentEvents?: PaymentEventUncheckedUpdateManyWithoutInvoiceNestedInput
   }
 
   export type InvoiceUncheckedUpdateManyWithoutUserInput = {
@@ -81046,6 +84054,8 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
   }
 
   export type DiagramCreateManyRepositoryInput = {
@@ -82000,6 +85010,42 @@ export namespace Prisma {
   export type PlanCapabilityUncheckedUpdateManyWithoutCapabilityInput = {
     planId?: StringFieldUpdateOperationsInput | string
     enabled?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type PaymentEventCreateManyInvoiceInput = {
+    id?: string
+    eventType: $Enums.PaymentEventType
+    source?: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type PaymentEventUpdateWithoutInvoiceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventType?: EnumPaymentEventTypeFieldUpdateOperationsInput | $Enums.PaymentEventType
+    source?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PaymentEventUncheckedUpdateWithoutInvoiceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventType?: EnumPaymentEventTypeFieldUpdateOperationsInput | $Enums.PaymentEventType
+    source?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PaymentEventUncheckedUpdateManyWithoutInvoiceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventType?: EnumPaymentEventTypeFieldUpdateOperationsInput | $Enums.PaymentEventType
+    source?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PaymentMethodCreateManyBillingInfoInput = {

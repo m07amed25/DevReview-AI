@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import type { PricingPlan, PrismaClient } from "@/server/db/client";
+import { appendPaymentEvent } from "./payment-ledger";
 
 export type BillingCycle = "monthly" | "yearly";
 
@@ -206,6 +207,12 @@ export async function activatePaidInvoice(
         billingCycle,
         ...(creditToDeduct > 0 ? { accountCredit: { decrement: creditToDeduct } } : {}),
       },
+    });
+
+    await appendPaymentEvent(tx, {
+      invoiceId: invoice.id,
+      eventType: "PAYMENT_SUCCEEDED",
+      source: "system",
     });
   });
 }
