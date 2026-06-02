@@ -1015,3 +1015,25 @@ model ContactMessage {
 
   @@map("contact_messages")
 }
+
+enum EmailTemplateCategory {
+  ONBOARDING
+  ANNOUNCEMENT
+  FEATURE
+  NEWSLETTER
+  TRANSACTIONAL
+  GENERAL
+}
+
+model EmailTemplate {
+  id          String                @id @default(cuid())
+  name        String
+  description String?
+  subject     String
+  body        String                @db.Text
+  category    EmailTemplateCategory @default(GENERAL)
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+
+  @@map("email_template")
+}

@@ -704,6 +704,17 @@ exports.Prisma.ContactMessageScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.EmailTemplateScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  subject: 'subject',
+  body: 'body',
+  category: 'category',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -899,6 +910,15 @@ exports.MessageCategory = exports.$Enums.MessageCategory = {
   MAINTENANCE_FEEDBACK: 'MAINTENANCE_FEEDBACK'
 };
 
+exports.EmailTemplateCategory = exports.$Enums.EmailTemplateCategory = {
+  ONBOARDING: 'ONBOARDING',
+  ANNOUNCEMENT: 'ANNOUNCEMENT',
+  FEATURE: 'FEATURE',
+  NEWSLETTER: 'NEWSLETTER',
+  TRANSACTIONAL: 'TRANSACTIONAL',
+  GENERAL: 'GENERAL'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Session: 'Session',
@@ -945,7 +965,8 @@ exports.Prisma.ModelName = {
   BillingInfo: 'BillingInfo',
   PaymentMethod: 'PaymentMethod',
   LegalPage: 'LegalPage',
-  ContactMessage: 'ContactMessage'
+  ContactMessage: 'ContactMessage',
+  EmailTemplate: 'EmailTemplate'
 };
 
 /**
