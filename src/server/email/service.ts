@@ -360,16 +360,29 @@ export async function sendBroadcastEmail(params: {
       unsubscribeUrl = `${appUrl}/api/unsubscribe?uid=${userId}&token=${token}`;
     }
 
+    const resolvedName = userName || "there";
+    const resolvedSubject = subject
+      .replace(/\{\{name\}\}/g, resolvedName)
+      .replace(/\{\{userName\}\}/g, resolvedName)
+      .replace(/\{\{email\}\}/g, to)
+      .replace(/\{\{appUrl\}\}/g, appUrl);
+
+    const resolvedBody = body
+      .replace(/\{\{name\}\}/g, resolvedName)
+      .replace(/\{\{userName\}\}/g, resolvedName)
+      .replace(/\{\{email\}\}/g, to)
+      .replace(/\{\{appUrl\}\}/g, appUrl);
+
     const html = await renderBroadcastEmail({
-      subject,
-      body,
+      subject: resolvedSubject,
+      body: resolvedBody,
       userName,
       appUrl,
       design,
       unsubscribeUrl,
     });
 
-    return await sendEmail(to, subject, html);
+    return await sendEmail(to, resolvedSubject, html);
   } catch (error) {
     console.error("❌ Error generating broadcast email:", error);
     return {

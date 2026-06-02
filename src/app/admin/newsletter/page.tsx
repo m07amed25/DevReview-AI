@@ -1,7 +1,9 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, Suspense } from "react";
 import { trpc } from "@/lib/trpc/client";
+import { useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +11,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Newspaper, Send, Loader2, Users, Check, ImagePlus, Eye, EyeOff, X, Search, Palette, Type, Layout, Bold, Italic, Heading1, Heading2, Link2, List, ListOrdered, Minus, Quote, Code, Table, MousePointer2 } from "lucide-react";
+import { Newspaper, Send, Loader2, Users, Check, ImagePlus, Eye, EyeOff, X, Search, Palette, Type, Layout, Bold, Italic, Heading1, Heading2, Link2, List, ListOrdered, Minus, Quote, Code, Table, MousePointer2, LayoutTemplate, Info } from "lucide-react";
+import { SelectItem, SelectRoot } from "@/components/ui/select";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
@@ -85,7 +88,7 @@ const colorPresets = [
   { name: "Midnight", bgColor: "#0f172a", containerBg: "#1e293b", textColor: "#cbd5e1", headingColor: "#f1f5f9", linkColor: "#38bdf8", buttonBg: "#0ea5e9" },
 ];
 
-export default function AdminNewsletterPage() {
+function NewsletterContent() {
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
   const [target, setTarget] = useState<Target>("ALL");
@@ -98,12 +101,40 @@ export default function AdminNewsletterPage() {
   const [design, setDesign] = useState<EmailDesign>(defaultDesign);
   const [activeTab, setActiveTab] = useState<"content" | "design">("content");
   const [bodyImageInput, setBodyImageInput] = useState("");
+  const [selectedTemplateId, setSelectedTemplateId] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const headerFileRef = useRef<HTMLInputElement>(null);
   const footerFileRef = useRef<HTMLInputElement>(null);
   const bodyImageFileRef = useRef<HTMLInputElement>(null);
   const logoFileRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Template Library from DB
+  const searchParams = useSearchParams();
+  const templateIdParam = searchParams.get("templateId");
+  const { data: templates = [] } = trpc.admin.listTemplates.useQuery(undefined);
+
+  useEffect(() => {
+    if (templateIdParam && templates.length > 0) {
+      const template = templates.find((t) => t.id === templateIdParam);
+      if (template) {
+        setSubject(template.subject);
+        setBody(template.body);
+        setSelectedTemplateId(template.id);
+        toast.success(`Template "${template.name}" loaded!`);
+      }
+    }
+  }, [templateIdParam, templates]);
+
+  const handleTemplateSelect = (id: string) => {
+    const template = templates.find((t) => t.id === id);
+    if (template) {
+      setSubject(template.subject);
+      setBody(template.body);
+      setSelectedTemplateId(id);
+      toast.success(`Loaded template: ${template.name}`);
+    }
+  };
 
   const userIds = selectedUsers.map((u) => u.id);
   const { data: count } = trpc.admin.recipientCount.useQuery({ target, userIds, forceSendAll });
@@ -448,6 +479,40 @@ export default function AdminNewsletterPage() {
       {activeTab === "content" && (
         <div className="grid gap-6 lg:grid-cols-2">
           <div className="space-y-4">
+            {/* Template Library */}
+            {templates.length > 0 && (
+              <Card className="border-indigo-500/20 bg-indigo-500/5">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <LayoutTemplate className="h-4 w-4 text-indigo-500 animate-pulse" />
+                    Template Library
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="space-y-2">
+                    <Label className="text-xs">Load a saved template</Label>
+                    <SelectRoot
+                      value={selectedTemplateId}
+                      onValueChange={handleTemplateSelect}
+                      placeholder="Select a template..."
+                    >
+                      {templates.map((t) => (
+                        <SelectItem key={t.id} value={t.id}>
+                          {t.name}
+                        </SelectItem>
+                      ))}
+                    </SelectRoot>
+                  </div>
+                  <div className="flex gap-2 rounded bg-muted/40 border border-border/30 p-2">
+                    <Info className="h-3.5 w-3.5 text-muted-foreground shrink-0 mt-0.5" />
+                    <p className="text-[10px] text-muted-foreground leading-relaxed">
+                      Loading a template will overwrite current subject and body fields.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-base">Recipients</CardTitle>
@@ -904,5 +969,17 @@ export default function AdminNewsletterPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function AdminNewsletterPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex h-[50vh] items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    }>
+      <NewsletterContent />
+    </Suspense>
   );
 }

@@ -27,6 +27,7 @@ import {
   Newspaper,
   Receipt,
   SlidersHorizontal,
+  LayoutTemplate,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -64,7 +65,7 @@ const NAV_GROUPS = [
       { href: "/admin/sso", label: "SSO / SAML", icon: KeyRound },
       { href: "/admin/roles", label: "Custom Roles", icon: Shield },
       { href: "/admin/security", label: "Security", icon: ShieldCheck },
-      { href: "/admin/email", label: "Email Engine", icon: Mail },
+      { href: "/admin/email/templates", label: "Email Templates", icon: LayoutTemplate },
       { href: "/admin/feedback", label: "Review Feedback", icon: MessageSquareText },
       { href: "/admin/user-feedback", label: "User Feedback", icon: ShieldAlert },
       { href: "/admin/settings", label: "Settings", icon: Settings },
