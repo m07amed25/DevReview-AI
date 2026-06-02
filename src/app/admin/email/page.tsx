@@ -14,9 +14,7 @@ import {
   Info,
   ChevronRight,
   Eye,
-  CheckCircle2,
   Trash2,
-  Plus,
   Bold,
   Italic,
   Link as LinkIcon,
@@ -26,7 +24,6 @@ import {
   Code,
   Heading1,
   Heading2,
-  Type,
   Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -45,8 +42,6 @@ import {
   SelectRoot,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "motion/react";
 
 export default function EmailEnginePage() {
