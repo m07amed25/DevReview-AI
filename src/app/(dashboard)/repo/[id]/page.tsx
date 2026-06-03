@@ -21,7 +21,7 @@ import {
   Lock,
   Search,
   ExternalLink,
-  Network,
+  Database,
   ShieldCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -56,10 +56,15 @@ export default function RepositoryDetailPage({ params }: PageProps) {
   );
 
   const utils = trpc.useUtils();
+  const hasEntityFiles = trpc.diagram.hasEntityFiles.useQuery(
+    { repositoryId: id },
+    { enabled: !!id, staleTime: 5 * 60 * 1000 },
+  );
+
   const diagrams = trpc.diagram.listForRepository.useQuery(
     { repositoryId: id },
     {
-      enabled: !!id,
+      enabled: !!id && hasEntityFiles.data !== false,
       refetchInterval: (query) => {
         const { data } = query.state;
         if (data?.some((d) => d.status === "PENDING")) return 3000;
@@ -245,10 +250,11 @@ export default function RepositoryDetailPage({ params }: PageProps) {
           <TabsTrigger value="rules" className="gap-1.5 text-sm">
             <ShieldCheck className="size-3.5" />Rules
           </TabsTrigger>
-          <TabsTrigger value="diagrams" className="gap-1.5 text-sm">
-            <Network className="size-3.5" />Diagrams
-            <Badge variant="secondary" className="text-xs h-4 px-1 bg-primary/10 text-primary">Beta</Badge>
-          </TabsTrigger>
+          {hasEntityFiles.data !== false && (
+            <TabsTrigger value="entity" className="gap-1.5 text-sm">
+              <Database className="size-3.5" />Entity
+            </TabsTrigger>
+          )}
           <TabsTrigger value="history" className="gap-1.5 text-sm">
             <GitCommit className="size-3.5" />History
           </TabsTrigger>
@@ -265,9 +271,11 @@ export default function RepositoryDetailPage({ params }: PageProps) {
           <RulesManagerCard repositoryId={id} />
         </TabsContent>
 
-        <TabsContent value="diagrams" className="mt-4">
-          <DiagramPanel diagrams={diagrams.data ?? []} repositoryId={id} onRequestDiagram={(type) => requestDiagram.mutate({ repositoryId: id, type })} />
-        </TabsContent>
+        {hasEntityFiles.data !== false && (
+          <TabsContent value="entity" className="mt-4">
+            <DiagramPanel diagrams={diagrams.data ?? []} repositoryId={id} onRequestDiagram={(type) => requestDiagram.mutate({ repositoryId: id, type })} />
+          </TabsContent>
+        )}
 
         <TabsContent value="history" className="mt-4">
           <CodeTimeline repositoryId={id} />

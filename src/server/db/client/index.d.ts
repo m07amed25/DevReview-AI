@@ -405,10 +405,7 @@ export type RecommendationPriority = (typeof RecommendationPriority)[keyof typeo
 
 
 export const DiagramType: {
-  ERD: 'ERD',
-  CLASS: 'CLASS',
-  USE_CASE: 'USE_CASE',
-  SEQUENCE: 'SEQUENCE'
+  ERD: 'ERD'
 };
 
 export type DiagramType = (typeof DiagramType)[keyof typeof DiagramType]

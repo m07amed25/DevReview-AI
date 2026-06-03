@@ -1,4 +1,4 @@
-export type DiagramType = "ERD" | "CLASS" | "USE_CASE" | "SEQUENCE";
+export type DiagramType = "ERD";
 
 export type DiagramStatus = "PENDING" | "COMPLETED" | "FAILED";
 
@@ -20,31 +20,12 @@ export interface DiagramNodeDetailTable {
   attributes?: string[];
 }
 
-export interface DiagramNodeDetailClass {
-  properties: Array<{
-    name: string;
-    type: string;
-    visibility: "public" | "private" | "protected";
-  }>;
-  methods: string[];
-  /** UML stereotype shown in the Mermaid diagram header */
-  stereotype?: "interface" | "type";
-}
-
-export interface DiagramNodeDetailUseCase {
-  description: string;
-  interactions: string[];
-}
-
-export type DiagramNodeDetail =
-  | DiagramNodeDetailTable
-  | DiagramNodeDetailClass
-  | DiagramNodeDetailUseCase;
+export type DiagramNodeDetail = DiagramNodeDetailTable;
 
 export interface DiagramNode {
   id: string;
   label: string;
-  type: "TABLE" | "CLASS" | "ACTOR" | "USE_CASE";
+  type: "TABLE";
   detail: DiagramNodeDetail;
   /** Set when the node first appeared in the latest regeneration (for highlighting). */
   isNew?: boolean;

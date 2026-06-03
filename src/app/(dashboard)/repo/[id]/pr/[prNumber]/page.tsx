@@ -13,18 +13,15 @@ import {
   GitMerge,
   ExternalLink,
   Clock,
-  Plus,
-  Minus,
   FileText,
   XCircle,
   Loader2,
-  Sparkles,
   GitBranch,
   ArrowRight,
   Wand2,
   ScanSearch,
   MessageCircle,
-  Network,
+  Database,
   ArrowLeftRight,
   History,
   RefreshCw,
@@ -46,7 +43,7 @@ type PageProps = { params: Promise<{ id: string; prNumber: string }> };
 export default function PullRequestPage({ params }: PageProps) {
   const { id, prNumber } = use(params);
   const prNum = parseInt(prNumber, 10);
-  const [activeTab, setActiveTab] = useState<"review" | "files" | "discussion" | "diagrams" | "compare" | "security">("files");
+  const [activeTab, setActiveTab] = useState<"review" | "files" | "discussion" | "entity" | "compare" | "security">("files");
   const [compareCurrentId, setCompareCurrentId] = useState<string | null>(null);
   const [comparePreviousId, setComparePreviousId] = useState<string | null>(null);
   const { data: session } = useSession();
@@ -54,17 +51,41 @@ export default function PullRequestPage({ params }: PageProps) {
   const pr = trpc.pullRequest.get.useQuery({ repositoryId: id, prNumber: prNum }, { enabled: !!id && !isNaN(prNum) });
   const files = trpc.pullRequest.files.useQuery({ repositoryId: id, prNumber: prNum }, { enabled: !!id && !isNaN(prNum) });
 
-  const timeAgo = useMemo(() => {
+  const [timeAgo, setTimeAgo] = useState<string | null>(null);
+  useEffect(() => {
     const date = pr.data?.createdAt ? new Date(pr.data.createdAt) : null;
-    if (!date) return null;
-    const diffMs = Date.now() - date.getTime();
-    const mins = Math.floor(diffMs / 60000);
-    if (mins < 60) return `${mins}m ago`;
-    const hrs = Math.floor(mins / 60);
-    if (hrs < 24) return `${hrs}h ago`;
-    const days = Math.floor(hrs / 24);
-    if (days < 7) return `${days}d ago`;
-    return `${Math.floor(days / 7)}w ago`;
+    if (!date) {
+      const timeoutId = setTimeout(() => {
+        setTimeAgo(null);
+      }, 0);
+      return () => clearTimeout(timeoutId);
+    }
+
+    const compute = () => {
+      const diffMs = Date.now() - date.getTime();
+      const mins = Math.floor(diffMs / 60000);
+      if (mins < 60) return `${mins}m ago`;
+      const hrs = Math.floor(mins / 60);
+      if (hrs < 24) return `${hrs}h ago`;
+      const days = Math.floor(hrs / 24);
+      if (days < 7) return `${days}d ago`;
+      return `${Math.floor(days / 7)}w ago`;
+    };
+
+    // Update asynchronously to prevent synchronous cascading renders during commit phase
+    const timeoutId = setTimeout(() => {
+      setTimeAgo(compute());
+    }, 0);
+
+    // Keep it up to date every minute
+    const intervalId = setInterval(() => {
+      setTimeAgo(compute());
+    }, 60000);
+
+    return () => {
+      clearTimeout(timeoutId);
+      clearInterval(intervalId);
+    };
   }, [pr.data?.createdAt]);
 
   const MAX_POLL_MS = 5 * 60 * 1000;
@@ -105,8 +126,13 @@ export default function PullRequestPage({ params }: PageProps) {
   const isReviewing = !pollTimedOut && (latestReview.data?.status === "PROCESSING" || latestReview.data?.status === "PENDING");
   const reviewId = latestReview.data?.id;
 
+  const hasEntityFiles = trpc.diagram.hasEntityFiles.useQuery(
+    { repositoryId: id },
+    { enabled: !!id, staleTime: 5 * 60 * 1000 },
+  );
+
   const diagrams = trpc.diagram.listForRepository.useQuery({ repositoryId: id }, {
-    enabled: !!id,
+    enabled: !!id && hasEntityFiles.data !== false,
     refetchInterval: (query) => { if (query.state.data?.some((d) => d.status === "PENDING")) return 3000; return false; },
   });
   const requestDiagram = trpc.diagram.requestDiagram.useMutation({ onSuccess: () => void diagrams.refetch() });
@@ -224,7 +250,9 @@ export default function PullRequestPage({ params }: PageProps) {
             <TabButton active={activeTab === "compare"} onClick={() => { setActiveTab("compare"); if (!compareCurrentId && completedReviews.length >= 2) { setCompareCurrentId(completedReviews[0].id); setComparePreviousId(completedReviews[1].id); } }} icon={ArrowLeftRight} label="Compare" />
           )}
           <TabButton active={activeTab === "security"} onClick={() => setActiveTab("security")} icon={ScanSearch} label="Security" />
-          <TabButton active={activeTab === "diagrams"} onClick={() => setActiveTab("diagrams")} icon={Network} label="Diagrams" count={diagrams.data?.length ?? 0} />
+          {hasEntityFiles.data !== false && (
+            <TabButton active={activeTab === "entity"} onClick={() => setActiveTab("entity")} icon={Database} label="Entity" count={diagrams.data?.length ?? 0} />
+          )}
         </div>
       </div>
 
@@ -279,7 +307,7 @@ export default function PullRequestPage({ params }: PageProps) {
         reviewId ? <SecurityDashboard reviewId={reviewId} /> : <EmptyState icon={ScanSearch} text="Run an AI review first to see security results." />
       )}
 
-      {activeTab === "diagrams" && (
+      {activeTab === "entity" && (
         <DiagramPanel diagrams={diagrams.data ?? []} repositoryId={id} onRequestDiagram={(type) => requestDiagram.mutate({ repositoryId: id, prNumber: prNum, type })} />
       )}
 

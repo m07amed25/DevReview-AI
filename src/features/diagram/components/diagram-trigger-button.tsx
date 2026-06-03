@@ -13,9 +13,6 @@ interface DiagramTriggerButtonProps {
 
 const TYPE_LABELS: Record<DiagramType, string> = {
   ERD: "ERD",
-  CLASS: "Class Diagram",
-  USE_CASE: "Use Case",
-  SEQUENCE: "Sequence",
 };
 
 export function DiagramTriggerButton({

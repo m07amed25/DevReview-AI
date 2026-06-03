@@ -850,10 +850,7 @@ exports.RecommendationPriority = exports.$Enums.RecommendationPriority = {
 };
 
 exports.DiagramType = exports.$Enums.DiagramType = {
-  ERD: 'ERD',
-  CLASS: 'CLASS',
-  USE_CASE: 'USE_CASE',
-  SEQUENCE: 'SEQUENCE'
+  ERD: 'ERD'
 };
 
 exports.DiagramStatus = exports.$Enums.DiagramStatus = {

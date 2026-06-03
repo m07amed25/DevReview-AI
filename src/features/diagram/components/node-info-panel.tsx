@@ -4,14 +4,12 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import type {
   DiagramNode,
   DiagramNodeDetailTable,
-  DiagramNodeDetailClass,
-  DiagramNodeDetailUseCase,
 } from "@/features/diagram/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { X, Database, Code2, User, Layers, GripHorizontal, ArrowRightLeft, Tag } from "lucide-react";
+import { X, Database, GripHorizontal, ArrowRightLeft, Tag } from "lucide-react";
 
 interface NodeInfoPanelProps {
   node: DiagramNode | null;
@@ -28,21 +26,6 @@ const TYPE_CONFIG: Record<
     label: "Table",
     icon: Database,
     color: "bg-blue-500/10 text-blue-500 border-blue-500/20",
-  },
-  CLASS: {
-    label: "Class",
-    icon: Code2,
-    color: "bg-purple-500/10 text-purple-500 border-purple-500/20",
-  },
-  ACTOR: {
-    label: "Actor",
-    icon: User,
-    color: "bg-green-500/10 text-green-500 border-green-500/20",
-  },
-  USE_CASE: {
-    label: "Use Case",
-    icon: Layers,
-    color: "bg-orange-500/10 text-orange-500 border-orange-500/20",
   },
 };
 
@@ -125,67 +108,6 @@ function TableDetail({ detail }: { detail: DiagramNodeDetailTable }) {
             ))}
           </div>
         </>
-      )}
-    </div>
-  );
-}
-
-function ClassDetail({ detail }: { detail: DiagramNodeDetailClass }) {
-  return (
-    <div className="space-y-3">
-      {detail.methods && detail.methods.length > 0 && (
-        <div>
-          <p className="text-xs font-semibold text-muted-foreground mb-1">
-            Methods
-          </p>
-          {detail.methods.map((m, i) => (
-            <div key={i} className="text-xs font-mono text-muted-foreground/80">
-              {m}
-            </div>
-          ))}
-        </div>
-      )}
-      {detail.properties && detail.properties.length > 0 && (
-        <div>
-          <p className="text-xs font-semibold text-muted-foreground mb-1">
-            Properties
-          </p>
-          {detail.properties.map((p, i) => (
-            <div
-              key={i}
-              className="text-xs font-mono text-muted-foreground/80"
-            >
-              <Badge variant="outline" className="text-[10px] px-1 py-0 mr-1">
-                {p.visibility[0]}
-              </Badge>
-              {p.name}: {p.type}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function UseCaseDetail({ detail }: { detail: DiagramNodeDetailUseCase }) {
-  return (
-    <div className="space-y-1.5">
-      {detail.description && (
-        <p className="text-xs text-muted-foreground">{detail.description}</p>
-      )}
-      {detail.interactions && detail.interactions.length > 0 && (
-        <div>
-          <p className="text-xs font-semibold text-muted-foreground mb-1">
-            Interactions
-          </p>
-          <div className="flex flex-wrap gap-1">
-            {detail.interactions.map((a) => (
-              <Badge key={a} variant="secondary" className="text-xs">
-                {a}
-              </Badge>
-            ))}
-          </div>
-        </div>
       )}
     </div>
   );
@@ -326,13 +248,6 @@ export function NodeInfoPanel({
           {node.type === "TABLE" && node.detail && (
             <TableDetail detail={node.detail as DiagramNodeDetailTable} />
           )}
-          {node.type === "CLASS" && node.detail && (
-            <ClassDetail detail={node.detail as DiagramNodeDetailClass} />
-          )}
-          {(node.type === "ACTOR" || node.type === "USE_CASE") &&
-            node.detail && (
-              <UseCaseDetail detail={node.detail as DiagramNodeDetailUseCase} />
-            )}
           {!node.detail && (
             <p className="text-xs text-muted-foreground">
               No additional details.

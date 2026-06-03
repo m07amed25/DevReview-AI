@@ -17,7 +17,7 @@ export type GenerateDiagramEvent = {
     repositoryId: string;
     userId: string;
     prNumber?: number; // Optional, fallbacks to full repository scan (not fully implemented in fetch yet, but typed as optional)
-    type: "ERD" | "CLASS" | "USE_CASE";
+    type: "ERD";
   };
 };
 
@@ -142,107 +142,13 @@ export const generateDiagram = inngest.createFunction(
     // reflects the entire system, not just the files changed in a single PR.
     const changedFiles = await step.run("fetch-files", async () => {
       const repoFiles = await fetchRepositoryFiles(accessToken, owner, repo);
-      // Score files differently depending on what diagram we're generating
+      // Score files for ERD diagrams
       const scoreFile = (path: string) => {
-        // ── ERD: prioritise DB schema & migration files ───────────────────────
-        if (type === "ERD") {
-          if (path.endsWith("schema.prisma") || path.endsWith(".prisma"))
-            return 100;
-          if (/migration/i.test(path) && path.endsWith(".sql")) return 90;
-          if (path.endsWith("package.json")) return 20;
-          if (path.endsWith(".ts") || path.endsWith(".tsx")) return 10;
-          return 0;
-        }
-        // ── CLASS: prioritise service / model / entity / hook files ──────
-        if (type === "CLASS") {
-          // Skip test, spec, page, layout, config, and generated files entirely
-          if (/\.(test|spec)\.(ts|js|tsx|jsx)$/.test(path)) return 0;
-          if (
-            /(page|layout|not-found|error|loading|template)\.(tsx|jsx)$/.test(
-              path,
-            )
-          )
-            return 0;
-          if (/\.(config|setup)\.(ts|js)$/.test(path)) return 0;
-          if (/node_modules|\.next|\.prisma|prisma\/migrations/.test(path))
-            return 0;
-          // Highest priority: explicit OOP naming convention
-          if (
-            /\.(service|model|entity|class|controller|repository|store)\.(ts|js)$/.test(
-              path,
-            )
-          )
-            return 100;
-          // High priority: files in service/model/feature directories
-          if (
-            /\/(services?|models?|entities|controllers?|repositories?|stores?)\//i.test(
-              path,
-            ) &&
-            /\.(ts|js)$/.test(path)
-          )
-            return 90;
-          if (
-            /\/server\/(api|services?|auth|db)\//i.test(path) &&
-            path.endsWith(".ts")
-          )
-            return 85;
-          if (/\/features?\//i.test(path) && path.endsWith(".ts")) return 70;
-          if (/\/hooks?\//i.test(path) && path.endsWith(".ts")) return 60;
-          // Generic TypeScript files
-          if (path.endsWith(".ts")) return 50;
-          if (path.endsWith(".tsx")) return 30;
-          if (path.endsWith(".js") || path.endsWith(".jsx")) return 20;
-          return 0;
-        }
-        // ── USE_CASE: prioritise route / controller / handler / API files ─────
-        // Immediately discard files that can never contain use-case patterns
-        if (/\.(test|spec)\.(ts|tsx|js|jsx)$/.test(path)) return 0;
-        if (/node_modules|\.next|prisma\/migrations/.test(path)) return 0;
-        if (/\.(css|scss|sass|less|svg|png|jpg|gif|ico|md)$/.test(path))
-          return 0;
-        if (
-          /(layout|not-found|error|loading|template)\.(tsx|jsx)$/.test(path)
-        )
-          return 0;
-        if (/\.(config|setup)\.(ts|js)$/.test(path)) return 0;
-        // Route handlers (highest value)
-        if (/route\.(ts|js)$/.test(path)) return 100;
-        if (/\.(controller|router|handler|endpoint)\.(ts|js)$/.test(path))
+        if (path.endsWith("schema.prisma") || path.endsWith(".prisma"))
           return 100;
-        // tRPC routers
-        if (/\/routers?\/[^/]+\.(ts|js)$/.test(path)) return 95;
-        // Route directories
-        if (/routes?\/|controllers?\/|handlers?\/|endpoints?\//i.test(path))
-          return 90;
-        // API directory files
-        if (
-          /\/app\/api\//i.test(path) &&
-          (path.endsWith(".ts") || path.endsWith(".js"))
-        )
-          return 88;
-        // Server action files
-        if (
-          /\/actions?\//i.test(path) &&
-          (path.endsWith(".ts") || path.endsWith(".js"))
-        )
-          return 85;
-        if (/\.(action|actions)\.(ts|js)$/.test(path)) return 85;
-        // Inngest / webhook / cron files
-        if (/inngest/i.test(path)) return 82;
-        if (/webhook/i.test(path)) return 80;
-        if (/cron|schedule/i.test(path)) return 78;
-        // Next.js pages (navigation use cases)
-        if (/\/page\.(tsx|jsx)$/.test(path)) return 70;
-        // Server-side files that may contain procedures / actions
-        if (
-          /\/server\//i.test(path) &&
-          (path.endsWith(".ts") || path.endsWith(".js"))
-        )
-          return 40;
-        // Generic TypeScript — may have tRPC procedures or server actions
-        if (path.endsWith(".ts")) return 15;
-        if (path.endsWith(".tsx")) return 8;
-        if (path.endsWith(".js") || path.endsWith(".jsx")) return 5;
+        if (/migration/i.test(path) && path.endsWith(".sql")) return 90;
+        if (path.endsWith("package.json")) return 20;
+        if (path.endsWith(".ts") || path.endsWith(".tsx")) return 10;
         return 0;
       };
 
@@ -258,17 +164,16 @@ export const generateDiagram = inngest.createFunction(
       const contents: Record<string, string> = {};
 
       // Limit to reasonable number of files to avoid token/time explosion.
-      // USE_CASE needs a wide scan of the whole codebase; CLASS also needs many files.
-      const MAX_FILES = type === "CLASS" ? 60 : type === "USE_CASE" ? 80 : 20;
+      const MAX_FILES = 20;
       const relevant = changedFiles.slice(0, MAX_FILES);
 
       await Promise.all(
         relevant.map(async (file) => {
           const content = await fetchFileContent(
-            accessToken,
-            owner,
-            repo,
-            file.filename,
+              accessToken,
+              owner,
+              repo,
+              file.filename,
           );
           if (content) {
             contents[file.filename] = content;

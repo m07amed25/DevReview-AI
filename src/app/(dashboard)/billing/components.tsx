@@ -528,7 +528,7 @@ function BillingInfoForm({
               name="fullName"
               required
               defaultValue={initial?.fullName}
-              placeholder="John Doe"
+              placeholder="Mohamed"
               className={errors.fullName ? "border-destructive focus-visible:ring-destructive/30" : ""}
               onChange={() => errors.fullName && setErrors((p) => ({ ...p, fullName: "" }))}
               autoComplete="name"

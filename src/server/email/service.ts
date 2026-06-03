@@ -406,7 +406,7 @@ export async function sendRefundEmail(
 
     return await sendEmail(to, subject, html);
   } catch (error) {
-    console.error("❌ Error generating refund email:", error);
+    console.error("Error generating refund email:", error);
     return {
       success: false,
       error: error instanceof Error ? error.message : "Failed to generate email",

@@ -3,8 +3,52 @@ import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { inngest } from "@/server/inngest";
 import { getAccessibleRepository } from "@/lib/repository";
+import {
+  getGitHubAccessToken,
+  fetchRepositoryFiles,
+} from "@/server/services/github";
+import { matchTriggerRules } from "@/server/services/diagram-generator";
 
 export const diagramRouter = createTRPCRouter({
+  /**
+   * Lightweight check: does this repository contain files that indicate a
+   * database layer (Prisma schemas, SQL migrations, entity files, etc.)?
+   * The UI uses this to conditionally show the Entity tab.
+   */
+  hasEntityFiles: protectedProcedure
+    .input(z.object({ repositoryId: z.string().max(255).cuid() }))
+    .query(async ({ ctx, input }) => {
+      const repo = await getAccessibleRepository(
+        ctx.db,
+        ctx.user.id,
+        input.repositoryId,
+      );
+
+      // If we already generated an ERD diagram for this repo, skip the API call.
+      const existingDiagram = await ctx.db.diagram.findFirst({
+        where: { repositoryId: input.repositoryId, type: "ERD" },
+        select: { id: true },
+      });
+      if (existingDiagram) return true;
+
+      // Otherwise, fetch the file tree from GitHub and check patterns.
+      const accessToken = await getGitHubAccessToken(ctx.user.id);
+      if (!accessToken) return false;
+
+      const [owner, repoName] = (repo.fullName ?? "").split("/");
+      if (!owner || !repoName) return false;
+
+      try {
+        const files = await fetchRepositoryFiles(accessToken, owner, repoName);
+        const matched = matchTriggerRules(files.map((f) => f.path));
+        return matched.includes("ERD");
+      } catch {
+        // If the tree fetch fails (permissions, empty repo, etc.) fall back
+        // to showing the tab so the user can still try generating.
+        return true;
+      }
+    }),
+
   /** List all diagrams for a repository (owner or team member). */
   listForRepository: protectedProcedure
     .input(z.object({ repositoryId: z.string().max(255).cuid() }))
@@ -44,7 +88,7 @@ export const diagramRouter = createTRPCRouter({
       z.object({
         repositoryId: z.string().max(255).cuid(),
         prNumber: z.number().int().optional(), // optional since we might trigger manually without a PR
-        type: z.enum(["ERD", "CLASS", "USE_CASE", "SEQUENCE"]),
+        type: z.enum(["ERD"]),
       }),
     )
     .mutation(async ({ ctx, input }) => {

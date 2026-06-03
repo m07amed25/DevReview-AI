@@ -6,9 +6,6 @@ import type {
   DiagramTriggerRule,
 } from "@/features/diagram/types";
 import { generateERD } from "./erd";
-import { generateClassDiagram } from "./class-diagram";
-import { generateUseCaseDiagram } from "./use-case-diagram";
-import { generateSequenceDiagram } from "./sequence-diagram";
 
 export const DIAGRAM_TRIGGER_RULES: DiagramTriggerRule[] = [
   {
@@ -38,14 +35,6 @@ export const DIAGRAM_TRIGGER_RULES: DiagramTriggerRule[] = [
       "knexfile.js",
       "knexfile.ts",
     ],
-  },
-  {
-    type: "CLASS",
-    patterns: ["**/*.service.ts", "**/*.controller.ts"],
-  },
-  {
-    type: "USE_CASE",
-    patterns: ["src/app/api/**/*.ts", "**/*.controller.ts", "**/*.router.ts"],
   },
 ];
 
@@ -84,14 +73,9 @@ export async function generateMermaidDefinition(
     sorted[key] = fileContents[key]!;
   }
 
-  switch (type) {
-    case "ERD":
-      return generateERD(sorted);
-    case "CLASS":
-      return generateClassDiagram(sorted);
-    case "USE_CASE":
-      return generateUseCaseDiagram(sorted);
-    case "SEQUENCE":
-      return generateSequenceDiagram(sorted);
+  if (type === "ERD") {
+    return generateERD(sorted);
   }
+
+  throw new Error(`Unsupported diagram type: ${type}`);
 }

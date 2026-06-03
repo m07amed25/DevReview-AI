@@ -826,9 +826,6 @@ enum RecommendationPriority {
 
 enum DiagramType {
   ERD
-  CLASS
-  USE_CASE
-  SEQUENCE
 }
 
 enum DiagramStatus {
