@@ -5,6 +5,7 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { payments, tokenization } from "../../services/fawaterak";
 import { decryptPaymentToken } from "../../services/payment-tokens";
 import {
+  activateInvoiceWithAccountCredit,
   activatePaidInvoice,
   calculateCheckoutAmount,
   checkoutCurrency,
@@ -99,36 +100,17 @@ export const paymentRouter = createTRPCRouter({
 
         // If credit covers the full amount, activate immediately without payment gateway
         if (finalAmount === 0 && creditUsed > 0) {
-          const planExpiresAt = new Date();
-          planExpiresAt.setMonth(planExpiresAt.getMonth() + (input.billingCycle === "yearly" ? 12 : 1));
-
-          const invoice = await ctx.db.invoice.create({
-            data: {
-              userId: ctx.user.id,
-              amount: 0,
-              planId: input.planId,
-              billingCycle: input.billingCycle,
-              description: `${plan.name} - ${input.billingCycle} (paid with credit)`,
-              currency: checkoutCurrency,
-              status: "PAID",
-              paidAt: new Date(),
-              idempotencyKey: input.idempotencyKey,
-            },
-          });
-
-          await ctx.db.user.update({
-            where: { id: ctx.user.id },
-            data: {
-              planId: input.planId,
-              planExpiresAt,
-              planStartedAt: new Date(),
-              billingCycle: input.billingCycle,
-              accountCredit: { decrement: creditUsed },
-            },
+          const invoiceId = await activateInvoiceWithAccountCredit(ctx.db, {
+            userId: ctx.user.id,
+            planId: input.planId,
+            billingCycle: input.billingCycle,
+            planName: plan.name,
+            creditUsed,
+            idempotencyKey: input.idempotencyKey,
           });
 
           await releaseIdempotencyLock(ctx.user.id, input.idempotencyKey);
-          return { invoiceId: invoice.id, redirectTo: null, referenceCode: null, paidWithCredit: true };
+          return { invoiceId, redirectTo: null, referenceCode: null, paidWithCredit: true };
         }
 
         const amountMajor = toAmountString(finalAmount);
@@ -533,34 +515,15 @@ export const paymentRouter = createTRPCRouter({
         throw new TRPCError({ code: "BAD_REQUEST", message: "Insufficient credit to cover this plan." });
       }
 
-      const planExpiresAt = new Date();
-      planExpiresAt.setMonth(planExpiresAt.getMonth() + (input.billingCycle === "yearly" ? 12 : 1));
-
-      const invoice = await ctx.db.invoice.create({
-        data: {
-          userId: ctx.user.id,
-          amount: 0,
-          planId: input.planId,
-          billingCycle: input.billingCycle,
-          description: `${plan.name} - ${input.billingCycle} (paid with credit)`,
-          currency: checkoutCurrency,
-          status: "PAID",
-          paidAt: new Date(),
-        },
+      const invoiceId = await activateInvoiceWithAccountCredit(ctx.db, {
+        userId: ctx.user.id,
+        planId: input.planId,
+        billingCycle: input.billingCycle,
+        planName: plan.name,
+        creditUsed,
       });
 
-      await ctx.db.user.update({
-        where: { id: ctx.user.id },
-        data: {
-          planId: input.planId,
-          planExpiresAt,
-          planStartedAt: new Date(),
-          billingCycle: input.billingCycle,
-          accountCredit: { decrement: creditUsed },
-        },
-      });
-
-      return { success: true, invoiceId: invoice.id };
+      return { success: true, invoiceId };
     }),
 
   getUpgradePlans: protectedProcedure.query(async ({ ctx }) => {

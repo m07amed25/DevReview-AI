@@ -78,6 +78,8 @@ type ActivateInvoiceOptions = {
 
 export const checkoutCurrency = "USD";
 
+export const ACCOUNT_CREDIT_PAYMENT_METHOD = "Credits";
+
 export function toAmountString(amount: number) {
   return amount.toFixed(2);
 }
@@ -161,6 +163,38 @@ export async function calculateCheckoutAmount(
   const finalAmount = Math.max(0, afterDiscount - creditUsed);
 
   return { basePrice, finalAmount, discountId, creditUsed };
+}
+
+export async function activateInvoiceWithAccountCredit(
+  db: PrismaClient,
+  params: {
+    userId: string;
+    planId: string;
+    billingCycle: BillingCycle;
+    planName: string;
+    creditUsed: number;
+    idempotencyKey?: string;
+  },
+) {
+  const invoice = await db.invoice.create({
+    data: {
+      userId: params.userId,
+      amount: params.creditUsed,
+      planId: params.planId,
+      billingCycle: params.billingCycle,
+      description: `${params.planName} - ${params.billingCycle} (paid with credit)`,
+      currency: checkoutCurrency,
+      paymentMethodUsed: ACCOUNT_CREDIT_PAYMENT_METHOD,
+      ...(params.idempotencyKey ? { idempotencyKey: params.idempotencyKey } : {}),
+    },
+  });
+
+  await activatePaidInvoice(db, invoice, {
+    paymentMethodUsed: ACCOUNT_CREDIT_PAYMENT_METHOD,
+    paidAt: new Date(),
+  });
+
+  return invoice.id;
 }
 
 export async function activatePaidInvoice(
