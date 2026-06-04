@@ -489,10 +489,14 @@ function BillingInfoForm({
     const errs: Record<string, string> = {};
     const fullName = (fd.get("fullName") as string).trim();
     const email = (fd.get("email") as string).trim();
+    const phone = (fd.get("phone") as string).replace(/\D/g, "");
     const zip = (fd.get("zip") as string).trim();
 
     if (!fullName || fullName.length < 2) errs.fullName = "Name must be at least 2 characters";
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.email = "Enter a valid email address";
+    if (!/^01[0-9]{9}$/.test(phone)) {
+      errs.phone = "Enter a valid Egyptian mobile (01xxxxxxxxx)";
+    }
     if (zip && !/^[\w\s-]{2,20}$/.test(zip)) errs.zip = "Enter a valid postal code";
 
     setErrors(errs);
@@ -507,6 +511,7 @@ function BillingInfoForm({
     upsert.mutate({
       fullName: (fd.get("fullName") as string).trim(),
       email: (fd.get("email") as string).trim(),
+      phone: (fd.get("phone") as string).replace(/\D/g, ""),
       address: (fd.get("address") as string).trim() || undefined,
       city: (fd.get("city") as string).trim() || undefined,
       state: (fd.get("state") as string).trim() || undefined,
@@ -553,6 +558,25 @@ function BillingInfoForm({
             autoComplete="email"
           />
           {errors.email && <p className="text-xs text-destructive flex items-center gap-1"><AlertCircle className="h-3 w-3" />{errors.email}</p>}
+        </div>
+
+        <div className="col-span-2 space-y-1.5">
+          <Label htmlFor="phone" className="text-sm font-medium">
+            Mobile (for card payments) <span className="text-destructive">*</span>
+          </Label>
+          <Input
+            id="phone"
+            name="phone"
+            type="tel"
+            required
+            defaultValue={initial?.phone ?? ""}
+            placeholder="01xxxxxxxxx"
+            className={errors.phone ? "border-destructive focus-visible:ring-destructive/30" : ""}
+            onChange={() => errors.phone && setErrors((p) => ({ ...p, phone: "" }))}
+            autoComplete="tel"
+          />
+          <p className="text-xs text-muted-foreground">Egyptian mobile format required by Fawaterak (11 digits, starts with 01).</p>
+          {errors.phone && <p className="text-xs text-destructive flex items-center gap-1"><AlertCircle className="h-3 w-3" />{errors.phone}</p>}
         </div>
 
         <div className="col-span-2 space-y-1.5">

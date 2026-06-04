@@ -947,6 +947,8 @@ model BillingInfo {
   userId         String          @unique
   fullName       String
   email          String
+  /// Egyptian mobile for Fawaterak (01xxxxxxxxx)
+  phone          String?
   address        String?
   city           String?
   state          String?

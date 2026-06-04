@@ -7,6 +7,7 @@ import {
   resolveExpiredSubscription,
   toAmountString,
 } from "@/server/services/payment-workflow";
+import { fawaterakConfig } from "@/server/services/fawaterak/config";
 import { tokenization } from "@/server/services/fawaterak";
 import { decryptPaymentToken } from "@/server/services/payment-tokens";
 
@@ -200,11 +201,12 @@ async function chargeAndActivatePending(
   }
 
   try {
+    const chargeCurrency = fawaterakConfig.savedCardChargeCurrency;
     const amountMajor = toAmountString(finalAmount);
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
     const result = await tokenization.payWithToken({
       cartTotal: amountMajor,
-      currency: checkoutCurrency,
+      currency: chargeCurrency,
       customer: {
         first_name: billingInfo.fullName.split(" ")[0] ?? billingInfo.fullName,
         last_name: billingInfo.fullName.split(" ").slice(1).join(" ") || "User",

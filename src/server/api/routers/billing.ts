@@ -7,6 +7,14 @@ import { classifyPlanChange } from "../../services/payment-workflow";
 const billingInfoSchema = z.object({
   fullName: z.string().min(1).max(200),
   email: z.string().email().max(320),
+  phone: z
+    .string()
+    .max(20)
+    .optional()
+    .refine(
+      (v) => !v || /^01[0-9]{9}$/.test(v.replace(/\D/g, "")),
+      "Enter a valid Egyptian mobile (01xxxxxxxxx)",
+    ),
   address: z.string().max(500).optional(),
   city: z.string().max(100).optional(),
   state: z.string().max(100).optional(),
@@ -149,10 +157,12 @@ export const billingRouter = createTRPCRouter({
   upsertInfo: protectedProcedure
     .input(billingInfoSchema)
     .mutation(async ({ ctx, input }) => {
+      const { phone: rawPhone, ...rest } = input;
+      const phone = rawPhone?.replace(/\D/g, "") || null;
       return ctx.db.billingInfo.upsert({
         where: { userId: ctx.user.id },
-        create: { ...input, userId: ctx.user.id },
-        update: input,
+        create: { ...rest, phone, userId: ctx.user.id },
+        update: { ...rest, phone },
       });
     }),
 

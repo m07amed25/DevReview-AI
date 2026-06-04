@@ -3,6 +3,7 @@ import crypto from "crypto";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { payments, tokenization, FawaterakError } from "../../services/fawaterak";
+import { fawaterakConfig } from "../../services/fawaterak/config";
 import { decryptPaymentToken } from "../../services/payment-tokens";
 import {
   activateInvoiceWithAccountCredit,
@@ -298,21 +299,28 @@ export const paymentRouter = createTRPCRouter({
     const baseUrl = getPublicAppBaseUrl();
     const tokenWebhookUrl = `${baseUrl}/api/webhooks/fawaterak_token_json`;
 
+    const tokenCurrency = fawaterakConfig.tokenizationCurrency;
+    const phoneDigits = billing.phone?.replace(/\D/g, "") ?? "";
+    const phone = /^01[0-9]{9}$/.test(phoneDigits)
+      ? phoneDigits
+      : fawaterakConfig.fallbackCustomerPhone;
+
     const result = await tokenization.createCardTokenScreen({
+      deduct_total_amount: false,
       customerData: {
         customer_unique_id: ctx.user.id,
         customer_first_name: billing.fullName.split(" ")[0] ?? billing.fullName,
         customer_last_name: billing.fullName.split(" ").slice(1).join(" ") || "User",
         customer_email: billing.email,
-        // TODO: Phone Number
-        customer_phone: "01000000000", // Required by Fawaterak API, default placeholder
+        customer_phone: phone,
       },
       order: {
-        currency: checkoutCurrency,
+        currency: tokenCurrency,
       },
+      allowedCardTypes: [],
       redirectionUrls: {
         success_url: `${baseUrl}/billing/cards/saved`,
-        fail_url: `${baseUrl}/billing/cards/saved?error=failed`,
+        fail_url: `${baseUrl}/billing/cards/failed`,
         webhook_url: tokenWebhookUrl,
         webhookUrl: tokenWebhookUrl,
       },
@@ -423,6 +431,7 @@ export const paymentRouter = createTRPCRouter({
         });
       }
 
+      const chargeCurrency = fawaterakConfig.savedCardChargeCurrency;
       const amountMajor = toAmountString(finalAmount);
 
       const invoice = await ctx.db.invoice.create({
@@ -432,16 +441,16 @@ export const paymentRouter = createTRPCRouter({
           planId: input.planId,
           billingCycle: input.billingCycle,
           description: `${plan.name} - ${input.billingCycle}`,
-          currency: checkoutCurrency,
+          currency: chargeCurrency,
         },
       });
 
-      const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+      const baseUrl = getPublicAppBaseUrl();
 
       try {
         const result = await tokenization.payWithToken({
           cartTotal: amountMajor,
-          currency: checkoutCurrency,
+          currency: chargeCurrency,
           customer: {
             first_name: billing.fullName.split(" ")[0] ?? billing.fullName,
             last_name: billing.fullName.split(" ").slice(1).join(" ") || "User",

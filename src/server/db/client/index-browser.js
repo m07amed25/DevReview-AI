@@ -660,6 +660,7 @@ exports.Prisma.BillingInfoScalarFieldEnum = {
   userId: 'userId',
   fullName: 'fullName',
   email: 'email',
+  phone: 'phone',
   address: 'address',
   city: 'city',
   state: 'state',

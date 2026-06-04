@@ -20,4 +20,19 @@ export const fawaterakConfig = {
   get isProduction() {
     return this.baseUrl.includes('app.fawaterk.com');
   },
+
+  get tokenizationCurrency() {
+    return process.env.FAWATERAK_TOKENIZATION_CURRENCY ?? 'EGP';
+  },
+
+  get savedCardChargeCurrency() {
+    return (
+      process.env.FAWATERAK_SAVED_CARD_CURRENCY ??
+      this.tokenizationCurrency
+    );
+  },
+
+  get fallbackCustomerPhone() {
+    return process.env.FAWATERAK_FALLBACK_PHONE ?? '01234567891';
+  },
 } as const;

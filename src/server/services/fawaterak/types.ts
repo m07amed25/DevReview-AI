@@ -99,6 +99,7 @@ export interface TransactionDataResponse {
 }
 
 export interface CreateCardTokenRequest {
+  deduct_total_amount?: boolean;
   customerData: {
     customer_unique_id: string;
     customer_first_name: string;
@@ -108,7 +109,10 @@ export interface CreateCardTokenRequest {
   };
   order: {
     currency: string;
+    cartTotal?: string | number;
+    cartItems?: { name: string; price: string | number; quantity: string | number }[];
   };
+  allowedCardTypes?: string[];
   redirectionUrls: {
     success_url: string;
     fail_url: string;

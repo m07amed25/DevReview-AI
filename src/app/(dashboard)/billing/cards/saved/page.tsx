@@ -14,7 +14,9 @@ const MAX_WAIT_MS = 45_000;
 export default function CardSavedPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const failed = searchParams.get("error") === "failed";
+  const failed =
+    searchParams.get("error") === "failed" ||
+    searchParams.get("status") === "failed";
   const [timedOut, setTimedOut] = useState(false);
   const syncAttempted = useRef(false);
 

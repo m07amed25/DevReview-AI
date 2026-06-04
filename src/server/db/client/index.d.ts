@@ -54387,6 +54387,7 @@ export namespace Prisma {
     userId: string | null
     fullName: string | null
     email: string | null
+    phone: string | null
     address: string | null
     city: string | null
     state: string | null
@@ -54401,6 +54402,7 @@ export namespace Prisma {
     userId: string | null
     fullName: string | null
     email: string | null
+    phone: string | null
     address: string | null
     city: string | null
     state: string | null
@@ -54415,6 +54417,7 @@ export namespace Prisma {
     userId: number
     fullName: number
     email: number
+    phone: number
     address: number
     city: number
     state: number
@@ -54431,6 +54434,7 @@ export namespace Prisma {
     userId?: true
     fullName?: true
     email?: true
+    phone?: true
     address?: true
     city?: true
     state?: true
@@ -54445,6 +54449,7 @@ export namespace Prisma {
     userId?: true
     fullName?: true
     email?: true
+    phone?: true
     address?: true
     city?: true
     state?: true
@@ -54459,6 +54464,7 @@ export namespace Prisma {
     userId?: true
     fullName?: true
     email?: true
+    phone?: true
     address?: true
     city?: true
     state?: true
@@ -54546,6 +54552,7 @@ export namespace Prisma {
     userId: string
     fullName: string
     email: string
+    phone: string | null
     address: string | null
     city: string | null
     state: string | null
@@ -54577,6 +54584,7 @@ export namespace Prisma {
     userId?: boolean
     fullName?: boolean
     email?: boolean
+    phone?: boolean
     address?: boolean
     city?: boolean
     state?: boolean
@@ -54594,6 +54602,7 @@ export namespace Prisma {
     userId?: boolean
     fullName?: boolean
     email?: boolean
+    phone?: boolean
     address?: boolean
     city?: boolean
     state?: boolean
@@ -54609,6 +54618,7 @@ export namespace Prisma {
     userId?: boolean
     fullName?: boolean
     email?: boolean
+    phone?: boolean
     address?: boolean
     city?: boolean
     state?: boolean
@@ -54624,6 +54634,7 @@ export namespace Prisma {
     userId?: boolean
     fullName?: boolean
     email?: boolean
+    phone?: boolean
     address?: boolean
     city?: boolean
     state?: boolean
@@ -54633,7 +54644,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type BillingInfoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "fullName" | "email" | "address" | "city" | "state" | "zip" | "country" | "createdAt" | "updatedAt", ExtArgs["result"]["billingInfo"]>
+  export type BillingInfoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "fullName" | "email" | "phone" | "address" | "city" | "state" | "zip" | "country" | "createdAt" | "updatedAt", ExtArgs["result"]["billingInfo"]>
   export type BillingInfoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     paymentMethods?: boolean | BillingInfo$paymentMethodsArgs<ExtArgs>
@@ -54657,6 +54668,10 @@ export namespace Prisma {
       userId: string
       fullName: string
       email: string
+      /**
+       * Egyptian mobile for Fawaterak (01xxxxxxxxx)
+       */
+      phone: string | null
       address: string | null
       city: string | null
       state: string | null
@@ -55093,6 +55108,7 @@ export namespace Prisma {
     readonly userId: FieldRef<"BillingInfo", 'String'>
     readonly fullName: FieldRef<"BillingInfo", 'String'>
     readonly email: FieldRef<"BillingInfo", 'String'>
+    readonly phone: FieldRef<"BillingInfo", 'String'>
     readonly address: FieldRef<"BillingInfo", 'String'>
     readonly city: FieldRef<"BillingInfo", 'String'>
     readonly state: FieldRef<"BillingInfo", 'String'>
@@ -60492,6 +60508,7 @@ export namespace Prisma {
     userId: 'userId',
     fullName: 'fullName',
     email: 'email',
+    phone: 'phone',
     address: 'address',
     city: 'city',
     state: 'state',
@@ -64511,6 +64528,7 @@ export namespace Prisma {
     userId?: StringFilter<"BillingInfo"> | string
     fullName?: StringFilter<"BillingInfo"> | string
     email?: StringFilter<"BillingInfo"> | string
+    phone?: StringNullableFilter<"BillingInfo"> | string | null
     address?: StringNullableFilter<"BillingInfo"> | string | null
     city?: StringNullableFilter<"BillingInfo"> | string | null
     state?: StringNullableFilter<"BillingInfo"> | string | null
@@ -64527,6 +64545,7 @@ export namespace Prisma {
     userId?: SortOrder
     fullName?: SortOrder
     email?: SortOrder
+    phone?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
     state?: SortOrderInput | SortOrder
@@ -64546,6 +64565,7 @@ export namespace Prisma {
     NOT?: BillingInfoWhereInput | BillingInfoWhereInput[]
     fullName?: StringFilter<"BillingInfo"> | string
     email?: StringFilter<"BillingInfo"> | string
+    phone?: StringNullableFilter<"BillingInfo"> | string | null
     address?: StringNullableFilter<"BillingInfo"> | string | null
     city?: StringNullableFilter<"BillingInfo"> | string | null
     state?: StringNullableFilter<"BillingInfo"> | string | null
@@ -64562,6 +64582,7 @@ export namespace Prisma {
     userId?: SortOrder
     fullName?: SortOrder
     email?: SortOrder
+    phone?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
     state?: SortOrderInput | SortOrder
@@ -64582,6 +64603,7 @@ export namespace Prisma {
     userId?: StringWithAggregatesFilter<"BillingInfo"> | string
     fullName?: StringWithAggregatesFilter<"BillingInfo"> | string
     email?: StringWithAggregatesFilter<"BillingInfo"> | string
+    phone?: StringNullableWithAggregatesFilter<"BillingInfo"> | string | null
     address?: StringNullableWithAggregatesFilter<"BillingInfo"> | string | null
     city?: StringNullableWithAggregatesFilter<"BillingInfo"> | string | null
     state?: StringNullableWithAggregatesFilter<"BillingInfo"> | string | null
@@ -68746,6 +68768,7 @@ export namespace Prisma {
     id?: string
     fullName: string
     email: string
+    phone?: string | null
     address?: string | null
     city?: string | null
     state?: string | null
@@ -68762,6 +68785,7 @@ export namespace Prisma {
     userId: string
     fullName: string
     email: string
+    phone?: string | null
     address?: string | null
     city?: string | null
     state?: string | null
@@ -68776,6 +68800,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
@@ -68792,6 +68817,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
@@ -68807,6 +68833,7 @@ export namespace Prisma {
     userId: string
     fullName: string
     email: string
+    phone?: string | null
     address?: string | null
     city?: string | null
     state?: string | null
@@ -68820,6 +68847,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
@@ -68834,6 +68862,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
@@ -72061,6 +72090,7 @@ export namespace Prisma {
     userId?: SortOrder
     fullName?: SortOrder
     email?: SortOrder
+    phone?: SortOrder
     address?: SortOrder
     city?: SortOrder
     state?: SortOrder
@@ -72075,6 +72105,7 @@ export namespace Prisma {
     userId?: SortOrder
     fullName?: SortOrder
     email?: SortOrder
+    phone?: SortOrder
     address?: SortOrder
     city?: SortOrder
     state?: SortOrder
@@ -72089,6 +72120,7 @@ export namespace Prisma {
     userId?: SortOrder
     fullName?: SortOrder
     email?: SortOrder
+    phone?: SortOrder
     address?: SortOrder
     city?: SortOrder
     state?: SortOrder
@@ -76082,6 +76114,7 @@ export namespace Prisma {
     id?: string
     fullName: string
     email: string
+    phone?: string | null
     address?: string | null
     city?: string | null
     state?: string | null
@@ -76096,6 +76129,7 @@ export namespace Prisma {
     id?: string
     fullName: string
     email: string
+    phone?: string | null
     address?: string | null
     city?: string | null
     state?: string | null
@@ -76620,6 +76654,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76634,6 +76669,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
@@ -84621,6 +84657,7 @@ export namespace Prisma {
     id?: string
     fullName: string
     email: string
+    phone?: string | null
     address?: string | null
     city?: string | null
     state?: string | null
@@ -84636,6 +84673,7 @@ export namespace Prisma {
     userId: string
     fullName: string
     email: string
+    phone?: string | null
     address?: string | null
     city?: string | null
     state?: string | null
@@ -84665,6 +84703,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
@@ -84680,6 +84719,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
