@@ -1,107 +1,60 @@
 import { NextRequest, NextResponse } from "next/server";
-import crypto from "crypto";
+import pino from "pino";
 import { db } from "@/server/db";
-import { fawaterakConfig } from "@/server/services/fawaterak/config";
 import {
-  encryptPaymentToken,
-  fingerprintPaymentToken,
-} from "@/server/services/payment-tokens";
+  parseTokenizationWebhookBody,
+  persistSavedCardFromTokenization,
+} from "@/server/services/save-card-from-fawaterak";
 
-function verifyTokenizationHash(
-  customerUniqueId: string,
-  customerCardToken: string,
-  receivedHash: string
-): boolean {
-  const queryParam = `customerUniqueId=${customerUniqueId}&customerCardToken=${customerCardToken}`;
-  const expected = crypto
-    .createHmac("sha256", fawaterakConfig.vendorKey)
-    .update(queryParam)
-    .digest("hex");
+export const runtime = "nodejs";
 
-  if (!/^[a-f0-9]{64}$/i.test(receivedHash)) return false;
-  const a = Buffer.from(expected, "hex");
-  const b = Buffer.from(receivedHash, "hex");
-  if (a.length !== b.length) return false;
-  return crypto.timingSafeEqual(a, b);
-}
-
-function detectCardBrand(cardNumber: string): string {
-  const first6 = cardNumber.slice(0, 6);
-  if (/^4/.test(first6)) return "Visa";
-  if (/^5[1-5]/.test(first6) || /^2[2-7]/.test(first6)) return "Mastercard";
-  return "Card";
-}
+const log = pino({ name: "webhook.fawaterak.token" });
 
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as Record<string, unknown>;
-    const customerUniqueId =
-      typeof body.customerUniqueId === "string" ? body.customerUniqueId : "";
-    const customerCardToken =
-      typeof body.customerCardToken === "string" ? body.customerCardToken : "";
-    const customerCard =
-      typeof body.customerCard === "string" ? body.customerCard : "";
-    const cardTokenUniqueId =
-      typeof body.cardTokenUniqueId === "string" ? body.cardTokenUniqueId : "";
+    const payload = parseTokenizationWebhookBody(body);
 
-    if (!customerUniqueId || !customerCardToken) {
+    if (!payload) {
+      log.warn({ bodyKeys: Object.keys(body) }, "token webhook malformed");
       return NextResponse.json({ error: "Malformed webhook" }, { status: 400 });
     }
 
-    const receivedHash =
-      request.headers.get("x-fawaterak-hash") ??
-      (typeof body.hashKey === "string" ? body.hashKey : "");
-    if (!verifyTokenizationHash(customerUniqueId, customerCardToken, receivedHash)) {
-      return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
+    const headerHash = request.headers.get("x-fawaterak-hash");
+    if (headerHash && !payload.hashKey) {
+      payload.hashKey = headerHash;
     }
 
-    // Get billing info
-    const billing = await db.billingInfo.findFirst({
-      where: { user: { id: customerUniqueId } },
+    const result = await persistSavedCardFromTokenization(db, payload, {
+      requireValidHash: true,
     });
 
-    if (!billing) {
-      return NextResponse.json({ error: "Billing info not found" }, { status: 404 });
+    if (!result.ok) {
+      log.warn(
+        { reason: result.reason, customerUniqueId: payload.customerUniqueId },
+        "token webhook rejected",
+      );
+      if (result.reason === "invalid_signature") {
+        return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
+      }
+      if (result.reason === "billing_not_found") {
+        return NextResponse.json({ error: "Billing info not found" }, { status: 404 });
+      }
+      return NextResponse.json({ error: "Malformed webhook" }, { status: 400 });
     }
 
-    // Idempotency: check if token already exists
-    const fingerprint = fingerprintPaymentToken(customerCardToken);
-    const existing = await db.paymentMethod.findFirst({
-      where: { fingerprint },
-    });
-
-    if (existing) {
-      return NextResponse.json({ received: true });
-    }
-
-    // Extract last 4 digits from masked card
-    const lastFour = customerCard.slice(-4) || "****";
-    const cardBrand =
-      typeof body.cardBrand === "string" ? body.cardBrand : detectCardBrand(customerCard);
-
-    // Check if this is the first card (make it default)
-    const existingCount = await db.paymentMethod.count({
-      where: { billingInfoId: billing.id },
-    });
-
-    await db.paymentMethod.create({
-      data: {
-        billingInfoId: billing.id,
-        cardBrand,
-        lastFour,
-        expiryMonth: 0, // Fawaterak doesn't return expiry
-        expiryYear: 0,
-        isDefault: existingCount === 0,
-        fingerprint,
-        fawaterakToken: encryptPaymentToken(customerCardToken),
-        customerUniqueId,
-        cardTokenUniqueId: cardTokenUniqueId || customerCardToken,
+    log.info(
+      {
+        customerUniqueId: payload.customerUniqueId,
+        created: result.created,
+        paymentMethodId: result.paymentMethodId,
       },
-    });
+      "token webhook saved card",
+    );
 
-    return NextResponse.json({ received: true });
+    return NextResponse.json({ received: true, created: result.created });
   } catch (error) {
-    console.error("Fawaterak tokenization webhook error:", error);
+    log.error({ err: error }, "token webhook failed");
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 }

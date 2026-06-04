@@ -14,11 +14,28 @@ export const tokenization = {
   async createCardTokenScreen(
     data: CreateCardTokenRequest
   ): Promise<CreateCardTokenResponse> {
-    const response = await fawaterakClient.post<CreateCardTokenResponse>(
-      "/api/v2/createCardTokenScreen",
-      data
-    );
-    return response;
+    const response = await fawaterakClient.post<
+      CreateCardTokenResponse & {
+        redirect_url?: string;
+        data?: { redirectUrl?: string; redirect_url?: string };
+      }
+    >("/api/v2/createCardTokenScreen", data);
+
+    const redirectUrl =
+      response.redirectUrl ??
+      response.redirect_url ??
+      response.data?.redirectUrl ??
+      response.data?.redirect_url;
+
+    if (!redirectUrl) {
+      throw new FawaterakError(
+        "Fawaterak did not return a card token screen URL.",
+        500,
+        response,
+      );
+    }
+
+    return { status: "success", redirectUrl };
   },
 
   /**

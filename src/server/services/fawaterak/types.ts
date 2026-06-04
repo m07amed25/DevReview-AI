@@ -114,6 +114,8 @@ export interface CreateCardTokenRequest {
     fail_url: string;
     /** Receives customerCardToken after the customer saves their card. */
     webhook_url: string;
+    /** CamelCase alias — some Fawaterak environments accept this key instead. */
+    webhookUrl?: string;
   };
 }
 

@@ -14,6 +14,11 @@ import {
   toAmountString,
 } from "../../services/payment-workflow";
 import {
+  getPublicAppBaseUrl,
+  parseTokenizationWebhookBody,
+  persistSavedCardFromTokenization,
+} from "../../services/save-card-from-fawaterak";
+import {
   acquireIdempotencyLock,
   releaseIdempotencyLock,
 } from "../../services/payment-idempotency";
@@ -290,7 +295,8 @@ export const paymentRouter = createTRPCRouter({
       });
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+    const baseUrl = getPublicAppBaseUrl();
+    const tokenWebhookUrl = `${baseUrl}/api/webhooks/fawaterak_token_json`;
 
     const result = await tokenization.createCardTokenScreen({
       customerData: {
@@ -307,12 +313,62 @@ export const paymentRouter = createTRPCRouter({
       redirectionUrls: {
         success_url: `${baseUrl}/billing/cards/saved`,
         fail_url: `${baseUrl}/billing/cards/saved?error=failed`,
-        webhook_url: `${baseUrl}/api/webhooks/fawaterak_token_json`,
+        webhook_url: tokenWebhookUrl,
+        webhookUrl: tokenWebhookUrl,
       },
     });
 
     return { url: result.redirectUrl };
   }),
+
+  /** Fallback when Fawaterak returns token fields on the success redirect URL. */
+  confirmSavedCard: protectedProcedure
+    .input(
+      z.object({
+        customerCardToken: z.string().min(1),
+        customerCard: z.string().optional(),
+        hashKey: z.string().optional(),
+        cardBrand: z.string().optional(),
+        cardTokenUniqueId: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const billing = await ctx.db.billingInfo.findUnique({
+        where: { userId: ctx.user.id },
+      });
+      if (!billing) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "Please add billing information first.",
+        });
+      }
+
+      const payload = parseTokenizationWebhookBody({
+        customerUniqueId: ctx.user.id,
+        customerCardToken: input.customerCardToken,
+        customerCard: input.customerCard ?? "",
+        hashKey: input.hashKey ?? "",
+        cardBrand: input.cardBrand ?? "",
+        cardTokenUniqueId: input.cardTokenUniqueId ?? "",
+      });
+
+      if (!payload) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Invalid card data." });
+      }
+
+      const result = await persistSavedCardFromTokenization(ctx.db, payload, {
+        requireValidHash: Boolean(input.hashKey),
+      });
+
+      if (!result.ok) {
+        if (result.reason === "invalid_signature") {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Invalid card verification." });
+        }
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Could not save card." });
+      }
+
+      return { success: true, created: result.created };
+    }),
 
   payWithSavedCard: protectedProcedure
     .input(

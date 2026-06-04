@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { CheckCircle2, CreditCard, Loader2, AlertCircle } from "lucide-react";
@@ -16,13 +16,21 @@ export default function CardSavedPage() {
   const searchParams = useSearchParams();
   const failed = searchParams.get("error") === "failed";
   const [timedOut, setTimedOut] = useState(false);
+  const syncAttempted = useRef(false);
 
   const utils = trpc.useUtils();
+
+  const confirmSavedCard = trpc.payment.confirmSavedCard.useMutation({
+    onSuccess: () => {
+      void utils.payment.getSavedCards.invalidate();
+      void utils.billing.getInfo.invalidate();
+    },
+  });
 
   const { data: billing, isLoading } = trpc.billing.getInfo.useQuery(undefined, {
     enabled: !failed,
     refetchInterval: (query) => {
-      if (failed || timedOut) return false;
+      if (failed || timedOut || confirmSavedCard.isPending) return false;
       if ((query.state.data?.paymentMethods.length ?? 0) > 0) return false;
       return POLL_MS;
     },
@@ -30,20 +38,46 @@ export default function CardSavedPage() {
 
   const cardSaved = (billing?.paymentMethods.length ?? 0) > 0;
 
+  // Some Fawaterak flows append token fields to the success redirect URL.
+  useEffect(() => {
+    if (failed || syncAttempted.current) return;
+
+    const customerCardToken =
+      searchParams.get("customerCardToken") ??
+      searchParams.get("customer_card_token") ??
+      searchParams.get("customer_token");
+
+    if (!customerCardToken) return;
+
+    syncAttempted.current = true;
+    confirmSavedCard.mutate({
+      customerCardToken,
+      customerCard:
+        searchParams.get("customerCard") ??
+        searchParams.get("customer_card") ??
+        undefined,
+      hashKey: searchParams.get("hashKey") ?? searchParams.get("hash_key") ?? undefined,
+      cardBrand: searchParams.get("cardBrand") ?? searchParams.get("card_brand") ?? undefined,
+      cardTokenUniqueId:
+        searchParams.get("cardTokenUniqueId") ??
+        searchParams.get("card_token_unique_id") ??
+        undefined,
+    });
+  }, [failed, searchParams, confirmSavedCard]);
+
   useEffect(() => {
     if (failed || cardSaved) return;
     const timer = window.setTimeout(() => setTimedOut(true), MAX_WAIT_MS);
     return () => window.clearTimeout(timer);
   }, [failed, cardSaved]);
 
-  useEffect(() => {
-    if (cardSaved) {
-      void utils.payment.getSavedCards.invalidate();
-      void utils.billing.getInfo.invalidate();
-    }
-  }, [cardSaved, utils]);
+  const waiting =
+    !failed &&
+    !cardSaved &&
+    !timedOut &&
+    (isLoading || confirmSavedCard.isPending);
 
-  const waiting = !failed && !cardSaved && !timedOut;
+  const syncError = confirmSavedCard.error?.message;
 
   return (
     <div className="max-w-md mx-auto py-12 px-4">
@@ -62,9 +96,9 @@ export default function CardSavedPage() {
             >
               {failed ? (
                 <AlertCircle className="h-16 w-16 text-destructive" />
-              ) : waiting || isLoading ? (
+              ) : waiting ? (
                 <Loader2 className="h-16 w-16 text-primary animate-spin" />
-              ) : timedOut ? (
+              ) : timedOut && !cardSaved ? (
                 <AlertCircle className="h-16 w-16 text-amber-500" />
               ) : (
                 <CheckCircle2 className="h-16 w-16 text-emerald-500" />
@@ -75,18 +109,24 @@ export default function CardSavedPage() {
                 ? "Card Not Saved"
                 : waiting
                   ? "Saving Your Card..."
-                  : timedOut
-                    ? "Still Processing"
-                    : "Card Saved"}
+                  : cardSaved
+                    ? "Card Saved"
+                    : timedOut
+                      ? "Still Processing"
+                      : "Card Not Saved"}
             </CardTitle>
             <CardDescription>
               {failed
                 ? "Fawaterak could not save your card. Please try again."
                 : waiting
                   ? "Confirming with our payment provider. This usually takes a few seconds."
-                  : timedOut
-                    ? "Your card may still appear shortly. Check Billing or try adding the card again."
-                    : "Your payment method has been saved successfully"}
+                  : cardSaved
+                    ? "Your payment method has been saved successfully."
+                    : syncError
+                      ? syncError
+                      : timedOut
+                        ? "We did not receive confirmation from Fawaterak. Ensure the token webhook URL is reachable from the internet, then add the card again."
+                        : "We could not confirm your card was saved. Please try again from Billing."}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
