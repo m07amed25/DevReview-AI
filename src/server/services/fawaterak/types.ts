@@ -112,6 +112,8 @@ export interface CreateCardTokenRequest {
   redirectionUrls: {
     success_url: string;
     fail_url: string;
+    /** Receives customerCardToken after the customer saves their card. */
+    webhook_url: string;
   };
 }
 

@@ -307,6 +307,7 @@ export const paymentRouter = createTRPCRouter({
       redirectionUrls: {
         success_url: `${baseUrl}/billing/cards/saved`,
         fail_url: `${baseUrl}/billing/cards/saved?error=failed`,
+        webhook_url: `${baseUrl}/api/webhooks/fawaterak_token_json`,
       },
     });
 

@@ -67,12 +67,7 @@ export async function POST(request: NextRequest) {
     // Idempotency: check if token already exists
     const fingerprint = fingerprintPaymentToken(customerCardToken);
     const existing = await db.paymentMethod.findFirst({
-      where: {
-        OR: [
-          { fingerprint },
-          { fawaterakToken: customerCardToken },
-        ],
-      },
+      where: { fingerprint },
     });
 
     if (existing) {
