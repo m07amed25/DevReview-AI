@@ -1,47 +1,31 @@
-/**
- * Integration tests for the Fawaterak webhook handler.
- *
- * Strategy: mock all external dependencies (Prisma, Redis, Inngest, fawaterakAdapter)
- * and exercise the handler logic end-to-end at the HTTP level.
- */
-
 import { NextRequest } from "next/server";
-import crypto from "crypto";
-
-// ── Mock dependencies before importing handler ────────────────────────────────
-const mockDbInvoice = {
-  findUnique: jest.fn(),
-  update: jest.fn(),
-};
-const mockDbWebhookDedup = {
-  findUnique: jest.fn(),
-  create: jest.fn(),
-};
-const mockDbPaymentEvent = {
-  create: jest.fn(),
-};
-const mockTransaction = jest.fn();
 
 jest.mock("@/server/db", () => ({
   db: {
-    invoice: mockDbInvoice,
-    webhookDedup: mockDbWebhookDedup,
-    paymentEvent: mockDbPaymentEvent,
-    $transaction: mockTransaction,
+    invoice: {
+      findUnique: jest.fn(),
+      findFirst: jest.fn(),
+      update: jest.fn(),
+    },
+    webhookDedup: {
+      findUnique: jest.fn(),
+      create: jest.fn(),
+    },
+    paymentEvent: {
+      create: jest.fn(),
+    },
+    $transaction: jest.fn(),
   },
 }));
 
-const mockInngestSend = jest.fn();
 jest.mock("@/server/inngest", () => ({
-  inngest: { send: mockInngestSend },
+  inngest: { send: jest.fn() },
 }));
 
-const mockVerifySignature = jest.fn();
-const mockNormalizeStatus = jest.fn();
 jest.mock("@/server/services/gateways/fawaterak-adapter", () => ({
   fawaterakAdapter: {
-    verifyWebhookSignature: mockVerifySignature,
-    normalizeWebhookStatus: mockNormalizeStatus,
+    verifyWebhookSignature: jest.fn(),
+    normalizeWebhookStatus: jest.fn(),
   },
 }));
 
@@ -55,6 +39,10 @@ jest.mock("pino", () => () => ({
   warn: jest.fn(),
   error: jest.fn(),
 }));
+
+import { db } from "@/server/db";
+import { inngest } from "@/server/inngest";
+import { fawaterakAdapter } from "@/server/services/gateways/fawaterak-adapter";
 
 // ── Import handler after mocks are registered ─────────────────────────────────
 // eslint-disable-next-line import/first
@@ -71,8 +59,10 @@ function buildRequest(body: Record<string, unknown>): NextRequest {
 }
 
 const INVOICE_ID = "inv_test_001";
+const FAWATERAK_INVOICE_ID = 12345;
 const validPayload = {
-  invoice_id: INVOICE_ID,
+  invoice_id: FAWATERAK_INVOICE_ID,
+  invoice_key: "key_abc",
   invoice_status: "paid",
   amount: 99,
   payment_method: "credit_card",
@@ -97,51 +87,45 @@ describe("POST /api/webhooks/fawaterak_json", () => {
 
   // ── Signature validation ───────────────────────────────────────────────────
   it("returns 401 when signature is invalid", async () => {
-    mockVerifySignature.mockReturnValue(false);
+    (fawaterakAdapter.verifyWebhookSignature as jest.Mock).mockReturnValue({ valid: false, reason: "Invalid signature" });
 
     const req = buildRequest(validPayload);
     const res = await POST(req);
 
     expect(res.status).toBe(401);
-    expect(mockTransaction).not.toHaveBeenCalled();
+    expect(db.$transaction).not.toHaveBeenCalled();
   });
 
   // ── Duplicate detection ────────────────────────────────────────────────────
   it("returns 200 without processing when duplicate dedup record exists", async () => {
-    mockVerifySignature.mockReturnValue(true);
-    mockNormalizeStatus.mockReturnValue("paid");
+    (fawaterakAdapter.verifyWebhookSignature as jest.Mock).mockReturnValue({ valid: true });
+    (fawaterakAdapter.normalizeWebhookStatus as jest.Mock).mockReturnValue("paid");
 
-    // Simulate dedup record already exists
-    mockTransaction.mockImplementation(async (fn: (tx: unknown) => Promise<unknown>) => {
-      const tx = {
-        webhookDedup: { findUnique: jest.fn().mockResolvedValue({ id: "dup" }), create: jest.fn() },
-        invoice: { findUnique: jest.fn().mockResolvedValue(mockInvoice), update: jest.fn() },
-        paymentEvent: { create: jest.fn() },
-      };
-      return fn(tx);
-    });
+    (db.webhookDedup.findUnique as jest.Mock).mockResolvedValue({ id: "dup" });
 
     const req = buildRequest(validPayload);
     const res = await POST(req);
 
     expect(res.status).toBe(200);
     const body = await res.json();
-    expect(body.skipped).toBe(true);
+    expect(body.received).toBe(true);
+    expect(db.$transaction).not.toHaveBeenCalled();
   });
 
   // ── Successful payment flow ────────────────────────────────────────────────
   it("processes a valid paid webhook and returns 200", async () => {
-    mockVerifySignature.mockReturnValue(true);
-    mockNormalizeStatus.mockReturnValue("paid");
+    (fawaterakAdapter.verifyWebhookSignature as jest.Mock).mockReturnValue({ valid: true });
+    (fawaterakAdapter.normalizeWebhookStatus as jest.Mock).mockReturnValue("paid");
 
-    mockTransaction.mockImplementation(async (fn: (tx: unknown) => Promise<unknown>) => {
+    (db.webhookDedup.findUnique as jest.Mock).mockResolvedValue(null);
+    (db.invoice.findFirst as jest.Mock).mockResolvedValue(mockInvoice);
+
+    (db.$transaction as jest.Mock).mockImplementation(async (fn: (tx: unknown) => Promise<unknown>) => {
       const tx = {
         webhookDedup: {
-          findUnique: jest.fn().mockResolvedValue(null),
           create: jest.fn().mockResolvedValue({}),
         },
         invoice: {
-          findUnique: jest.fn().mockResolvedValue(mockInvoice),
           update: jest.fn().mockResolvedValue({ ...mockInvoice, version: 2 }),
         },
         paymentEvent: {
@@ -154,54 +138,47 @@ describe("POST /api/webhooks/fawaterak_json", () => {
     const { activatePaidInvoice } = await import("@/server/services/payment-workflow");
     (activatePaidInvoice as jest.Mock).mockResolvedValue(undefined);
 
-    mockInngestSend.mockResolvedValue(undefined);
+    (inngest.send as jest.Mock).mockResolvedValue(undefined);
 
     const req = buildRequest(validPayload);
     const res = await POST(req);
 
     expect(res.status).toBe(200);
     const body = await res.json();
-    expect(body.ok).toBe(true);
+    expect(body.received).toBe(true);
   });
 
   // ── Invoice not found ──────────────────────────────────────────────────────
   it("returns 200 (soft reject) when invoice is not found", async () => {
-    mockVerifySignature.mockReturnValue(true);
-    mockNormalizeStatus.mockReturnValue("paid");
+    (fawaterakAdapter.verifyWebhookSignature as jest.Mock).mockReturnValue({ valid: true });
+    (fawaterakAdapter.normalizeWebhookStatus as jest.Mock).mockReturnValue("paid");
 
-    mockTransaction.mockImplementation(async (fn: (tx: unknown) => Promise<unknown>) => {
-      const tx = {
-        webhookDedup: {
-          findUnique: jest.fn().mockResolvedValue(null),
-          create: jest.fn().mockResolvedValue({}),
-        },
-        invoice: {
-          findUnique: jest.fn().mockResolvedValue(null),
-          update: jest.fn(),
-        },
-        paymentEvent: { create: jest.fn() },
-      };
-      return fn(tx);
-    });
+    (db.webhookDedup.findUnique as jest.Mock).mockResolvedValue(null);
+    (db.invoice.findFirst as jest.Mock).mockResolvedValue(null);
 
     const req = buildRequest(validPayload);
     const res = await POST(req);
 
     expect(res.status).toBe(200);
     const body = await res.json();
-    expect(body.skipped).toBe(true);
+    expect(body.received).toBe(true);
+    expect(db.$transaction).not.toHaveBeenCalled();
   });
 
   // ── Unknown status ─────────────────────────────────────────────────────────
   it("returns 200 (soft reject) for unknown normalised status", async () => {
-    mockVerifySignature.mockReturnValue(true);
-    mockNormalizeStatus.mockReturnValue("unknown");
+    (fawaterakAdapter.verifyWebhookSignature as jest.Mock).mockReturnValue({ valid: true });
+    (fawaterakAdapter.normalizeWebhookStatus as jest.Mock).mockReturnValue("unknown");
+
+    (db.webhookDedup.findUnique as jest.Mock).mockResolvedValue(null);
+    (db.invoice.findFirst as jest.Mock).mockResolvedValue(mockInvoice);
 
     const req = buildRequest({ ...validPayload, invoice_status: "unknown" });
     const res = await POST(req);
 
     expect(res.status).toBe(200);
     const body = await res.json();
-    expect(body.skipped).toBe(true);
+    expect(body.received).toBe(true);
+    expect(db.$transaction).not.toHaveBeenCalled();
   });
 });

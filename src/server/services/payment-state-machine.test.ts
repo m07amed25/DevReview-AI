@@ -6,9 +6,6 @@ import {
 } from "./payment-state-machine";
 import type { InvoiceStatus, PaymentEventType } from "./payment-state-machine";
 
-// ──────────────────────────────────────────────────────────────────────────────
-// isValidTransition
-// ──────────────────────────────────────────────────────────────────────────────
 describe("isValidTransition", () => {
   const validCases: [InvoiceStatus, PaymentEventType][] = [
     ["INITIATED", "PAYMENT_INITIATED"],
@@ -92,9 +89,6 @@ describe("getNextStatus", () => {
   });
 });
 
-// ──────────────────────────────────────────────────────────────────────────────
-// rebuildPaymentState
-// ──────────────────────────────────────────────────────────────────────────────
 describe("rebuildPaymentState", () => {
   it("starts from INITIATED with no events", () => {
     expect(rebuildPaymentState([])).toBe("INITIATED");
