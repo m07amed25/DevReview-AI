@@ -15,7 +15,7 @@ export const tokenization = {
     data: CreateCardTokenRequest
   ): Promise<CreateCardTokenResponse["data"]> {
     const response = await fawaterakClient.post<CreateCardTokenResponse>(
-      "/api/v2/cardtoken/screen",
+      "/api/v2/createCardTokenScreen",
       data
     );
     return response.data;
@@ -28,7 +28,7 @@ export const tokenization = {
     data: PayWithTokenRequest
   ): Promise<PayWithTokenResponse["data"]> {
     const response = await fawaterakClient.post<PayWithTokenResponse>(
-      "/api/v2/cardtoken/pay",
+      "/api/v2/createTokenizationPayRequest",
       data
     );
     return response.data;
@@ -42,7 +42,7 @@ export const tokenization = {
     cardTokenUniqueId: string
   ): Promise<boolean> {
     try {
-      await fawaterakClient.post("/api/v2/cardtoken/delete", {
+      await fawaterakClient.post("/api/v2/deleteCustomerToken", {
         customer_unique_id: customerUniqueId,
         card_token_unique_id: cardTokenUniqueId,
       });
