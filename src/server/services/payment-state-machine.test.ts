@@ -11,21 +11,33 @@ import type { InvoiceStatus, PaymentEventType } from "./payment-state-machine";
 // ──────────────────────────────────────────────────────────────────────────────
 describe("isValidTransition", () => {
   const validCases: [InvoiceStatus, PaymentEventType][] = [
-    ["PENDING", "PAYMENT_INITIATED"],
-    ["INITIATED", "PAYMENT_AUTHORIZED"],
-    ["INITIATED", "PAYMENT_SUCCEEDED"],
-    ["INITIATED", "PAYMENT_FAILED"],
-    ["INITIATED", "PAYMENT_PROCESSING"],
+    ["INITIATED", "PAYMENT_INITIATED"],
+    ["INITIATED", "CREDIT_APPLIED"],
+    ["INITIATED", "PAYMENT_CANCELLED"],
+    ["PENDING", "PAYMENT_PROCESSING"],
+    ["PENDING", "PAYMENT_SUCCEEDED"],
+    ["PENDING", "PAYMENT_FAILED"],
+    ["PENDING", "PAYMENT_CANCELLED"],
+    ["PROCESSING", "PAYMENT_AUTHORIZED"],
     ["PROCESSING", "PAYMENT_SUCCEEDED"],
     ["PROCESSING", "PAYMENT_FAILED"],
+    ["PROCESSING", "PAYMENT_CANCELLED"],
+    ["AUTHORIZED", "PAYMENT_CAPTURED"],
     ["AUTHORIZED", "PAYMENT_SUCCEEDED"],
     ["AUTHORIZED", "PAYMENT_FAILED"],
-    ["PAID", "PAYMENT_REFUNDED"],
-    ["PAID", "PAYMENT_PARTIALLY_REFUNDED"],
-    ["PAID", "PAYMENT_DISPUTED"],
-    ["DISPUTED", "PAYMENT_REFUNDED"],
+    ["AUTHORIZED", "PAYMENT_CANCELLED"],
+    ["PAID", "REFUND_REQUESTED"],
+    ["PAID", "REFUND_SUCCEEDED"],
+    ["PAID", "REFUND_FAILED"],
+    ["PAID", "DISPUTE_OPENED"],
+    ["REFUNDED", "DISPUTE_OPENED"],
+    ["PARTIALLY_REFUNDED", "REFUND_REQUESTED"],
+    ["PARTIALLY_REFUNDED", "REFUND_SUCCEEDED"],
+    ["PARTIALLY_REFUNDED", "REFUND_FAILED"],
+    ["PARTIALLY_REFUNDED", "DISPUTE_OPENED"],
+    ["DISPUTED", "DISPUTE_RESOLVED"],
+    ["DISPUTED", "REFUND_SUCCEEDED"],
     ["FAILED", "PAYMENT_INITIATED"],
-    ["CANCELLED", "PAYMENT_INITIATED"],
   ];
 
   test.each(validCases)(
@@ -39,8 +51,8 @@ describe("isValidTransition", () => {
     ["PAID", "PAYMENT_INITIATED"],
     ["PAID", "PAYMENT_SUCCEEDED"],
     ["PAID", "PAYMENT_FAILED"],
-    ["PENDING", "PAYMENT_SUCCEEDED"],
-    ["PARTIALLY_REFUNDED", "PAYMENT_SUCCEEDED"],
+    ["PENDING", "PAYMENT_INITIATED"],
+    ["CANCELLED", "PAYMENT_INITIATED"],
   ];
 
   test.each(invalidCases)(
@@ -55,24 +67,24 @@ describe("isValidTransition", () => {
 // getNextStatus
 // ──────────────────────────────────────────────────────────────────────────────
 describe("getNextStatus", () => {
-  it("transitions PENDING → INITIATED via PAYMENT_INITIATED", () => {
-    expect(getNextStatus("PENDING", "PAYMENT_INITIATED")).toBe("INITIATED");
+  it("transitions INITIATED → PENDING via PAYMENT_INITIATED", () => {
+    expect(getNextStatus("INITIATED", "PAYMENT_INITIATED")).toBe("PENDING");
   });
 
-  it("transitions PAID → PARTIALLY_REFUNDED via PAYMENT_PARTIALLY_REFUNDED", () => {
-    expect(getNextStatus("PAID", "PAYMENT_PARTIALLY_REFUNDED")).toBe("PARTIALLY_REFUNDED");
+  it("transitions PAID → REFUNDED via REFUND_SUCCEEDED", () => {
+    expect(getNextStatus("PAID", "REFUND_SUCCEEDED")).toBe("REFUNDED");
   });
 
-  it("transitions PAID → DISPUTED via PAYMENT_DISPUTED", () => {
-    expect(getNextStatus("PAID", "PAYMENT_DISPUTED")).toBe("DISPUTED");
+  it("transitions PAID → DISPUTED via DISPUTE_OPENED", () => {
+    expect(getNextStatus("PAID", "DISPUTE_OPENED")).toBe("DISPUTED");
   });
 
-  it("transitions DISPUTED → REFUNDED via PAYMENT_REFUNDED", () => {
-    expect(getNextStatus("DISPUTED", "PAYMENT_REFUNDED")).toBe("REFUNDED");
+  it("transitions DISPUTED → REFUNDED via REFUND_SUCCEEDED", () => {
+    expect(getNextStatus("DISPUTED", "REFUND_SUCCEEDED")).toBe("REFUNDED");
   });
 
-  it("allows retry: FAILED → INITIATED via PAYMENT_INITIATED", () => {
-    expect(getNextStatus("FAILED", "PAYMENT_INITIATED")).toBe("INITIATED");
+  it("allows retry: FAILED → PENDING via PAYMENT_INITIATED", () => {
+    expect(getNextStatus("FAILED", "PAYMENT_INITIATED")).toBe("PENDING");
   });
 
   it("throws InvalidTransitionError for invalid transition", () => {
@@ -84,8 +96,8 @@ describe("getNextStatus", () => {
 // rebuildPaymentState
 // ──────────────────────────────────────────────────────────────────────────────
 describe("rebuildPaymentState", () => {
-  it("starts from PENDING with no events", () => {
-    expect(rebuildPaymentState([])).toBe("PENDING");
+  it("starts from INITIATED with no events", () => {
+    expect(rebuildPaymentState([])).toBe("INITIATED");
   });
 
   it("replays a happy-path flow", () => {
@@ -100,7 +112,7 @@ describe("rebuildPaymentState", () => {
     const result = rebuildPaymentState([
       { eventType: "PAYMENT_INITIATED", createdAt: new Date() },
       { eventType: "PAYMENT_SUCCEEDED", createdAt: new Date() },
-      { eventType: "PAYMENT_REFUNDED", createdAt: new Date() },
+      { eventType: "REFUND_SUCCEEDED", createdAt: new Date() },
     ]);
     expect(result).toBe("REFUNDED");
   });
@@ -129,7 +141,7 @@ describe("rebuildPaymentState", () => {
     const result = rebuildPaymentState([
       { eventType: "PAYMENT_INITIATED", createdAt: new Date() },
       { eventType: "PAYMENT_SUCCEEDED", createdAt: new Date() },
-      { eventType: "PAYMENT_DISPUTED", createdAt: new Date() },
+      { eventType: "DISPUTE_OPENED", createdAt: new Date() },
     ]);
     expect(result).toBe("DISPUTED");
   });

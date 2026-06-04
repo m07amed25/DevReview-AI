@@ -18,21 +18,28 @@ import { Redis } from "@upstash/redis";
 // Singleton client
 // ─────────────────────────────────────────────────────────────────────────────
 
-function createRedisClient(): Redis {
+let _client: Redis | null = null;
+let _hasWarned = false;
+
+// In-memory fallback lock store: key -> expiration timestamp (ms)
+const _inMemoryLocks = new Map<string, number>();
+
+function getRedisClient(): Redis | null {
   const url = process.env.UPSTASH_REDIS_REST_URL;
   const token = process.env.UPSTASH_REDIS_REST_TOKEN;
   if (!url || !token) {
-    throw new Error(
-      "UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN must be set",
-    );
+    if (!_hasWarned) {
+      console.warn(
+        "[payment-idempotency] UPSTASH_REDIS_REST_URL and/or UPSTASH_REDIS_REST_TOKEN are not set. " +
+          "Falling back to in-memory idempotency locks for checkout flow."
+      );
+      _hasWarned = true;
+    }
+    return null;
   }
-  return new Redis({ url, token });
-}
-
-let _client: Redis | null = null;
-
-function getRedisClient(): Redis {
-  if (!_client) _client = createRedisClient();
+  if (!_client) {
+    _client = new Redis({ url, token });
+  }
   return _client;
 }
 
@@ -57,6 +64,23 @@ export async function acquireIdempotencyLock(
 ): Promise<boolean> {
   const redis = getRedisClient();
   const key = `idempotency:${userId}:${idempotencyKey}`;
+
+  if (!redis) {
+    const now = Date.now();
+    // Clean up expired keys to avoid memory leaks
+    for (const [k, exp] of _inMemoryLocks.entries()) {
+      if (now >= exp) {
+        _inMemoryLocks.delete(k);
+      }
+    }
+    const expiresAt = _inMemoryLocks.get(key);
+    if (expiresAt && now < expiresAt) {
+      return false;
+    }
+    _inMemoryLocks.set(key, now + IDEMPOTENCY_LOCK_TTL_SECONDS * 1000);
+    return true;
+  }
+
   // SET NX EX — returns "OK" if set, null if already exists
   const result = await redis.set(key, "1", {
     nx: true,
@@ -75,5 +99,11 @@ export async function releaseIdempotencyLock(
 ): Promise<void> {
   const redis = getRedisClient();
   const key = `idempotency:${userId}:${idempotencyKey}`;
+
+  if (!redis) {
+    _inMemoryLocks.delete(key);
+    return;
+  }
+
   await redis.del(key);
 }
