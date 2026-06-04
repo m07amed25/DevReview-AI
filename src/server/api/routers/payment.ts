@@ -2,7 +2,7 @@ import { z } from "zod";
 import crypto from "crypto";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { payments, tokenization } from "../../services/fawaterak";
+import { payments, tokenization, FawaterakError } from "../../services/fawaterak";
 import { decryptPaymentToken } from "../../services/payment-tokens";
 import {
   activateInvoiceWithAccountCredit,
@@ -302,7 +302,7 @@ export const paymentRouter = createTRPCRouter({
         customer_phone: "01000000000", // Required by Fawaterak API, default placeholder
       },
       order: {
-        currency: "EGP",
+        currency: checkoutCurrency,
       },
       redirectionUrls: {
         success_url: `${baseUrl}/billing/cards/saved`,
@@ -326,7 +326,12 @@ export const paymentRouter = createTRPCRouter({
         where: { userId: ctx.user.id },
         include: { paymentMethods: true },
       });
-      if (!billing) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!billing) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "Please add billing information first.",
+        });
+      }
 
       const card = billing.paymentMethods.find((c) => c.id === input.cardId);
       if (!card || !card.fawaterakToken) {
@@ -336,12 +341,31 @@ export const paymentRouter = createTRPCRouter({
       const plan = await ctx.db.pricingPlan.findUnique({ where: { id: input.planId } });
       if (!plan) throw new TRPCError({ code: "NOT_FOUND", message: "Plan not found" });
 
-      const { finalAmount } = await calculateCheckoutAmount(
+      const { finalAmount, creditUsed } = await calculateCheckoutAmount(
         ctx.db,
         ctx.user.id,
         plan,
         input.billingCycle,
       );
+
+      if (finalAmount === 0 && creditUsed > 0) {
+        const invoiceId = await activateInvoiceWithAccountCredit(ctx.db, {
+          userId: ctx.user.id,
+          planId: input.planId,
+          billingCycle: input.billingCycle,
+          planName: plan.name,
+          creditUsed,
+        });
+        return { invoiceId, transactionId: null, paidWithCredit: true as const };
+      }
+
+      if (finalAmount === 0) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "No card payment is required for this plan.",
+        });
+      }
+
       const amountMajor = toAmountString(finalAmount);
 
       const invoice = await ctx.db.invoice.create({
@@ -357,40 +381,52 @@ export const paymentRouter = createTRPCRouter({
 
       const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
-      const result = await tokenization.payWithToken({
-        cartTotal: amountMajor,
-        currency: checkoutCurrency,
-        customer: {
-          first_name: billing.fullName.split(" ")[0] ?? billing.fullName,
-          last_name: billing.fullName.split(" ").slice(1).join(" ") || "User",
-          email: billing.email,
-          customer_unique_id: ctx.user.id,
-        },
-        cartItems: [{ name: plan.name, price: amountMajor, quantity: "1" }],
-        redirectionUrls: {
-          webhookUrl: `${baseUrl}/api/webhooks/fawaterak_json`,
-        },
-        card_token: decryptPaymentToken(card.fawaterakToken),
-        invoice_number: invoice.id,
-      });
+      try {
+        const result = await tokenization.payWithToken({
+          cartTotal: amountMajor,
+          currency: checkoutCurrency,
+          customer: {
+            first_name: billing.fullName.split(" ")[0] ?? billing.fullName,
+            last_name: billing.fullName.split(" ").slice(1).join(" ") || "User",
+            email: billing.email,
+            customer_unique_id: ctx.user.id,
+          },
+          cartItems: [{ name: plan.name, price: amountMajor, quantity: "1" }],
+          redirectionUrls: {
+            webhookUrl: `${baseUrl}/api/webhooks/fawaterak_json`,
+          },
+          card_token: decryptPaymentToken(card.fawaterakToken),
+          invoice_number: invoice.id,
+        });
 
-      const paidInvoice = await ctx.db.invoice.update({
-        where: { id: invoice.id },
-        data: {
-          fawaterakInvoiceId: result.invoice_id,
-          fawaterakInvoiceKey: result.invoice_key,
+        const paidInvoice = await ctx.db.invoice.update({
+          where: { id: invoice.id },
+          data: {
+            fawaterakInvoiceId: result.invoice_id,
+            fawaterakInvoiceKey: result.invoice_key,
+            paymentMethodUsed: card.cardBrand,
+            status: "PAID",
+            paidAt: new Date(),
+          },
+        });
+
+        await activatePaidInvoice(ctx.db, paidInvoice, {
           paymentMethodUsed: card.cardBrand,
-          status: "PAID",
-          paidAt: new Date(),
-        },
-      });
+          paidAt: paidInvoice.paidAt ?? new Date(),
+          creditUsed,
+        });
 
-      await activatePaidInvoice(ctx.db, paidInvoice, {
-        paymentMethodUsed: card.cardBrand,
-        paidAt: paidInvoice.paidAt ?? new Date(),
-      });
+        return { invoiceId: invoice.id, transactionId: result.transaction_id };
+      } catch (error) {
+        await ctx.db.invoice
+          .update({ where: { id: invoice.id }, data: { status: "FAILED" } })
+          .catch(() => undefined);
 
-      return { invoiceId: invoice.id, transactionId: result.transaction_id };
+        if (error instanceof FawaterakError) {
+          throw new TRPCError({ code: "BAD_REQUEST", message: error.message });
+        }
+        throw error;
+      }
     }),
 
   removeSavedCard: protectedProcedure

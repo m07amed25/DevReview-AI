@@ -74,6 +74,8 @@ type ActivateInvoiceOptions = {
   paidAt?: Date;
   paymentMethodUsed?: string | null;
   referenceNumber?: string | null;
+  /** Profile account credit applied at checkout (deducted once on activation). */
+  creditUsed?: number;
 };
 
 export const checkoutCurrency = "USD";
@@ -192,6 +194,7 @@ export async function activateInvoiceWithAccountCredit(
   await activatePaidInvoice(db, invoice, {
     paymentMethodUsed: ACCOUNT_CREDIT_PAYMENT_METHOD,
     paidAt: new Date(),
+    creditUsed: params.creditUsed,
   });
 
   return invoice.id;
@@ -225,12 +228,7 @@ export async function activatePaidInvoice(
       },
     });
 
-    // Deduct any account credit that was applied to this payment
-    const user = await tx.user.findUnique({
-      where: { id: invoice.userId },
-      select: { accountCredit: true },
-    });
-    const creditToDeduct = Math.min(user?.accountCredit ?? 0, invoice.amount ?? 0);
+    const creditToDeduct = Math.max(0, options.creditUsed ?? 0);
 
     await tx.user.update({
       where: { id: invoice.userId },

@@ -79,6 +79,12 @@ export default function PayPage() {
     }
   }, [plans, initialPlan, planId]);
 
+  useEffect(() => {
+    if (!savedCards?.length || savedCardId || selectedMethod) return;
+    const defaultCard = savedCards.find((c) => c.isDefault) ?? savedCards[0];
+    if (defaultCard) setSavedCardId(defaultCard.id);
+  }, [savedCards, savedCardId, selectedMethod]);
+
   const selectedPlan = plans?.find((p) => p.id === planId);
 
   const getDisplayPrice = () => {
@@ -109,6 +115,11 @@ export default function PayPage() {
 
   const payWithSavedCard = trpc.payment.payWithSavedCard.useMutation({
     onSuccess: (data) => {
+      if ("paidWithCredit" in data && data.paidWithCredit) {
+        toast.success("Plan activated using your account credit!");
+        router.push("/billing");
+        return;
+      }
       router.push(`/billing/success?invoice=${data.invoiceId}`);
     },
     onError: (e) => toast.error(e.message),

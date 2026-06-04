@@ -173,7 +173,7 @@ async function chargeAndActivatePending(
   const plan = await db.pricingPlan.findUnique({ where: { id: planId } });
   if (!plan) return false;
 
-  const { finalAmount } = await calculateCheckoutAmount(db, userId, plan, billingCycle);
+  const { finalAmount, creditUsed } = await calculateCheckoutAmount(db, userId, plan, billingCycle);
   const invoice = await db.invoice.create({
     data: {
       userId,
@@ -188,7 +188,7 @@ async function chargeAndActivatePending(
   });
 
   if (finalAmount === 0) {
-    await activatePaidInvoice(db, invoice, { paidAt: new Date() });
+    await activatePaidInvoice(db, invoice, { paidAt: new Date(), creditUsed });
     await db.user.update({ where: { id: userId }, data: { pendingPlanId: null, pendingBillingCycle: null } });
     return true;
   }
@@ -228,7 +228,11 @@ async function chargeAndActivatePending(
       },
     });
 
-    await activatePaidInvoice(db, paid, { paymentMethodUsed: card.cardBrand, paidAt: paid.paidAt ?? new Date() });
+    await activatePaidInvoice(db, paid, {
+      paymentMethodUsed: card.cardBrand,
+      paidAt: paid.paidAt ?? new Date(),
+      creditUsed,
+    });
     await db.user.update({ where: { id: userId }, data: { pendingPlanId: null, pendingBillingCycle: null } });
     return true;
   } catch (error) {
