@@ -83,15 +83,18 @@ export interface CreateInvoiceLinkResponse {
 export interface TransactionDataResponse {
   status: "success";
   data: {
-    invoice_id: number;
+    id: number;
     invoice_key: string;
-    invoice_amount: string;
-    invoice_description: string;
-    invoice_status: "paid" | "pending" | "failed" | "expired" | "refund";
+    /** Amount in original checkout currency (e.g. "79.00") */
+    total_paid: string;
+    /** Total in EGP after conversion */
+    total: number;
+    currency: string;
+    status_text: "paid" | "pending" | "failed" | "expired" | "refund";
     payment_method: string;
-    customer: FawaterakCustomer;
+    customer_data: string;
     created_at: string;
-    paid_at?: string;
+    paid_at?: string | null;
   };
 }
 

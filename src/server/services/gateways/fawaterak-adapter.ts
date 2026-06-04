@@ -159,11 +159,11 @@ export const fawaterakAdapter: PaymentGatewayAdapter = {
   async getTransactionStatus(gatewayInvoiceId: string): Promise<GatewayTransactionStatus> {
     const data = await payments.getTransactionData(Number(gatewayInvoiceId));
     return {
-      gatewayInvoiceId: String(data.invoice_id),
+      gatewayInvoiceId: String(data.id),
       gatewayInvoiceKey: data.invoice_key,
-      amountCents: Math.round(Number(data.invoice_amount) * 100),
+      amountCents: Math.round(Number(data.total_paid) * 100),
       currency: "USD",
-      status: mapStatus(data.invoice_status),
+      status: mapStatus(data.status_text),
       paymentMethod: data.payment_method,
       paidAt: data.paid_at ? new Date(data.paid_at) : null,
       referenceNumber: null,

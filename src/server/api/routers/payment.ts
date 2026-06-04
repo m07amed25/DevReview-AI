@@ -261,8 +261,8 @@ export const paymentRouter = createTRPCRouter({
       const transaction = await payments.getTransactionData(invoice.fawaterakInvoiceId);
       if (
         transaction.invoice_key !== invoice.fawaterakInvoiceKey ||
-        transaction.invoice_status !== "paid" ||
-        !invoiceAmountMatches(invoice.amount, transaction.invoice_amount)
+        transaction.status_text !== "paid" ||
+        !invoiceAmountMatches(invoice.amount, transaction.total_paid)
       ) {
         // Re-check DB in case webhook arrived while we were calling Fawaterak
         const freshInvoice = await ctx.db.invoice.findFirst({
