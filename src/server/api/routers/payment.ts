@@ -311,16 +311,24 @@ export const paymentRouter = createTRPCRouter({
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
     const result = await tokenization.createCardTokenScreen({
-      customer_unique_id: ctx.user.id,
-      customer: {
-        first_name: billing.fullName.split(" ")[0] ?? billing.fullName,
-        last_name: billing.fullName.split(" ").slice(1).join(" ") || "User",
-        email: billing.email,
+      customerData: {
+        customer_unique_id: ctx.user.id,
+        customer_first_name: billing.fullName.split(" ")[0] ?? billing.fullName,
+        customer_last_name: billing.fullName.split(" ").slice(1).join(" ") || "User",
+        customer_email: billing.email,
+        // TODO: Phone Number
+        customer_phone: "01000000000", // Required by Fawaterak API, default placeholder
       },
-      redirect_url: `${baseUrl}/billing/cards/saved`,
+      order: {
+        currency: "EGP",
+      },
+      redirectionUrls: {
+        success_url: `${baseUrl}/billing/cards/saved`,
+        fail_url: `${baseUrl}/billing/cards/saved?error=failed`,
+      },
     });
 
-    return { url: result.card_token_screen_url };
+    return { url: result.redirectUrl };
   }),
 
   payWithSavedCard: protectedProcedure

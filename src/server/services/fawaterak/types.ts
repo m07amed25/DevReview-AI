@@ -96,17 +96,25 @@ export interface TransactionDataResponse {
 }
 
 export interface CreateCardTokenRequest {
-  customer_unique_id: string;
-  customer: FawaterakCustomer;
-  redirect_url: string;
+  customerData: {
+    customer_unique_id: string;
+    customer_first_name: string;
+    customer_last_name: string;
+    customer_email: string;
+    customer_phone: string;
+  };
+  order: {
+    currency: string;
+  };
+  redirectionUrls: {
+    success_url: string;
+    fail_url: string;
+  };
 }
 
 export interface CreateCardTokenResponse {
   status: "success";
-  data: {
-    card_token_screen_url: string;
-    card_token_unique_id: string;
-  };
+  redirectUrl: string;
 }
 
 export interface PayWithTokenRequest {

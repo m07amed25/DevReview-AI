@@ -13,12 +13,12 @@ export const tokenization = {
    */
   async createCardTokenScreen(
     data: CreateCardTokenRequest
-  ): Promise<CreateCardTokenResponse["data"]> {
+  ): Promise<CreateCardTokenResponse> {
     const response = await fawaterakClient.post<CreateCardTokenResponse>(
       "/api/v2/createCardTokenScreen",
       data
     );
-    return response.data;
+    return response;
   },
 
   /**
