@@ -17,8 +17,12 @@ function collectFiles(dir: string): string[] {
   return out;
 }
 
-const SERVER_DIR = path.join(__dirname, "..", "server");
-const source = collectFiles(SERVER_DIR)
+const SOURCE_DIRS = [
+  path.join(__dirname, "..", "server"),
+  path.join(__dirname, "..", "features"),
+];
+
+const source = SOURCE_DIRS.flatMap(collectFiles)
   .map((f) => fs.readFileSync(f, "utf8"))
   .join("\n");
 

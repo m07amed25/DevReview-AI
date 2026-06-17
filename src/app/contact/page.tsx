@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { UnifiedNavbar } from "@/components/unified-navbar";
-import { HomeFooter } from "@/features/home/components/HomeFooter";
-import { ContactForm } from "./contact-form";
+import { ContactForm } from "@/features/contact";
+import { HomeFooter } from "@/features/home";
 
 export const metadata: Metadata = {
   title: "Contact - Code Catch",

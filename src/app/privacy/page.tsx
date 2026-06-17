@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
-import { UnifiedNavbar } from "@/components/unified-navbar";
-import { HomeFooter } from "@/features/home/components/HomeFooter";
-import { db } from "@/server/db";
-import { LegalMarkdown } from "@/components/legal-markdown";
+import { PrivacyPolicyPage } from "@/features/legal";
 
 export const metadata: Metadata = {
   title: "Privacy Policy - Code Catch",
@@ -12,28 +9,6 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default async function PrivacyPage() {
-  const page = await db.legalPage.findUnique({ where: { slug: "privacy" } });
-
-  return (
-    <div className="min-h-screen bg-background text-foreground">
-      <UnifiedNavbar />
-      <main className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 pt-32 pb-24">
-        <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4">
-          Privacy Policy
-        </h1>
-        {page?.updatedAt && (
-          <p className="text-muted-foreground mb-12">
-            Last updated: {page.updatedAt.toLocaleDateString()}
-          </p>
-        )}
-        {page?.content ? (
-          <LegalMarkdown content={page.content} />
-        ) : (
-          <p className="text-muted-foreground">Privacy Policy content is being prepared.</p>
-        )}
-      </main>
-      <HomeFooter />
-    </div>
-  );
+export default function Page() {
+  return <PrivacyPolicyPage />;
 }

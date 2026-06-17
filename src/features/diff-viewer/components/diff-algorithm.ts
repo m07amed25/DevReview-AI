@@ -9,10 +9,6 @@ export interface DiffFile {
   previousFilename?: string;
 }
 
-export interface DiffViewerProps {
-  files: DiffFile[];
-}
-
 export type ViewMode = "unified" | "split";
 export type FileStatusFilter =
   | "all"

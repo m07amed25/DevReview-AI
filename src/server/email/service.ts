@@ -6,7 +6,7 @@ import { renderSupportReplyEmail } from "./templates/support-reply";
 import { renderAdminPromotedEmail } from "./templates/admin-promoted";
 import { renderAdminDemotedEmail } from "./templates/admin-demoted";
 import { renderSecurityAlertEmail } from "./templates/security-alert";
-import { renderPasswordResetEmail } from "./templates/password-reset";
+import { renderPasswordResetEmail } from "@/features/auth";
 import { renderPlanChangedEmail } from "./templates/plan-changed";
 import { renderRefundEmail } from "./templates/refund";
 import type { RefundEmailParams } from "./templates/refund";

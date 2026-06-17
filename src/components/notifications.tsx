@@ -1,61 +1,16 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Bell, Loader2 } from "lucide-react";
 import { trpc } from "@/lib/trpc/client";
 import { cn } from "@/lib/utils";
-import { toast } from "sonner";
-import { useRealtimeNotifications } from "@/hooks/use-realtime-notifications";
+import {
+  TeamInviteActions,
+  formatTime,
+  useRealtimeNotifications,
+} from "@/features/notifications";
 import { authClient } from "@/lib/auth-client";
-
-function extractInviteToken(link: string): string | null {
-  try { return new URL(link, "http://localhost").searchParams.get("token"); }
-  catch { return null; }
-}
-
-function TeamInviteActions({ link, onDone }: { link: string; notificationId: string; onDone: () => void }) {
-  const token = extractInviteToken(link);
-  const utils = trpc.useUtils();
-  const router = useRouter();
-  const invalidate = () => { utils.notification.unreadCount.invalidate(); utils.notification.list.invalidate(); };
-
-  const accept = trpc.team.acceptTeamInvite.useMutation({
-    onSuccess: () => { toast.success("Joined!"); invalidate(); onDone(); router.push("/teams"); },
-    onError: (e) => toast.error(e.message || "Failed"),
-  });
-  const decline = trpc.team.declineTeamInvite.useMutation({
-    onSuccess: () => { toast.info("Declined"); invalidate(); onDone(); },
-    onError: (e) => toast.error(e.message || "Failed"),
-  });
-
-  if (!token) return <Link href={link} onClick={onDone} className="mt-1.5 text-xs text-primary hover:underline">View invite</Link>;
-
-  const pending = accept.isPending || decline.isPending;
-  return (
-    <div className="mt-2 flex gap-2">
-      <button disabled={pending} onClick={(e) => { e.stopPropagation(); accept.mutate({ token }); }} className="px-2.5 py-1 text-xs font-medium bg-primary text-primary-foreground rounded-sm hover:bg-primary/90 disabled:opacity-50">
-        {accept.isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : "Accept"}
-      </button>
-      <button disabled={pending} onClick={(e) => { e.stopPropagation(); decline.mutate({ token }); }} className="px-2.5 py-1 text-xs font-medium border border-border rounded-sm hover:bg-muted disabled:opacity-50">
-        {decline.isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : "Decline"}
-      </button>
-    </div>
-  );
-}
-
-function formatTime(date: Date): string {
-  const diff = Date.now() - new Date(date).getTime();
-  const m = Math.floor(diff / 60000);
-  if (m < 1) return "now";
-  if (m < 60) return `${m}m`;
-  const h = Math.floor(diff / 3600000);
-  if (h < 24) return `${h}h`;
-  const d = Math.floor(diff / 86400000);
-  if (d < 7) return `${d}d`;
-  return new Date(date).toLocaleDateString(undefined, { month: "short", day: "numeric" });
-}
 
 export function Notifications({ side = "bottom" }: { side?: "top" | "bottom" }) {
   const [open, setOpen] = useState(false);
@@ -128,7 +83,7 @@ export function Notifications({ side = "bottom" }: { side?: "top" | "bottom" }) 
                       </p>
                       <p className="text-[11px] text-muted-foreground/60 font-mono mt-0.5">{formatTime(n.createdAt)}</p>
                       {isInvite && n.link && (
-                        <TeamInviteActions link={n.link} notificationId={n.id} onDone={() => { markAsRead.mutate({ id: n.id }); setOpen(false); }} />
+                        <TeamInviteActions link={n.link} onDone={() => { markAsRead.mutate({ id: n.id }); setOpen(false); }} />
                       )}
                     </div>
                     {!n.read && <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary shrink-0" />}

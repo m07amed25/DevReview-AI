@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { UnifiedNavbar } from "@/components/unified-navbar";
-import { HomeFooter } from "@/features/home/components/HomeFooter";
+import { HomeFooter } from "@/features/home";
 import {
   Shield,
   Lock,

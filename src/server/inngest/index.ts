@@ -1,6 +1,6 @@
 export { inngest } from "./client";
-export { reviewPR } from "./functions/review-pr";
-export { postReviewToGitHub } from "./functions/post-review-to-github";
+export { reviewPR } from "@/features/review/jobs/review-pr";
+export { postReviewToGitHub } from "@/features/review/jobs/post-review-to-github";
 export {
   dailyScheduledScan,
   weeklyScheduledScan,
@@ -17,8 +17,8 @@ export {
   handlePaymentDisputed,
 } from "./functions/subscription";
 
-import { reviewPR } from "./functions/review-pr";
-import { postReviewToGitHub } from "./functions/post-review-to-github";
+import { reviewPR } from "@/features/review/jobs/review-pr";
+import { postReviewToGitHub } from "@/features/review/jobs/post-review-to-github";
 import {
   dailyScheduledScan,
   weeklyScheduledScan,

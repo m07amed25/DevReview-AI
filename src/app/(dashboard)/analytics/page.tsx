@@ -8,10 +8,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "motion/react";
 import { BarChart3, Download, AlertTriangle } from "lucide-react";
 import { UpgradePrompt } from "@/components/upgrade-prompt";
-import { type TimePeriod } from "@/features/analytics/types";
-import { ChartsRow } from "@/features/analytics/components/ChartsRow";
-import { IssuesTablesRow } from "@/features/analytics/components/IssuesTablesRow";
-import { FeedbackTrendRow } from "@/features/analytics/components/FeedbackTrendRow";
+import {
+  ChartsRow,
+  FeedbackTrendRow,
+  IssuesTablesRow,
+  type TimePeriod,
+} from "@/features/analytics";
 
 const periods: { value: TimePeriod; label: string }[] = [
   { value: "7d", label: "7d" },
